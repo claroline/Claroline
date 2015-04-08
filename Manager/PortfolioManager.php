@@ -231,13 +231,12 @@ class PortfolioManager
     public function getPortfolioData(Portfolio $portfolio)
     {
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets  = $portfolio->getWidgets();
+        $widgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
         $data = array(
-            'id'          => $portfolio->getId(),
-            'disposition' => $portfolio->getDisposition()
+            'id' => $portfolio->getId()
         );
 
         foreach ($widgets as $widget) {
@@ -312,20 +311,13 @@ class PortfolioManager
     public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
     {
         $data           = array();
-        $oldDisposition = $portfolio->getDisposition();
 
         $form = $this->getForm($portfolio);
         $form->submit($parameters);
 
         if ($form->isValid()) {
-            $newDisposition = $portfolio->getDisposition();
-
             $this->entityManager->persist($portfolio);
             $this->entityManager->flush();
-
-            if ($oldDisposition !== $newDisposition) {
-                $this->dispositionUpdated($portfolio);
-            }
 
             $data = $this->getPortfolioData($portfolio);
 
@@ -342,24 +334,6 @@ class PortfolioManager
         }
 
         throw new \InvalidArgumentException();
-    }
-
-    /**
-     * @param Portfolio $portfolio
-     */
-    public function dispositionUpdated(Portfolio $portfolio)
-    {
-        $widgets   = $portfolio->getWidgets();
-        $maxColumn = $portfolio->getDisposition() + 1;
-
-        foreach ($widgets as $widget) {
-            if ($maxColumn < $widget->getColumn()) {
-                $widget->setColumn($maxColumn);
-            }
-            $this->entityManager->persist($widget);
-        }
-
-        $this->entityManager->flush();
     }
 
     /**

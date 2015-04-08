@@ -35,7 +35,6 @@ portfolioApp
                 if (rollback) {
                     angular.copy(widget.copy, widget);
                 }
-
                 widget.setEditMode(false);
 
                 if (widget.isNew()) {

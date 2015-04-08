@@ -4,28 +4,28 @@ body {
 
 #portfolio-container {
     .communication_panel_container {
-        position           : absolute;
-        z-index            : 1;
-        text-align         : left;
-        left               : 0;
-        padding-left       : 0;
-        padding-right      : 0;
+        position: absolute;
+        z-index: 1;
+        text-align: left;
+        left: 0;
+        padding-left: 0;
+        padding-right: 0;
 
         .communication_panel_toggle {
-            position:         absolute;
-            transform:        rotate(90deg);
+            position: absolute;
+            transform: rotate(90deg);
             transform-origin: 15px center;
-            left:             0;
-            -webkit-transition : 0.4s linear all;
-               -moz-transition : 0.4s linear all;
-                 -o-transition : 0.4s linear all;
-                    transition : 0.4s linear all;
+            left: 0;
+            -webkit-transition: 0.4s linear all;
+               -moz-transition: 0.4s linear all;
+                 -o-transition: 0.4s linear all;
+                    transition: 0.4s linear all;
             &.expanded {
                 left: 100%;
             }
             button {
-                border-top-right-radius:   0;
-                border-top-left-radius:    0;
+                border-top-right-radius: 0;
+                border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
                 &.info {
                     color: #f0ad4e;
@@ -38,42 +38,42 @@ body {
 
         .communication_panel {
             position: absolute;
-            width:    100%;
-            left:     0;
-            -webkit-transition : 0.4s linear all;
-               -moz-transition : 0.4s linear all;
-                 -o-transition : 0.4s linear all;
-                    transition : 0.4s linear all;
+            width: 100%;
+            left: 0;
+            -webkit-transition: 0.4s linear all;
+               -moz-transition: 0.4s linear all;
+                 -o-transition: 0.4s linear all;
+                    transition: 0.4s linear all;
             &.nghide {
-                left : -100%;
+                left: -100%;
             }
             .media-list {
-                max-height : 400px;
-                overflow   : auto;
-                font-size  : 12px;
+                max-height: 400px;
+                overflow: auto;
+                font-size: 12px;
                 .media + .media {
-                    margin-top  : 0;
-                    padding-top : 10px;
-                    border-top  : 1px solid #DDDDDD;
+                    margin-top: 0;
+                    padding-top: 10px;
+                    border-top: 1px solid #DDDDDD;
                 }
                 .media-empty {
-                    margin-bottom : 10px;
+                    margin-bottom: 10px;
                 }
                 .media-body {
                     .message {
-                        margin-bottom : 0;
+                        margin-bottom: 0;
                     }
                 }
             }
             .comment_field {
-                margin-bottom : 0;
+                margin-bottom: 0;
             }
         }
     }
     header {
         background:  #302e2c;
         padding-top: 10px;
-        color:       #fff;
+        color: #fff;
 
         #username {
             text-transform: uppercase;
@@ -83,6 +83,9 @@ body {
             &.margin {
                 margin-bottom: 20px;
             }
+            .edit-container {
+                margin-bottom: 10px;
+            }
             .portfolio-title {
                 float: left;
                 margin-right: 15px;
@@ -91,21 +94,21 @@ body {
                 }
             }
             div.loading {
-                margin-top:  10px;
+                margin-top: 10px;
                 margin-left: 80px;
             }
         }
         .configuration_panel {
-            clear:      both;
+            clear: both;
             text-align: center;
             .configuration_panel_button {
-                margin-bottom:           0;
-                cursor:                  pointer;
-                background-color:        #e2e2e2;
+                margin-bottom: 0;
+                cursor: pointer;
+                background-color: #e2e2e2;
                 border-top-right-radius: 20px;
-                border-top-left-radius:  20px;
-                box-shadow:              0 2px 5px #aaa;
-                color:                   black;
+                border-top-left-radius: 20px;
+                box-shadow: 0 2px 5px #aaa;
+                color: black;
             }
 
             .configuration_panel_container {
@@ -113,11 +116,11 @@ body {
                    -moz-transition: 0.5s linear all;
                      -o-transition: 0.5s linear all;
                         transition: 0.5s linear all;
-                height:             200px;
-                padding:            0 10px 0 10px;
-                box-shadow:         0 -2px 5px #aaa inset;
+                height: 200px;
+                padding: 0 10px 0 10px;
+                box-shadow: 0 -2px 5px #aaa inset;
                 background-color: #e2e2e2;
-                color:            black;
+                color: black;
 
                 &.ng-hide {
                    height: 0;
@@ -135,66 +138,52 @@ body {
 
             .no-data {
                 text-align: center;
-                clear:      both;
+                clear: both;
+            }
+            .loading_view {
+                margin: auto;
             }
         }
     }
 
-    .widget-panel {
-        .widget-actions {
-            display: inline;
-            .btn-danger.btn-loading {
-                padding-left: 7px;
-                padding-right: 6px;
-            }
-        }
-        .list-group {
-            margin-bottom: 0px;
-        }
-        .badge_list {
-            .badge_image {
-                width:  32px;
-                height: 32px;
-            }
-        }
+    .gridster-preview-holder {
+        background-color: #428bca;
     }
 
-    .dispositions {
-        padding-left:  15px;
-        padding-right: 15px;
-        .disposition {
-            display:          inline-block;
-            background-color: whitesmoke;
-            height:           100px;
-            margin-bottom:    10px;
-            padding:          10px;
-            &.loading {
-                background-position: center;
-                width:               auto;
-                opacity:             0.5;
-            }
-            &.selected {
-                background-color: orange;
-            }
-            &.idle {
-                cursor:           pointer;
-                &:hover {
-                    background-color: orange;
+    .gridster-item {
+        .widget-panel {
+            margin-bottom: 0;
+            height: 100%;
+            .panel-heading {
+                &.draggable {
+                    .draggable-handle {
+                        cursor: move;
+                    }
                 }
             }
-            .col-md-12 {
-                float: left;
+            .widget-actions {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                .btn-danger.btn-loading {
+                    padding-left: 7px;
+                    padding-right: 6px;
+                }
             }
-            div.border {
-                height:      80px;
-                border:      1px solid grey;
-                padding-top: 30px;
+            .list-group {
+                margin-bottom: 0px;
+            }
+            .badge_list {
+                .badge_image {
+                    width: 32px;
+                    height: 32px;
+                }
             }
         }
     }
 
     .add_widget {
-        border:        3px dashed #ccc;
+        border: 3px dashed #ccc;
         border-radius: 0.25em;
         margin-bottom: 20px;
         &:hover {
@@ -203,11 +192,11 @@ body {
         .panel-body {
             padding: 0;
             .add_widget_icon {
-                cursor:         pointer;
-                color:          #ccc;
-                text-align:     center;
-                margin:         0;
-                padding-top:    15px;
+                cursor: pointer;
+                color: #ccc;
+                text-align: center;
+                margin: 0;
+                padding-top: 15px;
                 padding-bottom: 15px;
                 &:hover {
                     color: #adadad;
@@ -217,18 +206,18 @@ body {
                 margin: 15px;
                 .widget_type  {
                     .fa {
-                        display:   block;
+                        display: block;
                         font-size: 18px;
                     }
-                    float:            left;
-                    width:            80px;
-                    height:           75px;
-                    font-size:        12px;
+                    float: left;
+                    width: 80px;
+                    height: 75px;
+                    font-size: 12px;
                     background-color: #E9E9E9;
-                    text-align:       center;
-                    padding:          15px 0 0 0;
-                    margin:           5px;
-                    cursor:           pointer;
+                    text-align: center;
+                    padding: 15px 0 0 0;
+                    margin: 5px;
+                    cursor: pointer;
                     &:hover {
                         background-color: orange;
                     }
@@ -246,42 +235,47 @@ body {
 }
 
 #portfolio-loading {
-    position:         absolute;
-    width:            100%;
-    height:           100%;
-    top:              0;
-    background :      #e2e2e2 url("../../bundles/clarolinecore/images/loading.gif") no-repeat center center;
-    z-index:          1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background: #e2e2e2 url("../../bundles/clarolinecore/images/loading.gif") no-repeat center center;
+    z-index: 1;
 }
 
 .widget-panel {
     span.loading {
-        display:        inline-block;
-        margin:         0;
+        display: inline-block;
+        margin: 0;
         vertical-align: middle;
     }
     .panel-body {
         &.loading {
-            height:              60px;
+            height: 60px;
             background-position: center;
-            width:               100%;
-            margin-bottom:       0;
+            width: 100%;
+            margin-bottom: 0;
         }
         .badge_collection {
             .badge_collection_item {
                 height: auto;
                 padding: 2px 0 2px 5px;
                 .badge_selection_field {
-                    padding-top:    2px;
+                    padding-top: 2px;
                     padding-bottom: 2px;
-                    margin-bottom:  0;
+                    margin-bottom: 0;
                     .badge_image {
-                        width:  32px;
+                        width: 32px;
                         height: 32px;
                     }
                 }
             }
         }
+    }
+    .panel-footer {
+        position: absolute;
+        bottom: 0;
+        width: 99.5%;
     }
 }
 

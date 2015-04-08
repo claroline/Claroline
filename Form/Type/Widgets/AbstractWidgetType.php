@@ -12,7 +12,10 @@ class AbstractWidgetType extends AbstractType
         $builder
             ->add('label',  'text')
             ->add('column', 'integer')
-            ->add('row',    'integer');
+            ->add('row',    'integer')
+            ->add('col',    'integer', ['property_path' => 'column'])
+            ->add('sizeX',  'integer')
+            ->add('sizeY',  'integer');
     }
 
     /**

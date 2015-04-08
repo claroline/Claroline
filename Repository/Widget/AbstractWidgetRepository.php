@@ -46,4 +46,23 @@ class AbstractWidgetRepository extends EntityRepository
 
         return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
+
+
+    /**
+     * @param Portfolio $portfolio
+     * @param bool      $executeQuery
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function findOrderedByRowAndCol(Portfolio $portfolio, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('w')
+            ->where('w.portfolio = :portfolio')
+            ->setParameter('portfolio', $portfolio)
+            ->orderBy('w.row', 'ASC')
+            ->addOrderBy('w.column', 'ASC')
+        ;
+
+        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+    }
 }

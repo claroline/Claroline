@@ -118,8 +118,8 @@ class ImportManager
      */
     public function doImport($content, User $user, $format)
     {
-        $entityManager = $this->getEntityManager();
         $portfolio     = $this->simulateImport($content, $user, $format);
+        $entityManager = $this->getEntityManager();
 
         $entityManager->persist($portfolio);
         $entityManager->flush();

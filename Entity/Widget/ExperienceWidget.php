@@ -43,6 +43,12 @@ class ExperienceWidget extends AbstractWidget
      */
     protected $endDate;
 
+    public function __construct()
+    {
+        $this->sizeX = 2;
+        $this->sizeY = 2;
+    }
+
     /**
      * @return string
      */
@@ -129,7 +135,6 @@ class ExperienceWidget extends AbstractWidget
     public function getData()
     {
         $data = array(
-            'id'          => $this->getId(),
             'post'        => $this->getPost(),
             'companyName' => $this->getCompanyName(),
             'startDate'   => $this->getStartDate() ? $this->getStartDate()->format('Y/m/d') : null,
