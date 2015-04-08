@@ -139,6 +139,10 @@ class TemplateLocator extends baseTemplateLocator
 
     private function getBundle($theme)
     {
-        return ($theme instanceof Theme) ? $theme->getPlugin()->getSfName() : 'ClarolineCoreBundle';
+        if ($theme instanceof Theme) {
+            $plugin = $theme->getPlugin();
+        }
+
+        return $plugin !== null ? $plugin->getSfName(): 'ClarolineCoreBundle';
     }
 }
