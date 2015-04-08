@@ -482,16 +482,6 @@ class ProfileController extends Controller
         return new JsonResponse($data);
     }
 
-    public function propertiesFormAction()
-    {
-
-    }
-
-    public function editPropertiesAction()
-    {
-
-    }
-
     private function encodePassword(User $user)
     {
         return $this->encoderFactory
