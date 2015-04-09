@@ -49,7 +49,9 @@ class ExperienceType extends AbstractWidgetType
                     'language' => $language,
                     'format'   => 'Y-M-d'
                )
-            );
+            )
+            ->add('description', 'tinymce')
+            ->add('website', 'url');
     }
 
     public function getName()

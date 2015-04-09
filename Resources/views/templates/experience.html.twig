@@ -1,3 +1,5 @@
 <p>{{ widget.post }}</p>
 <p>{{ widget.companyName }}</p>
+{% if widget.website is not null %}<p><a href="{{ widget.website }}" title="{{ widget.companyName }} website">{{ widget.website }}</a></p>{% endif %}
 <p>{{ widget.startDate|date('date_format'|trans({}, 'platform')) }} - {% if widget.endDate is not null %}{{ widget.endDate|date('date_format'|trans({}, 'platform')) }}{% else %}{{ 'today'|trans({}, 'icap_portfolio') }}{% endif %}</p>
+{% if widget.description is not null %}{{ widget.description|raw }}{% endif %}

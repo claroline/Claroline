@@ -102,3 +102,7 @@ experience_post: 'Intitulé du poste'
 experience_company_name: 'Entreprise'
 my_portfolios: 'Mes portfolios'
 today: "aujourd'hui"
+formation_establishmentName: "Etablissement"
+formation_diploma : "Diplôme"
+experience_website: "Site web de l'institution/entreprise"
+experience_description: "Description"

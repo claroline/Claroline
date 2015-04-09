@@ -32,7 +32,7 @@ class ExperienceWidget extends AbstractWidget
     /**
      * @var \Date
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     protected $startDate;
 
@@ -42,6 +42,20 @@ class ExperienceWidget extends AbstractWidget
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $endDate;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $website;
 
     public function __construct()
     {
@@ -130,15 +144,57 @@ class ExperienceWidget extends AbstractWidget
     }
 
     /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     *
+     * @return ExperienceWidget
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsite()
+    {
+        return $this->website;
+    }
+
+    /**
+     * @param string $website
+     *
+     * @return ExperienceWidget
+     */
+    public function setWebsite($website)
+    {
+        $this->website = $website;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
     {
         $data = array(
-            'post'        => $this->getPost(),
+            'post' => $this->getPost(),
             'companyName' => $this->getCompanyName(),
-            'startDate'   => $this->getStartDate() ? $this->getStartDate()->format('Y/m/d') : null,
-            'endDate'     => $this->getEndDate() ? $this->getEndDate()->format('Y/m/d') : null
+            'startDate' => $this->getStartDate() ? $this->getStartDate()->format('Y/m/d') : null,
+            'endDate' => $this->getEndDate() ? $this->getEndDate()->format('Y/m/d') : null,
+            'description' => $this->getDescription(),
+            'website' => $this->getWebsite()
         );
 
         return $data;
@@ -150,10 +206,12 @@ class ExperienceWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'post'        => null,
+            'post' => null,
             'companyName' => null,
-            'startDate'   => null,
-            'endDate'     => null
+            'startDate' => null,
+            'endDate' => null,
+            'description' => null,
+            'website' => null
         );
     }
 }
