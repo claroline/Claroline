@@ -550,5 +550,5 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 
 ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
 
-WordResponse.score: Point attribués à cette réponse
+WordResponse.score: Points attribués à cette réponse
 WordResponse.response_value: Mot
