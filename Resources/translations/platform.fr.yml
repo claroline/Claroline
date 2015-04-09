@@ -1195,3 +1195,6 @@ display_at_registration: Afficher à la création du compte
 workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
 workspace_edit_form_endDate : Date d'expiration
 user_info: Informations utilisateur
+activate_account_click: Cliquez ici pour activer votre compte.
+activate_account: Activation du compte
+please_validate_your_account: Un email vient de vous être envoyé pour activer votre compte.

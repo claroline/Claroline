@@ -91,6 +91,19 @@ class MailManager
         return $this->send($subject, $body, array($user));
     }
 
+    public function sendEnableAccountMessage($user)
+    {
+        $hash = $user->getResetPasswordHash();
+        $link = $this->router->generate('claro_security_activate_user', array('hash' => $hash), true);
+        $subject = $this->translator->trans('activate_account', array(), 'platform');
+
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Mail:activateUser.html.twig', array('user' => $user, 'link' => $link)
+        );
+
+        return $this->send($subject, $body, array($user));
+    }
+
     /**
      * @param User $user
      *
