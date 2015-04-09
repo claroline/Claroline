@@ -47,7 +47,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // If label already exist, add button to delete it
     } else {
         tableProposals.children('tr').each(function() {
-            adddelete($(this), deletechoice, codeContainerProposal);
+           addDelete($(this), 'newTableProposal');
         });
     }
 
@@ -59,7 +59,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // If label already exist, add button to delete it
     } else {
         tableLabels.children('tr').each(function() {
-            adddelete($(this), deletechoice, codeContainerLabel);
+            addDelete($(this), 'newTableProposal');
         });
     }
 
@@ -96,7 +96,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
                 $(this).val($(this).val().replace("&gt;", ">"));
             });
 
-            addRemoveRowTableProposal();
+//            addRemoveRowTableProposal();
 
             // Add the form errors
             $('#proposalError').append($(this).find('span'));
@@ -106,7 +106,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
             // Add the delete button
             $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableProposal').find('td:last'), deletechoice, 1);
+            addDelete($('#newTableProposal').find('td:last'), 'newTableProposal');
         }
 
         $('#newTableProposal').find('tbody').append('<tr></tr>');
@@ -144,7 +144,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-            adddelete($('#newTableLabel').find('td:last'), deletechoice, 0);
+            addDelete($('#newTableLabel').find('td:last'), 'newTableLabel');
         }
 
         $('#newTableLabel').find('tbody').append('<tr></tr>');
@@ -192,11 +192,11 @@ function addLabel(container, deletechoice, table, codeContainer) {
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexLabel))
                 .replace(/__name__/g, indexLabel)
-                .replace('<a class="btn btn-danger remove" href="#"><i class="fa fa-close"></i></a>', '')
+                .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
             );
     }
 
-    adddelete(contain, deletechoice, codeContainer);
+    addDelete(contain, "newTableLabel");
     container.append(contain);
 
     container.find('.row').each(function () {
@@ -215,7 +215,7 @@ function addLabel(container, deletechoice, table, codeContainer) {
 
     // Add the delete button
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
-    $('#newTableLabel').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
+    $('#newTableLabel').find('td:last').append(contain.find('a.btn-danger'));
     
     // Remove the useless fileds form
     container.remove();
@@ -240,11 +240,11 @@ function addProposal(container, deletechoice, table, codeContainer) {
             // Change the "name" by the index and delete the symfony delete form button
             contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'Choice n°' + (indexProposal))
                 .replace(/__name__/g, indexProposal)
-                .replace('<a class="btn btn-danger remove" href="#"><i class="fa fa-close"></i></a>', '')
+                .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
             );
     }
 
-    adddelete(contain, deletechoice, codeContainer);
+    addDelete(contain, 'newTableProposal');
     container.append(contain);
 
     container.find('.row').each(function () {
@@ -253,28 +253,28 @@ function addProposal(container, deletechoice, table, codeContainer) {
 
     // Add the delete button
     $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
-    $('#newTableProposal').find('td:last').append(contain.find('a:contains("' + deletechoice + '")'));
+    $('#newTableProposal').find('td:last').append(contain.find('a.btn-danger'));
 
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
 
-    addRemoveRowTableProposal();
+//    addRemoveRowTableProposal();
 
     // for replace correspondances
-    $("#newTableLabel").find("select").each(function() {
-        var numberId = $(this).attr("id");
-        numberId = numberId.replace("_correspondence", "");
-        for(var i = 1; i < correspondances.length; i++) {
-            if (i == numberId) {
-                var value = correspondances[i] + '';
-                var tableau = value.split(",");
-                for(var u = 0; u < tableau.length; u++) {
-                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
-                }
-            }
-        }
-    });
+//    $("#newTableLabel").find("select").each(function() {
+//        var numberId = $(this).attr("id");
+//        numberId = numberId.replace("_correspondence", "");
+//        for(var i = 1; i < correspondances.length; i++) {
+//            if (i == numberId) {
+//                var value = correspondances[i] + '';
+//                var tableau = value.split(",");
+//                for(var u = 0; u < tableau.length; u++) {
+//                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+//                }
+//            }
+//        }
+//    });
 
     whichChecked();
 }
@@ -424,75 +424,75 @@ function advProposalVal(idProposalVal) {
 }
 
 
-function adddelete(tr, deletechoice, codeContainer) {
-    var delLink;
-    // Create the button to delete a row
-    if(codeContainer == 0) {
-        delLink = $('<a href="newTableLabel" class="btn btn-danger">' + deletechoice + '</a>');
-    } else {
-        delLink = $('<a href="newTableProposal" class="btn btn-danger">' + deletechoice + '</a>');
-    }
-
-    // Add the button to the row
-    tr.append(delLink);
-
-    // When click, delete the row in the table
-    delLink.click(function(e) {
-        // for getting correspondances
-//        getCorrespondances();
-        // for update correspondances
-        var numberId;
-        var typeDelete = delLink.attr("href");
-        if(typeDelete == "newTableLabel") {
-            numberId = $(this).parent('td').parent('tr').find("select").attr("id");
-            numberId = numberId.replace("_correspondence", "");
-            for(var i = 1; i < correspondances.length; i++ ) {
-                if(numberId == i) {
-                    correspondances[i] = 0;
-                }
-                if(i > numberId) {
-                    var w = i - 1;
-                    correspondances[w] = correspondances[i];
-                }
-            }
-        } else {
-            numberId = $(this).parent('td').parent('tr').find("span").text();
-            numberId = numberId.replace("Edition avancée", "");
-            for(var i = 1; i < correspondances.length; i++ ) {
-                var value = correspondances[i] + '';
-                var tableau = value.split(",");
-                for(var u = 0; u < tableau.length; u++ ) {
-                    if(tableau[u] == numberId) {
-                        tableau[u] = 0;
-                    }
-                    if(tableau[u] > numberId) {
-                        tableau[u] = tableau[u] -1;
-                    }
-                }
-                correspondances[i] = tableau;
-            }
-        }
-
-        $(this).parent('td').parent('tr').remove();
-
-        addRemoveRowTableProposal();
-        removeRowTableLabel();
-
-        // for replace correspondances
-        $("#newTableLabel").find("select").each(function() {
-            for(var i = 1; i < correspondances.length; i++ ) {
-                var value = correspondances[i] + '';
-                var tableau = value.split(",");
-                for(var u = 0; u < tableau.length; u++) {
-                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
-                }
-            }
-        });
-
-        e.preventDefault();
-        return false;
-    });
-}
+//function adddelete(tr, deletechoice, codeContainer) {
+//    var delLink;
+//    // Create the button to delete a row
+//    if(codeContainer == 0) {
+//        delLink = $('<a href="newTableLabel" class="btn btn-danger">' + deletechoice + '</a>');
+//    } else {
+//        delLink = $('<a href="newTableProposal" class="btn btn-danger">' + deletechoice + '</a>');
+//    }
+//
+//    // Add the button to the row
+//    tr.append(delLink);
+//
+//    // When click, delete the row in the table
+//    delLink.click(function(e) {
+//        // for getting correspondances
+////        getCorrespondances();
+//        // for update correspondances
+////        var numberId;
+////        var typeDelete = delLink.attr("href");
+////        if(typeDelete == "newTableLabel") {
+////            numberId = $(this).parent('td').parent('tr').find("select").attr("id");
+////            numberId = numberId.replace("_correspondence", "");
+////            for(var i = 1; i < correspondances.length; i++ ) {
+////                if(numberId == i) {
+////                    correspondances[i] = 0;
+////                }
+////                if(i > numberId) {
+////                    var w = i - 1;
+////                    correspondances[w] = correspondances[i];
+////                }
+////            }
+////        } else {
+////            numberId = $(this).parent('td').parent('tr').find("span").text();
+////            numberId = numberId.replace("Edition avancée", "");
+////            for(var i = 1; i < correspondances.length; i++ ) {
+////                var value = correspondances[i] + '';
+////                var tableau = value.split(",");
+////                for(var u = 0; u < tableau.length; u++ ) {
+////                    if(tableau[u] == numberId) {
+////                        tableau[u] = 0;
+////                    }
+////                    if(tableau[u] > numberId) {
+////                        tableau[u] = tableau[u] -1;
+////                    }
+////                }
+////                correspondances[i] = tableau;
+////            }
+////        }
+//
+//        $(this).parent('td').parent('tr').remove();
+//
+////        addRemoveRowTableProposal();
+////        removeRowTableLabel();
+//
+//        // for replace correspondances
+////        $("#newTableLabel").find("select").each(function() {
+////            for(var i = 1; i < correspondances.length; i++ ) {
+////                var value = correspondances[i] + '';
+////                var tableau = value.split(",");
+////                for(var u = 0; u < tableau.length; u++) {
+////                    $('#'+ i + '_correspondence option[value="' + tableau[u] + '"]').prop('selected',true);
+////                }
+////            }
+////        });
+//
+//        e.preventDefault();
+//        return false;
+//    });
+//}
 
 function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, correspondence,forcePosition) {
     if (nbResponses == 0) {
@@ -538,38 +538,38 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
     }
 }
 
-function addRemoveRowTableProposal () {
+//function addRemoveRowTableProposal () {
+//
+//    var rowInd;
+//
+//    $("*[id$='_correspondence']").each( function() {
+//        $(this).find('option').remove();
+//    });
+//
+//    $('#newTableProposal').find('tbody').find('tr').each( function() {
+//        rowInd = this.rowIndex;
+//        $(this).find('td:first').children().remove();
+////        $(this).find('td:first').append('<span>' + rowInd + '</span>');
+//
+//        $("*[id$='_correspondence']").each( function() {
+//            $(this).append($('<option>', {
+//                            value: rowInd,
+//                            text:  rowInd
+//                        }));
+//        });
+//
+//    });
+//}
 
-    var rowInd;
-
-    $("*[id$='_correspondence']").each( function() {
-        $(this).find('option').remove();
-    });
-
-    $('#newTableProposal').find('tbody').find('tr').each( function() {
-        rowInd = this.rowIndex;
-        $(this).find('td:first').children().remove();
-//        $(this).find('td:first').append('<span>' + rowInd + '</span>');
-
-        $("*[id$='_correspondence']").each( function() {
-            $(this).append($('<option>', {
-                            value: rowInd,
-                            text:  rowInd
-                        }));
-        });
-
-    });
-}
-
-function removeRowTableLabel() {
-
-    var ind = 1;
-    $("*[id$='_correspondence']").each( function() {
-         $(this).attr("id", ind + "_correspondence");
-         $(this).attr("name", ind + "_correspondence[]");
-         ind++;
-    });
-}
+//function removeRowTableLabel() {
+//
+//    var ind = 1;
+//    $("*[id$='_correspondence']").each( function() {
+//         $(this).attr("id", ind + "_correspondence");
+//         $(this).attr("name", ind + "_correspondence[]");
+//         ind++;
+//    });
+//}
 
 //function addCorrespondence($parent) {
 //    $parent.append('<select id="' + $('#newTableLabel').find('tr:not(:first)').length + '_correspondence" \n\
