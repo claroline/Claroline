@@ -184,6 +184,10 @@ class MailManager
                 $message->setTo($to);
             }
 
+            if (isset($extra['attachment'])) {
+                $message->attach(\Swift_Attachment::fromPath($extra['attachment'], "application/octet-stream"));
+            }
+
             return $this->mailer->send($message) ? true : false;
         }
 

@@ -297,7 +297,7 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                       ->scalarNode('name')->isRequired()->end()
-                      ->scalarNode('path')->isRequired()->end()
+                      ->scalarNode('path')->defaultValue(null)->end()
                     ->end()
                 ->end()
             ->end()

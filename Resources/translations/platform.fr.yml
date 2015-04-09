@@ -1194,3 +1194,4 @@ updated_by: 'Dernière màj: %modificationDate%'
 display_at_registration: Afficher à la création du compte
 workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
 workspace_edit_form_endDate : Date d'expiration
+user_info: Informations utilisateur
