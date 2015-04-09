@@ -31,6 +31,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -144,6 +145,11 @@ class RegistrationController extends Controller
             $msg = $this->get('translator')->trans('account_created', array(), 'platform');
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
+            if ($this->configHandler->getParameter('registration_mail_validation')) {
+                $msg = $this->get('translator')->trans('please_validate_your_account', array(), 'platform');
+                $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
+            }
+
             if ($this->get('claroline.config.platform_config_handler')->getParameter('auto_logging_after_registration')) {
                 //this is bad but I don't know any other way (yet)
                 $securityContext = $this->get('security.context');
@@ -205,6 +211,27 @@ class RegistrationController extends Controller
         return $format === 'json' ?
             new JsonResponse($content, $status) :
             new XmlResponse($content, $status);
+    }
+
+    /**
+     * @Route(
+     *     "/activate/{hash}/",
+     *     name="claro_security_activate_user",
+     *     options={"expose"=true}
+     * )
+     */
+    public function activateUserAction($hash)
+    {
+        $user = $this->userManager->getByResetPasswordHash($hash);
+
+        if (!$user) {
+            throw new \Exception('Hash not found');
+        }
+
+        $this->userManager->activateUser($user);
+        $this->userManager->logUser($user);
+
+        return new RedirectResponse($this->generateUrl('claro_desktop_open'));
     }
 
     /**
