@@ -1,0 +1,19 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block userpicker_widget %}
+    {% spaceless %}
+        <div class="input-group">
+            <input type="text"
+                   class="form-control user-picker"
+                   placeholder="{{ 'add_user'|trans({}, 'platform') }}"
+            >
+            <span class="input-group-btn">
+                <button class="btn btn-default user-picker"
+                        type="button"
+                >
+                    <i class="fa fa-user"></i>
+                </button>
+            </span>
+        </div>
+    {% endspaceless %}
+{% endblock %}

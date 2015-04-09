@@ -1,0 +1,35 @@
+<div class="modal-dialog user-picker-modal">
+    <form novalidate="novalidate"
+          action=""
+          id="user-picker-modal-form" 
+          class="modal-content"
+    >
+        <div class='modal-header'>
+            <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-hidden="true"
+            >
+                &times;
+            </button>
+            <h4 class="modal-title">
+                {{ 'user_picker' | trans({}, 'platform') }}
+            </h4>
+        </div>
+        <div class='modal-body'>
+        </div>
+        <div class="modal-footer">
+            <button type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+            <button type="button"
+                    class="btn btn-primary submit"
+            >
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+        </div>
+    </form>
+</div>

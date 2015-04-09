@@ -11,14 +11,13 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use JMS\DiExtraBundle\Annotation as DI;
-
 
 class UserController extends Controller
 {
@@ -28,7 +27,7 @@ class UserController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "userManager" = @DI\Inject("claroline.manager.user_manager"),
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
@@ -59,5 +58,23 @@ class UserController extends Controller
         $usersArray = $this->userManager->toArrayForPicker($users);
 
         return new JsonResponse($usersArray);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "user/picker",
+     *     name="claro_user_picker",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function userPickerAction()
+    {
+        $users = $this->userManager->getAllEnabledUsers();
+
+        return array(
+            'users' => $users
+        );
     }
 }
