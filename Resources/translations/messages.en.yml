@@ -498,7 +498,7 @@ Inter_Hole.score: Score
 Inter_Hole.size: Size
 
 Label.value : Value
-Label.scoreRight: Score of question
+Label.scoreRight: Score of the association
 Label.positionForce: Forced position
 
 LockAttempte.date: Date
