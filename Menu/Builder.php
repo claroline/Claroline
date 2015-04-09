@@ -201,6 +201,44 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function desktopParametersMenu(FactoryInterface $factory, array $options)
+    {
+        $translator = $this->container->get('translator');
+        $securityContext = $this->container->get('security.context');
+        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+
+        $menu = $factory->createItem('root')
+            ->setChildrenAttribute('class', 'list-group menu desktop-parameters-menu');
+
+        $menu->addChild(
+            $translator->trans('menu_bar', array(), 'platform'),
+            array(
+                'route' => 'claro_tool_properties',
+                'routeParameters' => array('type' => 0)
+            ));
+
+        $menu->addChild(
+            $translator->trans('user_menu', array(), 'platform'),
+            array(
+                'route' => 'claro_tool_properties',
+                'routeParameters' => array('type' => 1)
+            ));
+
+        $menu->addChild(
+            $translator->trans('desktop_parameters', array(), 'platform'),
+            array(
+                'route' => 'claro_user_options_edit_form'
+            ));
+
+        //allowing the menu to be extended
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_desktop_parameters_menu_configure',
+            new ConfigureMenuEvent($factory, $menu)
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)

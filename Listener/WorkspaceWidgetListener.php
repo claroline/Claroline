@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -47,6 +48,7 @@ class WorkspaceWidgetListener
     public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->securityContext->isGranted('ROLE_USER')) {
+
             throw new AccessDeniedException();
         }
 

@@ -229,6 +229,7 @@ copies: Copies
 copy: Copy
 core_packages: Core packages
 create: Create
+create_and_update: 'Create and update'
 create_category: 'Create a category'
 create_competence: 'Create a competence'
 create_facet: Create a facet
@@ -240,6 +241,7 @@ create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
+create_only: 'Create only'
 create_role: Create role
 create_security_token: 'Create a security token'
 create_sub_competence: 'Create a sub-competence'
@@ -445,6 +447,7 @@ has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
 has_been_unregistered_from_role: 'has been unregistered from group'
 has_been_unregistered_from_workspace: 'has been unregistered from workspace'
+has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide
@@ -580,6 +583,7 @@ missing_%content%: 'The variable %content% is missing for "%language%".'
 missing_%password%: 'The variable %password% is missing for "%language%".'
 missing_%username%: 'The variable %username% is missing for "%language%".'
 mixed: Mixed
+mode: 'Mode'
 model: Model
 models: Modèles
 month.April: April
@@ -1021,6 +1025,7 @@ user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
 user_removed: 'User removed'
 username: Username
+username_and_email_from_two_different_users: 'Username %username% and email %email% are both in use and don''t refer to the same user.'
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
 users: Users
@@ -1181,3 +1186,7 @@ updated_by: 'Last update: %modificationDate%'
 display_at_registration: Display at registration
 workspace_max_users: Maximum number of user per workspace
 workspace_edit_form_endDate : Expiration date
+user_info: User informations
+activate_account_click: Click here to activate your account
+activate_account: Activate your account
+please_validate_your_account: An email was sent for you to activate your account

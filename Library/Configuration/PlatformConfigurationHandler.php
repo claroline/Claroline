@@ -78,7 +78,8 @@ class PlatformConfigurationHandler
         'country' => '-',
         'datas_sending_url' => 'http://stats.claroline.net/insert.php',
         'repository_api' => 'http://packages.claroline.net/api.php',
-        'auto_logging_after_registration' => false
+        'auto_logging_after_registration' => false,
+        'registration_mail_validation' => false
     );
 
     /**
@@ -175,6 +176,7 @@ class PlatformConfigurationHandler
         $config->setRepositoryApi($this->parameters['repository_api']);
         $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
         $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
+        $config->setRegistrationMailValidation($this->parameters['registration_mail_validation']);
 
         return $config;
     }

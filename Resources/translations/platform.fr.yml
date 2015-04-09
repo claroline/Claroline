@@ -229,6 +229,7 @@ copies: Copies
 copy: Copier
 core_packages: Paquets du noyau
 create: Créer
+create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
 create_competence: 'Créer une compétence'
 create_facet: Créer une facette
@@ -240,6 +241,7 @@ create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_new_user_account: 'Creation de votre compte ClarolineConnect'
+create_only: 'Création seulement'
 create_role: Créer un rôle
 create_security_token: 'Créer un jeton d''authentification'
 create_sub_competence: 'Créer une sous-compétence'
@@ -447,6 +449,7 @@ has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit du groupe'
 has_been_unregistered_from_role: 'a été désincrit du rôle'
 has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activités'
+has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 hide: Cacher
@@ -582,6 +585,7 @@ missing_%content%: 'La variable %content% est manquante pour la langue "%languag
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
 missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 mixed: Mixte
+mode: 'Mode'
 model: Modèle
 models: Modèles
 month.April: Avril
@@ -1027,6 +1031,7 @@ user_profile: 'Profil utilisateur'
 user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
+username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
 users: Utilisateurs
@@ -1187,3 +1192,7 @@ updated_by: 'Dernière màj: %modificationDate%'
 display_at_registration: Afficher à la création du compte
 workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
 workspace_edit_form_endDate : Date d'expiration
+user_info: Informations utilisateur
+activate_account_click: Cliquez ici pour activer votre compte.
+activate_account: Activation du compte
+please_validate_your_account: Un email vient de vous être envoyé pour activer votre compte.

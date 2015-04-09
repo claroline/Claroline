@@ -197,6 +197,34 @@ body.iframe {
     right: 0;
 }
 
+/*************/
+/*  Desktop parameters menu */
+/*************/
+ul.desktop-parameters-menu
+{
+  li.list-group-item {
+    padding: 0;
+    &:hover,
+    &:focus{
+      background-color: @list-group-hover-bg;
+      a{
+        color: @list-group-link-hover-color;
+      }
+    }
+    a {
+      padding: 10px 15px;
+      position: relative;
+      display: block;
+      color: @list-group-link-color;
+      text-decoration: none;
+    }
+    a:hover,
+    a:focus{
+      text-decoration: none;
+    }
+  }
+}
+
 @media (min-width: @screen-sm) {
     body.left-bar-push {
         margin-left: 40px;

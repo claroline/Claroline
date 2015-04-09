@@ -62,17 +62,8 @@ class TemplateLocator extends baseTemplateLocator
 
         $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
         $theme = $this->themeService->findTheme(array('name' => $name));
-        $path = $this->getPath($theme);
-        $bundle = substr($path, 0, strpos($path, ':'));
-
-        if ($this->isOverwritable($theme, $bundle, $template)) {
-            $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
-        } elseif ($template->get('bundle') === 'FOSOAuthServerBundle') {
-            if ('Authorize' === $template->get('controller') && 'authorize' === $template->get('name')) {
-                $template = $this->locateTemplate($template, 'ClarolineCoreBundle', $theme, $currentPath);
-            }
-        }
-
+        $bundle = $this->getBundle($theme);
+        $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
         $key = $this->getCacheKey($template);
 
         if (isset($this->cache[$key])) {
@@ -103,15 +94,13 @@ class TemplateLocator extends baseTemplateLocator
 
         if (null !== $theme) {
             $controller = sprintf(
-                '%s/%s',
-                strtolower(str_replace(' ', '', $theme->getName())),
+                'theme/%s/%s',
+                $template->get('bundle'),
                 $template->get('controller')
             );
         }
 
-        $newTemplate
-            ->set('bundle', $bundle)
-            ->set('controller', $controller);
+        $newTemplate->set('bundle', $bundle)->set('controller', $controller);
 
         try {
             $this->locator->locate($newTemplate->getPath(), $currentPath);
@@ -123,24 +112,21 @@ class TemplateLocator extends baseTemplateLocator
     }
 
     /**
-     * Check if $theme, $bundle and $template are correct in order to Overwrite a template.
-     * @return boolean
-     */
-    private function isOverwritable($theme, $bundle, $template)
-    {
-        return (
-            $theme instanceof Theme and
-            $bundle !== '' and
-            $bundle !== $template->get('bundle') and
-            $template->get('bundle') === 'ClarolineCoreBundle'
-        );
-    }
-
-    /**
      * Get the th of a theme
      */
     private function getPath($theme)
     {
         return ($theme instanceof Theme) ? $theme->getPath() : null;
+    }
+
+    private function getBundle($theme)
+    {
+        if (!$theme) return 'ClarolineCoreBundle';
+
+        if ($theme instanceof Theme) {
+            $plugin = $theme->getPlugin();
+        }
+
+        return $plugin !== null ? $plugin->getSfName(): 'ClarolineCoreBundle';
     }
 }
