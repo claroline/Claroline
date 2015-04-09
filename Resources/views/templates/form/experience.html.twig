@@ -12,7 +12,7 @@
     <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
         <span class="input-group-addon">{{ 'date_range_from'|trans({}, 'icap_portfolio') }}</span>
         <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
-               class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" />
+               class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
         <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
         <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
                class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />

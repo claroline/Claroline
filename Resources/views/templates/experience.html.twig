@@ -1,3 +1,3 @@
 <p>{{ widget.post }}</p>
 <p>{{ widget.companyName }}</p>
-<p>{{ 'date_range_from'|trans({}, 'icap_portfolio') }} {{ widget.startDate|date('date_format'|trans({}, 'platform')) }} {{ 'date_range_to'|trans({}, 'icap_portfolio') }} {{ widget.endDate|date('date_format'|trans({}, 'platform')) }}</p>
+<p>{{ widget.startDate|date('date_format'|trans({}, 'platform')) }} - {% if widget.endDate is not null %}{{ widget.endDate|date('date_format'|trans({}, 'platform')) }}{% else %}{{ 'today'|trans({}, 'icap_portfolio') }}{% endif %}</p>
