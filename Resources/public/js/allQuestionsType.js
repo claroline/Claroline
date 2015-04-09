@@ -261,3 +261,21 @@ function displayOptionalFields(){
       $("#collepseinteraction").collapse('show'); 
   }
 }
+
+/**
+ * Displays enabled tinyMCE by QCM et Matching
+ * @returns {undefined}
+ */
+function textareaAdvancedEdition()
+{
+    //Enables advanced edition QCM - Matching
+    $('.classic').find('textarea').each(function() {
+        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+        if($(this).val().match("<.+>.+|\s<\/.+>$")) {
+            var idProposalVal = $(this).attr("id");
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+            $("#btnEdition_"+idProposalVal).remove();
+        }
+    });
+}

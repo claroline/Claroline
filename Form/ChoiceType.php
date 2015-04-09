@@ -31,7 +31,7 @@ class ChoiceType extends AbstractType
             ->add(
                 'weight', 'text', array(
                     'required' => false, 
-                    'label' => ' ', 
+                    'label' => ' ',
                     'attr' => array('class' => 'col-md-1', 'placeholder' => 'points')
                 )
             )
