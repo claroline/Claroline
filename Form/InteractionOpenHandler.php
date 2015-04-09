@@ -49,6 +49,11 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->em->persist($interOpen->getInteraction()->getQuestion());
         $this->em->persist($interOpen->getInteraction());
 
+        foreach ($interOpen->getWordResponses() as $wr) {
+            $wr->setInteractionOpen($interOpen);
+            $this->em->persist($wr);
+        }
+
         $this->persistHints($interOpen);
 
         $this->em->flush();

@@ -149,7 +149,7 @@ class InteractionOpen
             $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection;
             foreach ($this->wordResponses as $wordResponse) {
                 $newWordResponse = clone $wordResponse;
-                $newWordResponse->setHole($this);
+                $newWordResponse->setInteractionOpen($this);
                 $newWordResponses->add($newWordResponse);
             }
             $this->wordResponses = $newWordResponses;

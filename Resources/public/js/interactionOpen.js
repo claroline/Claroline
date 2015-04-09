@@ -7,7 +7,7 @@ function insertStyle(tOpen) {
     typeOpen = JSON.parse(tOpen);
 
     $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
-    
+
      $('#ujm_exobundle_interactionopentype_typeopenquestion').children('option').each(function() {
          if (typeOpen[$(this).val()] == 2) {
              $(this).prop('selected', true);
@@ -24,11 +24,11 @@ function CheckForm() {
 }
 
 function formWordResponse() {
-    
+
     container = $('div#ujm_exobundle_interactionopentype_wordResponses');
     tablewr = $('#tablewr');
     $('.form-collection-add').remove();
-    
+
     $('#add_wr').click(function (e) {
         $('#tablewr').find('tbody').append('<tr></tr>');
         deleteWr = 'Meuh !'
@@ -57,13 +57,13 @@ function addWr(container, deleteWr) {
         .replace(/__name__/g, index)
         .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
     );
-    
+
     // Add the button to delete a choice
     addDeleteMeuh(contain, deleteWr);
-    
+
     // Add the modified dataprototype to the page
     container.append(contain);
-    
+
     container.find('.row').each(function () {
         addRowToTablewr($(this));
     });
@@ -105,9 +105,11 @@ $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
     if (typeOpen[$(this).val()] == 4) {
          $('#qOpenOneWord').css('display', 'block');
          $('#qOpenScoreMaxLongResp').css('display', 'none');
+         $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
          formWordResponse();
      } else if (typeOpen[$(this).val()] == 2) {
          $('#qOpenScoreMaxLongResp').css('display', 'block');
          $('#qOpenOneWord').css('display', 'none');
+         $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
      }
 });
