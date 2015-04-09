@@ -83,6 +83,7 @@
         "cache-files-ttl": 0
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
