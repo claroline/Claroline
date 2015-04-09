@@ -49,6 +49,8 @@ class FormationsType extends AbstractWidgetType
                     'format'   => 'Y-M-d'
                )
             )
+            ->add('establishmentName', 'text')
+            ->add('diploma', 'text')
             ->add('children', 'collection',
                 array(
                     'type'          => 'icap_portfolio_widget_form_formations_formation',
