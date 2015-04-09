@@ -498,7 +498,7 @@ Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
 Label.value : Valeur
-Label.scoreRight: Score de la question
+Label.scoreRight: Score de l'association
 Label.positionForce: Forcer cette position
 
 LockAttempte.date: Date

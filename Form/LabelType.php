@@ -16,8 +16,9 @@ class LabelType extends AbstractType
             )
             ->add(
                 'value', 'textarea', array(
+                    'required' => true,
                     'label' => ' ', 'attr' => array(
-                        'class' => 'labelVal',
+                        'class' => 'labelVal form-control',
                         'style' => 'height:34px;',
                         'placeholder' => 'expected answer'
                     )
@@ -25,6 +26,7 @@ class LabelType extends AbstractType
             )
             ->add(
                 'scoreRightResponse', 'text', array(
+                    'required' => true,
                     'label' => ' ', 'attr' => array('class' => 'labelScore', 'placeholder' => 'points'
                   )))
                 //add a field for correspondance, and will be replace by the our field
