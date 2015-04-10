@@ -24,9 +24,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
                 return 'infoDuplicateQuestion';
             }
 
-            if ( $this->form->isValid() ) {
-//                var_dump($this->form->getData()->getInteraction()->getInteractionQCM());
-//                die();
+            if ( $this->form->isValid() ) {          
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;

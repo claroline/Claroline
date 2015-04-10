@@ -22,6 +22,7 @@ class ChoiceType extends AbstractType
             ->add(
                 'label', 'textarea', array(
                     'label' => ' ',
+                    'required' => true, 
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
                     'placeholder' => 'expected answer'               

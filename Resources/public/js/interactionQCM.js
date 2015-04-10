@@ -74,14 +74,11 @@ function creationQCM(expectedAnswer, response, point, comment, positionForce, ad
 function creationQCMEdit(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, tQCM,edition, nbResponses) {
 
     var index = 0;
-    
     typeQCM = JSON.parse(tQCM);
-
     tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice,edition, nbResponses);
 
     // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
-     
         // Add a row to the table
         $('#newTable').find('tbody').append('<tr></tr>');
            
@@ -96,9 +93,9 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         if (nbResponses == 0) {
             // Add the delete button
             $('#newTable').find('tr:last').append('<td class="classic"></td>');
-            addDelete($('#newTable').find('td:last'), deleteChoice); 
+            addDelete($('#newTable').find('td:last'), deleteChoice);          
           
-        }
+        }       
         
         $('#ujm_exobundle_interactionqcmtype_choices_'+index+'_weight').click(function() {
             $(this).focus();
@@ -206,64 +203,18 @@ function addChoice(container, deleteChoice, comment, edition) {
 }
 
 // Check if form is valid
-function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {
-    //"use strict";
-
-    /*if ($("*[id$='_penalty']").length > 0) {
-        $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
-    }*/
-
-    // If no question is asked
-    if ($('#ujm_exobundle_interactionqcmtype_interaction_invite').val() == '') {
-        alert(inviteQuestion);
-        return false;
-    } else {
-        // If there is no at least two choices
-        if (($('#newTable').find('tr:not(:first)').length) < 2) {
-            alert(nbrChoices);
-            return false;
-        } else {
-            // If no expected answer is selected
-            var nbr_rep_coched = 0;
-            $('#newTable').find('tr:not(:first)').each(function (index) {
-                if ($(this).find('td').eq(1).find('input').is(':checked')) {
-                    nbr_rep_coched = nbr_rep_coched + 1;
-                }
-            });
-            if (nbr_rep_coched === 0) {
-                alert(answerCoched);
-                return false;
-            } else {
-                // If all the points fields are fill                       
-                if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-                    var checked = true;
-                    $('#newTable').find('tr:not(:first)').each(function () {
-                        if ($(this).find('td').eq(3).find('input').val() === '') {
-                           checked = false;
-                            return false;
-                        }
-                    });
-
-                    if (checked == false) {
-                        alert(pointAnswers);
-                        return false;
-                    }
-                }
-                //Assign points by response is not check
-                else
-                {
-                    if($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val()==="") { 
-                       alert(pointAnswers);
-                       return false;
-                    }
-                    if($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val()==="") {                           
-                       alert(pointAnswers);
-                      return false;
-                    }
-                }
-            }
+function check_form(nbrChoices, answerCoched, labelEmpty, pointAnswers, pointAnswer, inviteQuestion) {   
+        // If no expected answer is selected
+    var nbr_rep_coched = 0;
+    $('#newTable').find('tr:not(:first)').each(function () {
+        if ($(this).find('td').eq(1).find('input').is(':checked')) {
+            nbr_rep_coched = nbr_rep_coched + 1;
         }
-    }
+    });
+    if (nbr_rep_coched === 0) {
+        alert(answerCoched);
+        return false;
+    } 
 }
 
 // Set the choices order
@@ -290,28 +241,8 @@ function whichChecked() {
            $(this).parent('td').hide();
        });
     }
-    // Disable or not the score by response if weightResponse is checked
-    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
-        $('#labelRightResponse').css({"display" : "none"});
-        $('#labelFalseResponse').css({"display" : "none"});
-        tableChoices.find('th').eq(2).show();
-        $("*[id$='_weight']").each(function() {
-           // $(this).css({"display" : "inline-block"});    
-             $(this).parent('td').show();
-        });
-    } else {
-        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
-        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
-        $('#labelRightResponse').css({"display" : "inline-block"});
-        $('#labelFalseResponse').css({"display" : "inline-block"});
-        tableChoices.find('th').eq(2).hide();
-        $("*[id$='_weight']").each(function() {
-           // $(this).css({"display" : "none"});
-             $(this).parent('td').hide();
-        });
-    }
+    // Disable or not the score by response if weightResponse is checked  
+        hiddenScore();
 
     // Change the type od ExpectedAnswer (radio or checkbox) depending on which typeQCM is choose
     var type = $('#ujm_exobundle_interactionqcmtype_typeQCM :checked').val();
@@ -340,33 +271,11 @@ function whichChange() {
            });
         }
     });
-
-    // When "set points by response" change, disable or not single choice point
+   
     $('#ujm_exobundle_interactionqcmtype_weightResponse').change(function () {
-        if ($(this).is(':checked')) {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "none"});
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "none"});
-            $('#labelRightResponse').css({"display" : "none"});
-            $('#labelFalseResponse').css({"display" : "none"});
-            tableChoices.find('th').eq(2).show();
-            $("*[id$='_weight']").each(function() {
-               // $(this).css({"display" : "inline-block"});
-                $(this).parent('td').show();
-            });
-        } else {
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display" : "inline-block"});
-            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display" : "inline-block"});
-            $('#labelRightResponse').css({"display" : "inline-block"});
-            $('#labelFalseResponse').css({"display" : "inline-block"});
-            tableChoices.find('th').eq(2).hide();
-            $("*[id$='_weight']").each(function() {
-              //  $(this).css({"display" : "none"});
-                $(this).parent('td').hide();
-            });
-        }
-    });
-
-    // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox
+        hiddenScore();
+        });
+     // When "type of QCM (unique/multiple)" change, change the expected response to radio or checkbox    
     $('#ujm_exobundle_interactionqcmtype_typeQCM').change(function () {
         var type = $('#ujm_exobundle_interactionqcmtype_typeQCM :checked').val();
 
@@ -416,7 +325,6 @@ function fillChoicesArray(row,edition,index) {
 }
 
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
-
     if (nbResponses == 0) {
         // Add the structure od the table
         tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
@@ -441,4 +349,67 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
 function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
      $('#'+btnHiddenFeedback).remove();
      $('#'+spanFeedback).removeAttr( 'style' );    
+}
+
+/**
+ * If all the points fields are fill   
+ */
+function checkScore() {                    
+    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
+       if ($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val() === '') {
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('~');
+        }
+        if ($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val() === '') {
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('~');
+        }
+      $("*[id$='_weight']").each(function () {
+          if ($(this).val() === '~') {
+              alert('la');
+                $(this).val('');
+           }
+        });
+    }
+    else {
+        $("*[id$='_weight']").each(function () {
+            if ($(this).val() === '') {
+                $(this).val('~');
+            }
+        if ($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val() === '~') {
+            alert('la');
+            $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('');
+        }
+        if ($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val() === '~') {
+            alert('la');
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');
+            
+        }      
+        });
+    }
+}
+
+/**
+ * Disable or not the score by response if weightResponse is checked
+ */
+function hiddenScore() {
+    if ($('#ujm_exobundle_interactionqcmtype_weightResponse').is(':checked')) {
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display": "none"});
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display": "none"});
+        $('#labelRightResponse').css({"display": "none"});
+        $('#labelFalseResponse').css({"display": "none"});
+        tableChoices.find('th').eq(2).show();
+        $("*[id$='_weight']").each(function () {
+            $(this).parent('td').show();
+        });
+    //    checkScore();
+    } else {
+        $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').css({"display": "inline-block"});
+        $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').css({"display": "inline-block"});
+        $('#labelRightResponse').css({"display": "inline-block"});
+        $('#labelFalseResponse').css({"display": "inline-block"});
+        tableChoices.find('th').eq(2).hide();
+        $("*[id$='_weight']").each(function () {
+            $(this).parent('td').hide();
+        });
+      //  checkScore();
+    }
 }
