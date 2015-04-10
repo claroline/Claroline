@@ -30,4 +30,18 @@ class InteractionOpenRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * Get the score max for an open question with one word
+     *
+     * @access public
+     *
+     * @param integer $interactionId id Interaction
+     *
+     * Return float
+     */
+    public function getScoreMaxOneWord($interactionId)
+    {
+        die('todo getScoreMaxOneWord in the open repository');
+    }
 }

@@ -348,6 +348,8 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $response = $request->request->get('interOpenLong');
+        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+            $response = $request->request->get('interOpenOneWord');
         }
 
         // Not assessment
@@ -371,6 +373,8 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $score = -1;
+        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+            die('todo recup score dans le service');
         }
 
         $score .= '/'.$this->openMaxScore($interOpen);
@@ -963,6 +967,11 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
+        } else if ($interOpen->getTypeOpenQuestion() == 'long') {
+            $scoreMax = $interQCM = $this->doctrine
+                                         ->getManager()
+                                         ->getRepository('UJMExoBundle:InteractionOpen')
+                                         ->getScoreMaxOneWord($interOpen->getInteraction()->getId());;
         }
 
         return $scoreMax;
