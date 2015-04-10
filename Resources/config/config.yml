@@ -2,4 +2,3 @@ icap_notification:
     default_layout:   ClarolineCoreBundle::layout.html.twig
     max_per_page:     50
     dropdown_items:   10
-    system_name:      Claroline

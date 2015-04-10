@@ -1,8 +1,4 @@
 services:
-    icap.notification.manager:
-        class: Icap\NotificationBundle\Manager\NotificationManager
-        arguments: [@service_container]
-
     icap_notification.twig.notification_extension:
         class: Icap\NotificationBundle\Twig\NotificationExtension
         arguments: [@translator]

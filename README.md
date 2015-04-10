@@ -25,7 +25,6 @@ Prerequisites
     - default_layout : the layout from which the notification list page will extend (default ClarolineCoreBundle::layout.html.twig)
     - max_per_page : the maximum number of notifications per page in notification list page (default 50)
     - dropdown_items : the number of notifications present in the dropdown list (default 10)
-    - system_name : the system's name; used when action has no doer (default Claroline)
 
 How to use in plugins
 -----------------------------
@@ -52,8 +51,8 @@ In order to integrate and enable notifications in a Claroline connect plugin you
 
 3.  Create a domain for translations under translations folder following the name pattern `notification.lang.yml`
 4.  Under views folder create a `Notification` folder and store inside all views related to notifications' display/rendering. It is recommended to create a general twig file say `notification_item.html.twig` which will extend the `IcapNotificationBundle:Templates:notification.html.twig` template, will render all common elements and include any other necessary template according to the action type. An example is given [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
-5.  Create `NotificationListener` class under Listener folder which will "listen" to plugin's notification events and render the notification item. You can checkout the [NotificationListener](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationListener.php) class in the WikiBundle
-6.  Add in a config file e.g. `listeners.yml` the service that will listen to plugin's events and redirect the to your NotificationListener class calling the right method. [Here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/config/services/listeners.yml) is the example for WikiBundle
+5.  Create listener, for example [`NotificationListener`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationListener.php) and service e.g. [`listeners.yml`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/config/services/listeners.yml) is the example for WikiBundle
+6.  (*new) In `config.yml` file set `is_notifiable` to `true` (under your resource configuration) in order to enable notification configuration for your resource.
 
 You can find a complete example of these steps in [iCAPLyon1/WikiBundle](https://github.com/iCAPLyon1/WikiBundle)
 

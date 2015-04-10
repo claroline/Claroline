@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\SecurityContext;
 /**
  * @DI\Service()
  */
-class ConfigureTopLeftMenuListener
+class ConfigureMenuListener
 {
     private $translator;
     private $notificationManager;
@@ -32,20 +32,20 @@ class ConfigureTopLeftMenuListener
         NotificationManager $notificationManager,
         TwigEngine $templating,
         SecurityContext $securityContext
-    )
-    {
-        $this->translator          = $translator;
+    ) {
+        $this->translator = $translator;
         $this->notificationManager = $notificationManager;
-        $this->templating          = $templating;
-        $this->securityContext     = $securityContext;
+        $this->templating = $templating;
+        $this->securityContext = $securityContext;
     }
 
     /**
      * @DI\Observe("claroline_top_bar_left_menu_configure")
      *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
+     * @return \Knp\Menu\ItemInterface $menu
      */
-    public function onMenuConfigure(ConfigureMenuEvent $event)
+    public function onTopBarLeftMenuConfigure(ConfigureMenuEvent $event)
     {
         $user = $this->securityContext->getToken()->getUser();
 
@@ -58,7 +58,10 @@ class ConfigureTopLeftMenuListener
             );
 
             $menu = $event->getMenu();
-            $countUnviewedNotificationsMenuLink = $menu->addChild($this->translator->trans('notifications', array(), 'platform'), array('route' => 'icap_notification_view'))
+            $countUnviewedNotificationsMenuLink = $menu->addChild(
+                $this->translator->trans('notifications', array(), 'platform'),
+                array('route' => 'icap_notification_view')
+            )
                 ->setExtra('icon', 'fa fa-bell')
                 ->setExtra('title', $this->translator->trans('notifications', array(), 'platform'))
                 ->setAttribute('id', 'notification-topbar-item')
@@ -68,6 +71,27 @@ class ConfigureTopLeftMenuListener
                 $countUnviewedNotificationsMenuLink
                     ->setExtra('badge', $countUnviewedNotifications);
             }
+
+            return $menu;
+        }
+    }
+
+    /**
+     * @DI\Observe("claroline_desktop_parameters_menu_configure")
+     *
+     * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
+     * @return \Knp\Menu\ItemInterface $menu
+     */
+    public function onDesktopParametersMenuConfigure(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+
+        if ($user !== 'anon.') {
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $this->translator->trans('notifications', array(), 'platform'),
+                array('route' => 'icap_notification_user_parameters')
+            );
 
             return $menu;
         }

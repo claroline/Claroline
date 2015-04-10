@@ -2,7 +2,8 @@
 
 namespace Icap\NotificationBundle\Entity;
 
-class UserPickerContent {
+class UserPickerContent
+{
     private $originalText = "";
     private $finalText = "";
     private $userIds = array();
@@ -28,7 +29,7 @@ class UserPickerContent {
         return $this->originalText;
     }
 
-    public  function getFinalText()
+    public function getFinalText()
     {
         return $this->finalText;
     }

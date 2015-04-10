@@ -18,3 +18,11 @@ days: "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday"
 see_more: "See more"
 zero_notifications: "There are no notifications"
 notifications_title: "Notifications list"
+
+notification_user_configuration: Notifications configuration
+rss_visible: Rss feed
+rss_url_regenerate: Regenerate RSS URL
+role-change_right: Resource access
+registration-decline: Registration refusal
+role-subscribe: New registration
+badge-award: Badges

@@ -26,8 +26,8 @@ class IcapNotificationExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach (array('default_layout', 'max_per_page', 'dropdown_items', 'system_name') as $attribute) {
-            $container->setParameter("icap_notification.".$attribute, $config[$attribute]);
+        foreach (array('default_layout', 'max_per_page', 'dropdown_items') as $attribute) {
+            $container->setParameter("icap_notification." . $attribute, $config[$attribute]);
         }
 
         $locator = new FileLocator(__DIR__ . '/../Resources/config/services');

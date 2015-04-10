@@ -3,10 +3,11 @@
 namespace Icap\NotificationBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Icap\NotificationBundle\Entity\NotificationUserParameters;
 
 class NotificationViewerRepository extends EntityRepository
 {
-    public function findUserNotificationsQuery($viewerId, $max = null)
+    public function findUserNotificationsQuery($viewerId, $visibleTypes)
     {
         $queryBuilder = $this->createQueryBuilder('notificationViewer');
         $queryBuilder
@@ -14,22 +15,12 @@ class NotificationViewerRepository extends EntityRepository
             ->andWhere('notificationViewer.viewerId = :viewerId')
             ->orderBy('notification.creationDate', 'DESC')
             ->setParameter("viewerId", $viewerId);
-
-        if (!empty($max)) {
-            $queryBuilder->setMaxResults($max);
-        }
+        $this->addVisibleTypesRestriction($queryBuilder, $visibleTypes);
 
         return $queryBuilder->getQuery();
     }
 
-    public function findUserLatestNotifications ($viewerId, $max)
-    {
-        $query = $this->findUserLatestNotifications($viewerId, $max);
-
-        return $query->getArrayResult();
-    }
-
-    public function markAsViewed ($notificationViewIds)
+    public function markAsViewed($notificationViewIds)
     {
         $queryBuilder = $this->createQueryBuilder('notificationViewer');
         $queryBuilder
@@ -40,16 +31,36 @@ class NotificationViewerRepository extends EntityRepository
         $queryBuilder->getQuery()->execute();
     }
 
-    public function countUnviewedNotifications ($userId)
+    public function countUnviewedNotifications($userId, $visibleTypes)
     {
         $queryBuilder = $this->createQueryBuilder('notificationViewer');
         $queryBuilder
             ->select('COUNT(notificationViewer.id) AS total')
+            ->join('notificationViewer.notification', 'notification')
             ->andWhere('notificationViewer.viewerId = :viewerId')
             ->andWhere($queryBuilder->expr()->neq('notificationViewer.status', ':viewed'))
             ->setParameter('viewed', true)
             ->setParameter('viewerId', $userId);
+        $this->addVisibleTypesRestriction($queryBuilder, $visibleTypes);
 
         return $queryBuilder->getQuery()->getSingleResult();
+    }
+
+    private function addVisibleTypesRestriction($qb, $visibleTypes)
+    {
+        if (count($visibleTypes) >0) {
+            foreach ($visibleTypes as $name => $val) {
+                if (!$val) {
+                    $qb->andWhere(
+                        $qb
+                            ->expr()
+                            ->notLike(
+                                'notification.actionKey',
+                                $qb->expr()->literal('%'.$name.'%')
+                            )
+                    );
+                }
+            }
+        }
     }
 }

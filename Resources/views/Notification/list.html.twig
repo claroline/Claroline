@@ -8,18 +8,16 @@
             </div>
             {% if pager.haveToPaginate %}
                 <div>
-                    {{
-                    pagerfanta(
+                    {{ pagerfanta(
                     pager,
                     'twitter_bootstrap_translated',
                     {
                     'proximity' : 1,
                     'routeName': 'icap_notification_view'
                     }
-                    )
-                    }}
+                    ) }}
                 </div>
-            {%  endif %}
+            {% endif %}
 
             {% block notification_widget %}
                 {% if pager.getNbResults() > 0 %}
@@ -36,18 +34,16 @@
 
             {% if pager.haveToPaginate %}
                 <div>
-                    {{
-                    pagerfanta(
+                    {{ pagerfanta(
                     pager,
                     'twitter_bootstrap_translated',
                     {
                     'proximity' : 1,
                     'routeName': 'icap_notification_view'
                     }
-                    )
-                    }}
+                    ) }}
                 </div>
-            {%  endif %}
+            {% endif %}
         </div>
     </div>
 

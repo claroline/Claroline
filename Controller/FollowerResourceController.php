@@ -22,7 +22,11 @@ class FollowerResourceController extends Controller
      */
     public function renderFormAction($resourceId, $resourceClass, $user)
     {
-        $followerResource = $this->get('icap.notification.manager')->getFollowerResource($user->getId(), $resourceId, $resourceClass);
+        $followerResource = $this->get('icap.notification.manager')->getFollowerResource(
+            $user->getId(),
+            $resourceId,
+            $resourceClass
+        );
 
         $hasActiveNotifications = false;
         if (!empty($followerResource)) {
@@ -31,9 +35,9 @@ class FollowerResourceController extends Controller
 
         return array(
             'hasActiveNotifications' => $hasActiveNotifications,
-            'resourceId' => $resourceId,
-            'resourceClass' => base64_encode($resourceClass),
-            'userId' => $user->getId()
+            'resourceId'             => $resourceId,
+            'resourceClass'          => base64_encode($resourceClass),
+            'userId'                 => $user->getId()
         );
     }
 

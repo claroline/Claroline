@@ -25,8 +25,7 @@ class LogListener
     public function __construct(
         NotificationManager $notificationManager,
         PlatformConfigurationHandler $ch
-    )
-    {
+    ) {
         $this->notificationManager = $notificationManager;
         $this->ch = $ch;
     }
