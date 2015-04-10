@@ -73,7 +73,7 @@ class Updater040500 extends Updater
         $iterableResult = $nodesQuery->iterate();
         foreach ($iterableResult as $row) {
             $node = $row[0];
-            $resourceManager->reorder($node);
+            $resourceManager->reorder($node, true);
 
             $nbNodes++;
             $currentBatchNodes++;

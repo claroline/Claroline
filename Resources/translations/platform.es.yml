@@ -211,6 +211,7 @@ copiable: 'Copiable'
 copy: 'Copiar'
 core_packages: Core packages
 create: 'Crear'
+create_and_update: 'Crear y actualizar'
 create_category: 'Crear una categoría'
 create_facet: Crear una faceta
 create_field: Crear un campo
@@ -219,6 +220,7 @@ create_new_admin_tag: 'Crear una etiqueta de administrador'
 create_new_home_tab: 'Crear una pestaña'
 create_new_tag: 'Crear una etiqueta'
 create_new_user_account: 'Nuevo usuario'
+create_only: 'Crear sólo'
 create_role: Crear un rol
 create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
@@ -385,9 +387,11 @@ groups: 'Grupos'
 groups_list: 'Lista de grupos'
 groups_per_page: 'Grupos por página'
 groups_registration_in_workspace: 'Inscripción de un grupo a un espacio de trabajo'
+has_been_created: 'ha sido creado'
 has_been_put_in_category: 'ha sido agregado en una categoría'
 has_been_suscribed_with_role: 'ha sido inscrito en un rol'
 has_been_suscribed_with_role_group: 'ha sido inscrito con un rol'
+has_been_updated: 'ha sido actualizado'
 has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
 hide: 'Ocultar'
@@ -499,6 +503,7 @@ missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
 mixed: Mezclado
+mode: 'Modo'
 model: Modelo
 month.April: 'Abril'
 month.August: 'Agosto'
@@ -865,6 +870,10 @@ unpublish: Despublicar
 unpublished: No publicado
 unregister: 'Desinscribir'
 unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
+unregister_group_confirm_message: '¿Está seguro que desea desinscribir este grupo?'
+unregister_group_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% grupos?'
+unregister_user_confirm_message: '¿Está seguro que desea desinscribir este usuario?'
+unregister_user_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% usuarios?'
 unregistered: 'No inscritos'
 unregistered_groups: 'Grupos no inscritos'
 unregistered_users: 'Usuarios no inscritos'
@@ -1018,3 +1027,7 @@ updated_by: updated_by
 display_at_registration: display_at_registration
 workspace_max_users: workspace_max_users
 workspace_edit_form_endDate : workspace_edit_form_endDate
+user_info: user_info
+activate_account_click: activate_account_click
+activate_account: activate_account
+please_validate_your_account: please_validate_your_account

@@ -786,8 +786,8 @@ class ResourceController
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @param ResourceNode $node
-     * @param ResourceNode $next
      * @param User         $user
+     * @param integer      $index
      *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      * @return \Symfony\Component\HttpFoundation\Response

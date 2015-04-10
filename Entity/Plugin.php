@@ -94,6 +94,11 @@ class Plugin
         $this->bundleName = $name;
     }
 
+    public function getSfName()
+    {
+        return $this->vendorName . $this->bundleName;
+    }
+
     public function setHasOptions($hasOptions)
     {
         $this->hasOptions = $hasOptions;

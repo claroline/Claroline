@@ -13,71 +13,78 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class WorkspaceRegistrationController extends Controller
 {
-    private $userManager;
-    private $roleManager;
+    private $adminWorkspaceRegistrationTool;
+    private $formFactory;
     private $groupManager;
+    private $roleManager;
+    private $sc;
+    private $session;
     private $toolManager;
+    private $translator;
+    private $userManager;
     private $workspaceManager;
     private $workspaceTagManager;
-    private $formFactory;
-    private $translator;
-    private $sc;
-    private $adminWorkspaceRegistrationTool;
 
     /**
      * @DI\InjectParams({
-     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
-     *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
-     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
+     *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
+     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
+     *     "sc"                  = @DI\Inject("security.context"),
+     *     "session"             = @DI\Inject("session"),
+     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"          = @DI\Inject("translator"),
-     *     "sc"                  = @DI\Inject("security.context")
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager")
      * })
      */
     public function __construct(
-        UserManager $userManager,
-        RoleManager $roleManager,
-        GroupManager $groupManager,
-        ToolManager $toolManager,
-        WorkspaceManager $workspaceManager,
-        WorkspaceTagManager $workspaceTagManager,
         FormFactory $formFactory,
+        GroupManager $groupManager,
+        RoleManager $roleManager,
+        SecurityContextInterface $sc,
+        SessionInterface $session,
+        ToolManager $toolManager,
         Translator $translator,
-        SecurityContextInterface $sc
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager,
+        WorkspaceTagManager $workspaceTagManager
     )
     {
-        $this->userManager         = $userManager;
-        $this->roleManager         = $roleManager;
-        $this->groupManager        = $groupManager;
-        $this->workspaceManager    = $workspaceManager;
+        $this->adminWorkspaceRegistrationTool = $toolManager->getAdminToolByName(
+            'registration_to_workspace'
+        );
+        $this->formFactory = $formFactory;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
+        $this->sc = $sc;
+        $this->session = $session;
+        $this->toolManager = $toolManager;
+        $this->translator = $translator;
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
-        $this->formFactory         = $formFactory;
-        $this->translator          = $translator;
-        $this->toolManager         = $toolManager;
-        $this->sc                  = $sc;
-        $this->adminWorkspaceRegistrationTool
-            = $this->toolManager->getAdminToolByName('registration_to_workspace');
     }
 
     /**
@@ -469,6 +476,196 @@ class WorkspaceRegistrationController extends Controller
         }
 
         return new Response($msg, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "workspace/{workspace}/users/unregistration/management/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *    name="claro_admin_workspace_users_unregistration_management",
+     *    defaults={"search"="","page"=1,"max"=50,"orderedBy"="username","order"="ASC"},
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param Workspace $workspace
+     * @param string $search
+     * @param int $page
+     * @param int $max
+     * @param string $orderedBy
+     * @param string $order
+     *
+     * @return Response
+     */
+    public function workspaceUsersUnregistrationManagementAction(
+        Workspace $workspace,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'username',
+        $order = 'ASC'
+    )
+    {
+        $this->checkOpen();
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $pager = $search === '' ?
+            $this->userManager->getByRolesIncludingGroups(
+                $wsRoles,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            ) :
+            $this->userManager->getByRolesAndNameIncludingGroups(
+                $wsRoles,
+                $search,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            );
+
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *    "workspace/{workspace}/groups/unregistration/management/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *    name="claro_admin_workspace_groups_unregistration_management",
+     *    defaults={"search"="","page"=1,"max"=50,"orderedBy"="name","order"="ASC"},
+     *    options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     *
+     * @param Workspace $workspace
+     * @param string $search
+     * @param int $page
+     * @param int $max
+     * @param string $orderedBy
+     * @param string $order
+     *
+     * @return Response
+     */
+    public function workspaceGroupsUnregistrationManagementAction(
+        Workspace $workspace,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        $this->checkOpen();
+        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $pager = ($search === '') ?
+            $this->groupManager->getGroupsByRoles(
+                $wsRoles,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            ) :
+            $this->groupManager->getGroupsByRolesAndName(
+                $wsRoles,
+                $search,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            );
+
+        return array(
+            'workspace' => $workspace,
+            'pager' => $pager,
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *    "unregistration/management/workspace/{workspace}/roles/users",
+     *    name="claro_admin_unsubscribe_users_from_workspace",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
+     * )
+     *
+     * @param Workspace $workspace
+     * @param User[] $users
+     *
+     * @return Response
+     */
+    public function unsubscribeMultipleUsersFromWorkspaceAction(
+        Workspace $workspace,
+        array $users
+    )
+    {
+        $this->checkOpen();
+        $this->roleManager->resetWorkspaceRoleForSubjects($users, $workspace);
+        $sessionFlashBag = $this->session->getFlashBag();
+
+        foreach ($users as $user) {
+            $msg = $user->getFirstName() . ' ' . $user->getLastName() . ' ';
+            $msg .= $this->translator->trans(
+                'has_been_unregistered_from_workspace',
+                array(),
+                'platform'
+            );
+            $sessionFlashBag->add('success', $msg);
+        }
+
+        return new Response('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *    "unregistration/management/workspace/{workspace}/roles/groups",
+     *    name="claro_admin_unsubscribe_groups_from_workspace",
+     *    options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "name" = "subjectIds"}
+     * )
+     *
+     * @param Workspace $workspace
+     * @param Group[] $groups
+     *
+     * @return Response
+     */
+    public function unsubscribeMultipleGroupsFromWorkspaceAction(
+        Workspace $workspace,
+        array $groups
+    )
+    {
+        $this->checkOpen();
+        $this->roleManager->resetWorkspaceRoleForSubjects($groups, $workspace);
+        $sessionFlashBag = $this->session->getFlashBag();
+
+        foreach ($groups as $group) {
+            $msg = $group->getName() . ' ';
+            $msg .= $this->translator->trans(
+                'has_been_unregistered_from_workspace',
+                array(),
+                'platform'
+            );
+            $sessionFlashBag->add('success', $msg);
+        }
+
+        return new Response('success', 200);
     }
 
     private function checkOpen()

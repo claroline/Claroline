@@ -39,7 +39,7 @@ class Theme
     /**
      * @var string
      *
-     * @ORM\Column()
+     * @ORM\Column(nullable=true)
      */
     private $path;
 
