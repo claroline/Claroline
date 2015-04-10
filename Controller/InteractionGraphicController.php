@@ -30,6 +30,14 @@ class InteractionGraphicController extends Controller
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        
+        //Get the lock category
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
+        if (empty($Locker)) {
+            $catLocker = "";
+        } else {
+            $catLocker = $Locker[0];
+        }
 
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
@@ -87,7 +95,8 @@ class InteractionGraphicController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $catLocker
             )
         );
     }
