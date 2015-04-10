@@ -1,8 +1,9 @@
 <div {% if not viewMode %}data-widget="widget" {% endif %} class="panel panel-default widget-panel{% if not viewMode %} ng-cloak{% endif %}">
-    <div class="panel-heading"{% if not viewMode %} {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %} data-ng-show="!widget.isEditing()" data-ng-mouseover="showAction = true" data-ng-mouseleave="showAction = false"{% endif %}>
+    <div class="panel-heading"{% if not viewMode %} {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %}
+        data-ng-show="!widget.isEditing()"{% endif %}>
         {% verbatim %}{{ widget.label }}{% endverbatim %}
         {% if editMode %}
-        <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating() && showAction">
+        <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating()">
             <button class="widget-action btn btn-xs btn-default draggable-handle">
                 <span class="fa fa-arrows"></span>
             </button>
