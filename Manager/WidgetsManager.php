@@ -153,6 +153,7 @@ class WidgetsManager
     public function getNewWidget(Portfolio $portfolio, $type)
     {
         $widget = $this->widgetFactory->createWidget($portfolio, $type);
+        $widget->setId(uniqid());
 
         return $widget;
     }

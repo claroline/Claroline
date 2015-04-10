@@ -47,7 +47,6 @@ class AbstractWidgetRepository extends EntityRepository
         return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
 
-
     /**
      * @param Portfolio $portfolio
      * @param bool      $executeQuery

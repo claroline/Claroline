@@ -54,9 +54,6 @@ class WidgetFactory
                 ->setPortfolio($portfolio)
                 ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
 
-            $maxRow = $this->abstractWidgetRepository->findMaxRow($widget->getPortfolio(), $widget->getColumn());
-            $widget->setRow($maxRow['maxRow'] + 1);
-
             return $widget;
         }
 
