@@ -134,6 +134,6 @@ $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
     if (typeOpen[$(this).val()] == 4) {
         showOpenWord();
     } else if (typeOpen[$(this).val()] == 2) {
-        showOpenWord();
+        showLongResponse();
     }
 });
