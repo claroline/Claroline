@@ -44,14 +44,14 @@ abstract class AbstractWidget
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 1})
      */
-    protected $column = 1;
+    protected $column;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="row", type="integer", options={"default" = 1})
      */
-    protected $row = 1;
+    protected $row;
 
     /**
      * @var integer
@@ -101,6 +101,18 @@ abstract class AbstractWidget
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return AbstractWidget
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**

@@ -58,6 +58,10 @@ portfolioApp
                     console.log(error);
                 }
 
+                if (widget.isNew()) {
+                    delete widget.id;
+                }
+
                 return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             create: function(portfolioId, type, column) {
