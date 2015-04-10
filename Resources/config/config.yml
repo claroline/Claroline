@@ -5,8 +5,8 @@ plugin:
     resources:
         - class: Icap\WikiBundle\Entity\Wiki
           name: icap_wiki          
-          is_browsable: false
           is_exportable: false
+          is_notifiable: true
           icon: icap_wiki_icon.png
           activity_rules:
             - action: resource-read
