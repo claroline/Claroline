@@ -5,7 +5,7 @@ namespace Icap\NotificationBundle\Manager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\FollowerResource;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Entity\Notification;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Doctrine\ORM\EntityManager;

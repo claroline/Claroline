@@ -5,7 +5,7 @@ namespace Icap\NotificationBundle\Listener;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
 
 /**
