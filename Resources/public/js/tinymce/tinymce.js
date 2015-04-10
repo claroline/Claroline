@@ -20,6 +20,7 @@
 
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
+    tinymce.PluginManager.load('inwicast', home.asset + 'bundles/inwicastclarolineplugin/js/tinymce/plugins/inwicast/plugin.js');
     tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
     tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
 
@@ -385,12 +386,12 @@
             'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
             'searchreplace wordcount visualblocks visualchars fullscreen',
             'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons code -mention -accordion'
+            'template paste textcolor emoticons code -mention -accordion -inwicast'
         ],
         'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
                     'resourcePicker fileUpload | fullscreen displayAllButtons',
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
-                    'image media link charmap | print preview code',
+                    'image media inwicast link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
