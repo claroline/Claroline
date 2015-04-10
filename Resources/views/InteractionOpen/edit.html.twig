@@ -67,10 +67,12 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
-            insertStyle('{{ typeOpen|raw }}');
+            insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+            openEdit({{ nbResponses }});
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>

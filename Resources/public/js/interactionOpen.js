@@ -1,41 +1,46 @@
 var typeOpen;
 var container;
 var tablewr;
+var deleteWr;
 
-function insertStyle(tOpen) {
+function insertStyle(tOpen, deleteTrans) {
 
     typeOpen = JSON.parse(tOpen);
-
-    $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
-
-     $('#ujm_exobundle_interactionopentype_typeopenquestion').children('option').each(function() {
-         if (typeOpen[$(this).val()] == 2) {
-             $(this).prop('selected', true);
-         } else {
-             //$(this).attr('disabled', 'disabled');
-         }
-     });
-}
-
-function CheckForm() {
-    /*if ($("*[id$='_penalty']").length > 0) {
-        $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
-    }*/
-}
-
-function formWordResponse() {
-
     container = $('div#ujm_exobundle_interactionopentype_wordResponses');
     tablewr = $('#tablewr');
+    deleteWr = deleteTrans;
+
+    $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
     $('.form-collection-add').remove();
 
     $('#add_wr').click(function (e) {
         $('#tablewr').find('tbody').append('<tr></tr>');
-        deleteWr = 'Meuh !'
         addWr(container, deleteWr);
         e.preventDefault(); // prevent add # in the url
         return false;
     });
+}
+
+function formWordResponseEdit(nbResponses) {
+    // Get the form field to fill rows of the choices' table
+    container.children().first().children('div').each(function () {
+
+        // Add a row to the table
+        $('#tablewr').find('tbody').append('<tr></tr>');
+
+         $(this).find('.row').each(function () {
+
+            addRowToTablewr($(this));
+
+        });
+        if (nbResponses == 0) {
+            // Add the delete button
+            $('#tablewr').find('tr:last').append('<td class="classic"></td>');
+            addDeleteMeuh($('#tablewr').find('td:last'), deleteWr);
+        }
+
+    });
+    container.remove();
 }
 
 // Add a choice
@@ -101,15 +106,34 @@ function addRowToTablewr(row) {
     }
 }
 
+function openEdit(nbResponses) {
+    //tab[typeId]=code
+    //selectionner bonne valeur dans liste
+    codeOpen = typeOpen[$('#ujm_exobundle_interactionopentype_typeopenquestion').val()];
+    $('#ujm_exobundle_interactionopentype_typeopenquestion').children('option').each(function() {
+         if (typeOpen[$(this).val()] == 4) {
+             showOpenWord();
+             formWordResponseEdit(nbResponses);
+         }
+     });
+}
+
+function showOpenWord () {
+    $('#qOpenOneWord').css('display', 'block');
+    $('#qOpenScoreMaxLongResp').css('display', 'none');
+    $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
+}
+
+function showLongResponse () {
+    $('#qOpenScoreMaxLongResp').css('display', 'block');
+     $('#qOpenOneWord').css('display', 'none');
+     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
+}
+
 $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
     if (typeOpen[$(this).val()] == 4) {
-         $('#qOpenOneWord').css('display', 'block');
-         $('#qOpenScoreMaxLongResp').css('display', 'none');
-         $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
-         formWordResponse();
-     } else if (typeOpen[$(this).val()] == 2) {
-         $('#qOpenScoreMaxLongResp').css('display', 'block');
-         $('#qOpenOneWord').css('display', 'none');
-         $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
-     }
+        showOpenWord();
+    } else if (typeOpen[$(this).val()] == 2) {
+        showOpenWord();
+    }
 });
