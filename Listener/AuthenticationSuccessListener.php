@@ -98,9 +98,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $this->userManager->setUserInitDate($user);
         }
 
-        $this->eventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->securityContext->setToken($token);
+        $this->userManager->logUser($user);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -109,7 +107,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
         if ($uri = $request->getSession()->get('redirect_route')) {
             $request->getSession()->remove('redirect_route');
-            
+
             return new RedirectResponse($uri);
         }
 

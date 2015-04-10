@@ -33,6 +33,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -146,7 +147,18 @@ class UserManager
         $this->objectManager->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
-            $this->mailManager->sendCreationMessage($user);
+            //send a validation by hash
+            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
+                $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+                $user->setResetPasswordHash($password);
+                $user->setIsEnabled(false);
+                $this->objectManager->persist($user);
+                $this->objectManager->flush();
+                $this->mailManager->sendEnableAccountMessage($user);
+            } else {
+            //don't change anything
+                $this->mailManager->sendCreationMessage($user);
+            }
         }
 
         return $user;
@@ -1252,6 +1264,28 @@ class UserManager
         }
 
         return $returnValues;
+    }
+
+    /**
+     * Activates a User and set the init date to now.
+     */
+    public function activateUser(User $user)
+    {
+        $user->setIsEnabled(true);
+        $user->setResetPasswordHash(null);
+        $user->setInitDate(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+    /**
+     * Logs the current user
+     */
+    public function logUser(User $user)
+    {
+        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->container->get('security.context')->setToken($token);
     }
 
     public function getUsersForUserPicker(

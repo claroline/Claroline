@@ -1030,3 +1030,6 @@ display_at_registration: display_at_registration
 workspace_max_users: workspace_max_users
 workspace_edit_form_endDate : workspace_edit_form_endDate
 user_info: user_info
+activate_account_click: activate_account_click
+activate_account: activate_account
+please_validate_your_account: please_validate_your_account

@@ -1190,3 +1190,6 @@ display_at_registration: Display at registration
 workspace_max_users: Maximum number of user per workspace
 workspace_edit_form_endDate : Expiration date
 user_info: User informations
+activate_account_click: Click here to activate your account
+activate_account: Activate your account
+please_validate_your_account: An email was sent for you to activate your account

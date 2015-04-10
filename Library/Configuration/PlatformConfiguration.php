@@ -61,6 +61,7 @@ class PlatformConfiguration
     private $repositoryApi;
     private $workspaceMaxUsers;
     private $autoLogginAfterRegistration;
+    private $registrationMailValidation;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -628,5 +629,15 @@ class PlatformConfiguration
     public function getAutoLogginAfterRegistration()
     {
         return $this->autoLogginAfterRegistration;
+    }
+
+    public function setRegistrationMailValidation($boolean)
+    {
+        $this->registrationMailValidation = $boolean;
+    }
+
+    public function getRegistrationMailValidation()
+    {
+        return $this->registrationMailValidation ;
     }
 }

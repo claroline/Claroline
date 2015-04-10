@@ -66,6 +66,11 @@ class ResourceType
     protected $isExportable = false;
 
     /**
+     * @ORM\Column(name="is_notifiable", type="boolean", options={"default":false})
+     */
+    protected $isNotifiable = false;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -161,6 +166,25 @@ class ResourceType
     public function isExportable()
     {
         return $this->isExportable;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsNotifiable()
+    {
+        return $this->isNotifiable;
+    }
+
+    /**
+     * @param bool $isNotifiable
+     * @return $this
+     */
+    public function setNotifiable($isNotifiable)
+    {
+        $this->isNotifiable = $isNotifiable;
+
+        return $this;
     }
 
     public function getMaskDecoders()
