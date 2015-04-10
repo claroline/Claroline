@@ -559,6 +559,16 @@ class RoleManager
     }
 
     /**
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return \Claroline\CoreBundle\Entity\Role[]
+     */
+    public function getWorkspaceRolesByUser(User $user, $executeQuery = true)
+    {
+        return $this->roleRepo->findWorkspaceRolesByUser($user, $executeQuery);
+    }
+
+    /**
      * @param string $search
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
@@ -905,6 +915,11 @@ class RoleManager
     public function getWorkspaceRoleWithToolAccess(Workspace $workspace)
     {
         return $this->roleRepo->findWorkspaceRoleWithToolAccess($workspace);
+    }
+
+    public function getRoleByUserAndRoleName(User $user, $roleName, $executeQuery = true)
+    {
+        return $this->roleRepo->findRoleByUserAndRoleName($user, $roleName, $executeQuery);
     }
 
     public function getWorkspaceRoleByNameOrTranslationKey(

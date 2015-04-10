@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -30,7 +29,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
@@ -1254,5 +1252,81 @@ class UserManager
         }
 
         return $returnValues;
+    }
+
+    public function getUsersForUserPicker(
+        User $user,
+        $search = '',
+        $withMail = false,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC',
+        array $searchedWorkspaces = array(),
+        array $searchedRoles = array(),
+        array $searchedGroups = array()
+    )
+    {
+        $roles = $this->generateRoleRestrictions($user);
+        $groups = $this->generateGroupRestrictions($user);
+        $users = $this->userRepo->findUsersForUserPicker(
+            $search,
+            $withMail,
+            $orderedBy,
+            $order,
+            $roles,
+            $groups,
+            $searchedWorkspaces,
+            $searchedRoles,
+            $searchedGroups
+        );
+
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+    }
+
+    private function generateRoleRestrictions(User $user)
+    {
+        $restrictions = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_AMDIN');
+
+        if (is_null($adminRole)) {
+            $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
+
+            foreach ($wsRoles as $wsRole) {
+                $wsRoleId = $wsRole->getId();
+                $workspace = $wsRole->getWorkspace();
+                $guid = $workspace->getGuid();
+                $managerRoleName = 'ROLE_WS_MANAGER_' . $guid;
+
+                if ($wsRole->getName() === $managerRoleName) {
+                    $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
+
+                    foreach ($workspaceRoles as $workspaceRole) {
+                        $workspaceRoleId = $workspaceRole->getId();
+
+                        if (!isset($restrictions[$workspaceRoleId])) {
+                            $restrictions[$workspaceRoleId] = $workspaceRole;
+                        }
+                    }
+                } elseif (!isset($restrictions[$wsRoleId])) {
+                    $restrictions[$wsRoleId] = $wsRole;
+                }
+            }
+        }
+
+        return $restrictions;
+    }
+
+    private function generateGroupRestrictions(User $user)
+    {
+        $restrictions = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_AMDIN');
+
+        if (is_null($adminRole)) {
+
+            $restrictions = $user->getGroups()->toArray();
+        }
+
+        return $restrictions;
     }
 }
