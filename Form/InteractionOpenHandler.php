@@ -75,8 +75,12 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     public function processUpdate($originalInterOpen)
     {
+        $originalWrs = array();
         $originalHints = array();
 
+        foreach ($originalInterOpen->getWordResponses() as $wr) {
+            $originalWrs[] = $wr;
+        }
         foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
@@ -85,7 +89,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
             $this->form->handleRequest($this->request);
 
             if ( $this->form->isValid() ) {
-                $this->onSuccessUpdate($this->form->getData(), $originalHints);
+                $this->onSuccessUpdate($this->form->getData(), $originalWrs, $originalHints);
 
                 return true;
             }
@@ -104,13 +108,32 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
     {
         $arg_list = func_get_args();
         $interOpen = $arg_list[0];
-        $originalHints = $arg_list[1];
+        $originalWrs = $arg_list[1];
+        $originalHints = $arg_list[2];
+
+        foreach ($interOpen->getWordResponses() as $wr) {
+            foreach ($originalWrs as $key => $toDel) {
+                if ($toDel->getId() == $wr->getId()) {
+                    unset($originalWrs[$key]);
+                }
+            }
+        }
+
+        foreach ($originalWrs as $wr) {
+            $interOpen->getWordResponses()->removeElement($wr);
+            $this->em->remove($wr);
+        }
 
         $this->modifyHints($interOpen, $originalHints);
 
         $this->em->persist($interOpen);
         $this->em->persist($interOpen->getInteraction()->getQuestion());
         $this->em->persist($interOpen->getInteraction());
+
+        foreach ($interOpen->getWordResponses() as $wr) {
+            $interOpen->addWordResponse($wr);
+            $this->em->persist($wr);
+        }
 
         $this->em->flush();
 
