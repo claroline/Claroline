@@ -34,6 +34,15 @@ class InteractionMatchingController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        
+        //Get the lock category
+        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
+        if (empty($Locker)) {
+            $catLocker = "";
+        } else {
+            $catLocker = $Locker[0];
+        }
 
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
@@ -84,7 +93,8 @@ class InteractionMatchingController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $catLocker
             )
         );
 

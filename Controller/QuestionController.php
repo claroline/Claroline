@@ -384,20 +384,12 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-        //Get the lock category
-        $user= $this->container->get('security.context')->getToken()->getUser()->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
-        if (empty($Locker)){
-            $catLocker="";
-        }
-        else{ 
-            $catLocker=$Locker[0]; 
-        }
+        
         
         $variables = array(
             'exoID' => $exoID,
             'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
-            'locker' => $catLocker
+            'locker' => $this->getLockCategory(),
         );
 
         $em = $this->getDoctrine()->getManager();
@@ -436,7 +428,8 @@ class QuestionController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $this->getLockCategory(),
             )
         );
     }
@@ -460,16 +453,6 @@ class QuestionController extends Controller
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.context')->getToken()->getUser();
         $catID    = -1;
-
-         //Get the lock category
-        $idUser=  $user->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($idUser);
-        if (empty($Locker)){
-            $catLocker="";
-        }
-        else{ 
-            $catLocker=$Locker[0]; 
-        }
         
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
@@ -523,7 +506,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeQCM'       ] = json_encode($typeQCM);
                     $variables['exoID']          = $exoID;
-                    $variables['locker']          = $catLocker;
+                    $variables['locker'] = $this->getLockCategory();
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -561,7 +544,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['position']       = $position;
                     $variables['exoID']          = $exoID;
-                    $variables['locker']          = $catLocker;
+                    $variables['locker'] = $this->getLockCategory();
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -590,7 +573,7 @@ class QuestionController extends Controller
                         'nbResponses' => $nbResponses,
                         'linkedCategory' => $linkedCategory,
                         'exoID' => $exoID,
-                        'locker' => $catLocker
+                        'locker' => $this->getLockCategory()                           
                         )
                     );
 
@@ -621,7 +604,7 @@ class QuestionController extends Controller
                     $variables['linkedCategory'] = $linkedCategory;
                     $variables['typeOpen']       = json_encode($typeOpen);
                     $variables['exoID']          = $exoID;
-                    $variables['locker']          = $catLocker;
+                    $variables['locker'] = $this->getLockCategory();
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -680,7 +663,7 @@ class QuestionController extends Controller
                     $variables['correspondence']  = json_encode($correspondence);
                     $variables['tableLabel']     = json_encode($tableLabel);
                     $variables['tableProposal']  = json_encode($tableProposal);
-                    $variables['locker']          = $catLocker;
+                    $variables['locker']         = $this->getLockCategory();
 
                     if ($exoID != -1) {
                         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -2220,6 +2203,22 @@ class QuestionController extends Controller
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
 
+    }
+    
+     /**
+     * Get the lock category
+     * 
+     * @return the name of category locked
+     */
+    private function getLockCategory() {
+        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
+        if (empty($Locker)) {
+            $catLocker = "";
+        } else {
+            $catLocker = $Locker[0];
+        }
+        return $catLocker;
     }
 
     /**
