@@ -96,6 +96,7 @@ portfolioApp
                 var widget = widgetFactory.getWidget(portfolioId, type);
                 if (this.emptyWidgets[type]) {
                     newWidget = new widget(angular.copy(this.emptyWidgets[type]));
+                    newWidget.id = new Date().getTime();
                     this.edit(newWidget);
                 }
                 else {
