@@ -1,0 +1,32 @@
+{% for favourite in favourites %}
+    <div data-resource-node-id="{{ favourite.resourceNode.id }}" class="resource-node">
+            {% for path in getFullResourcePath(favourite.resourceNode.path) %}
+                <a href="{{ path.nodeOpenUrl }}">{{ path.nodeName }}</a>
+                {% if loop.last != true %} / {% endif %}
+            {% endfor %}
+            <span class="fa fa-star pull-right favourite-resource-node" style="color:gold;cursor: pointer;" title="{{ 'remove_from_favourite'|trans({}, 'widget') }}"></span>
+    </div>
+{% else %}
+    <span>{{ 'widget_no_favourite'|trans({}, 'widget') }}</span>
+{% endfor %}
+
+<script>
+    (function () {
+        $('.favourite-resource-node').click(function () {
+            var star = $(this);
+            var resourceNode = star.parent();
+            var resourceNodeId = resourceNode.data('resourceNodeId');
+            var routing = window.Routing.generate('hevinci_delete_favourite', {'node': resourceNodeId});
+
+            $.ajax({
+                url: routing,
+                type: 'GET',
+                success : function () {
+                    resourceNode.slideUp('fast', function () {
+                        resourceNode.remove();
+                    });
+                }
+            });
+        });
+    }) ();
+</script>
