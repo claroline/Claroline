@@ -44,14 +44,14 @@ abstract class AbstractWidget
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 0})
      */
-    protected $column = 0;
+    protected $column;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="row", type="integer", options={"default" = 0})
      */
-    protected $row = 0;
+    protected $row;
 
     /**
      * @var integer

@@ -42,6 +42,13 @@ portfolioApp
                 }
             },
             save: function(widget) {
+                if (null == widget.row) {
+                    widget.row = 0;
+                }
+                if (null == widget.col) {
+                    widget.col = 0;
+                }
+
                 widget.setUpdatingMode(true);
                 delete widget.copy;
 

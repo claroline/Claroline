@@ -23,6 +23,14 @@ portfolioApp
         };
 
         $scope.$watchGroup(['widget.row','widget.col','widget.sizeX','widget.sizeY'], function(newValue, oldValue) {
+            if (null == newValue[0]) {
+                $scope.widget.row = oldValue[0];
+            }
+
+            if (null == newValue[1]) {
+                $scope.widget.col = oldValue[1];
+            }
+
             if (newValue !== oldValue) {
                 $scope.widget.toSave = true;
             }
