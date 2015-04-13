@@ -2,16 +2,12 @@
 
 namespace HeVinci\FavouriteBundle\Listener;
 
-use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Templating\EngineInterface;
@@ -21,44 +17,32 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class FavouriteListener extends ContainerAware
 {
-    private $formFactory;
     private $om;
-    private $request;
-    private $templating;
     private $sc;
     private $router;
     private $templatingEngine;
     /**
      * @DI\InjectParams({
-     *     "formFactory"        = @DI\Inject("form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "templating"         = @DI\Inject("templating"),
      *     "sc"                 = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *      "templatingEngine" = @DI\Inject("templating")
      * })
      */
     public function __construct(
-        FormFactory $formFactory,
         ObjectManager $om,
-        RequestStack $requestStack,
-        TwigEngine $templating,
         SecurityContext $sc,
         Router $router,
         EngineInterface $templatingEngine
     ){
-        $this->formFactory = $formFactory;
         $this->om = $om;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->templating = $templating;
         $this->sc = $sc;
         $this->router = $router;
         $this->templatingEngine = $templatingEngine;
     }
 
     /**
-     * @DI\Observe("resource_action_favourite_hevinci")
+     * @DI\Observe("resource_action_hevinci_favourite")
      *
      * @param CustomActionResourceEvent $event
      */
@@ -69,13 +53,9 @@ class FavouriteListener extends ContainerAware
         $isFavourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
             ->findOneBy(array('user' => $user, 'resourceNode' => $resourceNode));
 
-        if ($isFavourite) {
-            $isFavourite = 1;
-        } else {
-            $isFavourite = 0;
-        }
+        $isFavourite = ($isFavourite) ? 1 : 0;
 
-        $route = $this->router->generate('hevinci_favourite_check', array(
+        $route = $this->router->generate('hevinci_favourite_index', array(
                 'isFavourite' => $isFavourite,
                 'id' => $event->getResource()->getResourceNode()->getId()
             ));
@@ -84,7 +64,7 @@ class FavouriteListener extends ContainerAware
     }
 
     /**
-     * @DI\Observe("widget_hevinci_favourite")
+     * @DI\Observe("widget_hevinci_favourite_widget")
      *
      * @param DisplayWidgetEvent $event
      */

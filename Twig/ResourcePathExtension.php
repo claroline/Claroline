@@ -14,7 +14,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @Service
  * @Tag("twig.extension")
  */
-class HeVinciFavouriteExtension extends \Twig_Extension
+class ResourcePathExtension extends \Twig_Extension
 {
     protected $doctrine;
     protected $generator;
@@ -33,14 +33,14 @@ class HeVinciFavouriteExtension extends \Twig_Extension
 
     public function getFullResourcePath($fullPath)
     {
-        $nameAndIdOfTheResource = explode('`', $fullPath);
-        unset($nameAndIdOfTheResource[count($nameAndIdOfTheResource)-1]);
+        $segments = explode('`', $fullPath);
+        unset($segments[count($segments)-1]);
 
         $fullResourcePath = array();
 
-        foreach ($nameAndIdOfTheResource as $part) {
-            $partsOfNode = explode('-', $part);
-            $nodeId = $partsOfNode[count($partsOfNode)-1];
+        foreach ($segments as $segment) {
+            $segmentsOfNode = explode('-', $segment);
+            $nodeId = $segmentsOfNode[count($segmentsOfNode)-1];
 
             $node = $this->doctrine->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->find($nodeId);
@@ -59,7 +59,7 @@ class HeVinciFavouriteExtension extends \Twig_Extension
             }
 
             $fullResourcePath[] = array(
-                'nodeName' => substr($part, 0, -(count($nodeId)+1)),
+                'nodeName' => substr($segment, 0, -(count($nodeId)+1)),
                 'nodeOpenUrl' => $routing
             );
         }
@@ -76,6 +76,6 @@ class HeVinciFavouriteExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'hevinci_favourite';
+        return 'hevinci_favourite_widget';
     }
 }

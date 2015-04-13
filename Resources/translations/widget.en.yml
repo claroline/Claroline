@@ -1,8 +1,7 @@
-hevinci_favourite: Favourite
+hevinci_favourite_widget: Favourite
+favourite: Favourite
 widget_no_favourite: There is no favourites yet.
 add_to_favourite: Add to favourites
 remove_from_favourite: Remove from favourites
-already_favourite: This resource already exists in your favourites.
 favourite_added: This resource has been added to your favourites.
-no_favourite: This resource doesn't exist in your favourites.
 favourite_deleted: This resource has been deleted from your favourites.

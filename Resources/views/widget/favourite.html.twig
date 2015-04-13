@@ -21,8 +21,10 @@
             $.ajax({
                 url: routing,
                 type: 'GET',
-                complete : function () {
-                    resourceNode.remove();
+                success : function () {
+                    resourceNode.slideUp('fast', function () {
+                        resourceNode.remove();
+                    });
                 }
             });
         });

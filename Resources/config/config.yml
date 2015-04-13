@@ -2,8 +2,8 @@ plugin:
     has_options: false
 
     resource_actions:
-      - name: favourite_hevinci
+      - name: hevinci_favourite
 
     widgets:
-      - name: hevinci_favourite
+      - name: hevinci_favourite_widget
         is_configurable: false

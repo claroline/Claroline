@@ -13,8 +13,8 @@ class FavouriteController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/check/{isFavourite}/node/{id}",
-     *     name="hevinci_favourite_check"
+     *     "/{isFavourite}/node/{id}",
+     *     name="hevinci_favourite_index"
      * )
      * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
      */
@@ -38,7 +38,6 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("GET")
-     * @EXT\Template()
      */
     public function addFavouriteAction(ResourceNode $node)
     {
@@ -48,7 +47,7 @@ class FavouriteController extends Controller
             ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
 
         if ($favourite) {
-            return new Response('already_favourite');
+            throw new \Exception('This favourite already exists !');
         }
 
         $favourite = new Favourite();
@@ -57,7 +56,7 @@ class FavouriteController extends Controller
         $em->persist($favourite);
         $em->flush();
 
-        return new Response('favourite_added');
+        return new Response();
     }
 
     /**
@@ -69,7 +68,6 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("GET")
-     * @EXT\Template()
      */
     public function deleteFavouriteAction(ResourceNode $node)
     {
@@ -79,12 +77,12 @@ class FavouriteController extends Controller
             ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
 
         if (!$favourite) {
-            return new Response('no_favourite');
+            throw new \Exception("This favourite doesn't exist !");
         }
 
         $em->remove($favourite);
         $em->flush();
 
-        return new Response('favourite_deleted');
+        return new Response();
     }
 }
