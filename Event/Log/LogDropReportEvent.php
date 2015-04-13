@@ -4,7 +4,7 @@ namespace Icap\DropzoneBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;

@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\DropzoneBundle\Entity\Document;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 
 class LogDropEndEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
