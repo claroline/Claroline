@@ -1,3 +1,4 @@
 portfolio-add_guide: 'vous a ajouté à la liste des accompagnateurs de son portfolio %portfolio%'
 portfolio-remove_guide: 'vous a supprimé de la liste des accompagnateurs de son portfolio %portfolio%'
 portfolio-add_viewer: 'vous a donné l''accès à son portfolio %portfolio%'
+portfolio: Portfolio
