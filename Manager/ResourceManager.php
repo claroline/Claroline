@@ -1650,11 +1650,4 @@ class ResourceManager
 
         return $defaults;
     }
-
-    public function getAllNotifiableResourceTypeNames()
-    {
-        $resourceTypeNames = $this->resourceTypeRepo->findAllNotifiableTypeNames();
-
-        return $resourceTypeNames;
-    }
 }

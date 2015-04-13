@@ -88,15 +88,4 @@ class ResourceTypeRepository extends EntityRepository
 
         return $query->getResult();
     }
-
-    public function findAllNotifiableTypeNames()
-    {
-        $qb = $this->createQueryBuilder('resourceType');
-        $qb
-            ->select('resourceType.name')
-            ->andWhere('resourceType.isNotifiable = :isNotifiable')
-            ->setParameter('isNotifiable', true);
-
-        return $qb->getQuery()->getArrayResult();
-    }
 }
