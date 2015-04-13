@@ -6,7 +6,6 @@ plugin:
         - name: icap_dropzone
           class: Icap\DropzoneBundle\Entity\Dropzone
           is_visible: true
-          is_notifiable: true
           icon: icap_eval_icon.png
           actions:
             - name: open
