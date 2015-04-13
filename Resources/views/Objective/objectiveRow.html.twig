@@ -6,17 +6,15 @@
 {% set indent = indent is defined ? indent : 0 %}
 {% set collapsed = collapsed is defined ? collapsed : false %}
 {% set isLoaded = isLoaded is defined ? isLoaded : true %}
-{% set
-    hasChildren = hasChildren is defined ?
-        hasChildren :
-        __children is defined
-        and __children|length > 0
-        or __abilities.length is defined
-        and __abilities.length > 0
-%}
+{% set path = path is defined ? path : '' %}
+{% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
+{% set hasCompetencies = hasCompetencies is defined ? hasCompetencies : __children is defined and __children|length > 0 %}
+{% set hasAbilities = __abilities is defined and __abilities|length > 0 %}
+{% set hasChildren = hasCompetencies or hasAbilities %}
 
 <tr data-id="{{ id }}"
     data-type="{{ type }}"
+    data-path="{{ path }}"
     {% if hasChildren %}data-has-children{% endif %}
     {% if isLoaded %}data-is-loaded="true"{% endif %}
     {% if collapsed %} style="display: none;"{% endif %}>
@@ -81,41 +79,38 @@
     </td>
 </tr>
 
-{% if __children is defined and  __children|length > 0 %}
-    {% for child in __children %}
+{% if hasCompetencies and __children is defined %}
+    {% for competency in __children %}
         {% include
             'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
             with {
-                id: child.id,
-                name: child.name,
+                id: competency.id,
+                name: competency.name,
+                path: childrenPath,
                 framework: '-',
                 level: '-',
                 type: 'competency',
                 indent: indent + 1,
                 collapsed: true,
-                hasChildren: child.__children is defined
-                    and child.__children|length > 0
-                    or child.__abilities.length is defined
-                    and child.__abilities.length > 0,
-                __children: child.__children is defined ? child.__children : []
+                __children: competency.__children is defined ? competency.__children : []
             }
         %}
     {% endfor %}
 {% endif %}
 
-{% if __abilities is defined and  __abilities|length > 0 %}
+{% if hasAbilities %}
     {% for ability in __abilities %}
         {% include
             'HeVinciCompetencyBundle:Objective:objectiveRow.html.twig'
             with {
                 id: ability.id,
                 name: ability.name,
+                path: childrenPath,
                 framework: '-',
                 level: ability.levelName,
                 type: 'ability',
                 indent: indent + 1,
                 collapsed: true,
-                hasChildren: false,
                 __children: [],
                 __abilities: []
             }

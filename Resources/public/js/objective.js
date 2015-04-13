@@ -55,14 +55,14 @@
             url = 'hevinci_delete_objective_association';
             title = 'competency.delete';
             message = 'message.objective_association_deletion_confirm';
-            var feedback = 'message.objective_association_deleted';
+            feedback = 'message.objective_association_deleted';
         }
 
         Claroline.Modal.confirmRequest(
             Routing.generate(url, { id: row.dataset.id }),
             function () {
                 $(row).remove();
-                flasher.setMessage(trans('message.objective_deleted'));
+                flasher.setMessage(trans(feedback));
             },
             null,
             trans(message),
@@ -74,29 +74,39 @@
     $(document).on('click', 'table.objectives a.associate', function (event) {
         event.preventDefault();
         currentObjectiveRow = this.parentNode.parentNode;
-        currentObjectiveId = currentObjective.dataset.id;
+        currentObjectiveId = currentObjectiveRow.dataset.id;
         picker.open();
     });
 
     // competency expansion
     $(document).on('click', 'table.objectives a.expand', function (event) {
         event.preventDefault();
-        var row = this.parentNode.parentNode;
+        var link = this;
+        var row = link.parentNode.parentNode;
 
-        if (row.dataset.type === 'objective' && row.dataset.hasOwnProperty('hasChildren')) {
-            if (!row.dataset.isLoaded) {
-                $.get(Routing.generate('hevinci_load_objective_competencies', {id: row.dataset.id}))
-                    .done(function (competencies) {
-                        insertCompetencyRows(competencies, row);
-                        // toggle minus icon
-                    })
-                    .error(function () {
-                        Claroline.Modal.error();
-                    });
-            } else {
-                // display child rows, toggle minus icon
-            }
+        if (row.dataset.type === 'objective'
+            && row.dataset.hasOwnProperty('hasChildren')
+            && !row.dataset.isLoaded) {
+            $.get(Routing.generate('hevinci_load_objective_competencies', {id: row.dataset.id}))
+                .done(function (competencies) {
+                    insertCompetencyRows(competencies, row);
+                    toggleExpandLink(link, true);
+                    row.dataset.isLoaded = true;
+                })
+                .error(function () {
+                    Claroline.Modal.error();
+                });
+        } else {
+            toggleChildrenRows(row, link, false);
         }
+    });
+
+    // competency collapsing
+    $(document).on('click', 'table.objectives a.collapse_', function (event) {
+        event.preventDefault();
+        var link = this;
+        var row = link.parentNode.parentNode;
+        toggleChildrenRows(row, link, true);
     });
 
     function onCompetencySelection(selection) {
@@ -139,10 +149,33 @@
         var html = competencies.reduce(function (previousHtml, competency) {
             competency.type = 'competency';
             competency.indent = 1;
+            competency.path = previousSibling.dataset.path ?
+                (previousSibling.dataset.path + '-' + previousSibling.dataset.id) :
+                previousSibling.dataset.id;
 
             return previousHtml + Twig.render(ObjectiveRow, competency);
         }, '');
 
         $(html).insertAfter(previousSibling);
+    }
+
+    function toggleExpandLink(link, collapse) {
+        // "collapse" conflicts with bootstrap..
+        $(link).removeClass(collapse ? 'expand' : 'collapse_')
+            .addClass(collapse ? 'collapse_' : 'expand')
+            .find('i')
+            .removeClass(collapse ? 'fa-search-plus': 'fa-search-minus')
+            .addClass(collapse ? 'fa-search-minus' : 'fa-search-plus');
+    }
+
+    function toggleChildrenRows(parentRow, toggleLink, hide) {
+        var childrenPath = parentRow.dataset.path ?
+            (parentRow.dataset.path + '-' + parentRow.dataset.id) :
+            parentRow.dataset.id;
+        var matchType = hide ? '^=' : '=';
+        $(parentRow.parentNode).find('tr[data-path' + matchType + childrenPath + ']')
+            .css('display', hide ? 'none' : 'table-row');
+
+        toggleExpandLink(toggleLink, !hide);
     }
 })();
