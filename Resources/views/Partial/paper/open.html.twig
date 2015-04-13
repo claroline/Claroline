@@ -1,0 +1,9 @@
+{% if interactionToDisplayed.typeopenquestion == 'long' %}
+    <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off" data-before-unload="off">
+        {{ response }}
+    </textarea>
+{% endif %}
+
+{% if interactionToDisplayed.typeopenquestion == 'oneWord' %}
+    <input type="text" name='interOpenOneWord' size='30' value="{{ response }}"/>
+{% endif %}

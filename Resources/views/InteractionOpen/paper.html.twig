@@ -57,17 +57,12 @@
         <div class="list-group-item">
 
             {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-            
+
             <form action="{{ path('ujm_interactionopen_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
 
-                {% if interactionToDisplayed.typeopenquestion == 'long' %}
-                    <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off"></textarea>
-                {% endif %}
-
-                {% if interactionToDisplayed.typeopenquestion == 'oneWord' %}
-                    <input type="text" name='interOpenOneWord' size='30' />
-                {% endif %}
+                {% set response = '' %}
+                {% include "UJMExoBundle:Partial:paper/open.html.twig" %}
 
                 {% if interactionToDisplayed.interaction.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}

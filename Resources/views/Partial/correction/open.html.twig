@@ -1,11 +1,15 @@
 {% include "UJMExoBundle:Partial:correction/interaction.html.twig" %}
 
-<p><h3 class="panel-title">{{ 'response' | trans }}</h3></p>
 <div class="panel-body">
     {% if response is not defined %}
         {% set response = responses[p].response %}
     {% endif %}
-    {% if inter.typeopenquestion == 'long' %}
-        {{ response|raw}}
+
+    <p><h3 class="panel-title">{{ 'your answer' | trans }}</h3></p>
+    {{ response|raw}}
+
+    {% if inter.typeopenquestion != 'long' %}
+        <p><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></p>
+        <div id="eAnswer"></div>
     {% endif %}
 </div>

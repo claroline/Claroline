@@ -374,7 +374,8 @@ class exerciseServices
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $score = -1;
         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            die('todo recup score dans le service');
+            $score = $this->getScoreOpenOneWord($response, $interOpen);
+
         }
 
         $score .= '/'.$this->openMaxScore($interOpen);
@@ -967,11 +968,11 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
-        } else if ($interOpen->getTypeOpenQuestion() == 'long') {
+        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
             $scoreMax = $interQCM = $this->doctrine
                                          ->getManager()
-                                         ->getRepository('UJMExoBundle:InteractionOpen')
-                                         ->getScoreMaxOneWord($interOpen->getInteraction()->getId());;
+                                         ->getRepository('UJMExoBundle:WordResponse')
+                                         ->getScoreMaxOneWord($interOpen->getId());;
         }
 
         return $scoreMax;
@@ -1643,6 +1644,29 @@ class exerciseServices
         }
 
         return $resp;
+    }
+
+    /**
+     * Get score for an open question with one word
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * Return float
+     */
+    private function getScoreOpenOneWord($response, $interOpen)
+    {
+        $score = 0;
+        foreach ($interOpen->getWordResponses() as $wr) {
+            if (trim($wr->getResponse()) == trim($response)) {
+                $score = $wr->getScore();
+            }
+        }
+
+        return $score;
+
     }
 
     /**

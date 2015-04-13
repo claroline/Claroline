@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\WordResponse
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\WordResponseRepository")
  * @ORM\Table(name="ujm_word_response")
  */
 class WordResponse
