@@ -11,8 +11,6 @@
 
 namespace Claroline\MessageBundle\Entity;
 
-use Claroline\CoreBundle\Entity\User;
-use Claroline\MessageBundle\Entity\Message;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -118,12 +116,12 @@ class UserMessage
         return $this->user;
     }
 
-    public function setMessage(Message $message)
+    public function setMessage($message)
     {
         $this->message = $message;
     }
 
-    public function setUser(User $user)
+    public function setUser($user)
     {
         $this->user = $user;
     }

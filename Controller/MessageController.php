@@ -14,7 +14,6 @@ namespace Claroline\MessageBundle\Controller;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -22,10 +21,12 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\MessageBundle\Entity\Message;
+use Claroline\MessageBundle\Form\MessageType;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +55,7 @@ class MessageController
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"      = @DI\Inject("form.factory"),
      *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
      *     "mailManager"      = @DI\Inject("claroline.manager.mail_manager"),
      *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
@@ -144,7 +145,7 @@ class MessageController
      * @EXT\ParamConverter("sender", options={"authenticatedUser" = true})
      * @EXT\ParamConverter(
      *     "parent",
-     *     class="ClarolineCoreBundle:Message",
+     *     class="ClarolineMessageBundle:Message",
      *     options={"id" = "parentId", "strictId" = true}
      * )
      * @EXT\Template("ClarolineMessageBundle:Message:show.html.twig")
@@ -158,7 +159,7 @@ class MessageController
      */
     public function sendAction(User $sender, Message $parent = null)
     {
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE);
+        $form = $this->formFactory->create(new MessageType(), new Message());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -337,8 +338,10 @@ class MessageController
             $object = '';
             $ancestors = array();
         }
-
-        $form = $this->formFactory->create(FormFactory::TYPE_MESSAGE, array($sendString, $object));
+        $form = $this->formFactory->create(
+            new MessageType($sendString, $object),
+            new Message()
+        );
 
         return array(
             'ancestors' => $ancestors,
