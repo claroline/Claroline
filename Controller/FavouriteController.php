@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FavouriteController extends Controller
 {
-
     /**
      * @EXT\Route(
      *     "/{isFavourite}/node/{id}",
