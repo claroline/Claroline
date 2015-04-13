@@ -992,7 +992,7 @@
                                 $elem.addClass('gridster-loaded');
                             }
 
-                            scope.$parent.$broadcast('gridster-resized', [width, $elem[0].offsetHeight]);
+                            scope.$parent.$broadcast('gridster-resized', [width, $elem.offsetHeight]);
                         }
 
                         // track element width changes any way we can
@@ -1014,13 +1014,9 @@
 
                         // be sure to cleanup
                         scope.$on('$destroy', function() {
-                            destroy();
-                        });
-
-                        function destroy() {
                             gridster.destroy();
                             $win.off('resize', onResize);
-                        }
+                        });
 
                         // allow a little time to place items before floating up
                         $timeout(function() {
