@@ -30,8 +30,5 @@ class WordResponseRepository extends EntityRepository
         $res = $qb->getQuery()->getOneOrNullResult();
 
         return $res['max_score'];
-
-
-        die('todo getScoreMaxOneWord in the open repository');
     }
 }
