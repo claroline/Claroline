@@ -1,0 +1,15 @@
+{
+    "name": "claroline/message-bundle",
+    "keywords": ["Claroline", "Plugin"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~4.11"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\Message": "" }
+    },
+    "target-dir": "Claroline/MessageBundle"
+}
