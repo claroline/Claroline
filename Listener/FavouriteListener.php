@@ -84,29 +84,6 @@ class FavouriteListener extends ContainerAware
     }
 
     /**
-     * @DI\Observe("widget_hevinci_favourite_configuration")
-     *
-     * @param ConfigureWidgetEvent $event
-     */
-    public function onConfig(ConfigureWidgetEvent $event)
-    {
-        $form = $this->formFactory->create();
-
-        $favourites = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findBy(array('user' => $this->sc->getToken()->getUser()));
-
-        $content = $this->templatingEngine->render(
-            'HeVinciFavouriteBundle:widget:favouriteConfigure.html.twig',
-            array(
-                'form' => $form->createView(),
-                'favourites' => $favourites
-            )
-        );
-
-        $event->setContent($content);
-    }
-
-    /**
      * @DI\Observe("widget_hevinci_favourite")
      *
      * @param DisplayWidgetEvent $event

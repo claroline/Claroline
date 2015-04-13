@@ -45,7 +45,7 @@
             });
 
             $('.delete-favourite').click(function () {
-                var routing = window.Routing.generate('hevinci_delete_favourite', { id: resourceNodeId });
+                var routing = window.Routing.generate('hevinci_delete_favourite', { node: resourceNodeId });
                 var button = $(this);
 
                 $.ajax({

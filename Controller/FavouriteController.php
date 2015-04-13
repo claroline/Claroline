@@ -62,21 +62,21 @@ class FavouriteController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/delete/{id}",
+     *     "/delete/{node}",
      *     name="hevinci_delete_favourite",
-     *     requirements={"resourceNodeId" = "\d+"},
+     *     requirements={"node" = "\d+"},
      *     options={"expose"=true}
      * )
      *
      * @EXT\Method("GET")
      * @EXT\Template()
      */
-    public function deleteFavouriteAction($id)
+    public function deleteFavouriteAction(ResourceNode $node)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
         $favourite = $em->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findOneBy(array('user' => $user, 'resourceNode' => $id));
+            ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
 
         if (!$favourite) {
             return new Response('no_favourite');

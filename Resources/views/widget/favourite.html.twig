@@ -16,7 +16,7 @@
             var star = $(this);
             var resourceNode = star.parent();
             var resourceNodeId = resourceNode.data('resourceNodeId');
-            var routing = window.Routing.generate('hevinci_delete_favourite', {'id': resourceNodeId});
+            var routing = window.Routing.generate('hevinci_delete_favourite', {'node': resourceNodeId});
 
             $.ajax({
                 url: routing,
