@@ -107,15 +107,11 @@ function addRowToTablewr(row) {
 }
 
 function openEdit(nbResponses) {
-    //tab[typeId]=code
-    //selectionner bonne valeur dans liste
     codeOpen = typeOpen[$('#ujm_exobundle_interactionopentype_typeopenquestion').val()];
-    $('#ujm_exobundle_interactionopentype_typeopenquestion').children('option').each(function() {
-         if (typeOpen[$(this).val()] == 4) {
-             showOpenWord();
-             formWordResponseEdit(nbResponses);
-         }
-     });
+    if (codeOpen == 4) {
+        showOpenWord();
+        formWordResponseEdit(nbResponses);
+    }
 }
 
 function showOpenWord () {
@@ -126,8 +122,8 @@ function showOpenWord () {
 
 function showLongResponse () {
     $('#qOpenScoreMaxLongResp').css('display', 'block');
-     $('#qOpenOneWord').css('display', 'none');
-     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
+    $('#qOpenOneWord').css('display', 'none');
+    $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
 }
 
 $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {

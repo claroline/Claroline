@@ -19,14 +19,18 @@
                     <tr style="background-color: lightsteelblue;">
                         <th class="classic">{{ 'ujm_exobundle_interactionopentype_wordResponses' | trans }}</th>
                         <th class="classic">{{ 'points' | trans }}</th>
-                        <th class="classic">{{ 'delete' | trans }}</th>
+                        {% if (nbResponses is not defined or nbResponses == 0) %}
+                            <th class="classic">{{ 'delete' | trans }}</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     <tr></tr>
                 </tbody>
             </table>
-            <a href="#" id="add_wr" class="btn btn-primary"><i class="fa fa-plus"></i> {{ 'add' | trans }}</a>
+            {% if (nbResponses is not defined or nbResponses == 0) %}
+                <a href="#" id="add_wr" class="btn btn-primary"><i class="fa fa-plus"></i> {{ 'add' | trans }}</a>
+            {% endif %}
         </p>
     </div>
 </div>
