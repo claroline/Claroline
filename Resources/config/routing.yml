@@ -213,11 +213,6 @@ claro_mail:
     prefix: mail
     type: annotation
 
-claro_message:
-    resource: "@ClarolineCoreBundle/Controller/MessageController.php"
-    prefix: message
-    type: annotation
-
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity/
