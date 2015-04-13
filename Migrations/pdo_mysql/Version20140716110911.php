@@ -210,43 +210,43 @@ class Version20140716110911 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__portfolio_users 
+            ALTER TABLE icap__portfolio_users
             DROP FOREIGN KEY FK_3980F8F8B96B5643
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_groups 
+            ALTER TABLE icap__portfolio_groups
             DROP FOREIGN KEY FK_9AF01ADFB96B5643
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_abstract_widget 
+            ALTER TABLE icap__portfolio_abstract_widget
             DROP FOREIGN KEY FK_3E7AEFBBB96B5643
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_formations 
+            ALTER TABLE icap__portfolio_widget_formations
             DROP FOREIGN KEY FK_88739997BF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_title 
+            ALTER TABLE icap__portfolio_widget_title
             DROP FOREIGN KEY FK_1431A01DBF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_user_information 
+            ALTER TABLE icap__portfolio_widget_user_information
             DROP FOREIGN KEY FK_E2BFAA03BF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_skills 
+            ALTER TABLE icap__portfolio_widget_skills
             DROP FOREIGN KEY FK_6C68C5A1BF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_presentation 
+            ALTER TABLE icap__portfolio_widget_presentation
             DROP FOREIGN KEY FK_F0DBA727BF396750
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_formations_resource 
+            ALTER TABLE icap__portfolio_widget_formations_resource
             DROP FOREIGN KEY FK_23096D58FBE885E2
         ");
         $this->addSql("
-            ALTER TABLE icap__portfolio_widget_skills_skill 
+            ALTER TABLE icap__portfolio_widget_skills_skill
             DROP FOREIGN KEY FK_98EF40A3FBE885E2
         ");
         $this->addSql("
