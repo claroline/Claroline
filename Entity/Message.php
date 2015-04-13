@@ -11,7 +11,6 @@
 
 namespace Claroline\MessageBundle\Entity;
 
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -161,7 +160,7 @@ class Message
         return $this->user;
     }
 
-    public function setSender(User $sender)
+    public function setSender($sender)
     {
         $this->user = $sender;
         $this->senderUsername = ($sender) ? $sender->getUsername(): 'claroline-connect';
@@ -210,7 +209,7 @@ class Message
         return $this->parent;
     }
 
-    public function setParent(Message $parent)
+    public function setParent($parent)
     {
         $this->parent = $parent;
     }

@@ -159,7 +159,7 @@ class MessageController
      */
     public function sendAction(User $sender, Message $parent = null)
     {
-        $form = $this->formFactory->create(new MessageType());
+        $form = $this->formFactory->create(new MessageType(), new Message());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -338,7 +338,10 @@ class MessageController
             $object = '';
             $ancestors = array();
         }
-        $form = $this->formFactory->create(new MessageType($sendString, $object));
+        $form = $this->formFactory->create(
+            new MessageType($sendString, $object),
+            new Message()
+        );
 
         return array(
             'ancestors' => $ancestors,
