@@ -14,12 +14,11 @@ namespace Claroline\AnnouncementBundle\Manager;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
