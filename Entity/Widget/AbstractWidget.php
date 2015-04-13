@@ -42,16 +42,16 @@ abstract class AbstractWidget
     /**
      * @var integer
      *
-     * @ORM\Column(name="col", type="integer", options={"default" = 1})
+     * @ORM\Column(name="col", type="integer", options={"default" = 0})
      */
-    protected $column;
+    protected $column = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="row", type="integer", options={"default" = 1})
+     * @ORM\Column(name="row", type="integer", options={"default" = 0})
      */
-    protected $row;
+    protected $row = 0;
 
     /**
      * @var integer
