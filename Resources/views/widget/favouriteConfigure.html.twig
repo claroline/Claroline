@@ -1,0 +1,47 @@
+
+<form name="blog_widget_list_form" class="form-inline" action="" method="post" {{ form_enctype(form) }} novalidate="novalidate">
+    <div class="panel-body">
+        <div class="btn btn-info" id="addFavourites">Ajouter des favoris</div>
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+
+        {% for favourite in favourites %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" checked value="{{ favourite.resourceNode.id }}">
+                    {{ favourite.resourceNode.name }}
+               </label>
+            </div>
+        {% endfor %}
+
+        {{ form_rest(form) }}
+    </div>
+    <div class="panel-footer">
+        <button type="submit" class="btn btn-primary">{{ 'edit'|trans({}, 'platform') }}</button>
+        <button type="button" class="btn btn-default claro-widget-form-cancel">{{ 'cancel'|trans({}, 'platform') }}</button>
+    </div>
+</form>
+
+<script>
+    (function() {
+        $('#addFavourites').click( function() {
+            if (!Claroline.ResourceManager.hasPicker('hevinci_favourite')) {
+                Claroline.ResourceManager.createPicker('hevinci_favourite', {
+                    callback: function (nodes) {
+                        selectedFavourites(nodes);
+                    },
+                    isPickerMultiSelectAllowed: true
+                }, true);
+            }
+            Claroline.ResourceManager.picker('hevinci_favourite');
+        });
+    }) ();
+
+    function selectedFavourites (nodes) {
+        var arrayNodes = $.map(nodes, function(value, index) {
+            return [value];
+        });
+
+        console.log(arrayNodes.length);
+    }
+</script>

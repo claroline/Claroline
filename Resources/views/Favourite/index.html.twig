@@ -1,0 +1,67 @@
+{% extends 'HeVinciFavouriteBundle::layout.html.twig' %}
+
+{% block title %} Favoris - {{ parent() }} {% endblock %}
+
+{% block section_content %}
+    <div class="container">
+        <div class="row">
+            <div class="panel-heading">
+                <h3 class="panel-title">Favoris</h3>
+            </div>
+            <div class="panel-body">
+                {% if isFavourite == 0 %}
+                    <button class="btn btn-info add-favourite">{{ 'add_to_favourite'|trans({}, 'widget') }}</button>
+                {% else %}
+                    <button class="btn btn-danger delete-favourite">{{ 'remove_from_favourite'|trans({}, 'widget') }}</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function() {
+            var resourceNodeId = {{ _resource.getResourceNode().getId() }};
+
+            $('.add-favourite').click(function () {
+                var routing = window.Routing.generate('hevinci_add_favourite', { node: resourceNodeId });
+                var button = $(this);
+
+                $.ajax({
+                    url: routing,
+                    type: 'GET',
+                    dataType: 'text',
+                    complete: function (res) {
+                        if (res.responseText === 'already_favourite') {
+                            button.parent().prepend("<p> {{ 'already_favourite'|trans({}, 'widget') }} </p>");
+                        } else {
+                            button.parent().prepend("<p> {{ 'favourite_added'|trans({}, 'widget') }} </p>");
+                        }
+                        button.remove();
+                    }
+                });
+            });
+
+            $('.delete-favourite').click(function () {
+                var routing = window.Routing.generate('hevinci_delete_favourite', { id: resourceNodeId });
+                var button = $(this);
+
+                $.ajax({
+                    url: routing,
+                    type: 'GET',
+                    dataType: 'text',
+                    complete: function (res) {
+                        if (res.responseText === 'no_favourite') {
+                            button.parent().prepend("<p> {{ 'no_favourite'|trans({}, 'widget') }} </p>");
+                        } else {
+                            button.parent().prepend("<p> {{ 'favourite_deleted'|trans({}, 'widget') }} </p>");
+                        }
+                        button.remove();
+                    }
+                });
+            });
+        }) ();
+    </script>
+{% endblock %}

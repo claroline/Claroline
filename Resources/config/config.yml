@@ -1,0 +1,9 @@
+plugin:
+    has_options: false
+
+    resource_actions:
+      - name: favourite_hevinci
+
+    widgets:
+      - name: hevinci_favourite
+        is_configurable: false
