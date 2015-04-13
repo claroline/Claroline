@@ -12,9 +12,10 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\InstallationBundle\Manager\InstallationManager;
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\InstallationBundle\Manager\InstallationManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -31,6 +32,7 @@ class Installer
     private $validator;
     private $recorder;
     private $baseInstaller;
+    private $om;
 
     /**
      * Constructor.
@@ -42,18 +44,21 @@ class Installer
      * @DI\InjectParams({
      *     "validator" = @DI\Inject("claroline.plugin.validator"),
      *     "recorder"  = @DI\Inject("claroline.plugin.recorder"),
-     *     "installer" = @DI\Inject("claroline.installation.manager")
+     *     "installer" = @DI\Inject("claroline.installation.manager"),
+     *     "om"        = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         Validator $validator,
         Recorder $recorder,
-        InstallationManager $installer
+        InstallationManager $installer,
+        ObjectManager $om
     )
     {
         $this->validator = $validator;
         $this->recorder = $recorder;
         $this->baseInstaller = $installer;
+        $this->om = $om;
     }
 
     /**
@@ -78,9 +83,11 @@ class Installer
     {
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
-        $this->baseInstaller->install($plugin);
         $this->log('Saving plugin configuration...');
+        $this->om->startFlushSuite();
         $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
+        $this->baseInstaller->install($plugin);
+        $this->om->endFlushSuite();
     }
 
     /**
