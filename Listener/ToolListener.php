@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\MessageBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -370,38 +370,6 @@ class ToolListener
             )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-' . $tool->getClass());
-
-            return $menu;
-        }
-    }
-
-    /**
-     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        $tool = $event->getTool();
-
-        if ($user !== 'anon.') {
-            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
-            $messageTitle = $this->translator->trans(
-                'new_message_alert',
-                array('%count%' => $countUnreadMessages),
-                'platform'
-            );
-            $menu = $event->getMenu();
-            $messageMenuLink = $menu->addChild(
-                $this->translator->trans('messages', array(), 'cursus'),
-                array('route' => 'claro_message_list_received')
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
-            ->setExtra('title', $messageTitle);
-
-            if ($countUnreadMessages > 0) {
-                $messageMenuLink->setExtra('badge', $countUnreadMessages);
-            }
 
             return $menu;
         }

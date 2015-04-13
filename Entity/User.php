@@ -192,7 +192,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @var UserMessage[]|ArrayCollection
      *
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
+     *     targetEntity="Claroline\MessageBundle\Entity\UserMessage",
      *     mappedBy="user"
      * )
      */
