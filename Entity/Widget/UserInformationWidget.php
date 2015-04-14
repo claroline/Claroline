@@ -190,10 +190,10 @@ class UserInformationWidget extends AbstractWidget
         return array(
             'city' => $this->getCity(),
             'birthDate' => $birthDate ? $birthDate->format('Y/m/d') : $birthDate,
-            'showAvatar' => $this->isShowAvatar(),
-            'showMail' => $this->isShowMail(),
-            'showPhone' => $this->isShowPhone(),
-            'showDescription' => $this->isShowDescription()
+            'show_avatar' => $this->isShowAvatar(),
+            'show_mail' => $this->isShowMail(),
+            'show_phone' => $this->isShowPhone(),
+            'show_description' => $this->isShowDescription()
 
         );
     }
@@ -206,10 +206,10 @@ class UserInformationWidget extends AbstractWidget
         return array(
             'city' => null,
             'birthDate' => null,
-            'showAvatar' => false,
-            'showMail' => false,
-            'showPhone' => false,
-            'showDescription' => false
+            'show_avatar' => false,
+            'show_mail' => false,
+            'show_phone' => false,
+            'show_description' => false
         );
     }
 }
