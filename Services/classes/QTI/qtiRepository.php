@@ -211,7 +211,7 @@ class qtiRepository {
                 return $qtiExport->export($interaction, $this);
 
             case "InteractionOpen":
-                $qtiExport = $this->container->get('ujm.qti_open_export');
+                $qtiExport = $this->container->get('ujm.qti_open_long_export');
 
                 return $qtiExport->export($interaction, $this);
 

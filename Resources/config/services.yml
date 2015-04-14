@@ -60,8 +60,13 @@ services:
         scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
-    ujm.qti_open_export:
-        class: UJM\ExoBundle\Services\classes\QTI\openExport
+    ujm.qti_open_long_export:
+        class: UJM\ExoBundle\Services\classes\QTI\openLongExport
+        scope: prototype
+        arguments: [@doctrine, @security.context, @service_container]
+
+    ujm.qti_open_one_word_export:
+        class: UJM\ExoBundle\Services\classes\QTI\openOneWordExport
         scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
