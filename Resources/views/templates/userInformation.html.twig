@@ -1,2 +1,21 @@
-<p><span class="fa fa-birthday-cake"> {% if null != widget.birthDate %}{{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}{% endif %}</span></p>
-<p><span class="fa fa-map-marker"> {{ widget.city }}</p>
+{% if widget.isShowAvatar %}
+<p class="profile_picture">
+    {% set user = widget.portfolio.user %}
+    {% if user.picture != "" %}
+        <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
+    {% else %}
+        <span class="fa fa-user"></span>
+    {% endif %}
+</p>
+{% endif %}
+<p><span class="fa fa-map-marker"></span> {{ widget.city }}</p>
+<p><span class="fa fa-birthday-cake"></span> {{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}</p>
+{% if widget.isShowMail %}
+<p><span class="fa fa-envelope"></span> {{ widget.portfolio.user.mail }}</p>
+{% endif %}
+{% if widget.showPhone %}
+<p><span class="fa fa-phone"></span> {{ widget.portfolio.user.phone }}</p>
+{% endif %}
+{% if widget.showDescription %}
+<p>{{ widget.portfolio.user.description|raw }}</p>
+{% endif %}
