@@ -40,7 +40,19 @@ class UserInformationType extends AbstractWidgetType
                     'format'   => 'Y-M-d'
                )
             )
-            ->add('city', 'text');
+            ->add('city', 'text')
+            ->add('show_avatar', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('show_mail', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('show_phone', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('show_description', 'checkbox', array(
+                'required' => false,
+            ));
     }
 
     public function getName()
