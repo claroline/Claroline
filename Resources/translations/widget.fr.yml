@@ -1,7 +1,9 @@
-hevinci_favourite_widget: Favori
-favourite: Favori
+hevinci_favourite_widget: Ressources favorites
+favourite: Favoris
 widget_no_favourite: Il n'y a pas encore de favoris.
-add_to_favourite: Ajouter aux favoris
-remove_from_favourite: Supprimer des favoris
-favourite_added: Cette ressource a bien été ajoutée aux favoris.
-favourite_deleted: Cette ressource a bien été supprimée.
+add_to_favourite: Ajouter cette ressource à vos favoris.
+add_to_favourite_btn: Ajouter aux favoris
+remove_from_favourite: Supprimer cette ressource de vos favoris.
+remove_from_favourite_btn: Supprimer des favoris
+favourite_added: Cette ressource a bien été ajoutée à vos favoris.
+favourite_deleted: Cette ressource a bien été supprimée de vos favoris.
