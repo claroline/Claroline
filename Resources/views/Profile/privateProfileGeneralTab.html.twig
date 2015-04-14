@@ -4,7 +4,7 @@
             {% if user.getPicture() != "" %}
                 <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" class="profile_picture" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
             {% else %}
-                <h1 class="profile_picture_placeholder"><i class="icon-user"></i></h1>
+                <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
             {% endif %}
         </div>
         <div class="informations">
