@@ -8,8 +8,8 @@
     {% endif %}
 </p>
 {% endif %}
-<p><span class="fa fa-map-marker"></span> {{ widget.city }}</p>
 <p><span class="fa fa-birthday-cake"></span> {{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}</p>
+<p><span class="fa fa-map-marker"></span> {{ widget.city }}</p>
 {% if widget.isShowMail %}
 <p><span class="fa fa-envelope"></span> {{ widget.portfolio.user.mail }}</p>
 {% endif %}
