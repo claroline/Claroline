@@ -21,10 +21,12 @@ use Claroline\CoreBundle\Entity\Content;
 class TermsOfServiceType extends AbstractType
 {
     private $active;
+    private $lockedParams;
 
-    public function __construct($active = false)
+    public function __construct($active = false, array $lockedParams = array())
     {
         $this->active = $active;
+        $this->lockedParams = $lockedParams;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -46,7 +48,8 @@ class TermsOfServiceType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $this->active,
-                'label' => 'Activate the terms of service in the platform'
+                'label' => 'Activate the terms of service in the platform',
+                'disabled' => isset($this->lockedParams['terms_of_service'])
             )
         );
 
