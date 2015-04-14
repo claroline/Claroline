@@ -211,7 +211,7 @@ class qtiRepository {
                 return $qtiExport->export($interaction, $this);
 
             case "InteractionOpen":
-                $qtiExport = $this->container->get('ujm.qti_open_long_export');
+                $qtiExport = $this->serviceOpenQuestion($interaction->getId());
 
                 return $qtiExport->export($interaction, $this);
 
@@ -221,6 +221,27 @@ class qtiRepository {
                 return $qtiExport->export($interaction, $this);
 
         }
+    }
+
+    /**
+     * To select the service (long, oneWord, ...) for an open question
+     *
+     * @access private
+     *
+     * @param  Integer $interId id of the interaction
+     *
+     * @return instance of service ujm.qti_open
+     *
+     */
+    private function serviceOpenQuestion($interId)
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+                        ->getInteractionOpen($interId);
+        $type = ucfirst($interOpen[0]->getTypeOpenQuestion());
+        $serv = $this->container->get('ujm.qti_open_'.$type.'_export');
+
+        return $serv;
     }
 
 

@@ -21,6 +21,36 @@ class openExport extends qtiExport
     }
 
     /**
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository $qtiRepos
+     *
+     */
+    protected function startExport(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    {
+        $this->qtiRepos = $qtiRepos;
+        $this->question = $interaction->getQuestion();
+
+        $this->interactionopen = $this->doctrine
+                                ->getManager()
+                                ->getRepository('UJMExoBundle:InteractionOpen')
+                                ->findOneBy(array('interaction' => $interaction->getId()));
+
+        $this->qtiHead('extendedText', $this->question->getTitle());
+        $this->qtiResponseDeclaration('RESPONSE','string', 'single');
+        $this->qtiOutComeDeclaration();
+        $this->defaultValueTag();
+        $this->itemBodyTag();
+
+        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
+                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
+            $this->qtiFeedBack($interaction->getFeedBack());
+        }
+    }
+
+    /**
      * Implements the abstract method
      * add the tag prompt in extendedTextInteraction
      *

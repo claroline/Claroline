@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 class openLongExport extends openExport
 {
     private $extendedTextInteraction;
-    
+
     /**
      * Implements the abstract method
      *
@@ -21,19 +21,7 @@ class openLongExport extends openExport
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
-        $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
-
-        $this->interactionopen = $this->doctrine
-                                ->getManager()
-                                ->getRepository('UJMExoBundle:InteractionOpen')
-                                ->findOneBy(array('interaction' => $interaction->getId()));
-
-        $this->qtiHead('extendedText', $this->question->getTitle());
-        $this->qtiResponseDeclaration('RESPONSE','string', 'single');
-        $this->qtiOutComeDeclaration();
-        $this->defaultValueTag();
-        $this->itemBodyTag();
+        $this->startExport($interaction, $qtiRepos);
         $this->extendedTextInteractionTag();
         $this->promptTag($this->extendedTextInteraction);
 
