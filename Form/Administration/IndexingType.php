@@ -18,6 +18,13 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class IndexingType extends AbstractType
 {
+    private $lockedParams;
+
+    public function __construct(array $lockedParams = array())
+    {
+        $this->lockedParams = $lockedParams;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
@@ -31,6 +38,7 @@ class IndexingType extends AbstractType
                        'message' => 'google_meta_tag_error'
                    ))
                 ),
+                'disabled' => isset($this->lockedParams['google_meta_tag'])
             )
         );
     }

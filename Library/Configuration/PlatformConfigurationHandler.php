@@ -78,16 +78,19 @@ class PlatformConfigurationHandler
         'auto_logging_after_registration' => false,
         'registration_mail_validation' => false
     );
+    private $lockedParameters;
 
     /**
      * @DI\InjectParams({
-     *     "configFile" = @DI\Inject("%claroline.param.platform_options_file%")
+     *     "configFile"       = @DI\Inject("%claroline.param.platform_options_file%"),
+     *     "lockedConfigFile" = @DI\Inject("%claroline.param.locked_platform_options_file%")
      * })
      */
-    public function __construct($configFile)
+    public function __construct($configFile, $lockedConfigFile)
     {
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
+        $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
     }
 
     public function hasParameter($parameter)
@@ -119,7 +122,15 @@ class PlatformConfigurationHandler
 
     public function setParameters(array $parameters)
     {
-        $this->parameters = array_merge($this->parameters, $parameters);
+        $toMerge = array();
+
+        foreach ($parameters as $key => $value) {
+
+            if (!isset($this->lockedParameters[$key])) {
+                $toMerge[$key] = $value;
+            }
+        }
+        $this->parameters = array_merge($this->parameters, $toMerge);
         $this->saveParameters();
     }
 
@@ -210,5 +221,25 @@ class PlatformConfigurationHandler
     public function getDefaultParameters()
     {
         return $this->defaultParameters;
+    }
+
+    public function getLockedParamaters()
+    {
+        return $this->lockedParameters;
+    }
+
+    protected function generateLockedParameters($lockedConfigFile)
+    {
+        $lockedParameters = array();
+
+        if (file_exists($lockedConfigFile)) {
+            $lockedConfigParameters = Yaml::parse(file_get_contents($lockedConfigFile)) ?: array();
+
+            foreach ($lockedConfigParameters as $parameter => $value) {
+                $lockedParameters[$parameter] = $value;
+            }
+        }
+
+        return $lockedParameters;
     }
 }

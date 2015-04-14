@@ -26,7 +26,6 @@ class MailInscriptionType extends AbstractType
                 'data' => $builder->getData()
             )
         );
-
     }
 
     public function getName()
