@@ -3,27 +3,48 @@
 namespace HeVinci\FavouriteBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use HeVinci\FavouriteBundle\Entity\Favourite;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @EXT\Security("has_role('ROLE_USER')")
+ */
 class FavouriteController extends Controller
 {
+    protected $manager;
+
+    /**
+     * @DI\InjectParams({
+     *     "manager" = @DI\Inject("claroline.manager.resource_manager")
+     * })
+     */
+    public function __construct (ResourceManager $manager)
+    {
+        $this->manager = $manager;
+    }
+
     /**
      * @EXT\Route(
-     *     "/{isFavourite}/node/{id}",
-     *     name="hevinci_favourite_index"
+     *     "/node/{id}",
+     *     name="hevinci_favourite_index",
+     *     requirements={"id" = "\d+"}
      * )
-     * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
+     *
+     * @EXT\Template()
      */
-    public function indexAction($isFavourite, ResourceNode $node)
+    public function indexAction(ResourceNode $node)
     {
-        $manager = $this->get('claroline.manager.resource_manager');
-        $resource = $manager->getResourceFromNode($node);
+        $resource = $this->manager->getResourceFromNode($node);
+
+        $user = $this->get('security.context')->getToken()->getUser();
+        $isFavourite = $this->get('claroline.persistence.object_manager')->getRepository('HeVinciFavouriteBundle:Favourite')
+            ->findOneBy(array('user' => $user, 'resourceNode' => $node));
 
         return array(
-            'isFavourite' => $isFavourite,
+            'isFavourite' => $isFavourite ? 1 : 0,
             '_resource' => $resource
         );
     }
@@ -32,11 +53,10 @@ class FavouriteController extends Controller
      * @EXT\Route(
      *     "/add/{node}",
      *     name="hevinci_add_favourite",
-     *     requirements={"node" = "\d+"},
-     *     options={"expose"=true}
+     *     requirements={"node" = "\d+"}
      * )
      *
-     * @EXT\Method("GET")
+     * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
      */
     public function addFavouriteAction(ResourceNode $node)
     {
@@ -55,7 +75,10 @@ class FavouriteController extends Controller
         $em->persist($favourite);
         $em->flush();
 
-        return new Response();
+        return array(
+            'isFavourite' => 1,
+            '_resource' => $this->manager->getResourceFromNode($node)
+        );
     }
 
     /**
@@ -67,6 +90,7 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("GET")
+     * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
      */
     public function deleteFavouriteAction(ResourceNode $node)
     {
@@ -82,6 +106,9 @@ class FavouriteController extends Controller
         $em->remove($favourite);
         $em->flush();
 
-        return new Response();
+        return array(
+            'isFavourite' => 0,
+            '_resource' => $this->manager->getResourceFromNode($node)
+        );
     }
 }

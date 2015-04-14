@@ -14,10 +14,10 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button class="btn btn-primary add-favourite">
+                <a href="{{ path('hevinci_add_favourite', { 'node': _resource.getResourceNode().getId() }) }}" class="btn btn-primary">
                     <span class="fa fa-plus-circle"></span>
                     {{ 'add_to_favourite_btn'|trans({}, 'widget') }}
-                </button>
+                </a>
             </div>
         {% else %}
             <div class="panel-body">
@@ -27,55 +27,10 @@
                 </div>
             </div>
             <div class="panel-footer">
-                <button class="btn btn-danger delete-favourite">
+                <a href="{{ path('hevinci_delete_favourite', { 'node': _resource.getResourceNode().getId() }) }}" class="btn btn-danger">
                     <span class="fa fa-trash"></span>
                     {{ 'remove_from_favourite_btn'|trans({}, 'widget') }}
-                </button>
+                </a>
             </div>
         {% endif %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        (function() {
-            var resourceNodeId = {{ _resource.getResourceNode().getId() }};
-
-            $('.add-favourite').click(function () {
-                var routing = window.Routing.generate('hevinci_add_favourite', { node: resourceNodeId });
-                var btn = $(this);
-                var panel_footer = btn.parent();
-                var alert = panel_footer.prev().children();
-
-                $.ajax({
-                    url: routing,
-                    type: 'GET',
-                    success: function () {
-                        alert.contents().last()[0].textContent = " {{ 'favourite_added'|trans({}, 'widget') }}";
-                        alert.addClass('alert-success');
-                        alert.removeClass('alert-info');
-                        panel_footer.remove();
-                    }
-                });
-            });
-
-            $('.delete-favourite').click(function () {
-                var routing = window.Routing.generate('hevinci_delete_favourite', { node: resourceNodeId });
-                var btn = $(this);
-                var panel_footer = btn.parent();
-                var alert = panel_footer.prev().children();
-
-                $.ajax({
-                    url: routing,
-                    type: 'GET',
-                    success: function () {
-                        alert.contents().last()[0].textContent = " {{ 'favourite_deleted'|trans({}, 'widget') }}";
-                        alert.addClass('alert-success');
-                        alert.removeClass('alert-info');
-                        panel_footer.remove();
-                    }
-                });
-            });
-        }) ();
-    </script>
 {% endblock %}
