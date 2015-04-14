@@ -375,7 +375,13 @@ class exerciseServices
             $score = -1;
         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
             $score = $this->getScoreOpenOneWord($response, $interOpen);
+        }
 
+        if ($interOpen->getTypeOpenQuestion() != 'long') {
+            $score -= $penalty;
+            if ($score < 0) {
+                $score = 0;
+            }
         }
 
         $score .= '/'.$this->openMaxScore($interOpen);
