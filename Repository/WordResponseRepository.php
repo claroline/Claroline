@@ -31,4 +31,26 @@ class WordResponseRepository extends EntityRepository
 
         return $res['max_score'];
     }
+
+    /**
+     * Get the goods responses for an open question with one word
+     *
+     * @access public
+     *
+     * @param integer $interOpenId id InteractionOpen
+     *
+     * Return String
+     */
+    public function getgoodResponseOneWord($interOpenId)
+    {
+        $qb = $this->createQueryBuilder('wr');
+        $qb->select('wr.response, MAX(wr.score) AS max_score')
+           ->join('wr.interactionopen', 'iopen')
+           ->where($qb->expr()->in('iopen.id', $interOpenId))
+           ->andWhere('wr.score > 0');
+
+        $res = $qb->getQuery()->getOneOrNullResult();
+
+        return $res['response'];
+    }
 }

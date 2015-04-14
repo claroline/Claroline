@@ -10,6 +10,6 @@
 
     {% if inter.typeopenquestion != 'long' %}
         <p><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></p>
-        <div id="eAnswer"></div>
+        <div id="eAnswer">{{ goodResponseOpenOneWord(inter.id) }}</div>
     {% endif %}
 </div>
