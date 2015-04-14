@@ -229,6 +229,11 @@ class PlatformConfigurationHandler
         return $this->defaultParameters;
     }
 
+    public function getLockedParamaters()
+    {
+        return $this->lockedParameters;
+    }
+
     protected function generateLockedParameters($lockedConfigFile)
     {
         $lockedParameters = array();

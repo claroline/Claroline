@@ -20,6 +20,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class FacebookType extends AbstractType
 {
+    private $lockedParams;
+
+    public function __construct(array $lockedParams = array())
+    {
+        $this->lockedParams = $lockedParams;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -32,7 +39,8 @@ class FacebookType extends AbstractType
                         new GreaterThanOrEqual(array('value' => 0))
                     ),
                     'attr' => array('min' => 0),
-                    'label' => 'fb_client_id'
+                    'label' => 'fb_client_id',
+                    'disabled' => isset($this->lockedParams['facebook_client_id'])
                 )
             )
             ->add(
@@ -40,10 +48,19 @@ class FacebookType extends AbstractType
                 'text',
                 array(
                     'constraints' => new NotBlank(),
-                    'label' => 'fb_client_secret'
+                    'label' => 'fb_client_secret',
+                    'disabled' => isset($this->lockedParams['facebook_client_secret'])
                 )
             )
-            ->add('facebook_client_active', 'checkbox', array('label' => 'Active', 'required' => false));
+            ->add(
+                'facebook_client_active',
+                'checkbox',
+                array(
+                    'label' => 'Active',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['facebook_client_active'])
+                )
+            );
     }
 
     public function getName()

@@ -20,8 +20,9 @@ class MailServerType extends AbstractType
 {
     private $formDisplay;
     private $transport;
+    private $lockedParams;
 
-    public function __construct($transport)
+    public function __construct($transport, array $lockedParams = array())
     {
         $this->transport = $transport;
         $this->formDisplay = array(
@@ -50,6 +51,7 @@ class MailServerType extends AbstractType
                 'port' =>true
             )
         );
+        $this->lockedParams = $lockedParams;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -59,7 +61,8 @@ class MailServerType extends AbstractType
                 'mailer_transport',
                 'choice',
                 array(
-                    'choices' => array('sendmail' => 'sendmail', 'smtp' => 'smtp', 'gmail' => 'gmail')
+                    'choices' => array('sendmail' => 'sendmail', 'smtp' => 'smtp', 'gmail' => 'gmail'),
+                    'disabled' => isset($this->lockedParams['mailer_transport'])
                 )
             )
             ->add(
@@ -67,7 +70,8 @@ class MailServerType extends AbstractType
                 'text',
                 array(
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['host'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['host']),
+                    'disabled' => isset($this->lockedParams['mailer_host'])
                 )
             )
             ->add(
@@ -75,7 +79,8 @@ class MailServerType extends AbstractType
                 'text',
                 array(
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['username'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['username']),
+                    'disabled' => isset($this->lockedParams['mailer_username'])
                 )
             )
             ->add(
@@ -83,7 +88,8 @@ class MailServerType extends AbstractType
                 'password',
                 array(
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['password'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['password']),
+                    'disabled' => isset($this->lockedParams['mailer_password'])
                 )
             )
             ->add(
@@ -92,7 +98,8 @@ class MailServerType extends AbstractType
                 array(
                     'choices' => array(null => '', 'plain' => 'plain', 'login' => 'login', 'cram-md5' => 'cram-md5'),
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['auth_mode'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['auth_mode']),
+                    'disabled' => isset($this->lockedParams['mailer_auth_mode'])
                 )
             )
             ->add(
@@ -101,7 +108,8 @@ class MailServerType extends AbstractType
                 array(
                     'choices' => array(null => '', 'tls' => 'tls', 'ssl' => 'ssl' ),
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['encryption'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['encryption']),
+                    'disabled' => isset($this->lockedParams['mailer_encryption'])
                 )
             )
             ->add(
@@ -109,7 +117,8 @@ class MailServerType extends AbstractType
                 'number',
                 array(
                     'required' => false,
-                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['port'])
+                    'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['port']),
+                    'disabled' => isset($this->lockedParams['mailer_port'])
                 )
             );
     }
