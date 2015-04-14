@@ -48,15 +48,7 @@ class FavouriteListener extends ContainerAware
      */
     public function onFavoriteAction(CustomActionResourceEvent $event)
     {
-        $user = $this->sc->getToken()->getUser();
-        $resourceNode = $event->getResource()->getResourceNode();
-        $isFavourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findOneBy(array('user' => $user, 'resourceNode' => $resourceNode));
-
-        $isFavourite = ($isFavourite) ? 1 : 0;
-
         $route = $this->router->generate('hevinci_favourite_index', array(
-                'isFavourite' => $isFavourite,
                 'id' => $event->getResource()->getResourceNode()->getId()
             ));
         $event->setResponse(new RedirectResponse($route));
