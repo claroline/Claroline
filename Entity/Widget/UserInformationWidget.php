@@ -26,6 +26,34 @@ class UserInformationWidget extends AbstractWidget
      */
     protected $birthDate;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="show_avatar")
+     */
+    protected $showAvatar = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="show_mail")
+     */
+    protected $showMail = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="show_phone")
+     */
+    protected $showPhone = false;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="show_description")
+     */
+    protected $showDescription = false;
+
     public function __construct()
     {
         $this->sizeX = 2;
@@ -73,6 +101,86 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
+     * @return boolean
+     */
+    public function isShowAvatar()
+    {
+        return $this->showAvatar;
+    }
+
+    /**
+     * @param boolean $showAvatar
+     *
+     * @return UserInformationWidget
+     */
+    public function setShowAvatar($showAvatar)
+    {
+        $this->showAvatar = $showAvatar;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isShowMail()
+    {
+        return $this->showMail;
+    }
+
+    /**
+     * @param boolean $showMail
+     *
+     * @return UserInformationWidget
+     */
+    public function setShowMail($showMail)
+    {
+        $this->showMail = $showMail;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isShowPhone()
+    {
+        return $this->showPhone;
+    }
+
+    /**
+     * @param boolean $showPhone
+     *
+     * @return UserInformationWidget
+     */
+    public function setShowPhone($showPhone)
+    {
+        $this->showPhone = $showPhone;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isShowDescription()
+    {
+        return $this->showDescription;
+    }
+
+    /**
+     * @param boolean $showDescription
+     *
+     * @return UserInformationWidget
+     */
+    public function setShowDescription($showDescription)
+    {
+        $this->showDescription = $showDescription;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
@@ -80,8 +188,13 @@ class UserInformationWidget extends AbstractWidget
         $birthDate = $this->getBirthDate();
 
         return array(
-            'city'      => $this->getCity(),
-            'birthDate' => $birthDate ? $birthDate->format('Y/m/d') : $birthDate
+            'city' => $this->getCity(),
+            'birthDate' => $birthDate ? $birthDate->format('Y/m/d') : $birthDate,
+            'showAvatar' => $this->isShowAvatar(),
+            'showMail' => $this->isShowMail(),
+            'showPhone' => $this->isShowPhone(),
+            'showDescription' => $this->isShowDescription()
+
         );
     }
 
@@ -91,8 +204,12 @@ class UserInformationWidget extends AbstractWidget
     public function getEmpty()
     {
         return array(
-            'city'      => null,
-            'birthDate' => null
+            'city' => null,
+            'birthDate' => null,
+            'showAvatar' => false,
+            'showMail' => false,
+            'showPhone' => false,
+            'showDescription' => false
         );
     }
 }
