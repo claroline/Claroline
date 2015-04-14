@@ -21,8 +21,8 @@ class TextWidget extends AbstractWidget
 
     public function __construct()
     {
-        $this->sizeX = 2;
-        $this->sizeY = 2;
+        $this->sizeX = 4;
+        $this->sizeY = 4;
     }
 
     /**
