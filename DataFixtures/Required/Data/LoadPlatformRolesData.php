@@ -37,6 +37,8 @@ class LoadPlatformRolesData implements RequiredFixture
         $roleManager->createBaseRole(PlatformRoles::WS_CREATOR, 'ws_creator');
         $roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
         $roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
+        $roleManager->createBaseRole('ROLE_HOME_MANAGER', 'home_manager');
+
         $manager->endFlushSuite();
     }
 
@@ -44,7 +46,7 @@ class LoadPlatformRolesData implements RequiredFixture
     {
         $this->container = $container;
     }
-    
+
     public function getOrder()
     {
         return 1;

@@ -204,8 +204,6 @@ class Builder extends ContainerAware
     public function desktopParametersMenu(FactoryInterface $factory, array $options)
     {
         $translator = $this->container->get('translator');
-        $securityContext = $this->container->get('security.context');
-        $configHandler = $this->container->get('claroline.config.platform_config_handler');
 
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'list-group menu desktop-parameters-menu');
