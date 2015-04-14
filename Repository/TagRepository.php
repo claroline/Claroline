@@ -11,6 +11,7 @@ class TagRepository extends EntityRepository
     /**
      * @param Blog $blog
      * @param bool $executeQuery
+     * @param integer|null $max
      *
      * @return array|\Doctrine\ORM\AbstractQuery
      */
@@ -18,7 +19,7 @@ class TagRepository extends EntityRepository
     {
         $query = $this->getEntityManager()
             ->createQuery('
-                SELECT t, COUNT(t.id) AS frequency
+                SELECT t, COUNT(t.id) AS frequency, COUNT(p.id) as countPosts
                 FROM IcapBlogBundle:Tag t
                 JOIN t.posts p
                 WHERE p.blog = :blogId

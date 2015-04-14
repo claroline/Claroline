@@ -35,7 +35,7 @@ class BlogOptionsType extends AbstractType
                 'theme_options' => array('control_width' => 'col-md-2'),
             ))
             ->add('tag_cloud', 'choice', array(
-                'choices'       => array("0" => "classic", "1" => "3D"),
+                'choices'       => array("0" => "classic", "1" => "3D", "2" => "advanced"),
                 'required'      => false,
                 'expanded'      => true,
                 'multiple'      => false,
