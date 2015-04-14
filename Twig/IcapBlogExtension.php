@@ -51,7 +51,7 @@ class IcapBlogExtension extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            'highlight'  => new \Twig_Filter_Method($this, 'highlight'),
+            'highlight' => new \Twig_Filter_Method($this, 'highlight'),
         );
     }
 

@@ -138,7 +138,7 @@ class BlogOptions
     /**
      * @var int
      *
-     * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1)
+     * Option for tag cloud rendering (Classic:0 (or null), 3D sphere:1, classic with numbre of article per tag: 2:1)
      *
      * @ORM\Column(type="smallint", name="tag_cloud", nullable=true)
      */
