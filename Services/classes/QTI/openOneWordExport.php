@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 class openOneWordExport extends openExport
 {
     /**
-     * Implements the abstract method
+     * overload the export method
      *
      * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
@@ -19,7 +19,7 @@ class openOneWordExport extends openExport
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
-        $this->startExport($interaction, $qtiRepos);
+        parent::export($interaction, $qtiRepos);
         $this->promptTag($this->itemBody);
         $this->mappingTag();
         $this->textEntryInteractionTag();

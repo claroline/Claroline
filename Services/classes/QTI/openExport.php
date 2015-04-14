@@ -13,22 +13,13 @@ class openExport extends qtiExport
 
     /**
      * Implements the abstract method
-     * Overload in the child class
      *
-     */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
-    {
-    }
-
-    /**
-     *
-     * @access private
-     *
+     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      * @param qtiRepository $qtiRepos
      *
      */
-    protected function startExport(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
         $this->question = $interaction->getQuestion();

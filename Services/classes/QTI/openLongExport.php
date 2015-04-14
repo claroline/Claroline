@@ -12,7 +12,7 @@ class openLongExport extends openExport
     private $extendedTextInteraction;
 
     /**
-     * Implements the abstract method
+     * overload the export method
      *
      * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
@@ -21,7 +21,7 @@ class openLongExport extends openExport
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
-        $this->startExport($interaction, $qtiRepos);
+        parent::export($interaction, $qtiRepos);
         $this->extendedTextInteractionTag();
         $this->promptTag($this->extendedTextInteraction);
 
