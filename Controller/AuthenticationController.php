@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * Authentication/login controller.
@@ -47,6 +48,7 @@ class AuthenticationController
     private $authenticator;
     private $router;
     private $ch;
+    private $dispatcher;
 
     /**
      * @DI\InjectParams({
@@ -59,7 +61,8 @@ class AuthenticationController
      *     "authenticator"  = @DI\Inject("claroline.authenticator"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "router"         = @DI\Inject("router"),
-     *     "ch"             = @DI\Inject("claroline.config.platform_config_handler")
+     *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -72,7 +75,8 @@ class AuthenticationController
         Authenticator $authenticator,
         MailManager $mailManager,
         RouterInterface $router,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $ch,
+        StrictDispatcher $dispatcher
     )
     {
         $this->request = $request;
@@ -85,6 +89,7 @@ class AuthenticationController
         $this->mailManager = $mailManager;
         $this->router = $router;
         $this->ch = $ch;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -324,5 +329,13 @@ class AuthenticationController
         return $format === 'json' ?
             new JsonResponse($content, $status) :
             new XmlResponse($content, $status);
+    }
+
+    //not routed...
+    public function renderExternalAuthenticatonButtonAction()
+    {
+        $event = $this->dispatcher->dispatch('render_external_authentication_button', 'RenderAuthenticationButton');
+
+        return new Response($event->getContent());
     }
 }
