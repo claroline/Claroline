@@ -172,7 +172,12 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $descriptions, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
+            new AdminForm\GeneralType(
+                $this->localeManager->getAvailableLocales(),
+                $role, $descriptions,
+                $this->translator->trans('date_form_format', array(), 'platform'),
+                $this->localeManager->getUserLocale($request)
+            ),
             $platformConfig
         );
 
