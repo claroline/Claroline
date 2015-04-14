@@ -59,6 +59,20 @@ class LoadRequiredData extends AbstractFixture implements ContainerAwareInterfac
                 $adminMessageOt->setType(0);
                 $adminMessageOt->setVisibleInDesktop(true);
                 $om->persist($adminMessageOt);
+                $userRepo = $om->getRepository('ClarolineCoreBundle:User');
+                $users = $userRepo->findAllEnabledUsers();
+
+                foreach ($users as $user) {
+                    $messageOt = new OrderedTool();
+                    $messageOt->setName('message');
+                    $messageOt->setTool($messageTool);
+                    $messageOt->setUser($user);
+                    $messageOt->setLocked(false);
+                    $messageOt->setOrder(1);
+                    $messageOt->setType(0);
+                    $messageOt->setVisibleInDesktop(true);
+                    $om->persist($messageOt);
+                }
             } else {
                 $messageTool->setPlugin($messagePlugin);
                 $om->persist($messageTool);
