@@ -270,7 +270,6 @@ class DatabaseWriter
         }
 
         $resourceType->setExportable($resourceConfiguration['is_exportable']);
-        $resourceType->setNotifiable($resourceConfiguration['is_notifiable']);
         $this->em->persist($resourceType);
 
         if (!$this->mm->hasMenuAction($resourceType)) {
@@ -530,7 +529,6 @@ class DatabaseWriter
         $resourceType = new ResourceType();
         $resourceType->setName($resourceConfiguration['name']);
         $resourceType->setExportable($resourceConfiguration['is_exportable']);
-        $resourceType->setNotifiable($resourceConfiguration['is_notifiable']);
         $resourceType->setPlugin($plugin);
         $this->em->persist($resourceType);
         $this->mm->addDefaultPerms($resourceType);

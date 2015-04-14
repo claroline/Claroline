@@ -132,7 +132,6 @@ class Configuration implements ConfigurationInterface
                        ->booleanNode('is_visible')->end()    // must be removed
                        ->booleanNode('is_browsable')->end()  // must be removed
                        ->scalarNode('is_exportable')->defaultValue(false)->end()
-                       ->scalarNode('is_notifiable')->defaultValue(false)->end()
                        ->scalarNode('icon')
                            ->validate()
                                 ->ifTrue(
