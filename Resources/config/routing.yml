@@ -1,0 +1,4 @@
+facebook_controller:
+    resource: "@ClarolineFacebookBundle/Controller/FacebookController.php"
+    type: annotation
+    prefix: /
