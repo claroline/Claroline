@@ -172,7 +172,13 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType($this->localeManager->getAvailableLocales(), $role, $descriptions, $this->translator->trans('date_form_format', array(), 'platform'), $this->localeManager->getUserLocale($request)),
+            new AdminForm\GeneralType(
+                $this->localeManager->getAvailableLocales(),
+                $role, $descriptions,
+                $this->translator->trans('date_form_format', array(), 'platform'),
+                $this->localeManager->getUserLocale($request),
+                $this->configHandler->getLockedParamaters()
+            ),
             $platformConfig
         );
 
@@ -254,7 +260,10 @@ class ParametersController extends Controller
 
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\AppearanceType($this->getThemes()),
+            new AdminForm\AppearanceType(
+                $this->getThemes(),
+                $this->configHandler->getLockedParamaters()
+            ),
             $platformConfig
         );
 
@@ -325,7 +334,10 @@ class ParametersController extends Controller
 
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType(
+                $platformConfig->getMailerTransport(),
+                $this->configHandler->getLockedParamaters()
+            ),
             $platformConfig
         );
 
@@ -348,7 +360,10 @@ class ParametersController extends Controller
 
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailServerType($platformConfig->getMailerTransport()),
+            new AdminForm\MailServerType(
+                $platformConfig->getMailerTransport(),
+                $this->configHandler->getLockedParamaters()
+            ),
             $platformConfig
         );
         $form->handleRequest($this->request);
@@ -522,7 +537,10 @@ class ParametersController extends Controller
         $this->checkOpen();
 
         $form = $this->formFactory->create(
-            new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
+            new AdminForm\TermsOfServiceType(
+                $this->configHandler->getParameter('terms_of_service'),
+                $this->configHandler->getLockedParamaters()
+            ),
             $this->termsOfService->getTermsOfService(false)
         );
 
@@ -541,7 +559,10 @@ class ParametersController extends Controller
         $this->checkOpen();
 
         $form = $this->formFactory->create(
-            new AdminForm\TermsOfServiceType($this->configHandler->getParameter('terms_of_service')),
+            new AdminForm\TermsOfServiceType(
+                $this->configHandler->getParameter('terms_of_service'),
+                $this->configHandler->getLockedParamaters()
+            ),
             $this->termsOfService->getTermsOfService(false)
         );
 
@@ -573,7 +594,10 @@ class ParametersController extends Controller
     {
         $this->checkOpen();
 
-        $form = $this->formFactory->create(new AdminForm\IndexingType(), $this->configHandler->getPlatformConfig());
+        $form = $this->formFactory->create(
+            new AdminForm\IndexingType($this->configHandler->getLockedParamaters()), 
+            $this->configHandler->getPlatformConfig()
+        );
 
         if ($this->request->getMethod() === 'POST') {
             $form->handleRequest($this->request);
@@ -602,7 +626,11 @@ class ParametersController extends Controller
 
         $config = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\SessionType($config->getSessionStorageType(), $config)
+            new AdminForm\SessionType(
+                $config->getSessionStorageType(),
+                $config,
+                $this->configHandler->getLockedParamaters()
+            )
         );
 
         return array('form' => $form->createView());
@@ -624,7 +652,11 @@ class ParametersController extends Controller
             $formData['session_storage_type'] :
             $this->configHandler->getParameter('session_storage_type');
         $form = $this->formFactory->create(
-            new AdminForm\SessionType($storageType),
+            new AdminForm\SessionType(
+                $storageType,
+                null,
+                $this->configHandler->getLockedParamaters()
+            ),
             $this->configHandler->getPlatformConfig()
         );
         $form->handleRequest($this->request);
@@ -680,7 +712,10 @@ class ParametersController extends Controller
     {
         $this->checkOpen();
         $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+        $form = $this->formFactory->create(
+            new AdminForm\FacebookType($this->configHandler->getLockedParamaters()),
+            $platformConfig
+        );
 
         return array('form' => $form->createView());
     }
@@ -716,7 +751,10 @@ class ParametersController extends Controller
     {
         $this->checkOpen();
         $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(new AdminForm\FacebookType(), $platformConfig);
+        $form = $this->formFactory->create(
+            new AdminForm\FacebookType($this->configHandler->getLockedParamaters()),
+            $platformConfig
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
