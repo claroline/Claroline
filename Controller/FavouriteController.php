@@ -44,7 +44,7 @@ class FavouriteController extends Controller
             ->findOneBy(array('user' => $user, 'resourceNode' => $node));
 
         return array(
-            'isFavourite' => $isFavourite ? 1 : 0,
+            'isFavourite' => $isFavourite ? true : false,
             '_resource' => $resource
         );
     }
@@ -76,7 +76,7 @@ class FavouriteController extends Controller
         $em->flush();
 
         return array(
-            'isFavourite' => 1,
+            'isFavourite' => true,
             '_resource' => $this->manager->getResourceFromNode($node)
         );
     }
@@ -107,7 +107,7 @@ class FavouriteController extends Controller
         $em->flush();
 
         return array(
-            'isFavourite' => 0,
+            'isFavourite' => false,
             '_resource' => $this->manager->getResourceFromNode($node)
         );
     }

@@ -6,20 +6,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'favourite'|trans({}, 'widget') }}</h3>
     </div>
-        {% if isFavourite == 0 %}
-            <div class="panel-body">
-                <div class="alert alert-info">
-                    <span class="fa fa-info-circle"></span>
-                    {{ 'add_to_favourite'|trans({}, 'widget') }}
-                </div>
-            </div>
-            <div class="panel-footer">
-                <a href="{{ path('hevinci_add_favourite', { 'node': _resource.getResourceNode().getId() }) }}" class="btn btn-primary">
-                    <span class="fa fa-plus-circle"></span>
-                    {{ 'add_to_favourite_btn'|trans({}, 'widget') }}
-                </a>
-            </div>
-        {% else %}
+        {% if isFavourite %}
             <div class="panel-body">
                 <div class="alert alert-info">
                     <span class="fa fa-info-circle"></span>
@@ -30,6 +17,19 @@
                 <a href="{{ path('hevinci_delete_favourite', { 'node': _resource.getResourceNode().getId() }) }}" class="btn btn-danger">
                     <span class="fa fa-trash"></span>
                     {{ 'remove_from_favourite_btn'|trans({}, 'widget') }}
+                </a>
+            </div>
+        {% else %}
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <span class="fa fa-info-circle"></span>
+                    {{ 'add_to_favourite'|trans({}, 'widget') }}
+                </div>
+            </div>
+            <div class="panel-footer">
+                <a href="{{ path('hevinci_add_favourite', { 'node': _resource.getResourceNode().getId() }) }}" class="btn btn-primary">
+                    <span class="fa fa-plus-circle"></span>
+                    {{ 'add_to_favourite_btn'|trans({}, 'widget') }}
                 </a>
             </div>
         {% endif %}
