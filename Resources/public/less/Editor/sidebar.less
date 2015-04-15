@@ -5,10 +5,17 @@
   overflow-y: hidden;
   z-index: (@zindex-navbar + 1); /* To prevent bootstrap navbar to pass over the sidebar */
   margin-top: @navbar-height + 3px; /* Avoid sidebar to be under the header menu */
-  margin-bottom: @navbar-height; /* Avoid sidebar to be under the footer */
 
   &.ps-shown {
     padding: 0 !important;
+  }
+
+  &.ps-left {
+    border-right: none;
+
+    #sidebar-left {
+      border-right: 1px solid #bbbbbb;
+    }
   }
 
   /* Add a margin to the sidebar when the left menu is displayed */
@@ -40,6 +47,19 @@
     &:focus {
       opacity: 1;
     }
+  }
+}
+
+/* Shift content when  */
+@media (min-width: @screen-sm) {
+  .ps-push-left {
+    margin-left: 410px !important;
+  }
+}
+
+@media (max-width: (@screen-sm - 1)) {
+  .ps-push-left {
+    margin-left: 370px !important;
   }
 }
 
