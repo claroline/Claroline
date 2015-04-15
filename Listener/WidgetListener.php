@@ -4,10 +4,14 @@ namespace Icap\BlogBundle\Listener;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Icap\BlogBundle\Entity\BlogOptions;
 use Icap\BlogBundle\Entity\WidgetBlog;
 use Icap\BlogBundle\Entity\WidgetBlogList;
+use Icap\BlogBundle\Entity\WidgetTagListBlog;
 use Icap\BlogBundle\Form\WidgetBlogType;
 use Icap\BlogBundle\Form\WidgetListType;
+use Icap\BlogBundle\Form\WidgetTagListBlogType;
+use Icap\BlogBundle\Manager\TagManager;
 use Icap\BlogBundle\Manager\WidgetManager;
 use Icap\BlogBundle\Repository\PostRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -38,26 +42,36 @@ class WidgetListener
     /** @var PostRepository */
     private $postRepository;
 
+    /** @var TagManager */
+    private $tagManager;
+
+    /** @var WidgetTagListBlogType  */
+    private $widgetTagListBlogType;
 
     /**
      * @DI\InjectParams({
-     *      "widgetManager"    = @DI\Inject("icap_blog.manager.widget"),
-     *      "formFactory"      = @DI\Inject("form.factory"),
+     *      "widgetManager" = @DI\Inject("icap_blog.manager.widget"),
+     *      "formFactory" = @DI\Inject("form.factory"),
      *      "templatingEngine" = @DI\Inject("templating"),
-     *      "widgetListType"   = @DI\Inject("icap_blog.form.widget_list"),
-     *      "widgetBlogType"   = @DI\Inject("icap_blog.form.widget_blog"),
-     *      "postRepository"   = @DI\Inject("icap.blog.post_repository")
+     *      "widgetListType" = @DI\Inject("icap_blog.form.widget_list"),
+     *      "widgetBlogType" = @DI\Inject("icap_blog.form.widget_blog"),
+     *      "postRepository" = @DI\Inject("icap.blog.post_repository"),
+     *      "tagManager" = @DI\Inject("icap.blog.manager.tag"),
+     *      "widgetTagListBlogType" = @DI\Inject("icap_blog.form.widget_tag_list_blog")
      * })
      */
     public function __construct(WidgetManager $widgetManager, FormFactoryInterface $formFactory,
-        EngineInterface $templatingEngine, WidgetListType $widgetListType, WidgetBlogType $widgetBlogType, PostRepository $postRepository)
+        EngineInterface $templatingEngine, WidgetListType $widgetListType, WidgetBlogType $widgetBlogType,
+        PostRepository $postRepository, TagManager $tagManager, WidgetTagListBlogType $widgetTagListBlogType)
     {
-        $this->widgetManager    = $widgetManager;
-        $this->formFactory      = $formFactory;
+        $this->widgetManager = $widgetManager;
+        $this->formFactory = $formFactory;
         $this->templatingEngine = $templatingEngine;
-        $this->widgetListType   = $widgetListType;
-        $this->widgetBlogType   = $widgetBlogType;
-        $this->postRepository   = $postRepository;
+        $this->widgetListType = $widgetListType;
+        $this->widgetBlogType = $widgetBlogType;
+        $this->postRepository = $postRepository;
+        $this->tagManager = $tagManager;
+        $this->widgetTagListBlogType = $widgetTagListBlogType;
     }
 
      /**
@@ -136,12 +150,63 @@ class WidgetListener
     public function onWidgetBlogConfigure(ConfigureWidgetEvent $event)
     {
         $widgetBlog = new WidgetBlog();
-        $widgetBlog->setResourceNode($this->widgetManager->getResourceNode($event->getInstance()));
+        $widgetBlog->setResourceNode($this->widgetManager->getResourceNodeOfWidgetBlog($event->getInstance()));
 
         $form = $this->formFactory->create($this->widgetBlogType, $widgetBlog);
 
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:blogConfigure.html.twig',
+            array(
+                'form'           => $form->createView(),
+                'widgetInstance' => $event->getInstance()
+            )
+        );
+
+        $event->setContent($content);
+    }
+
+     /**
+     * @DI\Observe("widget_tag_list")
+     */
+    public function onWidgetTagListDisplay(DisplayWidgetEvent $event)
+    {
+        $blog = $this->widgetManager->getTagListBlog($event->getInstance());
+        /** @var \icap\BlogBundle\Entity\WidgetTagListBlog $widgetTagListBlog */
+        $widgetTagListBlog = $this->widgetManager->getWidgetTagListBlogByWdgetInstance($event->getInstance());
+
+        $blogOptions = new BlogOptions();
+        $blogOptions->setTagCloud($widgetTagListBlog->getTagCloud());
+
+        $content = $this->templatingEngine->render(
+            'IcapBlogBundle:widget:tags.html.twig',
+            [
+                'blog' => $blog,
+                '_resource' => $blog,
+                'blogOptions' => $blogOptions
+            ]
+        );
+
+        $event->setContent($content);
+        $event->stopPropagation();
+    }
+
+     /**
+     * @DI\Observe("widget_tag_list_configuration")
+     */
+    public function onWidgetTagListConfiguration(ConfigureWidgetEvent $event)
+    {
+        /** @var \icap\BlogBundle\Entity\WidgetTagListBlog $widgetTagListBlog */
+        $widgetTagListBlog = $this->widgetManager->getWidgetTagListBlogByWdgetInstance($event->getInstance());
+
+        if (null === $widgetTagListBlog) {
+            $widgetTagListBlog = new WidgetTagListBlog();
+            $widgetTagListBlog->setResourceNode($this->widgetManager->getResourceNodeOfWidgetTagListBlog($event->getInstance()));
+        }
+
+        $form = $this->formFactory->create($this->widgetTagListBlogType, $widgetTagListBlog);
+
+        $content = $this->templatingEngine->render(
+            'IcapBlogBundle:widget:tagListBlogConfigure.html.twig',
             array(
                 'form'           => $form->createView(),
                 'widgetInstance' => $event->getInstance()

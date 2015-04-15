@@ -10,14 +10,14 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 
 /**
  * @ORM\Table(
- *      name="icap__blog_widget_blog",
+ *      name="icap__blog_widget_tag_list_blog",
  *      uniqueConstraints={
- *          @ORM\UniqueConstraint(name="unique_widget_blog", columns={"resourceNode_id", "widgetInstance_id"})
+ *          @ORM\UniqueConstraint(name="unique_widget_tag_list_blog", columns={"resourceNode_id", "widgetInstance_id"})
  *      }
  * )
  * @ORM\Entity
  */
-class WidgetBlog
+class WidgetTagListBlog
 {
     /**
      * @ORM\Id
@@ -42,6 +42,15 @@ class WidgetBlog
     protected $widgetInstance;
 
     /**
+     * @var int
+     *
+     * Option for tag cloud rendering (Classic:0, 3D sphere:1, classic with numbre of article per tag: 2:1)
+     *
+     * @ORM\Column(type="smallint", name="tag_cloud", nullable=false)
+     */
+    protected $tagCloud = 0;
+
+    /**
      * @return integer
      */
     public function getId()
@@ -60,7 +69,7 @@ class WidgetBlog
     /**
      * @param ResourceNode $resourceNode
      *
-     * @return WidgetBlog
+     * @return WidgetTagListBlog
      */
     public function setResourceNode($resourceNode)
     {
@@ -80,12 +89,32 @@ class WidgetBlog
     /**
      * @param WidgetInstance $widgetInstance
      *
-     * @return WidgetList
+     * @return WidgetTagListBlog
      */
     public function setWidgetInstance(WidgetInstance $widgetInstance)
     {
         $this->widgetInstance = $widgetInstance;
 
         return $this;
+    }
+
+    /**
+     * @param int $tagCloud
+     *
+     * @return WidgetTagListBlog
+     */
+    public function setTagCloud($tagCloud)
+    {
+        $this->tagCloud = $tagCloud;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTagCloud()
+    {
+        return $this->tagCloud;
     }
 }

@@ -99,3 +99,5 @@ view: '%viewCounter% vue | %viewCounter% vues'
 icap_blog_options_form_display_post_view_counter: 'Affichage du nombre de vue par article ?'
 blog_widgt_list_form_blog: 'Blog à ajouter'
 widget_list_no_blog: 'Aucun blog affiché'
+no_blog_selected: 'Aucun blog sélectionné'
+blog_widget_tag_list_blog_form_tag_cloud: "Nuage de tags"

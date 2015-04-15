@@ -189,19 +189,7 @@
                         <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
                     </div>
                     <div class="tag-cloud-container panel-body">
-                        {% if blogOptions.tagCloud == 1 %}
-                        <canvas width="320" height="320" id="tagCloudCanvas">
-                        {% endif %}
-                            <ul id="tagList" class="tag-cloud list-unstyled list-inline">
-                                {% for tag in blog_tags(_resource) %}
-                                <li><a class="w{{ tag.weight }}" href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': tag.slug}) }}" title="{{ tag.name }}">{{ tag.name }}{% if blogOptions.tagCloud == 2 %} ({{ tag.countPosts }}){% endif %}</a></li>
-                                {% else %}
-                                <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% if blogOptions.tagCloud == 1 %}
-                        </canvas>
-                        {% endif %}
+                        {% include 'IcapBlogBundle:Layout:tags.html.twig' %}
                     </div>
                 </div>
 
