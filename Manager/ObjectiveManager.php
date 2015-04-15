@@ -136,6 +136,7 @@ class ObjectiveManager
         $this->om->flush();
 
         $competency = $this->competencyManager->loadCompetency($competency);
+        $competency['id'] = $link->getId(); // link is treated as the competency itself on client-side
         $competency['framework'] = $framework->getName();
         $competency['level'] = $level->getName();
 

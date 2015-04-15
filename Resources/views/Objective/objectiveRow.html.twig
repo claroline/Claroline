@@ -8,7 +8,7 @@
 {% set isLoaded = isLoaded is defined ? isLoaded : true %}
 {% set path = path is defined ? path : '' %}
 {% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
-{% set hasCompetencies = hasCompetencies is defined ? hasCompetencies : __children is defined and __children|length > 0 %}
+{% set hasCompetencies = hasCompetencies is defined ? hasCompetencies : (__children is defined and __children|length > 0) %}
 {% set hasAbilities = __abilities is defined and __abilities|length > 0 %}
 {% set hasChildren = hasCompetencies or hasAbilities %}
 
@@ -22,7 +22,7 @@
     <td class="center">{{ framework }}</td>
     <td class="center{% if type == 'ability' %} level-small{% endif %}">{{ level }}</td>
     <td class="x-small-cell">
-        <a href="#" class="{{ hasChildren ? 'expand' : '' }}">
+        <a href="#" class="{{ hasChildren ? 'expand' : 'expand disabled' }}">
             <i class="fa fa-search-plus{{ hasChildren ? '' : ' disabled' }}"></i>
         </a>
     </td>
@@ -92,7 +92,9 @@
                 type: 'competency',
                 indent: indent + 1,
                 collapsed: true,
-                __children: competency.__children is defined ? competency.__children : []
+                hasCompetencies: competency.__children is defined and competency.__children|length > 0,
+                __children: competency.__children is defined ? competency.__children : [],
+                __abilities: competency.__abilities is defined ? competency.__abilities : []
             }
         %}
     {% endfor %}
@@ -111,6 +113,7 @@
                 type: 'ability',
                 indent: indent + 1,
                 collapsed: true,
+                hasCompetencies: false,
                 __children: [],
                 __abilities: []
             }

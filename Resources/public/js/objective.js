@@ -61,7 +61,7 @@
         Claroline.Modal.confirmRequest(
             Routing.generate(url, { id: row.dataset.id }),
             function () {
-                $(row).remove();
+                removeRow(row);
                 flasher.setMessage(trans(feedback));
             },
             null,
@@ -78,8 +78,13 @@
         picker.open();
     });
 
+    // prevent hash of disabled expansion links to make window scrolling
+    $(document).on('click', 'table.objectives a.disabled', function (event) {
+       event.preventDefault();
+    });
+
     // competency expansion
-    $(document).on('click', 'table.objectives a.expand', function (event) {
+    $(document).on('click', 'table.objectives a.expand:not(.disabled)', function (event) {
         event.preventDefault();
         var link = this;
         var row = link.parentNode.parentNode;
@@ -134,6 +139,7 @@
 
                 picker.close();
                 insertCompetencyRows([competency], currentObjectiveRow);
+                toggleExpandLink($(currentObjectiveRow).find('a.expand').get(0), true)
                 flasher.setMessage(trans(message), category);
             })
             .error(function () {
@@ -159,22 +165,51 @@
         $(html).insertAfter(previousSibling);
     }
 
+    function removeRow(row) {
+        // remove children first, if any
+        var childrenPath = row.dataset.path ?
+            (row.dataset.path + '-' + row.dataset.id) :
+            row.dataset.id;
+        var childrenSelector = 'tr[data-path^=' + childrenPath + ']';
+
+        $('table.objectives ' + childrenSelector).remove();
+        $(row).remove();
+    }
+
     function toggleExpandLink(link, collapse) {
         // "collapse" conflicts with bootstrap..
-        $(link).removeClass(collapse ? 'expand' : 'collapse_')
+        $(link).removeClass(collapse ? 'expand disabled' : 'collapse_')
             .addClass(collapse ? 'collapse_' : 'expand')
             .find('i')
-            .removeClass(collapse ? 'fa-search-plus': 'fa-search-minus')
+            .removeClass(collapse ? 'fa-search-plus disabled': 'fa-search-minus')
             .addClass(collapse ? 'fa-search-minus' : 'fa-search-plus');
     }
 
     function toggleChildrenRows(parentRow, toggleLink, hide) {
+        // "children" rows are identified using a materialized
+        // path data attribute (e.g. ancestorId-parentId-...).
+        // When expanding a row, only the direct children are shown.
+        // When collapsing, all descendants are hidden.
+
         var childrenPath = parentRow.dataset.path ?
             (parentRow.dataset.path + '-' + parentRow.dataset.id) :
             parentRow.dataset.id;
         var matchType = hide ? '^=' : '=';
-        $(parentRow.parentNode).find('tr[data-path' + matchType + childrenPath + ']')
+        var childrenSelector = 'tr[data-path' + matchType + childrenPath + ']';
+        var $tableBody = $(parentRow.parentNode);
+
+        $tableBody.find(childrenSelector)
             .css('display', hide ? 'none' : 'table-row');
+
+        if (hide) {
+            $tableBody.find(childrenSelector + '[data-has-children]')
+                .find('a.collapse_')
+                .removeClass('collapse_')
+                .addClass('expand')
+                .children('i')
+                .removeClass('fa-search-minus')
+                .addClass('fa-search-plus');
+        }
 
         toggleExpandLink(toggleLink, !hide);
     }
