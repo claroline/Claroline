@@ -760,8 +760,11 @@ class ResourceManager
                 $i = 1;
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
-                    $i++;
+
+                    if ($child->isActive()) {
+                        $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
+                        $i++;
+                    }
                 }
             }
         }
