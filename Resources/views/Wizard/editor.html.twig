@@ -28,8 +28,8 @@
         {# Templates Sidebar #}
         <path-template-sidebar></path-template-sidebar>
 
-        {# Path Form #}
-        <path-form data-path="{{ _resource | json_encode | raw | escape }}"></path-form>
+        {# Path Form (we not directly alter the entity, but work with a JSON structure which stores info before publishing) #}
+        <path-form data-id="{{ _resource.id }}" data-path="{{ _resource.structure | raw | escape }}" data-modified="{{ _resource.modified }}" data-published="{{ _resource.published }}"></path-form>
     </div>
 {% endblock %}
 
@@ -114,36 +114,12 @@
         {# Make Twig variables accessibles by AngularJS #}
         var EditorApp = {};
 
-        EditorApp.workspaceId   = {{ workspace.id }};
-        EditorApp.appDir        = "{{ app.request.getBaseUrl }}";
         EditorApp.webDir        = "{{ asset('') }}";
-        EditorApp.wsDirectoryId = {{ wsDirectoryId }};
         EditorApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
 
         EditorApp.resourceIcons = {
             {% for resourceIcon in resourceIcons %}
             "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
-            {% endfor %}
-        };
-
-        EditorApp.resourceTypes = {
-            {% for resourceType in resourceTypes %}
-            "{{ resourceType.getName() }}": {
-                "name": "{{ resourceType.getName()|trans({}, 'resource') }}",
-                "actions": {
-                    {% for action in resourceType.getActions() %}
-                    "{{ action.getName() }}": {
-                        "name":     "{{ action.getName() }}",
-                        "route":    "{{ path('claro_resource_action', {'resourceType': resourceType.getName(), 'action': action.getName(), 'node': '_nodeId' }) }}",
-                        "async":    {% if action.isAsync() %} 1 {% else %} 0 {% endif %},
-                        "mask":     {{ action.getValue() }},
-                        "isCustom": {% if action.isCustom() %} "yes" {% else %} "no" {% endif %},
-                        "isForm":   {% if action.isForm() %} true {% else %} false {% endif %}
-                    }
-                    {% if loop.last != true %},{% endif %}
-                    {% endfor %}
-                }
-            }{% if loop.last != true %},{% endif %}
             {% endfor %}
         };
     </script>
