@@ -26,6 +26,7 @@ open_templates: Ouvrir les modèles
 
 # p
 path_save_success: Le parcours a correctement été sauvegardé.
+path_save_error: Une erreur s'est produite lors de la sauvegarde du parcours.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 publish_and_preview: Publier & visualiser
@@ -94,5 +95,12 @@ delete_activity: Supprimer le lien avec l'activité
 no_templates: Il n'y a aucun modèle disponible.
 
 path_name: Nom
+path_status: Statut
 path_description: Description
 step_description: Description
+published: Publié
+modified: avec des modifications en attente
+draft: Non publié
+publish: Publier
+preview: Prévisualiser
+copy: copie

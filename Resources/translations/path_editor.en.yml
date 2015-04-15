@@ -27,6 +27,7 @@ open_templates: Open templates
 # p
 path_name: Name of the path
 path_save_success: The path has been successfully saved.
+path_save_error: An error occurred while saving path.
 path_template_save_success: The template has been successfully saved.
 path_template_save_error: An error occurred while saving template.
 publish_and_preview: Publish & preview
@@ -97,4 +98,11 @@ no_templates: There is not template available.
 
 path_name: Name
 path_description: Description
+path_status: Status
 step_description: Description
+published: Published
+modified: with pending changes
+draft: Not published
+publish: Publish
+preview: Preview
+copy: copy
