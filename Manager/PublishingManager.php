@@ -152,7 +152,7 @@ class PublishingManager
         $this->manageRights();
 
         // Mark Path as published
-        $this->path->setPublished(true);
+        /*$this->path->setPublished(true);*/
         $this->path->setModified(false);
 
         // Persist data
