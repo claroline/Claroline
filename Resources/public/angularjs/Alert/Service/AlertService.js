@@ -35,14 +35,14 @@
                     // Auto close alert
                     $timeout(function () {
                         this.closeAlert(alert);
-                    }.bind(this), 3000);
+                    }.bind(this), 10000);
 
                     return this;
                 },
 
                 /**
                  * Close an alert
-                 * @param index
+                 * @param alert
                  * @returns AlertService
                  */
                 closeAlert: function (alert) {

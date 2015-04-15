@@ -5,9 +5,8 @@
     'use strict';
 
     angular.module('PathModule').directive('pathForm', [
-        '$window',
         'HistoryService',
-        function ($window, HistoryService) {
+        function (HistoryService) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -15,38 +14,23 @@
                 controllerAs: 'pathFormCtrl',
                 templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/path-form.html',
                 scope: {
-                    path: '='
+                    id        : '=', // ID of the path
+                    path      : '=', // Data of the path
+                    modified  : '=',
+                    published : '='
                 },
                 link: function (scope, element, attrs, pathFormCtrl) {
+                    // Set controller variables
+                    pathFormCtrl.id        = scope.id;
+                    pathFormCtrl.path      = scope.path;
+                    pathFormCtrl.modified  = scope.modified;
+                    pathFormCtrl.published = scope.published;
+
+                    // Update history each time a path is changed
                     scope.$watch('path', function (newValue) {
-                        console.log('path modified');
-
-                        if (typeof newValue === 'string') {
-                            pathFormCtrl.path = JSON.parse(newValue);
-                        } else {
-                            pathFormCtrl.path = newValue;
-                        }
-                    });
-
-                    // Display a confirm on page close with pending modifications
-                    function closeEditor(event) {
-                        if (!HistoryService.isEmpty()) {
-                            var confirmMessage = Translator.trans('save_path_changes', {}, 'path_editor');
-
-                            if (event) {
-                                event.returnValue = confirmMessage;
-                            }
-
-                            return confirmMessage;
-                        }
-                    }
-
-                    window.addEventListener('beforeunload', closeEditor);
-
-                    // Unbind event on directive destroy
-                    scope.$on('$destroy', function handleDestroyEvent() {
-                        window.removeEventListener('beforeunload', closeEditor);
-                    });
+                        console.log('path updated');
+                        HistoryService.update(newValue);
+                    }, true);
                 }
             };
         }

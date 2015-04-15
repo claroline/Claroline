@@ -25,26 +25,31 @@
 
     <!-- Actions available -->
     <span data-ng-show="showButtons == step.id || pathStructureCtrl.currentStep == step" class="step-actions btn-group" data-nodrag="">
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.addChild(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
+        <!-- Add child -->
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.addStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
             <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.copy(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_editor' }}">
+        <!-- Copy to clipboard -->
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.copy(step)" data-ng-disabled="pathStructureCtrl.clipboardDisabled.copy" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_editor' }}">
             <span class="fa fa-copy"></span>
             <span class="sr-only">{{ 'step_copy' | trans:{}:'path_editor' }}</span>
         </a>
 
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.paste(step)" data-ng-disabled="pasteDisabled" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_editor' }}">
+        <!-- Paste from clipboard -->
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.paste(step)" data-ng-disabled="pathStructureCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_editor' }}">
             <span class="fa fa-paste"></span>
             <span class="sr-only">{{ 'step_paste' | trans:{}:'path_editor' }}</span>
         </a>
 
+        <!-- Create as template -->
         <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.saveAsTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_editor' }}">
             <span class="fa fa-download"></span>
             <span class="sr-only">{{ 'step_to_template' | trans:{}:'path_editor' }}</span>
         </a>
 
+        <!-- Delete step -->
         <a href="#" class="btn btn-danger btn-sm" data-ng-click="pathStructureCtrl.removeStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_editor' }}">
             <span class="fa fa-trash-o"></span>
             <span class="sr-only">{{ 'step_delete' | trans:{}:'path_editor' }}</span>

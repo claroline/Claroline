@@ -13,15 +13,17 @@
                     structure: '='
                 },
                 link: function (scope, element, attrs, pathStructureCtrl) {
-                    /*scope.$watch('structure', function (newValue) {
-                        console.log('structure updated');
+                    pathStructureCtrl.structure = scope.structure;
 
-                        if (typeof newValue === 'string') {
-                            pathStructureCtrl.structure = JSON.parse(newValue);
-                        } else {
-                            pathStructureCtrl.structure = newValue;
-                        }
-                    });*/
+                    if (pathStructureCtrl.structure && pathStructureCtrl.structure) {
+                        // Get the root of the path structure as the current step
+                        pathStructureCtrl.currentStep = pathStructureCtrl.structure[0];
+                    }
+
+                    // Watch for changes
+                    scope.$watch('structure', function (newValue) {
+                        pathStructureCtrl.structure = newValue;
+                    }, true);
                 }
             };
         }

@@ -12,8 +12,16 @@
         'StepService',
         'ResourceService',
         function ($scope, $http, HistoryService, PathService, StepService, ResourceService) {
+            /**
+             * Path to public dir
+             * @type {string}
+             */
             this.webDir = EditorApp.webDir;
 
+            /**
+             * Current edited Step
+             * @type {object}
+             */
             this.step = null;
 
             // Defines which panels of the form are collapsed or not
@@ -26,138 +34,136 @@
 
             // Store resource icons
             $scope.resourceIcons = EditorApp.resourceIcons;
-            $scope.resourceZoom = 75;
-
-            // Resource Picker base config
-            $scope.resourcePickerConfig = {
-                isPickerMultiSelectAllowed: false,
-                webPath: EditorApp.webDir,
-                appPath: EditorApp.appDir,
-                directoryId: EditorApp.wsDirectoryId,
-                resourceTypes: EditorApp.resourceTypes
-            };
 
             // Activity resource picker config
-            $scope.activityResourcePicker = {
+            this.activityResourcePicker = {
                 name: 'picker-activity',
-                parameters: angular.copy($scope.resourcePickerConfig)
-            };
+                parameters: {
+                    // A step can allow be linked to one Activity, so disable multi-select
+                    isPickerMultiSelectAllowed: false,
 
-            // Adapt default config for Activity picker
-            $scope.activityResourcePicker.parameters.typeWhiteList = ['activity'];
-            $scope.activityResourcePicker.parameters.callback = function (nodes) {
-                if (typeof nodes === 'object' && nodes.length !== 0) {
-                    // We need only one node, so only the last one will be kept
-                    for (var nodeId in nodes) {
-                        // Load activity properties to populate step
-                        $http.get(Routing.generate('innova_path_load_activity', { workspaceId: EditorApp.workspaceId, nodeId: nodeId }))
-                            .success(function (data) {
-                                if (typeof data !== 'undefined' && data !== null && data.length !== 0) {
-                                    // Populate step
-                                    $scope.previewStep.activityId  = data['id'];
-                                    $scope.previewStep.name        = data['name'];
-                                    $scope.previewStep.description = data['description'];
+                    // Only allow Activity selection
+                    typeWhiteList: [ 'activity' ],
+                    callback: function (nodes) {
+                        if (typeof nodes === 'object' && nodes.length !== 0) {
+                            // We need only one node, so only the last one will be kept
+                            for (var nodeId in nodes) {
+                                // Load activity properties to populate step
+                                $http.get(Routing.generate('innova_path_load_activity', { nodeId: nodeId }))
+                                    .success(function (data) {
+                                        if (typeof data !== 'undefined' && data !== null && data.length !== 0) {
+                                            // Populate step
+                                            $scope.previewStep.activityId  = data['id'];
+                                            $scope.previewStep.name        = data['name'];
+                                            $scope.previewStep.description = data['description'];
 
-                                    // Primary resources
-                                    $scope.previewStep.primaryResource = data['primaryResource'];
+                                            // Primary resources
+                                            $scope.previewStep.primaryResource = data['primaryResource'];
 
-                                    // Secondary resources
-                                    if (null !== data['resources']) {
-                                        for (var i = 0; i < data['resources'].length; i++) {
-                                            var resource = data['resources'][i];
-                                            var resourceExists = StepService.hasResource($scope.previewStep, resource.resourceId);
-                                            if (!resourceExists) {
-                                                // Generate new local ID
-                                                resource['id'] = PathService.getNextResourceId();
+                                            // Secondary resources
+                                            if (null !== data['resources']) {
+                                                for (var i = 0; i < data['resources'].length; i++) {
+                                                    var resource = data['resources'][i];
+                                                    var resourceExists = StepService.hasResource($scope.previewStep, resource.resourceId);
+                                                    if (!resourceExists) {
+                                                        // Generate new local ID
+                                                        resource['id'] = PathService.getNextResourceId();
 
-                                                // Add to secondary resources
-                                                $scope.previewStep.resources.push(resource);
+                                                        // Add to secondary resources
+                                                        $scope.previewStep.resources.push(resource);
+                                                    }
+                                                }
                                             }
+
+                                            // Parameters
+                                            $scope.previewStep.withTutor = data['withTutor'];
+                                            $scope.previewStep.who       = data['who'];
+                                            $scope.previewStep.where     = data['where'];
+                                            $scope.previewStep.duration  = data['duration'];
                                         }
-                                    }
+                                    });
+                            }
 
-                                    // Parameters
-                                    $scope.previewStep.withTutor = data['withTutor'];
-                                    $scope.previewStep.who       = data['who'];
-                                    $scope.previewStep.where     = data['where'];
-                                    $scope.previewStep.duration  = data['duration'];
-                                }
-                            });
+                            $scope.$apply();
+
+                            // Update history
+                            HistoryService.update($scope.path);
+                        }
                     }
-
-                    $scope.$apply();
-
-                    // Update history
-                    HistoryService.update($scope.path);
                 }
             };
 
             // Primary resource picker config
-            $scope.primaryResourcePicker = {
+            this.primaryResourcePicker = {
                 name: 'picker-primary-resource',
-                parameters: angular.copy($scope.resourcePickerConfig)
-            };
+                parameters: {
+                    // A step can allow be linked to one primary Resource, so disable multi-select
+                    isPickerMultiSelectAllowed: false,
 
-            // Adapt default config for Primary resource picker
-            $scope.primaryResourcePicker.parameters.typeBlackList = ['innova_path', 'activity'];
-            $scope.primaryResourcePicker.parameters.callback = function (nodes) {
-                if (typeof nodes === 'object' && nodes.length !== 0) {
-                    // We need only one node, so only the last one will be kept
-                    for (var nodeId in nodes) {
-                        var node = nodes[nodeId];
-                        $scope.previewStep.primaryResource = {
-                            resourceId: nodeId,
-                            name: node[0],
-                            type: node[2]
+                    // Do not allow Path and Activities as primary resource to avoid Inception
+                    typeBlackList: [ 'innova_path', 'activity' ],
+
+                    // On select, set the primary resource of the step
+                    callback: function (nodes) {
+                        if (typeof nodes === 'object' && nodes.length !== 0) {
+                            // We need only one node, so only the last one will be kept
+                            for (var nodeId in nodes) {
+                                var node = nodes[nodeId];
+                                $scope.previewStep.primaryResource = {
+                                    resourceId: nodeId,
+                                    name: node[0],
+                                    type: node[2]
+                                }
+                            }
+
+                            $scope.$apply();
+
+                            // Update history
+                            HistoryService.update($scope.path);
+
                         }
                     }
-
-                    $scope.$apply();
-
-                    // Update history
-                    HistoryService.update($scope.path);
-
                 }
             };
 
             // Secondary resources picker config
-            $scope.secondaryResourcesPicker = {
+            this.secondaryResourcesPicker = {
                 name: 'picker-secondary-resources',
-                parameters: angular.copy($scope.resourcePickerConfig)
-            };
+                parameters: {
+                    isPickerMultiSelectAllowed: true,
+                    callback: function (nodes) {
+                        if (typeof nodes === 'object' && nodes.length !== 0) {
+                            if (typeof $scope.previewStep.resources !== 'object') {
+                                $scope.previewStep.resources = [];
+                            }
 
-            // Adapt default config for Secondary resources picker
-            $scope.secondaryResourcesPicker.parameters.isPickerMultiSelectAllowed = true;
-            $scope.secondaryResourcesPicker.parameters.callback = function (nodes) {
-                if (typeof nodes === 'object' && nodes.length !== 0) {
-                    if (typeof $scope.previewStep.resources !== 'object') {
-                        $scope.previewStep.resources = [];
-                    }
+                            for (var nodeId in nodes) {
+                                var node = nodes[nodeId];
 
-                    for (var nodeId in nodes) {
-                        var node = nodes[nodeId];
+                                // Check if resource has already been linked to the the step
+                                var resourceExists = StepService.hasResource($scope.previewStep, nodeId);
+                                if (!resourceExists) {
+                                    // Resource need to be linked
+                                    var resource = ResourceService.new();
+                                    resource.name = node[0];
+                                    resource.type = node[2];
+                                    resource.resourceId = nodeId;
 
-                        // Check if resource has already been linked to the the step
-                        var resourceExists = StepService.hasResource($scope.previewStep, nodeId);
-                        if (!resourceExists) {
-                            // Resource need to be linked
-                            var resource = ResourceService.generateNewResource();
-                            resource.name = node[0];
-                            resource.type = node[2];
-                            resource.resourceId = nodeId;
+                                    $scope.previewStep.resources.push(resource);
+                                    $scope.$apply();
+                                }
+                            }
 
-                            $scope.previewStep.resources.push(resource);
-                            $scope.$apply();
+                            // Update history
+                            HistoryService.update($scope.path);
                         }
+
+                        // Remove checked nodes for next time
+                        nodes = {};
                     }
-
-                    // Update history
-                    HistoryService.update($scope.path);
                 }
-
-                // Remove checked nodes for next time
-                nodes = {};
             };
+
 
             // Tiny MCE options
             this.tinymceOptions = {
@@ -191,77 +197,55 @@
             /**
              * Delete selected resource from path
              */
-            $scope.removeResource = function (resource) {
+            this.removeResource = function (resource) {
                 StepService.removeResource($scope.previewStep, resource.id);
-
-                // Update history
-                HistoryService.update($scope.path);
             };
 
-            $scope.enableResourcePropagation = function (resource) {
+            this.enableResourcePropagation = function (resource) {
                 resource.propagateToChildren = true;
-
-                // Update history
-                HistoryService.update($scope.path);
             };
 
-            $scope.disableResourcePropagation = function (resource) {
+            this.disableResourcePropagation = function (resource) {
                 resource.propagateToChildren = false;
-
-                // Update history
-                HistoryService.update($scope.path);
             };
 
             /**
              * Exclude a resource inherited from parents
              */
-            $scope.excludeParentResource= function (resource) {
+            this.excludeParentResource= function (resource) {
                 resource.isExcluded = true;
-                $scope.previewStep.excludedResources.push(resource.id);
-
-                // Update history
-                HistoryService.update($scope.path);
+                this.step.excludedResources.push(resource.id);
             };
 
             /**
              * Include a resource inherited from parents which has been excluded
              */
-            $scope.includeParentResource= function (resource) {
+            this.includeParentResource = function (resource) {
                 resource.isExcluded = false;
 
-                if (typeof $scope.previewStep.excludedResources !== 'undefined' && null !== $scope.previewStep.excludedResources) {
-                    for (var i = 0; i < $scope.previewStep.excludedResources.length; i++) {
-                        if (resource.id == $scope.previewStep.excludedResources[i]) {
-                            $scope.previewStep.excludedResources.splice(i, 1);
+                if (typeof this.step.excludedResources !== 'undefined' && null !== this.step.excludedResources) {
+                    for (var i = 0; i < this.step.excludedResources.length; i++) {
+                        if (resource.id == this.step.excludedResources[i]) {
+                            this.step.excludedResources.splice(i, 1);
                         }
                     }
                 }
-
-                // Update history
-                HistoryService.update($scope.path);
             };
 
-            $scope.removePrimaryResource = function () {
+            this.removePrimaryResource = function () {
                 this.step.primaryResource = null;
-
-                // Update history
-                /*HistoryService.update($scope.path);*/
             };
 
-            $scope.showActivity = function () {
+            this.showActivity = function () {
                 var activityRoute = Routing.generate('innova_path_show_activity', {
-                    workspaceId: EditorApp.workspaceId,
-                    activityId:  this.step.activityId
+                    activityId: this.step.activityId
                 });
 
                 window.open(activityRoute, '_blank');
             };
 
-            $scope.deleteActivity = function () {
+            this.deleteActivity = function () {
                 this.step.activityId = null;
-
-                // Update history
-                /*HistoryService.update($scope.path);*/
             };
         }
     ]);

@@ -32,7 +32,7 @@
 
             return {
                 /**
-                 * Generate a new empty step
+                 * Generates a new empty step
                  *
                  * @param   {object} [parentStep]
                  * @returns {Step}
@@ -49,6 +49,50 @@
                     }
 
                     return newStep;
+                },
+
+                /**
+                 * Injects the Activity data into step
+                 * @param step
+                 * @param activity
+                 */
+                setActivity: function (step, activity) {
+                    if (typeof activity !== 'undefined' && activity !== null && activity.length !== 0) {
+                        // Populate step
+                        step.activityId  = activity['id'];
+                        step.name        = activity['name'];
+                        step.description = activity['description'];
+
+                        // Primary resources
+                        step.primaryResource = activity['primaryResource'];
+
+                        // Secondary resources
+                        if (null !== activity['resources']) {
+                            for (var i = 0; i < activity['resources'].length; i++) {
+                                var resource = activity['resources'][i];
+                                var resourceExists = this.hasResource(step, resource.resourceId);
+                                if (!resourceExists) {
+                                    // Generate new local ID
+                                    resource['id'] = PathService.getNextResourceId();
+
+                                    // Add to secondary resources
+                                    step.resources.push(resource);
+                                }
+                            }
+                        }
+
+                        // Parameters
+                        step.withTutor = activity['withTutor'];
+                        step.who       = activity['who'];
+                        step.where     = activity['where'];
+                        step.duration  = activity['duration'];
+                    }
+                },
+
+                addResource: function (step, resource) {
+                    if (this.hasResource(step, resource)) {
+
+                    }
                 },
 
                 /**
@@ -93,14 +137,15 @@
                 /**
                  * Check if a step contains a resource
                  * @param {object} step
-                 * @param {number} resourceId
+                 * @param {object} resource
                  */
-                hasResource: function (step, resourceId) {
+                hasResource: function (step, resource) {
                     var resourceExists = false;
                     for (var i = 0; i < step.resources.length; i++) {
-                        var res = step.resources[i];
-                        if (res.resourceId === resourceId) {
+                        var stepResource = step.resources[i];
+                        if (stepResource.resourceId === resource.resourceId) {
                             resourceExists = true;
+
                             break;
                         }
                     }

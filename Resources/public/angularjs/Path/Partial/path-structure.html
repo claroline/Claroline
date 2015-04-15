@@ -28,7 +28,7 @@
         </div>
 
         <!-- Block to display when a structure is set -->
-        <div data-ng-if="pathStructureCtrl.structure.length !== 0" data-ui-tree="pathStructureCtrl.treeOptions">
+        <div class="steps-tree" data-ng-if="pathStructureCtrl.structure.length !== 0" data-ui-tree="pathStructureCtrl.treeOptions">
             <ol class="tree" data-ui-tree-nodes="" data-ng-model="pathStructureCtrl.structure" data-nodrop>
                 <li data-ui-tree-node="" data-ng-repeat="step in pathStructureCtrl.structure" data-ng-include="pathStructureCtrl.webDir + 'bundles/innovapath/angularjs/Path/Partial/path-structure-step.html'"></li>
             </ol>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Step form -->
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" data-ng-if="pathStructureCtrl.structure.length !== 0">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" data-ng-if="pathStructureCtrl.structure.length !== 0 && pathStructureCtrl.currentStep !== null">
         <step-form data-step="pathStructureCtrl.currentStep"></step-form>
     </div>
 </div>

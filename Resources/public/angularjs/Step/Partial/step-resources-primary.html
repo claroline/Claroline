@@ -6,7 +6,7 @@
         <span class="badge">{{ stepFormCtrl.step.primaryResource != null ? 1 : 0 }}</span>
     </h4>
 
-    <a href="#" data-ui-resource-picker="primaryResourcePicker" class="btn btn-sm btn-primary">
+    <a href="#" data-ui-resource-picker="stepFormCtrl.primaryResourcePicker" class="btn btn-sm btn-primary">
         <span class="fa fa-plus"></span>
         <span data-ng-show="null == stepFormCtrl.step.primaryResource">{{ 'resources_browse'|trans:{}:'path_editor' }}</span>
         <span data-ng-show="null != stepFormCtrl.step.primaryResource">{{ 'resources_replace'|trans:{}:'path_editor' }}</span>
@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-10 col-sm-10">
             <p class="h4">{{ stepFormCtrl.step.primaryResource.name }}</p>
-            <a href="#" class="btn btn-xs btn-danger" data-ng-click="removePrimaryResource()">
+            <a href="#" class="btn btn-xs btn-danger" data-ng-click="stepFormCtrl.removePrimaryResource()">
                 <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_editor' }}
             </a>
         </div>

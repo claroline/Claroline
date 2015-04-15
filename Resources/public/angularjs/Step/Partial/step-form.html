@@ -9,17 +9,17 @@
             <div class="input-group col-md-12">
                 <input type="text" class="form-control" name="step-name" id="step-name" data-ng-model="stepFormCtrl.step.name" />
                 <div class="input-group-btn">
-                    <button data-ng-click="showActivity()" class="btn btn-default" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
+                    <button data-ng-click="stepFormCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
                         <span class="fa fa-eye"></span>
                         <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor' }}</span>
                     </button>
 
-                    <button class="btn btn-default" type="button" data-ui-resource-picker="activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
+                    <button class="btn btn-default" type="button" data-ui-resource-picker="stepFormCtrl.activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
                         <span class="fa fa-folder-open"></span>
                         <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor' }}</span>
                     </button>
 
-                    <button data-ng-click="deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
+                    <button data-ng-click="stepFormCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
                         <span class="fa fa-trash-o"></span>
                         <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor' }}</span>
                     </button>

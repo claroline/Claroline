@@ -25,7 +25,7 @@
                             </a>
                         </li>
                         <li>
-                            <a data-pageslide="left" data-ps-size="320px" href="#sidebar-left" role="button">
+                            <a data-pageslide="left" href="#sidebar-left" role="button">
                                 <span class="fa fa-download"></span> {{ 'open_templates'|trans:{}:'path_editor' }}
                             </a>
                         </li>
@@ -38,8 +38,13 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" data-ng-click="pathFormCtrl.publishAndPreview()">
-                                <span class="fa fa-eye"></span> {{ 'publish_and_preview'|trans:{}:'path_editor' }}
+                            <a href="#" data-ng-click="pathFormCtrl.preview()">
+                                <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_editor' }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-ng-click="pathFormCtrl.preview()">
+                                <span class="fa fa-eye"></span> {{ 'preview'|trans:{}:'path_editor' }}
                             </a>
                         </li>
                     </ul>
@@ -57,6 +62,20 @@
                         <label class="control-label col-md-3" for="innova_path_description">{{ 'path_description'|trans:{}:'path_editor' }}</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_editor' }}" data-ng-model="pathFormCtrl.path.description" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <label class="control-label col-md-3">{{ 'path_status'|trans:{}:'path_editor' }}</label>
+                        <div class="col-md-9">
+                            <!-- Path not published -->
+                            <p data-ng-if="!pathFormCtrl.published" class="form-control-static text-danger">{{ 'draft'|trans:{}:'path_editor' }}</p>
+
+                            <!-- Path published without modifications -->
+                            <p data-ng-if="pathFormCtrl.published && !pathFormCtrl.modified" class="form-control-static text-success">{{ 'published'|trans:{}:'path_editor' }}</p>
+
+                            <!-- Path published with modifications -->
+                            <p data-ng-if="pathFormCtrl.published && pathFormCtrl.modified" class="form-control-static text-warning">{{ 'published'|trans:{}:'path_editor' }} {{ 'modified'|trans:{}:'path_editor' }}</p>
                         </div>
                     </div>
                 </div>

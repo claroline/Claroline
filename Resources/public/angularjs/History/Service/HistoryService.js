@@ -5,32 +5,51 @@
     'use strict';
 
     angular.module('HistoryModule').factory('HistoryService', [
-        'PathService',
-        function (PathService) {
+        function () {
             var disabled = {
                 redo: true,
                 undo: true
             };
 
-            // History stack
+            /**
+             * History stack
+             * @type {Array}
+             */
             var history = [];
-            var historyState = -1;
+
+            /**
+             * Index of current data into the history
+             * @type {number}
+             */
+            var historyIndex = -1;
 
             return {
                 getDisabled: function () {
                     return disabled;
                 },
 
+                /**
+                 * Can the last action be undo ?
+                 * @returns {boolean}
+                 */
                 canUndo: function () {
                     return !disabled.undo;
                 },
 
+                /**
+                 * Can next action be redo ?
+                 * @returns {boolean}
+                 */
                 canRedo: function () {
                     return !disabled.redo;
                 },
 
+                /**
+                 * Is history empty ?
+                 * @returns {boolean}
+                 */
                 isEmpty: function () {
-                    return 0 === historyState || -1 === historyState;
+                    return 0 <= historyIndex;
                 },
 
                 /**
@@ -42,25 +61,25 @@
                     disabled.undo = true;
 
                     history = [];
-                    historyState = -1;
+                    historyIndex = -1;
 
                     return this;
                 },
 
                 /**
-                 * Store current path in history
-                 * @param path
+                 * Store current data in history
+                 * @param data
                  * @returns {*}
                  */
-                update: function (path) {
+                update: function (data) {
                     // Increment history state
-                    this.incrementHistoryState();
+                    this.incrementIndex();
 
-                    // Store path in history stack
-                    var pathCopy = angular.extend({}, path);
-                    history.push(pathCopy);
+                    // Store a copy of data in history stack
+                    var dataCopy = angular.copy(data);
+                    history.push(dataCopy);
 
-                    if (this.getHistoryState() !== 0) {
+                    if (this.getIndex() !== 0) {
                         // History is not empty => enable the undo function
                         disabled.undo = false;
                     }
@@ -73,58 +92,51 @@
                  * Get the last path state from history stack and set it as current path
                  * @returns {*}
                  */
-                undo: function () {
+                undo: function (currentData) {
                     // Decrement history state
-                    this.decrementHistoryState();
+                    this.decrementIndex();
 
-                    var path = this.getPathFromHistory(historyState);
-
-                    // Clone object
-                    var pathCopy = angular.extend({}, path);
+                    var data = this.getFromHistory(historyIndex);
 
                     disabled.redo = false;
-                    if (0 === historyState) {
+                    if (0 <= historyIndex) {
                         // History stack is empty => disable the undo function
                         disabled.undo = true;
                     }
 
-                    // Inject new path
-                    PathService.setPath(pathCopy);
+                    // Returns a copy of the history
+                    angular.copy(data, currentData);
 
-                    return this;
+                    return currentData;
                 },
 
                 /**
                  * Get the next history state from history stack and set it as current path
                  * @returns {*}
                  */
-                redo: function () {
-                    // Increment history state
-                    historyState++;
+                redo: function (currentData) {
+                    this.incrementIndex();
 
-                    var path = this.getPathFromHistory(historyState);
-
-                    // Clone object
-                    var pathCopy = angular.extend({}, path);
+                    var data = this.getFromHistory(historyIndex);
 
                     disabled.undo = false;
-                    if (historyState == history.length - 1) {
+                    if (historyIndex == history.length - 1) {
                         disabled.redo = true;
                     }
 
-                    // Inject new path
-                    PathService.setPath(pathCopy);
+                    // Returns a copy of the history
+                    angular.copy(data, currentData);
 
-                    return this;
+                    return currentData;
                 },
 
                 /**
                  *
                  * @returns {*}
                  */
-                incrementHistoryState: function () {
+                incrementIndex: function () {
                     // Increment history state
-                    this.setHistoryState(this.getHistoryState() + 1);
+                    this.setIndex(this.getIndex() + 1);
 
                     return this;
                 },
@@ -133,9 +145,9 @@
                  *
                  * @returns {*}
                  */
-                decrementHistoryState: function() {
+                decrementIndex: function() {
                     // Decrement history state
-                    this.setHistoryState(this.getHistoryState() - 1);
+                    this.setIndex(this.getIndex() - 1);
 
                     return this;
                 },
@@ -144,8 +156,8 @@
                  *
                  * @returns {number}
                  */
-                getHistoryState: function () {
-                    return historyState;
+                getIndex: function () {
+                    return historyIndex;
                 },
 
                 /**
@@ -153,18 +165,18 @@
                  * @param   {number} data
                  * @returns {*}
                  */
-                setHistoryState: function (data) {
-                    historyState = data;
+                setIndex: function (data) {
+                    historyIndex = data;
 
                     return this;
                 },
 
                 /**
-                 * Get path state stored at position index in history stack
+                 * Get state stored at position index in history stack
                  * @param   {number} index
                  * @returns {object}
                  */
-                getPathFromHistory : function (index) {
+                getFromHistory : function (index) {
                     return history[index];
                 }
             };

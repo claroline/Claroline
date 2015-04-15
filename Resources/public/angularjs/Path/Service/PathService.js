@@ -6,260 +6,119 @@
 
     angular.module('PathModule').factory('PathService', [
         '$http',
-        function PathService($http) {
-            var path = null;
-            var maxStepId = 0;
-            var maxResourceId = 0;
-
+        'AlertService',
+        function PathService($http, AlertService) {
             return {
                 /**
-                 *
-                 * @returns object
+                 * Save modification to DB
+                 * @param {number} id
+                 * @param {{}}     path
                  */
-                getPath: function() {
-                    return path;
-                },
-
-                /**
-                 *
-                 * @param data
-                 * @returns {PathService}
-                 */
-                setPath: function(data) {
-                    // Store current path
-                    path = data;
-
-                    // Retrieve max resource id
-                    this.getMaxResourceId();
-
-                    return this;
-                },
-
-                recalculateStepsLevel: function () {
-                    if (path != null && path.steps != null && path.steps.length !== 0) {
-                        var currentLevel = 0;
-                        for (var i = 0; i < path.steps.length; i++) {
-                            var step = path.steps[i];
-                            this.updateStepLevel(step, currentLevel);
+                save: function (id, path) {
+                    // Transform data to make it acceptable by Symfony
+                    var dataToSave = {
+                        innova_path: {
+                            name:        path.name,
+                            description: path.description,
+                            structure:   angular.toJson(path)
                         }
-                    }
-                },
+                    };
 
-                updateStepLevel: function (step, currentLevel) {
-                    step.lvl = currentLevel;
+                    // Call server
+                    return $http
+                        .put(Routing.generate('innova_path_editor_wizard_save', { id: id }), dataToSave)
 
-                    if (step.children != null && step.children.length !== 0) {
-                        var nextLevel = currentLevel + 1;
-                        for (var i = 0; i < step.children.length; i++) {
-                            var nextStep = step.children[i];
-                            this.updateStepLevel(nextStep, nextLevel);
-                        }
-                    }
-                },
-
-                /**
-                 * Retrieve step in path using its ID
-                 *
-                 * @param stepId
-                 * @returns object
-                 */
-                getStepById: function(stepId) {
-                    function search(stepId, currentStep) {
-                        var step = null;
-                        if (stepId === currentStep.id) {
-                            step = currentStep;
-                        }
-                        else if (typeof currentStep.children != 'undefined' && null != currentStep.children && currentStep.children.length !== 0) {
-                            for (var i = 0; i < currentStep.children.length; i++) {
-                                step = search(stepId, currentStep.children[i]);
-                                if (null !== step) {
-                                    // Step found, stop search
-                                    break;
+                        .success(function (response) {
+                            if ('ERROR_VALIDATION' === response.status) {
+                                for (var i = 0; i < response.messages.length; i++) {
+                                    AlertService.addAlert('error', response.messages[i]);
                                 }
+                            } else {
+                                // Get updated data
+                                angular.copy(response.data, path);
+
+                                // Display confirm message
+                                AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_editor'));
                             }
-                        }
+                        })
 
-                        return step;
-                    }
-
-                    var step = null;
-                    if (null !== path && path.length !== 0) {
-                        for (var i = 0; i < path.steps.length; i++) {
-                            step = search(stepId, path.steps[i]);
-                            if (null !== step) {
-                                break;
-                            }
-                        }
-                    }
-
-                    return step;
+                        .error(function (response) {
+                            AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_editor'));
+                        });
                 },
 
                 /**
-                 *
-                 * @param step
-                 * @returns {PathService}
+                 * Publish path modifications
+                 * @param {number} id
                  */
-                retrieveMaxStepId: function(step) {
-                    // Check current step
-                    if (step.id > maxStepId) {
-                        maxStepId = step.id;
-                    }
+                publish: function (id) {
 
-                    // Check step children
-                    if (typeof step.children != 'undefined' && null !== step.children) {
-                        for (var i = 0; i < step.children.length; i++) {
-                            this.retrieveMaxStepId(step.children[i]);
-                        }
-                    }
-
-                    return this;
                 },
 
                 /**
-                 *
-                 * @returns Integer
+                 * Loop over all steps of path and execute callback
+                 * Iteration stops when callback returns true
                  */
-                getMaxResourceId: function() {
-                    maxResourceId = 1;
-                    if (null !== path && typeof path.steps !== 'undefined' && null != path.steps)
-                    {
-                        for (var i = 0; i < path.steps.length; i++) {
-                            this.retrieveMaxResourceId(path.steps[i]);
+                browseSteps: function (steps, callback) {
+                    /**
+                     * Recursively loop through the steps to execute callback on each step
+                     * @param   {object} parentStep
+                     * @param   {object} currentStep
+                     * @returns {boolean}
+                     */
+                    function recursiveLoop(parentStep, currentStep) {
+                        var terminated = false;
+
+                        // Execute callback on current step
+                        if (typeof callback === 'function') {
+                            terminated = callback(parentStep, currentStep);
                         }
-                    }
 
-                    return maxResourceId;
-                },
-
-                /**
-                 *
-                 * @param step
-                 * @returns {PathService}
-                 */
-                retrieveMaxResourceId: function(step) {
-                    if (typeof step.resources != 'undefined' && null !== step.resources) {
-                        // Check current step resources
-                        for (var i = 0; i < step.resources.length; i++) {
-                            if (step.resources[i].id > maxResourceId) {
-                                maxResourceId = step.resources[i].id;
-                            }
-                        }
-                    }
-
-                    // Check step children
-                    if (typeof step.children != 'undefined' && null !== step.children) {
-                        for (var i = 0; i < step.children.length; i++) {
-                            this.retrieveMaxResourceId(step.children[i]);
-                        }
-                    }
-
-                    return this;
-                },
-
-                /**
-                 *
-                 * @returns Integer
-                 */
-                getNextResourceId: function() {
-                    if (0 === maxResourceId) {
-                        // Max step ID not calculated
-                        this.getMaxResourceId();
-                    }
-                    maxResourceId++;
-
-                    return maxResourceId;
-                },
-
-                checkStepExists: function(step) {
-                    var stepFound = false;
-
-                    function find(stepToFind, currentStep) {
-                        if (currentStep.id === stepToFind.id) {
-                            return true;
-                        }
-                        else if (typeof currentStep.children != 'undefined' && null !== currentStep.children) {
+                        if (!terminated && typeof currentStep.children !== 'undefined' && currentStep.children.length !== 0) {
                             for (var i = 0; i < currentStep.children.length; i++) {
-                                var current = currentStep.children[i];
-
-                                return find(stepToFind, current);
+                                terminated = recursiveLoop(currentStep, currentStep.children[i]);
                             }
                         }
+
+                        return terminated;
                     }
 
-                    if (null !== path && typeof path.steps !== 'undefined' && null !== path.steps) {
-                        for (var i = 0; i < path.steps.length; i++) {
-                            var current = path.steps[i];
-                            stepFound = find(step, current);
-                        }
-                    }
-
-                    return stepFound;
-                },
-
-                /**
-                 *
-                 * @param newStep
-                 * @returns {PathService}
-                 */
-                replaceStep: function(newStep) {
-                    if (null !== path && typeof path.steps !== 'undefined' && null !== path.steps) {
-                        var stepFound = false;
-                        for (var i = 0; i < path.steps.length; i++) {
-                            stepFound = this.searchStepToReplace(path.steps[i], newStep);
-                            if (stepFound) {
+                    if (typeof steps !== 'undefined' && steps.length !== 0) {
+                        for (var j = 0; j < steps.length; j++) {
+                            var terminated = recursiveLoop(null, steps[j]);
+                            if (terminated) {
                                 break;
                             }
                         }
                     }
-
-                    return this;
                 },
 
-                /**
-                 *
-                 * @param currentStep
-                 * @param newStep
-                 * @returns boolean
-                 */
-                searchStepToReplace: function(currentStep, newStep) {
-                    var stepFound = false;
-                    if (currentStep.id === newStep.id) {
-                        stepFound = true;
-                        this.updateStep(currentStep, newStep);
-                    }
-                    else if (typeof currentStep.children != 'undefined' && null !== currentStep.children) {
-                        for (var i = 0; i < currentStep.children.length; i++) {
-                            stepFound = this.searchStepToReplace(currentStep.children[i], newStep);
-                            if (stepFound) {
-                                break;
+                reorderSteps: function (steps) {
+                    this.browseSteps(steps, function (parent, step) {
+                        if (null !== parent) {
+                            step.lvl = parent.lvl + 1;
+                        } else {
+                            step.lvl = 0;
+                        }
+                    });
+                },
+
+                removeStep: function (steps, stepToDelete) {
+                    this.browseSteps(steps, function (parent, step) {
+                        var deleted = false;
+                        if (step === stepToDelete) {
+                            console.log('found');
+                            var pos = parent.children.indexOf(stepToDelete);
+                            if (-1 !== pos) {
+                                console.log('deleted');
+                                parent.children.splice(pos, 1);
+
+                                deleted = true;
                             }
                         }
-                    }
 
-                    return stepFound;
-                },
-
-                /**
-                 *
-                 * @param oldStep
-                 * @param newStep
-                 * @returns {PathService}
-                 */
-                updateStep: function(oldStep, newStep) {
-                    // Add all newStep properties
-                    for (var prop in newStep) {
-                        oldStep[prop] = newStep[prop];
-                    }
-
-                    // Remove properties which no longer exists in new step
-                    for (var prop in oldStep) {
-                        if (typeof (newStep[prop]) == 'undefined') {
-                            delete oldStep[prop];
-                        }
-                    }
-
-                    return this;
+                        return deleted;
+                    });
                 }
             };
         }

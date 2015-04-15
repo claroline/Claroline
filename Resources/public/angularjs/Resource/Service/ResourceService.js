@@ -5,48 +5,23 @@
     'use strict';
 
     angular.module('ResourceModule').factory('ResourceService', [
+        'IdentifierService',
         'PathService',
-        function (PathService) {
-            var resource = null;
-
-            // Base template used to create new resource
-            var baseResource = {
-                id                  : null,
-                resourceId          : null,
-                name                : null,
-                type                : null,
-                propagateToChildren : true
+        function ResourceService(IdentifierService, PathService) {
+            var Resource = function Resource() {
+                this.id                  = IdentifierService.generateUUID();
+                this.resourceId          = null;
+                this.name                = null;
+                this.type                = null;
+                this.propagateToChildren = true;
             };
 
             return {
                 /**
-                 *
-                 * @returns object
+                 * Generates a new Resource object
                  */
-                getResource: function() {
-                    return resource;
-                },
-
-                /**
-                 *
-                 * @param data
-                 * @returns {ResourceService}
-                 */
-                setResource: function(data) {
-                    resource = data;
-
-                    return this;
-                },
-
-                /**
-                 *
-                 * @returns object
-                 */
-                generateNewResource: function() {
-                    var newResource = jQuery.extend(true, {}, baseResource);
-                    newResource.id = PathService.getNextResourceId();
-
-                    return newResource;
+                new: function () {
+                    return new Resource();
                 },
 
                 /**

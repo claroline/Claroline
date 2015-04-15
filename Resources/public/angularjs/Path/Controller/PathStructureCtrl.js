@@ -7,62 +7,31 @@
 
     angular.module('PathModule').controller('PathStructureCtrl', [
         '$modal',
+        'IdentifierService',
         'HistoryService',
         'ClipboardService',
         'ConfirmService',
         'PathService',
         'StepService',
-        function PathStructureCtrl($modal, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
+        function PathStructureCtrl($modal, IdentifierService, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
             this.webDir = EditorApp.webDir;
 
             this.structure = [];
 
+            /**
+             * Step currently displayed into Step form
+             * @type {null}
+             */
             this.currentStep = null;
+
+            /**
+             * Current state of the clipboard
+             * @type {object}
+             */
+            this.clipboardDisabled = ClipboardService.getDisabled();
 
             // Show action buttons for a step in the tree (contains the ID of the step)
             this.showButtons = null;
-
-            /**
-             * Initialize an empty structure for path
-             */
-            this.createNew = function () {
-                // Create a generic root step
-                var rootStep = StepService.new();
-
-                this.structure = [];
-                this.structure.push(rootStep);
-
-                // Set root step as current step
-                this.setCurrentStep(rootStep);
-            };
-
-            /**
-             * Initialize the structure from a selected template
-             */
-            this.createFromTemplate = function () {
-                // Open select modal
-
-                // Get the root of the template as current step
-            };
-
-            this.setCurrentStep = function (step) {
-                this.currentStep = step;
-            };
-
-            /**
-             * Copy step into clipboard
-             */
-            this.copy = function (step) {
-                ClipboardService.copy(step);
-            };
-
-            /**
-             * Paste clipboard content
-             */
-            this.paste = function (step) {
-                ClipboardService.paste(step);
-                /*HistoryService.update(this.path);*/
-            };
 
             // Configure sortable Tree feature
             this.treeOptions = {
@@ -79,41 +48,79 @@
                     // Enable tooltip on drag handlers
                     $('.angular-ui-tree-handle').tooltip('enable');
 
-                    // Reorder steps tree
-                    this.applyTreeChanges();
+                    // Recalculate step levels
+                    PathService.reorderSteps(this.structure);
                 }.bind(this)
             };
 
             /**
-             * Update Path when Tree is modified with drag n drop
+             * Initialize an empty structure for path
              */
-            this.applyTreeChanges = function() {
-                PathService.setPath(this.path);
-                PathService.recalculateStepsLevel(this.path);
+            this.createNew = function () {
+                // Create a generic root step
+                var rootStep = StepService.new();
 
-                /*HistoryService.update(this.path);*/
+                this.structure.push(rootStep);
+
+                // Set root step as current step
+                this.setCurrentStep(rootStep);
+            };
+
+            /**
+             * Initialize the structure from a selected template
+             */
+            this.createFromTemplate = function () {
+                // Open select modal
+
+                // Get the root of the template as current step
+            };
+
+            /**
+             * Set the current step to edit
+             * @param step
+             */
+            this.setCurrentStep = function (step) {
+                this.currentStep = step;
+            };
+
+            /**
+             * Add a new step child to specified step
+             */
+            this.addStep = function (parentStep) {
+                StepService.new(parentStep);
+            };
+
+            /**
+             * Copy step into clipboard
+             */
+            this.copy = function (step) {
+                ClipboardService.copy(step);
+            };
+
+            /**
+             * Paste clipboard content
+             */
+            this.paste = function (step) {
+                // Paste clipboard content into children of the step
+                ClipboardService.paste(step.children, function (clipboardData) {
+                    // Change step IDs before paste them
+                    PathService.browseSteps([ clipboardData ], function (parentStep, step) {
+                        step.id = IdentifierService.generateUUID();
+
+                        // Override name
+                        step.name = step.name ? step.name + ' ' : '';
+                        step.name += '(' + Translator.trans('copy', {}, 'path_editor') + ')';
+                    });
+                });
+
+                // Recalculate step levels
+                PathService.reorderSteps(this.structure);
             };
 
             /**
              * Remove a step from Tree
              */
             this.removeStep = function (step) {
-                // Search step to remove function
-                function walk(path) {
-                    var children = path.children;
-
-                    if (children) {
-                        var i = children.length;
-                        while (i--) {
-                            if (children[i] === step) {
-                                return children.splice(i, 1);
-                            } else {
-                                walk(children[i]);
-                            }
-                        }
-                    }
-                }
-
                 ConfirmService.open(
                     // Confirm options
                     {
@@ -123,23 +130,29 @@
                     },
 
                     // Confirm success callback
-                    function() {
-                        // Confirm
-                        walk(this.structure);
+                    function () {
+                        // Check if we are deleting the current editing step
+                        var updatePreview = false;
+                        if (step === this.currentStep) {
+                            // Need to update preview
+                            updatePreview = true;
+                        }
 
-                        /*HistoryService.update(this.path);*/
-                        /*this.updatePreviewStep();*/
+                        // Effective remove
+                        PathService.removeStep(this.structure, step);
+
+                        // Update current editing step
+                        if (updatePreview) {
+                            if (this.structure[0]) {
+                                // Display root step
+                                this.setCurrentStep(this.structure[0]);
+                            } else {
+                                // There is no longer steps into the path => hide step form
+                                this.setCurrentStep(null);
+                            }
+                        }
                     }.bind(this)
                 );
-            };
-
-            /**
-             * Add a new step child to specified step
-             */
-            this.addChild = function (parentStep) {
-                StepService.new(parentStep);
-
-                /*HistoryService.update(this.path);*/
             };
 
             /**

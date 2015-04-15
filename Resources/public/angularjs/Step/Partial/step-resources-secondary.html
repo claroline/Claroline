@@ -7,7 +7,7 @@
         <span class="badge">{{ (inheritedResources.length + previewStep.resources.length) }}</span>
     </h4>
 
-    <a href="#" data-ui-resource-picker="secondaryResourcesPicker" class="btn btn-sm btn-primary">
+    <a href="#" data-ui-resource-picker="stepFormCtrl.secondaryResourcesPicker" class="btn btn-sm btn-primary">
         <span class="fa fa-plus"></span> {{ 'resources_browse'|trans:{}:'path_editor' }}
     </a>
 </div>
@@ -18,7 +18,7 @@
     <!-- Resources -->
     <ul class="step-resources nodes" data-ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != stepFormCtrl.form.resources && stepFormCtrl.form.resources.length != 0)">
         <!-- Inherited resources from parents -->
-        <li data-ng-repeat="resource in inheritedResources" data-ng-class="{ excluded: resource.isExcluded }" class="resource-inherited resource-lvl-{% verbatim %}{{ resource.parentStep.lvl }}{% endverbatim %} node-thumbnail node ui-state-default zoom{% verbatim %}{{ resourceZoom }}{% endverbatim %}">
+        <li data-ng-repeat="resource in inheritedResources" data-ng-class="{ excluded: resource.isExcluded }" class="resource-inherited resource-lvl-{{ resource.parentStep.lvl }} node-thumbnail node ui-state-default zoom75">
             <div class="node-element" style="background-image: url('{{ resourceIcons[resource.type] }}');"></div>
             <div class="dropdown">
                 <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
@@ -26,11 +26,11 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li>
-                        <a class="node-menu-action" href="#" data-ng-show="resource.isExcluded" data-ng-click="includeParentResource(resource)">
+                        <a class="node-menu-action" href="#" data-ng-show="resource.isExcluded" data-ng-click="stepFormCtrl.includeParentResource(resource)">
                             <span class="fa fa-eye"></span>
                             {{ 'resource_show_parent'|trans:{}:'path_editor' }}
                         </a>
-                        <a class="node-menu-action" href="#" data-ng-show="!resource.isExcluded" data-ng-click="excludeParentResource(resource)">
+                        <a class="node-menu-action" href="#" data-ng-show="!resource.isExcluded" data-ng-click="stepFormCtrl.excludeParentResource(resource)">
                             <span class="fa fa-eye-slash"></span>
                             {{ 'resource_hide_parent'|trans:{}:'path_editor' }}
                         </a>
@@ -40,7 +40,7 @@
         </li>
 
         <!-- Specific resources -->
-        <li data-ng-repeat="resource in stepFormCtrl.form.resources" data-ng-class="{propagated: resource.propagateToChildren}" class="resource node-thumbnail node ui-state-default zoom{{ resourceZoom }}">
+        <li data-ng-repeat="resource in stepFormCtrl.form.resources" data-ng-class="{ propagated: resource.propagateToChildren }" class="resource node-thumbnail node ui-state-default zoom75">
             <div class="node-element" style="background-image: url({{ resourceIcons[resource.type] || resourceIcons['custom/default'] }});"></div>
 
             <div class="dropdown">
@@ -55,18 +55,18 @@
                         </a>
                     </li>
                     <li>
-                        <a class="node-menu-action" href="#" data-ng-show="!resource.propagateToChildren" data-ng-click="enableResourcePropagation(resource)">
+                        <a class="node-menu-action" href="#" data-ng-show="!resource.propagateToChildren" data-ng-click="stepFormCtrl.enableResourcePropagation(resource)">
                             <span class="fa fa-eye"></span>
                             {{ 'resource_propagate'|trans:{}:'path_editor' }}
                         </a>
 
-                        <a class="node-menu-action" href="#" data-ng-show="resource.propagateToChildren" data-ng-click="disableResourcePropagation(resource)">
+                        <a class="node-menu-action" href="#" data-ng-show="resource.propagateToChildren" data-ng-click="stepFormCtrl.disableResourcePropagation(resource)">
                             <span class="fa fa-eye-slash"></span>
                             {{ 'resource_no_propagate'|trans:{}:'path_editor' }}
                         </a>
                     </li>
                     <li>
-                        <a class="node-menu-action" href="#" data-ng-click="removeResource(resource)">
+                        <a class="node-menu-action" href="#" data-ng-click="stepFormCtrl.removeResource(resource)">
                             <span class="fa fa-trash-o"></span>
                             {{ 'resource_delete'|trans:{}:'path_editor' }}
                         </a>
