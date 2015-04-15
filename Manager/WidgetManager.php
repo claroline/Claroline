@@ -77,7 +77,21 @@ class WidgetManager
      */
     public function getBlog(WidgetInstance $widgetInstance)
     {
-        $resourceNode = $this->getResourceNode($widgetInstance);
+        $resourceNode = $this->getResourceNodeOfWidgetBlog($widgetInstance);
+
+        return $this->entityManager
+            ->getRepository('IcapBlogBundle:Blog')
+            ->findOneByResourceNode($resourceNode);
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Icap\BlogBundle\Entity\Blog
+     */
+    public function getTagListBlog(WidgetInstance $widgetInstance)
+    {
+        $resourceNode = $this->getResourceNodeOfWidgetTagListBlog($widgetInstance);
 
         return $this->entityManager
             ->getRepository('IcapBlogBundle:Blog')
@@ -89,11 +103,41 @@ class WidgetManager
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode|null
      */
-    public function getResourceNode(WidgetInstance $widgetInstance)
+    public function getResourceNodeOfWidgetBlog(WidgetInstance $widgetInstance)
     {
-        /** @var \Icap\BlogBundle\Entity\WidgetBlog $widgetBlog */
+        return $this->getResourceNode($widgetInstance, 'IcapBlogBundle:WidgetBlog');
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode|null
+     */
+    public function getResourceNodeOfWidgetTagListBlog(WidgetInstance $widgetInstance)
+    {
+        return $this->getResourceNode($widgetInstance, 'IcapBlogBundle:WidgetTagListBlog');
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Icap\BlogBundle\Entity\WidgetTagListBlog|null
+     */
+    public function getWidgetTagListBlogByWdgetInstance(WidgetInstance $widgetInstance)
+    {
+        return $this->entityManager ->getRepository('IcapBlogBundle:WidgetTagListBlog')->findOneByWidgetInstance($widgetInstance);
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     * @param string         $widgetRepositoryClass
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode|null
+     */
+    public function getResourceNode(WidgetInstance $widgetInstance, $widgetRepositoryClass)
+    {
         $widgetBlog = $this->entityManager
-            ->getRepository('IcapBlogBundle:WidgetBlog')
+            ->getRepository($widgetRepositoryClass)
             ->findOneByWidgetInstance($widgetInstance);
 
         $resourceNode = null;

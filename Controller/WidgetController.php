@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Entity\WidgetBlog;
 use Icap\BlogBundle\Entity\WidgetBlogList;
+use Icap\BlogBundle\Entity\WidgetTagListBlog;
 use Icap\BlogBundle\Listener\BlogListener;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -79,6 +80,7 @@ class WidgetController extends Controller
             )
         );
     }
+
     /**
      * @Route("/icap_blog/widget/blog/{id}/config", name="icap_blog_widget_blog_configure", requirements={"id" = "\d+"})
      * @Method("POST")
@@ -89,18 +91,24 @@ class WidgetController extends Controller
             throw new AccessDeniedException();
         }
 
-        $resourceNode = $this->getWidgetManager()->getResourceNode($widgetInstance);
+        $resourceNode = $this->getWidgetManager()->getResourceNodeOfWidgetBlog($widgetInstance);
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $widgetBlog = new WidgetBlog();
-        $widgetBlog->setResourceNode($resourceNode);
+        /** @var \icap\BlogBundle\Entity\WidgetBlog $widgetBlog */
+        $widgetBlog = $entityManager->getRepository('IcapBlogBundle:WidgetBlog')->findOneByWidgetInstance($widgetInstance);
+
+        if (null === $widgetBlog) {
+            $widgetBlog = new WidgetBlog();
+            $widgetBlog
+                ->setResourceNode($resourceNode)
+                ->setWidgetInstance($widgetInstance);
+        }
 
         /** @var Form $form */
         $form = $this->get('form.factory')->create($this->get('icap_blog.form.widget_blog'), $widgetBlog);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $widgetBlog->setWidgetInstance($widgetInstance);
             $entityManager->persist($widgetBlog);
             $entityManager->flush();
 
@@ -109,6 +117,49 @@ class WidgetController extends Controller
 
         return $this->render(
             'IcapBlogBundle:widget:blogConfigure.html.twig',
+            array(
+                'form'           => $form->createView(),
+                'widgetInstance' => $widgetInstance
+            )
+        );
+    }
+
+    /**
+     * @Route("/icap_blog/widget/tags/{id}/config", name="icap_blog_widget_tag_list_blog_configure", requirements={"id" = "\d+"})
+     * @Method("POST")
+     */
+    public function updateWidgetTagListBlog(Request $request, WidgetInstance $widgetInstance)
+    {
+        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+            throw new AccessDeniedException();
+        }
+
+        $resourceNode = $this->getWidgetManager()->getResourceNodeOfWidgetTagListBlog($widgetInstance);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        /** @var \icap\BlogBundle\Entity\WidgetTagListBlog $widgetTagListBlog */
+        $widgetTagListBlog = $entityManager->getRepository('IcapBlogBundle:WidgetTagListBlog')->findOneByWidgetInstance($widgetInstance);
+
+        if (null === $widgetTagListBlog) {
+            $widgetTagListBlog = new WidgetTagListBlog();
+            $widgetTagListBlog
+                ->setResourceNode($resourceNode)
+                ->setWidgetInstance($widgetInstance);
+        }
+
+        /** @var Form $form */
+        $form = $this->get('form.factory')->create($this->get('icap_blog.form.widget_tag_list_blog'), $widgetTagListBlog);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $entityManager->persist($widgetTagListBlog);
+            $entityManager->flush();
+
+            return new Response('', Response::HTTP_NO_CONTENT);
+        }
+
+        return $this->render(
+            'IcapBlogBundle:widget:tagListBlogConfigure.html.twig',
             array(
                 'form'           => $form->createView(),
                 'widgetInstance' => $widgetInstance

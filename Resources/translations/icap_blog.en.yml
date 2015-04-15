@@ -99,3 +99,5 @@ view: '%viewCounter% view | %viewCounter% views'
 icap_blog_options_form_display_post_view_counter: 'Display view counter on each post ?'
 blog_widgt_list_form_blog: 'Blog to add'
 widget_list_no_blog: 'No blog displayed'
+no_blog_selected: 'No blog selected'
+blog_widget_tag_list_blog_form_tag_cloud: "Tag cloud"

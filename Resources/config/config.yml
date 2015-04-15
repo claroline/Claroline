@@ -24,3 +24,6 @@ plugin:
       - name: blog
         is_configurable: true
         is_exportable: false
+      - name: tag_list
+        is_configurable: true
+        is_exportable: false
