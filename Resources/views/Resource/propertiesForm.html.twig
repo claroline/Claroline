@@ -16,6 +16,10 @@
             {{ form_row(form.resourceType) }}
             {{ form_row(form.creator) }}
             <hr>
+            {{ form_row(form.published) }}
+            {{ form_row(form.accessibleFrom) }}
+            {{ form_row(form.accessibleUntil) }}
+            <hr>
             {{ form_rest(form) }}
 
             {% if isDir %}
