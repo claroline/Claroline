@@ -2,7 +2,9 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
+use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Manager\PathManager;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
@@ -38,6 +40,12 @@ class EditorController
     protected $router;
 
     /**
+     * Form factory
+     * @var \Symfony\Component\Form\FormFactoryInterface
+     */
+    protected $formFactory;
+
+    /**
      * Path manager
      * @var \Innova\PathBundle\Manager\PathManager
      */
@@ -51,21 +59,27 @@ class EditorController
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager    $objectManager
-     * @param \Symfony\Component\Routing\RouterInterface    $router
-     * @param \Innova\PathBundle\Manager\PathManager        $pathManager
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Symfony\Component\Routing\RouterInterface $router
+     * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
+     * @param \Innova\PathBundle\Manager\PathManager $pathManager
+     * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
      */
     public function __construct(
         ObjectManager        $objectManager,
         RouterInterface      $router,
+        FormFactoryInterface $formFactory,
+        ResourceManager      $resourceManager,
         PathManager          $pathManager,
-        ResourceManager      $resourceManager)
+        PathHandler          $pathHandler)
     {
-        $this->om                = $objectManager;
-        $this->router            = $router;
-        $this->pathManager       = $pathManager;
-        $this->resourceManager   = $resourceManager;
+        $this->om              = $objectManager;
+        $this->router          = $router;
+        $this->formFactory    = $formFactory;
+        $this->resourceManager = $resourceManager;
+        $this->pathManager     = $pathManager;
+        $this->pathHandler     = $pathHandler;
     }
 
     /**
@@ -83,36 +97,53 @@ class EditorController
         // Check User credentials
         $this->pathManager->checkAccess('EDIT', $path);
 
-        // Get workspace root directory
-        $wsDirectory = $this->resourceManager->getWorkspaceRoot($path->getWorkspace());
-        $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
             '_resource'     => $path,
-            'workspace'     => $path->getWorkspace(),
-            'wsDirectoryId' => $wsDirectory->getId(),
-            'resourceTypes' => $resourceTypes,
             'resourceIcons' => $resourceIcons,
         );
     }
 
+    /**
+     * Save Path
+     * @param Path $path
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     *
+     * @Route(
+     *      "/{id}",
+     *      name    = "innova_path_editor_wizard_save",
+     *      options = { "expose" = true }
+     * )
+     * @Method("PUT")
+     */
     public function saveAction(Path $path)
     {
-        /*$this->pathManager->checkAccess('EDIT', $path);
+        $this->pathManager->checkAccess('EDIT', $path);
 
         // Create form
-        $form = $this->formFactory->create('innova_path', $path);
+        $form = $this->formFactory->create('innova_path', $path, array (
+            'method' => 'PUT',
+            'csrf_protection' => false,
+        ));
+
+        $response = array ();
 
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
             // Validation OK
+            $response['status']   = 'OK';
+            $response['messages'] = array ();
+            $response['data']     = $this->pathHandler->getData();
         } else {
             // Validation Error
+            $response['status']   = 'ERROR_VALIDATION';
+            $response['messages'] = $this->pathHandler->getFormErrors();
+            $response['data']     = null;
         }
 
-        return new JsonResponse(array ());*/
+        return new JsonResponse($response);
     }
 
     /**

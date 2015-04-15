@@ -36,5 +36,8 @@ services:
         arguments:
             objectManager:   @doctrine.orm.entity_manager
             router:          @router
-            pathManager:     @innova_path.manager.path
+            formFactory:     @form.factory
             resourceManager: @claroline.manager.resource_manager
+            pathManager:     @innova_path.manager.path
+            pathHandler:     @innova_path.form.handler.path
+        scope: request
