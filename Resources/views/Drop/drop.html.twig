@@ -160,19 +160,16 @@
 
             if ($('#innova_collecticiel_document_file_form_file').val() != '') {
                 $('.please-wait').show();
-                alert('ici1');
                 $(this).parents('form').submit();
             }
             // autosubmit input files.
             $('#innova_collecticiel_document_file_form_file').change(function () {
                 $('.please-wait').show();
-                alert('ici2');
                 $(this).parents('form').submit();
             });
 
             $('#innova_collecticiel_document_file_form_file').parents('form').find('button').click(function (e) {
                 // desactivation of the submit button ( autosubmit is activated).
-                alert('ici3');
                 e.preventDefault();
             });
 

@@ -56,8 +56,9 @@
     <div class="row align-with-panel">
         <div class="col-md-8">
             <a href="{{ path('innova_collecticiel_edit_add_criterion', {'resourceId': dropzone.id, 'page': pager.currentPage}) }}"
-               class="btn btn-primary add-criterion-button disabled-during-edition"><span
-                        class="fa fa-plus "> {{ 'Add a criterion Innova'|trans({}, 'innova_collecticiel') }}</span></a>
+               class="btn btn-primary add-criterion-button disabled-during-edition">
+               <span class="fa fa-plus "> {{ 'Add a criterion Innova'|trans({}, 'innova_collecticiel') }}</span>
+           </a>
             {# <a href="{{ path('innova_collecticiel_recalculate_dropzone_grades', {'dropzone': dropzone.id}) }}"
                 class="btn btn-default disabled-during-edition" data-toggle="tooltip" data-placement="left"
                 data-container="body"
@@ -283,11 +284,12 @@
 
     <div class="row">
         <div>
-            {{ form_row(form.allowCommentInCorrection, {'input_col_size': ' '}) }}
+{# Voir issue 252 InnovaERV #}
+{#            {{ form_row(form.allowCommentInCorrection, {'input_col_size': ' '}) }} #}
         </div>
         <div>
-            {{ form_row(form.forceCommentInCorrection, {'input_col_size': ' '}) }}
-
+{# Voir issue 252 InnovaERV #}
+{#      {{ form_row(form.forceCommentInCorrection, {'input_col_size': ' '}) }} #}
         </div>
     </div>
 

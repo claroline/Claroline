@@ -365,6 +365,8 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCriteriaAction(Dropzone $dropzone, $page)
     {
+
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -397,6 +399,7 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
+
         $nbCorrection = $this
             ->getDoctrine()
             ->getManager()
@@ -406,13 +409,13 @@ class DropzoneController extends DropzoneBaseController
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
         $add_criteria_after = false;
         if ($this->getRequest()->isMethod('POST')) {
+        echo "POST";
 
             $form->handleRequest($this->getRequest());
 
             if ($form->isValid()) {
 
                 $add_criteria_after = $this->getRequest()->request->get('addCriteria') == 'add-criterion' ? true : false;
-
 
                 $dropzone = $form->getData();
                 if ($dropzone->getEditionState() < 3) {
@@ -427,7 +430,6 @@ class DropzoneController extends DropzoneBaseController
                 $em->persist($dropzone);
                 $em->flush();
 
-
                 if ($form->get('recalculateGrades')->getData() == 1) {
                     $this->get('innova.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
                     $this->getRequest()->getSession()->getFlashBag()->add(
@@ -439,7 +441,6 @@ class DropzoneController extends DropzoneBaseController
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
 
-
                 if ($dropzone->hasCriteria() === false) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'warning',
@@ -447,10 +448,8 @@ class DropzoneController extends DropzoneBaseController
                     );
                 }
                 if ($add_criteria_after) {
-
                     return new JsonResponse(array('success' => true));
                     //$this->generateUrl('innova_collecticiel_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
-
                 }
 
                 $goBack = $form->get('goBack')->getData();
@@ -471,6 +470,10 @@ class DropzoneController extends DropzoneBaseController
                 }
             }
         }
+
+        echo "edidtCriteriaAction";
+        //die();
+
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
