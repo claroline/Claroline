@@ -70,8 +70,13 @@ services:
         scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 
-    ujm.qti_open_import:
-        class: UJM\ExoBundle\Services\classes\QTI\openImport
+    ujm.qti_open_long_import:
+        class: UJM\ExoBundle\Services\classes\QTI\openLongImport
+        scope: prototype
+        arguments: [@doctrine, @security.context, @service_container]
+        
+    ujm.qti_open_one_word_import:
+        class: UJM\ExoBundle\Services\classes\QTI\openOneWordImport
         scope: prototype
         arguments: [@doctrine, @security.context, @service_container]
 

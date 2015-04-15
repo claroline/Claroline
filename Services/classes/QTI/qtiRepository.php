@@ -144,7 +144,7 @@ class qtiRepository {
                                         $imported = true;
                                         break;
                                     case 'extendedTextInteraction': //open
-                                        $qtiImport = $this->container->get('ujm.qti_open_import');
+                                        $qtiImport = $this->container->get('ujm.qti_open_long_import');
                                         $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
@@ -157,12 +157,9 @@ class qtiRepository {
                             }
                         }
                         if ($imported === false) {
-                            if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
-                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
-                                $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $interX = $qtiImport->import($this, $ai);
-                                $imported = true;
-                            } else {
+                            $imported = $this->importOther($ai);
+                            if ($imported == false) {
+
                                 return 'qti unsupported format';
                             }
                         }
@@ -182,6 +179,45 @@ class qtiRepository {
         $this->removeDirectory();
 
         return true;
+    }
+
+    /**
+     * to try import other type of question
+     *
+     * @access private
+     * @param  DOMElement $ai
+     *
+     */
+    private function importOther($ai)
+    {
+        $imported = false;
+        $ib = $ai->getElementsByTagName('itemBody')->item(0);
+        $nbNodes = 0;
+        $promptTag = false;
+        $textEntryInteractionTag = false;
+        foreach ($ib->childNodes as $node) {
+            if(!($node instanceof \DomText)) {
+                $nbNodes++;
+            }
+            if ($node->nodeName == 'prompt') {
+                $promptTag = true;
+            }
+            if ($node->nodeName == 'textEntryInteraction') {
+                $textEntryInteractionTag = true;
+            }
+        }
+        if ($nbNodes == 2 && $promptTag === true && $textEntryInteractionTag === true) {
+            $qtiImport = $this->container->get('ujm.qti_open_one_word_import');
+            $interX = $qtiImport->import($this, $ai);
+            $imported = true;
+        } else if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
+                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
+                        $qtiImport = $this->container->get('ujm.qti_hole_import');
+                        $interX = $qtiImport->import($this, $ai);
+                        $imported = true;
+        }
+
+        return $imported;
     }
 
     /**
