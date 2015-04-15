@@ -34,7 +34,6 @@ use Innova\PathBundle\Entity\Path\Path;
  *      name    = "innova_path",
  *      service = "innova_path.controller.path"
  * )
- * @ParamConverter("workspace", class="ClarolineCoreBundle:Workspace\Workspace", options = { "mapping": { "workspaceId" : "id" } })
  */
 class PathController
 {
@@ -125,7 +124,7 @@ class PathController
 
         // Redirect to path list
         $url = $this->router->generate('claro_workspace_open_tool', array (
-            'workspaceId' => $workspace->getId(), 
+            'workspaceId' => $path->getWorkspace()->getId(),
             'toolName' => 'innova_path'
         ));
         
