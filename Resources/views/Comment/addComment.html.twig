@@ -1,31 +1,33 @@
 {% block dropzone_add_comment %}
-<div class="container">
-    <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
-    action="{{ path('innova_collecticiel_add_comment',
-    {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
+    <div class="container">
+        <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
+        action="{{ path('innova_collecticiel_add_comment',
+        {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
 
-        {{ form_errors(form) }}
+            {{ form_errors(form) }}
 
-        <div class="form-group">
-            <div class="col-md-12">
-                <label for="comment-name">{{ 'Comments add'|trans({}, 'innova_collecticiel') }}</label>
-                <input id="comment-name" type="text" class="form-control" name="comment-name" required />
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="comment-name">{{ 'Comments add'|trans({}, 'innova_collecticiel') }}</label>
+                    <input id="comment-name" type="text" class="form-control" name="comment-name" required />
+                </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            <div class="col-md-6">
-                <input type="submit" value="{{ 'Comment validation'|trans({}, 'innova_collecticiel') }}" class="btn btn-primary pull-left">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input type="submit" value="{{ 'Comment validation'|trans({}, 'innova_collecticiel') }}" class="btn btn-primary pull-left">
+                </div>
             </div>
-        </div>
 
-        {{ form_rest(form) }}
+            <hr>
 
-    </form>
-        </div>
+            {{ form_rest(form) }}
 
+            <hr>
+
+        </form>
+    </div>
 {% endblock %}
-
 {% block stylesheets %}
     <style>
         .column-container-div {
