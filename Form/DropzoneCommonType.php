@@ -83,8 +83,10 @@ class DropzoneCommonType extends AbstractType
                 'choices' => array(
                     'notStarted' => 'notStartedManualState',
                     'allowDrop' => 'allowDropManualState',
+/* issue #251 InnovaERV
                     'peerReview' => 'peerReviewManualState',
                     'allowDropAndPeerReview' => 'allowDropAndPeerReviewManualState',
+*/
                     'finished' => 'finishedManualState',
                 ),
                 'expanded' => true,
