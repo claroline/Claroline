@@ -40,7 +40,6 @@ $(document).ready(function () {
     // InnovaCollecticiel
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"
     $('#modal_confirm').on('click', function(event) {
-
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var row = "row_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
