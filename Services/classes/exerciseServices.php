@@ -495,9 +495,7 @@ class exerciseServices
                 $score += $wr->getScore();
             } else {
                 foreach ($hole->getWordResponses() as $wr) {
-                    if ($wr->getResponse() == $response) {
-                        $score += $wr->getScore();
-                    }
+                    $score += $this->getScoreWordResponse($wr, $response);
                 }
             }
         }
@@ -1666,13 +1664,33 @@ class exerciseServices
     {
         $score = 0;
         foreach ($interOpen->getWordResponses() as $wr) {
-            if (trim($wr->getResponse()) == trim($response)) {
-                $score = $wr->getScore();
-            }
+            $score = $this->getScoreWordResponse($wr, $response);
         }
 
         return $score;
 
+    }
+
+    /**
+     * Get score for a question with key word
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\WordResponse $wr
+     * @param String $response
+     *
+     * Return float
+     */
+    private function getScoreWordResponse($wr, $response)
+    {
+        $score = 0;
+        if ( ((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
+                && $wr->getCaseSensitive() == false))
+                    || (trim($wr->getResponse()) == trim($response)) ) {
+            $score = $wr->getScore();
+        }
+
+        return $score;
     }
 
     /**
