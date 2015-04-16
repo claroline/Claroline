@@ -434,6 +434,45 @@ class WidgetManager
         return $results;
     }
 
+    public function generateWidgetDisplayConfigsByType(array $widgetHTCs)
+    {
+        $results = array();
+        $widgetInstances = array();
+        $tab = array();
+
+        foreach ($widgetHTCs as $htc) {
+            $widgetInstances[] = $htc->getWidgetInstance();
+        }
+        $wdcs = $this->getWidgetDisplayConfigsByWidgetsForAdmin($widgetInstances);
+
+        foreach ($wdcs as $wdc) {
+            $widgetInstanceId = $wdc->getWidgetInstance()->getId();
+
+            $tab[$widgetInstanceId] = $wdc;
+        }
+
+        $this->om->startFlushSuite();
+
+        foreach ($widgetInstances as $widgetInstance) {
+            $id = $widgetInstance->getId();
+
+            if (isset($tab[$id])) {
+                $results[$id] = $tab[$id];
+            } else {
+                $widget = $widgetInstance->getWidget();
+                $wdc = new WidgetDisplayConfig();
+                $wdc->setWidgetInstance($widgetInstance);
+                $wdc->setWidth($widget->getDefaultWidth());
+                $wdc->setHeight($widget->getDefaultHeight());
+                $this->om->persist($wdc);
+                $results[$id] = $wdc;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $results;
+    }
+
     public function persistWidgetDisplayConfigs(array $configs)
     {
         $this->om->startFlushSuite();

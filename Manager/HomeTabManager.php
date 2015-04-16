@@ -578,6 +578,11 @@ class HomeTabManager
         );
     }
 
+    public function getHomeTabByIdAndType($homeTabId, $type)
+    {
+        return $this->homeTabRepo->findOneBy(array('id' => $homeTabId, 'type' => $type));
+    }
+
 
     /**
      * HomeTabConfigRepository access methods
@@ -729,6 +734,26 @@ class HomeTabManager
         return $this->homeTabConfigRepo->findOrderOfLastWorkspaceUserHomeTabByUser($user);
     }
 
+    public function getHomeTabConfigsByType($type)
+    {
+        return $this->homeTabConfigRepo->findHomeTabConfigsByType($type);
+    }
+
+    public function getHomeTabConfigsByUserAndType(User $user, $type)
+    {
+        return $this->homeTabConfigRepo->findHomeTabConfigsByUserAndType($user, $type);
+    }
+
+    public function getOrderOfLastHomeTabByType($type)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastHomeTabByType($type);
+    }
+
+    public function getOrderOfLastHomeTabByUserAndType(User $user, $type)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastHomeTabByUserAndType($user, $type);
+    }
+
 
     /**
      * WidgetHomeTabConfigRepository access methods
@@ -803,6 +828,14 @@ class HomeTabManager
             $homeTab,
             $widgetInstance,
             $user
+        );
+    }
+
+    public function getWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
+    {
+        return $this->widgetHomeTabConfigRepo->findWidgetHomeTabConfigsByHomeTabAndType(
+            $homeTab,
+            $type
         );
     }
 }
