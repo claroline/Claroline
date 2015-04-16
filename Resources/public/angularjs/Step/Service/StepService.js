@@ -6,7 +6,8 @@
 
     angular.module('StepModule').factory('StepService', [
         'IdentifierService',
-        function StepService(IdentifierService) {
+        'ResourceService',
+        function StepService(IdentifierService, ResourceService) {
             /**
              * Step object
              * @constructor
@@ -26,6 +27,8 @@
                 this.lvl               = lvl;
                 this.name              = name;
                 this.children          = [];
+                this.activityId        = null;
+                this.primaryResource   = null;
                 this.resources         = [];
                 this.excludedResources = [];
             };
@@ -51,6 +54,13 @@
                     return newStep;
                 },
 
+                loadActivity: function (step, activityId) {
+                    $http.get(Routing.generate('innova_path_load_activity', { nodeId: activityId }))
+                        .success(function (data) {
+                            this.setActivity(step, data);
+                        }.bind(this));
+                },
+
                 /**
                  * Injects the Activity data into step
                  * @param step
@@ -64,20 +74,16 @@
                         step.description = activity['description'];
 
                         // Primary resources
-                        step.primaryResource = activity['primaryResource'];
+                        var resource = ResourceService.new(activity['primaryResource']['type'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
+                        this.addPrimaryResource(step, resource);
 
                         // Secondary resources
                         if (null !== activity['resources']) {
                             for (var i = 0; i < activity['resources'].length; i++) {
-                                var resource = activity['resources'][i];
-                                var resourceExists = this.hasResource(step, resource.resourceId);
-                                if (!resourceExists) {
-                                    // Generate new local ID
-                                    resource['id'] = PathService.getNextResourceId();
+                                var current = activity['resources'][i];
 
-                                    // Add to secondary resources
-                                    step.resources.push(resource);
-                                }
+                                var resource = ResourceService.new(current['type'], current['resourceId'], current['name']);
+                                this.addSecondaryResource(step, resource);
                             }
                         }
 
@@ -89,9 +95,21 @@
                     }
                 },
 
-                addResource: function (step, resource) {
-                    if (this.hasResource(step, resource)) {
+                /**
+                 *
+                 * @param {Step}     step
+                 * @param {Resource} resource
+                 */
+                addPrimaryResource: function (step, resource) {
+                    step.primaryResource = resource;
+                },
 
+                addSecondaryResource: function (step, resource) {
+                    if (this.hasResource(step, resource)) {
+                        if (!step.resources instanceof Array) {
+                            step.resources = [];
+                        }
+                        step.resources.push(resource);
                     }
                 },
 

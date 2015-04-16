@@ -8,11 +8,18 @@
         'IdentifierService',
         'PathService',
         function ResourceService(IdentifierService, PathService) {
-            var Resource = function Resource() {
+            /**
+             * Resource object
+             * @param {string} [type]
+             * @param {number} [id]
+             * @param {string} [name]
+             * @constructor
+             */
+            var Resource = function Resource(type, id, name) {
                 this.id                  = IdentifierService.generateUUID();
-                this.resourceId          = null;
-                this.name                = null;
-                this.type                = null;
+                this.resourceId          = id ? id : null;
+                this.name                = name ? name : null;
+                this.type                = type ? type : null;
                 this.propagateToChildren = true;
             };
 

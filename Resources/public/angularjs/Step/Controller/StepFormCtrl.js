@@ -46,50 +46,19 @@
                     typeWhiteList: [ 'activity' ],
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
-                            // We need only one node, so only the last one will be kept
                             for (var nodeId in nodes) {
                                 // Load activity properties to populate step
-                                $http.get(Routing.generate('innova_path_load_activity', { nodeId: nodeId }))
-                                    .success(function (data) {
-                                        if (typeof data !== 'undefined' && data !== null && data.length !== 0) {
-                                            // Populate step
-                                            $scope.previewStep.activityId  = data['id'];
-                                            $scope.previewStep.name        = data['name'];
-                                            $scope.previewStep.description = data['description'];
+                                StepService.loadActivity(this.step, nodeId);
 
-                                            // Primary resources
-                                            $scope.previewStep.primaryResource = data['primaryResource'];
-
-                                            // Secondary resources
-                                            if (null !== data['resources']) {
-                                                for (var i = 0; i < data['resources'].length; i++) {
-                                                    var resource = data['resources'][i];
-                                                    var resourceExists = StepService.hasResource($scope.previewStep, resource.resourceId);
-                                                    if (!resourceExists) {
-                                                        // Generate new local ID
-                                                        resource['id'] = PathService.getNextResourceId();
-
-                                                        // Add to secondary resources
-                                                        $scope.previewStep.resources.push(resource);
-                                                    }
-                                                }
-                                            }
-
-                                            // Parameters
-                                            $scope.previewStep.withTutor = data['withTutor'];
-                                            $scope.previewStep.who       = data['who'];
-                                            $scope.previewStep.where     = data['where'];
-                                            $scope.previewStep.duration  = data['duration'];
-                                        }
-                                    });
+                                break; // We need only one node, so only the last one will be kept
                             }
 
                             $scope.$apply();
 
-                            // Update history
-                            HistoryService.update($scope.path);
+                            // Remove checked nodes for next time
+                            nodes = {};
                         }
-                    }
+                    }.bind(this)
                 }
             };
 
@@ -106,23 +75,24 @@
                     // On select, set the primary resource of the step
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
-                            // We need only one node, so only the last one will be kept
                             for (var nodeId in nodes) {
                                 var node = nodes[nodeId];
-                                $scope.previewStep.primaryResource = {
-                                    resourceId: nodeId,
-                                    name: node[0],
-                                    type: node[2]
-                                }
+
+                                // Create a new resource object from picker data
+                                var resource = ResourceService.new(node[2], nodeId, node[0]);
+
+                                // Link resource to step
+                                StepService.addPrimaryResource(this.step, resource);
+
+                                break; // We need only one node, so only the first one will be kept
                             }
 
                             $scope.$apply();
 
-                            // Update history
-                            HistoryService.update($scope.path);
-
+                            // Remove checked nodes for next time
+                            nodes = {};
                         }
-                    }
+                    }.bind(this)
                 }
             };
 
@@ -133,34 +103,22 @@
                     isPickerMultiSelectAllowed: true,
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
-                            if (typeof $scope.previewStep.resources !== 'object') {
-                                $scope.previewStep.resources = [];
-                            }
-
                             for (var nodeId in nodes) {
                                 var node = nodes[nodeId];
 
-                                // Check if resource has already been linked to the the step
-                                var resourceExists = StepService.hasResource($scope.previewStep, nodeId);
-                                if (!resourceExists) {
-                                    // Resource need to be linked
-                                    var resource = ResourceService.new();
-                                    resource.name = node[0];
-                                    resource.type = node[2];
-                                    resource.resourceId = nodeId;
+                                // Create a new resource object from picker data
+                                var resource = ResourceService.new(node[2], nodeId, node[0]);
 
-                                    $scope.previewStep.resources.push(resource);
-                                    $scope.$apply();
-                                }
+                                // Link resource to step
+                                StepService.addSecondaryResource(this.step, resource);
                             }
 
-                            // Update history
-                            HistoryService.update($scope.path);
-                        }
+                            $scope.$apply();
 
-                        // Remove checked nodes for next time
-                        nodes = {};
-                    }
+                            // Remove checked nodes for next time
+                            nodes = {};
+                        }
+                    }.bind(this)
                 }
             };
 
