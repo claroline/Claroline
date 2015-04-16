@@ -34,9 +34,23 @@ class Objective implements \JsonSerializable
      */
     private $objectiveCompetencies;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinTable(name="hevinci_objective_user")
+     */
+    private $users;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Group")
+     * @ORM\JoinTable(name="hevinci_objective_group")
+     */
+    private $groups;
+
     public function __construct()
     {
         $this->objectiveCompetencies = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->groups = new ArrayCollection();
     }
 
     /**

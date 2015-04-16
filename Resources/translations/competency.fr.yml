@@ -41,7 +41,10 @@ info:
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 learners: Apprenants
-level: Niveau
+level:
+  obtained: Niveau obtenu
+  expected: Niveau attendu
+level_: Niveau
 levels: Dégrés
 message:
   ability_added: Capacité ajoutée avec succès.
@@ -75,6 +78,7 @@ message:
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.
 objective:
+  assign_this: Assigner cet objectif
   create: Créer un objectif d'apprentissage
   create_short: Créer un objectif
   delete: Supprimer un objectif
@@ -90,6 +94,7 @@ tooltip:
   uneditable_scale: Cette échelle ne peut être modifiée car une capacité lui est associée.
   uneditable_scale_plural: Cette échelle ne peut être modifiée car %count% capacités lui sont associées.
 manage_scales: Gérer les échelles
+progress: Progression
 scale:
   create: Créer une échelle
   delete: Supprimer une échelle
@@ -99,3 +104,4 @@ scale:
   view: Détails de l'échelle
 scale_: Échelle
 scales: Échelles
+stats: Historique et statistiques

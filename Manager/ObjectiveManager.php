@@ -2,12 +2,15 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use HeVinci\CompetencyBundle\Adapter\OrmArrayAdapter;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use JMS\DiExtraBundle\Annotation as DI;
+use Pagerfanta\Pagerfanta;
 
 /**
  * @DI\Service("hevinci.competency.objective_manager")
@@ -16,23 +19,32 @@ class ObjectiveManager
 {
     private $om;
     private $competencyManager;
+    private $pagerFactory;
     private $objectiveRepo;
     private $competencyRepo;
     private $objectiveCompetencyRepo;
 
     /**
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "manager"    = @DI\Inject("hevinci.competency.competency_manager")
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "manager"        = @DI\Inject("hevinci.competency.competency_manager"),
+     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
+
      * })
      *
      * @param ObjectManager     $om
      * @param CompetencyManager $manager
+     * @param PagerFactory      $pagerFactory
      */
-    public function __construct(ObjectManager $om, CompetencyManager $manager)
+    public function __construct(
+        ObjectManager $om,
+        CompetencyManager $manager,
+        PagerFactory $pagerFactory
+    )
     {
         $this->om = $om;
         $this->competencyManager = $manager;
+        $this->pagerFactory = $pagerFactory;
         $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->objectiveCompetencyRepo = $om->getRepository('HeVinciCompetencyBundle:ObjectiveCompetency');
@@ -143,9 +155,28 @@ class ObjectiveManager
         return $competency;
     }
 
+    /**
+     * Deletes a link between an objective and a competency.
+     *
+     * @param ObjectiveCompetency $link
+     */
     public function deleteCompetencyLink(ObjectiveCompetency $link)
     {
         $this->om->remove($link);
         $this->om->flush();
+    }
+
+    /**
+     * Returns a pager for all the users which have at least one objective.
+     *
+     * @return Pagerfanta
+     */
+    public function listUsersWithObjective()
+    {
+        $countQuery = $this->objectiveRepo->getUsersWithObjectiveCountQuery();
+        $resultQuery = $this->objectiveRepo->getUsersWithObjectiveQuery();
+        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
+
+        return $this->pagerFactory->createPagerWithAdapter($adapter, 1);
     }
 }

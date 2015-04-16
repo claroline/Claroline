@@ -31,8 +31,32 @@
             <a href="#"
                data-toggle="tooltip"
                data-placement="left"
-               title="{{ 'learners'|trans({}, 'competency') }}">
+               title="{{ 'users'|trans({}, 'platform') }}">
                 <i class="fa fa-user"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'groups'|trans({}, 'platform') }}">
+                <i class="fa fa-group"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'objective.assign_this'|trans({}, 'competency') }}">
+                <i class="fa fa-user-plus"></i>
             </a>
         {% else %}
             -

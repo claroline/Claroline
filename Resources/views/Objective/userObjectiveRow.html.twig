@@ -1,0 +1,53 @@
+{% set type = type is defined ? type : 'user' %}
+{% set progress = progress is defined ? progress : 0 %}
+
+<tr>
+    <td class="{{ type }}">
+        {{ type == 'user' ? firstName ~ ' ' ~ lastName : 'NOT USER'}}
+    </td>
+    <td class="medium-cell">
+        {{ type == 'objective' ? framework : '-' }}
+    </td>
+    <td class="x-large-cell">
+        {% if type != 'competency-leaf' %}
+            <div class="progress">
+                <div class="progress-bar"
+                     role="progressbar"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     aria-valuenow="{{ progress }}"
+                     style="width: {{ progress }}%;">
+                </div>
+            </div>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+    <td class="large-cell">-</td>
+    <td class="large-cell">-</td>
+    <td class="x-small-cell">
+        <a href="#">
+            <i class="fa fa-search-plus"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        <a href="#"
+           data-toggle="tooltip"
+           data-placement="left"
+           title="{{ 'stats'|trans({}, 'competency') }}">
+            <i class="fa fa-bar-chart"></i>
+        </a>
+    </td>
+    <td class="x-small-cell">
+        {% if type == 'objective' %}
+            <a href="#"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'delete'|trans({}, 'platform') }}">
+                <i class="fa fa-remove"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
+    </td>
+</tr>

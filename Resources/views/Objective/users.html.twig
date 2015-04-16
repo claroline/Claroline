@@ -16,6 +16,37 @@
 {% endblock %}
 
 {% block tabContent %}
+    {% if pager.getNbPages() > 1 %}
+        {{
+            pagerfanta(pager, 'twitter_bootstrap_translated', {
+                'proximity' : 1,
+                'routeName': 'hevinci_objectives_users'
+            })
+        }}
+    {% endif %}
+
     <br>
-    USERS
+
+    {% if pager.getNbResults() > 0 %}
+        <table class="table table-condensed table-bordered user-objectives">
+            <thead>
+                <tr>
+                    <th>{{ 'user'|trans({}, 'platform') }}</th>
+                    <th>{{ 'framework_'|trans({}, 'competency') }}</th>
+                    <th>{{ 'progress'|trans({}, 'competency') }}</th>
+                    <th>{{ 'level.obtained'|trans({}, 'competency') }}</th>
+                    <th>{{ 'level.expected'|trans({}, 'competency') }}</th>
+                    <th colspan="3">{{ 'actions'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in pager.currentPageResults() %}
+                    {% include 'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig' with user %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        NO USER YET
+    {% endif %}
+
 {% endblock %}

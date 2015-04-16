@@ -202,7 +202,7 @@ class ObjectiveController
      */
     public function usersAction()
     {
-        return [];
+        return ['pager' => $this->manager->listUsersWithObjective()];
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr;
 
 class ObjectiveRepository extends EntityRepository
 {
@@ -20,5 +21,43 @@ class ObjectiveRepository extends EntityRepository
             ->groupBy('o.id')
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * Returns the query object for counting all the users which have
+     * at least one learning objective.
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getUsersWithObjectiveCountQuery()
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('COUNT(u.id)')
+            ->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where((new Expr())->in('u.id', $this->getInverseSideIdsDql('users')))
+            ->getQuery();
+    }
+
+    /**
+     * Returns the query object for fetching all the users which have
+     * at least one learning objective.
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getUsersWithObjectiveQuery()
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('u.id', 'u.firstName', 'u.lastName')
+            ->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->where((new Expr())->in('u.id', $this->getInverseSideIdsDql('users')))
+            ->getQuery();
+    }
+
+    private function getInverseSideIdsDql($targetField)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('ot.id')
+            ->join("o.{$targetField}", 'ot')
+            ->getDQL();
     }
 }

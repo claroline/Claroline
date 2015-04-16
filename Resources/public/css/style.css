@@ -17,6 +17,16 @@ td.medium-cell, th.medium-cell {
     text-align: center;
 }
 
+td.large-cell {
+    width: 120px;
+    text-align: center;
+}
+
+td.x-large-cell {
+    width: 180px;
+    text-align: center;
+}
+
 th.center, td.center {
     text-align: center;
 }
@@ -160,4 +170,12 @@ td.competency-path ul {
     list-style: none;
     margin: 0;
     padding-left: 16px;
+}
+
+table > tbody > tr > td.user {
+    font-weight: bold;
+}
+
+table div.progress {
+    margin-bottom: inherit;
 }
