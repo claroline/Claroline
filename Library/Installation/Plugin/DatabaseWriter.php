@@ -421,7 +421,7 @@ class DatabaseWriter
             ->findOneBy(array('name' => $action['name'], 'resourceType' => null, 'isCustom' => true));
 
         if ($resourceAction === null) {
-            $this->persistResourceAction(array($action));
+            $this->persistResourceAction($action);
         } else {
             $resourceAction->setIsForm($action['is_form']);
         }
