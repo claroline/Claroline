@@ -19,10 +19,12 @@ see_more: "Voir plus"
 zero_notifications: "Aucune notification"
 notifications_title: "Liste des notifications"
 
-notification_user_configuration: Configuration des notifications
+notification_user_configuration: Paramètres des notifications
+notification_configuration: Configuration des notifications
 rss_visible: Flux RSS
 rss_url_regenerate: Régénérer l'URL du flux RSS
-role-change_right: Accès ressource
-registration-decline: Refus d'inscription
-role-subscribe: Nouvelle inscription
-badge-award: Badges
+dropdown_items: Eléments dans la liste
+max_per_page: Eléments par page
+purge_enabled: Effacement automatique
+purge_after_days: Effacer après (jours)
+purge_explain_text: "*en activant cette option, l'historique des notification sera effacé automatiquement en fonction de la valeur ci-dessous"

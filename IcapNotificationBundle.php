@@ -2,18 +2,12 @@
 
 namespace Icap\NotificationBundle;
 
-use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
+use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\InstallationBundle\Bundle\InstallableBundle;
+use Icap\NotificationBundle\Installation\AdditionalInstaller;
 
-class IcapNotificationBundle extends InstallableBundle implements AutoConfigurableInterface
+class IcapNotificationBundle extends PluginBundle
 {
-
-    public function supports($environment)
-    {
-        return true;
-    }
-
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
@@ -22,10 +16,11 @@ class IcapNotificationBundle extends InstallableBundle implements AutoConfigurab
             $config->addRoutingResource($routingFile, null, 'icap_notification');
         }
 
-        if (file_exists($containerFile = $this->getPath() . '/Resources/config/config.yml')) {
-            $config->addContainerResource($containerFile);
-        }
-
         return $config;
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }

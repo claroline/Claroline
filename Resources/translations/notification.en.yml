@@ -19,10 +19,12 @@ see_more: "See more"
 zero_notifications: "There are no notifications"
 notifications_title: "Notifications list"
 
-notification_user_configuration: Notifications configuration
+notification_user_configuration: Notification parameters
+notification_configuration: Notification configuration
 rss_visible: Rss feed
 rss_url_regenerate: Regenerate RSS URL
-role-change_right: Resource access
-registration-decline: Registration refusal
-role-subscribe: New registration
-badge-award: Badges
+dropdown_items: Items in dropdown list
+max_per_page: Items per page
+purge_enabled: Remove notifications automatically
+purge_after_days: Remove after (days)
+purge_explain_text: "*by activating this option, notification history will automatically be deleted according to the value below"

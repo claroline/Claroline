@@ -12,11 +12,14 @@
 namespace Icap\NotificationBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\Serializer\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class NotificationUserParametersManager
@@ -24,17 +27,17 @@ use JMS\DiExtraBundle\Annotation as DI;
  *
  * @DI\Service("icap.notification.manager.notification_user_parameters")
  */
-class NotificationUserParametersManager {
-
+class NotificationUserParametersManager
+{
     /**
      * @var \Icap\NotificationBundle\Repository\NotificationUserParametersRepository
      */
     private $notificationUserParametersRepository;
 
     /**
-     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
      */
-    private $resourceManager;
+    private $ed;
 
     /**
      * @var \Doctrine\ORM\EntityManager
@@ -43,14 +46,14 @@ class NotificationUserParametersManager {
 
     /**
      * @DI\InjectParams({
-     *      "em"                = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "resourceManager"   = @DI\Inject("claroline.manager.resource_manager")
+     *      "em"    = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "ed"    = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $em, ResourceManager $resourceManager)
+    public function __construct(EntityManager $em, EventDispatcherInterface $ed)
     {
         $this->em = $em;
-        $this->resourceManager = $resourceManager;
+        $this->ed = $ed;
         $this->notificationUserParametersRepository = $em
             ->getRepository('IcapNotificationBundle:NotificationUserParameters');
     }
@@ -89,19 +92,13 @@ class NotificationUserParametersManager {
     {
         //$typesParams = array();
 
-        //List with all core notifiables
-        $coreTypes = array(
-            array("name" => "role-change_right"),
-            array("name" => "registration-decline"),
-            array("name" => "role-subscribe"),
-            array("name" => "badge-award")
+        $allTypes = array();
+
+        $this->ed->dispatch(
+            'icap_notification_user_parameters_event',
+            new NotificationUserParametersEvent($allTypes)
         );
 
-        //Get all notifiable resource types
-        $resourceTypes = $this->resourceManager
-            ->getAllNotifiableResourceTypeNames();
-
-        $allTypes = array_merge($coreTypes, $resourceTypes);
         $visibleTypes = $parameters->getDisplayEnabledTypes();
         $rssVisibleTypes = $parameters->getRssEnabledTypes();
         foreach ($allTypes as $key => $type) {

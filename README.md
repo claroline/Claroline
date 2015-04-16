@@ -10,21 +10,20 @@ Notification bundle for Claroline Connect. See https://github.com/claroline/Clar
 Installation
 -------------------------
 
-This bundle is a required bundle from CoreBundle. It is needed so the Core can work properly.
+This bundle completes the Core bundle. It is needed so the system can generate notifications.
 
-However if you want to install it manually here is the package in composer:
+Via composer:
 
 `composer require icap/notification-bundle "dev-master"`
 
-Prerequisites
+Configuration
 ------------------------
 
-*	*User* class must provide methods: getId(), getFirstName(), getLastName() and getPicture() (user's avatar)
-*	*Resource* class must provide methods: getId(), getClass() 
-*	In config.yml the following fields need to be informed:
-    - default_layout : the layout from which the notification list page will extend (default ClarolineCoreBundle::layout.html.twig)
-    - max_per_page : the maximum number of notifications per page in notification list page (default 50)
-    - dropdown_items : the number of notifications present in the dropdown list (default 10)
+*	After installation, an Notification configuration admin tool has been added which allow as to set the following:
+    - the maximum number of notifications per page in notification list page (default 50)
+    - the number of notifications present in the dropdown list (default 10)
+    - activate the automatic cleanup of notification items after x days
+    - the number of days after which a notification is deleted
 
 How to use in plugins
 -----------------------------
@@ -52,7 +51,7 @@ In order to integrate and enable notifications in a Claroline connect plugin you
 3.  Create a domain for translations under translations folder following the name pattern `notification.lang.yml`
 4.  Under views folder create a `Notification` folder and store inside all views related to notifications' display/rendering. It is recommended to create a general twig file say `notification_item.html.twig` which will extend the `IcapNotificationBundle:Templates:notification.html.twig` template, will render all common elements and include any other necessary template according to the action type. An example is given [here](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/views/Notification/notification_item.html.twig)
 5.  Create listener, for example [`NotificationListener`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationListener.php) and service e.g. [`listeners.yml`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Resources/config/services/listeners.yml) is the example for WikiBundle
-6.  (*new) In `config.yml` file set `is_notifiable` to `true` (under your resource configuration) in order to enable notification configuration for your resource.
+6.  `*new`Create listener, [`NotificationUserParametersListener`](https://github.com/iCAPLyon1/WikiBundle/blob/master/Listener/NotificationUserParametersListener.php) to enable user activate and deactivate the display of your notifications
 
 You can find a complete example of these steps in [iCAPLyon1/WikiBundle](https://github.com/iCAPLyon1/WikiBundle)
 

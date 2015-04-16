@@ -1,4 +1,6 @@
-icap_notification:
-    default_layout:   ClarolineCoreBundle::layout.html.twig
-    max_per_page:     50
-    dropdown_items:   10
+plugin:
+    has_options: false
+
+    admin_tools:
+          - name: notification_configuration
+            class: bell

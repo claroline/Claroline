@@ -23,13 +23,6 @@ class IcapNotificationExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        foreach (array('default_layout', 'max_per_page', 'dropdown_items') as $attribute) {
-            $container->setParameter("icap_notification." . $attribute, $config[$attribute]);
-        }
-
         $locator = new FileLocator(__DIR__ . '/../Resources/config/services');
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('services.yml');

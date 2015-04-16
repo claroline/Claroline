@@ -27,11 +27,35 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class NotificationManager
 {
+    /**
+     * @var \Doctrine\ORM\EntityManager
+     */
     protected $em;
+    /**
+     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     */
     protected $security;
+    /**
+     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     */
     protected $eventDispatcher;
+    /**
+     * @var string
+     */
     protected $platformName;
+    /**
+     * @var NotificationUserParametersManager
+     */
     protected $notificationParametersManager;
+    /**
+     * @var NotificationPluginConfigurationManager
+     */
+    protected $notificationPluginConfigurationManager;
+
+    private function getConfigurationAndPurge()
+    {
+        return $this->notificationPluginConfigurationManager->getConfigOrEmpty();
+    }
 
     /**
      * @return \Icap\NotificationBundle\Repository\NotificationRepository
@@ -97,7 +121,8 @@ class NotificationManager
      *      "securityContext"   = @DI\Inject("security.context"),
      *      "eventDispatcher"   = @DI\Inject("event_dispatcher"),
      *      "configHandler"     = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters")
+     *      "notificationParametersManager" = @DI\Inject("icap.notification.manager.notification_user_parameters"),
+     *      "notificationPluginConfigurationManager" = @DI\Inject("icap.notification.manager.plugin_configuration")
      * })
      */
     public function __construct(
@@ -105,7 +130,8 @@ class NotificationManager
         SecurityContextInterface $securityContext,
         EventDispatcherInterface $eventDispatcher,
         PlatformConfigurationHandler $configHandler,
-        NotificationUserParametersManager $notificationParametersManager
+        NotificationUserParametersManager $notificationParametersManager,
+        NotificationPluginConfigurationManager $notificationPluginConfigurationManager
     ) {
         $this->em = $em;
         $this->security = $securityContext;
@@ -115,6 +141,7 @@ class NotificationManager
             $this->platformName = "Claroline";
         }
         $this->notificationParametersManager = $notificationParametersManager;
+        $this->notificationPluginConfigurationManager = $notificationPluginConfigurationManager;
     }
 
     /**
@@ -279,6 +306,18 @@ class NotificationManager
         return $notification;
     }
 
+    public function getDropdownNotifications($userId)
+    {
+        $config = $this->getConfigurationAndPurge();
+        return $this->getUserNotificationsList($userId, 1, $config->getDropdownItems());
+    }
+
+    public function getPaginatedNotifications($userId, $page = 1)
+    {
+        $config = $this->getConfigurationAndPurge();
+        return $this->getUserNotificationsList($userId, $page, $config->getMaxPerPage());
+    }
+
     /**
      * Retrieves the notifications list
      *
@@ -320,8 +359,9 @@ class NotificationManager
         );
     }
 
-    public function getUserNotificationsListRss($rssId, $maxResult)
+    public function getUserNotificationsListRss($rssId)
     {
+        $config = $this->getConfigurationAndPurge();
         $notificationUserParameters = $this
             ->notificationParametersManager
             ->getParametersByRssId($rssId);
@@ -333,7 +373,7 @@ class NotificationManager
         return $this->getUserNotificationsList(
             $notificationUserParameters->getUserId(),
             1,
-            $maxResult,
+            $config->getMaxPerPage(),
             true
         );
     }
@@ -375,7 +415,7 @@ class NotificationManager
      * @param int $resourceId
      * @param string $resourceClass
      *
-     * @return
+     * @return null|object
      */
     public function getFollowerResource($userId, $resourceId, $resourceClass)
     {

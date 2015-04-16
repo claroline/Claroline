@@ -8,9 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-
-use Icap\NotificationBundle\Entity\ColorChooser;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -32,19 +29,11 @@ class NotificationController extends Controller
      */
     public function listAction(Request $request, $user, $page)
     {
-        if ($request->isXMLHttpRequest()) {
-            $maxResult = $this->container->getParameter('icap_notification.dropdown_items');
-            $page = 1;
-        } else {
-            $maxResult = $this->container->getParameter('icap_notification.max_per_page');
-        }
-
         $notificationManager = $this->getNotificationManager();
-        $result = $notificationManager->getUserNotificationsList($user->getId(), $page, $maxResult);
         $systemName = $notificationManager->getPlatformName();
-        $result['systemName'] = $systemName;
-
         if ($request->isXMLHttpRequest()) {
+            $result = $notificationManager->getDropdownNotifications($user->getId());
+            $result['systemName'] = $systemName;
             $unviewedNotifications = $notificationManager->countUnviewedNotifications(
                 $user->getId()
             );
@@ -55,8 +44,8 @@ class NotificationController extends Controller
                 $result
             );
         } else {
-            $defaultLayout = $this->container->getParameter('icap_notification.default_layout');
-            $result['layout'] = $defaultLayout;
+            $result = $notificationManager->getPaginatedNotifications($user->getId(), $page);
+            $result['systemName'] = $systemName;
 
             return $result;
         }
@@ -75,9 +64,8 @@ class NotificationController extends Controller
     public function rssAction($rssId)
     {
         $notificationManager = $this->getNotificationManager();
-        $maxResult = $this->container->getParameter('icap_notification.max_per_page');
         try {
-            $result = $notificationManager->getUserNotificationsListRss($rssId, $maxResult);
+            $result = $notificationManager->getUserNotificationsListRss($rssId);
             $result["systemName"] = $notificationManager->getPlatformName();
         } catch (NoResultException $nre) {
             $result = array("error" => "no_rss_defined");
