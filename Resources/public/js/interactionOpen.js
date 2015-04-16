@@ -111,6 +111,9 @@ function openEdit(nbResponses) {
     if (codeOpen == 4) {
         showOpenWord();
         formWordResponseEdit(nbResponses);
+    } else if (codeOpen == 3) {
+        showShortResponse ();
+        formWordResponseEdit(nbResponses);
     }
 }
 
@@ -118,6 +121,10 @@ function showOpenWord () {
     $('#qOpenOneWord').css('display', 'block');
     $('#qOpenScoreMaxLongResp').css('display', 'none');
     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
+}
+
+function showShortResponse () {
+    showOpenWord ();
 }
 
 function showLongResponse () {
@@ -131,5 +138,7 @@ $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
         showOpenWord();
     } else if (typeOpen[$(this).val()] == 2) {
         showLongResponse();
+    } else if (typeOpen[$(this).val()] == 3) {
+        showOpenWord ();
     }
 });
