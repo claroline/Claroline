@@ -59,6 +59,7 @@ class openOneWordExport extends openExport
             $mapEntry =  $this->document->createElement("mapEntry");
             $mapEntry->setAttribute("mapKey", $resp->getResponse());
             $mapEntry->setAttribute("mappedValue",$resp->getScore());
+            $mapEntry->setAttribute("caseSensitive",$resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
             $i++;

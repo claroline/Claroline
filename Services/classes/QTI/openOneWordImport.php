@@ -65,6 +65,11 @@ class openOneWordImport extends openImport
             $keyWord->setResponse($me->getAttribute('mapKey'));
             $keyWord->setScore($me->getAttribute('mappedValue'));
             $keyWord->setInteractionOpen($this->interactionOpen);
+            if ($me->getAttribute('caseSensitive') == true) {
+                $keyWord->setCaseSensitive(true);
+            } else {
+                $keyWord->setCaseSensitive(false);
+            }
             $this->doctrine->getManager()->persist($keyWord);
         }
         $this->doctrine->getManager()->flush();
