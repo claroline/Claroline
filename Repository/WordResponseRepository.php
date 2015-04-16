@@ -53,4 +53,26 @@ class WordResponseRepository extends EntityRepository
 
         return $res['response'];
     }
+
+    /**
+     * Get the score max for an open question with short answer
+     *
+     * @access public
+     *
+     * @param integer $interOpenId id InteractionOpen
+     *
+     * Return float
+     */
+    public function getScoreMaxShort($interOpenId)
+    {
+        $qb = $this->createQueryBuilder('wr');
+        $qb->select('SUM(wr.score) AS max_score')
+           ->join('wr.interactionopen', 'iopen')
+           ->where($qb->expr()->in('iopen.id', $interOpenId))
+           ->andWhere('wr.score > 0');
+
+        $res = $qb->getQuery()->getOneOrNullResult();
+
+        return $res['max_score'];
+    }
 }

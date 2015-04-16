@@ -346,11 +346,7 @@ class exerciseServices
         $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
-        if ($interOpen->getTypeOpenQuestion() == 'long') {
-            $response = $request->request->get('interOpenLong');
-        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            $response = $request->request->get('interOpenOneWord');
-        }
+        $response = $request->request->get('interOpen');
 
         // Not assessment
         if ($paperID == 0) {
@@ -375,6 +371,8 @@ class exerciseServices
             $score = -1;
         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
             $score = $this->getScoreOpenOneWord($response, $interOpen);
+        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+            $score = $this->getScoreShortResponse($response, $interOpen);
         }
 
         if ($interOpen->getTypeOpenQuestion() != 'long') {
@@ -973,10 +971,15 @@ class exerciseServices
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            $scoreMax = $interQCM = $this->doctrine
-                                         ->getManager()
-                                         ->getRepository('UJMExoBundle:WordResponse')
-                                         ->getScoreMaxOneWord($interOpen->getId());;
+            $scoreMax = $this->doctrine
+                             ->getManager()
+                             ->getRepository('UJMExoBundle:WordResponse')
+                             ->getScoreMaxOneWord($interOpen->getId());
+        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+            $scoreMax = $this->doctrine
+                             ->getManager()
+                             ->getRepository('UJMExoBundle:WordResponse')
+                             ->getScoreMaxShort($interOpen->getId());
         }
 
         return $scoreMax;
@@ -1664,7 +1667,7 @@ class exerciseServices
     {
         $score = 0;
         foreach ($interOpen->getWordResponses() as $wr) {
-            $score = $this->getScoreWordResponse($wr, $response);
+            $score += $this->getScoreWordResponse($wr, $response);
         }
 
         return $score;
@@ -1688,6 +1691,29 @@ class exerciseServices
                 && $wr->getCaseSensitive() == false))
                     || (trim($wr->getResponse()) == trim($response)) ) {
             $score = $wr->getScore();
+        }
+
+        return $score;
+    }
+
+    /**
+     * Get score for an open question with short answer
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * Return float
+     */
+    private function getScoreShortResponse($response, $interOpen)
+    {
+        $score = 0;
+
+        foreach($interOpen->getWordResponses() as $wr) {
+            if (ereg($wr->getResponse(), $response)) {
+                $score += $wr->getScore();
+            }
         }
 
         return $score;
