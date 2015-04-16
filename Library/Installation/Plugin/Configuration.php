@@ -197,6 +197,7 @@ class Configuration implements ConfigurationInterface
                                 ->thenInvalid($pluginFqcn . ' : the resource action name already exists')
                             ->end()
                         ->end()
+                        ->booleanNode('is_form')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end()

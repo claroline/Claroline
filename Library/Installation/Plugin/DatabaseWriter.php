@@ -395,36 +395,35 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $actions
+     * @param array $action
      */
-    public function persistResourceAction(array $actions)
+    public function persistResourceAction(array $action)
     {
-        foreach ($actions as $action) {
-            $resourceAction = new MenuAction();
+        $resourceAction = new MenuAction();
 
-            $resourceAction->setName($action);
-            $resourceAction->setAsync(1);
-            $resourceAction->setIsCustom(1);
-            $resourceAction->setValue(1);
+        $resourceAction->setName($action['name']);
+        $resourceAction->setAsync(1);
+        $resourceAction->setIsForm($action['is_form']);
+        $resourceAction->setIsCustom(1);
+        $resourceAction->setValue(1);
 
-            $this->em->persist($resourceAction);
-        }
+        $this->em->persist($resourceAction);
 
         $this->em->flush();
     }
 
     /**
-     * @param array $actions
+     * @param array $action
      */
-    public function updateResourceAction(array $actions)
+    public function updateResourceAction(array $action)
     {
-        foreach ($actions as $action) {
-            $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
-                ->findOneBy(array('name' => $action, 'resourceType' => null, 'isCustom' => true));
+        $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findOneBy(array('name' => $action['name'], 'resourceType' => null, 'isCustom' => true));
 
-            if ($resourceAction === null) {
-                $this->persistResourceAction(array($action));
-            }
+        if ($resourceAction === null) {
+            $this->persistResourceAction($action);
+        } else {
+            $resourceAction->setIsForm($action['is_form']);
         }
     }
 
