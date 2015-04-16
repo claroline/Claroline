@@ -83,7 +83,7 @@ class PlayerController extends ContainerAware
         
         // get previous url        
         $lastPath = substr($referer, strpos($referer, $request->getBaseUrl()));
-        $lastPath = str_replace($request->getBaseUrl(), '', $lastPath)
+        $lastPath = str_replace($request->getBaseUrl(), '', $lastPath);
     
         $parameters = $matcher->match($lastPath);
         $previous = $parameters['_route'];
