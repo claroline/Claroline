@@ -32,13 +32,25 @@
             event.preventDefault();
             var action = event.currentTarget.getAttribute('data-action');
             var nodeId = event.currentTarget.getAttribute('data-id');
-            var isCustom = event.currentTarget.getAttribute('data-is-custom');
-            var eventName = isCustom === 'no' ? action : 'custom-action';
-            this.dispatcher.trigger(eventName, {
-                action: action,
-                nodeId: nodeId,
-                view: this.parameters.viewName
-            });
+            var isCustom = event.currentTarget.getAttribute('data-is-custom') === 'yes';
+            var eventName = isCustom ? 'custom-action' : action;
+            var isForm = event.currentTarget.getAttribute('data-action-type') === 'display-form';
+
+            if (isCustom && isForm) {
+                this.dispatcher.trigger('custom-action-form', {
+                    action: action,
+                    nodeId: nodeId,
+                    view: this.parameters.viewName,
+                    isCustomAction: true
+                });
+            } else {
+                this.dispatcher.trigger(eventName, {
+                    action: action,
+                    nodeId: nodeId,
+                    view: this.parameters.viewName,
+                    isCustomAction: false
+                });
+            }
         },
         render: function (node, isSelectionAllowed) {
             this.el.id = node.id;

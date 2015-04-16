@@ -32,6 +32,10 @@
             'edit-properties': {
                 route: 'claro_resource_form_properties',
                 onSuccess: 'edited-node'
+            },
+            'custom-action-form': {
+                route: 'claro_resource_action',
+                onSuccess: 'custom-action-done'
             }
         },
         initialize: function (dispatcher) {
@@ -64,14 +68,23 @@
         },
         render: function (event) {
             this.targetNodeId = event.nodeId || this.targetNodeId;
-            this.eventOnSuccess = event.eventOnSuccess
+
+            if (event.isCustomAction) {
+                this.eventOnSuccess = 'custom-action-done';
+            } else {
+                this.eventOnSuccess = event.eventOnSuccess
                 || this.knownActions[event.action].onSuccess + '-' + event.view;
+            }
 
             if (!event.errorForm) {
-                var route = this.knownActions[event.action].route;
-                var parameters = event.action === 'create-form' ?
-                    { resourceType: event.resourceType } :
-                    { node: event.nodeId };
+                var route = event.isCustomAction ? 'claro_resource_action' : this.knownActions[event.action].route;
+                if (event.action === 'create-form') {
+                    var parameters = { resourceType: event.resourceType };
+                } else if (event.isCustomAction) {
+                    var parameters = { action: event.action, node: event.nodeId };
+                } else {
+                    var parameters = { node: event.nodeId };
+                }
                 Claroline.Modal.fromRoute(route, parameters, _.bind(function (element) {
                     this.setElement(element);
                     this.replaceId(event.nodeId);

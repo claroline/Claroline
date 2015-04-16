@@ -402,8 +402,9 @@ class DatabaseWriter
         foreach ($actions as $action) {
             $resourceAction = new MenuAction();
 
-            $resourceAction->setName($action);
+            $resourceAction->setName($action['name']);
             $resourceAction->setAsync(1);
+            $resourceAction->setIsForm($action['is_form']);
             $resourceAction->setIsCustom(1);
             $resourceAction->setValue(1);
 
@@ -414,17 +415,17 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $actions
+     * @param array $action
      */
-    public function updateResourceAction(array $actions)
+    public function updateResourceAction(array $action)
     {
-        foreach ($actions as $action) {
-            $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
-                ->findOneBy(array('name' => $action, 'resourceType' => null, 'isCustom' => true));
+        $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findOneBy(array('name' => $action['name'], 'resourceType' => null, 'isCustom' => true));
 
-            if ($resourceAction === null) {
-                $this->persistResourceAction(array($action));
-            }
+        if ($resourceAction === null) {
+            $this->persistResourceAction(array($action));
+        } else {
+            $resourceAction->setIsForm($action['is_form']);
         }
     }
 
