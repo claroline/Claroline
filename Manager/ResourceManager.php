@@ -1060,7 +1060,10 @@ class ResourceManager
             $children = $this->getDescendants($dir);
 
             foreach ($children as $child) {
-                if ($child->getResourceType()->getName() !== 'directory') {
+
+                if ($child->isActive() &&
+                    $child->getResourceType()->getName() !== 'directory') {
+
                     $toAppend[] = $child;
                 }
             }
