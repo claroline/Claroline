@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Templating\EngineInterface;
@@ -48,10 +49,22 @@ class FavouriteListener extends ContainerAware
      */
     public function onFavoriteAction(CustomActionResourceEvent $event)
     {
-        $route = $this->router->generate('hevinci_favourite_index', array(
-                'id' => $event->getResource()->getResourceNode()->getId()
+        $nodeId = $event->getResource()->getResourceNode()->getId();
+        $favourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
+            ->findBy(array(
+                'resourceNode' => $nodeId,
+                'user' => $this->sc->getToken()->getUser()
             ));
-        $event->setResponse(new RedirectResponse($route));
+
+        $content = $this->templatingEngine->render(
+            'HeVinciFavouriteBundle:Favourite:form.html.twig',
+            array(
+                'isFavourite' => $isFavourite = $favourite ? true : false,
+                'nodeId' => $nodeId
+            )
+        );
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

@@ -1,7 +1,6 @@
 {
   "name": "hevinci/favourite-bundle",
   "description": "Favorite Plugin for Claroline Connect",
-  "homepage": "http://www.claroline.net",
   "type": "claroline-plugin",
   "autoload": {
     "psr-0": { "HeVinci\\FavouriteBundle": "" }
