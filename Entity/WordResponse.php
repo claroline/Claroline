@@ -29,6 +29,13 @@ class WordResponse
     private $response;
 
     /**
+     * @var boolean $caseSensitive
+     *
+     * @ORM\Column(name="caseSensitive", type="boolean", nullable=true)
+     */
+    private $caseSensitive;
+
+    /**
      * @var float $score
      *
      * @ORM\Column(name="score", type="float")
@@ -65,6 +72,26 @@ class WordResponse
     public function setResponse($response)
     {
         $this->response = $response;
+    }
+
+    /**
+     * Get caseSensitive
+     *
+     * @return boolean
+     */
+    public function getCaseSensitive()
+    {
+        return $this->caseSensitive;
+    }
+
+    /**
+     * Set caseSensitive
+     *
+     * @param boolean $caseSensitive
+     */
+    public function setCaseSensitive($caseSensitive)
+    {
+        $this->caseSensitive = $caseSensitive;
     }
 
     /**

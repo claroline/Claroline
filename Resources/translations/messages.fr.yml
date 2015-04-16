@@ -550,5 +550,6 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 
 ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
 
+WordResonse.caseSensitive: Respecter la casse
 WordResponse.score: Points attribués à cette réponse
 WordResponse.response_value: Mot
