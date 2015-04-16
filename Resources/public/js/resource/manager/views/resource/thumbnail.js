@@ -35,22 +35,14 @@
             var isCustom = event.currentTarget.getAttribute('data-is-custom') === 'yes';
             var eventName = isCustom ? 'custom-action' : action;
             var isForm = event.currentTarget.getAttribute('data-action-type') === 'display-form';
+            eventName = isCustom && isForm ? 'custom-action-form' : eventName;
 
-            if (isCustom && isForm) {
-                this.dispatcher.trigger('custom-action-form', {
-                    action: action,
-                    nodeId: nodeId,
-                    view: this.parameters.viewName,
-                    isCustomAction: true
-                });
-            } else {
-                this.dispatcher.trigger(eventName, {
-                    action: action,
-                    nodeId: nodeId,
-                    view: this.parameters.viewName,
-                    isCustomAction: false
-                });
-            }
+            this.dispatcher.trigger(eventName, {
+                action: action,
+                nodeId: nodeId,
+                view: this.parameters.viewName,
+                isCustomAction: isCustom
+            });
         },
         render: function (node, isSelectionAllowed) {
             this.el.id = node.id;

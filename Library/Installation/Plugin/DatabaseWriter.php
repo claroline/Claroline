@@ -395,21 +395,19 @@ class DatabaseWriter
     }
 
     /**
-     * @param array $actions
+     * @param array $action
      */
-    public function persistResourceAction(array $actions)
+    public function persistResourceAction(array $action)
     {
-        foreach ($actions as $action) {
-            $resourceAction = new MenuAction();
+        $resourceAction = new MenuAction();
 
-            $resourceAction->setName($action['name']);
-            $resourceAction->setAsync(1);
-            $resourceAction->setIsForm($action['is_form']);
-            $resourceAction->setIsCustom(1);
-            $resourceAction->setValue(1);
+        $resourceAction->setName($action['name']);
+        $resourceAction->setAsync(1);
+        $resourceAction->setIsForm($action['is_form']);
+        $resourceAction->setIsCustom(1);
+        $resourceAction->setValue(1);
 
-            $this->em->persist($resourceAction);
-        }
+        $this->em->persist($resourceAction);
 
         $this->em->flush();
     }
