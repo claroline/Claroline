@@ -1,0 +1,3 @@
+resource-icap_lesson-chapter_create: created '%chapter%' chapter in '%lesson%' lesson
+resource-icap_lesson-chapter_update: updated '%chapter%' chapter of '%lesson%' lesson
+resource-icap_lesson-user_tagged: tagged you in '%chapter%' chapter of '%lesson%' lesson

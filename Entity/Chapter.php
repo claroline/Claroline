@@ -5,11 +5,15 @@ namespace Icap\LessonBundle\Entity;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="icap__lesson_chapter")
  * @ORM\Entity(repositoryClass="Icap\LessonBundle\Repository\ChapterRepository")
+ * @ORM\EntityListeners({"Icap\LessonBundle\Listener\ChapterListener"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Chapter
 {
@@ -72,6 +76,8 @@ class Chapter
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $parent;
+
+    protected $userPicker = null;
 
     /**
      * @param mixed $id
@@ -238,5 +244,24 @@ class Chapter
     public function getTitle()
     {
         return $this->title;
+    }
+
+    /**
+     * @param UserPickerContent $userPicker
+     * @return $this
+     */
+    public function setUserPicker(UserPickerContent $userPicker)
+    {
+        $this->userPicker = $userPicker;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\NotificationBundle\Entity\UserPickerContent
+     */
+    public function getUserPicker()
+    {
+        return $this->userPicker;
     }
 }

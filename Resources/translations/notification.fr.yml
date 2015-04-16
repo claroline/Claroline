@@ -1,0 +1,3 @@
+resource-icap_lesson-chapter_create: a creé le chapitre '%chapter%' dans '%lesson%' cours
+resource-icap_lesson-chapter_update: a mis à jour le chapitre '%chapter%' du cours '%lesson%'
+resource-icap_lesson-user_tagged: vous a cité dans le chapitre '%chapter%' du cours '%lesson%'
