@@ -171,7 +171,7 @@ You are about to make your copy. This action is final. Are you sure you have don
 No document type allowed: 'Aucun type de document autorisé'
 Add a %type% document: 'Ajouter un document %type%'
 Delete a document: 'Supprimer un document'
-Are you sure to want to delete this document: 'Êtes vous sûr de vouloir supprimer ce document ?'
+Are you sure to want to delete this document: 'Êtes-vous sûr de vouloir supprimer ce document ?'
 'Add': 'Ajouter'
 Confirm delete: 'Confirmer la suppression'
 Copy n°%number%: 'Document n°%number%'

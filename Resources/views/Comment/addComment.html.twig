@@ -10,6 +10,9 @@
                 <div class="col-md-12">
                     <label for="comment-name">{{ 'Comments add'|trans({}, 'innova_collecticiel') }}</label>
                     <input id="comment-name" type="text" class="form-control" name="comment-name" required />
+                    <textarea id="comment-name" class="tinymce media-description" name="comment-name" required></textarea>
+            {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
+
                 </div>
             </div>
 
