@@ -1,0 +1,11 @@
+{% extends 'HeVinciCompetencyBundle::modalForm.html.twig' %}
+
+{% block title %}
+    {{ 'objective.assign'|trans({}, 'competency') }}
+{% endblock %}
+
+{% block id %}user-form{% endblock %}
+
+{% block action %}
+    {{ path('hevinci_objective_add_user', { }) }}
+{% endblock %}

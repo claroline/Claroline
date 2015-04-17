@@ -2,11 +2,12 @@
     'use strict';
 
     var flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
-    var picker = new HeVinci.CompetencyPicker({
+    var competencyPicker = new HeVinci.CompetencyPicker({
         includeAbilities: false,
         includeLevel: true,
         callback: onCompetencySelection
     });
+    var userPicker = new HeVinci.UserPicker();
     var currentObjectiveRow = null;
     var currentObjectiveId = null;
 
@@ -75,7 +76,7 @@
         event.preventDefault();
         currentObjectiveRow = this.parentNode.parentNode;
         currentObjectiveId = currentObjectiveRow.dataset.id;
-        picker.open();
+        competencyPicker.open();
     });
 
     // prevent hash of disabled expansion links to make window scrolling
@@ -114,6 +115,12 @@
         toggleChildrenRows(row, link, true);
     });
 
+    // user/group addition
+    $(document).on('click', 'table.objectives a.add-users', function (event) {
+        event.preventDefault();
+        userPicker.open();
+    });
+
     function onCompetencySelection(selection) {
         var url;
 
@@ -137,7 +144,7 @@
                     category = 'warning';
                 }
 
-                picker.close();
+                competencyPicker.close();
                 insertCompetencyRows([competency], currentObjectiveRow);
                 toggleExpandLink($(currentObjectiveRow).find('a.expand').get(0), true)
                 flasher.setMessage(trans(message), category);

@@ -192,8 +192,7 @@ class ObjectiveController
     }
 
     /**
-     * Displays the index of the learning objectives tool, i.e.
-     * the list of learning objectives.
+     * Displays the list of users who have at least one objective.
      *
      * @EXT\Route("/users", name="hevinci_objectives_users")
      * @EXT\Template

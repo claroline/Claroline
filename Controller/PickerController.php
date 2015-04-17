@@ -7,6 +7,7 @@ use HeVinci\CompetencyBundle\Manager\CompetencyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -85,5 +86,29 @@ class PickerController
         }
 
         return ['scale' => $framework->getScale()];
+    }
+
+    /**
+     * Returns users suggestions for assigning objectives.
+     *
+     * @EXT\Route("/users/suggest/{query}", name="hevinci_suggest_user")
+     *
+     * @return JsonResponse
+     */
+    public function suggestUserAction()
+    {
+        return new JsonResponse([['name' => 'User 1'], ['name' => 'User 2']]);
+    }
+
+    /**
+     * Returns groups suggestions for assigning objectives.
+     *
+     * @EXT\Route("/groups/suggest/{query}", name="hevinci_suggest_group")
+     *
+     * @return JsonResponse
+     */
+    public function suggestGroupAction()
+    {
+        return new JsonResponse([['name' => 'Group 1'], ['name' => 'Group 2']]);
     }
 }

@@ -78,6 +78,7 @@ message:
   scale_edited: Échelle modifiée avec succès.
   sub_competency_created: Sous-compétence créée avec succès.
 objective:
+  assign: Assigner un objectif
   assign_this: Assigner cet objectif
   create: Créer un objectif d'apprentissage
   create_short: Créer un objectif
@@ -105,3 +106,7 @@ scale:
 scale_: Échelle
 scales: Échelles
 stats: Historique et statistiques
+user_picker:
+  select_target: 'Choisissez la cible de la sélection '
+  enter_search: 'Entrez un nom (ou prénom, nom d''utilisateur, etc.) et sélectionnez une proposition dans la liste '
+user_picker_: Sélection d'utilisateur(s)

@@ -62,17 +62,21 @@
     {{ parent() }}
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
         "@HeVinciCompetencyBundle/Resources/views/Objective/objectiveRow.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Objective/userPickerForm.html.twig"
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/typeahead/js/bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/picker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/userPicker.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objective.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/typeahead/css/boostrap.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
 {% endblock %}

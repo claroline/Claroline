@@ -1,0 +1,51 @@
+{% twig_js name = 'UserPickerForm' %}
+
+{# simply extending the existing modal template doesn't work with twigjs... #}
+
+<div class="modal-dialog user-picker" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ title is defined ? title : 'user_picker_'|trans({}, 'competency') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form action="#" method="POST">
+                <div class="step-1">
+                    <span>{{ 'user_picker.select_target'|trans({}, 'competency') }}:</span>
+                    <br>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="target" value="user" checked>
+                            {{ 'user'|trans({}, 'platform') }}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="target" value="group">
+                            {{ 'group'|trans({}, 'platform') }}
+                         </label>
+                    </div>
+                </div>
+                <div class="step-2" style="display: none">
+                    <span>{{ 'user_picker.enter_search'|trans({}, 'competency') }}:</span>
+                    <br><br>
+                    <input type="text" class="form-control"/>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            {% block footer %}
+                <span class="btn btn-default" data-dismiss="modal">
+                    {{ 'cancel'|trans({}, 'platform') }}
+                </span>
+                <button type="submit" class="btn btn-primary">
+                    {{ 'ok'|trans({}, 'platform') }}
+                </button>
+            {% endblock %}
+        </div>
+    </div>
+</div>
