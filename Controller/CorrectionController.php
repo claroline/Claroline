@@ -2020,19 +2020,28 @@ class CorrectionController extends DropzoneBaseController
 
         $em = $this->getDoctrine()->getManager();
 
-        // Récupération de la saisie du commentaire
-        $request = $this->get('request');
-        $commentText = $request->request->get('comment-name');
-
         // Valorisation du commentaire
         $comment = new Comment();
         $comment->setDocument($document);
         $comment->setUser($user);
-        $comment->setCommentText($commentText);
 
-        // Insertion en base du commentaire
-        $em->persist($comment);
-        $em->flush();
+        $form = $this->get('form.factory')->createBuilder(new CommentType(), $comment)->getForm();
+
+        // Récupération de la saisie du commentaire
+        $request = $this->get('request');
+        var_dump($request);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+
+            // Insertion en base du commentaire
+            $em->persist($comment);
+            $em->flush();
+            }
+        }
 
         // Ajouter la création du log de la création du commentaire. InnovaERV.
         $unitOfWork = $em->getUnitOfWork();

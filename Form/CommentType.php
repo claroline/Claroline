@@ -10,13 +10,18 @@ class CommentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('comment', 'tinymce', array());
-            // ajouter submit
+        // Saisie du commentaire
+        $builder->add('commentText', 'tinymce', array(
+            'label' => 'Comments add',
+            'label_attr' => array(
+                'style' => 'display: none;'
+            )));
 
- $builder->add('save', 'submit', array(
-'label' => 'generic.save',
-'attr' => array('class' => 'btn btn-default btn-primary'),
-));
+        // Ajout de la déclaration du bouton "Envoyer"
+        $builder->add('save', 'submit', array(
+        'label' => 'Comment validation',
+        'attr' => array('class' => 'btn btn-primary pull-left'),
+        ));
 
     }
 

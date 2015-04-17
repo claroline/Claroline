@@ -235,13 +235,8 @@ class DropzoneController extends DropzoneBaseController
                     $event = $dropzone->getEventCorrection();
                     $AgendaManager->deleteEvent($event);
                     $dropzone->setEventCorrection(NULL);
-
-
                 }
-
-
             }
-
 
             if ($form->isValid()) {
                 //getting the dropzoneManager
@@ -272,7 +267,6 @@ class DropzoneController extends DropzoneBaseController
                         $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
                     }
                 }
-
                 $em = $this->getDoctrine()->getManager();
 
                 $unitOfWork = $em->getUnitOfWork();
@@ -282,7 +276,6 @@ class DropzoneController extends DropzoneBaseController
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($dropzone);
                 $em->flush();
-
 
                 // check if manual state has changed
                 if ($manualStateChanged) {

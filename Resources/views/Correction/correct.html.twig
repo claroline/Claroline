@@ -162,7 +162,7 @@
                                         </div><!-- /.direct-chat-info -->
                                         <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
                                         <!-- /.direct-chat-img -->
-                                        <div class="direct-chat-text">{{ comments.commentText }}</div><!-- /.direct-chat-text -->
+                                        <div class="direct-chat-text">{{ comments.commentText|raw }}</div><!-- /.direct-chat-text -->
                                     </div><!-- /.direct-chat-msg -->
                                 {% else %}
                                     <!-- Message to the right -->
@@ -171,7 +171,7 @@
                                             <span class="direct-chat-name pull-right">Correcteur(rice)</span>
                                             <span class="direct-chat-timestamp pull-left">{{ comments.commentDate|date("d/m/Y H:i:s") }}</span>
                                         </div><!-- /.direct-chat-info -->
-                                        <div class="direct-chat-text">{{ comments.commentText }}</div><!-- /.direct-chat-text -->
+                                        <div class="direct-chat-text">{{ comments.commentText|raw }}</div><!-- /.direct-chat-text -->
                                     </div><!-- /.direct-chat-msg -->
                                 {% endif %}
                                 {% set alternance = comments.user.id %}
