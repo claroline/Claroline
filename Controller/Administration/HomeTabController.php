@@ -53,7 +53,7 @@ class HomeTabController extends Controller
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"         = @DI\Inject("request"),
-     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager"),
+     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
