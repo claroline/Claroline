@@ -1711,7 +1711,12 @@ class exerciseServices
         $score = 0;
 
         foreach($interOpen->getWordResponses() as $wr) {
-            if (ereg($wr->getResponse(), $response)) {
+            $pattern = '/'.$wr->getResponse().'/';
+            if (!$wr->getCaseSensitive()) {
+                $pattern .= 'i';
+            }
+            $subject = '/'.$response.'/';
+            if (preg_match($pattern, $subject)) {
                 $score += $wr->getScore();
             }
         }
