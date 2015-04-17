@@ -1,5 +1,6 @@
 {% block dropzone_add_comment %}
     <div class="container">
+<!--
         <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
         action="{{ path('innova_collecticiel_add_comment',
         {'documentId': document.id, 'userId': user.id, 'dropzoneId': dropzone.id, 'correctionId': correction.id}) }}">
@@ -11,8 +12,6 @@
                     <label for="comment-name">{{ 'Comments add'|trans({}, 'innova_collecticiel') }}</label>
                     <input id="comment-name" type="text" class="form-control" name="comment-name" required />
                     <textarea id="comment-name" class="tinymce media-description" name="comment-name" required></textarea>
-            {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
-
                 </div>
             </div>
 
@@ -29,6 +28,10 @@
             <hr>
 
         </form>
+ -->
+
+        {{ form(formComment) }}
+
     </div>
 {% endblock %}
 {% block stylesheets %}

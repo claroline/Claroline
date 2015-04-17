@@ -24,6 +24,7 @@ use Innova\CollecticielBundle\Event\Log\LogCorrectionReportEvent;
 use Innova\CollecticielBundle\Event\Log\LogDropGradeAvailableEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogCommentReadCreateEvent;
+use Innova\CollecticielBundle\Form\CommentType;
 use Innova\CollecticielBundle\Form\CorrectionCommentType;
 use Innova\CollecticielBundle\Form\CorrectionCriteriaPageType;
 use Innova\CollecticielBundle\Form\CorrectionStandardType;
@@ -822,6 +823,11 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
+        $formComment = $this->createForm(
+            new CommentType(new Comment(),null))
+        ;
+
+
         $form = $this->createForm(
             new CorrectionCriteriaPageType(),
             $oldData,
@@ -912,6 +918,7 @@ class CorrectionController extends DropzoneBaseController
                     'correction' => $correction,
                     'pager' => $pager,
                     'form' => $form->createView(),
+                    'formComment' => $formComment->createView(),
                     'admin' => true,
                     'edit' => $edit,
                     'state' => $state,
@@ -930,6 +937,7 @@ class CorrectionController extends DropzoneBaseController
                     'correction' => $correction,
                     'pager' => $pager,
                     'form' => $form->createView(),
+                    'formComment' => $formComment->createView(),
                     'admin' => false,
                     'edit' => false,
                     'state' => $state
