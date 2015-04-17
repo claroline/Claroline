@@ -42,7 +42,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // If no proposal exist, add two labels by default in the container Label
     if (indexProposal == 0) {
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
-        $('#newTableProposal').find('tbody').append('<tr></tr>');
+        $('#newTableProposal').find('tbody').append('<tr class="orgin" ></tr>');
         addProposal(containerProposal, deletechoice, tableProposals, codeContainerProposal);
     // If label already exist, add button to delete it
     } else {
@@ -54,7 +54,7 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
     // If no label exist, add two labels by default in the container Label
     if (indexLabel == 0) {
         addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
-        $('#newTableLabel').find('tbody').append('<tr></tr>');
+        $('#newTableLabel').find('tbody').append('<tr class="droppable" ></tr>');
         addLabel(containerLabel, deletechoice, tableLabels, codeContainerLabel);
     // If label already exist, add button to delete it
     } else {
@@ -109,7 +109,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             addDelete($('#newTableProposal').find('td:last'), 'newTableProposal');
         }
 
-        $('#newTableProposal').find('tbody').append('<tr></tr>');
+        $('#newTableProposal').find('tbody').append('<tr> class="origin"</tr>');
     });
     $('#newTableProposal').find('tr').last().remove();
 
@@ -147,7 +147,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             addDelete($('#newTableLabel').find('td:last'), 'newTableLabel');
         }
 
-        $('#newTableLabel').find('tbody').append('<tr></tr>');
+        $('#newTableLabel').find('tbody').append('<tr class="droppable"></tr>');
 
         if (typeof labels[ind] !== 'undefined') {
             idlabel = labels[ind];
@@ -497,7 +497,7 @@ function advProposalVal(idProposalVal) {
 function tableCreationLabel(container, table, button, deletechoice, LabelValue, ScoreRight, nbResponses, codeContainer, correspondence,forcePosition) {
     if (nbResponses == 0) {
         // Creation of the table
-        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+deletechoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+deletechoice+'</th></tr></thead><tbody><tr class="droppable"></tr></tbody></table>');
 
         // Creation of the button add
         var add = $('<a href="#" id="add_label" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
@@ -505,21 +505,21 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
         // Add the button add
         table.append(add);
         add.click(function (e) {
-            $('#newTableLabel').find('tbody').append('<tr></tr>');
+            $('#newTableLabel').find('tbody').append('<tr class="droppable"></tr>');
             addLabel(container, deletechoice, table, codeContainer);
             e.preventDefault(); // prevent add # in the url
             return false;
         });
     } else {
         // Add the structure of the table
-        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableLabel" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+LabelValue+'</th><th class="classic">'+ScoreRight+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr class="droppable"></tr></tbody></table>');
     }
 }
 
 function tableCreationProposal(container, table, button, deletechoice, ProposalValue, nbResponses, codeContainer, correspondence, forcePosition) {
     if (nbResponses == 0) {
         // Creation of the table
-        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+deletechoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+forcePosition+'</th><th class="classic">'+deletechoice+'</th></tr></thead><tbody><tr class="origin"></tr></tbody></table>');
 
         // Creation of the button add
         var add = $('<a href="#" id="add_proposal" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+button+'</a>');
@@ -527,14 +527,14 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
         // Add the button add
         table.append(add);
         add.click(function (e) {
-            $('#newTableProposal').find('tbody').append('<tr></tr>');
+            $('#newTableProposal').find('tbody').append('<tr class="origin"></tr>');
             addProposal(container, deletechoice, table, codeContainer);
             e.preventDefault(); // prevent add # in the url
             return false;
         });
     } else {
         // Add the structure of the table
-       table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+       table.append('<table id="newTableProposal" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+ProposalValue+'</th><th class="classic">'+forcePosition+'</th></tr></thead><tbody><tr class="origin"></tr></tbody></table>');
     }
 }
 
