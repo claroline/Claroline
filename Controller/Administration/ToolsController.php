@@ -22,24 +22,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('desktop_tools')")
+ */
 class ToolsController extends Controller
 {
     private $request;
     private $toolManager;
     private $formFactory;
     private $router;
-    private $sc;
-    private $desktopToolAdmin;
 
     /**
      * @DI\InjectParams({
      *     "request"     = @DI\Inject("request"),
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "router"      = @DI\Inject("router"),
-     *     "sc"          = @DI\Inject("security.context")
+     *     "router"      = @DI\Inject("router")
      * })
      */
     public function __construct
@@ -47,16 +47,13 @@ class ToolsController extends Controller
         Request $request,
         ToolManager $toolManager,
         FormFactory $formFactory,
-        UrlGeneratorInterface $router,
-        SecurityContextInterface $sc
+        UrlGeneratorInterface $router
     )
     {
         $this->request          = $request;
         $this->toolManager      = $toolManager;
         $this->formFactory      = $formFactory;
         $this->router           = $router;
-        $this->sc               = $sc;
-        $this->desktopToolAdmin = $toolManager->getAdminToolByName('desktop_tools');
     }
 
     /**
@@ -72,8 +69,6 @@ class ToolsController extends Controller
      */
     public function showToolAction()
     {
-        $this->checkOpen();
-
         $forms = array();
         $tools = $this->toolManager->getAllTools();
 
@@ -106,8 +101,6 @@ class ToolsController extends Controller
      */
     public function modifyToolAction(Tool $tool)
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(FormFactory::TYPE_TOOL, array(), $tool);
 
         if ($this->request->getMethod() === 'POST') {
@@ -118,14 +111,5 @@ class ToolsController extends Controller
         }
 
         return new RedirectResponse($this->router->generate('claro_admin_tool_show'));
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->desktopToolAdmin)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

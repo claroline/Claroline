@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Competence\CompetenceNode;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\CompetenceManager;
@@ -25,41 +24,37 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('competence_subscription')")
+ */
 class CompetenceSubscriptionController
 {
     private $cptmanager;
     private $request;
     private $userManager;
-    private $sc;
-    private $adminTool;
+
     /**
      * @DI\InjectParams({
      *     "request"            = @DI\Inject("request"),
      *     "router"             = @DI\Inject("router"),
      *     "cptmanager"			= @DI\Inject("claroline.manager.competence_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "securityContext"    = @DI\Inject("security.context"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
         Request $request,
         RouterInterface $router,
         CompetenceManager $cptmanager,
-        UserManager $userManager,
-        SecurityContextInterface $securityContext,
-        ToolManager $toolManager
+        UserManager $userManager
     )
     {
         $this->request = $request;
         $this->router = $router;
         $this->cptmanager = $cptmanager;
         $this->userManager = $userManager;
-        $this->sc = $securityContext;
-        $this->toolManager = $toolManager->getAdminToolByName('competence_subscription');
     }
 
     /**
@@ -193,8 +188,6 @@ class CompetenceSubscriptionController
 
     public function showSubscriptionAction($competence)
     {
-        $this->checkOpen();
-        $listUsersCompetences =
         $this->cptmanager->getCompetencesAssociateUsers($competence);
         $tree = $this->cptmanager->getHierarchy($competence);
 
@@ -203,14 +196,5 @@ class CompetenceSubscriptionController
             'cpt' => $competence,
             'tree' => $tree
         );
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->toolManager)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

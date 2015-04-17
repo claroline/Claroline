@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
@@ -28,18 +27,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('registration_to_workspace')")
+ */
 class WorkspaceRegistrationController extends Controller
 {
     private $adminWorkspaceRegistrationTool;
     private $formFactory;
     private $groupManager;
     private $roleManager;
-    private $sc;
     private $session;
-    private $toolManager;
     private $translator;
     private $userManager;
     private $workspaceManager;
@@ -50,9 +50,7 @@ class WorkspaceRegistrationController extends Controller
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
-     *     "sc"                  = @DI\Inject("security.context"),
      *     "session"             = @DI\Inject("session"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"          = @DI\Inject("translator"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
@@ -63,24 +61,17 @@ class WorkspaceRegistrationController extends Controller
         FormFactory $formFactory,
         GroupManager $groupManager,
         RoleManager $roleManager,
-        SecurityContextInterface $sc,
         SessionInterface $session,
-        ToolManager $toolManager,
         Translator $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
     )
     {
-        $this->adminWorkspaceRegistrationTool = $toolManager->getAdminToolByName(
-            'registration_to_workspace'
-        );
         $this->formFactory = $formFactory;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
-        $this->sc = $sc;
         $this->session = $session;
-        $this->toolManager = $toolManager;
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
@@ -109,8 +100,6 @@ class WorkspaceRegistrationController extends Controller
      */
     public function registrationManagementAction($search = '', $max = 20)
     {
-        $this->checkOpen();
-
         if ($search === '') {
             $datas = $this->workspaceTagManager
                 ->getDatasForWorkspaceList(false, $search, $max);
@@ -154,7 +143,6 @@ class WorkspaceRegistrationController extends Controller
      */
     public function registrationManagementUserListAction(array $workspaces)
     {
-        $this->checkOpen();
         $pager = $this->userManager->getAllUsers(1);
 
         return array('workspaces' => $workspaces, 'users' => $pager, 'search' => '');
@@ -180,7 +168,6 @@ class WorkspaceRegistrationController extends Controller
      */
     public function registrationManagementGroupListAction(array $workspaces)
     {
-        $this->checkOpen();
         $pager = $this->groupManager->getGroups(1);
 
         return array('workspaces' => $workspaces, 'groups' => $pager, 'search' => '');
@@ -210,7 +197,6 @@ class WorkspaceRegistrationController extends Controller
      */
     public function userListPagerAction($page, $search)
     {
-        $this->checkOpen();
         $pager = $search === '' ?
             $this->userManager->getAllUsers($page) :
             $this->userManager->getUsersByName($search, $page);
@@ -242,7 +228,6 @@ class WorkspaceRegistrationController extends Controller
      */
     public function groupListPagerAction($page, $search)
     {
-        $this->checkOpen();
         $pager = $search === '' ?
             $this->groupManager->getGroups($page) :
             $this->groupManager->getGroupsByName($search, $page);
@@ -280,8 +265,6 @@ class WorkspaceRegistrationController extends Controller
         array $users
     )
     {
-        $this->checkOpen();
-
         foreach ($workspaces as $workspace) {
             $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
 
@@ -341,8 +324,6 @@ class WorkspaceRegistrationController extends Controller
         array $groups
     )
     {
-        $this->checkOpen();
-
         foreach ($workspaces as $workspace) {
             $role = $this->roleManager->getRoleByTranslationKeyAndWorkspace($roleKey, $workspace);
 
@@ -400,7 +381,6 @@ class WorkspaceRegistrationController extends Controller
         array $users
     )
     {
-        $this->checkOpen();
         $msg = '';
 
         foreach ($users as $user) {
@@ -453,7 +433,6 @@ class WorkspaceRegistrationController extends Controller
         array $groups
     )
     {
-        $this->checkOpen();
         $msg = '';
 
         foreach ($groups as $group) {
@@ -505,7 +484,6 @@ class WorkspaceRegistrationController extends Controller
         $order = 'ASC'
     )
     {
-        $this->checkOpen();
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $pager = $search === '' ?
             $this->userManager->getByRolesIncludingGroups(
@@ -561,7 +539,6 @@ class WorkspaceRegistrationController extends Controller
         $order = 'ASC'
     )
     {
-        $this->checkOpen();
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $pager = ($search === '') ?
             $this->groupManager->getGroupsByRoles(
@@ -612,7 +589,6 @@ class WorkspaceRegistrationController extends Controller
         array $users
     )
     {
-        $this->checkOpen();
         $this->roleManager->resetWorkspaceRoleForSubjects($users, $workspace);
         $sessionFlashBag = $this->session->getFlashBag();
 
@@ -651,7 +627,6 @@ class WorkspaceRegistrationController extends Controller
         array $groups
     )
     {
-        $this->checkOpen();
         $this->roleManager->resetWorkspaceRoleForSubjects($groups, $workspace);
         $sessionFlashBag = $this->session->getFlashBag();
 
@@ -666,14 +641,5 @@ class WorkspaceRegistrationController extends Controller
         }
 
         return new Response('success', 200);
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->adminWorkspaceRegistrationTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

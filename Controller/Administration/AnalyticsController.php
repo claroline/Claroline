@@ -15,46 +15,42 @@ use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_analytics')")
+ */
 class AnalyticsController extends Controller
 {
     private $userManager;
-    private $toolManager;
     private $workspaceManager;
     private $formFactory;
     private $analyticsManager;
     private $request;
     private $analyticsTool;
-    private $sc;
 
     /**
      * @DI\InjectParams({
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
-     *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
-     *     "request"             = @DI\Inject("request"),
-     *     "sc"                  = @DI\Inject("security.context")
+     *     "request"             = @DI\Inject("request")
      * })
      */
     public function __construct(
         UserManager $userManager,
-        ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
-        Request $request,
-        SecurityContextInterface $sc
+        Request $request
     )
     {
         $this->userManager = $userManager;
@@ -62,9 +58,6 @@ class AnalyticsController extends Controller
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
         $this->request = $request;
-        $this->toolManager = $toolManager;
-        $this->sc = $sc;
-        $this->analyticsTool = $toolManager->getAdminToolByName('platform_analytics');
     }
 
     /**
@@ -83,8 +76,6 @@ class AnalyticsController extends Controller
      */
     public function analyticsAction()
     {
-        $this->checkOpen();
-
         $lastMonthActions = $this->analyticsManager->getDailyActionNumberForDateRange();
         $mostViewedWS = $this->analyticsManager->topWSByAction(null, 'ws_tool_read', 5);
         $mostViewedMedia = $this->analyticsManager->topMediaByAction(null, 'resource_read', 5);
@@ -116,8 +107,6 @@ class AnalyticsController extends Controller
      */
     public function analyticsConnectionsAction()
     {
-        $this->checkOpen();
-
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_CONNECTIONS,
             array(),
@@ -165,8 +154,6 @@ class AnalyticsController extends Controller
      */
     public function analyticsResourcesAction()
     {
-        $this->checkOpen();
-
         $manager = $this->get('doctrine.orm.entity_manager');
         $wsCount = $this->workspaceManager->getNbWorkspaces();
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -199,8 +186,6 @@ class AnalyticsController extends Controller
      */
     public function analyticsTopAction(Request $request, $topType)
     {
-        $this->checkOpen();
-
         $criteriaForm = $this->formFactory->create(
             FormFactory::TYPE_ADMIN_ANALYTICS_TOP,
             array(),
@@ -222,14 +207,5 @@ class AnalyticsController extends Controller
             'form_criteria' => $criteriaForm->createView(),
             'list_data' => $listData
         );
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->analyticsTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }
