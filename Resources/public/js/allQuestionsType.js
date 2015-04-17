@@ -179,7 +179,22 @@ function addDelete(tr, deleteTrans) {
 $(document).ready(function() {
     $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
     displayOptionalFields();
+    
+    //on ne passe par ici pour l'instant
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').on('load', function() {
+        placeholderTinyMCE();
+        alert("coucou");
+    });
+        
 });
+
+function placeholderTinyMCE(){
+//    $('#mce-tinymce mce-container mce-panel').sortable({
+//        
+//    });
+
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').contents().find("br").css( "background-color", "#BADA55" );
+}
 
 /**
  * Enters edit advance
@@ -278,4 +293,6 @@ function textareaAdvancedEdition()
             $("#btnEdition_"+idProposalVal).remove();
         }
     });
+    
+    test();
 }
