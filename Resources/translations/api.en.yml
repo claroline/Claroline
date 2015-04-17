@@ -14,7 +14,7 @@ oauth_app_ask_access: 'Access demand to the platform'
 oauth_application_acceptance: 'Access confirmation'
 password_grant_type: Password
 refresh_token_grant_type: 'Refresh token'
-revoke: 'Revoke'
+revoke: Revoke
 revoke_access: 'Revoke access'
 thrid_party_application_delete_confirm_message: 'Are you sure you want to revoke access to the platform for third-party application <strong>%application%</strong>?'
 thrid_party_application_delete_confirm_title: 'Revoking access to the platform'

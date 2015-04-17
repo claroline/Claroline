@@ -1,6 +1,6 @@
 add_event: 'Ajouter un événement'
-isTask: Tâche
-agenda_form_allDay: All day
+agenda_form_allDay: 'All day'
+agenda_form_author: 'Créé par'
 agenda_form_description: Description
 agenda_form_end: 'Date de fin'
 agenda_form_endHours: 'Heure de fin'
@@ -10,7 +10,6 @@ agenda_form_recurring: Répétition
 agenda_form_start: 'Date de début'
 agenda_form_startHours: 'Heure de début'
 agenda_form_title: Titre
-agenda_form_author: 'Créé par'
 apr: Avr
 april: Avril
 aug: Août
@@ -24,18 +23,19 @@ dec: Déc
 december: Décembre
 end: Fin
 end_date: 'Date de fin'
-export: 'Exporter les événements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event: Evénement
 event_update: 'Modification enregistrée'
+export: 'Exporter les événements'
 feb: Févr
 february: Février
-filter_user: Filtrer par utilisateur
-filter_ws: Filtrer par espace d'activités
+filter_user: 'Filtrer par utilisateur'
+filter_ws: 'Filtrer par espace d''activités'
 fri: Ven
 friday: Vendredi
 high: Haute
-import_agenda_file_file: 'Importer'
+import_agenda_file_file: Importer
+isTask: Tâche
 jan: Janv
 january: Janvier
 jul: Juil
@@ -56,7 +56,7 @@ next: '>'
 nextYear: '>>'
 'no event found': 'Pas d''événements'
 no_description: 'Pas de description'
-no_task_found: Pas de tâches
+no_task_found: 'Pas de tâches'
 nov: Nov
 november: Novembre
 oct: Oct
