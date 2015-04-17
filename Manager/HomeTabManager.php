@@ -260,6 +260,45 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function reorderHomeTabConfigsByUserAndType(
+        User $user,
+        $type,
+        HomeTabConfig $homeTabConfig,
+        $nextHTCId
+    )
+    {
+        $htcs = $this->homeTabConfigRepo->findHomeTabConfigsByUserAndType($user, $type);
+        $nextId = intval($nextHTCId);
+        $order = 1;
+        $updated = false;
+
+        foreach ($htcs as $htc) {
+
+            if ($htc === $homeTabConfig) {
+                continue;
+            } elseif ($htc->getId() === $nextId) {
+                $homeTabConfig->setTabOrder($order);
+                $updated = true;
+                $this->om->persist($homeTabConfig);
+                $order++;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+
+            } else {
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+            }
+        }
+
+        if (!$updated) {
+            $homeTabConfig->setTabOrder($order);
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
+    }
+
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
         Workspace $workspace
