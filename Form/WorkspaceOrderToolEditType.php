@@ -19,7 +19,18 @@ class WorkspaceOrderToolEditType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('required' => true));
+        $builder->add(
+            'name',
+            'content',
+            array(
+                'data' => $builder->getData(),
+                'theme_options' => array(
+                    'titlePlaceHolder' => 'Menu title',
+                    'contentText' => false,
+                    'tinymce' => false
+                )
+            )
+        );
     }
 
     public function getName()
