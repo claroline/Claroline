@@ -594,4 +594,19 @@ class ResourceQueryBuilder
 
         return $this;
     }
+
+    /**
+     * Filters nodes by active value.
+     *
+     * @param boolean $active
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereActiveIs($active)
+    {
+        $this->addWhereClause('node.active = :active');
+        $this->parameters[':active'] = $active;
+
+        return $this;
+    }
 }
