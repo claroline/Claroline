@@ -93,11 +93,12 @@ class PickerController
      *
      * @EXT\Route("/users/suggest/{query}", name="hevinci_suggest_user")
      *
+     * @param string $query
      * @return JsonResponse
      */
-    public function suggestUserAction()
+    public function suggestUserAction($query)
     {
-        return new JsonResponse([['name' => 'User 1'], ['name' => 'User 2']]);
+        return new JsonResponse($this->competencyManager->suggestUsers($query));
     }
 
     /**
@@ -105,10 +106,11 @@ class PickerController
      *
      * @EXT\Route("/groups/suggest/{query}", name="hevinci_suggest_group")
      *
+     * @param string $query
      * @return JsonResponse
      */
-    public function suggestGroupAction()
+    public function suggestGroupAction($query)
     {
-        return new JsonResponse([['name' => 'Group 1'], ['name' => 'Group 2']]);
+        return new JsonResponse($this->competencyManager->suggestGroups($query));
     }
 }

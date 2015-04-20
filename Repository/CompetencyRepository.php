@@ -34,4 +34,50 @@ class CompetencyRepository extends NestedTreeRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Returns the first five users whose first name, last name or
+     * username include a given string.
+     *
+     * Note: this should definitely not be here
+     *
+     * @param string $search
+     * @return array
+     */
+    public function findFirstUsersByName($search)
+    {
+        return $this->_em->createQueryBuilder()
+            ->select(
+                'u.id',
+                "CONCAT(u.firstName, ' ', u.lastName, ' (', u.username, ')') AS name"
+            )
+            ->from('ClarolineCoreBundle:User', 'u')
+            ->where('u.firstName LIKE :search')
+            ->orWhere('u.lastName LIKE :search')
+            ->orWhere('u.username LIKE :search')
+            ->setMaxResults(5)
+            ->setParameter(':search', "%{$search}%")
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Returns the first five users whose name includes a given string.
+     *
+     * Note: this should definitely not be here
+     *
+     * @param string $search
+     * @return array
+     */
+    public function findFirstGroupsByName($search)
+    {
+        return $this->_em->createQueryBuilder()
+            ->select('g.id, g.name')
+            ->from('ClarolineCoreBundle:Group', 'g')
+            ->where('g.name LIKE :search')
+            ->setMaxResults(5)
+            ->setParameter(':search', "%{$search}%")
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

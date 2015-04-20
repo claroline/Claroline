@@ -4,7 +4,27 @@
     window.HeVinci = window.HeVinci || {};
     window.HeVinci.UserPicker = Picker;
 
-    function Picker() {
+    /**
+     * Initializes a user picker with a hash of options:
+     *
+     * - title:     title of the modal
+     *
+     *              (defaults to generic title)
+     *
+     * - callback:  function to be executed when picking is complete.
+     *              It will be passed an object with the following attributes:
+     *                  - target    (string: "user"|"group")
+     *                  - id        (integer)
+     *
+     *              (defaults to empty function)
+     *
+     * @param options Object
+     * @constructor
+     */
+    function Picker(options) {
+        options = options || {};
+        this.title = options.title;
+        this.callback = options.callback || function () {};
         this.$pickerModal = null;
         this.areListenersInitialized = false;
         this.userTypeahead = this._makeTypeahead('user');
@@ -17,7 +37,9 @@
     Picker.prototype.open = function () {
         this._initState(); // reset in case picker has been opened before
         if (!this.areListenersInitialized) this._initListeners();
-        this.$pickerModal = Claroline.Modal.create(Twig.render(UserPickerForm));
+        this.$pickerModal = Claroline.Modal.create(
+            Twig.render(UserPickerForm, this.title ? { title: this.title } : {})
+        );
     };
 
     /**
@@ -63,28 +85,18 @@
         event.preventDefault();
 
         if (this.currentStep === 1) {
-            this.$pickerModal.find('div.step-1').css('display', 'none');
-            this.$pickerModal.find('div.step-2').css('display', 'block');
-            var $input = this.$pickerModal.find('input[type=text]');
             var self = this;
+            var $input = this.$pickerModal.find('input[type=text]');
+            var targetTypeahead = this.selection.target === 'user' ?
+                this.userTypeahead :
+                this.groupTypeahead;
 
-            $input.on('typeahead:selected', function ($event, suggestion) {
-                console.log(suggestion);
-                // update selection.target
-                // if key press, invalidate
-            });
+            this._displayStepTwo();
+            this._bindInputListeners($input);
 
-            var targetTypeahead = this.selection.target ? this.userTypeahead : this.groupTypeahead;
-
-            targetTypeahead.initialize(true).done(function () {
-                // without this, bloodhound keep suggesting already
-                // added entries without making a new http request
-                targetTypeahead.clearRemoteCache();
+            targetTypeahead.initialize().done(function () {
                 $input.typeahead(
-                    {
-                        minLength: 1,
-                        highlight: true
-                    },
+                    { minLength: 1, highlight: true },
                     {
                         name: self.selection.target,
                         displayKey: 'name',
@@ -92,8 +104,43 @@
                     }
                 );
             });
-
-            event.currentTarget.disabled = true;
+        } else {
+            this.callback(this.selection);
+            this.close();
         }
+    };
+
+    Picker.prototype._displayStepTwo = function () {
+        if (this.selection.target === 'group') {
+            // change the default (user) label
+            this.$pickerModal
+                .find('span#search-info')
+                .text(Translator.trans('user_picker.enter_group_search', {}, 'competency') + ':');
+        }
+
+        this.$pickerModal.find('div.step-1').css('display', 'none');
+        this.$pickerModal.find('div.step-2').css('display', 'block');
+        this.$pickerModal.find('button[type=submit]').attr('disabled', 'disabled');
+
+        ++this.currentStep;
+    };
+
+    Picker.prototype._bindInputListeners = function ($input) {
+        var $submit = this.$pickerModal.find('button[type=submit]');
+        var self = this;
+
+        $input.on('typeahead:selected', function ($event, suggestion) {
+            // update selection and enable form submission
+            self.selection.id = suggestion.id;
+            $submit.removeAttr('disabled');
+        });
+
+        $input.on('keypress', function () {
+            if (self.selection.id) {
+                // invalidate previous selection if new characters are entered
+                self.selection.id = null;
+                $submit.attr('disabled', 'disabled');
+            }
+        });
     };
 })();

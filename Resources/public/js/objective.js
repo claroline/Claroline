@@ -7,7 +7,10 @@
         includeLevel: true,
         callback: onCompetencySelection
     });
-    var userPicker = new HeVinci.UserPicker();
+    var userPicker = new HeVinci.UserPicker({
+        title: trans('objective.assign'),
+        callback: onUserSelection
+    });
     var currentObjectiveRow = null;
     var currentObjectiveId = null;
 
@@ -152,6 +155,10 @@
             .error(function () {
                 Claroline.Modal.error();
             });
+    }
+
+    function onUserSelection(selection) {
+        console.log(selection);
     }
 
     function trans(message) {

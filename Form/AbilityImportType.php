@@ -55,7 +55,7 @@ class AbilityImportType extends AbstractType
                 ]
             ])
             ->add('level', 'entity', [
-                'label' => 'level',
+                'label' => 'level_',
                 'class' => 'HeVinciCompetencyBundle:Level',
                 'property' => 'name',
                 'query_builder' => function (LevelRepository $repo) use ($options) {

@@ -32,7 +32,7 @@ class AbilityType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('level', 'entity', [
-                'label' => 'level',
+                'label' => 'level_',
                 'translation_domain' => 'competency',
                 'class' => 'HeVinciCompetencyBundle:Level',
                 'property' => 'name',

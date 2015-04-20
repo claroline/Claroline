@@ -4,7 +4,6 @@
     <form id="{% block id %}#{% endblock %}"
           action="{% block action %}#{% endblock %}"
           method="POST"
-          onsubmit="return false;"
           {{ form_enctype(form) }}>
         {{ form_widget(form) }}
     </form>

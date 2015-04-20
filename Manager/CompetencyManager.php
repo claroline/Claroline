@@ -30,7 +30,8 @@ class CompetencyManager
      *     "translator" = @DI\Inject("translator")
      * })
      *
-     * @param ObjectManager $om
+     * @param ObjectManager         $om
+     * @param TranslatorInterface   $translator
      */
     public function __construct(ObjectManager $om, TranslatorInterface $translator)
     {
@@ -397,5 +398,29 @@ class CompetencyManager
         $this->om->flush();
 
         return $ability;
+    }
+
+    /**
+     * Returns the id and name of the first five users whose first name,
+     * last name or username include a given string.
+     *
+     * @param string $search
+     * @return array
+     */
+    public function suggestUsers($search)
+    {
+        return $this->competencyRepo->findFirstUsersByName($search);
+    }
+
+    /**
+     * Returns the id and name of the first five groups whose name
+     * includes a given string.
+     *
+     * @param string $search
+     * @return array
+     */
+    public function suggestGroups($search)
+    {
+        return $this->competencyRepo->findFirstGroupsByName($search);
     }
 }

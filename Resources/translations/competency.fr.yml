@@ -107,6 +107,7 @@ scale_: Échelle
 scales: Échelles
 stats: Historique et statistiques
 user_picker:
-  select_target: 'Choisissez la cible de la sélection '
-  enter_search: 'Entrez un nom (ou prénom, nom d''utilisateur, etc.) et sélectionnez une proposition dans la liste '
+  select_target: 'Choisissez l''objet de la sélection '
+  enter_user_search: 'Entrez un nom, prénom ou nom d''utilisateur et sélectionnez une proposition dans la liste '
+  enter_group_search: 'Entrez un nom de groupe et sélectionnez une proposition dans la liste '
 user_picker_: Sélection d'utilisateur(s)

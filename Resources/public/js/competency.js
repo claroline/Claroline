@@ -265,7 +265,8 @@
                 successCallback(data);
             },
             function () {},
-            'scale-form'
+            'scale-form',
+            false
         );
     }
 
@@ -275,7 +276,8 @@
             Routing.generate('hevinci_scale', { id: scaleId, edit: callback ? 1 : 0 }),
             callback || function () {},
             function () {},
-            'scale-form'
+            'scale-form',
+            false
         );
     }
 
