@@ -59,7 +59,7 @@ class ResourcePathExtension extends \Twig_Extension
             }
 
             $fullResourcePath[] = array(
-                'nodeName' => substr($segment, 0, -(count($nodeId)+1)),
+                'nodeName' => substr($segment, 0, -(strlen($nodeId)+1)),
                 'nodeOpenUrl' => $routing
             );
         }
