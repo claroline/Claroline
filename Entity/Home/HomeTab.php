@@ -72,6 +72,11 @@ class HomeTab
      */
     protected $roles;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $icon;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -156,5 +161,15 @@ class HomeTab
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
     }
 }

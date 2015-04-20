@@ -61,6 +61,12 @@ class WidgetInstance
      */
     protected $name;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $icon;
+
+
     public function getId()
     {
         return $this->id;
@@ -137,5 +143,15 @@ class WidgetInstance
         );
 
         return $return;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
     }
 }
