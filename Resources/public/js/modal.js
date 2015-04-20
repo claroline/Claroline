@@ -185,17 +185,18 @@
 
     /**
      * Displays a form in a modal. The form requires all the modals divs and layout because it's pretty much impossible
-     * to render something pretty otherwise as the form will usually include the class modal-body for datas and
-     * modal-footer for submissions/cancelation.
-     * The modal root element must contain the class "modal-dialog"
+     * to render something pretty otherwise as the form will usually include the class modal-body for data and
+     * modal-footer for submission/cancelling.
+     * The modal root element must contain the class "modal-dialog".
      *
      * It assumes the route for the form submission returns:
-     * - a json response when successfull
-     * - the form rendered with its errors when an error occured
+     * - a json response when successful
+     * - the form rendered with its errors when an error occurred
      *
-     * @param url The route of the controller rendering the form
-     * @param successHandler A successHandler
-     * @param formRenderHandler an action wich is done after the form is rendered the first time
+     * @param url               The route of the controller rendering the form
+     * @param successHandler    A function called after a successful submission of the form
+     * @param formRenderHandler A function called when the form is first rendered
+     * @param formId            The id of the form
      */
     modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
         $.ajax(url)
@@ -208,7 +209,7 @@
             });
 
             modalElement.on('keypress', function (e) {
-                if (e.keyCode === 13) {
+                if (e.keyCode === 13 && e.target.nodeName !== 'TEXTAREA') {
                     event.preventDefault();
                     modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
                 }
