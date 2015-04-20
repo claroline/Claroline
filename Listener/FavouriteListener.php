@@ -59,7 +59,7 @@ class FavouriteListener extends ContainerAware
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:Favourite:form.html.twig',
             array(
-                'isFavourite' => $isFavourite = $favourite ? true : false,
+                'isFavourite' => (bool) $favourite,
                 'nodeId' => $nodeId
             )
         );

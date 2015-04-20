@@ -125,15 +125,12 @@ class FavouriteController extends Controller
      *
      * @EXT\Method("GET")
      */
-    public function deleteFavouriteAction($node)
+    public function deleteFavouriteAction(ResourceNode $node)
     {
         $em = $this->getDoctrine()->getManager();
 
         $resourceNode = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
             ->find($node);
-        if (!$resourceNode) {
-            throw new \Exception("Impossible to remove this favourite because the resource doesn't exist anymore !");
-        }
 
         $user = $this->getUser();
         $favourite = $em->getRepository('HeVinciFavouriteBundle:Favourite')
