@@ -1,0 +1,4 @@
+hevinci_favourite:
+    resource: "@HeVinciUrlBundle/Controller/UrlController.php"
+    type:     annotation
+    prefix:   /

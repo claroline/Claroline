@@ -5,19 +5,24 @@ namespace HeVinci\UrlBundle\Listener;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
+use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Entity\Url;
+use HeVinci\UrlBundle\Form\UrlChangeType;
 use HeVinci\UrlBundle\Form\UrlType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @DI\Service
@@ -28,25 +33,29 @@ class UrlListener
     private $om;
     private $request;
     private $templating;
+    private $manager;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "templating"         = @DI\Inject("templating")
+     *     "templating"         = @DI\Inject("templating"),
+     *     "manager"            = @DI\Inject("claroline.manager.resource_manager")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         ObjectManager $om,
         RequestStack $requestStack,
-        TwigEngine $templating
+        TwigEngine $templating,
+        ResourceManager $manager
     ){
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->templating = $templating;
+        $this->manager = $manager;
     }
 
     /**
@@ -153,6 +162,25 @@ class UrlListener
         $copy->setInternalUrl($resource->getInternalUrl());
 
         $event->setCopy($copy);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("change_url_menu_hevinci_url")
+     *
+     * @param CustomActionResourceEvent $event
+     */
+    public function onChangeAction(CustomActionResourceEvent $event)
+    {
+        $form = $this->formFactory->create(new UrlChangeType(), $event->getResource());
+        $form->handleRequest($this->request);
+
+        $content = $this->templating->render('HeVinciUrlBundle:Url:form.html.twig', array(
+            'form' => $form->createView(),
+            'node' => $event->getResource()->getResourceNode()->getId()
+        ));
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 }
