@@ -36,7 +36,6 @@ use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Manager\CompetenceManager;
 use Claroline\CoreBundle\Manager\workspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -53,7 +52,6 @@ class RolesController extends Controller
     private $router;
     private $request;
     private $translator;
-    private $cptManager;
     private $wksUqmanager;
     private $symfonyFormFactory;
 
@@ -70,7 +68,6 @@ class RolesController extends Controller
      *     "router"             = @DI\Inject("router"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
-     *     "cptManager"         = @DI\Inject("claroline.manager.competence_manager"),
      *     "wksUqmanager"       = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
      *     "symfonyFormFactory" = @DI\Inject("form.factory")
      * })
@@ -87,7 +84,6 @@ class RolesController extends Controller
         UrlGeneratorInterface $router,
         Request $request,
         TranslatorInterface $translator,
-        CompetenceManager $cptManager,
         workspaceUserQueueManager $wksUqmanager,
         SymfonyFormFactory $symfonyFormFactory
     )
@@ -103,7 +99,6 @@ class RolesController extends Controller
         $this->router = $router;
         $this->request = $request;
         $this->translator = $translator;
-        $this->cptManager = $cptManager;
         $this->wksUqmanager = $wksUqmanager;
         $this->symfonyFormFactory = $symfonyFormFactory;
     }
@@ -455,8 +450,6 @@ class RolesController extends Controller
     {
         $this->checkEditionAccess($workspace);
         $this->roleManager->associateRolesToSubjects($users, $roles, true);
-        //$listCptNodes = $this->cptManager->getCompetenceByWorkspace($workspace);
-        //$this->cptManager->subscribeUserToCompetences($users, $listCptNodes);
 
         return new Response('success');
     }

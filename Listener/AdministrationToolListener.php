@@ -172,29 +172,6 @@ class AdministrationToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
         $this->redirect($params, $event);
     }
-
-    /**
-     * @DI\Observe("administration_tool_competence_referencial")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenAdministrationCompetences(OpenAdministrationToolEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Competence:adminLearningOutcomesList';
-        $this->redirect($params, $event);
-    }
-
-    /**
-     * @DI\Observe("administration_tool_competence_subscription")
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenSubscriptionCompetence(OpenAdministrationToolEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\CompetenceSubscription:menu';
-        $this->redirect($params, $event);
-    }
     
     protected function redirect($params, $event)
     {
