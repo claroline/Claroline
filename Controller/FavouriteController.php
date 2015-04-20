@@ -8,6 +8,8 @@ use HeVinci\FavouriteBundle\Entity\Favourite;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @EXT\Security("has_role('ROLE_USER')")
@@ -51,14 +53,15 @@ class FavouriteController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/add/{node}",
-     *     name="hevinci_add_favourite",
+     *     "/add/form/{node}",
+     *     name="hevinci_add_favourite_form",
      *     requirements={"node" = "\d+"}
      * )
      *
-     * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciFavouriteBundle:Favourite:formError.html.twig")
      */
-    public function addFavouriteAction(ResourceNode $node)
+    public function addFavouriteFormAction(ResourceNode $node)
     {
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
@@ -66,7 +69,10 @@ class FavouriteController extends Controller
             ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
 
         if ($favourite) {
-            throw new \Exception('This favourite already exists !');
+            return array(
+                'nodeId' => $node->getId(),
+                'error' => 'resource_already_in_favourites'
+            );
         }
 
         $favourite = new Favourite();
@@ -75,10 +81,38 @@ class FavouriteController extends Controller
         $em->persist($favourite);
         $em->flush();
 
-        return array(
-            'isFavourite' => true,
-            '_resource' => $this->manager->getResourceFromNode($node)
-        );
+        return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/delete/form/{node}",
+     *     name="hevinci_delete_favourite_form",
+     *     requirements={"node" = "\d+"},
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciFavouriteBundle:Favourite:formError.html.twig")
+     */
+    public function deleteFavouriteFormAction(ResourceNode $node)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $favourite = $em->getRepository('HeVinciFavouriteBundle:Favourite')
+            ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
+
+        if (!$favourite) {
+            return array(
+                'nodeId' => $node->getId(),
+                'error' => 'resource_not_in_favourites.'
+            );
+        }
+
+        $em->remove($favourite);
+        $em->flush();
+
+        return new JsonResponse();
     }
 
     /**
@@ -90,11 +124,11 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("GET")
-     * @EXT\Template("HeVinciFavouriteBundle:Favourite:index.html.twig")
      */
     public function deleteFavouriteAction(ResourceNode $node)
     {
         $em = $this->getDoctrine()->getManager();
+
         $user = $this->getUser();
         $favourite = $em->getRepository('HeVinciFavouriteBundle:Favourite')
             ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
@@ -106,9 +140,6 @@ class FavouriteController extends Controller
         $em->remove($favourite);
         $em->flush();
 
-        return array(
-            'isFavourite' => false,
-            '_resource' => $this->manager->getResourceFromNode($node)
-        );
+        return new Response();
     }
 }

@@ -28,7 +28,7 @@ class Favourite
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_node_id")
+     * @ORM\JoinColumn(name="resource_node_id", onDelete="CASCADE")
      * @Assert\NotNull
      */
     protected $resourceNode;

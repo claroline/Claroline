@@ -1,14 +1,13 @@
 {
   "name": "hevinci/favourite-bundle",
   "description": "Favorite Plugin for Claroline Connect",
-  "homepage": "http://www.claroline.net",
   "type": "claroline-plugin",
   "autoload": {
     "psr-0": { "HeVinci\\FavouriteBundle": "" }
   },
   "require": {
     "php": ">=5.4.1",
-    "claroline/core-bundle": "~4.9"
+    "claroline/core-bundle": "~4.11"
   },
   "autoload": {
     "psr-0": { "HeVinci\\FavouriteBundle": "" }
