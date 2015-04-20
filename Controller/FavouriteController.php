@@ -129,12 +129,9 @@ class FavouriteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $resourceNode = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-            ->find($node);
-
         $user = $this->getUser();
         $favourite = $em->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findOneBy(array('user' => $user, 'resourceNode' => $resourceNode->getId()));
+            ->findOneBy(array('user' => $user, 'resourceNode' => $node->getId()));
 
         if (!$favourite) {
             throw new \Exception("This favourite doesn't exist !");
