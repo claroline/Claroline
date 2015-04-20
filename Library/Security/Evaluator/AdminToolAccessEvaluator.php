@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Library\Security;
+namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;

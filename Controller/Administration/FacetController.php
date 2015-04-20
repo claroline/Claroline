@@ -14,9 +14,8 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
@@ -34,20 +33,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
+ */
 class FacetController extends Controller
 {
     private $router;
-    private $toolManager;
     private $roleManager;
-    private $userAdminTool;
     private $facetManager;
     private $profilePropertyManager;
 
     /**
      * @DI\InjectParams({
      *     "router"                 = @DI\Inject("router"),
-     *     "sc"                     = @DI\Inject("security.context"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "formFactory"            = @DI\Inject("form.factory"),
@@ -57,8 +56,6 @@ class FacetController extends Controller
      */
     public function __construct(
         RouterInterface $router,
-        SecurityContextInterface $sc,
-        ToolManager $toolManager,
         FacetManager $facetManager,
         RoleManager $roleManager,
         FormFactoryInterface $formFactory,
@@ -66,9 +63,6 @@ class FacetController extends Controller
         ProfilePropertyManager $profilePropertyManager
     )
     {
-        $this->sc                     = $sc;
-        $this->toolManager            = $toolManager;
-        $this->userAdminTool          = $this->toolManager->getAdminToolByName('user_management');
         $this->facetManager           = $facetManager;
         $this->formFactory            = $formFactory;
         $this->request                = $request;
@@ -87,8 +81,6 @@ class FacetController extends Controller
      */
     public function indexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -102,7 +94,6 @@ class FacetController extends Controller
      */
     public function facetsAction()
     {
-        $this->checkOpen();
         $facets = $this->facetManager->getFacets();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
         $profilePreferences = $this->facetManager->getProfilePreferences();
@@ -124,7 +115,6 @@ class FacetController extends Controller
      */
     public function profilePropertiesAction()
     {
-        $this->checkOpen();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(false);
         $labels = User::getEditableProperties();
         $properties = $this->profilePropertyManager->getAllProperties();
@@ -145,7 +135,6 @@ class FacetController extends Controller
      */
     public function invertPropertiesEditableAction(ProfileProperty $property)
     {
-        $this->checkOpen();
         $this->profilePropertyManager->invertProperty($property);
 
         return new JsonResponse(array(), 200);
@@ -162,7 +151,6 @@ class FacetController extends Controller
      */
     public function facetFormAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), new Facet());
 
         return array('form' => $form->createView());
@@ -179,7 +167,6 @@ class FacetController extends Controller
      */
     public function fieldFormAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
 
         return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
@@ -195,7 +182,6 @@ class FacetController extends Controller
      */
     public function createFacetAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), new Facet());
         $form->handleRequest($this->request);
 
@@ -223,7 +209,6 @@ class FacetController extends Controller
      */
     public function createFieldAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
         $form->handleRequest($this->request);
 
@@ -261,7 +246,6 @@ class FacetController extends Controller
      */
     public function removeFacetAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->removeFacet($facet);
 
         return new Response('success');
@@ -278,7 +262,6 @@ class FacetController extends Controller
      */
     public function editFacetFormAction(Facet $facet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), $facet);
 
         return array('form' => $form->createView(), 'facet' => $facet);
@@ -294,7 +277,6 @@ class FacetController extends Controller
      */
     public function editFacetAction(Facet $facet)
     {
-        $this->checkOpen();
         $oldName = $facet->getName();
         $form = $this->formFactory->create(new FacetType(), $facet);
         $form->handleRequest($this->request);
@@ -325,8 +307,7 @@ class FacetController extends Controller
      * )
      */
     public function removeFieldFacetAction(FieldFacet $fieldFacet)
-    {
-        $this->checkOpen();
+    {;
         $this->facetManager->removeField($fieldFacet);
 
         return new Response('success', 204);
@@ -340,7 +321,6 @@ class FacetController extends Controller
      */
     public function moveFacetUpAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->moveFacetUp($facet);
 
         return new Response('success', 204);
@@ -354,7 +334,6 @@ class FacetController extends Controller
      */
     public function moveFacetDownAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->moveFacetDown($facet);
 
         return new Response('success', 204);
@@ -369,7 +348,6 @@ class FacetController extends Controller
      */
     public function editFieldFormAction(FieldFacet $fieldFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
 
         return array('form' => $form->createView(), 'fieldFacet' => $fieldFacet);
@@ -383,7 +361,6 @@ class FacetController extends Controller
      */
     public function editFieldAction(FieldFacet $fieldFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
         $form->handleRequest($this->request);
 
@@ -419,7 +396,6 @@ class FacetController extends Controller
      */
     public function moveFieldFacetsAction(PanelFacet $panel)
     {
-        $this->checkOpen();
         $params = $this->request->query->all();
         $ids = [];
 
@@ -444,7 +420,6 @@ class FacetController extends Controller
      */
     public function facetRolesFormAction(Facet $facet)
     {
-        $this->checkOpen();
         $roles = $facet->getRoles();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
@@ -459,7 +434,6 @@ class FacetController extends Controller
      */
     public function editFacetRolesAction(Facet $facet)
     {
-        $this->checkOpen();
         $roles = $this->getRolesFromRequest('role-');
         $this->facetManager->setFacetRoles($facet, $roles);
 
@@ -478,7 +452,6 @@ class FacetController extends Controller
      */
     public function fieldRolesFormAction(FieldFacet $field)
     {
-        $this->checkOpen();
         $fieldFacetsRole = $field->getFieldFacetsRole();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
@@ -493,7 +466,6 @@ class FacetController extends Controller
      */
     public function editFieldRolesAction(FieldFacet $field)
     {
-        $this->checkOpen();
         $roles = $this->getRolesFromRequest('open-role-');
         $this->facetManager->setFieldBoolProperty($field, $roles, 'canOpen');
         $roles = $this->getRolesFromRequest('edit-role-');
@@ -510,7 +482,6 @@ class FacetController extends Controller
      */
     public function editGeneralFacet()
     {
-        $this->checkOpen();
         $configs = array();
 
         foreach ($this->request->request->all() as $key => $value) {
@@ -544,7 +515,6 @@ class FacetController extends Controller
      */
     public function panelFacetFormAction(Facet $facet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
 
         return array('form' => $form->createView(), 'facet' => $facet);
@@ -560,7 +530,6 @@ class FacetController extends Controller
      */
     public function addPanelFacetAction(Facet $facet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
         $form->handleRequest($this->request);
 
@@ -598,7 +567,6 @@ class FacetController extends Controller
      */
     public function editPanelFacetFormAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
 
         return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
@@ -614,7 +582,6 @@ class FacetController extends Controller
      */
     public function editPanelFacetAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
         $form->handleRequest($this->request);
 
@@ -646,7 +613,6 @@ class FacetController extends Controller
      */
     public function removePanelFacetAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $this->facetManager->removePanel($panelFacet);
 
         return new Response('success', 204);
@@ -663,7 +629,6 @@ class FacetController extends Controller
      */
     public function orderPanels(Facet $facet)
     {
-        $this->checkOpen();
         $params = $this->request->query->all();
         $ids = [];
 
@@ -674,15 +639,6 @@ class FacetController extends Controller
         $this->facetManager->orderPanels($ids, $facet);
 
         return new Response('success');
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 
     private function getRolesFromRequest($prefix)

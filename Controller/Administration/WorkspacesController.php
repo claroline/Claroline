@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Form\WorkspaceImportType;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
@@ -27,38 +26,33 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
+ */
 class WorkspacesController extends Controller
 {
     private $workspaceManager;
     private $om;
     private $eventDispatcher;
-    private $sc;
-    private $toolManager;
     private $workspaceAdminTool;
 
     /**
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "sc"                 = @DI\Inject("security.context"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager")
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher,
-        SecurityContextInterface $sc,
-        ToolManager $toolManager
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->workspaceManager   = $workspaceManager;
         $this->om                 = $om;
         $this->eventDispatcher    = $eventDispatcher;
-        $this->sc                 = $sc;
-        $this->toolManager        = $toolManager;
-        $this->workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
     }
 
     /**
@@ -86,7 +80,6 @@ class WorkspacesController extends Controller
      */
     public function managementAction($page, $search, $max, $order, $direction, $type = 1)
     {
-        $this->checkOpen();
         $workspaceType = intval($type);
 
         if ($workspaceType === 2) {
@@ -134,8 +127,6 @@ class WorkspacesController extends Controller
      */
     public function toggleWorkspaceVisibilityAction(Request $request)
     {
-        $this->checkOpen();
-
         $postData = $request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
         $postData['visible'] === '1' ?
@@ -157,8 +148,6 @@ class WorkspacesController extends Controller
      */
     public function toggleWorkspacePublicRegistrationAction(Request $request)
     {
-        $this->checkOpen();
-
         $postData = $request->request->all();
         $workspace = $this->workspaceManager->getWorkspaceById($postData['id']);
         $postData['registration'] === 'unlock' ?
@@ -189,8 +178,6 @@ class WorkspacesController extends Controller
      */
     public function deleteWorkspacesAction(array $workspaces)
     {
-        $this->checkOpen();
-
         if (count($workspaces) > 0) {
             $this->om->startFlushSuite();
 
@@ -211,7 +198,6 @@ class WorkspacesController extends Controller
      */
     public function importWorkspaceFormAction()
     {
-        $this->checkOpen();
         $form = $this->createForm(new WorkspaceImportType());
 
         return array('form' => $form->createView());
@@ -242,14 +228,5 @@ class WorkspacesController extends Controller
         }
 
         return array('form' => $form->createView());
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->workspaceAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }
