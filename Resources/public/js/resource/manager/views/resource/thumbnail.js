@@ -32,12 +32,16 @@
             event.preventDefault();
             var action = event.currentTarget.getAttribute('data-action');
             var nodeId = event.currentTarget.getAttribute('data-id');
-            var isCustom = event.currentTarget.getAttribute('data-is-custom');
-            var eventName = isCustom === 'no' ? action : 'custom-action';
+            var isCustom = event.currentTarget.getAttribute('data-is-custom') === 'yes';
+            var eventName = isCustom ? 'custom-action' : action;
+            var isForm = event.currentTarget.getAttribute('data-action-type') === 'display-form';
+            eventName = isCustom && isForm ? 'custom-action-form' : eventName;
+
             this.dispatcher.trigger(eventName, {
                 action: action,
                 nodeId: nodeId,
-                view: this.parameters.viewName
+                view: this.parameters.viewName,
+                isCustomAction: isCustom
             });
         },
         render: function (node, isSelectionAllowed) {

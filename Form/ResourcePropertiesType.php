@@ -87,6 +87,22 @@ class ResourcePropertiesType extends AbstractType
                 'disabled' => true
             )
         );
+        $builder->add(
+            'license',
+            'text',
+            array(
+                'label' => 'license',
+                'required' => false
+            )
+        );
+        $builder->add(
+            'author',
+            'text',
+            array(
+                'label' => 'author',
+                'required' => false
+            )
+        );
     }
 
     public function getName()

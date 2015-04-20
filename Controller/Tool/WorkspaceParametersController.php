@@ -182,7 +182,6 @@ class WorkspaceParametersController extends Controller
         }
 
         $wsRegisteredName = $workspace->getName();
-        $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
         $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
@@ -197,9 +196,6 @@ class WorkspaceParametersController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            //I need to do this to run the replaceCode methods.
-            $newCode = $workspace->getCode();
-            $workspace->setCode($wsRegisteredCode);
             $this->workspaceManager->editWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();

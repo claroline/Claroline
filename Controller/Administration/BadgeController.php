@@ -34,6 +34,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * Controller of the badges.
  *
  * @Route("/admin/badges")
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('badges_management')")
  */
 class BadgeController extends Controller
 {
@@ -49,8 +51,6 @@ class BadgeController extends Controller
      */
     public function listAction($badgePage = 1, $claimPage = 1, $userPage = 1)
     {
-        $this->checkOpen();
-
         $parameters = array(
             'badgePage'        => $badgePage,
             'claimPage'        => $claimPage,
@@ -80,7 +80,6 @@ class BadgeController extends Controller
      */
     public function addAction(Request $request)
     {
-        $this->checkOpen();
         $badge = new Badge();
 
         $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
@@ -122,7 +121,6 @@ class BadgeController extends Controller
      */
     public function editAction(Request $request, Badge $badge, $page = 1)
     {
-        $this->checkOpen();
         $query   = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Badge\Badge')->findUsers($badge, false);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new Pagerfanta($adapter);
@@ -166,8 +164,6 @@ class BadgeController extends Controller
      */
     public function deleteAction(Badge $badge)
     {
-        $this->checkOpen();
-
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -202,8 +198,6 @@ class BadgeController extends Controller
      */
     public function awardAction(Request $request, Badge $badge, User $loggedUser)
     {
-        $this->checkOpen();
-
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -281,8 +275,6 @@ class BadgeController extends Controller
      */
     public function unawardAction(Request $request, Badge $badge, User $user)
     {
-        $this->checkOpen();
-
         if (null !== $badge->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -327,8 +319,6 @@ class BadgeController extends Controller
      */
     public function manageClaimAction(BadgeClaim $badgeClaim, $validate = false)
     {
-        $this->checkOpen();
-
         if (null !== $badgeClaim->getBadge()->getWorkspace()) {
             throw $this->createNotFoundException("No badge found.");
         }
@@ -370,20 +360,6 @@ class BadgeController extends Controller
      */
     public function statisticsAction(Request $request)
     {
-        $this->checkOpen();
-
         return array();
-    }
-
-    private function checkOpen()
-    {
-        $badgeAdminTool = $this->container->get('claroline.manager.tool_manager')
-            ->getAdminToolByName('badges_management');
-
-        if ($this->container->get('security.context')->isGranted('OPEN', $badgeAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

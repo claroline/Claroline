@@ -48,6 +48,7 @@ use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * This controller is able to:
@@ -759,6 +760,7 @@ class WorkspaceController extends Controller
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"id" = "workspaceId", "strictId" = true}
      * )
+     * @SEC\PreAuthorize("canAccessWorkspace('OPEN')")
      *
      * Open the first tool of a workspace.
      *
@@ -768,24 +770,20 @@ class WorkspaceController extends Controller
      */
     public function openAction(Workspace $workspace)
     {
-        if ($this->security->isGranted('OPEN', $workspace)) {
-            $roles = $this->utils->getRoles($this->security->getToken());
-            $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
+        $roles = $this->utils->getRoles($this->security->getToken());
+        $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
 
-            if (count($tools) > 0) {
-                $route = $this->router->generate(
-                    'claro_workspace_open_tool',
-                    array(
-                        'workspaceId' => $workspace->getId(),
-                        'toolName' => $tools[0]->getName()
-                    )
-                );
+        if (count($tools) > 0) {
+            $route = $this->router->generate(
+                'claro_workspace_open_tool',
+                array(
+                    'workspaceId' => $workspace->getId(),
+                    'toolName' => $tools[0]->getName()
+                )
+            );
 
-                return new RedirectResponse($route);
+            return new RedirectResponse($route);
             }
-        }
-
-        throw new AccessDeniedException();
     }
 
     /**
@@ -1599,10 +1597,18 @@ class WorkspaceController extends Controller
         }
     }
 
+    private function throwWorkspaceDeniedException(Workspace $workspace)
+    {
+        $exception = new Exception\WorkspaceAccessDeniedException();
+        $exception->setWorkspace($workspace);
+
+        throw $exception;
+    }
+
     private function assertIsGranted($attributes, $object = null)
     {
         if (false === $this->security->isGranted($attributes, $object)) {
-            throw new AccessDeniedException();
+            if ($object instanceof Workspace) $this->throwWorkspaceDeniedException($object);
         }
     }
 

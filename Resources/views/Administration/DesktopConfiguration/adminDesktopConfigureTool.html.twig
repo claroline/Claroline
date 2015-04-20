@@ -56,6 +56,8 @@
                             <td>
                                 <span class="fa fa-sort text-muted"></span>
                                 &nbsp;
+                                &nbsp;
+                                <i class="fa fa-{{ tool.getClass() }}"></i>
                                 {% if toolName == 'parameters' %}
                                     {{ 'preferences'|trans({}, 'platform') }}
                                 {% else %}

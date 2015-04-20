@@ -28,17 +28,17 @@ class PagerFactory
     {
         $adapter = new DoctrineORMAdapter($query);
 
-        return $this->createPagerfanta($adapter, $currentPage, $max);
+        return $this->createPagerWithAdapter($adapter, $currentPage, $max);
     }
 
     public function createPagerFromArray(array $datas, $currentPage, $max = 20)
     {
         $adapter = new ArrayAdapter($datas);
 
-        return $this->createPagerfanta($adapter, $currentPage, $max);
+        return $this->createPagerWithAdapter($adapter, $currentPage, $max);
     }
 
-    private function createPagerfanta(AdapterInterface $adapter, $currentPage, $max = 20)
+    public function createPagerWithAdapter(AdapterInterface $adapter, $currentPage, $max = 20)
     {
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($max); // should be configurable

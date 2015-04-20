@@ -127,7 +127,9 @@ class ResourceVoter implements VoterInterface
 
             $errors = $this->checkAction($attributes[0], array($object), $token);
 
-            return count($errors) === 0 ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
+            return count($errors) === 0 && $object->isActive() ?
+                VoterInterface::ACCESS_GRANTED :
+                VoterInterface::ACCESS_DENIED;
 
         }
 
@@ -213,7 +215,8 @@ class ResourceVoter implements VoterInterface
 
             if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom) &&
                 (is_null($accessibleUntil) || $currentDate <= $accessibleUntil) &&
-                $node->isPublished()) {
+                $node->isPublished() &&
+                $node->isActive()) {
 
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
                 $type = $node->getResourceType();
