@@ -149,15 +149,6 @@ class Workspace
     protected $selfUnregistration = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
-     *     mappedBy="workspace",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $competences;
-
-    /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
     protected $creationDate;

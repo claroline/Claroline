@@ -1,5 +1,6 @@
 activity: Activité
 administrate: Administrer
+author: Auteur
 compose: Composer
 copy: Copier
 delete: Supprimer
@@ -12,6 +13,7 @@ empty: Vide
 export: Exporter
 file: Fichier
 insert: Insérer
+license: License
 open: Ouvrir
 open-tracking: 'Voir le suivi de l''objet'
 rename: Renommer

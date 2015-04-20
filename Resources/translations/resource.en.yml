@@ -1,5 +1,6 @@
 activity: Activity
 administrate: Administrate
+author: Author
 compose: 'Draw up'
 copy: Copy
 delete: Delete
@@ -12,6 +13,7 @@ empty: Empty
 export: Export
 file: File
 insert: Insert
+license: License
 open: Open
 open-tracking: 'View tracking'
 rename: Rename

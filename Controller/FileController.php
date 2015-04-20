@@ -86,14 +86,16 @@ class FileController extends Controller
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
         $mimeType = $tmpFile->getClientMimeType();
-        $hashName = $parent->getWorkspace()->getCode() .
+        $hashName = 'WORKSPACE_' .
+            $parent->getWorkspace()->getId() .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
             '.' .
             $extension;
         $destination = $this->container->getParameter('claroline.param.files_directory') .
             DIRECTORY_SEPARATOR .
-            $parent->getWorkspace()->getCode();
+            'WORKSPACE_' .
+            $parent->getWorkspace()->getId();
         $tmpFile->move($destination, $hashName);
         $file->setSize($size);
         $file->setName($fileName);

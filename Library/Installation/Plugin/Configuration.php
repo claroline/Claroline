@@ -150,6 +150,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('name')->isRequired()->end()
                                 ->scalarNode('menu_name')->end()
+                                ->booleanNode('is_form')->defaultFalse()->end()
                             ->end()
                          ->end()
                        ->end()
