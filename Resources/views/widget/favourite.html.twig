@@ -1,10 +1,13 @@
 {% for favourite in favourites %}
     <div data-resource-node-id="{{ favourite.resourceNode.id }}" class="resource-node">
-        {% for path in getFullResourcePath(favourite.resourceNode.path) %}
-            <a href="{{ path.nodeOpenUrl }}">{{ path.nodeName }}</a>
-            {% if loop.last != true %} / {% endif %}
-        {% endfor %}
-        <span class="fa fa-star pull-right delete-favourite-resource" style="color:gold;cursor: pointer;" title="{{ 'remove_from_favourite'|trans({}, 'widget') }}"></span>
+
+        <span class="fa fa-star delete-favourite-resource" style="color:gold;cursor: pointer; display: inline-block; width: 7%; vertical-align: top; margin-top: 3px; text-align: center; max-width: 30px" title="{{ 'remove_from_favourite_star'|trans({}, 'widget') }}"></span>
+        <div style="display: inline-block; width: 90%">
+            {% for path in getFullResourcePath(favourite.resourceNode.path) %}
+                <a href="{{ path.nodeOpenUrl }}">{{ path.nodeName }}</a>
+                {% if loop.last != true %} / {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% else %}
     <span><em>{{ 'widget_no_favourite'|trans({}, 'widget') }}</em></span>
