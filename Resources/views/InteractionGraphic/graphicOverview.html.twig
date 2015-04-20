@@ -62,8 +62,8 @@
 
             <div id="Answer" style="position: relative;">
                 <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
-                    alt="AnswerImage" id="AnswerImage1"/>
-
+                                                      alt="AnswerImage" id="AnswerImage1"/>
+            
                 {% set i = 0 %}{% set allInfo = '' %}
 
                 {% for c in coords %}
@@ -72,7 +72,7 @@
                     {% set respcoo = rep[i]|split('-') %}
 
                         <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="RightAnswer{{i}}" id="1ra{{i}}"
-                            style="z-index: 2;"/>
+                            style="z-index: 2;"/> 
                         <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{i}}" id="1cursor{{i}}"
                            style="z-index: 7;"/>
 
