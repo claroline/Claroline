@@ -1,5 +1,3 @@
-//var count=0;
-
 // Get the already placed right answer zone
 window.onload = function () {
 
@@ -138,6 +136,7 @@ function position(shape, color, i, prefix, value, size, points) {
     alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);
 
     grade++;
+    //Image center
     $('#Answer').children('div').css({'margin': 'auto'});
 }
 
@@ -202,9 +201,7 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
         $('#dragContainer'+chiffre).remove();
         setOrderAfterDel();
         e.preventDefault();
-    });
-    
-   
+    });  
     //Displays the array anwser
     $('#AlreadyPlacedArray').css({"display" : "inline"});
 }
