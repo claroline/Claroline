@@ -447,4 +447,62 @@ class HomeTabConfigRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function findHomeTabConfigsByType($type)
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = :type
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+
+        return $query->getResult();
+    }
+
+    public function findHomeTabConfigsByUserAndType(User $user, $type)
+    {
+        $dql = "
+            SELECT htc
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = :type
+            AND htc.user = :user
+            ORDER BY htc.tabOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('type', $type);
+
+        return $query->getResult();
+    }
+
+    public function findOrderOfLastHomeTabByType($type)
+    {
+        $dql = "
+            SELECT MAX(htc.tabOrder) AS order_max
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = :type
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+
+        return $query->getSingleResult();
+    }
+
+    public function findOrderOfLastHomeTabByUserAndType(User $user, $type)
+    {
+        $dql = "
+            SELECT MAX(htc.tabOrder) AS order_max
+            FROM Claroline\CoreBundle\Entity\Home\HomeTabConfig htc
+            WHERE htc.type = :type
+            AND htc.user = :user
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('type', $type);
+
+        return $query->getSingleResult();
+    }
 }
