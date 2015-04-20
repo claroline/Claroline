@@ -1415,6 +1415,8 @@ class ResourceManager
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
         $newNode->setPublished($node->isPublished());
+        $newNode->setLicense($node->getLicense());
+        $newNode->setAuthor($node->getAuthor());
         $newNode->setIndex($index);
 
         if ($withRights) {
