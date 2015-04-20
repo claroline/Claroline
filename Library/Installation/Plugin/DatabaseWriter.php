@@ -460,6 +460,7 @@ class DatabaseWriter
                 $rtca->setName($action['menu_name']);
                 $rtca->setResourceType($resourceType);
                 $rtca->setValue($decoder->getValue());
+                $rtca->setIsForm($action['is_form']);
                 $this->em->persist($rtca);
             }
         }
@@ -506,6 +507,7 @@ class DatabaseWriter
                     $menuAction
                         ->setName($action['menu_name'])
                         ->setResourceType($resourceType)
+                        ->setIsForm($action['is_form'])
                         ->setValue($decoder->getValue());
 
                     $this->em->persist($menuAction);
