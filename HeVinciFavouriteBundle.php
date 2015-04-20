@@ -3,8 +3,8 @@
 namespace HeVinci\FavouriteBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\ForumBundle\Installation\AdditionalInstaller;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use HeVinci\FavouriteBundle\Installation\AdditionalInstaller;
 
 class HeVinciFavouriteBundle extends PluginBundle
 {
