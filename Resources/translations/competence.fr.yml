@@ -1,0 +1,16 @@
+competence_add: 'Ajouter une compétence'
+competence_form_code: code
+competence_form_description: Description
+competence_form_name: Nom
+competence_form_score: Point
+competence_link: 'Lier une compétence dans un autre référentiel'
+competence_select: 'Sélection des utilisateurs'
+competence_subscription_management: 'Gestions des inscriptions aux référentiels'
+delete_all: 'Supprimer tous les utilisateurs'
+my_competences: 'Mes référentiels de compétences.'
+registration_to_competence: 'Inscription à des référentiels'
+remove_competence: 'Supprimer un référentiel ?'
+remove_competence_comfirm: 'Êtes-vous sûr de vouloir supprimer ce référentiel ?'
+select_competence_for_registration: 'Sélectionner des référentiels'
+select_users_for_registration_to_workspace: 'Sélectionner des utilisateurs à inscrire.'
+users_competences: 'Voir les utilisateurs associés aux référentiels'

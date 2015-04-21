@@ -36,8 +36,8 @@
                 <tbody id="widget-table-body">
                     {% for key,value in tools  %}
                         {% form_theme forms[key] 'ClarolineCoreBundle::form_theme_translate_tools_value.html.twig' %}
-                        <tr class='row-tool-config' data-tool-id={{ tools[key].getId () }}>
-                            <td>{{ tools[key].getName()|lower|trans({}, 'tools') }}</td>
+                        <tr class='row-tool-config' data-ordered-tool-id={{ tools[key].getId () }}>
+                            <td>{{ tools[key].getTool().getName()|lower|trans({}, 'tools') }}</td>
                             <td>
                                 <form
                                     role="form"
@@ -46,7 +46,7 @@
                                     class="form-inline" >
                                     {{ form_widget(forms[key]._token) }}
                                     <div class="input-group">
-                                        {{ form_widget(forms[key].displayName) }}
+                                        {{ form_widget(forms[key].content) }}
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="submit">{{ 'save'|trans({}, 'platform') }}</button>
                                         </span>

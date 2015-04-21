@@ -142,7 +142,7 @@
                         {{ 'tool_cannot_be_edited'|trans({}, 'platform') }}
                     </span>
                 </div>
-                
+
                 {% if workspace.isPersonal() == 1 %}
                     <br>
                     <div>
@@ -158,7 +158,7 @@
                         </span>
                     </div>
                 {% endif %}
-                
+
                 <br>
                 <a class="btn btn-default"
                      href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"

@@ -30,7 +30,7 @@ class LocaleController
 
     /**
      * @InjectParams({
-     *     "localeManager"      = @Inject("claroline.common.locale_manager"),
+     *     "localeManager"      = @Inject("claroline.manager.locale_manager"),
      *     "securityContext"    = @Inject("security.context")
      * })
      */

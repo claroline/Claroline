@@ -1,22 +1,24 @@
-agenda: 'Agenda'
-analytics: Tablero de control
-badges: 'Insignias'
-home: 'Inicio'
-logs: 'Registros'
-message: 'Mensajería'
-parameters: 'Parámetros'
-resource_manager: 'Recursos'
-users: 'Usuarios'
-platform_parameters: Parámetros de la plataforma
-user_management: Gestión de usuarios
-workspace_management: Gestión de espacios de trabajo
-badges_management: Gestión de insignias
-registration_to_workspace: Inscripción a un espacio de trabajo
-platform_plugins: Plugins de la plataforma
+agenda: Agenda
+analytics: 'Tablero de control'
+badges: Insignias
+badges_management: 'Gestión de insignias'
+competence_referencial: 'Referencial de competencia'
+competence_subscription: 'Inscribir competencia'
+desktop_and_home: 'Escritorio e inicio'
+desktop_tools: 'Herramientas del escritorio'
+home: Inicio
 home_tabs: Pestañas
-desktop_tools: Herramientas del escritorio
-platform_logs: Registros de la plataforma
-platform_analytics: Análisis de la plataforma
-roles_management: Gestión de roles
-learning_profil: Perfil de aprendizaje
-desktop_and_home: Escritorio e inicio
+learning_profil: 'Perfil de aprendizaje'
+logs: Registros
+message: Mensajería
+parameters: Parámetros
+platform_analytics: 'Análisis de la plataforma'
+platform_logs: 'Registros de la plataforma'
+platform_parameters: 'Parámetros de la plataforma'
+platform_plugins: 'Plugins de la plataforma'
+registration_to_workspace: 'Inscripción a un espacio de trabajo'
+resource_manager: Recursos
+roles_management: 'Gestión de roles'
+user_management: 'Gestión de usuarios'
+users: Usuarios
+workspace_management: 'Gestión de espacios de trabajo'

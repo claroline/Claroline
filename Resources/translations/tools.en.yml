@@ -1,25 +1,27 @@
 agenda: Calendar
 analytics: Dashboard
 badges: Badges
-message: Mailbox
-my_badges: My badges
+badges_management: 'Badges management'
+competence_referencial: 'Competency referential'
+competence_subscription: 'Competency subscription'
+desktop_and_home: 'Desktop and home'
+desktop_tools: 'Desktop tools'
 home: Home
-logs: Logs
-parameters: Settings
-resource_manager: Resources
-users: Users
-platform_parameters: Platform parameters
-user_management: Users management
-workspace_management: Workspaces management
-badges_management: Badges management
-registration_to_workspace: Registration to workspaces
-platform_plugins: Platform plugins
-home_tabs: Home tabs
-desktop_tools: Desktop tools
-platform_logs: Platform logs
-platform_analytics: Platform analytics
-roles_management: Roles management
-platform_packages: Platform packages
+home_tabs: 'Home tabs'
 learning_outcomes: 'Learning outcomes'
-learning_profil: Learning profile
-desktop_and_home: Desktop and home
+learning_profil: 'Learning profile'
+logs: Logs
+message: Mailbox
+my_badges: 'My badges'
+parameters: Settings
+platform_analytics: 'Platform analytics'
+platform_logs: 'Platform logs'
+platform_packages: 'Platform packages'
+platform_parameters: 'Platform parameters'
+platform_plugins: 'Platform plugins'
+registration_to_workspace: 'Registration to workspaces'
+resource_manager: Resources
+roles_management: 'Roles management'
+user_management: 'Users management'
+users: Users
+workspace_management: 'Workspaces management'

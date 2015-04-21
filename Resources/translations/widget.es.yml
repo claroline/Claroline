@@ -1,6 +1,6 @@
 agenda: 'Ultimo evento'
 core_resource_logger: 'Resumen de las actividades recientes'
 my_workspaces: 'Mi espacio de trabajo'
-simple_text: 'Texto'
-widget_instance_form_name: 'Nombre'
-widget_instance_form_widget: 'Tipo'
+simple_text: Texto
+widget_instance_form_name: Nombre
+widget_instance_form_widget: Tipo

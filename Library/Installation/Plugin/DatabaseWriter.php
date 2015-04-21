@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
@@ -26,6 +27,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
@@ -50,6 +52,8 @@ class DatabaseWriter
     private $modifyTemplate = false;
     private $toolManager;
     private $toolMaskManager;
+    private $localeManager;
+    private $translator;
 
     /**
      * Constructor.
@@ -62,7 +66,9 @@ class DatabaseWriter
      *     "kernel"          = @DI\Inject("kernel"),
      *     "templateDir"     = @DI\Inject("%claroline.param.templates_directory%"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
+     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "localeManager"   = @DI\Inject("claroline.manager.locale_manager"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -73,7 +79,9 @@ class DatabaseWriter
         MaskManager $mm,
         $templateDir,
         ToolManager $toolManager,
-        ToolMaskDecoderManager $toolMaskManager
+        ToolMaskDecoderManager $toolMaskManager,
+        LocaleManager $localeManager,
+        $translator
     )
     {
         $this->em = $em;
@@ -85,6 +93,8 @@ class DatabaseWriter
         $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
+        $this->localeManager = $localeManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -628,6 +638,7 @@ class DatabaseWriter
         $tool->setIsConfigurableInDesktop($toolConfiguration['is_configurable_in_desktop']);
         $tool->setIsLockedForAdmin($toolConfiguration['is_locked_for_admin']);
         $tool->setIsAnonymousExcluded($toolConfiguration['is_anonymous_excluded']);
+        $tool->setContent($this->toolManager->getOrderedToolDefaultTranslations($toolConfiguration['name']));
 
         if (isset($toolConfiguration['class'])) {
             $tool->setClass("{$toolConfiguration['class']}");

@@ -47,11 +47,7 @@
                             <tr class="row-locked-tool text-muted">
                                 <td>
                                     <i class="fa fa-{{ tool.getClass() }}"></i>
-                                    {% if toolName == 'parameters' %}
-                                        {{ 'preferences'|trans({}, 'platform') }}
-                                    {% else %}
-                                        {{ toolName|lower|trans({}, 'tools') }}
-                                    {% endif %}
+                                    {{ tool.getContent().getTitle() }}
                                 </td>
                                 <td>
                                     <input
@@ -64,7 +60,7 @@
                                 </td>
                             </tr>
                         {% endfor %}
-                        
+
                         {% for orderedTool in orderedTools %}
                             {% set tool = orderedTool.getTool() %}
                             {% set toolName = tool.getName() %}
@@ -77,11 +73,7 @@
                                     &nbsp;
                                     &nbsp;
                                     <i class="fa fa-{{ tool.getClass() }}"></i>
-                                    {% if toolName == 'parameters' %}
-                                        {{ 'preferences'|trans({}, 'platform') }}
-                                    {% else %}
-                                        {{ toolName|lower|trans({}, 'tools') }}
-                                    {% endif %}
+                                    {{ tool.getContent().getTitle() }}
                                 </td>
                                 <td>
                                     <input

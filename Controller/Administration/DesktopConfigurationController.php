@@ -12,13 +12,16 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -157,5 +160,70 @@ class DesktopConfigurationController extends Controller
 
             throw new AccessDeniedException();
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/tools/rename/{tool}/form",
+     *     name="claro_administration_desktop_order_tool_edit_form"
+     * )
+     *
+     * @EXT\Template()
+     *
+     * @param Workspace $workspace
+     * @param Tool              $tool
+     *
+     * @return Response
+     */
+    public function renameToolFormAction(Tool $tool)
+    {
+        return array(
+            'form' => $this->container->get('claroline.form.factory')->create(
+                FormFactory::TYPE_ORDERED_TOOL,
+                array(),
+                $tool->getContent())->createView(),
+            'tool' => $tool
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/tools/rename/{tool}",
+     *     name="claro_administration_desktop_order_tool_edit"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration\DesktopConfiguration\renameTooLForm.html.twig")
+     *
+     * @param Workspace $workspace
+     * @param Tool      $tool
+     *
+     * @return Response
+     */
+    public function renameToolAction(Tool $tool)
+    {
+        $form = $this->container->get('claroline.form.factory')
+            ->create(FormFactory::TYPE_ORDERED_TOOL, array(), $tool->getContent());
+        $form->handleRequest($this->get('request'));
+
+        if ($form->isValid()) {
+            //I know it's not that great but I couldn't find an other way
+            $formData = $this->get('request')->request->get('workspace_order_tool_edit_form');
+            $this->toolManager->renameTool(
+                $formData['content'],
+                $tool
+            );
+
+            return new JsonResponse(
+                array(
+                    'tool_id' => $tool->getId(),
+                    'name' => $tool->getContent()->getTitle()
+                )
+            );
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'tool' => $tool
+        );
     }
 }

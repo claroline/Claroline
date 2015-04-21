@@ -1,0 +1,15 @@
+competence_add: 'add a Learning Outcomes'
+competence_form_code: code
+competence_form_description: Description
+competence_form_name: name
+competence_form_score: Point
+competence_link: 'Link a Learning Outcomes'
+competence_subscription_management: 'Competence Subscription Management'
+delete_all: 'Delete all users'
+my_competences: 'My learning Outcomes'
+registration_to_competence: 'Subscription to Learning Outcomes'
+remove_competence: 'Remove a learning outcomes ?'
+remove_competence_comfirm: 'Are you sure to delete this learning outcomes ?'
+select_competence_for_registration: 'Select Learning Outcomes'
+select_users_for_registration_to_workspace: 'Select users to subscribe'
+users_competences: 'See users associate to a learning Outcomes'

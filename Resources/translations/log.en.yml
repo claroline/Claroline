@@ -5,9 +5,9 @@ badge: Badge
 group: Group
 log_add_user: 'Add user'
 log_badge-awarding_filter: 'Badge awarding'
+log_badge-awarding_sentence: 'has been awarded a badge'
+log_badge-awarding_shortname: 'Badge awarding'
 log_badge-awarding_title: 'Badge awarding'
-log_badge-awarding_shortname: "Badge awarding"
-log_badge-awarding_sentence: "has been awarded a badge"
 log_change_right: 'Change rights'
 log_change_set: 'List of modified properties'
 log_context: 'Context:'
@@ -64,7 +64,7 @@ log_resource-create_filter: 'Resource creation'
 log_resource-create_sentence: 'has created %resource%'
 log_resource-create_shortname: Creation
 log_resource-create_title: 'Resource creation'
-log_resource-custom_action_filter: Resource custom action
+log_resource-custom_action_filter: 'Resource custom action'
 log_resource-delete_filter: 'Resource deletion'
 log_resource-delete_sentence: 'has deleted %resource%'
 log_resource-delete_shortname: Delete
@@ -95,8 +95,8 @@ log_resource-update_shortname: Update
 log_resource-update_title: 'Resource update'
 log_resource_owner: 'Owner of resource'
 log_role: 'Action target role'
-log_role-subscribe_group_filter: Assigning a role to a group
-log_role-subscribe_user_filter: Assigning a role to a user
+log_role-subscribe_group_filter: 'Assigning a role to a group'
+log_role-subscribe_user_filter: 'Assigning a role to a user'
 log_see_details: 'see details'
 log_shortcut: Shortcut
 log_subscribe_group: 'Subscribe group'

@@ -1,10 +1,10 @@
+badge-award: Badges
+registration-decline: 'Registration refusal'
+role-change_right: 'Resource access'
+role-subscribe: 'New registration'
 role-subscribe_group: 'assigned you the ''%role%'''
 role-subscribe_user: 'assigned you the ''%role%'''
 workspace-registration-decline: 'has declined your registration request in workspace'
 workspace-role-change_right: 'gave you access to %resource% in %workspace%'
 workspace-role-subscribe_group: 'assigned you the ''%role%'' role in %workspace%'
 workspace-role-subscribe_user: 'assigned you the ''%role%'' role in %workspace%'
-role-change_right: Resource access
-registration-decline: Registration refusal
-role-subscribe: New registration
-badge-award: Badges

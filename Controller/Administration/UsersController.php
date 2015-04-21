@@ -73,7 +73,7 @@ class UsersController extends Controller
      *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"            = @DI\Inject("form.factory"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "request"                = @DI\Inject("request"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),

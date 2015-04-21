@@ -74,7 +74,7 @@ class ParametersController extends Controller
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "formFactory"        = @DI\Inject("form.factory"),
-     *     "localeManager"      = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"      = @DI\Inject("claroline.manager.locale_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
      *     "termsOfService"     = @DI\Inject("claroline.common.terms_of_service_manager"),

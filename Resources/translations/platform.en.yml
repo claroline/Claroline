@@ -1,69 +1,67 @@
-404: 'Page Not found'
-6_parameters_min_msg: The csv file must contain 6 elements per line.
-7_parameters_min_msg: The csv file must contain 7 elements per line.
-Action List: 'Action List'
-Actions per day: 'Actions per day'
-Activate the terms of service in the platform: 'Activate the terms of service in the platform'
-Active: 'Active'
+6_parameters_min_msg: 'The csv file must contain 6 elements per line.'
+7_parameters_min_msg: 'The csv file must contain 7 elements per line.'
+'Action List': 'Action List'
+'Actions per day': 'Actions per day'
+'Activate the terms of service in the platform': 'Activate the terms of service in the platform'
 Active: Active
-Add a logo: 'Add a logo'
-An error has occurred, please check if the file size does not exceeds the permitted size: 'An error has occurred, please check if the file size does not exceeds the permitted size'
-Audience/user visits: 'Audience/user visits'
-Choose a logo: 'Choose a logo'
-Choose visible actions in the widget: 'Choose visible actions in the widget'
-Choose workspaces displayed in the widget: 'Choose workspaces displayed in the widget'
-Create a new resource: 'Create a new resource'
-Draw an area on the graph to zoom, double-click to cancel: 'Draw an area on the graph to zoom, double-click to cancel'
-Filter actions: 'Filter actions'
-First name: 'First name'
-Google HTML tag validation: 'Google HTML tag validation'
-I accept the terms of service: 'I accept the terms of service'
+'Add a logo': 'Add a logo'
+'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
+'Audience/user visits': 'Audience/user visits'
+'Choose a logo': 'Choose a logo'
+'Choose visible actions in the widget': 'Choose visible actions in the widget'
+'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
+'Create a new resource': 'Create a new resource'
+'Draw an area on the graph to zoom, double-click to cancel': 'Draw an area on the graph to zoom, double-click to cancel'
+'Filter actions': 'Filter actions'
+'First name': 'First name'
+'Google HTML tag validation': 'Google HTML tag validation'
+'I accept the terms of service': 'I accept the terms of service'
 Indexing: Indexing
 Language: Language
-Last action: '{1} Last action|[1,Inf] Last %logAmount% actions'
-Last name: 'Last name'
+'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
+'Last name': 'Last name'
 None: None
-Or choose an existing file from resource manager: 'Or choose an existing file from resource manager'
-Overview of all recent activities in %workspaceName%: 'Overview of all recent activities in %workspaceName%'
-Overview of recent activities in %workspaceName%: 'Overview of recent activities in %workspaceName%'
-Overview of recent activities of your workspaces: 'Overview of recent activities of your workspaces'
-Paste here the meta tag provides by Google Webmaster: 'Paste here the meta tag provides by Google Webmaster'
-Powered by: Powered by
-See all: 'See all'
-Select a Language: 'Select a language'
-Show actions: 'Show actions'
-Show the name of the platform in the top bar: 'Show the name of the platform in the top bar'
+'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
+'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
+'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
+'Overview of recent activities of your workspaces': 'Overview of recent activities of your workspaces'
+'Paste here the meta tag provides by Google Webmaster': 'Paste here the meta tag provides by Google Webmaster'
+'Powered by': 'Powered by'
+'See all': 'See all'
+'Select a Language': 'Select a language'
 Show: Show
-Terms of service: 'Terms of service'
-The form is not valid: 'The form is not valid'
-This placeholder is optional and will be replaced by the author first name: 'This placeholder is optional and will be replaced by the author first name'
-This placeholder is optional and will be replaced by the author first name: This placeholder is optional and will be replaced by the author first name
-This placeholder is optional and will be replaced by the author last name: 'This placeholder is optional and will be replaced by the author last name'
-This placeholder is optional and will be replaced by the author last name: This placeholder is optional and will be replaced by the author last name
-This placeholder is optional and will be replaced by your platform name: 'This placeholder is optional and will be replaced by your platform name'
-This placeholder is optional and will be replaced by your platform name: This placeholder is optional and will be replaced by your platform name
-This placeholder is required and will be replaced by the actual mail content: 'This placeholder is required and will be replaced by the actual mail content'
-This placeholder is required and will be replaced by the actual mail content: This placeholder is required and will be replaced by the actual mail content
-This variable is optional and will be replaced by your platform name: 'This variable is optional and will be replaced by your platform name'
-This variable is required and will be replaced by the actual mail content: 'This variable is required and will be replaced by the actual mail content'
-Upload a file: 'Upload a file'
-User name: 'User name'
-You can redefine the content of the registration mail here: 'You can redefine the content of the registration mail here'
-You can redefine the layout used when a mail is sent: 'You can redefine the layout used when a mail is sent'
-You can use the following variables in your form: 'You can use the following variables in your form'
-You can use the full screen version of the text editor to include HTML: 'You can use the full screen version of the text editor to include HTML'
-Your changes have been saved: 'Your changes have been saved'
+'Show actions': 'Show actions'
+'Show the name of the platform in the top bar': 'Show the name of the platform in the top bar'
+'Terms of service': 'Terms of service'
+'The form is not valid': 'The form is not valid'
+'This placeholder is optional and will be replaced by the author first name': 'This placeholder is optional and will be replaced by the author first name'
+'This placeholder is optional and will be replaced by the author last name': 'This placeholder is optional and will be replaced by the author last name'
+'This placeholder is optional and will be replaced by your platform name': 'This placeholder is optional and will be replaced by your platform name'
+'This placeholder is required and will be replaced by the actual mail content': 'This placeholder is required and will be replaced by the actual mail content'
+'This variable is optional and will be replaced by your platform name': 'This variable is optional and will be replaced by your platform name'
+'This variable is required and will be replaced by the actual mail content': 'This variable is required and will be replaced by the actual mail content'
+'Upload a file': 'Upload a file'
+'User name': 'User name'
+'You can redefine the content of the registration mail here': 'You can redefine the content of the registration mail here'
+'You can redefine the layout used when a mail is sent': 'You can redefine the layout used when a mail is sent'
+'You can use the following variables in your form': 'You can use the following variables in your form'
+'You can use the full screen version of the text editor to include HTML': 'You can use the full screen version of the text editor to include HTML'
+'Your changes have been saved': 'Your changes have been saved'
 accept: Accept
 account_created: 'Account created.'
-account_duration_label: Account lifetime (days)
+account_duration_label: 'Account lifetime (days)'
 account_general_statistics: 'Account general statistics'
 action: Action
 actions: Actions
-activate_notifications: Activate notifications
+activate_account: 'Activate your account'
+activate_account_click: 'Click here to activate your account'
+activate_maintenance_mode: 'You should activate the maintenance mode before going further.'
+activate_notifications: 'Activate notifications'
+activate_personal_workspace_creation: 'Activate personal workspace creation.'
 active_widgets: 'Active widgets'
 activities: Activities
 activities_tracking: 'Activities tracking'
-activity_already: This resource is already in the activity
+activity_already: 'This resource is already in the activity'
 activity_evaluation_form_attemptsCount: 'Number of attempts'
 activity_evaluation_form_comment: Comment
 activity_evaluation_form_date: 'Last attempt'
@@ -76,16 +74,16 @@ activity_form_published: 'Publish resource'
 activity_parameters_form_evaluation_type: 'Evaluation type'
 activity_parameters_form_max_attempts: 'Number of allowed attempts'
 activity_parameters_form_max_duration: 'Allowed time limit (in second)'
-activity_parameters_form_where: Learning place
-activity_parameters_form_who: Working mode
+activity_parameters_form_where: 'Learning place'
+activity_parameters_form_who: 'Working mode'
 activity_parameters_form_withTutor: Tutored
 activity_past_evaluation_form_comment: Comment
 activity_past_evaluation_form_date: Date
 activity_past_evaluation_form_numScore: Score
 activity_past_evaluation_form_score: Evaluation
 activity_past_evaluation_form_status: Status
-activity_remove_primary_resource: Remove the primary resource
-activity_resource_not_allowed: You cannot add a resource of this type
+activity_remove_primary_resource: 'Remove the primary resource'
+activity_resource_not_allowed: 'You cannot add a resource of this type'
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
 activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
@@ -93,7 +91,7 @@ activity_rule_form_action: Action
 activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed on the associated resource.'
 activity_rule_form_activeFrom: 'Performed between'
 activity_rule_form_activeFrom_explanation: 'Only actions performed after this date will be processed. If not set all previous actions will be processed.'
-activity_rule_form_activeUntil: 'and'
+activity_rule_form_activeUntil: and
 activity_rule_form_activeUntil_explanation: 'Only actions performed before this date will be processed. If not set all future actions will be processed.'
 activity_rule_form_badge: 'Required badge'
 activity_rule_form_badge_explanation: 'The badge that has to be obtained to succeed.'
@@ -111,17 +109,19 @@ activity_who_mixed: Mixed
 actualize: Actualize
 add: Add
 add_category: 'Add category'
-add_field_to_facet: Add field to facet
+add_field_to_facet: 'Add field to facet'
+add_field_to_panel: 'Add a field'
 add_group: 'Add group'
 add_group_s_confirm_message: 'group(s) added'
 add_groups: 'Add groups'
+add_panel_to_facet: 'Add a panel'
 add_resource: 'Add resource'
 add_role: 'Add role'
-add_role_to_groups: Add a role to %count% group(s)
-add_role_to_users: Add a role to %count% user(s)
+add_role_to_groups: 'Add a role to %count% group(s)'
+add_role_to_users: 'Add a role to %count% user(s)'
 add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
 add_subcategory: 'Add a subcategory'
-add_tab: Add a tab
+add_tab: 'Add a tab'
 add_tag: 'Add tag'
 add_tag_to_workspace: 'Add tag to workspace'
 add_user: 'Add user'
@@ -138,6 +138,7 @@ admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
+administrativeCode: administrativeCode
 administrative_code: 'Administrative code'
 advanced: Advanced
 advanced_parameters: 'Advanced parameters'
@@ -166,14 +167,16 @@ at_least_one_category_has_to_be_selected: 'At least one category has to be selec
 attempt: Attempt
 attempts: Attempts
 authentication: Authentication
-authentication_invalid: The authentication source %authentication% from the line %line% is invalid.
-authentication_source: Authentication source
+authentication_invalid: 'The authentication source %authentication% from the line %line% is invalid.'
+authentication_source: 'Authentication source'
 automatic: Automatic
+available: Available
 available_widgets: 'Available widgets'
 available_workspaces: 'Available workspaces'
 back: Back
 back_to_activities_list: 'Back to activities list'
 back_to_profile: 'Back to profile'
+backup_reminder: 'We recommand you to do a backup before going further.'
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 badges_management: 'Badges management'
 base_informations: 'Basic information'
@@ -187,8 +190,9 @@ canDelete: 'Right to delete'
 canEdit: 'Right to edit'
 canExport: 'Right to export'
 canOpen: 'Right to open'
+can_edit_permission: 'Can edit permissions'
 cancel: Cancel
-cannot_change_password: you cannot change your password
+cannot_change_password: 'you cannot change your password'
 cannot_delete_unique_manager: 'Cannot remove the unique manager.'
 cannot_unsubscribe_from_workspace: 'Cannot unsubscribe from workspace'
 captcha: Captcha
@@ -205,13 +209,20 @@ classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 classroom: Classroom
 close: Close
-closed_account: Closed account
+closed_account: 'Closed account'
 code: Code
-code_found_at: The code %code% was found at lines %lines%.
+code_found_at: 'The code %code% was found at lines %lines%.'
 collaborative: Collaborative
 collaborator: Collaborator
+collapse: Collapse
 comment: Comment
 communication: Communication
+competence: Competence
+competence_creation: 'Competence creation'
+competence_edition: 'Competence edition'
+competence_referencial: 'Learning outcomes'
+competences: Competences
+competences_management: 'Competences management'
 completed: Completed
 configuration: Configuration
 configure: Configure
@@ -221,32 +232,36 @@ cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
 copies: Copies
 copy: Copy
-core_packages: Core packages
+core_packages: 'Core packages'
+count_resources: 'Amount of resources'
 create: Create
 create_and_update: 'Create and update'
 create_category: 'Create a category'
-create_facet: Create a facet
-create_field: Create a field
+create_competence: 'Create a competence'
+create_facet: 'Create a facet'
+create_field: 'Create a field'
 create_group: 'Create group'
 create_learning_outcomes: 'Create a learning outcomes'
-create_model: Create a model
+create_model: 'Create a model'
 create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
 create_only: 'Create only'
-create_role: Create role
+create_pane: 'Create a pane'
+create_role: 'Create role'
 create_security_token: 'Create a security token'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
-create_users: Create users
+create_users: 'Create users'
 create_widget_instance: 'Create a widget'
 create_workspace: 'Create workspace'
-creating: 'Creating'
+created_by: 'Created by %creator% the %creationDate%'
+creating: Creating
 creation: Creation
 creation_date: 'Creation date'
 creator: Creator
-csv_export: Csv export
+csv_export: 'Csv export'
 csv_group_import_infos: 'CSV file informations'
 csv_group_import_infos_format: 'Format: username list separated by a carriage return'
 csv_users_import_infos: 'CSV file informations'
@@ -276,8 +291,8 @@ date_range.clear: Clear
 date_range.custom_range: 'Custom range'
 date_range.day_names: '["Su","Mo","Tu","We","Th","Fr","Sa"]'
 date_range.first_day: '0'
-date_range.format.with_hours: m/d/Y H:i:s
 date_range.format: m/d/Y
+date_range.format.with_hours: 'm/d/Y H:i:s'
 date_range.from: From
 date_range.js_format: MM/dd/yyyy
 date_range.last_month: 'Last month'
@@ -306,7 +321,7 @@ delete_category_confirm_title: 'Category deletion'
 delete_home_tab: 'Delete tab'
 delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
-description: 'Description'
+description: Description
 desktop: Desktop
 desktop_and_home: 'Desktop and home'
 desktop_home_tab_creation: 'Desktop Home tab creation'
@@ -314,14 +329,16 @@ desktop_home_tab_edition: 'Desktop Home tab edition'
 desktop_home_tabs: 'Desktop Home tabs'
 desktop_parameters: 'Desktop parameters'
 desktop_tools: 'Desktop tools'
+destination: Destination
 directory: Directory
 directory_form_name: Name
 directory_form_published: 'Publish resource'
 directory_form_shareType: Sharable
 display: Display
+display_at_registration: 'Display at registration'
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
-distinguished_name: Distinguished Name (DN)
+distinguished_name: 'Distinguished Name (DN)'
 does_not_exist: 'doesn''t exist'
 does_not_exist_in_workspace: 'doesn''t exist in workspace'
 done_on: 'done on'
@@ -333,49 +350,52 @@ drop_file: 'Drop the file'
 dsn: dsn
 duration: Duration
 edit: Edit
-edit_event_success: The event was updated successfully.
-edit_facet: Edit a facet
-edit_field: Edit a field
+edit_competence: 'Edit competence'
+edit_event_success: 'The event was updated successfully.'
+edit_facet: 'Edit a facet'
+edit_field: 'Edit a field'
+edit_panel_facet: 'Edit a panel'
 edit_password: 'Edit the password'
 edit_password_error: 'An error occured while editing the password.'
-edit_password_error_current : The current password is not correct.
+edit_password_error_current: 'The current password is not correct.'
 edit_password_message: 'Do you really want to update your passwords?'
 edit_password_success: 'Your password has been edited with success.'
 edit_profile: 'Edit your profile'
 edit_profile_error: 'An error occured while editing the profile.'
-edit_profile_error_right : 'You are not authorized to upload pictures, please contact your administrator'
+edit_profile_error_right: 'You are not authorized to upload pictures, please contact your administrator'
 edit_profile_success: 'The profile has been edited with success.'
 edit_public_profile: 'Edit public profil'
 edit_public_profile_preferences_error: 'An error occured while editing your public profile preferences.'
 edit_public_profile_preferences_success: 'Your public profile preferences edited with success.'
-edit_rights_success: Rights were successfully changed.
+edit_rights_success: 'Rights were successfully changed.'
 edit_security_token: 'Edit security token'
 edit_your_profile_error: 'An error occured while editing your profile.'
 edit_your_profile_success: 'Your profile has been edited with success.'
 editable: Editable
-editable_facet_form_explanation: The field "Editable" allows you to set the element as visible or not for the user.
+editable_facet_form_explanation: 'The field "Editable" allows you to set the element as visible or not for the user.'
 email: 'Email adress'
 email_form_mail: 'Enter your email'
 email_found_at: 'The email %email% was found at lines: %lines%'
 empty_file: 'Empty file'
 end_date: 'End date'
-end_maintenance: End maintenance mode
+end_maintenance: 'End maintenance mode'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
 error: Error
+evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
-evaluation: Evaluation
 evaluation_edition: Evaluation
 evaluation_type: 'Evaluation type'
-excel_export: Excel export
+excel_export: 'Excel export'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
+facet_management: 'Facet management'
 facets: Facets
-fail_add_user_group_message: These users couldn't be added to this group (check the max amount of users by role).
+fail_add_user_group_message: 'These users couldn''t be added to this group (check the max amount of users by role).'
 failed: Failed
 fast_answer: 'Fast answer'
 fb_client_id: 'Application id'
@@ -393,7 +413,7 @@ filter: Filter
 find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
-for period: 'for period'
+'for period': 'for period'
 forgot_password: 'Forgot your password?'
 form_role: Role
 from: From
@@ -402,7 +422,7 @@ general: General
 general_parameters: 'General parameters'
 general_parameters_portfolio_url_help: 'start with http://'
 general_parameters_updated_success: 'General parameters updated with success.'
-general_tab_form_explanation: This form allows you to set wich datas are seen by role in the public profile.
+general_tab_form_explanation: 'This form allows you to set wich datas are seen by role in the public profile.'
 generate_token: 'Generate a random token'
 generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
@@ -421,16 +441,15 @@ group_parameter: 'Group parameter'
 groups: Groups
 groups_list: 'Groups list'
 groups_per_page: 'Groups per page'
-groups_per_page: Groups per page
 groups_registration_in_workspace: 'Groups registration in workspace'
 has_been_created: 'has been created'
 has_been_created_in_workspace: 'has been created in workspace'
 has_been_deleted: 'has been deleted'
 has_been_deleted_in_workspace: 'has been deleted in workspace'
 has_been_emptied: 'has been emptied'
+has_been_put_in_category: 'has been put in category'
 has_been_registered_in_workspace: 'has been registered in workspace'
 has_been_registered_to_group: 'has been registered to group'
-has_been_put_in_category: 'has been put in category'
 has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
@@ -449,8 +468,8 @@ home_tab_bookmark_confirm_message: 'This Home tab will be available in your desk
 home_tab_bookmark_confirm_title: 'Home tab bookmark'
 home_tab_bookmark_delete_confirm_message: 'Do you really want to delete this Home tab bookmark ?'
 home_tab_bookmark_delete_confirm_title: 'Remove home tab bookmark'
-home_tab_config_form_locked: 'Locked'
-home_tab_config_form_visible: 'Visible'
+home_tab_config_form_locked: Locked
+home_tab_config_form_visible: Visible
 home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_delete_confirm_title: 'Delete Home tab'
@@ -466,6 +485,8 @@ id_col: 'Database data column'
 identical_group_name: 'Identical group name'
 identical_role_name: 'Identical role name'
 import: Import
+import_profile_pics: 'Import profile pics'
+import_profile_pics_explanation: 'You must upload a zip file. Each file must be structured this way: username.extension'
 import_roles: 'Import roles'
 import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
@@ -478,6 +499,9 @@ infos_sending_bar_msg: 'Click on this bar for more informations'
 infos_sending_has_not_been_accepted: 'Informations sending has not been accepted'
 initialize: Initialize
 inscription_mail: 'Inscription mail'
+install: Install
+install_update_cant_be_undone: 'Once an operation is started, it cannot be undone.'
+installed: Installed
 instructions: Instructions
 internal_error: 'Internal server error. Please contact the administrator.'
 internal_portfolio: 'Platform internal portfolio'
@@ -499,33 +523,37 @@ keep_me_logged_in: 'Keep me logged in'
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_attempt_date: 'Last attempt'
-last_manager_error_message: You can't remove every manager.
+last_manager_error_message: 'You can''t remove every manager.'
+last_modification: 'Last modification'
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
 learning_outcomes_creation: 'Learning outcomes creation'
-learning_profil: Learning profile
+learning_profil: 'Learning profile'
 leave_this_page: 'If you leave this page you may lose your changes.'
 left: Left
 limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
 link: Link
+link_competence: Link
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
 links: Links
 list_groups: 'List groups'
-list_role: Role list
+list_role: 'Role list'
 list_users: 'List users'
+list_view: 'List view (beta)'
 list_workspaces: 'List workspaces'
 lock: Lock
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
 logs: tracking
+logs_error_location: 'The log files are located in app/logs/update-xxx.log.'
 mail: Mail
 mail_click: 'Click on this link to reset your password'
-mail_config_problem: Please contact your administrator platform to reinitialize your password.
+mail_config_problem: 'Please contact your administrator platform to reinitialize your password.'
 mail_form_content: Content
 mail_form_object: Object
 mail_form_receiver: Receiver(s)
@@ -533,23 +561,25 @@ mail_invalid: 'Mail format is not valid'
 mail_layout: 'Mail layout.'
 mail_login: 'Your Claroline''s login'
 mail_message: 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
-mail_not_available: The mail function is not available.
+mail_not_available: 'The mail function is not available.'
 mail_not_exist: 'This mail does not exist'
-mail_sent: A email has been sent to your address. Check your inbox mail and your spam box.
+mail_sent: 'A email has been sent to your address. Check your inbox mail and your spam box.'
 maintenance: Maintenance
-maintenance_mode_enabled: Maintenance mode is activated
-maintenance_mode_message: The platform access is disabled. You can activate it in the maintenance section of administration parameters.
+maintenance_mode_enabled: 'Maintenance mode is activated'
+maintenance_mode_message: 'The platform access is disabled. You can activate it in the maintenance section of administration parameters.'
 make_my_public_profil_visible: 'Make my public profile visible'
 make_public_profile_visible_to_everybody: 'to <strong>everybody</strong>'
 make_public_profile_visible_to_nobody: 'to <strong>nobody</strong>'
 make_public_profile_visible_to_platform_user: 'to <strong>platform users</strong>'
 manage_public_profile_preferences: 'Manage public profile preferences'
 manage_rights: 'Manage rights'
-manage_tools: Manage tools
+manage_tools: 'Manage tools'
 manager: Manager
 manual: Manual
 manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
+max_amount_resources: 'Maximum amount of resources'
 max_size_is: 'The maximum size is %size%'
+max_storage_size: 'Maximum storage size'
 media_most_viewed: 'Most viewed media'
 menu_bar: 'Menu bar'
 menu_bar_configuration: 'Menu bar configuration'
@@ -570,7 +600,7 @@ missing_%content%: 'The variable %content% is missing for "%language%".'
 missing_%password%: 'The variable %password% is missing for "%language%".'
 missing_%username%: 'The variable %username% is missing for "%language%".'
 mixed: Mixed
-mode: 'Mode'
+mode: Mode
 model: Model
 models: Modèles
 month.April: April
@@ -595,32 +625,31 @@ my_favourite_workspaces: 'My favourite workspaces'
 my_notes: 'My notes'
 my_portfolio: 'My portfolio'
 my_profile: 'My profile'
-my_profile: My profile
+my_public_documents: 'My public documents'
 my_resources: 'My resources'
 my_workspace: 'My workspace'
 my_workspaces: 'My workspaces'
 name: Name
-name_required: Name required
+name_required: 'Name required'
 new: New
+new_folder_in_current_ws: 'New directory in the current workspace'
 new_message: 'New message'
 new_message_alert: 'You have %count% new message(s)'
-new_password: New password
+new_password: 'New password'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
 no: No
-no: no
-no_action_found: No action found.
-no_activity_in_workspace: There are currently no activities in this workspace.
+no_action_found: 'No action found.'
+no_activity_in_workspace: 'There are currently no activities in this workspace.'
 no_category: 'There is no category'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
-no_group: There is no group.
 no_home_tab: 'There is no Home tab'
 no_learning_outcomes: 'No learning outcomes'
 no_message: 'No message'
 no_model: 'No model'
-no_package_description: No package description.
-no_resources_in_workspace: There are currently no resources in this workspace.
+no_package_description: 'No package description.'
+no_resources_in_workspace: 'There are currently no resources in this workspace.'
 no_role_selected_message: 'No role selected.'
 no_search_results: 'Your search hasn''t returned any result.'
 no_tag: 'There is no tag'
@@ -649,13 +678,20 @@ order: Order
 organize_admin_tags: 'Organize admin tags'
 organize_categories: 'Organize categories'
 organize_private_tags: 'Organize private tags'
+others: Others
 over_max_length: 'This value is too long'
 owner: Owner
 owner_s: Owner(s)
-package_upgrade_all_warning: Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.
+package_install: 'Package install'
+package_install_auto_reload: 'This page will be reload automatically once an operation is done'
+package_install_confirm: 'Do you really want to install %bundle% %version% ?'
+package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
+package_upgrade_all_warning: 'Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.'
 packages: Packages
-packages_upgrade_info_message: Warning, this page allows you to update the platform.
+packages_upgrade_info_message: 'Warning, this page allows you to update the platform.'
 parameters: Parameters
+parameters_save_error: 'An error occured while saving parameters.'
+parameters_save_success: 'Parameters saved with success.'
 passed: Passed
 passing_score: 'Passing score'
 password: Password
@@ -663,17 +699,20 @@ password_mismatch: 'Passwords mismatch'
 password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
-pending: 'Pending'
+pending: Pending
 pending_users_list: 'Pending users list'
 permissions: Permissions
 personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
+personal_workspace_management: 'Personal workspace management'
+personal_workspace_tools_management: 'Personal workspace tools management'
 personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
+picture: 'User picture'
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
-platform_expiration_date: Platform expiration date
-platform_init_date: Platform activation date
+platform_expiration_date: 'Platform expiration date'
+platform_init_date: 'Platform activation date'
 platform_parameters: 'Platform parameters'
 platform_parameters_form_auth_mode: 'Authentication mode'
 platform_parameters_form_content: Content
@@ -699,16 +738,19 @@ platform_parameters_form_theme: Theme
 platform_plugins: 'Platform plugins'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
+please_validate_your_account: 'An email was sent for you to activate your account'
 please_wait: 'Please wait...'
-plugin_packages: Plugin packages
+plugin_packages: 'Plugin packages'
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
-preferences: 'Preferences'
+preferences: Preferences
 private: Private
 profil_edition: 'User profile edition'
-profile_management: Profile Management
+profile_management: 'Profile Management'
+profile_properties_management: 'Profile properties management'
 properties: Properties
+property: Property
 public: Public
 public_profile: 'Public profile'
 public_profile_preferences_allow_mail_sending: 'Mail sending'
@@ -734,52 +776,55 @@ registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 remove: Remove
-remove_event: Remove an event
-remove_event_confirm: Are you sure you want to remove this event ?
-remove_facet: Remove a facet
-remove_facet_confirm: Do you really want to remove the facet %name% ?
-remove_field: Remove a field
-remove_field_confirm: Do you really want to remove the field %name% ?
+remove_competence: 'Remove competence'
+remove_event: 'Remove an event'
+remove_event_confirm: 'Are you sure you want to remove this event ?'
+remove_facet: 'Remove a facet'
+remove_facet_confirm: 'Do you really want to remove the facet %name% ?'
+remove_field: 'Remove a field'
+remove_field_confirm: 'Do you really want to remove the field %name% ?'
 remove_group_confirm_message: 'Are you sure you want to delete this group?'
-remove_group_from_model: Remove a group from the model
-remove_group_from_model_confirm: Are you sure you want to remove the group %groupe%?
+remove_group_from_model: 'Remove a group from the model'
+remove_group_from_model_confirm: 'Are you sure you want to remove the group %groupe%?'
 remove_group_s_confirm_message: 'Are you sure you want to delete these %count% groups?'
 remove_message_confirm_message: 'Are you sure you want to delete this message?'
 remove_message_s_confirm_message: 'Are you sure you want to delete these %count% messages?'
-remove_model: Remove a model
-remove_model_confirm: Are you sure you want to remove the model %name% ?
-remove_resource_from_model: Remove a resource from the model
-remove_resource_from_model_comfirm: Are you sure you want to remove this resource?
-remove_role: Role suppression.
-remove_role_confirm: Do you really want to remove the role %name% ?
+remove_model: 'Remove a model'
+remove_model_confirm: 'Are you sure you want to remove the model %name% ?'
+remove_resource_from_model: 'Remove a resource from the model'
+remove_resource_from_model_comfirm: 'Are you sure you want to remove this resource?'
+remove_role: 'Role suppression.'
+remove_role_confirm: 'Do you really want to remove the role %name% ?'
+remove_sub_competence: 'Remove competence from learning outcomes'
+remove_sub_competence_comfirm_message: 'Are you sure you want to remove this competence from this learning outcomes ?'
 remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user?'
-remove_user_from_model: Remove a user from the model
-remove_user_from_model_confirm: Are you sure you want to remove the user %name%?
+remove_user_from_model: 'Remove a user from the model'
+remove_user_from_model_confirm: 'Are you sure you want to remove the user %name%?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
 remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
 remove_workspace_from_selection: 'Remove workspace from selection'
-remove_workspace_role_warning: Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.
+remove_workspace_role_warning: 'Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.'
 remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
 rename_widget_instance: 'Rename widget'
-repeat_password: Repeat the password
+repeat_password: 'Repeat the password'
 reset: Reset
-reset_password: Reset password
-reset_password_message: Are you sure you want to reinitialize password?
-reset_password_txt: You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.
-reset_pwd_form_password : 'Your current password'
-resetting_your_password: Resetting your password
+reset_password: 'Reset password'
+reset_password_message: 'Are you sure you want to reinitialize password?'
+reset_password_txt: 'You asked for your password reinitialisation. If you did not ask for it, please just ignore this message.'
+reset_pwd_form_password: 'Your current password'
+resetting_your_password: 'Resetting your password'
 resource: Resource
 resource_action_denied_message: 'The action %action% couldn''t be done on ''%path%'': access denied.'
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
 resource_delete: 'Are you sure you want to delete this resource ?'
-resource_picker: Resource picker
+resource_picker: 'Resource picker'
 resource_properties_form_sharable: 'Share this resource'
 resource_properties_form_shareType: 'Share type'
 resource_properties_form_userIcon: Icon
@@ -808,13 +853,13 @@ rights_management: 'Rights Management'
 role: Role
 role_creation: 'Role creation'
 role_edition: 'Role edition'
-role_limit_reached: The limit of %translationKey% has been reached.
-role_list: Role list
-role_name_changed_success: The role name has been successfully updated.
+role_limit_reached: 'The limit of %translationKey% has been reached.'
+role_list: 'Role list'
+role_name_changed_success: 'The role name has been successfully updated.'
 role_name_type_form_translationKey: Name
 roles: Roles
-roles_facet_form_explanation: This form allows you to set wich roles can see the facet in the public profile.
-roles_fields_form_explanation: This form allows you to set wich roles can see and edit the field in the public profile.
+roles_facet_form_explanation: 'This form allows you to set wich roles can see the facet in the public profile.'
+roles_fields_form_explanation: 'This form allows you to set wich roles can see and edit the field in the public profile.'
 roles_management: 'Roles management'
 save: Save
 save_as_template: 'Save as template'
@@ -824,18 +869,18 @@ search: Search
 search_group: 'Search for a group'
 search_user: 'Search for an user'
 search_workspace: 'Search for a workspace'
-security_token: Security Token
+security_token: 'Security Token'
 security_token_delete_confirm_message: 'Do you really want to delete this security token ?'
 security_token_delete_confirm_title: 'Delete security token'
 security_token_form_clientIp: 'Client IP address'
 security_token_form_clientName: 'Client name'
-security_token_form_token: 'Token'
+security_token_form_token: Token
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
 see_more: 'See more'
 see_public_profile: 'See my public profile'
-select all: 'Select all'
+'select all': 'Select all'
 select_all: 'Select all'
 select_category: 'Select a category'
 select_contacts_title: 'Select receivers'
@@ -852,8 +897,7 @@ send_mail_form_content: Message
 send_mail_form_object: Object
 send_message: 'Send a message'
 send_message_to_workspace: 'Send a message'
-send_message_to_workspace: Send a message to the users of the workspace.
-send_message_to_workspace_info: This list shows the workspaces of which you are the manager.
+send_message_to_workspace_info: 'This list shows the workspaces of which you are the manager.'
 server: Server
 session: Session
 session_db_cannot_perform_operations: 'Cannot read or write in the specified table. Please check that the database user has sufficient permissions and that there isn''t any special constraint on this table.'
@@ -874,15 +918,16 @@ show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_profile: 'Show profile'
-show_profile_for_anonymous: Profil public access for anonymous.
+show_profile_for_anonymous: 'Profil public access for anonymous.'
 simple: Simple
 start_date: 'Start date'
-start_maintenance: Start maintenance mode
-statistics: 'Statistics'
+start_maintenance: 'Start maintenance mode'
+statistics: Statistics
 statistics_data: 'number of workspaces and users'
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
+storage_used: 'Storage used'
 subcategories: Subcategories
 subscribe_groups: 'Subscribe groups'
 subscribe_selected_groups: 'Subscribe selected groups'
@@ -890,7 +935,7 @@ subscribe_selected_users: 'Subscribe selected users'
 subscribe_users: 'Subscribe users'
 subscription: Subscription
 success_rate: 'Success rate'
-successfull_workspace_creation: The workspace %name% has been created successfully
+successfull_workspace_creation: 'The workspace %name% has been created successfully'
 support_email: 'Support email'
 switch: Switch
 tab: Tab
@@ -904,9 +949,9 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
-technical: 'Technical'
+technical: Technical
 technical_data: 'URL, Version, primary language, IP and email support'
-terms_enabled_but_empty: Terms of service can only be enabled if the text is provided in at least one language.
+terms_enabled_but_empty: 'Terms of service can only be enabled if the text is provided in at least one language.'
 text: Text
 text_form_content: Content
 text_form_name: Name
@@ -918,7 +963,8 @@ the_workspace: Workspace
 this_page_requires_authentication: 'This page requires authentication. Please login.'
 this_resource_is_not_published: 'This resource is not published'
 time_col: 'Database time column'
-tinymce_all_buttons: All tools
+tinymce_all_buttons: 'All tools'
+tips: Tips
 title: Title
 to: To
 to_anonymous: 'to anonymous users'
@@ -930,6 +976,7 @@ to_workspace_members: 'to the members of this workspace'
 today: Today
 token: Token
 tool: Tool
+tool_admin_disabled: 'This tool was deactivated by the administrator'
 tool_can_be_edited: 'Tool can be edited'
 tool_cannot_be_edited: 'Tool cannot be edited'
 tool_form_displayName: 'Displayed tool name'
@@ -938,7 +985,6 @@ tool_is_not_visible_and_cannot_be_opened: 'Tool is not visible and cannot be ope
 tool_is_visible_and_can_be_opened: 'Tool is visible and can be opened'
 tool_parameters: 'Tool parameters'
 tool_roles_create_directory: 'The "Create a directory" option allow you to automatically create a directory for that group.'
-tool_roles_create_directory: The "Create a directory" option allow you to automatically create a directory for that group.
 tools: Tools
 tools_rights_configuration: 'Tools rights configuration'
 top: Top
@@ -955,7 +1001,7 @@ total: Total
 total_time: 'Total time'
 traffic: Traffic
 trash: Trash
-tune: 'Tune'
+tune: Tune
 tune_public_url_error: 'An error occured while tuning your public profile URL.'
 tune_public_url_success: 'Tuning of your public profile URL made with success.'
 tune_your_public_profile: 'Tune your public profile'
@@ -967,11 +1013,11 @@ unable_to_start_sendmail: 'Sendmail or Postfix cannot be started. Please check t
 unable_to_start_smtp: 'The connection with the SMTP server cannot be established. Please check that the parameters you provided are correct.'
 unable_to_start_transport: 'The mailing transport cannot be started. Please check that the parameters you provided are correct.'
 unauthorized: 'You are not authorized to see this page.'
-unavailable_platform: The platform is unavailable
-unavailable_role: The role %translationKey% is not available
-uncompress_file: Uncompress the file if possible
+unavailable_platform: 'The platform is unavailable'
+unavailable_role: 'The role %translationKey% is not available'
+uncompress_file: 'Uncompress the file if possible'
 under_min_length: 'This value is too short'
-unique connections: 'Nb unique Cnx.'
+'unique connections': 'Nb unique Cnx.'
 unknown: Unknown
 unpublish: Unpublish
 unpublished: Unpublished
@@ -986,8 +1032,11 @@ unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
-update_available: Update available
-update_event: Update an event
+up_to_date: 'Up to date'
+update: Update
+update_available: 'Update available'
+update_event: 'Update an event'
+updated_by: 'Last update: %modificationDate%'
 upgrade: Upgrade
 upload: upload
 upload_denied: 'Permission denied'
@@ -996,10 +1045,11 @@ url_invalid: 'the code is not correct, do no try to change the url'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
-user_creation_success: The user account has been successfully created.
-user_limit_reached: The user limit has been reached.
-user_limit_success_update: The user limit by role has been successfully updated.
-user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
+user_creation_success: 'The user account has been successfully created.'
+user_info: 'User informations'
+user_limit_reached: 'The user limit has been reached.'
+user_limit_success_update: 'The user limit by role has been successfully updated.'
+user_limit_too_low: 'There is already %total% %role%(s). The limit %newMax% is too low.'
 user_menu: 'User menu'
 user_menu_configuration: 'User menu configuration'
 user_options_form_desktopBackgroundColor: 'Desktop background color'
@@ -1021,56 +1071,56 @@ users_list: 'Users list'
 users_management: 'Users management'
 users_minimum_requirement_msg: 'Users validation has the following requirements: 3 chars username, 4 chars password, valid email.'
 users_per_page: 'Users per page'
-users_per_page: Users per page
 users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
 validate: Validate
 validation: Validation
-verification: 'Verification'
+verification: Verification
 view: View
 view_category_hierarchy: 'View category hierarchy'
 views: Views
 visibility: Visibility
 visible: Visible
-visible_facet_form_explanation: The field "Visible" allows you to set the element as visible or not for the user.
+visible_facet_form_explanation: 'The field "Visible" allows you to set the element as visible or not for the user.'
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_configuration: 'Widget configuration'
-widget_display_config_form_color: 'Color'
+widget_display_config_form_color: Color
 widget_display_form_name: Name
-widget_home_tab_config_form_locked: 'Locked'
-widget_home_tab_config_form_visible: 'Visible'
+widget_home_tab_config_form_locked: Locked
+widget_home_tab_config_form_visible: Visible
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-will be replaced by your platform name: 'will be replaced by your platform name'
-will display the password: 'will display the password'
-will display the user first name: 'will display the user first name'
-will display the user last name: 'will display the user last name'
-will display the username: 'will display the username'
+'will be replaced by your platform name': 'will be replaced by your platform name'
+'will display the password': 'will display the password'
+'will display the user first name': 'will display the user first name'
+'will display the user last name': 'will display the user last name'
+'will display the username': 'will display the username'
 with_role: 'with role'
+workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
-workspace: Workspace
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
-workspace_code_invalid: The code %code% is already used (line %line%).
+workspace_code_invalid: 'The code %code% is already used (line %line%).'
 workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
 workspace_edit_form_code: Code
 workspace_edit_form_creationDate: 'Creation date'
-workspace_edit_form_creator : 'Creator of the workspace'
+workspace_edit_form_creator: 'Creator of the workspace'
 workspace_edit_form_description: Description
 workspace_edit_form_displayable: Displayable
+workspace_edit_form_endDate: 'Expiration date'
 workspace_edit_form_name: Name
-workspace_edit_form_number : Number of subscriber(s)
-workspace_edit_form_registrationValidation : 'Registration validation'
+workspace_edit_form_number: 'Number of subscriber(s)'
+workspace_edit_form_registrationValidation: 'Registration validation'
 workspace_edit_form_selfRegistration: 'Public registration'
 workspace_edit_form_selfUnregistration: 'Public unregistration'
 workspace_form_code: Code
@@ -1078,20 +1128,19 @@ workspace_form_description: Description
 workspace_form_displayable: Public
 workspace_form_model: Template
 workspace_form_name: Name
-workspace_form_registrationValidation : 'Registration validation'
+workspace_form_registrationValidation: 'Registration validation'
 workspace_form_selfRegistration: 'Public registration'
 workspace_form_selfUnregistration: 'Public unregistration'
 workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
-workspace_import: Import a workspace
-workspace_import: Workspace import
+workspace_import: 'Import a workspace'
 workspace_list: 'Workspace list'
-workspace_list: Workspace list
-workspace_management : 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
-workspace_management_date_null : 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
-workspace_model_invalid: The model %model% doesn't exist (line %line%).
+workspace_management: 'The workspace has been create at %creationDate%, by %creator%. There is %count% suscriber(s).'
+workspace_management_date_null: 'There is %count% subscriber(s). The creation date and the creator are not mentioned'
+workspace_max_users: 'Maximum number of user per workspace'
+workspace_model_invalid: 'The model %model% doesn''t exist (line %line%).'
 workspace_order_tool_edit_form_name: Name
 workspace_queue_cancel_confirm_message: 'Do you really want to cancel the registration request to this workspace ?'
 workspace_queue_cancel_confirm_title: 'Cancel registration request'
@@ -1109,68 +1158,17 @@ workspace_tag_remove_confirm_title: 'Remove category'
 workspace_template_form_name: Name
 workspace_tools: Tools
 workspace_unregistration_confirm_title: 'Do you really want to unregister from this workspace?'
-workspace_user_invalid: The username %username% doesn't exist (line %line%).
+workspace_user_invalid: 'The username %username% doesn''t exist (line %line%).'
 workspace_welcome: Welcome
 workspaces: Workspaces
 workspaces_included_in_category: 'Workspaces included in this category'
 workspaces_management: 'Workspaces management'
 workspaces_per_page: 'Workspace per page'
-wrong_captcha : 'The code does not match the picture'
+wrong_captcha: 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
 yes: Yes
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
-activate_personal_workspace_creation: Activate personal workspace creation.
-my_public_documents: My public documents
-new_folder_in_current_ws: New directory in the current workspace
-others: Others
-destination: Destination
-personal_workspace_tools_management: Personal workspace tools management
-personal_workspace_management: Personal workspace management
-tool_admin_disabled: This tool was deactivated by the administrator
-can_edit_permission: Can edit permissions
-max_storage_size: Maximum storage size
-storage_used: Storage used
-max_amount_resources: Maximum amount of resources
-count_resources: Amount of resources
-package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
-parameters_save_success: 'Parameters saved with success.'
-parameters_save_error: 'An error occured while saving parameters.'
-import_profile_pics: Import profile pics
-import_profile_pics_explanation: 'You must upload a zip file. Each file must be structured this way: username.extension'
-add_field_to_panel: Add a field
-add_panel_to_facet: Add a panel
-create_pane: Create a pane
-collapse: Collapse
-edit_panel_facet: Edit a panel
-administrativeCode: administrativeCode
-property: Property
-picture: User picture
-profile_properties_management: Profile properties management
-facet_management: Facet management
-installed: Installed
-available: Available
-install: Install
-up_to_date: Up to date
-update: Update
-package_install: Package install
-package_install_confirm: Do you really want to install %bundle% %version% ?
-backup_reminder: We recommand you to do a backup before going further.
-tips: Tips
-logs_error_location: The log files are located in app/logs/update-xxx.log.
-package_install_auto_reload: This page will be reload automatically once an operation is done
-activate_maintenance_mode: You should activate the maintenance mode before going further.
-install_update_cant_be_undone: Once an operation is started, it cannot be undone.
-list_view: List view (beta)
-last_modification: Last modification
-created_by: Created by %creator% the %creationDate%
-updated_by: 'Last update: %modificationDate%'
-display_at_registration: Display at registration
-workspace_max_users: Maximum number of user per workspace
-workspace_edit_form_endDate : Expiration date
-user_info: User informations
-activate_account_click: Click here to activate your account
-activate_account: Activate your account
-please_validate_your_account: An email was sent for you to activate your account
+404: 'Page Not found'

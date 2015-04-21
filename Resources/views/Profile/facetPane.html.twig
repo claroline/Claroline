@@ -34,7 +34,7 @@
                                         {% if fieldFacet.id == field.getId() and fieldFacet.canOpen == true %}
                                             <div class="form-group row">
                                                 <label class="control-label col-md-3" for="field-{{ field.getId() }}">
-                                                    {{ field.getName() }}
+                                                    {{ field.getName()|trans({}, 'facet') }}
                                                 </label>
                                                 <div class="col-md-9">
                                                     <input

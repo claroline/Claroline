@@ -8,16 +8,16 @@ badge_expiring_need_period_and_duration: 'Un periodo de validez debe estar defin
 badge_need_at_least_one_translation: 'Al menos una traducción debe estar definida en la insignia'
 badge_need_image: 'Una imagen debe estar definida en la insignia'
 google_meta_tag_error: 'Se debe definir una meta etiqueta, ejemplo: <meta name="google-site-verification" content="XXX" />'
-invalid_date_range: La fecha de finalización no puede preceder a la fecha de inicio.
-name_required: El Nombre es obligatorio.
+invalid_date_range: 'La fecha de finalización no puede preceder a la fecha de inicio.'
+name_required: 'El Nombre es obligatorio.'
 need_at_least_one_translation: 'Al menos una traducción debe estar definida'
 password_mismatch: 'Las contraseñas no coinciden'
-port_error: El puerto debe ser un número
+port_error: 'El puerto debe ser un número'
 public_profile_url_not_valid: 'Su URL pública de perfil no es válida.'
-role_already_exists: El rol ya existe.
+role_already_exists: 'El rol ya existe.'
 special_char_not_allowed: 'Los caracteres especiales no están permitidos (los caracteres permitidos son: a-z, A-Z, 0-9, @, _, - y .)'
-valid_end_date_required: Se requiere una fecha de finalización válida.
-valid_end_hour_required: Se requiere una hora de finalización válida.
-valid_start_date_required: Se requiere una fecha de inicio válida.
-valid_start_hour_required: Se requiere una hora de inicio válida.
-username_doesnt_exist: L'utilisateur %username% n'existe pas.
+username_doesnt_exist: 'L''utilisateur %username% n''existe pas.'
+valid_end_date_required: 'Se requiere una fecha de finalización válida.'
+valid_end_hour_required: 'Se requiere una hora de finalización válida.'
+valid_start_date_required: 'Se requiere una fecha de inicio válida.'
+valid_start_hour_required: 'Se requiere una hora de inicio válida.'
