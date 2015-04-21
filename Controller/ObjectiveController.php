@@ -207,6 +207,19 @@ class ObjectiveController
     }
 
     /**
+     * Displays the list of groups who have at least one objective.
+     *
+     * @EXT\Route("/groups", name="hevinci_objectives_groups")
+     * @EXT\Template
+     *
+     * @return array
+     */
+    public function groupsAction()
+    {
+        return ['pager' => $this->manager->listGroupsWithObjective()];
+    }
+
+    /**
      * Assigns an objective to a user.
      *
      * @EXT\Route("/{objectiveId}/users/{userId}", name="hevinci_objectives_assign_to_user")
@@ -244,19 +257,5 @@ class ObjectiveController
             $isAssigned = $this->manager->assignObjective($objective, $group),
             $isAssigned ? 200 : 204
         );
-    }
-
-    /**
-     * Displays the index of the learning objectives tool, i.e.
-     * the list of learning objectives.
-     *
-     * @EXT\Route("/groups", name="hevinci_objectives_groups")
-     * @EXT\Template
-     *
-     * @return array
-     */
-    public function groupsAction()
-    {
-        return [];
     }
 }

@@ -16,6 +16,36 @@
 {% endblock %}
 
 {% block tabContent %}
+    {% if pager.getNbPages() > 1 %}
+        {{
+            pagerfanta(pager, 'twitter_bootstrap_translated', {
+                'proximity' : 1,
+                'routeName': 'hevinci_objectives_groups'
+            })
+        }}
+    {% endif %}
+
     <br>
-    GROUPS
+
+    {% if pager.getNbResults() > 0 %}
+        <table class="table table-condensed table-bordered group-objectives">
+            <thead>
+                <tr>
+                    <th>{{ 'group'|trans({}, 'platform') }}</th>
+                    <th>{{ 'framework_'|trans({}, 'competency') }}</th>
+                    <th colspan="3">{{ 'actions'|trans({}, 'platform') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in pager.currentPageResults() %}
+                    {% include 'HeVinciCompetencyBundle:Objective:groupObjectiveRow.html.twig' with group %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            {{ 'info.no_group_objectives'|trans({}, 'competency') }}
+        </div>
+    {% endif %}
 {% endblock %}

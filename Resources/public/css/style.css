@@ -172,7 +172,8 @@ td.competency-path ul {
     padding-left: 16px;
 }
 
-table > tbody > tr > td.user {
+table > tbody > tr > td.user,
+table > tbody > tr > td.group {
     font-weight: bold;
 }
 

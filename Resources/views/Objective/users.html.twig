@@ -46,7 +46,10 @@
             </tbody>
         </table>
     {% else %}
-        NO USER YET
+        <div class="alert alert-info" role="alert">
+            <i class="fa fa-info-circle"></i>
+            {{ 'info.no_user_objectives'|trans({}, 'competency') }}
+        </div>
     {% endif %}
 
 {% endblock %}

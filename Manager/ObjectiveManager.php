@@ -175,11 +175,17 @@ class ObjectiveManager
      */
     public function listUsersWithObjective()
     {
-        $countQuery = $this->objectiveRepo->getUsersWithObjectiveCountQuery();
-        $resultQuery = $this->objectiveRepo->getUsersWithObjectiveQuery();
-        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
+        return $this->listSubjectsWithObjective('Users');
+    }
 
-        return $this->pagerFactory->createPagerWithAdapter($adapter, 1);
+    /**
+     * Returns a pager for all the groups which have at least one objective.
+     *
+     * @return Pagerfanta
+     */
+    public function listGroupsWithObjective()
+    {
+        return $this->listSubjectsWithObjective('Groups');
     }
 
     /**
@@ -209,5 +215,16 @@ class ObjectiveManager
         $this->om->flush();
 
         return true;
+    }
+
+    private function listSubjectsWithObjective($subjectType)
+    {
+        $countMethod = "get{$subjectType}WithObjectiveCountQuery";
+        $fetchMethod = "get{$subjectType}WithObjectiveQuery";
+        $countQuery = $this->objectiveRepo->{$countMethod}();
+        $resultQuery = $this->objectiveRepo->{$fetchMethod}();
+        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
+
+        return $this->pagerFactory->createPagerWithAdapter($adapter, 1);
     }
 }

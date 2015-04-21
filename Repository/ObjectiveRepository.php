@@ -31,11 +31,7 @@ class ObjectiveRepository extends EntityRepository
      */
     public function getUsersWithObjectiveCountQuery()
     {
-        return $this->_em->createQueryBuilder()
-            ->select('COUNT(u.id)')
-            ->from('Claroline\CoreBundle\Entity\User', 'u')
-            ->where((new Expr())->in('u.id', $this->getInverseSideIdsDql('users')))
-            ->getQuery();
+        return $this->getSubjectsWithObjectiveCountQuery('users');
     }
 
     /**
@@ -46,11 +42,58 @@ class ObjectiveRepository extends EntityRepository
      */
     public function getUsersWithObjectiveQuery()
     {
+        return $this->getSubjectsWithObjectiveQuery('users', ['id', 'firstName', 'lastName']);
+    }
+
+    /**
+     * Returns the query object for counting all the groups which have
+     * at least one learning objective.
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getGroupsWithObjectiveCountQuery()
+    {
+        return $this->getSubjectsWithObjectiveCountQuery('groups');
+    }
+
+    /**
+     * Returns the query object for fetching all the groups which have
+     * at least one learning objective.
+     *
+     * @return \Doctrine\ORM\Query
+     */
+    public function getGroupsWithObjectiveQuery()
+    {
+        return $this->getSubjectsWithObjectiveQuery('groups', ['id', 'name']);
+    }
+
+    private function getSubjectsWithObjectiveCountQuery($subjectField)
+    {
         return $this->_em->createQueryBuilder()
-            ->select('u.id', 'u.firstName', 'u.lastName')
-            ->from('Claroline\CoreBundle\Entity\User', 'u')
-            ->where((new Expr())->in('u.id', $this->getInverseSideIdsDql('users')))
+            ->select('COUNT(s.id)')
+            ->from($this->getSubjectFqcn($subjectField), 's')
+            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField)))
             ->getQuery();
+    }
+
+    private function getSubjectsWithObjectiveQuery($subjectField, array $selectedAttributes)
+    {
+        $attributes = array_map(function ($attribute) {
+            return "s.{$attribute}";
+        }, $selectedAttributes);
+
+        return $this->_em->createQueryBuilder()
+            ->select(implode(', ', $attributes))
+            ->from($this->getSubjectFqcn($subjectField), 's')
+            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField)))
+            ->getQuery();
+    }
+
+    private function getSubjectFqcn($subjectField)
+    {
+        return $subjectField === 'users' ?
+            'Claroline\CoreBundle\Entity\User' :
+            'Claroline\CoreBundle\Entity\Group';
     }
 
     private function getInverseSideIdsDql($targetField)
