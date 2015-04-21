@@ -5,6 +5,7 @@ namespace HeVinci\UrlBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Form\UrlChangeType;
+use HeVinci\UrlBundle\Manager\UrlManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,22 +18,26 @@ class UrlController extends Controller
     private $formFactory;
     private $om;
     private $request;
+    private $urlManager;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"       = @DI\Inject("request_stack")
+     *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "urlManager"         = @DI\Inject("hevinci_url.manager.url")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         ObjectManager $om,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        UrlManager $urlManager
     ){
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
+        $this->urlManager = $urlManager;
     }
 
     /**
@@ -57,16 +62,7 @@ class UrlController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()){
-            $formInterface = $form->getData();
-            $url = $formInterface->getUrl();
-            $baseUrl = $this->request->getSchemeAndHttpHost() . $this->request->getScriptName();
-            $baseUrlEscapeQuote = preg_quote($baseUrl);
-            $formInterface->setInternalUrl(false);
-
-            if (preg_match("#$baseUrlEscapeQuote#", $url)) {
-                $formInterface->setUrl(substr($url, strlen($baseUrl)));
-                $formInterface->setInternalUrl(true);
-            }
+            $this->urlManager->setUrl($form->getData());
             $em->flush();
 
             return new JsonResponse();
