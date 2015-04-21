@@ -6,12 +6,8 @@
 
     angular.module('StepModule').controller('StepFormCtrl', [
         '$scope',
-        '$http',
-        'HistoryService',
-        'PathService',
         'StepService',
-        'ResourceService',
-        function ($scope, $http, HistoryService, PathService, StepService, ResourceService) {
+        function StepFormCtrl($scope, StepService) {
             /**
              * Path to public dir
              * @type {string}
@@ -23,6 +19,8 @@
              * @type {object}
              */
             this.step = null;
+
+            this.inheritedResources = [];
 
             // Defines which panels of the form are collapsed or not
             this.collapsedPanels = {
@@ -78,11 +76,8 @@
                             for (var nodeId in nodes) {
                                 var node = nodes[nodeId];
 
-                                // Create a new resource object from picker data
-                                var resource = ResourceService.new(node[2], nodeId, node[0]);
-
                                 // Link resource to step
-                                StepService.addPrimaryResource(this.step, resource);
+                                StepService.addPrimaryResource(this.step, node[2], nodeId, node[0]);
 
                                 break; // We need only one node, so only the first one will be kept
                             }
@@ -106,11 +101,10 @@
                             for (var nodeId in nodes) {
                                 var node = nodes[nodeId];
 
-                                // Create a new resource object from picker data
-                                var resource = ResourceService.new(node[2], nodeId, node[0]);
-
                                 // Link resource to step
-                                StepService.addSecondaryResource(this.step, resource);
+                                StepService.addSecondaryResource(this.step, node[2], nodeId, node[0]);
+
+                                console.log(this.step);
                             }
 
                             $scope.$apply();
@@ -156,7 +150,7 @@
              * Delete selected resource from path
              */
             this.removeResource = function (resource) {
-                StepService.removeResource($scope.previewStep, resource.id);
+                StepService.removeResource(this.step, resource);
             };
 
             this.enableResourcePropagation = function (resource) {
@@ -170,7 +164,7 @@
             /**
              * Exclude a resource inherited from parents
              */
-            this.excludeParentResource= function (resource) {
+            this.excludeParentResource = function (resource) {
                 resource.isExcluded = true;
                 this.step.excludedResources.push(resource.id);
             };

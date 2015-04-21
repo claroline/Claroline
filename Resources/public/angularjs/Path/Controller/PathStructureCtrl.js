@@ -22,7 +22,8 @@
              * Step currently displayed into Step form
              * @type {null}
              */
-            this.currentStep = null;
+            this.currentStep                   = null;
+            this.currentStepInheritedResources = [];
 
             /**
              * Current state of the clipboard
@@ -80,7 +81,10 @@
              * @param step
              */
             this.setCurrentStep = function (step) {
-                this.currentStep = step;
+                // Set the current Step
+                this.currentStep                   = step;
+                // Get inherited resources for this step
+                this.currentStepInheritedResources = PathService.getStepInheritedResources(this.structure, this.currentStep);
             };
 
             /**

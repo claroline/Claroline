@@ -6,8 +6,7 @@
 
     angular.module('StepModule').factory('StepService', [
         'IdentifierService',
-        'ResourceService',
-        function StepService(IdentifierService, ResourceService) {
+        function StepService(IdentifierService) {
             /**
              * Step object
              * @constructor
@@ -31,6 +30,21 @@
                 this.primaryResource   = null;
                 this.resources         = [];
                 this.excludedResources = [];
+            };
+
+            /**
+             * Resource object
+             * @param {string} [type]
+             * @param {number} [id]
+             * @param {string} [name]
+             * @constructor
+             */
+            var StepResource = function StepResource(type, id, name) {
+                this.id                  = IdentifierService.generateUUID();
+                this.resourceId          = id ? id : null;
+                this.name                = name ? name : null;
+                this.type                = type ? type : null;
+                this.propagateToChildren = true;
             };
 
             return {
@@ -74,16 +88,14 @@
                         step.description = activity['description'];
 
                         // Primary resources
-                        var resource = ResourceService.new(activity['primaryResource']['type'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
-                        this.addPrimaryResource(step, resource);
+                        this.addPrimaryResource(step, activity['primaryResource']['type'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
 
                         // Secondary resources
                         if (null !== activity['resources']) {
                             for (var i = 0; i < activity['resources'].length; i++) {
                                 var current = activity['resources'][i];
 
-                                var resource = ResourceService.new(current['type'], current['resourceId'], current['name']);
-                                this.addSecondaryResource(step, resource);
+                                this.addSecondaryResource(step, current['type'], current['resourceId'], current['name']);
                             }
                         }
 
@@ -96,19 +108,30 @@
                 },
 
                 /**
-                 *
-                 * @param {Step}     step
-                 * @param {Resource} resource
+                 * Set the primary resource of the Step
+                 * @param {object} step
+                 * @param {string} type
+                 * @param {number} id
+                 * @param {string} name
                  */
-                addPrimaryResource: function (step, resource) {
-                    step.primaryResource = resource;
+                addPrimaryResource: function (step, type, id, name) {
+                    step.primaryResource = new StepResource(type, id, name);
                 },
 
-                addSecondaryResource: function (step, resource) {
-                    if (this.hasResource(step, resource)) {
+                /**
+                 * Add a secondary resource in the Step
+                 * @param {object} step
+                 * @param {string} type
+                 * @param {number} id
+                 * @param {string} name
+                 */
+                addSecondaryResource: function (step, type, id, name) {
+                    var resource = new StepResource(type, id, name);
+                    if (!this.hasResource(step, resource)) {
                         if (!step.resources instanceof Array) {
                             step.resources = [];
                         }
+
                         step.resources.push(resource);
                     }
                 },
@@ -116,15 +139,15 @@
                 /**
                  * Remove selected resource from step
                  *
-                 * @param   {object} step       current step
-                 * @param   {string} resourceId resource to remove
+                 * @param   {object} step     - current step
+                 * @param   {object} resource - resource to remove
                  * @returns {StepService}
                  */
-                removeResource: function (step, resourceId) {
+                removeResource: function (step, resource) {
                     // Remove from included resources
                     if (typeof step.resources !== 'undefined' && null !== step.resources) {
                         for (var i = 0; i < step.resources.length; i++) {
-                            if (resourceId === step.resources[i].id) {
+                            if (resource.id === step.resources[i].id) {
                                 step.resources.splice(i, 1);
                                 break;
                             }
@@ -135,7 +158,7 @@
                     if (typeof step.excludedResources != 'undefined' && null !== step.excludedResources) {
                         // Loop through excluded resource to remove reference to needle
                         for (var j = 0; j < step.excludedResources.length; j++) {
-                            if (resourceId == step.excludedResources[j]) {
+                            if (resource.id == step.excludedResources[j]) {
                                 step.excludedResources.splice(j, 1);
                                 break;
                             }
@@ -145,7 +168,7 @@
                     // Loop through children to remove propagation of the deleted resource
                     if (typeof step.children != 'undefined' && null !== step.children) {
                         for (var k = 0; k < step.children.length; k++) {
-                            this.removeResource(step.children[k], resourceId);
+                            this.removeResource(step.children[k], resource.id);
                         }
                     }
 

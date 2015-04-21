@@ -2,8 +2,10 @@
 <div class="panel-heading" data-ng-click="stepFormCtrl.collapsedPanels.resourcePrimary = !stepFormCtrl.collapsedPanels.resourcePrimary">
     <h4 class="panel-title">
         <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepFormCtrl.collapsedPanels.resourcePrimary, 'fa-caret-down': !stepFormCtrl.collapsedPanels.resourcePrimary }"></span>
-        {{ 'primary_resource'|trans:{}:'path_editor' }}
+
         <span class="badge">{{ stepFormCtrl.step.primaryResource != null ? 1 : 0 }}</span>
+
+        {{ 'primary_resource'|trans:{}:'path_editor' }}
     </h4>
 
     <a href="#" data-ui-resource-picker="stepFormCtrl.primaryResourcePicker" class="btn btn-sm btn-primary">

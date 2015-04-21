@@ -20,7 +20,6 @@
         'HistoryModule',
         'PathModule',
         'StepModule',
-        'ResourceModule',
         'TemplateModule'
     ]);
 })();

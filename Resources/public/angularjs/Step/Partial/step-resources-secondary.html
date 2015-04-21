@@ -2,9 +2,10 @@
 <div class="panel-heading" data-ng-click="stepFormCtrl.collapsedPanels.resourceSecondary = !stepFormCtrl.collapsedPanels.resourceSecondary">
     <h4 class="panel-title">
         <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': stepFormCtrl.collapsedPanels.resourceSecondary, 'fa-caret-down': !stepFormCtrl.collapsedPanels.resourceSecondary }"></span>
-        {{ 'secondary_resources'|trans:{}:'path_editor' }}
 
-        <span class="badge">{{ (inheritedResources.length + previewStep.resources.length) }}</span>
+        <span class="badge">{{ (inheritedResources.length + stepFormCtrl.step.resources.length) }}</span>
+
+        {{ 'secondary_resources'|trans:{}:'path_editor' }}
     </h4>
 
     <a href="#" data-ui-resource-picker="stepFormCtrl.secondaryResourcesPicker" class="btn btn-sm btn-primary">
@@ -13,12 +14,13 @@
 </div>
 
 <div class="panel-body" data-ng-show="!stepFormCtrl.collapsedPanels.resourceSecondary">
-    <em data-ng-show="null == inheritedResources || 0 == inheritedResources.length">{{ 'no_secondary_resources'|trans:{}:'path_editor' }}</em>
+    <!-- No resource message -->
+    <em data-ng-show="(null == stepFormCtrl.inheritedResources || 0 == stepFormCtrl.inheritedResources.length) && (null == stepFormCtrl.step.resources || 0 == stepFormCtrl.step.resources.length)">{{ 'no_secondary_resources'|trans:{}:'path_editor' }}</em>
 
     <!-- Resources -->
-    <ul class="step-resources nodes" data-ng-show="(null != inheritedResources && inheritedResources.length != 0) || (null != stepFormCtrl.form.resources && stepFormCtrl.form.resources.length != 0)">
+    <ul class="step-resources nodes" data-ng-show="(null != stepFormCtrl.inheritedResources && stepFormCtrl.inheritedResources.length != 0) || (null != stepFormCtrl.step.resources && stepFormCtrl.step.resources.length != 0)">
         <!-- Inherited resources from parents -->
-        <li data-ng-repeat="resource in inheritedResources" data-ng-class="{ excluded: resource.isExcluded }" class="resource-inherited resource-lvl-{{ resource.parentStep.lvl }} node-thumbnail node ui-state-default zoom75">
+        <li data-ng-repeat="resource in stepFormCtrl.inheritedResources" data-ng-class="{ excluded: resource.isExcluded }" class="resource-inherited resource-lvl-{{ resource.parentStep.lvl }} node-thumbnail node ui-state-default zoom75">
             <div class="node-element" style="background-image: url('{{ resourceIcons[resource.type] }}');"></div>
             <div class="dropdown">
                 <a class="dropdown-toggle name dropdown-thumbnail" href="#" data-toggle="dropdown" role="button">
@@ -40,7 +42,7 @@
         </li>
 
         <!-- Specific resources -->
-        <li data-ng-repeat="resource in stepFormCtrl.form.resources" data-ng-class="{ propagated: resource.propagateToChildren }" class="resource node-thumbnail node ui-state-default zoom75">
+        <li data-ng-repeat="resource in stepFormCtrl.step.resources" data-ng-class="{ propagated: resource.propagateToChildren }" class="resource node-thumbnail node ui-state-default zoom75">
             <div class="node-element" style="background-image: url({{ resourceIcons[resource.type] || resourceIcons['custom/default'] }});"></div>
 
             <div class="dropdown">
@@ -48,12 +50,6 @@
                     <div class="node-name">{{ resource.name }} <span class="fa fa-caret-down"></span></div>
                 </a>
                 <ul class="dropdown-menu" role="menu">
-                    <li ng-show="null == resource.resourceId || resource.resourceId.length == 0">
-                        <a class="node-menu-action" href="#" ng-click="editResource(resource)">
-                            <span class="fa fa-pencil"></span>
-                            {{ 'resource_edit'|trans:{}:'path_editor' }}
-                        </a>
-                    </li>
                     <li>
                         <a class="node-menu-action" href="#" data-ng-show="!resource.propagateToChildren" data-ng-click="stepFormCtrl.enableResourcePropagation(resource)">
                             <span class="fa fa-eye"></span>
