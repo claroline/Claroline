@@ -57,6 +57,16 @@ class UrlController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()){
+            $formInterface = $form->getData();
+            $url = $formInterface->getUrl();
+            $baseUrl = $this->request->getSchemeAndHttpHost() . $this->request->getScriptName();
+            $baseUrlEscapeQuote = preg_quote($baseUrl);
+            $formInterface->setInternalUrl(false);
+
+            if (preg_match("#$baseUrlEscapeQuote#", $url)) {
+                $formInterface->setUrl(substr($url, strlen($baseUrl)));
+                $formInterface->setInternalUrl(true);
+            }
             $em->flush();
 
             return new JsonResponse();
