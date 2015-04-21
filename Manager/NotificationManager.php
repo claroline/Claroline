@@ -7,6 +7,7 @@ use Doctrine\ORM\NoResultException;
 use Icap\NotificationBundle\Entity\FollowerResource;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Icap\NotificationBundle\Entity\Notification;
+use Icap\NotificationBundle\Entity\NotificationPluginConfiguration;
 use Icap\NotificationBundle\Entity\NotificationViewer;
 use Doctrine\ORM\EntityManager;
 use Icap\NotificationBundle\Event\Notification\NotificationCreateDelegateViewEvent;
@@ -52,9 +53,38 @@ class NotificationManager
      */
     protected $notificationPluginConfigurationManager;
 
+    private function getLoggedUser()
+    {
+        $securityToken = $this->security->getToken();
+
+        if (null !== $securityToken) {
+            $doer = $securityToken->getUser();
+        }
+
+        return $doer;
+    }
+
     private function getConfigurationAndPurge()
     {
-        return $this->notificationPluginConfigurationManager->getConfigOrEmpty();
+        $config = $this->notificationPluginConfigurationManager->getConfigOrEmpty();
+        if($config->getPurgeEnabled())$this->purgeNotifications($config);
+
+        return $config;
+    }
+
+    private function purgeNotifications(NotificationPluginConfiguration $config)
+    {
+        $lastPurgeDate = $config->getLastPurgeDate();
+        $today = (new \DateTime())->setTime(0, 0, 0);
+        if ($lastPurgeDate === null || $today > $lastPurgeDate) {
+            $purgeBeforeDate = clone $today;
+            $purgeBeforeDate->sub(new \DateInterval('P'.$config->getPurgeAfterDays().'D'));
+            $this->getNotificationRepository()->deleteNotificationsBeforeDate($purgeBeforeDate);
+
+            $config->setLastPurgeDate($today);
+            $this->em->persist($config);
+            $this->em->flush();
+        }
     }
 
     /**
@@ -220,11 +250,7 @@ class NotificationManager
         $doerId = null;
 
         if ($doer === null) {
-            $securityToken = $this->security->getToken();
-
-            if (null !== $securityToken) {
-                $doer = $securityToken->getUser();
-            }
+            $doer = $this->getLoggedUser();
         }
 
         if (is_a($doer, 'Claroline\CoreBundle\Entity\User')) {
@@ -262,7 +288,7 @@ class NotificationManager
     {
         if (count($userIds) > 0) {
             foreach ($userIds as $userId) {
-                if ($userId !== null) {
+                if ($userId !== null && $notification->getUserId() !== $userId) {
                     $notificationViewer = new NotificationViewer();
                     $notificationViewer->setNotification($notification);
                     $notificationViewer->setViewerId($userId);
