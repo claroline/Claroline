@@ -1,44 +1,41 @@
 <?php
+/**
+ * This file is part of the Claroline Connect package
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * Author: Panagiotis TSAVDARIS
+ * 
+ * Date: 4/21/15
+ */
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 
-class LogCommentCreateEvent extends AbstractLogResourceEvent implements NotifiableInterface
+class LogPostPublishEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
-    const ACTION = 'resource-icap_blog-comment_create';
-    protected $post;
-    protected $comment;
+    const ACTION = 'resource-icap_blog-post_publish';
     protected $blog;
+    protected $post;
     protected $details;
 
-    /**
-     * @param Post    $post
-     * @param Comment $comment
-     */
-    public function __construct(Post $post, Comment $comment)
+    public function __construct(Post $post)
     {
         $this->blog = $post->getBlog();
-        $this->comment = $comment;
         $this->post = $post;
 
         $this->details = array(
             'post' => array(
-                'blog'  => $this->blog->getId(),
-                'title' => $post->getTitle(),
-                'slug'  => $post->getSlug()
-            ),
-            'comment' => array(
-                'id'        => $comment->getId(),
-                'content'   => $comment->getMessage(),
-                'published' => $comment->isPublished(),
-                'author'    => $comment->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
-                'authorId'  => $comment->getAuthor()->getId()
+                'blog'      => $this->blog->getId(),
+                'title'     => $post->getTitle(),
+                'slug'      => $post->getSlug(),
+                'published' => $post->isPublished(),
+                'author'    => $post->getAuthor()->getFirstName()." ".$post->getAuthor()->getLastName(),
+                'authorId'  => $post->getAuthor()->getId()
             )
         );
 
@@ -60,7 +57,7 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
      */
     public function getSendToFollowers()
     {
-        $isPublished = $this->comment->isPublished() && $this->post->isPublished();
+        $isPublished = $this->post->isPublished();
 
         return $isPublished;
     }
@@ -131,4 +128,4 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
     {
         return true;
     }
-}
+} 

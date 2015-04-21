@@ -79,7 +79,7 @@
 <script type="text/javascript">
     $(function() {
         $(".tags").tagit({
-            'availableTags' : ["{{ blog_tags(_resource)|join('","')|raw }}"],
+            'availableTags' : ["{{ blog_tags(_resource)|tagnames|join('","')|raw }}"],
             'allowSpaces' : true
         });
     });

@@ -52,6 +52,7 @@ class IcapBlogExtension extends \Twig_Extension
     {
         return array(
             'highlight' => new \Twig_Filter_Method($this, 'highlight'),
+            'tagnames'    => new \Twig_Filter_Method($this, 'getTagNames'),
         );
     }
 
@@ -59,6 +60,7 @@ class IcapBlogExtension extends \Twig_Extension
     {
         $tags = $this->getTagManager()->loadByBlog($blog, 50);
         shuffle($tags);
+        //$tagNames = array_map(function($val){return $val->name;}, $tags);
 
         return $tags;
     }
@@ -66,6 +68,13 @@ class IcapBlogExtension extends \Twig_Extension
     public function getAuthorsByBlog(Blog $blog)
     {
         return $this->getPostRepository()->findAuthorsByBlog($blog);
+    }
+
+    public function getTagnames($tags)
+    {
+        $tagNames = array_map(function($val){return $val["name"];}, $tags);
+
+        return $tagNames;
     }
 
     public function highlight($sentence, $search)

@@ -101,7 +101,7 @@
         {% endif %}
         {{ macros.flashBox() }}
         <div class="row button_block">
-            {% if is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') or is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) or is_granted('ROLE_ADMIN') %}
             <div class="col-md-12">
                 {% if is_granted('ADMINISTRATE', _resource) or is_granted('POST', _resource) %}
                     <a href="{{ _path('icap_blog_post_new', {'blogId': _resource.id}) }}" title="{{ 'new_post'|trans({}, 'icap_blog') }}" class="btn btn-default">
@@ -112,6 +112,9 @@
                     <a href="{{ path('icap_blog_configure', {"blogId": _resource.id}) }}" title="{{ 'options'|trans({}, 'platform') }}" class="btn btn-default">
                         <i class="fa fa-wrench"></i> {{ 'options'|trans({}, 'platform') }}
                     </a>
+                {% endif %}
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <div class="btn-group">

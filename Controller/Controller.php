@@ -14,9 +14,11 @@ use Icap\BlogBundle\Event\Log\LogBlogConfigureBannerEvent;
 use Icap\BlogBundle\Event\Log\LogBlogConfigureEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
+use Icap\BlogBundle\Event\Log\LogCommentPublishEvent;
 use Icap\BlogBundle\Event\Log\LogCommentUpdateEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
 use Icap\BlogBundle\Event\Log\LogPostDeleteEvent;
+use Icap\BlogBundle\Event\Log\LogPostPublishEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\BlogBundle\Form\BlogBannerType;
@@ -224,6 +226,18 @@ class Controller extends BaseController
     }
 
     /**
+     * @param Post $post
+     *
+     * @return Controller
+     */
+    protected function dispatchPostPublishEvent(Post $post)
+    {
+        $event = new LogPostPublishEvent($post);
+
+        return $this->dispatch($event);
+    }
+
+    /**
      * @param Post    $post
      *
      * @param Comment $comment
@@ -252,15 +266,29 @@ class Controller extends BaseController
     }
 
     /**
-     * @param Post    $post
+     * @param Post $post
      *
      * @param Comment $comment
      *
+     * @param $changeSet
      * @return Controller
      */
     protected function dispatchCommentUpdateEvent(Post $post, Comment $comment, $changeSet)
     {
         $event = new LogCommentUpdateEvent($post, $comment, $changeSet);
+
+        return $this->dispatch($event);
+    }
+
+    /**
+     * @param Post $post
+     *
+     * @param Comment $comment
+     * @return Controller
+     */
+    protected function dispatchCommentPublishEvent(Post $post, Comment $comment)
+    {
+        $event = new LogCommentPublishEvent($post, $comment);
 
         return $this->dispatch($event);
     }

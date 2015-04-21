@@ -1,0 +1,1 @@
+<a href="{{ path('icap_blog_post_view', {'blogId' : notification.details.resource.id, 'postSlug' : notification.details.post.slug}) }}">{{ notification.actionKey|trans({'%blog%' : notification.details.resource.name, '%post%' : notification.details.post.title}, 'notification') }}</a>

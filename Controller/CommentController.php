@@ -108,6 +108,7 @@ class CommentController extends Controller
         try {
             $entityManager->persist($comment);
             $entityManager->flush();
+            $this->dispatchCommentPublishEvent($post, $comment);
 
             $flashBag->add('success', $messages['success']);
         } catch (\Exception $exception) {
@@ -169,7 +170,6 @@ class CommentController extends Controller
 
                     $entityManager->persist($comment);
                     $entityManager->flush();
-
                     $this->dispatchCommentUpdateEvent($post, $comment, $changeSet);
 
                     $flashBag->add('success', $messages['success']);

@@ -5,12 +5,16 @@ namespace Icap\BlogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Utils\String;
+use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Table(name="icap__blog_post")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\PostRepository")
+ * @ORM\EntityListeners({"Icap\BlogBundle\Listener\PostListener"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post extends Statusable
 {
@@ -104,6 +108,8 @@ class Post extends Statusable
      * @ORM\JoinTable(name="icap__blog_post_tag")
      */
     protected $tags;
+
+    protected $userPicker = null;
 
     public function __construct()
     {
@@ -491,5 +497,24 @@ class Post extends Statusable
     public function increaseViewCounter()
     {
         return $this->setViewCounter(++$this->viewCounter);
+    }
+
+    /**
+     * @param UserPickerContent $userPicker
+     * @return $this
+     */
+    public function setUserPicker(UserPickerContent $userPicker)
+    {
+        $this->userPicker = $userPicker;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\NotificationBundle\Entity\UserPickerContent
+     */
+    public function getUserPicker()
+    {
+        return $this->userPicker;
     }
 }

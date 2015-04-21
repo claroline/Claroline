@@ -5,10 +5,14 @@ namespace Icap\BlogBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Icap\NotificationBundle\Entity\UserPickerContent;
 
 /**
  * @ORM\Table(name="icap__blog_comment")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
+ * @ORM\EntityListeners({"Icap\BlogBundle\Listener\CommentListener"})
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment extends Statusable
 {
@@ -66,6 +70,8 @@ class Comment extends Statusable
      * @ORM\ManyToOne(targetEntity="Icap\BlogBundle\Entity\Post", inversedBy="comments")
      */
     protected $post;
+
+    protected $userPicker = null;
 
     public function __construct()
     {
@@ -211,5 +217,24 @@ class Comment extends Statusable
     public function getUpdateDate()
     {
         return $this->updateDate;
+    }
+
+    /**
+     * @param UserPickerContent $userPicker
+     * @return $this
+     */
+    public function setUserPicker(UserPickerContent $userPicker)
+    {
+        $this->userPicker = $userPicker;
+
+        return $this;
+    }
+
+    /**
+     * @return \Icap\NotificationBundle\Entity\UserPickerContent
+     */
+    public function getUserPicker()
+    {
+        return $this->userPicker;
     }
 }

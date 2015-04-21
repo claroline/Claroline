@@ -1,17 +1,25 @@
 <?php
+/**
+ * This file is part of the Claroline Connect package
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * Author: Panagiotis TSAVDARIS
+ * 
+ * Date: 4/21/15
+ */
 
 namespace Icap\BlogBundle\Event\Log;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
-use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 
-class LogCommentCreateEvent extends AbstractLogResourceEvent implements NotifiableInterface
+class LogCommentPublishEvent extends AbstractLogResourceEvent implements NotifiableInterface
 {
-    const ACTION = 'resource-icap_blog-comment_create';
+    const ACTION = 'resource-icap_blog-comment_publish';
     protected $post;
     protected $comment;
     protected $blog;
@@ -131,4 +139,4 @@ class LogCommentCreateEvent extends AbstractLogResourceEvent implements Notifiab
     {
         return true;
     }
-}
+} 

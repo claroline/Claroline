@@ -301,6 +301,7 @@ class PostController extends Controller
         try {
             $entityManager->persist($post);
             $entityManager->flush();
+            $this->dispatchPostPublishEvent($post);
 
             $flashBag->add('success', $messages['success']);
         } catch (\Exception $exception) {
