@@ -132,10 +132,12 @@ class EditorController
         // Try to process data
         $this->pathHandler->setForm($form);
         if ($this->pathHandler->process()) {
+            $data = $this->pathHandler->getData();
+
             // Validation OK
             $response['status']   = 'OK';
             $response['messages'] = array ();
-            $response['data']     = $this->pathHandler->getData();
+            $response['data']     = json_decode($data->getStructure());
         } else {
             // Validation Error
             $response['status']   = 'ERROR_VALIDATION';
