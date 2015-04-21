@@ -3,11 +3,10 @@
 namespace HeVinci\UrlBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Form\UrlChangeType;
+use HeVinci\UrlBundle\Manager\UrlManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,30 +18,26 @@ class UrlController extends Controller
     private $formFactory;
     private $om;
     private $request;
-    private $templating;
-    private $manager;
+    private $urlManager;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"        = @DI\Inject("form.factory"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "templating"         = @DI\Inject("templating"),
-     *     "manager"            = @DI\Inject("claroline.manager.resource_manager")
+     *     "urlManager"         = @DI\Inject("hevinci_url.manager.url")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         ObjectManager $om,
         RequestStack $requestStack,
-        TwigEngine $templating,
-        ResourceManager $manager
+        UrlManager $urlManager
     ){
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
-        $this->templating = $templating;
-        $this->manager = $manager;
+        $this->urlManager = $urlManager;
     }
 
     /**
@@ -67,6 +62,7 @@ class UrlController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()){
+            $this->urlManager->setUrl($form->getData());
             $em->flush();
 
             return new JsonResponse();

@@ -14,6 +14,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Entity\Url;
 use HeVinci\UrlBundle\Form\UrlChangeType;
 use HeVinci\UrlBundle\Form\UrlType;
+use HeVinci\UrlBundle\Manager\UrlManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
@@ -34,6 +35,7 @@ class UrlListener
     private $request;
     private $templating;
     private $manager;
+    private $urlManager;
 
     /**
      * @DI\InjectParams({
@@ -41,7 +43,8 @@ class UrlListener
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "manager"            = @DI\Inject("claroline.manager.resource_manager")
+     *     "manager"            = @DI\Inject("claroline.manager.resource_manager"),
+     *     "urlManager"         = @DI\Inject("hevinci_url.manager.url")
      * })
      */
     public function __construct(
@@ -49,13 +52,15 @@ class UrlListener
         ObjectManager $om,
         RequestStack $requestStack,
         TwigEngine $templating,
-        ResourceManager $manager
+        ResourceManager $manager,
+        UrlManager $urlManager
     ){
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->templating = $templating;
         $this->manager = $manager;
+        $this->urlManager = $urlManager;
     }
 
     /**
@@ -91,17 +96,10 @@ class UrlListener
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $formInterface = $form->getData();
-            $url = $formInterface->getUrl();
-            $baseUrl = $this->request->getSchemeAndHttpHost() . $this->request->getScriptName();
-            $baseUrlEscapeQuote = preg_quote($baseUrl);
+            $url = $form->getData();
+            $this->urlManager->setUrl($url);
 
-            if (preg_match("#$baseUrlEscapeQuote#", $url)) {
-                $formInterface->setUrl(substr($url, strlen($baseUrl)));
-                $formInterface->setInternalUrl(true);
-            }
-
-            $event->setResources(array($formInterface));
+            $event->setResources(array($url));
             $event->stopPropagation();
 
             return;
