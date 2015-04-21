@@ -258,4 +258,17 @@ class ObjectiveController
             $isAssigned ? 200 : 204
         );
     }
+
+    /**
+     * Returns the objectives assigned to a user.
+     *
+     * @EXT\Route("/users/{id}", name="hevinci_user_objectives")
+     *
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function loadUserObjectivesAction(User $user)
+    {
+        return new JsonResponse($this->manager->loadUserObjectives($user));
+    }
 }

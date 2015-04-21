@@ -43,3 +43,24 @@
         {{ 'objective.create_short'|trans }}
     </button>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/Picker/users.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/typeahead/js/bundle.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/userPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objective.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/typeahead/css/boostrap.css') }}"/>
+{% endblock %}
+

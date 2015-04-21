@@ -2,6 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 
@@ -19,6 +20,24 @@ class ObjectiveRepository extends EntityRepository
             ->select('o.id', 'o.name', 'COUNT(oc) AS competencyCount')
             ->leftJoin('o.objectiveCompetencies', 'oc')
             ->groupBy('o.id')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Returns an array representation of the objectives assigned to a user.
+     *
+     * @param User $user
+     * @return array
+     */
+    public function findByUser(User $user)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.id', 'o.name', 'COUNT(oc) AS competencyCount')
+            ->join('o.users', 'u')
+            ->leftJoin('o.objectiveCompetencies', 'oc')
+            ->where('u = :user')
+            ->setParameter(':user', $user)
             ->getQuery()
             ->getArrayResult();
     }

@@ -217,6 +217,17 @@ class ObjectiveManager
         return true;
     }
 
+    /**
+     * Returns an array representation of the objectives assigned to a user.
+     *
+     * @param User $user
+     * @return array
+     */
+    public function loadUserObjectives(User $user)
+    {
+        return $this->objectiveRepo->findByUser($user);
+    }
+
     private function listSubjectsWithObjective($subjectType)
     {
         $countMethod = "get{$subjectType}WithObjectiveCountQuery";

@@ -41,7 +41,15 @@
             </thead>
             <tbody>
                 {% for user in pager.currentPageResults() %}
-                    {% include 'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig' with user %}
+                    {%
+                        include 'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+                        with {
+                            id: user.id,
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            hasObjectives: true
+                        }
+                    %}
                 {% endfor %}
             </tbody>
         </table>
@@ -51,5 +59,9 @@
             {{ 'info.no_user_objectives'|trans({}, 'competency') }}
         </div>
     {% endif %}
+{% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUsers.js') }}"></script>
 {% endblock %}

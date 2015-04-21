@@ -1,9 +1,28 @@
-{% set type = type is defined ? type : 'user' %}
-{% set progress = progress is defined ? progress : 0 %}
+{% twig_js name = 'UserObjectiveRow' %}
 
-<tr>
-    <td class="{{ type }}">
-        {{ type == 'user' ? firstName ~ ' ' ~ lastName : 'NOT USER'}}
+{% set type = type is defined ? type : 'user' %}
+{% set path = path is defined ? path : '' %}
+{% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
+{% set indent = indent is defined ? indent : 0 %}
+{% set framework = framework is defined ? framework : '-' %}
+{% set progress = progress is defined ? progress : 0 %}
+{% set currentLevel = currentLevel is defined ? currentLevel : '-' %}
+{% set expectedLevel = expectedLevel is defined ? expectedLevel : '-' %}
+{% set hasObjectives = hasObjectives is defined ? hasObjectives : false %}
+{% set hasCompetencies = competencyCount is defined ? competencyCount > 0 : __children is defined and __children|length > 0 %}
+{% set hasAbilities = __abilities is defined and __abilities|length > 0 %}
+{% set hasChildren = hasObjectives or hasCompetencies or hasAbilities %}
+
+<tr data-id="{{ id }}"
+    data-type="{{ type }}"
+    data-path="{{ path }}"
+    {% if hasChildren %}data-has-children{% endif %}>
+    <td class="{{ type }}-name level-{{ indent }}">
+        {% if type == 'user' %}
+            {{ firstName ~ ' ' ~ lastName }}
+        {% else %}
+            {{ name }}
+        {% endif %}
     </td>
     <td class="large-cell">
         {{ type == 'objective' ? framework : '-' }}
@@ -23,11 +42,15 @@
             -
         {% endif %}
     </td>
-    <td class="large-cell">-</td>
-    <td class="large-cell">-</td>
+    <td class="large-cell">
+        {{ currentLevel }}
+    </td>
+    <td class="large-cell">
+        {{ expectedLevel }}
+    </td>
     <td class="x-small-cell">
-        <a href="#">
-            <i class="fa fa-search-plus"></i>
+        <a href="#" class="{{ hasChildren ? 'expand' : 'expand disabled' }}">
+            <i class="fa fa-search-plus{{ hasChildren ? '' : ' disabled' }}"></i>
         </a>
     </td>
     <td class="x-small-cell">
@@ -51,3 +74,45 @@
         {% endif %}
     </td>
 </tr>
+
+{% if hasCompetencies and __children is defined %}
+    {% for competency in __children %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+            with {
+                id: competency.id,
+                name: competency.name,
+                path: childrenPath,
+                framework: '-',
+                level: '-',
+                type: 'competency',
+                indent: indent + 1,
+                collapsed: true,
+                hasCompetencies: competency.__children is defined and competency.__children|length > 0,
+                __children: competency.__children is defined ? competency.__children : [],
+                __abilities: competency.__abilities is defined ? competency.__abilities : []
+            }
+        %}
+    {% endfor %}
+{% endif %}
+
+{% if hasAbilities %}
+    {% for ability in __abilities %}
+        {% include
+            'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+            with {
+                id: ability.id,
+                name: ability.name,
+                path: childrenPath,
+                framework: '-',
+                level: ability.levelName,
+                type: 'ability',
+                indent: indent + 1,
+                collapsed: true,
+                hasCompetencies: false,
+                __children: [],
+                __abilities: []
+            }
+        %}
+    {% endfor %}
+{% endif %}

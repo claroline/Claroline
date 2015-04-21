@@ -97,16 +97,20 @@ table.framework-activities > tbody > tr > td {
 }
 
 table > tbody > tr > td.competency-name,
-table > tbody > tr > td.ability-name {
+table > tbody > tr > td.ability-name,
+table.user-objectives > tbody > tr > td.objective-name {
     border-style: dashed;
 }
 
-table > tbody > tr > td.objective-name {
+table.objectives > tbody > tr > td.objective-name,
+table.user-objectives > tbody > tr > td.user-name {
     border-bottom-style: dashed;
 }
 
 table.framework-activities td.level-0,
-table.objectives tr[data-type=objective] td:first-of-type {
+table.objectives tr[data-type=objective] td:first-of-type,
+table.user-objectives td.user-name,
+table.group-objectives td.group-name {
     font-weight: bold;
 }
 
@@ -170,11 +174,6 @@ td.competency-path ul {
     list-style: none;
     margin: 0;
     padding-left: 16px;
-}
-
-table > tbody > tr > td.user,
-table > tbody > tr > td.group {
-    font-weight: bold;
 }
 
 table div.progress {
