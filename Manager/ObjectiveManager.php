@@ -2,6 +2,8 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Adapter\OrmArrayAdapter;
@@ -178,5 +180,34 @@ class ObjectiveManager
         $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
 
         return $this->pagerFactory->createPagerWithAdapter($adapter, 1);
+    }
+
+    /**
+     * Assigns an objective to a user or a group. If the objective has already
+     * been assigned, returns false. Otherwise, returns true.
+     *
+     * @param Objective     $objective
+     * @param User|Group    $subject
+     * @return bool
+     * @throws \Exception if the subject is not an instance of User or Group
+     */
+    public function assignObjective(Objective $objective, $subject)
+    {
+        if (!$subject instanceof User && !$subject instanceof Group) {
+            throw new \Exception('Subject must be an instance of User or Group');
+        }
+
+        $target = $subject instanceof User ? 'User' : 'Group';
+        $hasMethod = "has{$target}";
+        $addMethod = "add{$target}";
+
+        if ($objective->{$hasMethod}($subject)) {
+            return false;
+        }
+
+        $objective->{$addMethod}($subject);
+        $this->om->flush();
+
+        return true;
     }
 }

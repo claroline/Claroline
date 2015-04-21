@@ -121,6 +121,8 @@
     // user/group addition
     $(document).on('click', 'table.objectives a.add-users', function (event) {
         event.preventDefault();
+        currentObjectiveRow = this.parentNode.parentNode;
+        currentObjectiveId = currentObjectiveRow.dataset.id;
         userPicker.open();
     });
 
@@ -158,7 +160,28 @@
     }
 
     function onUserSelection(selection) {
-        console.log(selection);
+        var route = 'hevinci_objectives_assign_to_' + selection.target;
+        var params = {};
+
+        params['objectiveId'] = currentObjectiveId;
+        params[selection.target + 'Id'] = selection.id;
+
+        $.post(Routing.generate(route, params))
+            .done(function (data, statusText, xhr) {
+                var message = 'message.objective_assigned';
+                var category = 'success';
+
+                if (xhr.status === 204) {
+                    message = 'message.objective_already_assigned_to_' + selection.target;
+                    category = 'warning';
+                }
+
+                userPicker.close();
+                flasher.setMessage(trans(message), category);
+            })
+            .error(function () {
+                Claroline.Modal.error();
+            });
     }
 
     function trans(message) {

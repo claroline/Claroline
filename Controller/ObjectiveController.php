@@ -2,6 +2,8 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
@@ -202,6 +204,46 @@ class ObjectiveController
     public function usersAction()
     {
         return ['pager' => $this->manager->listUsersWithObjective()];
+    }
+
+    /**
+     * Assigns an objective to a user.
+     *
+     * @EXT\Route("/{objectiveId}/users/{userId}", name="hevinci_objectives_assign_to_user")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
+     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     *
+     * @param Objective $objective
+     * @param User $user
+     * @return JsonResponse
+     */
+    public function assignObjectiveToUserAction(Objective $objective, User $user)
+    {
+        return new JsonResponse(
+            $isAssigned = $this->manager->assignObjective($objective, $user),
+            $isAssigned ? 200 : 204
+        );
+    }
+
+    /**
+     * Assigns an objective to a group.
+     *
+     * @EXT\Route("/{objectiveId}/groups/{groupId}", name="hevinci_objectives_assign_to_group")
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
+     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     *
+     * @param Objective $objective
+     * @param Group     $group
+     * @return JsonResponse
+     */
+    public function assignObjectiveToGroupAction(Objective $objective, Group $group)
+    {
+        return new JsonResponse(
+            $isAssigned = $this->manager->assignObjective($objective, $group),
+            $isAssigned ? 200 : 204
+        );
     }
 
     /**

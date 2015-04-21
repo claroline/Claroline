@@ -2,6 +2,8 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use HeVinci\CompetencyBundle\Validator as CustomAssert;
@@ -83,6 +85,40 @@ class Objective implements \JsonSerializable
     public function getObjectiveCompetencies()
     {
         return $this->objectiveCompetencies;
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function hasUser(User $user)
+    {
+        return $this->users->contains($user);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+    }
+
+    /**
+     * @param Group $group
+     * @return bool
+     */
+    public function hasGroup(Group $group)
+    {
+        return $this->groups->contains($group);
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function addGroup(Group $group)
+    {
+        $this->groups->add($group);
     }
 
     public function jsonSerialize()
