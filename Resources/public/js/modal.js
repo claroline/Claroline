@@ -202,12 +202,12 @@
         $.ajax(url)
         .success(function (data) {
             var modalElement = modal.create(data);
-/*
+
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
                 modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });
-*/
+
             modalElement.on('keypress', function (e) {
                 if (e.keyCode === 13 && e.target.nodeName !== 'TEXTAREA') {
                     event.preventDefault();

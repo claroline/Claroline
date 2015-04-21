@@ -60,7 +60,7 @@ class WorkspaceParametersController extends Controller
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "router"              = @DI\Inject("router"),
-     *     "localeManager"       = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"       = @DI\Inject("claroline.manager.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
      *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),

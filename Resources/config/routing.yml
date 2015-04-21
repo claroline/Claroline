@@ -162,7 +162,7 @@ claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin
     type: annotation
-    
+
 claro_admin_desktop_configuration:
     resource: "@ClarolineCoreBundle/Controller/Administration/DesktopConfigurationController.php"
     prefix: admin
@@ -171,11 +171,6 @@ claro_admin_desktop_configuration:
 claro_admin_home_tab:
     resource: "@ClarolineCoreBundle/Controller/Administration/HomeTabController.php"
     prefix: admin
-    type: annotation
-
-claro_admin_tool_config:
-    resource: "@ClarolineCoreBundle/Controller/Administration/ToolsController.php"
-    prefix: admin/tools
     type: annotation
 
 claro_resource:

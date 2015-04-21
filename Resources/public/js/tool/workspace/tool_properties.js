@@ -19,7 +19,7 @@
             'edit-tool-name'
         );
     });
-/*
+
     $('#tool-table-body').sortable({
         items: 'tr',
         cursor: 'move'
@@ -124,7 +124,7 @@
             }
         });
     });
-*/
+
     var editName = function(tool) {
         $('#tool-' + tool.tool_id + '-name').html(tool.name);
     }

@@ -164,7 +164,6 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                     ->addWorkspaceTool(
                         $toolEntity,
                         $position,
-                        $tool['tool']['translation'],
                         $workspace
                     );
 

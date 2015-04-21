@@ -65,7 +65,7 @@ class ProfileController extends Controller
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "security"               = @DI\Inject("security.context"),
      *     "request"                = @DI\Inject("request"),
-     *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
+     *     "localeManager"          = @DI\Inject("claroline.manager.locale_manager"),
      *     "encoderFactory"         = @DI\Inject("security.encoder_factory"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),

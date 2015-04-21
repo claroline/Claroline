@@ -30,14 +30,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_ws_type",
  *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_name_by_workspace",
- *             columns={"workspace_id", "name"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"name", "workspace"})
+ *
  * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
  * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
  */
@@ -76,9 +72,10 @@ class OrderedTool
     protected $order;
 
     /**
-     * @ORM\Column()
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    protected $name;
+    private $content;
 
     /**
      * @ORM\Column(name="is_visible_in_desktop", type="boolean")
@@ -153,14 +150,14 @@ class OrderedTool
         return $this->order;
     }
 
-    public function setName($name)
+    public function setContent($content)
     {
-        $this->name = $name;
+        $this->content = $content;
     }
 
-    public function getName()
+    public function getContent()
     {
-        return $this->name;
+        return $this->content;
     }
 
     public function setUser(User $user = null)
