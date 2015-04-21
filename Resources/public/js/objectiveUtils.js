@@ -10,7 +10,7 @@
      *  - "objectives"  Admin management page of objectives
      *  - "users"       Admin management page of user objectives
      *
-     * @param {string} context
+     * @param {String} context
      * @constructor
      */
     function Utils(context) {
@@ -35,13 +35,14 @@
      *
      * @param {HTMLTableRowElement} parentRow
      * @param {Array}               data
-     * @param {string}              type
+     * @param {String}              type
+     * @param {Number}              [indent]
      */
-    Utils.prototype.insertChildRows = function (parentRow, data, type) {
+    Utils.prototype.insertChildRows = function (parentRow, data, type, indent) {
         var self = this;
         var html = data.reduce(function (previousHtml, item) {
             item.type = type;
-            item.indent = 1;
+            item.indent = indent || 1;
             item.path = parentRow.dataset.path ?
                 (parentRow.dataset.path + '-' + parentRow.dataset.id) :
                 parentRow.dataset.id;
@@ -72,7 +73,7 @@
      * Changes the status of an expansion link.
      *
      * @param {HTMLAnchorElement}   link
-     * @param {bool}                collapse
+     * @param {Boolean}             collapse
      */
     Utils.prototype.toggleExpandLink = function (link, collapse) {
         // "collapse" conflicts with bootstrap..
@@ -88,7 +89,7 @@
      *
      * @param {HTMLTableRowElement} parentRow
      * @param {HTMLAnchorElement}   toggleLink
-     * @param {bool}                hide
+     * @param {Boolean}             hide
      */
     Utils.prototype.toggleChildRows = function (parentRow, toggleLink, hide) {
         // "children" rows are identified using a materialized

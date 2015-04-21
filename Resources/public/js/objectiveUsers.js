@@ -11,29 +11,29 @@
         var id = row.dataset.id;
         var type = row.dataset.type;
 
-        if (row.dataset.isLoaded) {
+        if (row.dataset.isLoaded || type === 'competency' || type === 'ability') {
             utils.toggleChildRows(row, this, false);
-        } else if (type === 'user' ) {
-            $.get(Routing.generate('hevinci_user_objectives', {id: id }))
-                .done(function (objectives) {
-                    utils.insertChildRows(row, objectives, 'objective');
-                    utils.toggleExpandLink(link, true);
-                    row.dataset.isLoaded = true;
-                })
-                .error(function () {
-                    Claroline.Modal.error();
-                });
-        } else if (type === 'objective') {
-            $.get(Routing.generate('hevinci_load_objective_competencies', {id: id }))
-                .done(function (objectives) {
-                    utils.insertChildRows(row, objectives, 'competency');
-                    utils.toggleExpandLink(link, true);
-                    row.dataset.isLoaded = true;
-                })
-                .error(function () {
-                    Claroline.Modal.error();
-                });
+        } else {
+            // defaults to type === 'user'
+            var route = 'hevinci_user_objectives';
+            var childType = 'objective';
+            var indent = 1;
 
+            if (type === 'objective') {
+                route = 'hevinci_load_objective_competencies';
+                childType = 'competency';
+                indent = 2;
+            }
+
+            $.get(Routing.generate(route, {id: id }))
+                .done(function (data) {
+                    utils.insertChildRows(row, data, childType, indent);
+                    utils.toggleExpandLink(link, true);
+                    row.dataset.isLoaded = true;
+                })
+                .error(function () {
+                    Claroline.Modal.error();
+                });
         }
     });
 
