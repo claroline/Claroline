@@ -2,6 +2,7 @@
     'use strict';
 
     var utils = new HeVinci.ObjectiveUtils('users');
+    var flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
 
     // node expansion
     $(document).on('click', 'table.user-objectives a.expand:not(.disabled)', function (event) {
@@ -46,5 +47,25 @@
     // prevent hash of disabled expansion links to make window scrolling
     $(document).on('click', 'table.user-objectives a.disabled', function (event) {
        event.preventDefault();
+    });
+
+    // remove user objective
+    $(document).on('click', 'table.user-objectives a.remove', function (event) {
+        event.preventDefault();
+        var row = this.parentNode.parentNode;
+        var url = Routing.generate('hevinci_remove_user_objective', {
+            objectiveId: row.dataset.id,
+            userId: row.dataset.path.match(/^(\d+)\-*/)[1] // user id is the root in the node path
+        });
+        Claroline.Modal.confirmRequest(
+            url,
+            function () {
+                utils.removeRow(row);
+                flasher.setMessage(utils.trans('message.objective_unassigned'));
+            },
+            null,
+            utils.trans('message.objective_unassign_user_confirm'),
+            utils.trans('objective.unassign_user')
+        );
     });
 })();

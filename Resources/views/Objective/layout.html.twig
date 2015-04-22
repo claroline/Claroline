@@ -8,7 +8,7 @@
         },
         {
             name: 'learning-objectives'|trans({}, 'tools'),
-            href: path('hevinci_frameworks')
+            href: path('hevinci_objectives')
         }
     ]
 %}
@@ -32,7 +32,7 @@
     <div class="panel-body">
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation"{% if activeTab == 'objectives' %} class="active"{% endif %}>
-                <a href="{{ activeTab == 'objectives' ? '#' : path('hevinci_objectives_index') }}">
+                <a href="{{ activeTab == 'objectives' ? '#' : path('hevinci_objectives') }}">
                     {{ 'objectives'|trans({}, 'competency') }}
                 </a>
             </li>

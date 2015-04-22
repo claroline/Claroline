@@ -104,6 +104,13 @@ class Objective implements \JsonSerializable
         $this->users->add($user);
     }
 
+    public function removeUser(User $user)
+    {
+        if ($this->hasUser($user)) {
+            $this->users->removeElement($user);
+        }
+    }
+
     /**
      * @param Group $group
      * @return bool

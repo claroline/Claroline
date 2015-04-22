@@ -228,6 +228,18 @@ class ObjectiveManager
         return $this->objectiveRepo->findByUser($user);
     }
 
+    /**
+     * Unassigns a user objective.
+     *
+     * @param Objective $objective
+     * @param User      $user
+     */
+    public function removeUserObjective(Objective $objective, User $user)
+    {
+        $objective->removeUser($user);
+        $this->om->flush();
+    }
+
     private function listSubjectsWithObjective($subjectType)
     {
         $countMethod = "get{$subjectType}WithObjectiveCountQuery";

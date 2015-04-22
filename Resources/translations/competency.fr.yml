@@ -77,6 +77,8 @@ message:
   objective_deleted: Objectif supprimé avec succès.
   objective_deletion_confirm: Voulez-vous vraiment supprimer cet objectif ? Cette action est irréversible.
   objective_edited: Objectif modifié avec succès.
+  objective_unassigned: Objectif retiré avec succès.
+  objective_unassign_user_confirm: Voulez-vous vraiment retirer cet objectif à cet utilisateur ?
   scale_created: Nouvelle échelle créée avec succès.
   scale_deleted: Échelle supprimée avec succès.
   scale_deletion_confirm: Voulez-vous vraiment supprimer cette échelle ?
@@ -90,6 +92,7 @@ objective:
   delete: Supprimer un objectif
   edit: Éditer un objectif d'apprentissage
   pick_level: 'Sélectionner le niveau de compétence à atteindre '
+  unassign_user: Retirer un objectif à un utilisateur
 objective_: Objectif
 objectives: Objectifs
 origin: Origine

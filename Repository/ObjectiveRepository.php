@@ -37,6 +37,7 @@ class ObjectiveRepository extends EntityRepository
             ->join('o.users', 'u')
             ->leftJoin('o.objectiveCompetencies', 'oc')
             ->where('u = :user')
+            ->groupBy('o.id')
             ->setParameter(':user', $user)
             ->getQuery()
             ->getArrayResult();

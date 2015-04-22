@@ -46,7 +46,7 @@ class ObjectiveController
      * Displays the index of the learning objectives tool, i.e.
      * the list of learning objectives.
      *
-     * @EXT\Route("/", name="hevinci_objectives_index")
+     * @EXT\Route("/", name="hevinci_objectives")
      * @EXT\Template
      *
      * @return array
@@ -270,5 +270,21 @@ class ObjectiveController
     public function loadUserObjectivesAction(User $user)
     {
         return new JsonResponse($this->manager->loadUserObjectives($user));
+    }
+
+    /**
+     * Unassigns a user objective.
+     *
+     * @EXT\Route("/{objectiveId}/users/{userId}/remove", name="hevinci_remove_user_objective")
+     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
+     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     *
+     * @param Objective $objective
+     * @param User      $user
+     * @return JsonResponse
+     */
+    public function removeUserObjectiveAction(Objective $objective, User $user)
+    {
+        return new JsonResponse($this->manager->removeUserObjective($objective, $user));
     }
 }
