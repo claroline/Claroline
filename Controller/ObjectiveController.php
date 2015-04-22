@@ -207,6 +207,20 @@ class ObjectiveController
     }
 
     /**
+     * Displays the list of users who have a particular objective.
+     *
+     * @EXT\Route("/{id}/users", name="hevinci_objective_users")
+     * @EXT\Template("HeVinciCompetencyBundle:Objective:users.html.twig")
+     *
+     * @param Objective $objective
+     * @return array
+     */
+    public function objectiveUsersAction(Objective $objective)
+    {
+        return ['pager' => $this->manager->listUsersWithObjective($objective)];
+    }
+
+    /**
      * Displays the list of groups who have at least one objective.
      *
      * @EXT\Route("/groups", name="hevinci_objectives_groups")
@@ -217,6 +231,20 @@ class ObjectiveController
     public function groupsAction()
     {
         return ['pager' => $this->manager->listGroupsWithObjective()];
+    }
+
+    /**
+     * Displays the list of groups who have a particular objective.
+     *
+     * @EXT\Route("/{id}/groups", name="hevinci_objective_groups")
+     * @EXT\Template("HeVinciCompetencyBundle:Objective:groups.html.twig")
+     *
+     * @param Objective $objective
+     * @return array
+     */
+    public function objectiveGroupsAction(Objective $objective)
+    {
+        return ['pager' => $this->manager->listGroupsWithObjective($objective)];
     }
 
     /**
@@ -269,7 +297,7 @@ class ObjectiveController
      */
     public function loadUserObjectivesAction(User $user)
     {
-        return new JsonResponse($this->manager->loadUserObjectives($user));
+        return new JsonResponse($this->manager->loadSubjectObjectives($user));
     }
 
     /**
@@ -285,6 +313,35 @@ class ObjectiveController
      */
     public function removeUserObjectiveAction(Objective $objective, User $user)
     {
-        return new JsonResponse($this->manager->removeUserObjective($objective, $user));
+        return new JsonResponse($this->manager->removeSubjectObjective($objective, $user));
+    }
+
+    /**
+     * Unassigns a user objective.
+     *
+     * @EXT\Route("/{objectiveId}/groups/{groupId}/remove", name="hevinci_remove_group_objective")
+     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
+     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     *
+     * @param Objective $objective
+     * @param Group     $group
+     * @return JsonResponse
+     */
+    public function removeGroupObjectiveAction(Objective $objective, Group $group)
+    {
+        return new JsonResponse($this->manager->removeSubjectObjective($objective, $group));
+    }
+
+    /**
+     * Returns the objectives assigned to a user.
+     *
+     * @EXT\Route("/groups/{id}", name="hevinci_group_objectives")
+     *
+     * @param Group $group
+     * @return JsonResponse
+     */
+    public function loadGroupObjectivesAction(Group $group)
+    {
+        return new JsonResponse($this->manager->loadSubjectObjectives($group));
     }
 }

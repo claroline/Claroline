@@ -9,6 +9,7 @@
      *
      *  - "objectives"  Admin management page of objectives
      *  - "users"       Admin management page of user objectives
+     *  - "groups"      Admin management page of group objectives
      *
      * @param {String} context
      * @constructor
@@ -20,6 +21,9 @@
             },
             users: {
                 rowTemplate: UserObjectiveRow
+            },
+            groups: {
+                rowTemplate: GroupObjectiveRow
             }
         };
 
@@ -28,6 +32,7 @@
         }
 
         this.context = availableContexts[context];
+        this.flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
     }
 
     /**
@@ -87,16 +92,16 @@
     /**
      * Shows or hides rows which are the "children" of a given row.
      *
-     * @param {HTMLTableRowElement} parentRow
-     * @param {HTMLAnchorElement}   toggleLink
+     * @param {HTMLAnchorElement}   parentToggleLink
      * @param {Boolean}             hide
      */
-    Utils.prototype.toggleChildRows = function (parentRow, toggleLink, hide) {
+    Utils.prototype.toggleChildRows = function (parentToggleLink, hide) {
         // "children" rows are identified using a materialized
         // path data attribute (e.g. ancestorId-parentId-...).
         // When expanding a row, only the direct children are shown.
         // When collapsing, all descendants are hidden.
 
+        var parentRow = parentToggleLink.parentNode.parentNode;
         var childrenPath = parentRow.dataset.path ?
             (parentRow.dataset.path + '-' + parentRow.dataset.id) :
             parentRow.dataset.id;
@@ -117,7 +122,48 @@
                 .addClass('fa-search-plus');
         }
 
-        this.toggleExpandLink(toggleLink, !hide);
+        this.toggleExpandLink(parentToggleLink, !hide);
+    };
+
+    /**
+     * Removes an objective row which is a child of a user or a child row.
+     *
+     * @param {HTMLAnchorElement}   removeLink
+     * @param {String}              target      ("user"|"group")
+     */
+    Utils.prototype.removeSubjectObjectiveRow = function (removeLink, target) {
+        if (target !== 'user' && target !== 'group') {
+            throw new Error('Invalid target');
+        }
+
+        var self = this;
+        var row = removeLink.parentNode.parentNode;
+        var route = 'hevinci_remove_' + target + '_objective';
+        var params = {};
+
+        params['objectiveId'] = row.dataset.id;
+        params[target + 'Id'] = row.dataset.path.match(/^(\d+)\-*/)[1]; // target id is the root in the node path
+
+        Claroline.Modal.confirmRequest(
+            Routing.generate(route, params),
+            function () {
+                self.removeRow(row);
+                self.setFlashMessage('message.objective_unassigned');
+            },
+            null,
+            self.trans('message.objective_unassign_' + target + '_confirm'),
+            self.trans('objective.unassign_' + target)
+        );
+    };
+
+    /**
+     * Makes a flash message appear.
+     *
+     * @param {String}  message
+     * @param {String}  [category]
+     */
+    Utils.prototype.setFlashMessage = function (message, category) {
+        this.flasher.setMessage(this.trans(message), category);
     };
 
     /**

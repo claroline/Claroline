@@ -104,6 +104,9 @@ class Objective implements \JsonSerializable
         $this->users->add($user);
     }
 
+    /**
+     * @param User $user
+     */
     public function removeUser(User $user)
     {
         if ($this->hasUser($user)) {
@@ -126,6 +129,16 @@ class Objective implements \JsonSerializable
     public function addGroup(Group $group)
     {
         $this->groups->add($group);
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function removeGroup(Group $group)
+    {
+        if ($this->hasGroup($group)) {
+            $this->groups->removeElement($group);
+        }
     }
 
     public function jsonSerialize()

@@ -2,9 +2,11 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
+use HeVinci\CompetencyBundle\Entity\Objective;
 
 class ObjectiveRepository extends EntityRepository
 {
@@ -44,69 +46,109 @@ class ObjectiveRepository extends EntityRepository
     }
 
     /**
-     * Returns the query object for counting all the users which have
-     * at least one learning objective.
+     * Returns an array representation of the objectives assigned to a group.
      *
-     * @return \Doctrine\ORM\Query
+     * @param Group $group
+     * @return array
      */
-    public function getUsersWithObjectiveCountQuery()
+    public function findByGroup(Group $group)
     {
-        return $this->getSubjectsWithObjectiveCountQuery('users');
+        return $this->createQueryBuilder('o')
+            ->select('o.id', 'o.name')
+            ->join('o.groups', 'g')
+            ->where('g = :group')
+            ->groupBy('o.id')
+            ->setParameter(':group', $group)
+            ->getQuery()
+            ->getArrayResult();
     }
 
     /**
-     * Returns the query object for fetching all the users which have
-     * at least one learning objective.
+     * Returns the query object for counting all the users who have at
+     * least one learning objective. If a particular objective is given,
+     * only the users who have that objective are counted.
      *
+     * @param Objective $objective
      * @return \Doctrine\ORM\Query
      */
-    public function getUsersWithObjectiveQuery()
+    public function getUsersWithObjectiveCountQuery(Objective $objective = null)
     {
-        return $this->getSubjectsWithObjectiveQuery('users', ['id', 'firstName', 'lastName']);
+        return $this->getSubjectsWithObjectiveCountQuery('users', $objective);
     }
 
     /**
-     * Returns the query object for counting all the groups which have
-     * at least one learning objective.
+     * Returns the query object for fetching all the users who have at
+     * east one learning objective. If a particular objective is given,
+     * only the users who have that objective are included.
      *
+     * @param Objective $objective
      * @return \Doctrine\ORM\Query
      */
-    public function getGroupsWithObjectiveCountQuery()
+    public function getUsersWithObjectiveQuery(Objective $objective = null)
     {
-        return $this->getSubjectsWithObjectiveCountQuery('groups');
+        return $this->getSubjectsWithObjectiveQuery('users', ['id', 'firstName', 'lastName'], $objective);
     }
 
     /**
-     * Returns the query object for fetching all the groups which have
-     * at least one learning objective.
+     * Returns the query object for counting all the groups which have at
+     * least one learning objective. If a particular objective is given,
+     * only the groups which have that objective are counted.
      *
+     * @param Objective $objective
      * @return \Doctrine\ORM\Query
      */
-    public function getGroupsWithObjectiveQuery()
+    public function getGroupsWithObjectiveCountQuery(Objective $objective = null)
     {
-        return $this->getSubjectsWithObjectiveQuery('groups', ['id', 'name']);
+        return $this->getSubjectsWithObjectiveCountQuery('groups', $objective);
     }
 
-    private function getSubjectsWithObjectiveCountQuery($subjectField)
+    /**
+     * Returns the query object for fetching all the groups which have at
+     * least one learning objective. If a particular objective is given,
+     * only the groups which have that objective are counted.
+     *
+     * @param Objective $objective
+     * @return \Doctrine\ORM\Query
+     */
+    public function getGroupsWithObjectiveQuery(Objective $objective = null)
     {
-        return $this->_em->createQueryBuilder()
+        return $this->getSubjectsWithObjectiveQuery('groups', ['id', 'name'], $objective);
+    }
+
+    private function getSubjectsWithObjectiveCountQuery($subjectField, Objective $objective = null)
+    {
+        $qb = $this->_em->createQueryBuilder()
             ->select('COUNT(s.id)')
             ->from($this->getSubjectFqcn($subjectField), 's')
-            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField)))
-            ->getQuery();
+            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField, $objective)));
+
+        if ($objective) {
+            $qb->setParameter(':objective', $objective);
+        }
+
+        return $qb->getQuery();
     }
 
-    private function getSubjectsWithObjectiveQuery($subjectField, array $selectedAttributes)
+    private function getSubjectsWithObjectiveQuery(
+        $subjectField,
+        array $selectedAttributes,
+        Objective $objective = null
+    )
     {
         $attributes = array_map(function ($attribute) {
             return "s.{$attribute}";
         }, $selectedAttributes);
 
-        return $this->_em->createQueryBuilder()
+        $qb = $this->_em->createQueryBuilder()
             ->select(implode(', ', $attributes))
             ->from($this->getSubjectFqcn($subjectField), 's')
-            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField)))
-            ->getQuery();
+            ->where((new Expr())->in('s.id', $this->getInverseSideIdsDql($subjectField, $objective)));
+
+        if ($objective) {
+            $qb->setParameter(':objective', $objective);
+        }
+
+        return $qb->getQuery();
     }
 
     private function getSubjectFqcn($subjectField)
@@ -116,11 +158,16 @@ class ObjectiveRepository extends EntityRepository
             'Claroline\CoreBundle\Entity\Group';
     }
 
-    private function getInverseSideIdsDql($targetField)
+    private function getInverseSideIdsDql($targetField, Objective $objective = null)
     {
-        return $this->createQueryBuilder('o')
+        $qb = $this->createQueryBuilder('o')
             ->select('ot.id')
-            ->join("o.{$targetField}", 'ot')
-            ->getDQL();
+            ->join("o.{$targetField}", 'ot');
+
+        if ($objective) {
+            $qb->where('o = :objective');
+        }
+
+        return $qb->getDQL();
     }
 }

@@ -169,23 +169,29 @@ class ObjectiveManager
     }
 
     /**
-     * Returns a pager for all the users which have at least one objective.
+     * Returns a pager for all the users who have at least one objective.
+     * If a particular objective is given, only the users who have that
+     * objective are returned.
      *
+     * @param Objective $objective
      * @return Pagerfanta
      */
-    public function listUsersWithObjective()
+    public function listUsersWithObjective(Objective $objective = null)
     {
-        return $this->listSubjectsWithObjective('Users');
+        return $this->listSubjectsWithObjective('Users', $objective);
     }
 
     /**
      * Returns a pager for all the groups which have at least one objective.
+     * If a particular objective is given, only the groups which have that
+     * objective are returned.
      *
+     * @param Objective $objective
      * @return Pagerfanta
      */
-    public function listGroupsWithObjective()
+    public function listGroupsWithObjective(Objective $objective = null)
     {
-        return $this->listSubjectsWithObjective('Groups');
+        return $this->listSubjectsWithObjective('Groups', $objective);
     }
 
     /**
@@ -199,11 +205,7 @@ class ObjectiveManager
      */
     public function assignObjective(Objective $objective, $subject)
     {
-        if (!$subject instanceof User && !$subject instanceof Group) {
-            throw new \Exception('Subject must be an instance of User or Group');
-        }
-
-        $target = $subject instanceof User ? 'User' : 'Group';
+        $target = $this->getSubjectType($subject);
         $hasMethod = "has{$target}";
         $addMethod = "add{$target}";
 
@@ -218,34 +220,51 @@ class ObjectiveManager
     }
 
     /**
-     * Returns an array representation of the objectives assigned to a user.
+     * Returns an array representation of the objectives assigned to a user or a group.
      *
-     * @param User $user
+     * @param User|Group $subject
      * @return array
+     * @throws \Exception if the subject is not an instance of User or Group
      */
-    public function loadUserObjectives(User $user)
+    public function loadSubjectObjectives($subject)
     {
-        return $this->objectiveRepo->findByUser($user);
+        $target = $this->getSubjectType($subject);
+        $repoMethod = "findBy{$target}";
+
+        return $this->objectiveRepo->{$repoMethod}($subject);
     }
 
     /**
-     * Unassigns a user objective.
+     * Unassigns a user or group objective.
      *
-     * @param Objective $objective
-     * @param User      $user
+     * @param Objective     $objective
+     * @param User|Group    $subject
+     * @return array
+     * @throws \Exception if the subject is not an instance of User or Group
      */
-    public function removeUserObjective(Objective $objective, User $user)
+    public function removeSubjectObjective(Objective $objective, $subject)
     {
-        $objective->removeUser($user);
+        $target = $this->getSubjectType($subject);
+        $entityMethod = "remove{$target}";
+        $objective->{$entityMethod}($subject);
         $this->om->flush();
     }
 
-    private function listSubjectsWithObjective($subjectType)
+    private function getSubjectType($subject)
+    {
+        if (!$subject instanceof User && !$subject instanceof Group) {
+            throw new \Exception('Subject must be an instance of User or Group');
+        }
+
+        return $subject instanceof User ? 'User' : 'Group';
+    }
+
+    private function listSubjectsWithObjective($subjectType, Objective $objective = null)
     {
         $countMethod = "get{$subjectType}WithObjectiveCountQuery";
         $fetchMethod = "get{$subjectType}WithObjectiveQuery";
-        $countQuery = $this->objectiveRepo->{$countMethod}();
-        $resultQuery = $this->objectiveRepo->{$fetchMethod}();
+        $countQuery = $this->objectiveRepo->{$countMethod}($objective);
+        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective);
         $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
 
         return $this->pagerFactory->createPagerWithAdapter($adapter, 1);

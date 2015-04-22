@@ -49,3 +49,8 @@
         </div>
     {% endif %}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveGroups.js') }}"></script>
+{% endblock %}

@@ -1,28 +1,39 @@
-{% set type = type is defined ? type : 'group' %}
+{% twig_js name = 'GroupObjectiveRow' %}
 
-<tr>
-    <td class="{{ type }}-name">
+{% set type = type is defined ? type : 'group' %}
+{% set path = path is defined ? path : '' %}
+{% set indent = indent is defined ? indent : 0 %}
+
+<tr data-id="{{ id }}"
+    data-type="{{ type }}"
+    data-path="{{ path }}">
+    <td class="{{ type }}-name level-{{ indent }}">
         {{ name }}
     </td>
     <td class="large-cell">
         {{ type == 'objective' ? framework : '-' }}
     </td>
     <td class="x-small-cell">
-        <a href="#">
-            <i class="fa fa-search-plus"></i>
-        </a>
+        {% if type == 'group' %}
+            <a href="#" class="expand">
+                <i class="fa fa-search-plus"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
     <td class="x-small-cell">
         <a href="#"
            data-toggle="tooltip"
            data-placement="left"
            title="{{ 'users'|trans({}, 'platform') }}">
-            <i class="fa fa-group"></i>
+            <i class="fa fa-user"></i>
         </a>
     </td>
     <td class="x-small-cell">
         {% if type == 'objective' %}
             <a href="#"
+               class="remove"
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'delete'|trans({}, 'platform') }}">

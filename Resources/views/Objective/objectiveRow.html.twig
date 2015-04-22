@@ -28,7 +28,7 @@
     </td>
     <td class="x-small-cell">
         {% if type == 'objective' %}
-            <a href="#"
+            <a href="{{ path('hevinci_objective_users', { id: id }) }}"
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'users'|trans({}, 'platform') }}">
@@ -40,7 +40,7 @@
     </td>
     <td class="x-small-cell">
         {% if type == 'objective' %}
-            <a href="#"
+            <a href="{{ path('hevinci_objective_groups', { id: id }) }}"
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'groups'|trans({}, 'platform') }}">

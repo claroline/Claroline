@@ -2,7 +2,6 @@
     'use strict';
 
     var utils = new HeVinci.ObjectiveUtils('objectives');
-    var flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
     var competencyPicker = new HeVinci.CompetencyPicker({
         includeAbilities: false,
         includeLevel: true,
@@ -25,7 +24,7 @@
                     .children('tbody')
                     .append(Twig.render(ObjectiveRow, data));
                 $('div.alert-info').css('display', 'none');
-                flasher.setMessage(utils.trans('message.objective_created'));
+                utils.setFlashMessage('message.objective_created');
             },
             function () {},
             'objective-form'
@@ -40,7 +39,7 @@
             Routing.generate('hevinci_objective_edit_form', { id: row.dataset.id }),
             function (data) {
                 $(row).replaceWith(Twig.render(ObjectiveRow, data));
-                flasher.setMessage(utils.trans('message.objective_edited'));
+                utils.setFlashMessage('message.objective_edited');
             },
             function () {},
             'objective-form'
@@ -67,7 +66,7 @@
             Routing.generate(url, { id: row.dataset.id }),
             function () {
                 utils.removeRow(row);
-                flasher.setMessage(utils.trans(feedback));
+                utils.setFlashMessage(feedback);
             },
             null,
             utils.trans(message),
@@ -107,7 +106,7 @@
                     Claroline.Modal.error();
                 });
         } else {
-            utils.toggleChildRows(row, link, false);
+            utils.toggleChildRows(link, false);
         }
     });
 
@@ -116,7 +115,7 @@
         event.preventDefault();
         var link = this;
         var row = link.parentNode.parentNode;
-        utils.toggleChildRows(row, link, true);
+        utils.toggleChildRows(link, true);
     });
 
     // user/group addition
@@ -153,7 +152,7 @@
                 competencyPicker.close();
                 utils.insertChildRows(currentObjectiveRow, [competency], 'competency');
                 utils.toggleExpandLink($(currentObjectiveRow).find('a.expand').get(0), true)
-                flasher.setMessage(utils.trans(message), category);
+                utils.setFlashMessage(message, category);
             })
             .error(function () {
                 Claroline.Modal.error();
@@ -178,7 +177,7 @@
                 }
 
                 userPicker.close();
-                flasher.setMessage(utils.trans(message), category);
+                utils.setFlashMessage(message, category);
             })
             .error(function () {
                 Claroline.Modal.error();
