@@ -1,6 +1,7 @@
 {% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
 
 {% set activeTab = 'groups' %}
+{% set isFilteredByObjective = isFilteredByObjective is defined ? isFilteredByObjective : false %}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ 'groups'|trans({}, 'platform') }}
@@ -45,7 +46,11 @@
     {% else %}
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
-            {{ 'info.no_group_objectives'|trans({}, 'competency') }}
+            {% if isFilteredByObjective %}
+                {{ 'info.no_objective_groups'|trans({}, 'competency') }}
+            {% else %}
+                {{ 'info.no_group_objectives'|trans({}, 'competency') }}
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

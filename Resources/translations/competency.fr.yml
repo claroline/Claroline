@@ -40,6 +40,8 @@ info:
   no_frame_to_select: Aucun référentiel de compétences n'a encore été défini.
   no_group_objectives: Aucun objectif n'a encore été assigné à un groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
+  no_objective_groups: Cet objectif n'a encore été assigné à un aucun groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
+  no_objective_users: Cet objectif n'a encore été assigné à un aucun utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
   no_user_objectives: Aucun objectif n'a encore été assigné à un utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 learners: Apprenants

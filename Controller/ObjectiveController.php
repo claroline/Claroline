@@ -217,7 +217,10 @@ class ObjectiveController
      */
     public function objectiveUsersAction(Objective $objective)
     {
-        return ['pager' => $this->manager->listUsersWithObjective($objective)];
+        return [
+            'pager' => $this->manager->listUsersWithObjective($objective),
+            'isFilteredByObjective' => true
+        ];
     }
 
     /**
@@ -244,7 +247,10 @@ class ObjectiveController
      */
     public function objectiveGroupsAction(Objective $objective)
     {
-        return ['pager' => $this->manager->listGroupsWithObjective($objective)];
+        return [
+            'pager' => $this->manager->listGroupsWithObjective($objective),
+            'isFilteredByObjective' => true
+        ];
     }
 
     /**
