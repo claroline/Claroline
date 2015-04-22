@@ -65,7 +65,7 @@
                                 &nbsp;
                                 &nbsp;
                                 <i class="fa fa-{{ tool.getClass() }}"></i>
-                                <span id="tool-{{ tool.getId() }}-name"> {{ tool.getContent().getTitle() }} </span>
+                                <span id="tool-{{ tool.getId() }}-name"> {{ tool.getDisplayedName() }} </span>
                             </td>
                             <td class="text-center">
                                 {% if orderedTool.isVisibleInDesktop() %}

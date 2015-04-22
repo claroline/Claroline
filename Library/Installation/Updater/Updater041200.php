@@ -57,13 +57,7 @@ class Updater041200 extends Updater
 
         foreach ($rows as $row) {
             $ot = $row[0];
-            if ($ot->getContent() !== null) {
-                $this->log("Translations alreay updated... abort.");
-                return;
-            }
-            $ot->setContent($this->container->get('claroline.manager.tool_manager')
-                ->getOrderedToolDefaultTranslations($ot->getTool()->getName()));
-            $this->om->persist($ot);
+            $this->container->get('claroline.manager.tool_manager')->setDefaultOrderedToolTranslations($ot);
 
             if ($i % 200 === 0) {
                 $this->log(sprintf("    %d tools updated - %s...", $i, date('Y/m/d H:i:s')));
@@ -82,14 +76,7 @@ class Updater041200 extends Updater
         $this->log('Updating tools translations');
 
         foreach ($tools as $tool) {
-            if ($tool->getContent() !== null) {
-                $this->log("Translations alreay updated... abort.");
-                return;
-            }
-
-            $tool->setContent($this->container->get('claroline.manager.tool_manager')
-                ->getOrderedToolDefaultTranslations($tool->getName()));
-            $this->om->persist($tool);
+            $this->container->get('claroline.manager.tool_manager')->setDefaultToolTranslations($tool);
         }
         $this->om->flush();
     }

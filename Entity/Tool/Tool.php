@@ -15,12 +15,15 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
  * @ORM\Table(name="claro_tools")
+ * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Translation\ToolTranslation")
  */
-class Tool
+class Tool implements Translatable
 {
     /**
      * @ORM\Id
@@ -35,10 +38,11 @@ class Tool
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @var string
+     * @Gedmo\Translatable
+     * @ORM\Column(length=255, nullable=true)
      */
-    private $content;
+    private $displayedName;
 
     /**
      * @ORM\Column()
@@ -128,6 +132,14 @@ class Tool
      */
     protected $pwsToolConfig;
 
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
+
+
     public function __construct()
     {
         $this->maskDecoders  = new ArrayCollection();
@@ -137,18 +149,6 @@ class Tool
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setContent($content)
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getContent()
-    {
-        return $this->content;
     }
 
     public function setClass($class)
@@ -328,5 +328,25 @@ class Tool
     public function getPwsToolConfig()
     {
         return $this->pwsToolConfig;
+    }
+
+    public function setDisplayedName($name)
+    {
+        $this->displayedName = $name;
+    }
+
+    public function getDisplayedName()
+    {
+        return $this->displayedName;
+    }
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function getTranslatableLocale()
+    {
+        return $this->locale;
     }
 }

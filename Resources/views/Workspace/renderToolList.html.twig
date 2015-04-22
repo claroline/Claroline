@@ -21,7 +21,7 @@
         <a class="list-group-item{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) | compareRoute(" active") | raw }}"
             href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}">
             <i class="fa fa-{{ orderedTool.getTool().getClass() }}"></i>
-            <span>{{ orderedTool.getContent().getTitle()|trans({}, 'tools') }}</span>
+            <span>{{ orderedTool.getDisplayedName() }}</span>
         </a>
     {% endfor %}
 </div>

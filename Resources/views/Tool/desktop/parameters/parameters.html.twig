@@ -21,7 +21,7 @@
         <a class='list-group-item li-user-parameters' href="{{ path('claro_tool_properties') }}">{{ 'tools'|trans({}, 'platform') }}</a>
         {% for tool in tools %}
             <a class='list-group-item li-user-parameters' href="{{ path('claro_desktop_tool_config', {'tool': tool.getId()}) }}">
-                {{ tool.getContent().getTitle() }}
+                {{ tool.getDisplayedName() }}
             </a>
         {% endfor %}
     </div>
