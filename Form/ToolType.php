@@ -21,8 +21,8 @@ class ToolType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'content',
-            'content',
+            'displayedName',
+            'translatable',
             array(
                 'data' => $builder->getData(),
                 'theme_options' => array(

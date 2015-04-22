@@ -181,7 +181,7 @@ class DesktopConfigurationController extends Controller
             'form' => $this->container->get('claroline.form.factory')->create(
                 FormFactory::TYPE_ORDERED_TOOL,
                 array(),
-                $tool->getContent())->createView(),
+                $tool)->createView(),
             'tool' => $tool
         );
     }
@@ -202,21 +202,21 @@ class DesktopConfigurationController extends Controller
     public function renameToolAction(Tool $tool)
     {
         $form = $this->container->get('claroline.form.factory')
-            ->create(FormFactory::TYPE_ORDERED_TOOL, array(), $tool->getContent());
+            ->create(FormFactory::TYPE_ORDERED_TOOL, array(), $tool);
         $form->handleRequest($this->get('request'));
 
         if ($form->isValid()) {
             //I know it's not that great but I couldn't find an other way
             $formData = $this->get('request')->request->get('workspace_order_tool_edit_form');
             $this->toolManager->renameTool(
-                $formData['content'],
+                $formData['displayedName'],
                 $tool
             );
 
             return new JsonResponse(
                 array(
                     'tool_id' => $tool->getId(),
-                    'name' => $tool->getContent()->getTitle()
+                    'name' => $tool->getDisplayedName()
                 )
             );
         }

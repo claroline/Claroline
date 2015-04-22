@@ -47,7 +47,7 @@
                             <tr class="row-locked-tool text-muted">
                                 <td>
                                     <i class="fa fa-{{ tool.getClass() }}"></i>
-                                    {{ tool.getContent().getTitle() }}
+                                    {{ tool.getDisplayedName() }}
                                 </td>
                                 <td>
                                     <input
@@ -73,7 +73,7 @@
                                     &nbsp;
                                     &nbsp;
                                     <i class="fa fa-{{ tool.getClass() }}"></i>
-                                    {{ tool.getContent().getTitle() }}
+                                    {{ tool.getDisplayedName() }}
                                 </td>
                                 <td>
                                     <input

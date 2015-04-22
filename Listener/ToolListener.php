@@ -294,7 +294,7 @@ class ToolListener
 
         if ($user !== 'anon.' && !is_null($tool)) {
             $toolName = $tool->getName();
-            $translatedName = $tool->getContent()->getTitle();
+            $translatedName = $tool->getDisplayedName();
             $route = $this->router->generate(
                 'claro_desktop_open_tool',
                 array('toolName' => $toolName)
@@ -323,7 +323,7 @@ class ToolListener
 
         if ($user !== 'anon.' && !is_null($tool)) {
             $toolName = $tool->getName();
-            $translatedName = $tool->getContent()->getTitle();
+            $translatedName = $tool->getDisplayedName();
             $menu = $event->getMenu();
             $menu->addChild(
                 $translatedName,
@@ -382,7 +382,7 @@ class ToolListener
         $tool = $event->getTool();
 
         if ($user !== 'anon.') {
-            $parametersTitle = $tool->getContent()->getTitle();
+            $parametersTitle = $tool->getDisplayedName();
             $menu = $event->getMenu();
             $menu->addChild(
                 $this->translator->trans('preferences', array(), 'platform'),
