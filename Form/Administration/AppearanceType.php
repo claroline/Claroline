@@ -18,10 +18,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AppearanceType extends AbstractType
 {
     private $themes;
+    private $lockedParams;
 
-    public function __construct(array $themes)
+    public function __construct(array $themes, array $lockedParams = array())
     {
         $this->themes = $themes;
+        $this->lockedParams = $lockedParams;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -30,10 +32,28 @@ class AppearanceType extends AbstractType
             ->add(
                 'name_active',
                 'checkbox',
-                array('required' => false, 'label' => 'Show the name of the platform in the top bar')
+                array(
+                    'required' => false,
+                    'label' => 'Show the name of the platform in the top bar',
+                    'disabled' => isset($this->lockedParams['nameActive'])
+                )
             )
-            ->add('footer', 'text', array('required' => false))
-            ->add('theme', 'choice', array('choices' => $this->themes));
+            ->add(
+                'footer',
+                'text',
+                array(
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['footer'])
+                )
+            )
+            ->add(
+                'theme',
+                'choice',
+                array(
+                    'choices' => $this->themes,
+                    'disabled' => isset($this->lockedParams['theme'])
+                )
+            );
     }
 
     public function getName()

@@ -12,7 +12,7 @@
             </div>
             {% if not is_path_mode  %}
                 <ul class="breadcrumb">
-                    <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-briefcase"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
+                    <li><a href="{{ path('claro_desktop_open') }}"><i class="fa fa-home"></i> {{ 'desktop'|trans({}, 'platform') }}</a></li>
                     <li><a href="{{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}">{{ 'resources'|trans({}, 'platform') }}</a></li>
                     {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
                     {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
@@ -24,15 +24,6 @@
             {% endif %}
         {% endif %}
     </div>
-{% endblock %}
-
-{% block leftbar %}
-    {% if not is_path_mode %}
-        <div class="list-group menu">
-            <div class="list-group-item disabled">{{ 'desktop'|trans({}, 'platform') }}</div>
-            {% render controller("ClarolineCoreBundle:Desktop:renderToolList") %}
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -58,4 +49,18 @@
         window.Workspace.id = null;
         {% endif %}
     </script>
+{% endblock %}
+    
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        {% if app.user and
+              app.user.getOptions() is not empty and
+              app.user.getOptions().getDesktopBackgroundColor() is not empty
+        %}
+            body {
+                background-color: {{ app.user.getOptions().getDesktopBackgroundColor() }};
+            }
+        {% endif %}
+    </style>
 {% endblock %}

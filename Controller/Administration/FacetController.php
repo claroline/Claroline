@@ -9,63 +9,66 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Controller\Administration;;
+namespace Claroline\CoreBundle\Controller\Administration;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Form\FormFactoryInterface;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\ProfileProperty;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Form\Administration\FacetType;
 use Claroline\CoreBundle\Form\Administration\FieldFacetType;
+use Claroline\CoreBundle\Form\Administration\PanelFacetType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
+ */
 class FacetController extends Controller
 {
     private $router;
-    private $toolManager;
     private $roleManager;
-    private $userAdminTool;
     private $facetManager;
+    private $profilePropertyManager;
 
     /**
      * @DI\InjectParams({
-     *     "router"       = @DI\Inject("router"),
-     *     "sc"           = @DI\Inject("security.context"),
-     *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
-     *     "roleManager"  = @DI\Inject("claroline.manager.role_manager"),
-     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
-     *     "formFactory"  = @DI\Inject("form.factory"),
-     *     "request"      = @DI\Inject("request")
+     *     "router"                 = @DI\Inject("router"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
+     *     "formFactory"            = @DI\Inject("form.factory"),
+     *     "request"                = @DI\Inject("request"),
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
      */
     public function __construct(
         RouterInterface $router,
-        SecurityContextInterface $sc,
-        ToolManager $toolManager,
         FacetManager $facetManager,
         RoleManager $roleManager,
         FormFactoryInterface $formFactory,
-        Request $request
+        Request $request,
+        ProfilePropertyManager $profilePropertyManager
     )
     {
-        $this->sc            = $sc;
-        $this->toolManager   = $toolManager;
-        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
-        $this->facetManager  = $facetManager;
-        $this->formFactory   = $formFactory;
-        $this->request       = $request;
-        $this->roleManager   = $roleManager;
-        $this->router        = $router;
+        $this->facetManager           = $facetManager;
+        $this->formFactory            = $formFactory;
+        $this->request                = $request;
+        $this->roleManager            = $roleManager;
+        $this->router                 = $router;
+        $this->profilePropertyManager = $profilePropertyManager;
     }
 
     /**
@@ -78,7 +81,19 @@ class FacetController extends Controller
      */
     public function indexAction()
     {
-        $this->checkOpen();
+        return array();
+    }
+
+    /**
+     * Returns the facet list.
+     *
+     * @EXT\Route("/facet", name="claro_admin_facet")
+     * @EXT\Template
+     *
+     * @return Response
+     */
+    public function facetsAction()
+    {
         $facets = $this->facetManager->getFacets();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
         $profilePreferences = $this->facetManager->getProfilePreferences();
@@ -88,6 +103,41 @@ class FacetController extends Controller
             'platformRoles' => $platformRoles,
             'profilePreferences' => $profilePreferences
         );
+    }
+
+    /**
+     * Returns the facet list.
+     *
+     * @EXT\Route("/properties", name="claro_admin_profile_properties")
+     * @EXT\Template
+     *
+     * @return Response
+     */
+    public function profilePropertiesAction()
+    {
+        $platformRoles = $this->roleManager->getPlatformNonAdminRoles(false);
+        $labels = User::getEditableProperties();
+        $properties = $this->profilePropertyManager->getAllProperties();
+
+        return array(
+            'platformRoles' => $platformRoles,
+            'labels'        => $labels,
+            'properties'     => $properties
+        );
+    }
+
+    /**
+     * @EXT\Route("/property/{property}/invert",
+     *      name="claro_admin_invert_user_properties_edition",
+     *      options = {"expose"=true}
+     * )
+     *
+     */
+    public function invertPropertiesEditableAction(ProfileProperty $property)
+    {
+        $this->profilePropertyManager->invertProperty($property);
+
+        return new JsonResponse(array(), 200);
     }
 
     /**
@@ -101,7 +151,6 @@ class FacetController extends Controller
      */
     public function facetFormAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), new Facet());
 
         return array('form' => $form->createView());
@@ -110,18 +159,17 @@ class FacetController extends Controller
     /**
      * Returns the facet field creation form in a modal
      *
-     * @EXT\Route("{facet}/field/form",
+     * @EXT\Route("/panel/{panelFacet}/field/form",
      *      name="claro_admin_facet_field_form",
      *      options = {"expose"=true}
      * )
      * @EXT\Template
      */
-    public function fieldFormAction(Facet $facet)
+    public function fieldFormAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
 
-        return array('form' => $form->createView(), 'facet' => $facet);
+        return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
     }
 
     /**
@@ -134,12 +182,11 @@ class FacetController extends Controller
      */
     public function createFacetAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), new Facet());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $facet = $this->facetManager->createFacet($form->get('name')->getData());
+            $facet = $this->facetManager->createFacet($form->get('name')->getData(), $form->get('forceCreationForm')->getData());
 
             return new JsonResponse(
                 array('name' => $facet->getName(), 'position' => $facet->getPosition(), 'id' => $facet->getId())
@@ -155,20 +202,19 @@ class FacetController extends Controller
     /**
      * Returns the facet creation form in a modal
      *
-     * @EXT\Route("/create/field/facet/{facet}",
+     * @EXT\Route("/create/field/panel/{panelFacet}",
      *      name="claro_admin_field_facet_create",
      *      options = {"expose"=true}
      * )
      */
-    public function createFieldAction(Facet $facet)
+    public function createFieldAction(PanelFacet $panelFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), new FieldFacet());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $field = $this->facetManager->addField(
-                $facet,
+                $panelFacet,
                 $form->get('name')->getData(),
                 $form->get('type')->getData()
             );
@@ -179,14 +225,14 @@ class FacetController extends Controller
                     'position' => $field->getPosition(),
                     'typeTranslationKey' => $field->getTypeTranslationKey(),
                     'id' => $field->getId(),
-                    'facet_id' => $facet->getId()
+                    'panelId' => $panelFacet->getId()
                 )
             );
         }
 
         return $this->render(
             'ClarolineCoreBundle:Administration\Facet:fieldForm.html.twig',
-            array('form' => $form->createView(), 'facet' => $facet)
+            array('form' => $form->createView(), 'panelId' => $panelFacet)
         );
     }
 
@@ -200,7 +246,6 @@ class FacetController extends Controller
      */
     public function removeFacetAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->removeFacet($facet);
 
         return new Response('success');
@@ -217,7 +262,6 @@ class FacetController extends Controller
      */
     public function editFacetFormAction(Facet $facet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FacetType(), $facet);
 
         return array('form' => $form->createView(), 'facet' => $facet);
@@ -233,13 +277,12 @@ class FacetController extends Controller
      */
     public function editFacetAction(Facet $facet)
     {
-        $this->checkOpen();
         $oldName = $facet->getName();
         $form = $this->formFactory->create(new FacetType(), $facet);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $facet = $this->facetManager->editFacet($facet, $form->get('name')->getData());
+            $facet = $this->facetManager->editFacet($facet, $form->get('name')->getData(), $form->get('forceCreationForm')->getData());
 
             return new JsonResponse(
                 array(
@@ -264,8 +307,7 @@ class FacetController extends Controller
      * )
      */
     public function removeFieldFacetAction(FieldFacet $fieldFacet)
-    {
-        $this->checkOpen();
+    {;
         $this->facetManager->removeField($fieldFacet);
 
         return new Response('success', 204);
@@ -279,7 +321,6 @@ class FacetController extends Controller
      */
     public function moveFacetUpAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->moveFacetUp($facet);
 
         return new Response('success', 204);
@@ -293,7 +334,6 @@ class FacetController extends Controller
      */
     public function moveFacetDownAction(Facet $facet)
     {
-        $this->checkOpen();
         $this->facetManager->moveFacetDown($facet);
 
         return new Response('success', 204);
@@ -308,7 +348,6 @@ class FacetController extends Controller
      */
     public function editFieldFormAction(FieldFacet $fieldFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
 
         return array('form' => $form->createView(), 'fieldFacet' => $fieldFacet);
@@ -322,7 +361,6 @@ class FacetController extends Controller
      */
     public function editFieldAction(FieldFacet $fieldFacet)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(new FieldFacetType(), $fieldFacet);
         $form->handleRequest($this->request);
 
@@ -351,14 +389,13 @@ class FacetController extends Controller
     /**
      * Ajax method for ordering fields
      *
-     * @EXT\Route("/{facet}/fields/order",
+     * @EXT\Route("/{panel}/fields/order",
      *      name="claro_admin_field_facet_order",
      *      options = {"expose"=true}
      * )
      */
-    public function moveFieldFacetsAction(Facet $facet)
+    public function moveFieldFacetsAction(PanelFacet $panel)
     {
-        $this->checkOpen();
         $params = $this->request->query->all();
         $ids = [];
 
@@ -366,7 +403,7 @@ class FacetController extends Controller
             $ids[] = (int) str_replace('field-', '', $value);
         }
 
-        $this->facetManager->orderFields($ids, $facet);
+        $this->facetManager->orderFields($ids, $panel);
 
         return new Response('success');
     }
@@ -383,7 +420,6 @@ class FacetController extends Controller
      */
     public function facetRolesFormAction(Facet $facet)
     {
-        $this->checkOpen();
         $roles = $facet->getRoles();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
@@ -398,7 +434,6 @@ class FacetController extends Controller
      */
     public function editFacetRolesAction(Facet $facet)
     {
-        $this->checkOpen();
         $roles = $this->getRolesFromRequest('role-');
         $this->facetManager->setFacetRoles($facet, $roles);
 
@@ -417,7 +452,6 @@ class FacetController extends Controller
      */
     public function fieldRolesFormAction(FieldFacet $field)
     {
-        $this->checkOpen();
         $fieldFacetsRole = $field->getFieldFacetsRole();
         $platformRoles = $this->roleManager->getPlatformNonAdminRoles(true);
 
@@ -432,7 +466,6 @@ class FacetController extends Controller
      */
     public function editFieldRolesAction(FieldFacet $field)
     {
-        $this->checkOpen();
         $roles = $this->getRolesFromRequest('open-role-');
         $this->facetManager->setFieldBoolProperty($field, $roles, 'canOpen');
         $roles = $this->getRolesFromRequest('edit-role-');
@@ -449,7 +482,6 @@ class FacetController extends Controller
      */
     public function editGeneralFacet()
     {
-        $this->checkOpen();
         $configs = array();
 
         foreach ($this->request->request->all() as $key => $value) {
@@ -472,13 +504,141 @@ class FacetController extends Controller
         return new JsonResponse($this->request->request->all(), 200);
     }
 
-    private function checkOpen()
+    /**
+     * Returns the panel creation form in a modal
+     *
+     * @EXT\Route("/create/panel/facet/{facet}/form",
+     *      name="claro_admin_panel_facet_create_form",
+     *      options = {"expose"=true}
+     * )
+     * @EXT\Template()
+     */
+    public function panelFacetFormAction(Facet $facet)
     {
-        if ($this->sc->isGranted('OPEN', $this->userAdminTool)) {
-            return true;
+        $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
+
+        return array('form' => $form->createView(), 'facet' => $facet);
+    }
+
+    /**
+     * Returns the panel creation form in a modal
+     *
+     * @EXT\Route("/create/panel/facet/{facet}",
+     *      name="claro_admin_panel_facet_create",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function addPanelFacetAction(Facet $facet)
+    {
+        $form = $this->formFactory->create(new PanelFacetType(), new PanelFacet());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $panel = $this->facetManager->addPanel(
+                $facet,
+                $form->get('name')->getData(),
+                $form->get('isDefaultCollapsed')->getData()
+            );
+
+            return new JsonResponse(
+                array(
+                    'id' => $panel->getId(),
+                    'name' => $panel->getName(),
+                    'facet_id' => $facet->getId()
+                )
+            );
         }
 
-        throw new AccessDeniedException();
+        return $this->render(
+            'ClarolineCoreBundle:Administration\Facet:panelFacetForm.html.twig',
+            array('form' => $form->createView(), 'facet' => $facet)
+        );
+    }
+
+    /**
+     * Returns the panel creation edition in a modal
+     *
+     * @EXT\Route("/edit/panel/facet/{panelFacet}/form",
+     *      name="claro_admin_panel_facet_edit_form",
+     *      options = {"expose"=true}
+     * )
+     *
+     * @EXT\Template()
+     */
+    public function editPanelFacetFormAction(PanelFacet $panelFacet)
+    {
+        $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
+
+        return array('form' => $form->createView(), 'panelFacet' => $panelFacet);
+    }
+
+    /**
+     * Returns the panel creation edition in a modal
+     *
+     * @EXT\Route("/edit/panel/facet/{panelFacet}",
+     *      name="claro_admin_panel_facet_edit",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function editPanelFacetAction(PanelFacet $panelFacet)
+    {
+        $form = $this->formFactory->create(new PanelFacetType(), $panelFacet);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $panel = $this->facetManager->editPanel($panelFacet);
+
+            return new JsonResponse(
+                array(
+                    'id' => $panelFacet->getId(),
+                    'name' => $panelFacet->getName(),
+                    'facet_id' => $panelFacet->getId()
+                )
+            );
+        }
+
+        return $this->render(
+            'ClarolineCoreBundle:Administration\Facet:editPanelFacetForm.html.twig',
+            array('form' => $form->createView(), 'panelFacet' => $panelFacet)
+        );
+    }
+
+    /**
+     * Removes a panel.
+     *
+     * @EXT\Route("/remove/panel/facet/{panelFacet}",
+     *      name="claro_admin_remove_panel_facet",
+     *      options = {"expose"=true}
+     * )
+     */
+    public function removePanelFacetAction(PanelFacet $panelFacet)
+    {
+        $this->facetManager->removePanel($panelFacet);
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * Reorder panels.
+     *
+     * @EXT\Route("/order/panels/facet/{facet}",
+     *      name="claro_admin_panel_facet_order",
+     *      options = {"expose" = true}
+     * )
+     *
+     */
+    public function orderPanels(Facet $facet)
+    {
+        $params = $this->request->query->all();
+        $ids = [];
+
+        foreach ($params['ids'] as $value) {
+            $ids[] = (int) str_replace('panel-', '', $value);
+        }
+
+        $this->facetManager->orderPanels($ids, $facet);
+
+        return new Response('success');
     }
 
     private function getRolesFromRequest($prefix)
@@ -499,4 +659,4 @@ class FacetController extends Controller
 
         return $roles;
     }
-} 
+}

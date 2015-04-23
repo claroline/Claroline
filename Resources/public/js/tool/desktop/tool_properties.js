@@ -9,6 +9,8 @@
 
 (function () {
     'use strict';
+    
+    var type = $('#datas-box').data('type');
 
     $('#edit-tools-btn').on('click', function (e) {
         e.preventDefault();
@@ -36,7 +38,7 @@
     });
     
     $('#tools-table-body').sortable({
-        items: 'tr',
+        items: '.row-tool-config',
         cursor: 'move'
     });
     
@@ -44,35 +46,24 @@
         
         if (this === ui.item.parents('#tools-table-body')[0]) {
             var orderedToolId = $(ui.item).data('ordered-tool-id');
-            var nextOrderedToolId = $(ui.item).next().data('ordered-tool-id');
-            var previousOrderedToolId = $(ui.item).prev().data('ordered-tool-id');
-            var execute = false;
-            var otherOrderedToolId;
-            var mode;
+            var nextOrderedToolId = -1;
+            var nextElement = $(ui.item).next();
             
-            if (nextOrderedToolId !== undefined) {
-                otherOrderedToolId = nextOrderedToolId;
-                mode = 'next';
-                execute = true;
-            } else if (previousOrderedToolId !== undefined) {
-                otherOrderedToolId = previousOrderedToolId;
-                mode = 'previous';
-                execute = true;
+            if (nextElement !== undefined && nextElement.hasClass('row-tool-config')) {
+                nextOrderedToolId = nextElement.data('ordered-tool-id');
             }
             
-            if (execute) {
-                $.ajax({
-                    url: Routing.generate(
-                        'claro_desktop_update_ordered_tool_order',
-                        {
-                            'orderedTool': orderedToolId,
-                            'otherOrderedTool': otherOrderedToolId,
-                            'mode': mode
-                        }
-                    ),
-                    type: 'POST'
-                });
-            }
+            $.ajax({
+                url: Routing.generate(
+                    'claro_desktop_update_ordered_tool_order',
+                    {
+                        'orderedTool': orderedToolId,
+                        'nextOrderedToolId': nextOrderedToolId,
+                        'type': type
+                    }
+                ),
+                type: 'POST'
+            });
         }
     });
 })();

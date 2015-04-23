@@ -120,7 +120,6 @@ add_role: 'Add role'
 add_role_to_groups: Add a role to %count% group(s)
 add_role_to_users: Add a role to %count% user(s)
 add_roles_confirm_message: 'Do you want to add the following roles to the %count% selected elements'
-add_sub_competence: 'Add a sub-competence'
 add_subcategory: 'Add a subcategory'
 add_tab: Add a tab
 add_tag: 'Add tag'
@@ -133,6 +132,7 @@ add_workspace: 'Add workspace'
 admin: Administrator
 admin_analytics: 'Platform analytics'
 admin_analytics_no_data: 'No data.'
+admin_desktop_and_home_tabs_configuration: 'Desktop and home tabs configuration'
 admin_home_tabs_configuration: 'Home tabs configuration'
 admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'
@@ -140,7 +140,9 @@ admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
 advanced: Advanced
+advanced_parameters: 'Advanced parameters'
 agenda: Agenda
+agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
 all_available_workspaces: 'All available workspaces'
 all_my_workspaces: 'All my workspaces'
@@ -210,15 +212,10 @@ collaborative: Collaborative
 collaborator: Collaborator
 comment: Comment
 communication: Communication
-competence: Competence
-competence_creation: 'Competence creation'
-competence_edition: 'Competence edition'
-competence_referencial: Learning outcomes
-competences: Competences
-competences_management: 'Competences management'
 completed: Completed
 configuration: Configuration
 configure: Configure
+confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
@@ -226,8 +223,8 @@ copies: Copies
 copy: Copy
 core_packages: Core packages
 create: Create
+create_and_update: 'Create and update'
 create_category: 'Create a category'
-create_competence: 'Create a competence'
 create_facet: Create a facet
 create_field: Create a field
 create_group: 'Create group'
@@ -237,9 +234,9 @@ create_new_admin_tag: 'Create new admin tag'
 create_new_home_tab: 'Create new tab'
 create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
+create_only: 'Create only'
 create_role: Create role
 create_security_token: 'Create a security token'
-create_sub_competence: 'Create a sub-competence'
 create_subcategory: 'Create a subcategory'
 create_user: 'Create user'
 create_users: Create users
@@ -306,16 +303,16 @@ delete: Delete
 delete_category: 'Delete category'
 delete_category_confirm_message: 'Do you really want to delete this category?'
 delete_category_confirm_title: 'Category deletion'
-delete_competence: 'Delete competence'
-delete_competence_confirm_message: 'Do you really want to delete this competence ?'
 delete_home_tab: 'Delete tab'
 delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
 description: 'Description'
 desktop: Desktop
+desktop_and_home: 'Desktop and home'
 desktop_home_tab_creation: 'Desktop Home tab creation'
 desktop_home_tab_edition: 'Desktop Home tab edition'
 desktop_home_tabs: 'Desktop Home tabs'
+desktop_parameters: 'Desktop parameters'
 desktop_tools: 'Desktop tools'
 directory: Directory
 directory_form_name: Name
@@ -336,7 +333,6 @@ drop_file: 'Drop the file'
 dsn: dsn
 duration: Duration
 edit: Edit
-edit_competence: 'Edit competence'
 edit_event_success: The event was updated successfully.
 edit_facet: Edit a facet
 edit_field: Edit a field
@@ -439,6 +435,8 @@ has_been_suscribed_with_role: 'has been suscribed with role'
 has_been_suscribed_with_role_group: 'has been suscribed with role'
 has_been_unregistered_from_group: 'has been unregistered from group'
 has_been_unregistered_from_role: 'has been unregistered from group'
+has_been_unregistered_from_workspace: 'has been unregistered from workspace'
+has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 hide: Hide
@@ -447,11 +445,18 @@ home: Home
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
+home_tab_bookmark_confirm_message: 'This Home tab will be available in your desktop'
+home_tab_bookmark_confirm_title: 'Home tab bookmark'
+home_tab_bookmark_delete_confirm_message: 'Do you really want to delete this Home tab bookmark ?'
+home_tab_bookmark_delete_confirm_title: 'Remove home tab bookmark'
+home_tab_config_form_locked: 'Locked'
+home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Home tab creation'
-home_tab_delete_confirm_message: 'Do you really want to delete this Home tab?'
+home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_delete_confirm_title: 'Delete Home tab'
 home_tab_edition: 'Home tab edition'
 home_tab_form_name: Name
+home_tab_roles_explanation: 'If no role is checked the home tab will be available for all users.<br>Otherwise it will be available for users with one of the checked roles only.'
 home_tab_widgets: 'Home tab widgets'
 home_tab_widgets_configuration: 'Home tab widgets configuration'
 home_tabs: 'Home tabs'
@@ -468,6 +473,9 @@ in_workspace: 'in workspace'
 incomplete: Incomplete
 individual: Individual
 informations: Informations
+infos_sending_acceptance: 'Informations sending acceptance'
+infos_sending_bar_msg: 'Click on this bar for more informations'
+infos_sending_has_not_been_accepted: 'Informations sending has not been accepted'
 initialize: Initialize
 inscription_mail: 'Inscription mail'
 instructions: Instructions
@@ -503,10 +511,8 @@ limit: Limit
 line_number: 'Line %line%:'
 line_per_page: 'Results per page'
 link: Link
-link_competence: 'Link'
 link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
-linkable_competences: 'Linkable competences'
 links: Links
 list_groups: 'List groups'
 list_role: Role list
@@ -545,6 +551,8 @@ manual: Manual
 manual_evaluation_explanation: 'Manual evaluation by a workspace manager'
 max_size_is: 'The maximum size is %size%'
 media_most_viewed: 'Most viewed media'
+menu_bar: 'Menu bar'
+menu_bar_configuration: 'Menu bar configuration'
 message_form_content: Content
 message_form_object: Object
 message_form_to: To
@@ -562,6 +570,7 @@ missing_%content%: 'The variable %content% is missing for "%language%".'
 missing_%password%: 'The variable %password% is missing for "%language%".'
 missing_%username%: 'The variable %username% is missing for "%language%".'
 mixed: Mixed
+mode: 'Mode'
 model: Model
 models: Modèles
 month.April: April
@@ -603,7 +612,6 @@ no: no
 no_action_found: No action found.
 no_activity_in_workspace: There are currently no activities in this workspace.
 no_category: 'There is no category'
-no_competence: 'No competence'
 no_email: 'No email found, check the spelling'
 no_group: 'No group'
 no_group: There is no group.
@@ -656,7 +664,9 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 pending: 'Pending'
+pending_users_list: 'Pending users list'
 permissions: Permissions
+personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
 personal_workspace: 'Personal workspace'
 personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
@@ -694,6 +704,7 @@ plugin_packages: Plugin packages
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
+preferences: 'Preferences'
 private: Private
 profil_edition: 'User profile edition'
 profile_management: Profile Management
@@ -723,7 +734,6 @@ registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 remove: Remove
-remove_competence: 'Remove competence'
 remove_event: Remove an event
 remove_event_confirm: Are you sure you want to remove this event ?
 remove_facet: Remove a facet
@@ -742,8 +752,6 @@ remove_resource_from_model: Remove a resource from the model
 remove_resource_from_model_comfirm: Are you sure you want to remove this resource?
 remove_role: Role suppression.
 remove_role_confirm: Do you really want to remove the role %name% ?
-remove_sub_competence: 'Remove competence from learning outcomes'
-remove_sub_competence_comfirm_message: 'Are you sure you want to remove this competence from this learning outcomes ?'
 remove_subcategory: 'Remove subcategory'
 remove_user_confirm_message: 'Are you sure you want to delete this user?'
 remove_user_from_model: Remove a user from the model
@@ -843,7 +851,7 @@ send_mail: 'Send a mail'
 send_mail_form_content: Message
 send_mail_form_object: Object
 send_message: 'Send a message'
-send_message_to_workspace: 'Send a message to the users of the workspace.'
+send_message_to_workspace: 'Send a message'
 send_message_to_workspace: Send a message to the users of the workspace.
 send_message_to_workspace_info: This list shows the workspaces of which you are the manager.
 server: Server
@@ -870,6 +878,8 @@ show_profile_for_anonymous: Profil public access for anonymous.
 simple: Simple
 start_date: 'Start date'
 start_maintenance: Start maintenance mode
+statistics: 'Statistics'
+statistics_data: 'number of workspaces and users'
 status: Status
 steal_session: 'Steal the session'
 storage_type: 'Storage type'
@@ -894,6 +904,8 @@ tags_list: 'Tags list'
 tags_management: 'Tags management'
 tags_organization: 'Tags organization'
 teacher: Teacher
+technical: 'Technical'
+technical_data: 'URL, Version, primary language, IP and email support'
 terms_enabled_but_empty: Terms of service can only be enabled if the text is provided in at least one language.
 text: Text
 text_form_content: Content
@@ -965,6 +977,10 @@ unpublish: Unpublish
 unpublished: Unpublished
 unregister: Unregister
 unregister_from_a_workspace: 'Unregister from a workspace'
+unregister_group_confirm_message: 'Are you sure you want to unregister this group?'
+unregister_group_s_confirm_message: 'Are you sure you want to unregister these %count% groups?'
+unregister_user_confirm_message: 'Are you sure you want to unregister this user ?'
+unregister_user_s_confirm_message: 'Are you sure you want to unregister these %count% users ?'
 unregistered: Unregistered
 unregistered_groups: 'Unregistered groups'
 unregistered_users: 'Unregistered users'
@@ -984,12 +1000,16 @@ user_creation_success: The user account has been successfully created.
 user_limit_reached: The user limit has been reached.
 user_limit_success_update: The user limit by role has been successfully updated.
 user_limit_too_low: There is already %total% %role%(s). The limit %newMax% is too low.
+user_menu: 'User menu'
+user_menu_configuration: 'User menu configuration'
+user_options_form_desktopBackgroundColor: 'Desktop background color'
 user_parameters: 'User parameters'
 user_picker: 'User picker'
 user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
 user_removed: 'User removed'
 username: Username
+username_and_email_from_two_different_users: 'Username %username% and email %email% are both in use and don''t refer to the same user.'
 username_found_at: 'The username %username% was found at lines: %lines%'
 username_or_email: 'Username or email'
 users: Users
@@ -1017,7 +1037,11 @@ visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
+widget_configuration: 'Widget configuration'
+widget_display_config_form_color: 'Color'
 widget_display_form_name: Name
+widget_home_tab_config_form_locked: 'Locked'
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1114,3 +1138,39 @@ count_resources: Amount of resources
 package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
 parameters_save_success: 'Parameters saved with success.'
 parameters_save_error: 'An error occured while saving parameters.'
+import_profile_pics: Import profile pics
+import_profile_pics_explanation: 'You must upload a zip file. Each file must be structured this way: username.extension'
+add_field_to_panel: Add a field
+add_panel_to_facet: Add a panel
+create_pane: Create a pane
+collapse: Collapse
+edit_panel_facet: Edit a panel
+administrativeCode: administrativeCode
+property: Property
+picture: User picture
+profile_properties_management: Profile properties management
+facet_management: Facet management
+installed: Installed
+available: Available
+install: Install
+up_to_date: Up to date
+update: Update
+package_install: Package install
+package_install_confirm: Do you really want to install %bundle% %version% ?
+backup_reminder: We recommand you to do a backup before going further.
+tips: Tips
+logs_error_location: The log files are located in app/logs/update-xxx.log.
+package_install_auto_reload: This page will be reload automatically once an operation is done
+activate_maintenance_mode: You should activate the maintenance mode before going further.
+install_update_cant_be_undone: Once an operation is started, it cannot be undone.
+list_view: List view (beta)
+last_modification: Last modification
+created_by: Created by %creator% the %creationDate%
+updated_by: 'Last update: %modificationDate%'
+display_at_registration: Display at registration
+workspace_max_users: Maximum number of user per workspace
+workspace_edit_form_endDate : Expiration date
+user_info: User informations
+activate_account_click: Click here to activate your account
+activate_account: Activate your account
+please_validate_your_account: An email was sent for you to activate your account

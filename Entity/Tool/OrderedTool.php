@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,8 +24,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     name="claro_ordered_tool",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_tool_ws_usr",
- *             columns={"tool_id", "workspace_id", "user_id"}
+ *             name="ordered_tool_unique_tool_user_type",
+ *             columns={"tool_id", "user_id", "ordered_tool_type"}
+ *         ),
+ *         @ORM\UniqueConstraint(
+ *             name="ordered_tool_unique_tool_ws_type",
+ *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
  *         ),
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_name_by_workspace",
@@ -35,6 +38,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *     }
  * )
  * @DoctrineAssert\UniqueEntity({"name", "workspace"})
+ * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
+ * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
  */
 class OrderedTool
 {
@@ -97,6 +102,16 @@ class OrderedTool
      * )
      */
     protected $rights;
+
+    /**
+     * @ORM\Column(name="ordered_tool_type", type="integer")
+     */
+    protected $type = 0;
+
+    /**
+     * @ORM\Column(name="is_locked", type="boolean")
+     */
+    protected $locked = false;
 
     public function __construct()
     {
@@ -176,5 +191,25 @@ class OrderedTool
     public function addRight(ToolRights $right)
     {
         $this->rights->add($right);
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
     }
 }

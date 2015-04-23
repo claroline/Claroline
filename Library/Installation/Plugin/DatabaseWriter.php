@@ -100,16 +100,6 @@ class DatabaseWriter
         $pluginEntity->setBundleName($pluginBundle->getBundleName());
         $pluginEntity->setHasOptions($pluginConfiguration['has_options']);
 
-        if (isset($pluginConfiguration['icon'])) {
-            $ds = DIRECTORY_SEPARATOR;
-            $iconWebDir = "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons";
-            $pluginEntity->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
-        } else {
-            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneByMimeType('custom/default');
-            $pluginEntity->setIcon($defaultIcon->getRelativeUrl());
-        }
-
         $this->em->persist($pluginEntity);
         $this->persistConfiguration($pluginConfiguration, $pluginEntity, $pluginBundle);
         $this->em->flush();
@@ -136,16 +126,6 @@ class DatabaseWriter
         }
 
         $plugin->setHasOptions($pluginConfiguration['has_options']);
-
-        if (isset($pluginConfiguration['icon'])) {
-            $ds = DIRECTORY_SEPARATOR;
-            $iconWebDir = "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons";
-            $plugin->setIcon("{$iconWebDir}{$ds}{$pluginConfiguration['icon']}");
-        } else {
-            $defaultIcon = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneByMimeType('custom/default');
-            $plugin->setIcon($defaultIcon->getRelativeUrl());
-        }
 
         $this->em->persist($plugin);
         $this->updateConfiguration($pluginConfiguration, $plugin, $pluginBundle);
@@ -216,6 +196,10 @@ class DatabaseWriter
             $this->persistResourceTypes($resource, $plugin, $pluginBundle);
         }
 
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->persistResourceAction($resourceAction);
+        }
+
         foreach ($processedConfiguration['widgets'] as $widget) {
             $this->createWidget($widget, $plugin, $pluginBundle);
         }
@@ -229,7 +213,7 @@ class DatabaseWriter
         }
 
         foreach ($processedConfiguration['admin_tools'] as $adminTool) {
-            $this->persistAdminTool($adminTool, $plugin);
+            $this->createAdminTool($adminTool, $plugin);
         }
     }
 
@@ -244,6 +228,10 @@ class DatabaseWriter
             $this->updateResourceTypes($resourceConfiguration, $plugin, $pluginBundle);
         }
 
+        foreach ($processedConfiguration['resource_actions'] as $resourceAction) {
+            $this->updateResourceAction($resourceAction);
+        }
+
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
             $this->updateWidget($widgetConfiguration, $pluginBundle, $plugin);
         }
@@ -254,6 +242,10 @@ class DatabaseWriter
 
         foreach ($processedConfiguration['themes'] as $themeConfiguration) {
             $this->updateTheme($themeConfiguration, $plugin);
+        }
+
+        foreach ($processedConfiguration['admin_tools'] as $adminTool) {
+            $this->updateAdminTool($adminTool, $plugin);
         }
     }
 
@@ -274,7 +266,6 @@ class DatabaseWriter
             $resourceType = new ResourceType();
             $resourceType->setName($resourceConfiguration['name']);
             $resourceType->setPlugin($plugin);
-
             $isExistResourceType = false;
         }
 
@@ -404,6 +395,39 @@ class DatabaseWriter
     }
 
     /**
+     * @param array $action
+     */
+    public function persistResourceAction(array $action)
+    {
+        $resourceAction = new MenuAction();
+
+        $resourceAction->setName($action['name']);
+        $resourceAction->setAsync(1);
+        $resourceAction->setIsForm($action['is_form']);
+        $resourceAction->setIsCustom(1);
+        $resourceAction->setValue(1);
+
+        $this->em->persist($resourceAction);
+
+        $this->em->flush();
+    }
+
+    /**
+     * @param array $action
+     */
+    public function updateResourceAction(array $action)
+    {
+        $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findOneBy(array('name' => $action['name'], 'resourceType' => null, 'isCustom' => true));
+
+        if ($resourceAction === null) {
+            $this->persistResourceAction($action);
+        } else {
+            $resourceAction->setIsForm($action['is_form']);
+        }
+    }
+
+    /**
      * @param array $actions
      * @param ResourceType $resourceType
      */
@@ -436,6 +460,7 @@ class DatabaseWriter
                 $rtca->setName($action['menu_name']);
                 $rtca->setResourceType($resourceType);
                 $rtca->setValue($decoder->getValue());
+                $rtca->setIsForm($action['is_form']);
                 $this->em->persist($rtca);
             }
         }
@@ -482,6 +507,7 @@ class DatabaseWriter
                     $menuAction
                         ->setName($action['menu_name'])
                         ->setResourceType($resourceType)
+                        ->setIsForm($action['is_form'])
                         ->setValue($decoder->getValue());
 
                     $this->em->persist($menuAction);
@@ -556,23 +582,14 @@ class DatabaseWriter
      */
     private function persistWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, Widget $widget)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
+        $widget->setDisplayableInDesktop($widgetConfiguration['is_displayable_in_desktop']);
+        $widget->setDisplayableInWorkspace($widgetConfiguration['is_displayable_in_workspace']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
         $widget->setPlugin($plugin);
-
-        if (isset($widgetConfiguration['icon'])) {
-            $widget->setIcon(
-                "bundles{$ds}{$pluginBundle->getAssetsFolder()}{$ds}images{$ds}icons{$ds}{$widgetConfiguration['icon']}"
-            );
-        } else {
-            $widget->setIcon(
-                "bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}res_default.png"
-            );
-        }
-
+        $widget->setDefaultWidth($widgetConfiguration['default_width']);
+        $widget->setDefaultHeight($widgetConfiguration['default_height']);
         $this->em->persist($widget);
     }
 
@@ -656,11 +673,15 @@ class DatabaseWriter
     private function persistTheme($themeConfiguration, Plugin $plugin, Theme $theme)
     {
         $theme->setName($themeConfiguration['name']);
-        $theme->setPath(
-            $plugin->getVendorName().
-            $plugin->getBundleName().":".
-            substr_replace($themeConfiguration['path'], ":", strpos($themeConfiguration['path'], "/"), 1)
-        );
+        $theme->setPath('ClarolineCoreBundle:less:claroline/theme.html.twig');
+
+        if ($themeConfiguration['path']) {
+            $theme->setPath(
+                $plugin->getVendorName().
+                $plugin->getBundleName().":".
+                substr_replace($themeConfiguration['path'], ":", strpos($themeConfiguration['path'], "/"), 1)
+            );
+        }
 
         $theme->setPlugin($plugin);
         $this->em->persist($theme);
@@ -670,13 +691,39 @@ class DatabaseWriter
      * @param array  $adminToolConfiguration
      * @param Plugin $plugin
      */
-    private function persistAdminTool($adminToolConfiguration, Plugin $plugin)
+    private function createAdminTool($adminToolConfiguration, Plugin $plugin)
     {
         $adminTool = new AdminTool();
+        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
+    }
+
+    /**
+     * @param array     $adminToolConfiguration
+     * @param Plugin    $plugin
+     * @param AdminTool $adminTool
+     */
+    private function persistAdminTool($adminToolConfiguration, Plugin $plugin, AdminTool $adminTool)
+    {
         $adminTool->setName($adminToolConfiguration['name']);
         $adminTool->setClass($adminToolConfiguration['class']);
         $adminTool->setPlugin($plugin);
         $this->em->persist($adminTool);
+    }
+
+    /**
+     * @param array  $adminToolConfiguration
+     * @param Plugin $plugin
+     */
+    private function updateAdminTool($adminToolConfiguration, Plugin $plugin)
+    {
+        $adminTool = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+            ->findOneByName($adminToolConfiguration['name']);
+
+        if ($adminTool === null) {
+            $adminTool = new AdminTool();
+        }
+
+        $this->persistAdminTool($adminToolConfiguration, $plugin, $adminTool);
     }
 
     /**

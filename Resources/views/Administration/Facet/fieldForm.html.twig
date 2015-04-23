@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block form %}
-    <form role="form" class="form-horizontal" action="{{ path('claro_admin_field_facet_create', {'facet': facet.getId()}) }}" method="post" {{ form_enctype(form) }} id="form_field_creation">
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_field_facet_create', {'panelFacet': panelFacet.getId()}) }}" method="post" {{ form_enctype(form) }} id="form_field_creation">
         <div class="modal-body">
             {{ form_widget(form) }}
         </div>

@@ -22,12 +22,14 @@ class Configuration implements ConfigurationInterface
     private $listNames;
     private $listTools;
     private $updateMode;
+    private $listResourceActions;
 
-    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools)
+    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions)
     {
         $this->plugin     = $plugin;
         $this->listNames  = $resourceNames;
         $this->listTools  = $listTools;
+        $this->listResourceActions = $listResourceActions;
         $this->updateMode = false;
     }
 
@@ -39,6 +41,7 @@ class Configuration implements ConfigurationInterface
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
         $this->addResourceSection($pluginSection);
+        $this->addResourceActionSection($pluginSection);
         $this->addToolSection($pluginSection);
         $this->addThemeSection($pluginSection);
         $this->addAdminToolSection($pluginSection);
@@ -147,6 +150,7 @@ class Configuration implements ConfigurationInterface
                             ->children()
                                 ->scalarNode('name')->isRequired()->end()
                                 ->scalarNode('menu_name')->end()
+                                ->booleanNode('is_form')->defaultFalse()->end()
                             ->end()
                          ->end()
                        ->end()
@@ -171,6 +175,36 @@ class Configuration implements ConfigurationInterface
         ->end()->end();
     }
 
+    public function addResourceActionSection($pluginSection)
+    {
+        $plugin = $this->plugin;
+        $pluginFqcn = get_class($plugin);
+        $listResourceActions = $this->listResourceActions;
+        $updateMode   = $this->isInUpdateMode();
+
+        $pluginSection
+            ->arrayNode('resource_actions')
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('name')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                            ->validate()
+                                ->ifTrue(
+                                    function ($v) use ($listResourceActions, $updateMode) {
+                                        return !$updateMode && in_array($v, $listResourceActions);
+                                    }
+                                )
+                                ->thenInvalid($pluginFqcn . ' : the resource action name already exists')
+                            ->end()
+                        ->end()
+                        ->booleanNode('is_form')->defaultFalse()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end()->end();
+    }
+
     private function addWidgetSection($pluginSection)
     {
         $plugin     = $this->plugin;
@@ -186,6 +220,10 @@ class Configuration implements ConfigurationInterface
                         ->isRequired()->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
+                        ->scalarNode('default_width')->defaultValue(4)->end()
+                        ->scalarNode('default_height')->defaultValue(3)->end()
+                        ->scalarNode('is_displayable_in_workspace')->defaultValue(true)->end()
+                        ->scalarNode('is_displayable_in_desktop')->defaultValue(true)->end()
                         ->scalarNode('icon')
                             ->validate()
                             ->ifTrue(
@@ -261,7 +299,7 @@ class Configuration implements ConfigurationInterface
                 ->prototype('array')
                     ->children()
                       ->scalarNode('name')->isRequired()->end()
-                      ->scalarNode('path')->isRequired()->end()
+                      ->scalarNode('path')->defaultValue(null)->end()
                     ->end()
                 ->end()
             ->end()

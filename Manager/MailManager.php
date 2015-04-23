@@ -91,6 +91,19 @@ class MailManager
         return $this->send($subject, $body, array($user));
     }
 
+    public function sendEnableAccountMessage($user)
+    {
+        $hash = $user->getResetPasswordHash();
+        $link = $this->router->generate('claro_security_activate_user', array('hash' => $hash), true);
+        $subject = $this->translator->trans('activate_account', array(), 'platform');
+
+        $body = $this->container->get('templating')->render(
+            'ClarolineCoreBundle:Mail:activateUser.html.twig', array('user' => $user, 'link' => $link)
+        );
+
+        return $this->send($subject, $body, array($user));
+    }
+
     /**
      * @param User $user
      *
@@ -131,7 +144,7 @@ class MailManager
      *
      * @return boolean
      */
-    public function send($subject, $body, array $users, $from = null)
+    public function send($subject, $body, array $users, $from = null, array $extra = array())
     {
         if ($this->isMailerAvailable()) {
             $to = [];
@@ -158,11 +171,18 @@ class MailManager
             }
 
             foreach ($users as $user) {
-
                 $mail = $user->getMail();
 
                 if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                     $to[] = $mail;
+                }
+            }
+
+            if (isset($extra['to'])) {
+                foreach ($extra['to'] as $mail) {
+                    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                        $to[] = $mail;
+                    }
                 }
             }
 
@@ -175,6 +195,10 @@ class MailManager
                 $message->setBcc($to);
             } else {
                 $message->setTo($to);
+            }
+
+            if (isset($extra['attachment'])) {
+                $message->attach(\Swift_Attachment::fromPath($extra['attachment'], "application/octet-stream"));
             }
 
             return $this->mailer->send($message) ? true : false;

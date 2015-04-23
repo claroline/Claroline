@@ -56,9 +56,12 @@ class PlatformConfiguration
     private $headerLocale;
     private $portfolioUrl;
     private $isNotificationActive;
-    private $createPersonnalWorkspace;
     private $maxStorageSize;
     private $maxUploadResources;
+    private $repositoryApi;
+    private $workspaceMaxUsers;
+    private $autoLogginAfterRegistration;
+    private $registrationMailValidation;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -578,16 +581,6 @@ class PlatformConfiguration
         $this->isNotificationActive = $bool;
     }
 
-    public function setCreatePersonnalWorkspace($personnalWs)
-    {
-        $this->createPersonnalWorkspace = $personnalWs;
-    }
-
-    public function getCreatePersonnalWorkspace()
-    {
-        return $this->createPersonnalWorkspace;
-    }
-
     public function setMaxStorageSize($maxSize)
     {
         $this->maxStorageSize = $maxSize;
@@ -606,5 +599,45 @@ class PlatformConfiguration
     public function getMaxUploadResources()
     {
         return $this->maxUploadResources;
+    }
+
+    public function setRepositoryApi($url)
+    {
+        $this->repositoryApi = $url;
+    }
+
+    public function getRepositoryApi()
+    {
+        return $this->repositoryApi;
+    }
+
+    public function setWorkspaceMaxUsers($wsMaxUsers)
+    {
+        $this->workspaceMaxUsers = $wsMaxUsers;
+    }
+
+    public function getWorkspaceMaxUsers()
+    {
+        return $this->workspaceMaxUsers;
+    }
+
+    public function setAutoLogginAfterRegistration($boolean)
+    {
+        $this->autoLogginAfterRegistration = $boolean;
+    }
+
+    public function getAutoLogginAfterRegistration()
+    {
+        return $this->autoLogginAfterRegistration;
+    }
+
+    public function setRegistrationMailValidation($boolean)
+    {
+        $this->registrationMailValidation = $boolean;
+    }
+
+    public function getRegistrationMailValidation()
+    {
+        return $this->registrationMailValidation ;
     }
 }

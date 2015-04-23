@@ -26,6 +26,7 @@ class ResourceQueryBuilder
     private $joinSingleRelatives = true;
     private $resultAsArray = false;
     private $leftJoinRights = false;
+    private $leftJoinLogs = false;
     private $selectClause;
     private $whereClause;
     private $orderClause;
@@ -42,8 +43,6 @@ class ResourceQueryBuilder
 
         $this->joinRelativesClause = "JOIN node.creator creator{$eol}" .
             "JOIN node.resourceType resourceType{$eol}" .
-            "LEFT JOIN node.next next{$eol}" .
-            "LEFT JOIN node.previous previous{$eol}" .
             "LEFT JOIN node.parent parent{$eol}" .
             "LEFT JOIN node.icon icon{$eol}";
     }
@@ -78,7 +77,7 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function selectAsArray($withMaxPermissions = false)
+    public function selectAsArray($withMaxPermissions = false, $withLastOpenDate = false)
     {
         $this->resultAsArray = true;
         $this->joinSingleRelatives = true;
@@ -91,16 +90,21 @@ class ResourceQueryBuilder
             "    parent.id as parent_id,{$eol}" .
             "    creator.username as creator_username,{$eol}" .
             "    resourceType.name as type,{$eol}" .
-            "    previous.id as previous_id,{$eol}" .
-            "    next.id as next_id,{$eol}" .
             "    icon.relativeUrl as large_icon,{$eol}" .
             "    node.mimeType as mime_type,{$eol}" .
+            "    node.index as index_dir,{$eol}" .
+            "    node.creationDate as creation_date,{$eol}" .
+            "    node.modificationDate as modification_date,{$eol}" .
             "    node.published as published";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;
-            $this->selectClause .=
-                    ",{$eol}rights.mask";
+            $this->selectClause .= ",{$eol}rights.mask";
+        }
+
+        if ($withLastOpenDate) {
+            $this->leftJoinLogs = true;
+            $this->selectClause .= ",{$eol}log.dateLog as last_opened";
         }
 
         $this->selectClause .= $eol;
@@ -119,6 +123,15 @@ class ResourceQueryBuilder
     {
         $this->addWhereClause('node.workspace = :workspace_id');
         $this->parameters[':workspace_id'] = $workspace->getId();
+
+        return $this;
+    }
+
+    public function addLastOpenDate(User $user)
+    {
+        $this->addWhereClause('log.doer = :doer_id');
+        $this->addWhereClause('log_node.id = node.id');
+        $this->parameters[':doer_id'] = $user->getId();
 
         return $this;
     }
@@ -425,6 +438,18 @@ class ResourceQueryBuilder
     }
 
     /**
+     * Orders nodes by index.
+     *
+     * @return Claroline\CoreBundle\Repository\ResourceQueryBuilder
+     */
+    public function orderByIndex()
+    {
+        $this->orderClause = 'ORDER BY node.index' . PHP_EOL;
+
+        return $this;
+    }
+
+    /**
      * Groups nodes by id.
      *
      * @return ResourceQueryBuilder
@@ -474,15 +499,20 @@ class ResourceQueryBuilder
             "LEFT JOIN node.rights rights{$eol}" .
             "JOIN rights.role rightRole{$eol}" :
             '';
+        $joinLogs = $this->leftJoinLogs ?
+            "JOIN node.logs log{$eol}" .
+            "JOIN log.resourceNode log_node{$eol}":
+            '';
         $dql =
             $this->selectClause .
             $this->fromClause.
             $joinRelatives .
             $joinRoles .
             $joinRights .
+            $joinLogs .
             $this->whereClause .
-            $this->orderClause .
-            $this->groupByClause;
+            $this->groupByClause .
+            $this->orderClause;
 
         return $dql;
     }
@@ -561,6 +591,21 @@ class ResourceQueryBuilder
             $this->parameters[":managerroles"] = $managerRoles;
             $this->addWhereClause($clause . ")");
         }
+
+        return $this;
+    }
+
+    /**
+     * Filters nodes by active value.
+     *
+     * @param boolean $active
+     *
+     * @return ResourceQueryBuilder
+     */
+    public function whereActiveIs($active)
+    {
+        $this->addWhereClause('node.active = :active');
+        $this->parameters[':active'] = $active;
 
         return $this;
     }

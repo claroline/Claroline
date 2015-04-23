@@ -27,7 +27,11 @@ class ToolRepository extends EntityRepository
      *
      * @throws \RuntimeException
      */
-    public function findDisplayedByRolesAndWorkspace(array $roles, Workspace $workspace)
+    public function findDisplayedByRolesAndWorkspace(
+        array $roles,
+        Workspace $workspace,
+        $orderedToolType = 0
+    )
     {
         if (count($roles) === 0) {
 
@@ -49,6 +53,7 @@ class ToolRepository extends EntityRepository
                     JOIN ot.rights r
                     JOIN r.role rr
                     WHERE ot.workspace = :workspace
+                    AND ot.type = :type
                     AND rr.name IN (:roleNames)
                     AND BIT_AND(r.mask, 1) = 1
                     ORDER BY ot.order
@@ -56,6 +61,7 @@ class ToolRepository extends EntityRepository
                 $query = $this->_em->createQuery($dql);
                 $query->setParameter('workspace', $workspace);
                 $query->setParameter('roleNames', $roles);
+                $query->setParameter('type', $orderedToolType);
             } else {
                 $dql = '
                     SELECT tool
@@ -77,17 +83,53 @@ class ToolRepository extends EntityRepository
      *
      * @return array[Tool]
      */
-    public function findDesktopDisplayedToolsByUser(User $user)
+    public function findDesktopDisplayedToolsByUser(User $user, $orderedToolType = 0)
     {
         $dql = "
-            SELECT tool FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
             JOIN tool.orderedTools ot
             JOIN ot.user user
             WHERE user.id = {$user->getId()}
+            AND ot.type = :type
             AND ot.isVisibleInDesktop = true
+            AND tool.isDisplayableInDesktop = true
             ORDER BY ot.order
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the visible tools in a user's desktop.
+     *
+     * @param User $user
+     *
+     * @return array[Tool]
+     */
+    public function findDesktopDisplayedToolsWithExclusionByUser(
+        User $user,
+        array $excludedTools,
+        $orderedToolType = 0
+    )
+    {
+        $dql = "
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            JOIN tool.orderedTools ot
+            JOIN ot.user user
+            WHERE user.id = {$user->getId()}
+            AND ot.type = :type
+            AND ot.isVisibleInDesktop = true
+            AND tool.isDisplayableInDesktop = true
+            AND tool NOT IN (:excludedTools)
+            ORDER BY ot.order
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+        $query->setParameter('excludedTools', $excludedTools);
 
         return $query->getResult();
     }
@@ -99,7 +141,7 @@ class ToolRepository extends EntityRepository
      *
      * @return array[Tool]
      */
-    public function findDesktopUndisplayedToolsByUser(User $user)
+    public function findDesktopUndisplayedToolsByUser(User $user, $orderedToolType = 0)
     {
         $dql = "
             SELECT tool
@@ -110,10 +152,38 @@ class ToolRepository extends EntityRepository
                 JOIN tool_2.orderedTools ot_2
                 JOIN ot_2.user user_2
                 WHERE user_2.id = {$user->getId()}
+                AND ot_2.type = :type
             )
             AND tool.isDisplayableInDesktop = true
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
+
+        return $query->getResult();
+    }
+
+    /**
+     * Returns the non-visible tools in a user's desktop in admin configuration.
+     *
+     * @return array[Tool]
+     */
+    public function findDesktopUndisplayedToolsByTypeForAdmin($orderedToolType = 0)
+    {
+        $dql = "
+            SELECT tool
+            FROM Claroline\CoreBundle\Entity\Tool\Tool tool
+            WHERE tool NOT IN (
+                SELECT tool_2
+                FROM Claroline\CoreBundle\Entity\Tool\Tool tool_2
+                JOIN tool_2.orderedTools ot_2
+                WHERE ot_2.user IS NULL
+                AND ot_2.workspace IS NULL
+                AND ot_2.type = :type
+            )
+            AND tool.isDisplayableInDesktop = true
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -125,7 +195,10 @@ class ToolRepository extends EntityRepository
      *
      * @return array[Tool]
      */
-    public function findUndisplayedToolsByWorkspace(Workspace $workspace)
+    public function findUndisplayedToolsByWorkspace(
+        Workspace $workspace,
+        $orderedToolType = 0
+    )
     {
         $dql = "
             SELECT tool
@@ -137,9 +210,11 @@ class ToolRepository extends EntityRepository
                 JOIN ot.workspace ws
                 WHERE ws.id = {$workspace->getId()}
                 AND tool.isDisplayableInWorkspace = true
+                AND ot.type = :type
             )
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -151,7 +226,10 @@ class ToolRepository extends EntityRepository
      *
      * @return array[Tool]
      */
-    public function findDisplayedToolsByWorkspace(Workspace $workspace)
+    public function findDisplayedToolsByWorkspace(
+        Workspace $workspace,
+        $orderedToolType = 0
+    )
     {
         $dql = '
             SELECT tool
@@ -159,9 +237,11 @@ class ToolRepository extends EntityRepository
             JOIN tool.orderedTools ot
             JOIN ot.workspace ws
             WHERE ws = :workspace
+            AND ot.type = :type
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getResult();
     }
@@ -173,7 +253,10 @@ class ToolRepository extends EntityRepository
      *
      * @return integer
      */
-    public function countDisplayedToolsByWorkspace(Workspace $workspace)
+    public function countDisplayedToolsByWorkspace(
+        Workspace $workspace,
+        $orderedToolType = 0
+    )
     {
         $dql = "
             SELECT count(tool)
@@ -181,8 +264,10 @@ class ToolRepository extends EntityRepository
             JOIN tool.orderedTools ot
             JOIN ot.workspace ws
             WHERE ws.id = {$workspace->getId()}
+            AND ot.type = :type
         ";
         $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $orderedToolType);
 
         return $query->getSingleScalarResult();
     }

@@ -18,9 +18,22 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Csv implements ExporterInterface
 {
+    private $tmpLogPath;
+
+    /**
+     * @DI\InjectParams({
+     *     "tmp" = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
+     * })
+     */
+    public function __construct($tmp)
+    {
+        $this->tmpLogPath = $tmp;
+    }
+
     public function export(array $titles, array $data)
     {
-        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "file.csv";
+        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . '.csv';
+        file_put_contents($this->tmpLogPath, $tmpFile . "\n", FILE_APPEND);
         $fp = fopen($tmpFile, 'w');
 
         fputcsv($fp, $titles);

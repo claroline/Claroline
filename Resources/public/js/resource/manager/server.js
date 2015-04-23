@@ -28,6 +28,7 @@
             'copy-nodes': 'copy',
             'move-nodes': 'move',
             'order-nodes': 'order',
+            'list-mode': 'listMode',
             'filter': 'filter',
             'change-zoom': 'zoom',
             'custom-action': 'customAction',
@@ -206,9 +207,9 @@
 
     server.prototype.order = function (event) {
         $.ajax({
-            url: Routing.generate('claro_resource_insert_before', {
+            url: Routing.generate('claro_resource_insert_at', {
                 'node': event.nodeId,
-                'nextId': event.nextId
+                'index': event.index
             })
         });
     };
@@ -276,4 +277,8 @@
             node: event.nodeId
         });
     };
+
+    server.prototype.listMode = function (event) {
+        this.dispatcher.trigger('list-mode-' + event.viewName, {mode: event.mode});
+    }
 })();

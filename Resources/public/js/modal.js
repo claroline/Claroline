@@ -132,16 +132,16 @@
      * @param title The title of the modal.
      * @param content The content of the modal.
      */
-    modal.confirmContainer = function (title, content)
+    modal.confirmContainer = function (title, content, longModal)
     {
+        var btnSuccess = common.createElement('button', 'btn btn-primary btn-modal-confirm').html(translator.trans('Ok', {}, 'home'));
+        if (!longModal) btnSuccess.attr('data-dismiss', 'modal');
+
         var footer = common.createElement('div').append(
-            common.createElement('button', 'btn btn-default')
+            common.createElement('button', 'btn btn-default btn-modal-cancel')
             .html(translator.trans('cancel', {}, 'platform'))
             .attr('data-dismiss', 'modal')
-        ).append(
-            common.createElement('button', 'btn btn-primary').html(translator.trans('Ok', {}, 'home'))
-            .attr('data-dismiss', 'modal')
-        );
+        ).append(btnSuccess);
 
         return modal.simpleContainer(title, content, footer);
     };
@@ -185,17 +185,18 @@
 
     /**
      * Displays a form in a modal. The form requires all the modals divs and layout because it's pretty much impossible
-     * to render something pretty otherwise as the form will usually include the class modal-body for datas and
-     * modal-footer for submissions/cancelation.
-     * The modal root element must contain the class "modal-dialog"
+     * to render something pretty otherwise as the form will usually include the class modal-body for data and
+     * modal-footer for submission/cancelling.
+     * The modal root element must contain the class "modal-dialog".
      *
      * It assumes the route for the form submission returns:
-     * - a json response when successfull
-     * - the form rendered with its errors when an error occured
+     * - a json response when successful
+     * - the form rendered with its errors when an error occurred
      *
-     * @param url The route of the controller rendering the form
-     * @param successHandler A successHandler
-     * @param formRenderHandler an action wich is done after the form is rendered the first time
+     * @param url               The route of the controller rendering the form
+     * @param successHandler    A function called after a successful submission of the form
+     * @param formRenderHandler A function called when the form is first rendered
+     * @param formId            The id of the form
      */
     modal.displayForm = function (url, successHandler, formRenderHandler, formId) {
         $.ajax(url)
@@ -204,8 +205,16 @@
 
             modalElement.on('click', 'button.btn', function (event) {
                 event.preventDefault();
-                modal.submitForm(modalElement, successHandler, formId);
+                modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });
+
+            modalElement.on('keypress', function (e) {
+                if (e.keyCode === 13 && e.target.nodeName !== 'TEXTAREA') {
+                    event.preventDefault();
+                    modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
+                }
+            });
+
             formRenderHandler(data);
         })
         .error(function () {
@@ -221,28 +230,54 @@
      *      data (the data wich are returned by the ajax request)
      * )
      * @param url the url wich is going to be confirmed
-     * @param successHandler a sucessHandler
-     * @param successParameter a parameter required by the request handler
+     * @param successHandler a sucess handler
+     * @param successParameter a parameter required by the success handler
      * @param content the modal body
      * @param title the modal header
+     * @param waitingHandler a waiting handler
+     * @param waitingHandlerParameters a parameter required by the waiting handler
+     * @param errorHandler an error handler
+     * @param errorParameters an error parameter required by the error handler
+     * @param longModal the modal doesn't close on click
      */
-    modal.confirmRequest = function (url, successHandler, successParameter, content, title) {
-        modal.confirmContainer(title, content).on('click', '.btn-primary', function (event) {
+    modal.confirmRequest = function (
+        url,
+        successHandler,
+        successParameter,
+        content,
+        title,
+        waitingHandler,
+        waitingParameters,
+        errorHandler,
+        errorParameters,
+        longModal
+    ) {
+        var myModal = modal.confirmContainer(title, content, longModal);
+        myModal.on('click', '.btn-primary', function (event) {
+            if (waitingHandler) waitingHandler(waitingParameters);
             $.ajax(url)
             .success(function (data) {
                 successHandler(event, successParameter, data);
             })
             .error(function () {
-                modal.error();
+                if (errorHandler) {
+                    errorHandler(errorParameters)
+                } else {
+                    modal.error();
+                }
             });
         });
+
+        return myModal;
     };
 
     /**
      * This method is triggered when submit a form inside a modal created with modal.displayForm()
      */
-    modal.submitForm = function (modalElement, callBack, formId)
+    modal.submitForm = function (modalElement, callBack, formId, formRenderHandler)
     {
+        formRenderHandler = formRenderHandler || function () {};
+
         if (formId) {
             //this implementation works
             var form = $(modalElement).find('form');
@@ -263,6 +298,7 @@
                     } else {
                         //how do I find the root element of html ? It would be better to not have to use this class.
                         $('.modal-dialog').replaceWith(data);
+                        formRenderHandler(data);
                     }
                 }
             });
@@ -279,6 +315,7 @@
                     callBack(data, textStatus, jqXHR);
                 } else {
                     $('.modal-dialog', modalElement).replaceWith(data);
+                    formRenderHandler(data);
                 }
             })
             .error(function () {

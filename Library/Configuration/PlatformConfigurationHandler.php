@@ -4,7 +4,7 @@
  * This file is part of the Claroline Connect package.
  *
  * (c) Claroline Consortium <consortium@claroline.net>
- *
+ *A
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -70,20 +70,31 @@ class PlatformConfigurationHandler
         'header_locale' => false,
         'portfolio_url' => null,
         'is_notification_active' => true,
-        'createPersonnalWorkspace' => true,
         'max_storage_size' => Workspace::DEFAULT_MAX_STORAGE_SIZE,
-        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT
+        'max_upload_resources' => Workspace::DEFAULT_MAX_FILE_COUNT,
+        'max_workspace_users' => Workspace::DEFAULT_MAX_USERS,
+        'confirm_send_datas' => null,
+        'token' => null,
+        'country' => '-',
+        'datas_sending_url' => 'http://stats.claroline.net/insert.php',
+        'repository_api' => 'http://packages.claroline.net/api.php',
+        'auto_logging_after_registration' => false,
+        'registration_mail_validation' => false,
+        'resource_soft_delete' => false
     );
+    private $lockedParameters;
 
     /**
      * @DI\InjectParams({
-     *     "configFile" = @DI\Inject("%claroline.param.platform_options_file%")
+     *     "configFile"       = @DI\Inject("%claroline.param.platform_options_file%"),
+     *     "lockedConfigFile" = @DI\Inject("%claroline.param.locked_platform_options_file%")
      * })
      */
-    public function __construct($configFile)
+    public function __construct($configFile, $lockedConfigFile)
     {
         $this->configFile = $configFile;
         $this->parameters = $this->mergeParameters();
+        $this->lockedParameters = $this->generateLockedParameters($lockedConfigFile);
     }
 
     public function hasParameter($parameter)
@@ -97,9 +108,7 @@ class PlatformConfigurationHandler
 
     public function getParameter($parameter)
     {
-        $this->checkParameter($parameter);
-
-        return $this->parameters[$parameter];
+        if ($this->hasParameter($parameter)) return $this->parameters[$parameter];
     }
 
     public function setParameter($parameter, $value)
@@ -111,18 +120,21 @@ class PlatformConfigurationHandler
             throw $exception;
         }
 
-        $this->checkParameter($parameter);
         $this->parameters[$parameter] = $value;
         $this->saveParameters();
     }
 
     public function setParameters(array $parameters)
     {
-        foreach (array_keys($parameters) as $parameter) {
-            $this->checkParameter($parameter);
-        }
+        $toMerge = array();
 
-        $this->parameters = array_merge($this->parameters, $parameters);
+        foreach ($parameters as $key => $value) {
+
+            if (!isset($this->lockedParameters[$key])) {
+                $toMerge[$key] = $value;
+            }
+        }
+        $this->parameters = array_merge($this->parameters, $toMerge);
         $this->saveParameters();
     }
 
@@ -171,9 +183,12 @@ class PlatformConfigurationHandler
         $config->setHeaderLocale($this->parameters['header_locale']);
         $config->setPortfolioUrl($this->parameters['portfolio_url']);
         $config->setIsNotificationActive($this->parameters['is_notification_active']);
-        $config->setCreatePersonnalWorkspace($this->parameters['createPersonnalWorkspace']);
         $config->setMaxUploadResources($this->parameters['max_upload_resources']);
         $config->setMaxStorageSize($this->parameters['max_storage_size']);
+        $config->setRepositoryApi($this->parameters['repository_api']);
+        $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
+        $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
+        $config->setRegistrationMailValidation($this->parameters['registration_mail_validation']);
 
         return $config;
     }
@@ -190,9 +205,7 @@ class PlatformConfigurationHandler
         $parameters = $this->defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
-            if (array_key_exists($parameter, $parameters)) {
-                $parameters[$parameter] = $value;
-            }
+            $parameters[$parameter] = $value;
         }
 
         return $parameters;
@@ -215,5 +228,25 @@ class PlatformConfigurationHandler
     public function getDefaultParameters()
     {
         return $this->defaultParameters;
+    }
+
+    public function getLockedParamaters()
+    {
+        return $this->lockedParameters;
+    }
+
+    protected function generateLockedParameters($lockedConfigFile)
+    {
+        $lockedParameters = array();
+
+        if (file_exists($lockedConfigFile)) {
+            $lockedConfigParameters = Yaml::parse(file_get_contents($lockedConfigFile)) ?: array();
+
+            foreach ($lockedConfigParameters as $parameter => $value) {
+                $lockedParameters[$parameter] = $value;
+            }
+        }
+
+        return $lockedParameters;
     }
 }

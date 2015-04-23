@@ -4,3 +4,7 @@ workspace-registration-decline: 'ha rechazado su demanda de inscripción al espa
 workspace-role-change_right: 'Ha accedido al recurso %resource% del espacio de trabajo %workspace%'
 workspace-role-subscribe_group: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'
 workspace-role-subscribe_user: 'Se ha inscrito al rol ''%role%'' del espacio de trabajo %workspace%'
+role-change_right: Acceso al recurso
+registration-decline: Denegación de inscripción
+role-subscribe: Nueva inscripción
+badge-award: Badges

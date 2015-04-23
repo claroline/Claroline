@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -68,19 +69,19 @@ class FileManager
     {
         $ds = DIRECTORY_SEPARATOR;
         $node = $file->getResourceNode();
-        $workspaceCode = $node->getWorkspace()->getCode();
+        $workspaceId = $node->getWorkspace()->getId();
 
         //edit file
         $fileName = $upload->getClientOriginalName();
         $size = @filesize($upload);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $upload->getClientMimeType();
-        $hashName = $workspaceCode .
+        $hashName = 'WORKSPACE_' . $workspaceId .
             $ds .
             $this->ut->generateGuid() .
             "." .
             $extension;
-        $upload->move($this->fileDir . $ds . $workspaceCode, $hashName);
+        $upload->move($this->fileDir . $ds .  'WORKSPACE_' . $workspaceId, $hashName);
         $file->setSize($size);
         $file->setHashName($hashName);
         $file->setMimeType($mimeType);
@@ -94,5 +95,11 @@ class FileManager
         $this->om->persist($file);
         $this->om->persist($node);
         $this->om->flush();
+    }
+
+    public function getDirectoryChildren(ResourceNode $parent)
+    {
+        return $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\File')
+            ->findDirectoryChildren($parent);
     }
 }

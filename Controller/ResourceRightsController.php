@@ -160,7 +160,7 @@ class ResourceRightsController
             $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
         }
 
-        return new Response('', 204, array('Content-Type' => 'application/json'));
+        return new Response('', 200, array('Content-Type' => 'application/json'));
     }
 
 

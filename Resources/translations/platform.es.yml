@@ -125,6 +125,7 @@ add_widget_to_home_tab: 'Agregar un widget a esta pestaña'
 add_workspace: 'Agregar un espacio de trabajo'
 admin: 'Administrador'
 admin_analytics: 'Análisis de la plataforma'
+admin_desktop_and_home_tabs_configuration: 'Configuración del escritorio y de las pestañas'
 admin_home_tabs_configuration: 'Configuración de las pestañas de inicio'
 admin_logs: 'Registros de la plataforma'
 admin_third_party_application: 'Aplicaciones terceras'
@@ -133,6 +134,7 @@ administration: 'Administración'
 administrative_code: 'Código administrativo'
 advanced: 'Avanzado'
 agenda: 'Agenda'
+agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: 'Todos'
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'
 all_my_workspaces: 'Todos mis espacios de trabajo'
@@ -197,17 +199,17 @@ collaborative: Colaboración
 collaborator: 'Colaborador'
 comments: Comentarios
 communication: 'Comunicación'
-competence: Competencia
-competences: Competencias
 completed: Completado
 configuration: 'Configuración'
 configure: 'Configurar'
+confirm_send_data: 'Sugerimos confirmar su acuerdo para enviar datos:'
 connections: 'Conexiones'
 cookie_lifetime: 'Duración de la cookie'
 copiable: 'Copiable'
 copy: 'Copiar'
 core_packages: Core packages
 create: 'Crear'
+create_and_update: 'Crear y actualizar'
 create_category: 'Crear una categoría'
 create_facet: Crear una faceta
 create_field: Crear un campo
@@ -216,6 +218,7 @@ create_new_admin_tag: 'Crear una etiqueta de administrador'
 create_new_home_tab: 'Crear una pestaña'
 create_new_tag: 'Crear una etiqueta'
 create_new_user_account: 'Nuevo usuario'
+create_only: 'Crear sólo'
 create_role: Crear un rol
 create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
@@ -286,9 +289,11 @@ delete_category_confirm_title: 'Supresión de categoría'
 delete_home_tab: 'Suprimir pestaña'
 description: 'Descripción'
 desktop: 'Escritorio'
+desktop_and_home: 'Escritorio e inicio'
 desktop_home_tab_creation: 'Creación de pestañas en el escritorio'
 desktop_home_tab_edition: 'Modificación de de pestañas en el escritorio'
 desktop_home_tabs: 'Pestañas del escritorio'
+desktop_parameters: 'Parámetros del escritorio'
 desktop_tools: 'Herramientas del escritorio'
 directory: 'Carpeta'
 directory_form_name: 'Nombre'
@@ -380,9 +385,11 @@ groups: 'Grupos'
 groups_list: 'Lista de grupos'
 groups_per_page: 'Grupos por página'
 groups_registration_in_workspace: 'Inscripción de un grupo a un espacio de trabajo'
+has_been_created: 'ha sido creado'
 has_been_put_in_category: 'ha sido agregado en una categoría'
 has_been_suscribed_with_role: 'ha sido inscrito en un rol'
 has_been_suscribed_with_role_group: 'ha sido inscrito con un rol'
+has_been_updated: 'ha sido actualizado'
 has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
 hide: 'Ocultar'
@@ -391,6 +398,8 @@ home: 'Inicio'
 home_manager: 'Gestionario de inicio'
 home_parameters: 'Parámetros'
 home_tab: 'Pestañas'
+home_tab_config_form_locked: 'Bloqueado'
+home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Creación de pestañas'
 home_tab_delete_confirm_message: '¿Está seguro que desea suprimir esta pestaña?'
 home_tab_delete_confirm_title: 'Suprimir pestaña'
@@ -409,6 +418,9 @@ import_users: 'Importar usuarios'
 incomplete: Incompleto
 individual: Individual
 informations: 'Informaciones'
+infos_sending_acceptance: 'Aceptación del envío de información '
+infos_sending_bar_msg: 'Haga clic en esta barra para obtener más información '
+infos_sending_has_not_been_accepted: 'El envío de información no fue aceptado '
 initialize: Inicializar
 inscription_mail: 'Inscripción de correo electrónico'
 instructions: 'Instrucciones'
@@ -443,7 +455,7 @@ list_groups: 'Lista de grupos'
 list_role: Lista de roles
 list_users: 'Lista de usuarios'
 list_workspaces: 'Lista de espacios de trabajo'
-lock: 'Desactivar'
+lock: 'Bloquear'
 login: 'Conexión'
 login_failure: 'La conexión ha fallado. Compruebe si su nombre de usuario y la contraseña son correctos.'
 logout: 'Cerrar sesión'
@@ -470,6 +482,8 @@ manual: Manual
 manual_evaluation_explanation: 'Evaluación manual del administrador del espacio de trabajo'
 max_size_is: 'El tamaño máximo es %size%'
 media_most_viewed: 'Recurso más visto'
+menu_bar: 'Barra de menú'
+menu_bar_configuration: 'Configuración de la barra de menú'
 message_form_content: 'Contenido'
 message_form_object: 'Asunto'
 message_form_to: 'A'
@@ -487,6 +501,7 @@ missing_%content%: 'La variable %content% falta en la lengua "%language%".'
 missing_%password%: 'La variable %password% falta en la lengua "%language%".'
 missing_%username%: 'La variable %username% falta en la lengua "%language%".'
 mixed: Mezclado
+mode: 'Modo'
 model: Modelo
 month.April: 'Abril'
 month.August: 'Agosto'
@@ -574,6 +589,7 @@ password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
 paste: 'Pegar'
 path: 'Ruta'
 permissions: 'Permisos'
+personal_data: 'No se recuperarán datos personales. Los datos técnicos y estadísticos recogidos serán utilizados sólo en relación con el proyecto Claroline Connect y no serán difundidos de otra manera.'
 personal_workspace: 'Espacio de trabajo personal - '
 personal_workspaces_only: 'Solamente los espacios de trabajo personales'
 phone: 'Teléfono'
@@ -610,6 +626,7 @@ please_wait: 'Por favor espere...'
 plugin_packages: Plugin packages
 position: 'posición'
 positive_number_expected: 'Este valor debería ser un número positivo'
+preferences: 'Preferencias'
 private: 'Privado'
 profile_management: Gestión de perfiles
 properties: 'propiedades'
@@ -761,6 +778,8 @@ show_profile_for_anonymous: Profil public access for anonymous.
 simple: 'Simple'
 start_date: 'Fecha de inicio'
 start_maintenance: Lanzar el modo de mantenimiento
+statistics: 'Estadísticos'
+statistics_data: 'número de espacios de trabajo y usuarios'
 status: Estado
 storage_type: 'Tipo de almacenamiento'
 subcategories: 'subcategorías'
@@ -782,6 +801,8 @@ tags_list: 'Lista de etiquetas'
 tags_management: 'Gestión de etiquetas'
 tags_organization: 'Organización de las etiquetas'
 teacher: 'Profesor'
+technical: 'Técnicos'
+technical_data: 'URL, versión, idioma principal, IP y correo electrónico de soporte'
 terms_enabled_but_empty: Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.
 text: Texto
 text_form_content: 'Contenido'
@@ -847,6 +868,10 @@ unpublish: Despublicar
 unpublished: No publicado
 unregister: 'Desinscribir'
 unregister_from_a_workspace: 'Desinscribir de un espacio de trabajo'
+unregister_group_confirm_message: '¿Está seguro que desea desinscribir este grupo?'
+unregister_group_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% grupos?'
+unregister_user_confirm_message: '¿Está seguro que desea desinscribir este usuario?'
+unregister_user_s_confirm_message: '¿Está seguro que desea desinscribir estos %count% usuarios?'
 unregistered: 'No inscritos'
 unregistered_groups: 'Grupos no inscritos'
 unregistered_users: 'Usuarios no inscritos'
@@ -865,6 +890,9 @@ user_creation_success: El usuario se ha creado con éxito.
 user_limit_reached: Ha llegado al limite de creación de usuarios.
 user_limit_success_update: El número máximo de usuarios por rol ha sido actualizado con éxito.
 user_limit_too_low: Ya hay %total% %role%(s). El limite %newMax% es muy bajo.
+user_menu: 'Menú usuario'
+user_menu_configuration: 'Configuración del menú usuario'
+user_options_form_desktopBackgroundColor: 'Color de fondo del escritorio'
 user_parameters: 'Parámetros del usuario'
 user_removed: 'Usuario suprimido'
 username: 'Nombre de usuario'
@@ -893,7 +921,11 @@ visitor: 'Visitante'
 warning_user_impersonation: 'Usted esta conectado como %user%.'
 warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio de trabajo %workspace%.'
 widget: 'Widget'
+widget_configuration: 'Configuración del Widget'
+widget_display_config_form_color: 'Color'
 widget_display_form_name: 'Nombre'
+widget_home_tab_config_form_locked: 'Bloqueado'
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
 widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
 widget_settings: 'Configuración del Widget'
@@ -963,3 +995,37 @@ yes: Sí
 yesterday_activity: 'Actividades de ayer'
 your_username: 'Su nombre de usuario es '
 activate_personal_workspace_creation: Activar la creación de espacios personales.
+add_field_to_panel: add_field_to_panel
+add_panel_to_facet: add_panel_to_facet
+create_pane: create_pane
+collapse: collapse
+edit_panel_facet: edit_panel_facet
+administrativeCode: administrativeCode
+property: property
+picture: picture
+profile_properties_management: profile_properties_management
+facet_management: facet_management
+installed: installed
+available: available
+install: install
+up_to_date: up_to_date
+update: update
+package_install: package_install
+package_install_confirm: package_install_confirm
+backup_reminder: backup_reminder
+tips: tips
+logs_error_location: logs_error_location
+package_install_auto_reload: package_install_auto_reload
+activate_maintenance_mode: activate_maintenance_mode
+install_update_cant_be_undone: install_update_cant_be_undone
+list_view: list_view
+last_modification: last_modification
+created_by: created_by
+updated_by: updated_by
+display_at_registration: display_at_registration
+workspace_max_users: workspace_max_users
+workspace_edit_form_endDate : workspace_edit_form_endDate
+user_info: user_info
+activate_account_click: activate_account_click
+activate_account: activate_account
+please_validate_your_account: please_validate_your_account

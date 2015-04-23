@@ -20,16 +20,6 @@ use Symfony\Component\Console\Output\NullOutput;
 
 class AdditionalInstaller extends BaseInstaller
 {
-    private $logger;
-
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        };
-    }
-
     public function preInstall()
     {
         $this->setLocale();
@@ -59,12 +49,17 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater030800($this->container);
                 $updater->setLogger($this->logger);
                 $updater->preUpdate();
+            case version_compare($currentVersion, '4.8.0', '<'):
+                $updater = new Updater\Updater040800($this->container);
+                $updater->setLogger($this->logger);
+                $updater->preUpdate();
         }
     }
 
     public function postUpdate($currentVersion, $targetVersion)
     {
         $this->setLocale();
+
         switch (true) {
             case version_compare($currentVersion, '2.0', '<')  && version_compare($targetVersion, '2.0', '>='):
                 $updater = new Updater\Updater020000($this->container);
@@ -177,6 +172,34 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->postUpdate();
             case version_compare($currentVersion, '4.1.0', '<'):
                 $updater = new Updater\Updater040100($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.2.0', '<'):
+                $updater = new Updater\Updater040200($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.5.0', '<'):
+                $updater = new Updater\Updater040500($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.8.0', '<'):
+                $updater = new Updater\Updater040800($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.8.1', '<'):
+                $updater = new Updater\Updater040801($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.8.4', '<'):
+                $updater = new Updater\Updater040804($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.10.0', '<'):
+                $updater = new Updater\Updater041000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '4.11.1', '<'):
+                $updater = new Updater\Updater041101($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }

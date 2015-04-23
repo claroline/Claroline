@@ -16,6 +16,7 @@
     var stackedRequests = 0;
     var modal = window.Claroline.Modal;
     var translator = window.Translator;
+    var claroDate = window.Claroline.ClaroDate;
 
     var ajaxServerErrorHandler = function (statusCode, responseText) {
         if (env !== 'prod') {
@@ -105,4 +106,7 @@
         }
     });
     $(window).on('hashchange', shiftWindow);
+
+
+
 })();

@@ -14,8 +14,13 @@ namespace Claroline\CoreBundle\Controller\Administration;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_logs')")
+ */
 class LogsController extends Controller
 {
     /**
@@ -42,19 +47,6 @@ class LogsController extends Controller
      */
     public function logListAction($page)
     {
-        $this->checkOpen();
-
         return $this->get('claroline.log.manager')->getAdminList($page);
-    }
-
-    private function checkOpen()
-    {
-        $logsTool = $this->get('claroline.manager.tool_manager')->getAdminToolByName('platform_logs');
-
-        if ($this->get('security.context')->isGranted('OPEN', $logsTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }

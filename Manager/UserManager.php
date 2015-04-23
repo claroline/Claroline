@@ -35,6 +35,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @DI\Service("claroline.manager.user_manager")
@@ -127,26 +128,39 @@ class UserManager
     public function createUser(User $user, $sendMail = true, $additionnalRoles = array(), $model = null)
     {
         $this->objectManager->startFlushSuite();
-        $createPersonalWorkspace = $this->container
-            ->get('claroline.config.platform_config_handler')
-            ->getParameter('createPersonnalWorkspace');
 
-        if ($createPersonalWorkspace) $this->setPersonalWorkspace($user, $model);
+        if ($this->personalWorkspaceAllowed($additionnalRoles)) {
+            $this->setPersonalWorkspace($user, $model);
+        }
         $user->setPublicUrl($this->generatePublicUrl($user));
-        $this->toolManager->addRequiredToolsToUser($user);
+        $this->toolManager->addRequiredToolsToUser($user, 0);
+        $this->toolManager->addRequiredToolsToUser($user, 1);
         $this->roleManager->setRoleToRoleSubject($user, PlatformRoles::USER);
         $this->objectManager->persist($user);
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', array($user));
         $this->roleManager->createUserRole($user);
 
         foreach ($additionnalRoles as $role) {
-            if ($role) $user->addRole($role);
+            if ($role) {
+                $this->roleManager->associateRole($user, $role);
+            }
         }
 
         $this->objectManager->endFlushSuite();
 
         if ($this->mailManager->isMailerAvailable() && $sendMail) {
-            $this->mailManager->sendCreationMessage($user);
+            //send a validation by hash
+            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
+                $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+                $user->setResetPasswordHash($password);
+                $user->setIsEnabled(false);
+                $this->objectManager->persist($user);
+                $this->objectManager->flush();
+                $this->mailManager->sendEnableAccountMessage($user);
+            } else {
+            //don't change anything
+                $this->mailManager->sendCreationMessage($user);
+            }
         }
 
         return $user;
@@ -235,6 +249,8 @@ class UserManager
      * This user will have the additional role  $roleName.
      * $roleName must already exists.
      *
+     * @todo remove this and user createUser instead
+     * @deprecated
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param string                            $roleName
      *
@@ -243,36 +259,11 @@ class UserManager
     public function createUserWithRole(User $user, $roleName)
     {
         $this->objectManager->startFlushSuite();
-        $this->createUser($user);
-        $this->roleManager->setRoleToRoleSubject($user, $roleName);
+        $role = $this->roleManager->getRoleByName($roleName);
+        $this->createUser($user, true, array($role));
         $this->objectManager->endFlushSuite();
 
         return $user;
-    }
-
-    /**
-     * Create a user.
-     * Its basic properties (name, username,... ) must already be set.
-     * This user will have the additional roles $roles.
-     * These roles must already exists.
-     *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     */
-    public function insertUserWithRoles(User $user, ArrayCollection $roles)
-    {
-        $this->objectManager->startFlushSuite();
-        $this->createUser($user);
-        foreach ($roles as $role) {
-            $validated = $this->roleManager->validateRoleInsert($user, $role);
-
-            if (!$validated) {
-                throw new Exception\AddRoleException();
-            }
-        }
-
-        $this->roleManager->associateRoles($user, $roles);
-        $this->objectManager->endFlushSuite();
     }
 
     /**
@@ -295,6 +286,7 @@ class UserManager
      */
     public function importUsers(array $users, $sendMail = true, $logger = null, $additionalRoles = array())
     {
+        $returnValues = array();
         //keep these roles before the clear() will mess everything up. It's not what we want.
         $tmpRoles = $additionalRoles;
         $additionalRoles = [];
@@ -369,6 +361,7 @@ class UserManager
             $newUser->setAuthentication($authentication);
             $this->createUser($newUser, $sendMail, $additionalRoles, $model);
             $this->objectManager->persist($newUser);
+            $returnValues[] = $firstName . ' ' . $lastName;
 
             if ($logger) $logger(" [UOW size: " . $this->objectManager->getUnitOfWork()->size() . "]");
             if ($logger) $logger(" User $j ($username) being created");
@@ -396,6 +389,8 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
+
+        return $returnValues;
     }
 
     /**
@@ -907,7 +902,7 @@ class UserManager
      *
      * @return User
      */
-    public function getResetPasswordHash($resetPassword)
+    public function getByResetPasswordHash($resetPassword)
     {
         return $this->userRepo->findOneByResetPasswordHash($resetPassword);
     }
@@ -920,6 +915,14 @@ class UserManager
     public function getEnabledUserById($userId)
     {
         return $this->userRepo->findEnabledUserById($userId);
+    }
+
+    /**
+     * @return User[]
+     */
+    public function getAllEnabledUsers($executeQuery = true)
+    {
+        return $this->userRepo->findAllEnabledUsers($executeQuery);
     }
 
     /**
@@ -1115,5 +1118,175 @@ class UserManager
             $mail,
             $executeQuery
         );
+    }
+
+    public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    {
+        return $this->userRepo->findUserByUsernameAndMail(
+            $username,
+            $mail,
+            $executeQuery
+        );
+    }
+
+    public function getCountAllEnabledUsers($executeQuery = true)
+    {
+        return $this->userRepo->countAllEnabledUsers($executeQuery);
+    }
+
+    /**
+     *
+     */
+    public function importPictureFiles($filepath)
+    {
+        $archive = new \ZipArchive();
+        $archive->open($filepath);
+        $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        //add the tmp dir to the "trash list files"
+        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
+        file_put_contents($tmpList, $tmpDir . "\n", FILE_APPEND);
+        $archive->extractTo($tmpDir);
+        $iterator = new \DirectoryIterator($tmpDir);
+
+        foreach ($iterator as $file) {
+            if (!$file->isDot()) {
+                $fileName = basename($file->getPathName());
+                $username = preg_replace("/\.[^.]+$/", "", $fileName);
+                $user = $this->getUserByUsername($username);
+
+                if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
+                    throw new \Exception("{$pictureDir} is not writable");
+                }
+
+                $hash = sha1($user->getUsername()
+                    . '.'
+                    . pathinfo($fileName, PATHINFO_EXTENSION)
+                );
+
+                $user->setPicture($hash);
+                rename($file->getPathName(), $pictureDir . $user->getPicture());
+                $this->objectManager->persist($user);
+            }
+        }
+
+        $this->objectManager->flush();
+    }
+
+    /**
+     * Checks if a user will have a personal workspace at his creation
+     */
+    private function personalWorkspaceAllowed($roles) {
+        $roles[] = $this->roleManager->getRoleByName('ROLE_USER');
+
+        foreach ($roles as $role) {
+            if ($role->isPersonalWorkspaceCreationEnabled()) return true;
+        }
+
+        return false;
+    }
+
+    public function countByRoles(array $roles, $includeGrps = true)
+    {
+        return $this->userRepo->countByRoles($roles, $includeGrps);
+    }
+
+    /**
+     * Update users imported from an array.
+     * There is the array format:
+     * @todo some batch processing
+     *
+     * array(
+     *     array(firstname, lastname, username, pwd, email, code, phone),
+     *     array(firstname2, lastname2, username2, pwd2, email2, code2, phone2),
+     *     array(firstname3, lastname3, username3, pwd3, email3, code3, phone3),
+     * )
+     *
+     * @param array $users
+     *
+     * @return array
+     */
+    public function updateImportedUsers(array $users, $additionalRoles = array())
+    {
+        $returnValues = array();
+        $lg = $this->platformConfigHandler->getParameter('locale_language');
+        $this->objectManager->startFlushSuite();
+        $updatedUsers = array();
+        $i = 1;
+
+        foreach ($users as $user) {
+            $firstName = $user[0];
+            $lastName = $user[1];
+            $username = $user[2];
+            $pwd = $user[3];
+            $email = $user[4];
+
+            if (isset($user[5])) {
+                $code = trim($user[5]) === '' ? null: $user[5];
+            } else {
+                $code = null;
+            }
+
+            if (isset($user[6])) {
+                $phone = trim($user[6]) === '' ? null: $user[6];
+            } else {
+                $phone = null;
+            }
+
+            if (isset($user[7])) {
+                $authentication = trim($user[7]) === '' ? null: $user[7];
+            } else {
+                $authentication = null;
+            }
+            $existingUser = $this->getUserByUsernameOrMail($username, $email);
+
+            if (!is_null($existingUser)) {
+                $existingUser->setFirstName($firstName);
+                $existingUser->setLastName($lastName);
+                $existingUser->setUsername($username);
+                $existingUser->setPlainPassword($pwd);
+                $existingUser->setMail($email);
+                $existingUser->setAdministrativeCode($code);
+                $existingUser->setPhone($phone);
+                $existingUser->setLocale($lg);
+                $existingUser->setAuthentication($authentication);
+                $this->objectManager->persist($existingUser);
+                $updatedUsers[] = $existingUser;
+                $returnValues[] = $firstName . ' ' . $lastName;
+
+                if ($i % 100 === 0) {
+                    $this->objectManager->forceFlush();
+                }
+                $i++;
+            }
+        }
+        $this->objectManager->endFlushSuite();
+
+        if (count($updatedUsers) > 0 && count($additionalRoles) > 0) {
+            $this->roleManager->associateRolesToSubjects($updatedUsers, $additionalRoles);
+        }
+
+        return $returnValues;
+    }
+
+    /**
+     * Activates a User and set the init date to now.
+     */
+    public function activateUser(User $user)
+    {
+        $user->setIsEnabled(true);
+        $user->setResetPasswordHash(null);
+        $user->setInitDate(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
+
+    /**
+     * Logs the current user
+     */
+    public function logUser(User $user)
+    {
+        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
+        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+        $this->container->get('security.context')->setToken($token);
     }
 }

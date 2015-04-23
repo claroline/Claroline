@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater020102
+class Updater020102 extends Updater
 {
     private $container;
-    private $logger;
 
     public function __construct($container)
     {
@@ -42,18 +42,6 @@ class Updater020102
             $em->flush();
         } else {
             $this->log("The 'write' permissions for resource 'text' already exists");
-        }
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 }

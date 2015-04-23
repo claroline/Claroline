@@ -1,0 +1,53 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'infos_sending_acceptance' | trans({}, 'platform') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_index')
+            },
+            {
+                'name': 'infos_sending_acceptance'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'infos_sending_acceptance'|trans({}, 'platform') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="sendData">
+            <p>{{ 'confirm_send_data'|trans({}, 'platform') }}</p>
+            <ul>
+                <li>
+                    {{ 'technical'|trans({}, 'platform') }}
+                    (<i>{{ 'technical_data'|trans({}, 'platform') }}</i>)
+                </li>
+                <li>
+                    {{ 'statistics'|trans({}, 'platform') }}
+                    (<i>{{ 'statistics_data'|trans({}, 'platform') }}</i>)
+                </li>
+            </ul>
+            <small>
+                <p>{{ 'agreeing'|trans({}, 'platform') }}</p>
+                <p>{{ 'personal_data'|trans({}, 'platform') }}</p>
+            </small>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <a href="{{ path('claro_admin_send_datas_confirm') }}" class="btn btn-primary">
+            {{ 'accept'|trans({}, 'platform') }}
+        </a>
+    </div>
+{% endblock %}

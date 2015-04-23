@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\License;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -38,12 +37,7 @@ class ResourceNode
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\License",
-     *     inversedBy="abstractResources",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\Column(nullable=true)
      */
     protected $license;
 
@@ -116,9 +110,9 @@ class ResourceNode
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     mappedBy="parent"
+     *     mappedBy="parent",
      * )
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @ORM\OrderBy({"index" = "ASC"})
      */
     protected $children;
 
@@ -157,22 +151,9 @@ class ResourceNode
     protected $rights;
 
     /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\Column(name="value", nullable=true, type="integer")
      */
-    protected $next;
-
-    /**
-     * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
-     */
-    protected $previous;
+    protected $index;
 
     /**
      * @ORM\Column(name="mime_type", nullable=true)
@@ -201,10 +182,30 @@ class ResourceNode
      */
     protected $published = true;
 
+    /**
+     * @ORM\OneToMany(
+     *  targetEntity="Claroline\CoreBundle\Entity\Log\Log",
+     *  fetch="EXTRA_LAZY",
+     *  mappedBy="resourceNode"
+     * )
+     */
+    protected $logs;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $author;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 1})
+     */
+    protected $active = true;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->logs = new ArrayCollection();
     }
 
     /**
@@ -231,7 +232,7 @@ class ResourceNode
     /**
      * Returns the resource license.
      *
-     * @return \Claroline\CoreBundle\Entity\License
+     * @return string
      */
     public function getLicense()
     {
@@ -241,9 +242,9 @@ class ResourceNode
     /**
      * Sets the resource license.
      *
-     * @param \Claroline\CoreBundle\Entity\License
+     * @param string $license
      */
-    public function setLicense(License $license)
+    public function setLicense($license)
     {
         $this->license = $license;
     }
@@ -330,7 +331,7 @@ class ResourceNode
     /**
      * Returns the children resource instances.
      *
-     * @return \Doctrine\Common\ArrayCollection
+     * @return \Doctrine\Common\ArrayCollection|ResourceNode[]
      */
     public function getChildren()
     {
@@ -478,32 +479,6 @@ class ResourceNode
         $this->rights->add($right);
     }
 
-    public function setNext(ResourceNode $next = null, $setPrev = false)
-    {
-        $this->next = $next;
-        if ($next !== null && $setPrev === true) {
-            $next->setPrevious($this);
-        }
-    }
-
-    public function getNext()
-    {
-        return $this->next;
-    }
-
-    public function setPrevious(ResourceNode $previous = null, $setNext = false)
-    {
-        $this->previous = $previous;
-        if ($previous !== null && $setNext == true) {
-            $previous->setNext($this);
-        }
-    }
-
-    public function getPrevious()
-    {
-        return $this->previous;
-    }
-
     public function getMimeType()
     {
         return $this->mimeType;
@@ -580,6 +555,36 @@ class ResourceNode
     public function setPublished($published)
     {
         $this->published = $published;
+    }
+
+    public function setIndex($index)
+    {
+        $this->index = $index;
+    }
+
+    public function getIndex()
+    {
+        return $this->index;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
     /**

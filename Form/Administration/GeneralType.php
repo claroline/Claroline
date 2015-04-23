@@ -27,8 +27,16 @@ class GeneralType extends AbstractType
     private $description;
     private $dateFormat;
     private $language;
+    private $lockedParams;
 
-    public function __construct(array $langs, $role, $description, $dateFormat, $language)
+    public function __construct(
+        array $langs,
+        $role,
+        $description,
+        $dateFormat,
+        $language,
+        array $lockedParams = array()
+    )
     {
         $this->role = $role;
         $this->description = $description;
@@ -40,12 +48,20 @@ class GeneralType extends AbstractType
         } else {
             $this->langs = array('en' => 'en', 'fr' => 'fr');
         }
+        $this->lockedParams = $lockedParams;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('required' => false))
+            ->add(
+                'name',
+                'text',
+                array(
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['name'])
+                )
+            )
             ->add(
                 'description',
                 'content',
@@ -57,8 +73,22 @@ class GeneralType extends AbstractType
                     'theme_options' => array('contentTitle' => false, 'tinymce' => false)
                 )
             )
-            ->add('support_email', 'email', array('label' => 'support_email'))
-            ->add('selfRegistration', 'checkbox', array('required' => false))
+            ->add(
+                'support_email',
+                'email',
+                array(
+                    'label' => 'support_email',
+                    'disabled' => isset($this->lockedParams['support_email'])
+                )
+            )
+            ->add(
+                'selfRegistration',
+                'checkbox',
+                array(
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['allow_self_registration'])
+                )
+            )
             ->add(
                 'defaultRole',
                 'entity',
@@ -71,26 +101,102 @@ class GeneralType extends AbstractType
                     'property' => 'translationKey',
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                         return $er->createQueryBuilder('r')
-                                ->where("r.type != " . Role::WS_ROLE)
+                                ->where("r.type = " . Role::PLATFORM_ROLE)
                                 ->andWhere("r.name != 'ROLE_ANONYMOUS'");
-                    }
+                    },
+                    'disabled' => isset($this->lockedParams['default_role'])
                 )
             )
             ->add(
                 'localeLanguage',
                 'choice',
                 array(
-                    'choices' => $this->langs
+                    'choices' => $this->langs,
+                    'disabled' => isset($this->lockedParams['locale_language'])
                 )
             )
-            ->add('formCaptcha', 'checkbox', array('label' => 'display_captcha', 'required' => false))
-            ->add('redirect_after_login', 'checkbox', array('label' => 'redirect_after_login', 'required' => false))
-            ->add('account_duration', 'integer', array('label' => 'account_duration_label', 'required' => false))
-            ->add('anonymous_public_profile', 'checkbox', array('label' => 'show_profile_for_anonymous', 'required' => false))
-            ->add('portfolio_url', 'url', array('label' => 'portfolio_url', 'required' => false))
-            ->add('isNotificationActive', 'checkbox', array('label' => 'activate_notifications', 'required' => false))
-            ->add('maxStorageSize', 'text', array('required' => false, 'label' => 'max_storage_size', 'constraints' => array(new FileSize())))
-            ->add('maxUploadResources', 'integer', array('required' => false, 'label' => 'count_resources'));
+            ->add(
+                'formCaptcha',
+                'checkbox',
+                array(
+                    'label' => 'display_captcha',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['form_captcha'])
+                )
+            )
+            ->add(
+                'redirect_after_login',
+                'checkbox',
+                array(
+                    'label' => 'redirect_after_login',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['redirect_after_login'])
+                )
+            )
+            ->add(
+                'account_duration',
+                'integer',
+                array(
+                    'label' => 'account_duration_label',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['account_duration'])
+                )
+            )
+            ->add(
+                'anonymous_public_profile',
+                'checkbox',
+                array(
+                    'label' => 'show_profile_for_anonymous',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['anonymous_public_profile'])
+                )
+            )
+            ->add(
+                'portfolio_url',
+                'url',
+                array(
+                    'label' => 'portfolio_url',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['portfolio_url'])
+                )
+            )
+            ->add(
+                'isNotificationActive',
+                'checkbox',
+                array(
+                    'label' => 'activate_notifications',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['is_notification_active'])
+                )
+            )
+            ->add(
+                'maxStorageSize',
+                'text',
+                array(
+                    'required' => false,
+                    'label' => 'max_storage_size',
+                    'constraints' => array(new FileSize()),
+                    'disabled' => isset($this->lockedParams['max_storage_size'])
+                )
+            )
+            ->add(
+                'maxUploadResources',
+                'integer',
+                array(
+                    'required' => false,
+                    'label' => 'count_resources',
+                    'disabled' => isset($this->lockedParams['max_upload_resources'])
+                )
+            )
+            ->add(
+                'workspaceMaxUsers',
+                'integer',
+                array(
+                    'required' => false,
+                    'label' => 'workspace_max_users',
+                    'disabled' => isset($this->lockedParams['max_workspace_users'])
+                )
+            );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
             /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfiguration $generalParameters */
@@ -98,20 +204,28 @@ class GeneralType extends AbstractType
             $form = $event->getForm();
 
             $form
-                ->add('platform_init_date', 'datepicker', array(
+                ->add(
+                    'platform_init_date',
+                    'datepicker',
+                    array(
                         'input'       => 'timestamp',
                         'label'       => 'platform_init_date',
                         'required'    => false,
                         'format'      => $this->dateFormat,
-                        'language'    => $this->language
+                        'language'    => $this->language,
+                        'disabled' => isset($this->lockedParams['platform_init_date'])
                     )
                 )
-                ->add('platform_limit_date', 'datepicker', array(
+                ->add(
+                    'platform_limit_date',
+                    'datepicker',
+                    array(
                         'input'       => 'timestamp',
                         'label'       => 'platform_expiration_date',
                         'required'    => false,
                         'format'      => $this->dateFormat,
-                        'language'    => $this->language
+                        'language'    => $this->language,
+                        'disabled' => isset($this->lockedParams['platform_limit_date'])
                     )
                 );
         });

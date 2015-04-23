@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\InstallationBundle\Manager\InstallationManager;
@@ -26,11 +28,12 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class OperationExecutor
 {
+    use LoggableTrait;
+
     private $kernel;
     private $baseInstaller;
     private $pluginInstaller;
     private $operationFile;
-    private $logger;
 
     /**
      * @DI\InjectParams({
@@ -50,12 +53,18 @@ class OperationExecutor
         $this->pluginInstaller = $pluginInstaller;
     }
 
+    /**
+     * @param string $operationFile
+     */
     public function setOperationFile($operationFile)
     {
         $this->operationFile = $operationFile;
     }
 
-    public function setLogger(\Closure $logger)
+    /**
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
         $this->baseInstaller->setLogger($logger);

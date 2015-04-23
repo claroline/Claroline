@@ -33,11 +33,13 @@ plugin:
         # The name field allow you to chose an existing action ('open', 'delete', 'edit') or
         # to create a new one if the Claroline core couldn't find your action name.
         # The menu_name is optional. This will append a menu for your resource name with the menu_name you picked.
+        # The is_form parameter is also optional. If it's set to true, you'll be able to generate a form popup. Otherwise, you'll be redirected to a new page when you click on the menu action.
         # You can translate them in with a translation file from the resource domain.
         # You will be able to use these actions as a parameter for the isGranted() method.
         actions:
             - name: actionname
             - menu_name: new_menu (this line is optional)
+              is_form: true (optional)
 ```
 
 **/!\ it's a good practice to prefix your resources and widgets names to avoid
@@ -344,6 +346,51 @@ The event expects to receive a response back. You can notice the event name.
 
 - "compose" is an additional action name (see the config example).
 - "activity" is the resource type name.
+
+If the *is_form* parameter is set to **true**, you have to return a modal form as shown below (example from the UrlBundle) :
+
+```html
+<div class="modal-dialog">
+    <form role="form" novalidate="novalidate"
+        action="{{ path('hevinci_url_change', {'node': node}) }}" {{ form_enctype(form) }}
+        method="post" class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">{{ 'change_url_menu'|trans({}, 'resource') }}</h4>
+        </div>
+        <div class="modal-body">
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <input type="submit" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}">
+        </div>
+    </form>
+</div>
+```
+
+To validate your form, you must return a JsonResponse.
+
+```php
+public function changeUrlAction(ResourceNode $node)
+{
+    $em = $this->getDoctrine()->getManager();
+    $url = $em->getRepository('HeVinciUrlBundle:Url')
+        ->findOneBy(array('resourceNode' => $node->getId()));
+        
+    $form = $this->formFactory->create(new UrlChangeType(), $url);
+    $form->handleRequest($this->request);
+
+    if ($form->isValid()){
+        $em->flush();
+
+        return new JsonResponse();
+    }
+
+    return array('form' => $form->createView(), 'node' => $node->getId());
+}
+```
 
 ### Keeping the context ###
 

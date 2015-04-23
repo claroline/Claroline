@@ -24,17 +24,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('roles_management')")
+ */
 class RolesController extends Controller
 {
     private $toolManager;
     private $roleManager;
     private $formFactory;
     private $request;
-    private $roleAdminTool;
-    private $sc;
 
     /**
      * @DI\InjectParams({
@@ -42,7 +43,6 @@ class RolesController extends Controller
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "formFactory" = @DI\Inject("claroline.form.factory"),
      *     "request"     = @DI\Inject("request"),
-     *     "sc"          = @DI\Inject("security.context"),
      *     "om"          = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
@@ -51,7 +51,6 @@ class RolesController extends Controller
         RoleManager              $roleManager,
         FormFactory              $formFactory,
         Request                  $request,
-        SecurityContextInterface $sc,
         ObjectManager            $om
     )
     {
@@ -59,8 +58,6 @@ class RolesController extends Controller
         $this->roleManager   = $roleManager;
         $this->formFactory   = $formFactory;
         $this->request       = $request;
-        $this->roleAdminTool = $toolManager->getAdminToolByName('roles_management');
-        $this->sc            = $sc;
         $this->om            = $om;
     }
 
@@ -72,8 +69,6 @@ class RolesController extends Controller
      */
     public function indexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -85,8 +80,6 @@ class RolesController extends Controller
      */
     public function toolsIndexAction()
     {
-        $this->checkOpen();
-
         $tools = $this->toolManager->getAdminTools();
         $roles = $this->roleManager->getPlatformNonAdminRoles();
 
@@ -107,8 +100,6 @@ class RolesController extends Controller
      */
     public function addRoleToToolAction(AdminTool $tool, Role $role)
     {
-        $this->checkOpen();
-
         $this->toolManager->addRoleToAdminTool($tool, $role);
 
         return new Response('success');
@@ -128,8 +119,6 @@ class RolesController extends Controller
      */
     public function removeRoleFromToolAction(AdminTool $tool, Role $role)
     {
-        $this->checkOpen();
-
         $this->toolManager->removeRoleFromAdminTool($tool, $role);
 
         return new Response('success');
@@ -147,7 +136,6 @@ class RolesController extends Controller
      */
     public function createPlatformRoleModalFormAction()
     {
-        $this->checkOpen();
         $form = $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
 
         return array('form' => $form->createView());
@@ -166,8 +154,6 @@ class RolesController extends Controller
      */
     public function createPlatformRoleAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(FormFactory::TYPE_ROLE_TRANSLATION);
         $form->handleRequest($this->request);
 
@@ -196,7 +182,6 @@ class RolesController extends Controller
      */
     public function roleListAction()
     {
-        $this->checkOpen();
         $roles = $this->roleManager->getAllPlatformRoles();
         $counts = [];
 
@@ -218,7 +203,6 @@ class RolesController extends Controller
      */
     public function removeRoleAction(Role $role)
     {
-        $this->checkOpen();
         $this->roleManager->remove($role);
 
         return new JsonResponse(
@@ -243,7 +227,6 @@ class RolesController extends Controller
      */
     public function initializeRoleLimitAction(Role $role)
     {
-        $this->checkOpen();
         $this->roleManager->initializeLimit($role);
 
         return new JsonResponse(
@@ -268,8 +251,6 @@ class RolesController extends Controller
      */
     public function increaseRoleMaxUsers(Role $role, $amount)
     {
-        $this->checkOpen();
-
         if ($amount < 0) {
             return new JsonResponse(
                 array(
@@ -305,8 +286,6 @@ class RolesController extends Controller
      */
     public function editRoleNameAction(Role $role, $name)
     {
-        $this->checkOpen();
-
         if (ctype_space($name)) {
             return new JsonResponse(
                 array(
@@ -330,12 +309,21 @@ class RolesController extends Controller
         );
     }
 
-    private function checkOpen()
+    /**
+     * @EXT\Route(
+     *     "role/{role}/invert_workspace_creation",
+     *     name="platform_role_workspace_creation_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param Role $role
+     * @return JsonResponse
+     */
+    public function invertPersonalWorkspaceCreationAction(Role $role)
     {
-        if ($this->sc->isGranted('OPEN', $this->roleAdminTool)) {
-            return true;
-        }
+        $this->roleManager->invertWorkspaceCreation($role);
 
-        throw new AccessDeniedException();
+        return new JsonResponse(array(), 200);
     }
 }

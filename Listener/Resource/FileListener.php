@@ -293,47 +293,6 @@ class FileListener implements ContainerAwareInterface
     }
 
     /**
-     * @DI\Observe("resource_file_to_template")
-     * @todo is this still used ?
-     *
-     * @param ExportResourceTemplateEvent $event
-     */
-    public function onExportTemplate(ExportResourceTemplateEvent $event)
-    {
-        $resource = $event->getResource();
-        $hash = $resource->getHashName();
-        //@todo: remove this line without breaking everything ('type' is set by the tool listener).
-        $config['type'] = 'file';
-        $filePath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
-        $event->setFiles(array(array('archive_path' => $hash, 'original_path' => $filePath)));
-        $event->setConfig($config);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("resource_file_from_template")
-     *
-     * @param ImportResourceTemplateEvent $event
-     */
-    public function onImportTemplate(ImportResourceTemplateEvent $event)
-    {
-        $ds = DIRECTORY_SEPARATOR;
-        $files = $event->getFiles();
-        $file = new File();
-        $extension = pathinfo($files[0], PATHINFO_EXTENSION);
-        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() . "." . $extension;
-        $physicalPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
-        rename($files[0], $physicalPath);
-        $size = filesize($physicalPath);
-        $file->setSize($size);
-        $file->setHashName($hashName);
-        $guesser = MimeTypeGuesser::getInstance();
-        $file->setMimeType($guesser->guess($physicalPath));
-        $event->setResource($file);
-        $event->stopPropagation();
-    }
-
-    /**
      * Copies a file (no persistence).
      *
      * @param File $resource
@@ -348,7 +307,7 @@ class FileListener implements ContainerAwareInterface
         $newFile->setSize($resource->getSize());
         $newFile->setName($resource->getName());
         $newFile->setMimeType($resource->getMimeType());
-        $hashName =  $workspace->getCode() .
+        $hashName =  'WORKSPACE_' . $workspace->getId() .
             $ds .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
             '.' .
@@ -356,7 +315,7 @@ class FileListener implements ContainerAwareInterface
         $newFile->setHashName($hashName);
         $filePath = $this->container->getParameter('claroline.param.files_directory') . $ds . $resource->getHashName();
         $newPath = $this->container->getParameter('claroline.param.files_directory') . $ds . $hashName;
-        $workspaceDir = $this->filesDir . $ds . $workspace->getCode();
+        $workspaceDir = $this->filesDir . $ds . 'WORKSPACE_' . $workspace->getId();
 
         if (!is_dir($workspaceDir)) {
             mkdir($workspaceDir);
@@ -382,7 +341,7 @@ class FileListener implements ContainerAwareInterface
             $resources = $this->uploadDir($extractPath, $root, $perms, true, $published);
             $this->om->endFlushSuite();
             $fs = new \Claroline\CoreBundle\Library\Utilities\FileSystem();
-            $fs->rmdir($extractPath, true);    
+            $fs->rmdir($extractPath, true);
 
             return $resources;
         }
@@ -465,13 +424,13 @@ class FileListener implements ContainerAwareInterface
         $published = true
     )
     {
-        $workspaceCode = $parent->getWorkspace()->getCode();
+        $workspaceId = $parent->getWorkspace()->getId();
         $entityFile = new File();
         $fileName = $file->getFilename();
         $size = @filesize($file);
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $mimeType = $this->container->get('claroline.utilities.mime_type_guesser')->guess($extension);
-        $hashName = $workspaceCode .
+        $hashName =  'WORKSPACE_' . $workspaceId .
             DIRECTORY_SEPARATOR .
             $this->container->get('claroline.utilities.misc')->generateGuid() .
             "." .
@@ -509,13 +468,13 @@ class FileListener implements ContainerAwareInterface
         $size = filesize($tmpFile);
 
         if (!is_null($workspace)) {
-            $hashName = $workspace->getCode() .
+            $hashName = 'WORKSPACE_' . $workspace->getId() .
                 DIRECTORY_SEPARATOR .
                 $this->container->get('claroline.utilities.misc')->generateGuid() .
                 "." .
                 $extension;
             $tmpFile->move(
-                $this->filesDir . DIRECTORY_SEPARATOR . $workspace->getCode(),
+                $this->workspaceManager->getStorageDirectory($workspace) . '/',
                 $hashName
             );
         } else {

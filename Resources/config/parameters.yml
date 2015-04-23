@@ -2,6 +2,7 @@
 # in test environment (see app/config/config_test.yml)
 
 parameters:
+    claroline.param.bundle_sources: "%kernel.root_dir%/config/downloaded.json"
     claroline.param.files_directory: "%kernel.root_dir%/../files"
     claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
     claroline.param.thumbnails_directory: "%claroline.param.web_dir%/thumbnails"
@@ -15,6 +16,7 @@ parameters:
     claroline.param.authentication_directory: "%kernel.root_dir%/config/Authentication"
     claroline.param.platform_config_handler_class: Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler
     claroline.param.platform_options_file: %kernel.root_dir%/config/platform_options.yml
+    claroline.param.locked_platform_options_file: %kernel.root_dir%/config/locked_platform_options.yml
     claroline.param.web_dir: "%kernel.root_dir%/../web"
     claroline.param.platform_generated_archive_path: %kernel.root_dir%/config/tmp_files
     #todo: add .param. in the pathaname

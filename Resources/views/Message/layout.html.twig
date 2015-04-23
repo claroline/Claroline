@@ -1,6 +1,17 @@
-{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% block title %}{{ 'messages' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'message'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
 
 {% block content %}
     <div class="panel panel-default">

@@ -10,10 +10,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 
-class Updater030700
+class Updater030700 extends Updater
 {
     private $container;
     private $om;
@@ -56,18 +57,6 @@ class Updater030700
         foreach ($toRemove as $file) {
             $this->log('Removing ' . $webDir . $file .  '...');
             @unlink($webDir . $file);
-        }
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 }

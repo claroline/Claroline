@@ -201,6 +201,11 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         return array();
     }
 
+    public function import(array $data)
+    {
+
+    }
+
     public static function nameAlreadyExistsInDatabase($v, $groups)
     {
         return in_array($v, $groups);

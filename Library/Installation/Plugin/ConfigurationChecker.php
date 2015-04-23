@@ -71,8 +71,15 @@ class ConfigurationChecker implements CheckerInterface
             $tools[] = $tool->getName();
         }
 
+        $resourceActions = array();
+        $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(array('resourceType' => null, 'isCustom' => true));
+
+        foreach ($listResourceActions as $resourceAction) {
+            $resourceActions[] = $resourceAction->getName();
+        }
+
         $processor = new Processor();
-        $configuration = new Configuration($plugin, $names, $tools);
+        $configuration = new Configuration($plugin, $names, $tools, $resourceActions);
         $configuration->setUpdateMode($updateMode);
 
         try {

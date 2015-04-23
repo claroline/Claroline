@@ -61,6 +61,10 @@ img[title=captcha] {
     height: 100%;
 }
 
+.container {
+    max-width: 4000px;
+}
+
 /*************/
 /*  iframes  */
 /*************/
@@ -191,6 +195,34 @@ body.iframe {
 
 #right-bar {
     right: 0;
+}
+
+/*************/
+/*  Desktop parameters menu */
+/*************/
+ul.desktop-parameters-menu
+{
+  li.list-group-item {
+    padding: 0;
+    &:hover,
+    &:focus{
+      background-color: @list-group-hover-bg;
+      a{
+        color: @list-group-link-hover-color;
+      }
+    }
+    a {
+      padding: 10px 15px;
+      position: relative;
+      display: block;
+      color: @list-group-link-color;
+      text-decoration: none;
+    }
+    a:hover,
+    a:focus{
+      text-decoration: none;
+    }
+  }
 }
 
 @media (min-width: @screen-sm) {
@@ -695,6 +727,10 @@ body.iframe {
     .node-zoom-rules(150, 18px, 20px);
     .node-zoom-rules(200, 20px, 28px);
 
+    .resource-li {
+        height: 50px;
+    }
+
     .node-thumbnail {
 
         &.ui-state-default {
@@ -725,7 +761,7 @@ body.iframe {
             }
         }
 
-        .checkbox {
+        .checkbox-left {
             float: left;
         }
 

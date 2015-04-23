@@ -37,7 +37,7 @@ class IPWhiteListManager
         $ipAdded = false;
 
         if (!$this->IPExists($ip)) {
-            if (!is_writeable($this->ipFile)) {
+            if (is_writeable($this->ipFile)) {
                 if (!file_put_contents($this->ipFile, $ip, FILE_APPEND)) {
                     throw new \Exception('The IP ' . $ip . ' could not be added to the white list');
                 }

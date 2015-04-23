@@ -35,7 +35,7 @@ class Translator
             'return' => 'Return',
             'close' => 'Close',
             'debug_mode' => 'Debug mode',
-            'debug_mode_explanation' => 'The debug allows you to execute the update operations in an arbitrary order.'
+            'debug_mode_explanation' => 'The debug mode allows you to execute the update operations in an arbitrary order.'
         );
 
         $fr = array(

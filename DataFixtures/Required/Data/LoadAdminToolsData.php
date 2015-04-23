@@ -17,6 +17,13 @@ use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 
 class LoadAdminToolsData implements RequiredFixture
 {
+    private $container;
+
+    public function setContainer($container)
+    {
+        $this->container = $container;
+    }
+
     public function load(ObjectManager $manager)
     {
         $tools = array(
@@ -26,13 +33,11 @@ class LoadAdminToolsData implements RequiredFixture
             array('badges_management', 'trophy'),
             array('registration_to_workspace', 'book'),
             array('platform_packages', 'wrench'),
-            array('home_tabs', 'th-large'),
+            array('desktop_and_home', 'home'),
             array('desktop_tools', 'pencil'),
             array('platform_logs', 'bars'),
             array('platform_analytics', 'bar-chart-o'),
-            array('roles_management', 'users'),
-            array('competence_referencial', 'graduation-cap')
-            //array('competence_subscription', 'code-fork')
+            array('roles_management', 'users')
         );
 
         foreach ($tools as $tool) {
@@ -43,10 +48,5 @@ class LoadAdminToolsData implements RequiredFixture
         }
 
         $manager->flush();
-    }
-
-    public function setContainer($container)
-    {
-        $this->container = $container;
     }
 }

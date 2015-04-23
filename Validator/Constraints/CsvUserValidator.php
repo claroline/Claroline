@@ -11,47 +11,54 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\ORM\NonUniqueResultException;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\AuthenticationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Validator("csv_user_validator")
  */
 class CsvUserValidator extends ConstraintValidator
 {
-    private $validator;
-    private $translator;
     private $om;
+    private $translator;
+    private $userManager;
+    private $validator;
 
     /**
      * @DI\InjectParams({
-     *     "validator"             = @DI\Inject("validator"),
-     *     "trans"                 = @DI\Inject("translator"),
      *     "authenticationManager" = @DI\Inject("claroline.common.authentication_manager"),
-     *     "om"                    = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "trans"                 = @DI\Inject("translator"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "validator"             = @DI\Inject("validator")
      * })
      */
     public function __construct(
-        ValidatorInterface $validator,
-        TranslatorInterface $translator,
         AuthenticationManager $authenticationManager,
-        ObjectManager $om
+        ObjectManager $om,
+        TranslatorInterface $translator,
+        UserManager $userManager,
+        ValidatorInterface $validator
     )
     {
-        $this->validator = $validator;
-        $this->translator = $translator;
         $this->authenticationManager = $authenticationManager;
         $this->om = $om;
+        $this->translator = $translator;
+        $this->userManager = $userManager;
+        $this->validator = $validator;
     }
 
     public function validate($value, Constraint $constraint)
     {
+        $mode = $constraint->getDefaultOption();
         $lines = str_getcsv(file_get_contents($value), PHP_EOL);
         $authDrivers = $this->authenticationManager->getDrivers();
 
@@ -69,6 +76,17 @@ class CsvUserValidator extends ConstraintValidator
 
         $usernames = array();
         $mails = array();
+
+        if ($mode === 1) {
+            $currentDate = new \DateTime();
+            $timestamp = $currentDate->getTimestamp();
+            $fakeUsername = '@@@fake_username_' . $timestamp . '@@@';
+            $fakeMail = 'fake_email_' .
+                $timestamp .
+                '@fake-' .
+                $timestamp .
+                '-claroline-connect.com';
+        }
 
         foreach ($lines as $i => $line) {
             if (trim($line) != '') {
@@ -110,23 +128,81 @@ class CsvUserValidator extends ConstraintValidator
                     $usernames[$username] = array($i + 1):
                     $usernames[$username][] = $i + 1;
 
-                $newUser = new User();
-                $newUser->setFirstName($firstName);
-                $newUser->setLastName($lastName);
-                $newUser->setUsername($username);
-                $newUser->setPlainPassword($pwd);
-                $newUser->setMail($email);
-                $newUser->setAdministrativeCode($code);
-                $newUser->setPhone($phone);
-                $errors = $this->validator->validate($newUser, array('registration', 'Default'));
+                $existingUser = null;
+
+                if ($mode === 1) {
+                    try {
+                        $existingUser = $this->userManager->getUserByUsernameOrMail(
+                            $username,
+                            $email
+                        );
+                    } catch (NonUniqueResultException $e) {
+                        $msg = $this->translator->trans(
+                            'line_number',
+                            array('%line%' => $i + 1),
+                            'platform'
+                        );
+                        $msg .= ' ' . $this->translator->trans(
+                            'username_and_email_from_two_different_users',
+                            array(
+                                '%username%' => $username,
+                                '%email%' => $email
+                            ),
+                            'platform'
+                        );
+                        $this->context->addViolation($msg);
+                        continue;
+                    }
+                }
+
+                if (!is_null($existingUser)) {
+                    // For an update, we will validate user with a fake username and email
+                    $upperExistingUsername = strtoupper(trim($existingUser->getUsername()));
+                    $upperExistingMail = strtoupper(trim($existingUser->getMail()));
+                    $upperUsername = strtoupper(trim($username));
+                    $upperMail = strtoupper(trim($email));
+
+                    if ($upperExistingUsername === $upperUsername &&
+                        $upperExistingMail === $upperMail) {
+
+                        $existingUser->setUsername($fakeUsername);
+                        $existingUser->setMail($fakeMail);
+                    } elseif ($upperExistingUsername === $upperUsername) {
+                        $existingUser->setUsername($fakeUsername);
+                        $existingUser->setMail($email);
+                    } else {
+                        $existingUser->setUsername($username);
+                        $existingUser->setMail($fakeMail);
+                    }
+
+                    $existingUser->setFirstName($firstName);
+                    $existingUser->setLastName($lastName);
+                    $existingUser->setPlainPassword($pwd);
+                    $existingUser->setAdministrativeCode($code);
+                    $existingUser->setPhone($phone);
+                    $errors = $this->validator->validate(
+                        $existingUser,
+                        array('registration', 'Default')
+                    );
+                } else {
+                    $newUser = new User();
+                    $newUser->setFirstName($firstName);
+                    $newUser->setLastName($lastName);
+                    $newUser->setUsername($username);
+                    $newUser->setPlainPassword($pwd);
+                    $newUser->setMail($email);
+                    $newUser->setAdministrativeCode($code);
+                    $newUser->setPhone($phone);
+                    $errors = $this->validator->validate($newUser, array('registration', 'Default'));
+                }
 
                 if ($authentication) {
                     if (!in_array($authentication, $authDrivers)) {
                         $msg = $this->translator->trans(
-                                'authentication_invalid',
-                                array('%authentication%' => $authentication, '%line%' => $i + 1),
-                                'platform'
-                            ) . ' ';
+                            'authentication_invalid',
+                            array('%authentication%' => $authentication, '%line%' => $i + 1),
+                            'platform'
+                        ) . ' ';
 
                         $this->context->addViolation($msg);
                     }
@@ -141,57 +217,40 @@ class CsvUserValidator extends ConstraintValidator
             }
         }
 
-        foreach ($usernames as $username => $lines) {
-            if (count($lines) > 1) {
-                $msg = $this->translator->trans(
-                    'username_found_at',
-                    array('%username%' => $username, '%lines%' => $this->getLines($lines)),
-                    'platform'
-                ) . ' ';
-            }
-        }
-
         if ($modelName) {
             $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
 
             if (!$model) {
                 $msg = $this->translator->trans(
-                        'model_invalid',
-                        array('%model%' => $modelName, '%line%' => $i + 1),
-                        'platform'
-                    ) . ' ';
-
+                    'model_invalid',
+                    array('%model%' => $modelName, '%line%' => $i + 1),
+                    'platform'
+                ) . ' ';
                 $this->context->addViolation($msg);
             }
         }
 
-        foreach ($errors as $error) {
-            $this->context->addViolation(
-                $this->translator->trans('line_number', array('%line%' => $i + 1), 'platform') . ' ' .
-                $error->getInvalidValue() . ' : ' . $error->getMessage()
-            );
-        }
-
         foreach ($usernames as $username => $lines) {
+
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                     'username_found_at',
                     array('%username%' => $username, '%lines%' => $this->getLines($lines)),
                     'platform'
                 ) . ' ';
-
                 $this->context->addViolation($msg);
             }
+        }
 
-            foreach ($mails as $mail => $lines) {
-                if (count($lines) > 1) {
-                    $msg = $this->translator->trans(
-                        'email_found_at',
-                        array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
-                        'platform'
-                    ) . ' ';
-                    $this->context->addViolation($msg);
-                }
+        foreach ($mails as $mail => $lines) {
+
+            if (count($lines) > 1) {
+                $msg = $this->translator->trans(
+                    'email_found_at',
+                    array('%email%' => $mail, '%lines%' => $this->getLines($lines)),
+                    'platform'
+                ) . ' ';
+                $this->context->addViolation($msg);
             }
         }
     }

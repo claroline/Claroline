@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -55,6 +56,7 @@ class ProfileController extends Controller
     private $facetManager;
     private $ch;
     private $authenticationManager;
+    private $profilePropertyManager;
 
     /**
      * @DI\InjectParams({
@@ -68,7 +70,8 @@ class ProfileController extends Controller
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager")
+     *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
      */
     public function __construct(
@@ -82,7 +85,8 @@ class ProfileController extends Controller
         ToolManager $toolManager,
         FacetManager $facetManager,
         PlatformConfigurationHandler $ch,
-        AuthenticationManager $authenticationManager
+        AuthenticationManager $authenticationManager,
+        ProfilePropertyManager $profilePropertyManager
     )
     {
         $this->userManager = $userManager;
@@ -96,6 +100,7 @@ class ProfileController extends Controller
         $this->facetManager = $facetManager;
         $this->ch = $ch;
         $this->authenticationManager = $authenticationManager;
+        $this->profilePropertyManager = $profilePropertyManager;
     }
 
     private function isInRoles($role, $roles)
@@ -206,6 +211,7 @@ class ProfileController extends Controller
         }
         $userRole = $this->roleManager->getUserRoleByUser($user);
         $roles = $this->roleManager->getPlatformRoles($user);
+        $accesses = $this->profilePropertyManager->getAccessesForCurrentUser();
 
         $form = $this->createForm(
             new ProfileType(
@@ -213,6 +219,7 @@ class ProfileController extends Controller
                 $isAdmin,
                 $isGrantedUserAdmin,
                 $this->localeManager->getAvailableLocales(),
+                $accesses,
                 $this->authenticationManager->getDrivers()
             ),
             $user

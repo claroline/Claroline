@@ -10,13 +10,14 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 
-class Updater030400 {
+class Updater030400 extends Updater
+{
     private $em;
-    private $logger;
 
     public function __construct(ContainerInterface $container)
     {
@@ -49,19 +50,6 @@ class Updater030400 {
             $this->conn->query('DROP TABLE claro_workspace_model_resource');
         } catch (\Doctrine\DBAL\DBALException $e) {
             $this->log('claro_workspace_model_resource already removed.');
-        }
-
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
         }
     }
 } 

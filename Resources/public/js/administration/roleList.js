@@ -112,6 +112,14 @@
         isNegative($(event.currentTarget).val()) || isBlank($(event.currentTarget).val()) ?
             btn.attr('disabled', 'disabled'):
             btn.removeAttr('disabled');
+    })
+    .on('click', '.pws-chk', function(event) {
+        var roleId = $(event.currentTarget).attr('data-role-id');
+        var url = Routing.generate('platform_role_workspace_creation_edit', {'role': roleId});
+        $.ajax({
+            url: url,
+            type: 'GET'
+        });
     });
 
     //HELPER
@@ -155,12 +163,12 @@
     //CALLBACKS
     var setRoleMaxUsers = function(data, row) {
         $(row.find('.td-role-limit')).html(data['limit']);
-        showAlert(trans('platform', 'user_limit_success_update'), 'alert-success');
+        showAlert(Translator.trans('user_limit_success_update', {}, 'platform'), 'alert-success');
     }
 
     var changeNameCallback = function(data, row) {
         row.find('.change-name-field').val(trans('platform', data['translationKey']));
-        showAlert(trans('platform', 'role_name_changed_success'), 'alert-success');
+        showAlert(Translator.trans('role_name_changed_success', {}, 'platform'), 'alert-success');
     }
 
     var addRoleRow = function(data) {

@@ -16,18 +16,14 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -115,9 +111,12 @@ class RoleManager
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
+        $role->setPersonalWorkspaceCreationEnabled(true);
         $role->setType(Role::PLATFORM_ROLE);
         $this->om->persist($role);
         $this->om->flush();
+        $this->container->get('claroline.manager.profile_property_manager')
+            ->addDefaultProperties();
 
         return $role;
     }
@@ -152,17 +151,20 @@ class RoleManager
     {
         $username = $user->getUsername();
         $roleName = 'ROLE_USER_' . strtoupper($username);
+        $role = $this->getRoleByName($roleName);
 
         $this->om->startFlushSuite();
 
-        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
-        $role->setName($roleName);
-        $role->setTranslationKey($username);
-        $role->setReadOnly(true);
-        $role->setType(Role::USER_ROLE);
-        $this->om->persist($role);
-        $this->associateRole($user, $role);
+        if (is_null($role)) {
 
+            $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+            $role->setName($roleName);
+            $role->setTranslationKey($username);
+            $role->setReadOnly(true);
+            $role->setType(Role::USER_ROLE);
+            $this->om->persist($role);
+        }
+        $this->associateRole($user, $role);
         $this->om->endFlushSuite();
 
         return $role;
@@ -484,9 +486,25 @@ class RoleManager
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
      */
-    public function getRolesByWorkspace(Workspace $workspace)
+    public function getRolesByWorkspace(
+        Workspace $workspace,
+        $search = '',
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
     {
-        return $this->roleRepo->findByWorkspace($workspace);
+        if (empty($search)) {
+
+            return $this->roleRepo->findByWorkspace($workspace, $orderedBy, $order);
+        } else {
+
+            return $this->roleRepo->findByWorkspaceAndSearch(
+                $workspace,
+                $search,
+                $orderedBy,
+                $order
+            );
+        }
     }
 
     /**
@@ -530,7 +548,7 @@ class RoleManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User                        $user
+     * @param \Claroline\CoreBundle\Entity\User $user
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Role[]
@@ -742,8 +760,16 @@ class RoleManager
             return false;
         }
 
+        //if we already have the role, then it's ok
         if ($ars->hasRole($role->getName())) {
             return true;
+        }
+        
+        if ($role->getWorkspace()) {
+            $maxUsers = $role->getWorkspace()->getMaxUsers();
+            $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
+            
+            if ($maxUsers <= $countByWorkspace) return false;
         }
 
         if ($ars instanceof User) {
@@ -821,6 +847,24 @@ class RoleManager
     }
 
     /**
+     * @param string $workspaceCode
+     * @param string $translationKey
+     * @param bool $executeQuery
+     */
+    public function getRolesByWorkspaceCodeAndTranslationKey(
+        $workspaceCode,
+        $translationKey,
+        $executeQuery = true
+    )
+    {
+        return $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
+            $workspaceCode,
+            $translationKey,
+            $executeQuery
+        );
+    }
+
+    /**
      * Returns all non-platform roles of a user.
      *
      * @param User $user The subject of the role
@@ -874,5 +918,39 @@ class RoleManager
             $translationKey,
             $executeQuery
         );
+    }
+
+    public function invertWorkspaceCreation(Role $role)
+    {
+        $role->setPersonalWorkspaceCreationEnabled(!$role->isPersonalWorkspaceCreationEnabled());
+        $this->om->persist($role);
+        $this->om->flush();
+    }
+
+    public function associateWorkspaceRolesByImport(Workspace $workspace, array $datas)
+    {
+        $this->om->startFlushSuite();
+        $i = 1;
+
+        foreach ($datas as $data) {
+            $username = $data[0];
+            $roleName = $data[1];
+
+            $user = $this->userRepo->findOneUserByUsername($username);
+            $roles = $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
+                $workspace->getCode(),
+                $roleName
+            );
+
+            if (!is_null($user) && count ($roles) > 0) {
+                $this->associateRoles($user, $roles);
+            }
+
+            if ($i % 100 === 0) {
+                $this->om->forceFlush();
+            }
+            $i++;
+        }
+        $this->om->endFlushSuite();
     }
 }

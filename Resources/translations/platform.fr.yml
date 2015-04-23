@@ -117,10 +117,9 @@ add_group_s_confirm_message: 'groupe(s) ajouté(s)'
 add_groups: 'Ajouter des groupes'
 add_resource: 'Ajouter une ressource'
 add_role: 'Ajouter un role'
-add_role_to_groups: Ajouter un rôle a %count% groupe(s)
-add_role_to_users: Ajouter un rôle a %count% utilisateur(s)
+add_role_to_groups: Ajouter un rôle à %count% groupe(s)
+add_role_to_users: Ajouter un rôle à %count% utilisateur(s)
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
-add_sub_competence: 'Ajouter une sous-compétence'
 add_subcategory: 'Ajouter une sous-catégorie'
 add_tab: Ajouter un onglet
 add_tag: 'Ajouter un Tag'
@@ -133,6 +132,7 @@ add_workspace: 'Ajouter un espace d''activités'
 admin: Administrateur
 admin_analytics: 'Statistiques plateforme'
 admin_analytics_no_data: 'Aucune donnée.'
+admin_desktop_and_home_tabs_configuration: 'Configuration du bureau et des onglets'
 admin_home_tabs_configuration: 'Configuration des onglets pour les pages d''accueil'
 admin_logs: 'Suivi plateforme'
 admin_third_party_application: 'Applications tierces'
@@ -140,7 +140,9 @@ admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
+advanced_parameters: 'Paramètres avancés'
 agenda: Agenda
+agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
 all_my_workspaces: 'Tous mes espaces d''activités'
@@ -210,15 +212,10 @@ collaborative: Collaboratif
 collaborator: Collaborateur
 comment: Commentaire
 communication: Communication
-competence: Compétence
-competence_creation: 'Création d''une compétence'
-competence_edition: 'Modification de la compétence'
-competence_referencial: Référentiel de compétences
-competences: Compétences
-competences_management: 'Gestion des compétences'
 completed: Terminé
 configuration: Configuration
 configure: Configurer
+confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
 cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
@@ -226,8 +223,8 @@ copies: Copies
 copy: Copier
 core_packages: Paquets du noyau
 create: Créer
+create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
-create_competence: 'Créer une compétence'
 create_facet: Créer une facette
 create_field: Créer un champ
 create_group: 'Créer un groupe'
@@ -237,9 +234,9 @@ create_new_admin_tag: 'Créer un nouveau Tag administrateur'
 create_new_home_tab: 'Créer un nouvel onglet'
 create_new_tag: 'Créer un nouveau Tag'
 create_new_user_account: 'Creation de votre compte ClarolineConnect'
+create_only: 'Création seulement'
 create_role: Créer un rôle
 create_security_token: 'Créer un jeton d''authentification'
-create_sub_competence: 'Créer une sous-compétence'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_users: Créer les utilisateurs
@@ -306,16 +303,16 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
-delete_competence: 'Suppression d''une compétence'
-delete_competence_confirm_message: 'Voulez-vous vraiment supprimer cette compétence ?'
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
 delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
 description: 'Description'
 desktop: Bureau
+desktop_and_home: 'Bureau et accueil'
 desktop_home_tab_creation: 'Création d''un onglet pour le bureau'
 desktop_home_tab_edition: 'Edition de l''onglet pour le bureau'
 desktop_home_tabs: 'Onglets pour le bureau'
+desktop_parameters: 'Paramètres du bureau'
 desktop_tools: 'Outils du bureau'
 directory: Répertoire
 directory_form_name: Nom
@@ -336,7 +333,6 @@ drop_file: 'Déposez le fichier'
 dsn: dsn
 duration: Durée
 edit: Modifier
-edit_competence: 'Modifier la compétence'
 edit_event_success: Événement mis à jour avec succès.
 edit_facet: Editer une facette
 edit_field: Editer un champ
@@ -441,6 +437,8 @@ has_been_suscribed_with_role: 'a été inscrit(e) avec le rôle'
 has_been_suscribed_with_role_group: 'a été inscrit avec le rôle'
 has_been_unregistered_from_group: 'a été désincrit du groupe'
 has_been_unregistered_from_role: 'a été désincrit du rôle'
+has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activités'
+has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 hide: Cacher
@@ -449,11 +447,18 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
+home_tab_bookmark_confirm_message: 'Cet onglet sera disponible dans votre bureau'
+home_tab_bookmark_confirm_title: 'Ajouter cet onglet à vos favoris'
+home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de vos favoris ?'
+home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
+home_tab_config_form_locked: 'Verrouillé'
+home_tab_config_form_visible: 'Visible'
 home_tab_creation: 'Création d''un onglet'
-home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet de la page d''accueil ?'
+home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
 home_tab_edition: 'Edition de l''onglet'
 home_tab_form_name: Nom
+home_tab_roles_explanation: 'Si aucun rôle n''est coché, l''onglet sera disponible à tous les utilisateurs.<br>Sinon, il sera uniquement disponible aux utilisateurs ayant un des rôles sélectionnés.'
 home_tab_widgets: 'Widgets de l''onglet'
 home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
@@ -470,6 +475,9 @@ in_workspace: 'dans l''espace d''activités'
 incomplete: Incomplet
 individual: Individuel
 informations: Informations
+infos_sending_acceptance: 'Acceptation d''envoi d''informations'
+infos_sending_bar_msg: 'Cliquez sur cette barre pour plus d''informations'
+infos_sending_has_not_been_accepted: 'L''envoi d''informations n''a pas été accepté'
 initialize: Initialiser
 inscription_mail: 'Mail d''inscription'
 instructions: Consignes
@@ -506,10 +514,8 @@ limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
 link: Lien
-link_competence: 'Lier'
 link_outdated: 'le lien n''est plus valide'
 link_workspace: 'Lier un espace d''activités'
-linkable_competences: 'Compétences liables'
 links: Liens
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
@@ -547,6 +553,8 @@ manual: Manuelle
 manual_evaluation_explanation: 'Evaluation manuelle par un gestionnaire de l''espace d''activités'
 max_size_is: 'La taille maximale est %size%'
 media_most_viewed: 'Media les plus consultés'
+menu_bar: 'Barre de menu'
+menu_bar_configuration: 'Configuration de la barre de menu'
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -564,6 +572,7 @@ missing_%content%: 'La variable %content% est manquante pour la langue "%languag
 missing_%password%: 'La variable %password% est manquante pour la langue "%language%".'
 missing_%username%: 'La variable %username% est manquante pour la langue "%language%".'
 mixed: Mixte
+mode: 'Mode'
 model: Modèle
 models: Modèles
 month.April: Avril
@@ -605,7 +614,6 @@ no: non
 no_action_found: Aucune action trouvée.
 no_activity_in_workspace: Cet espace ne contient actuellement aucune activité.
 no_category: 'Il n''y a aucune catégorie'
-no_competence: 'Aucune compétence'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
 no_group: Il n'y a aucun groupe.
@@ -659,7 +667,9 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 pending: En attente
+pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
+personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
 personal_workspace: 'Espace personnel'
 personal_workspaces_only: 'Les espaces personnels seulement'
 phone: Téléphone
@@ -697,6 +707,7 @@ plugin_packages: Paquets des plugins
 portfolio_url: 'Url d''accès à l''outil de portfolio'
 position: Position
 positive_number_expected: 'Cette valeur doit être un nombre positif'
+preferences: 'Préférences'
 private: Privée
 profil_edition: 'Modification du profil utilisateur'
 profile_management: Gestion du profil
@@ -726,7 +737,6 @@ registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove: Enlever
-remove_competence: 'Retirer la compétence'
 remove_event: Supprimer un événement
 remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
 remove_facet: Supprimer une facette
@@ -745,8 +755,6 @@ remove_resource_from_model: Retirer une ressource du modèle
 remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
 remove_role: Supprimer un rôle.
 remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
-remove_sub_competence: 'Retirer la compétence du référentiel'
-remove_sub_competence_comfirm_message: 'Voulez-vous vraiment retirer cette compétence de ce référentiel ?'
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_from_model: Retirer un utilisateur
@@ -788,11 +796,11 @@ resource_right_form_canView: Voir
 resource_right_form_isRecursive: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
-resources_most_downloaded: 'Ressources les plus téléchargés'
+resources_most_downloaded: 'Ressources les plus téléchargées'
 resources_rights: 'Droits des ressources'
 resources_rights_management: 'Gestion des droits des ressources'
 resources_usage_list: 'Liste d''utilisation des ressources'
-resources_usage_ratio: 'Taux d''utilisation des resources'
+resources_usage_ratio: 'Taux d''utilisation des ressources'
 restore: Restaurer
 restore_messages_confirm_message: 'message(s) restauré(s)'
 results: Résultats
@@ -847,7 +855,7 @@ send_mail: 'Envoyer un mail'
 send_mail_form_content: Message
 send_mail_form_object: Objet
 send_message: 'Envoyer un message'
-send_message_to_workspace: Envoyer un message aux utilisateurs de l'espace
+send_message_to_workspace: Envoyer un message
 send_message_to_workspace_info: Cette liste reprend les espaces d'activités dont vous êtes le gestionnaire.
 server: Serveur
 session: Session
@@ -873,6 +881,8 @@ show_profile_for_anonymous: Profil public accessible aux anonymes
 simple: Simple
 start_date: 'Date de début'
 start_maintenance: Lancer le mode maintenance
+statistics: 'Statistiques'
+statistics_data: 'nombre d''espaces, nombre d''utilisateurs'
 status: Statut
 steal_session: 'Voler la session'
 storage_type: 'Type de stockage'
@@ -898,6 +908,8 @@ tags_list: 'Liste des Tags'
 tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
+technical: 'Techniques'
+technical_data: 'URL, version, langue principale, IP et email du support'
 terms_enabled_but_empty: Les conditions d'utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.
 text: Texte
 text_form_content: Contenu
@@ -935,14 +947,14 @@ tools: Outils
 tools_rights_configuration: 'Configuration des droits sur les outils'
 top: Top
 top_extension: 'Top des extensions (Media), par nombre de fichiers'
-top_media_views: 'Top des Medias le plus consultés'
-top_resources_downloads: 'Top des resources les plus téléchargés'
-top_resources_views: 'Top des resources les plus consultés'
-top_users_connections: 'Top des utilisateurs s''étant les plus connectés'
+top_media_views: 'Top des Medias les plus consultés'
+top_resources_downloads: 'Top des ressources les plus téléchargées'
+top_resources_views: 'Top des ressources les plus consultées'
+top_users_connections: 'Top des utilisateurs s''étant le plus connectés'
 top_users_workspaces_enrolled: 'Top des utilisateurs étant inscrits dans le plus de modules'
-top_users_workspaces_owners: 'Top des utilisateurs ayant crée le plus de modules'
+top_users_workspaces_owners: 'Top des utilisateurs ayant créé le plus de modules'
 top_workspaces_connections: 'Top des espaces d''activités les plus consultés'
-top_workspaces_resources: 'Top des espaces d''activités avec le plus des resources'
+top_workspaces_resources: 'Top des espaces d''activités avec le plus de ressources'
 total: Total
 total_time: 'Durée totale'
 traffic: Fréquentation
@@ -970,6 +982,10 @@ unpublish: Depublier
 unpublished: Non publié
 unregister: Désinscription
 unregister_from_a_workspace: 'Me désinscrire d''un espace d''activités'
+unregister_group_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ce groupe ?'
+unregister_group_s_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ces %count% groupes?'
+unregister_user_confirm_message: 'Êtes-vous sûr de vouloir désinscrire cet utilisateur ?'
+unregister_user_s_confirm_message: 'Êtes-vous sûr de vouloir désinscrire ces %count% utilisateurs ?'
 unregistered: 'Non inscrit'
 unregistered_groups: 'Groupes non enregistrés'
 unregistered_users: 'Utilisateurs non enregistrés'
@@ -990,12 +1006,16 @@ user_limit_reached: La limite de création d'utilisateur a été atteinte.
 user_limit_reached: La limite de création d'utilisateurs a été atteinte.
 user_limit_success_update: La limite d'utilisateur par rôle a été mise à jour avec succès.
 user_limit_too_low: Il y a déjà %total% %role%(s). La limite %newMax% est trop faible.
+user_menu: 'Menu utilisateur'
+user_menu_configuration: 'Configuration du menu utilisateur'
+user_options_form_desktopBackgroundColor: 'Couleur de fond du bureau'
 user_parameters: 'Paramètres de l''utilisateur'
 user_picker: 'Outil pour choisir un utilisateur'
 user_profile: 'Profil utilisateur'
 user_public_profile_not_visible: 'Votre profil public n''est visible à personne. <br> Vous pouvez rendre votre profil visible pour les <span class="shared_policy_link shared_policy_link_platform_users">utilisateurs de la plateforme</span>, ou à <span class="shared_policy_link shared_policy_link_everybody">tout le monde</span>.'
 user_removed: 'Utilisateur supprimé'
 username: 'Nom d''utilisateur'
+username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
 users: Utilisateurs
@@ -1023,7 +1043,11 @@ visitor: Visiteur
 warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
+widget_configuration: 'Configuration du widget'
+widget_display_config_form_color: 'Couleur'
 widget_display_form_name: Nom
+widget_home_tab_config_form_locked: 'Verrouillé'
+widget_home_tab_config_form_visible: 'Visible'
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
@@ -1121,3 +1145,38 @@ can_edit_permission: Peut éditer les permissions
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des paramètres.'
+import_profile_pics: Importer des profils d'utilisateurs
+import_profile_pics_explanation: 'Veuillez sélectionner une archive zip. Cette archive doit contenir une liste d''images dont les noms sont structurés de cette manière: username.extension'
+add_field_to_panel: Ajouter un champ
+add_panel_to_facet: Ajouter un panel
+create_pane: Créer un panel
+collapse: Replier
+edit_panel_facet: Modifier un panel
+administrativeCode: Code administratif
+property: Propriété
+picture: Photo de profil
+profile_properties_management: Gestion des propriétés du profil
+facet_management: Gestion des facets
+installed: Installé
+available: Disponible
+install: Installer
+up_to_date: À jour
+update: Mettre à jour
+package_install: Installation d'un paquet
+package_install_confirm: Êtes-vous sûr de vouloir installer %bundle% %version% ?
+backup_reminder: Pensez à faire un backup de la plateforme avant de faire une mise à jour.
+tips: Astuces
+logs_error_location: En cas d'erreur, les logs se trouvent dans le dossier app/log/update-xxx.log.
+package_install_auto_reload: Cette page est rechargée automatiquement à la fin de l'installaion d'un paquet.
+activate_maintenance_mode: Vous devriez activer le mode de maintenance afin de signaler aux utilisateurs qu'une mise à jour est en cours.
+install_update_cant_be_undone: Les opérations d'installation et de mise à jour ne peuvent pas être annulées.
+list_view: Vue en liste (beta)
+created_by: Créé par %creator% le %creationDate%
+updated_by: 'Dernière màj: %modificationDate%'
+display_at_registration: Afficher à la création du compte
+workspace_max_users: Nombre maximal d'utilisateur par espace d'activité
+workspace_edit_form_endDate : Date d'expiration
+user_info: Informations utilisateur
+activate_account_click: Cliquez ici pour activer votre compte.
+activate_account: Activation du compte
+please_validate_your_account: Un email vient de vous être envoyé pour activer votre compte.

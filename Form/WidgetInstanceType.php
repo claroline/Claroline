@@ -57,10 +57,6 @@ class WidgetInstanceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'translation_domain' => 'widget'
-            )
-        );
+        $resolver->setDefaults(array('translation_domain' => 'widget'));
     }
 }

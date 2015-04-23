@@ -28,7 +28,7 @@ class [[Tool]]Listener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
+    public function onDisplayWorkspace(DisplayToolEvent $event)
     {
         $event->setContent('Change me for workspace !');
     }
@@ -38,7 +38,7 @@ class [[Tool]]Listener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
+    public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $event->setContent('Change me for desktop !');
     }

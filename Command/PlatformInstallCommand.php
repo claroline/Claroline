@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -38,14 +40,21 @@ class PlatformInstallCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<comment>Installing the platform...</comment>');
+        $output->writeln(sprintf('<comment>%s - Installing the platform...</comment>', date('H:i:s')));
+
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+        );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+
+        /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
-        $installer->setLogger(
-            function ($message) use ($output) {
-                $output->writeln($message);
-            }
-        );
+        $installer->setLogger($consoleLogger);
         $installer->installFromKernel($input->getOption('with-optional-fixtures'));
+
+        $output->writeln(sprintf('<comment>%s - Platform installed.</comment>', date('H:i:s')));
     }
 }

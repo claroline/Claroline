@@ -119,7 +119,10 @@ class WorkspaceParametersController extends Controller
         $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getCreationDate()
         );
-        $count = $this->workspaceManager->countUsers($workspace->getId());
+        $expDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getEndDate()
+        );
+        $count = $this->workspaceManager->countUsers($workspace, true);
         $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
         $storageUsed = $this->utilities->formatFileSize($storageUsed);
         $countResources = $this->workspaceManager->countResources($workspace);
@@ -134,7 +137,8 @@ class WorkspaceParametersController extends Controller
                 $count,
                 $storageUsed,
                 $countResources,
-                $isAdmin
+                $isAdmin,
+                $expDate
             ),
             $workspace
         );
@@ -178,10 +182,12 @@ class WorkspaceParametersController extends Controller
         }
 
         $wsRegisteredName = $workspace->getName();
-        $wsRegisteredCode = $workspace->getCode();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
         $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+        $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
+            $workspace->getEndDate()
+        );
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_EDIT,
             array(null, null, null, null, null, $isAdmin),
@@ -190,10 +196,6 @@ class WorkspaceParametersController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            //I need to do this to run the replaceCode methods.
-            $newCode = $workspace->getCode();
-            $workspace->setCode($wsRegisteredCode);
-            $this->workspaceManager->replaceCode($workspace, $newCode);
             $this->workspaceManager->editWorkspace($workspace);
             $this->workspaceManager->rename($workspace, $workspace->getName());
             $displayable = $workspace->isDisplayable();
@@ -213,7 +215,6 @@ class WorkspaceParametersController extends Controller
             );
         } else {
             $workspace->setName($wsRegisteredName);
-            $this->workspaceManager->replaceCode($workspace, $wsRegisteredCode);
         }
 
         $user = $this->security->getToken()->getUser();
@@ -316,7 +317,7 @@ class WorkspaceParametersController extends Controller
         }
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager)
+            FormFactory::TYPE_USER_BASE_PROFILE, array($this->localeManager, $this->tosManager, $this->get('translator'))
         );
         $form->handleRequest($this->request);
 

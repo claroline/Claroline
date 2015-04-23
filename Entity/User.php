@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\UserOptions;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -329,6 +330,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $authentication;
 
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\UserOptions",
+     *     inversedBy="user"
+     * )
+     * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $options;
+
     public function __construct()
     {
         parent::__construct();
@@ -407,6 +417,18 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getSalt()
     {
         return $this->salt;
+    }
+    
+    /**
+     * @param string $salt
+     *
+     * @return User
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+        
+        return $this;
     }
 
     /**
@@ -1073,5 +1095,29 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getAuthentication()
     {
         return $this->authentication;
+    }
+
+    public static function getEditableProperties()
+    {
+        return array(
+            'username' => false,
+            'firstName' => false,
+            'lastName' => false,
+            'administrativeCode' => false,
+            'email' => false,
+            'phone' => true,
+            'picture' => true,
+            'description' => true
+        );
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setOptions(UserOptions $options)
+    {
+        $this->options = $options;
     }
 }

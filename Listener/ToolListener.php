@@ -11,16 +11,20 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Manager\MessageManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service()
@@ -28,43 +32,59 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 class ToolListener
 {
     private $container;
-    private $toolManager;
-    private $workspaceManager;
     private $formFactory;
-    private $templating;
     private $httpKernel;
+    private $messageManager;
     private $rightsManager;
+    private $router;
+    private $securityContext;
+    private $templating;
+    private $toolManager;
+    private $translator;
+    private $workspaceManager;
     const R_U = "ROLE_USER";
     const R_A = "ROLE_ADMIN";
 
     /**
      * @DI\InjectParams({
      *     "container"        = @DI\Inject("service_container"),
-     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
-     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
+     *     "httpKernel"       = @DI\Inject("http_kernel"),
+     *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
+     *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
+     *     "router"           = @DI\Inject("router"),
+     *     "securityContext"  = @DI\Inject("security.context"),
      *     "templating"       = @DI\Inject("templating"),
-     *     "httpKernel"       = @DI\Inject("http_kernel")
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         ContainerInterface $container,
-        ToolManager $toolManager,
-        RightsManager $rightsManager,
-        WorkspaceManager $workspaceManager,
         FormFactory $formFactory,
+        $httpKernel,
+        MessageManager $messageManager,
+        RightsManager $rightsManager,
+        RouterInterface $router,
+        SecurityContextInterface $securityContext,
         $templating,
-        $httpKernel
+        ToolManager $toolManager,
+        TranslatorInterface $translator,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->container = $container;
-        $this->toolManager = $toolManager;
-        $this->workspaceManager = $workspaceManager;
         $this->formFactory = $formFactory;
-        $this->templating = $templating;
         $this->httpKernel = $httpKernel;
+        $this->messageManager = $messageManager;
         $this->rightsManager = $rightsManager;
+        $this->router = $router;
+        $this->securityContext = $securityContext;
+        $this->templating = $templating;
+        $this->toolManager = $toolManager;
+        $this->translator = $translator;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -142,9 +162,18 @@ class ToolListener
      */
     public function desktopParameters()
     {
-        $tools = $this->toolManager->getToolByCriterias(
+        $desktopTools = $this->toolManager->getToolByCriterias(
             array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
         );
+        $tools = array();
+
+        foreach ($desktopTools as $desktopTool) {
+            $toolName = $desktopTool->getName();
+
+            if ($toolName !== 'home' && $toolName !== 'parameters') {
+                $tools[] = $desktopTool;
+            }
+        }
 
         if (count($tools) > 1) {
             return $this->templating->render(
@@ -154,7 +183,7 @@ class ToolListener
         }
 
         //otherwise only parameters exists so we return the parameters page.
-        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopConfigureTool';
+        $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopParametersMenu';
 
         $subRequest = $this->container->get('request')->duplicate(
             array(),
@@ -191,38 +220,118 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_learning_profil")
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool")
      *
-     * @param DisplayToolEvent $event
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
      */
-    public function onDisplayWorkspaceLearningProfil(DisplayToolEvent $event)
+    public function onTopBarLeftMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Tool\CompetenceTool:listMyCompetences',
-            'workspace' => $event->getWorkspace()->getId()
-        );
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
 
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        if ($user !== 'anon.' && !is_null($tool)) {
+            $toolName = $tool->getName();
+            $translatedName = $this->translator->trans($toolName, array(), 'tools');
+            $route = $this->router->generate(
+                'claro_desktop_open_tool',
+                array('toolName' => $toolName)
+            );
 
-        $event->setContent($response->getContent());
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $translatedName,
+                array('uri' => $route)
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $translatedName);
+
+            return $menu;
+        }
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_learning_outcomes")
+     * @DI\Observe("claroline_top_bar_right_menu_configure_desktop_tool")
      *
-     * @param DisplayToolEvent $event
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
      */
-    public function onDisplayWorkspaceLearningOutcomes(DisplayToolEvent $event)
+    public function onTopBarRightMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Tool\CompetenceTool:workspaceLearningOutcomesList',
-            'workspace' => $event->getWorkspace()->getId()
-        );
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
 
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        if ($user !== 'anon.' && !is_null($tool)) {
+            $toolName = $tool->getName();
+            $translatedName = $this->translator->trans($toolName, array(), 'tools');
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $translatedName,
+                array(
+                    'route' => 'claro_desktop_open_tool',
+                    'routeParameters' => array('toolName' => $toolName)
+                )
+            )->setAttribute('class', 'dropdown')
+            ->setAttribute('role', 'presentation')
+            ->setExtra('icon', 'fa fa-' . $tool->getClass());
 
-        $event->setContent($response->getContent());
+            return $menu;
+        }
+    }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
+
+        if ($user !== 'anon.') {
+            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
+            $messageTitle = $this->translator->trans(
+                'new_message_alert',
+                array('%count%' => $countUnreadMessages),
+                'platform'
+            );
+            $menu = $event->getMenu();
+            $messageMenuLink = $menu->addChild(
+                $this->translator->trans('messages', array(), 'cursus'),
+                array('route' => 'claro_message_list_received')
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $messageTitle);
+
+            if ($countUnreadMessages > 0) {
+                $messageMenuLink->setExtra('badge', $countUnreadMessages);
+            }
+
+            return $menu;
+        }
+    }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_parameters")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onTopBarLeftMenuConfigureParameters(ConfigureMenuEvent $event)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        $tool = $event->getTool();
+
+        if ($user !== 'anon.') {
+            $parametersTitle = $this->translator->trans(
+                'preferences',
+                array(),
+                'platform'
+            );
+            $menu = $event->getMenu();
+            $menu->addChild(
+                $this->translator->trans('preferences', array(), 'platform'),
+                array('route' => 'claro_desktop_parameters_menu')
+            )->setExtra('icon', 'fa fa-' . $tool->getClass())
+            ->setExtra('title', $parametersTitle);
+
+            return $menu;
+        }
     }
 }

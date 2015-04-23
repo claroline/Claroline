@@ -579,7 +579,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      *
      * @return Query|User[]
      */
-    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order)
+    public function findByRolesIncludingGroups(array $roles, $getQuery = false, $orderedBy = 'id', $order = '')
     {
         $dql = "
             SELECT u, r1, g, r2, ws From Claroline\CoreBundle\Entity\User u
@@ -964,6 +964,19 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
+    public function findAllEnabledUsers($executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = TRUE
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     /**
      * Returns the users who are members of one of the given workspaces
      *
@@ -1208,6 +1221,27 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getResult();
     }
 
+    public function findAllWithFacetsByWorkspace(Workspace $workspace)
+    {
+        $dql = "
+            SELECT u, ff
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.roles ur
+            LEFT JOIN u.fieldsFacetValue ff
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles gr
+            LEFT JOIN gr.workspace grws
+            LEFT JOIN ur.workspace uws
+            WHERE uws.id = :wsId
+            OR grws.id = :wsId
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('wsId', $workspace->getId());
+
+        return $query->getResult();
+    }
+
     public function findOneUserByUsername($username, $executeQuery = true)
     {
         $dql = '
@@ -1236,5 +1270,54 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('mail', $mail);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    {
+        $dql = '
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.username = :username
+            AND u.mail = :mail
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('username', $username);
+        $query->setParameter('mail', $mail);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function countAllEnabledUsers($executeQuery = true)
+    {
+        $dql = '
+            SELECT COUNT(DISTINCT u)
+            FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.isEnabled = true
+        ';
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getSingleScalarResult() : $query;
+    }
+    
+    public function countByRoles(array $roles, $includeGrps)
+    {
+        if ($includeGrps) {
+            $dql = 'SELECT count (DISTINCT u)
+                From Claroline\CoreBundle\Entity\User u
+                LEFT JOIN u.roles r1
+                LEFT JOIN u.personalWorkspace ws
+                LEFT JOIN u.groups g
+                LEFT JOIN g.roles r2
+                WHERE r1 in (:roles)
+                AND u.isEnabled = true
+                OR r2 in (:roles)';
+                
+                $query = $this->_em->createQuery($dql);
+                $query->setParameter('roles', $roles);
+                
+                return $query->getSingleScalarResult();
+        }
     }
 }

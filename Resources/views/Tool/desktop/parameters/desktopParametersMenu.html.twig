@@ -1,0 +1,27 @@
+{% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "preferences" | trans({}, "platform") | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'preferences'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'preferences'|trans({}, 'platform') }}
+        </h3>
+    </div>
+
+    {{ knp_menu_render('ClarolineCoreBundle:Builder:desktopParametersMenu', {}, 'desktop_parameters') }}
+
+{% endblock %}

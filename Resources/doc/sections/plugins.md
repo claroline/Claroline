@@ -74,6 +74,8 @@ widgets:
      is_exportable: 'true'
      #- name: 'claroline_mywidget2'
      #is_configurable: 'false'
+     #is_displayable_in_workspace: 'true'
+     #is_displayable_in_desktop: 'true'
 
 resources:
     - class: 'Claroline\ExampleBundle\Entity\Example'

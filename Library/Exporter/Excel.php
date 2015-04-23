@@ -18,6 +18,18 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class Excel implements ExporterInterface
 {
+    private $tmpLogPath;
+
+    /**
+     * @DI\InjectParams({
+     *     "tmp" = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
+     * })
+     */
+    public function __construct($tmp)
+    {
+        $this->tmpLogPath = $tmp;
+    }
+
     /**
      * http://www.the-art-of-web.com/php/dataexport/
      */
@@ -37,7 +49,8 @@ class Excel implements ExporterInterface
             $excel .= implode("\t", $row) . "\r\n";
         }
 
-        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . "file.xls";
+        $tmpFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid() . ".xls";
+        file_put_contents($this->tmpLogPath, $tmpFile . "\n", FILE_APPEND);
         file_put_contents($tmpFile, $excel);
 
         return $tmpFile;

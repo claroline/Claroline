@@ -26,6 +26,7 @@ class Workspace
 {
     const DEFAULT_MAX_STORAGE_SIZE = "1 TB";
     const DEFAULT_MAX_FILE_COUNT = 10000;
+    const DEFAULT_MAX_USERS = 10000;
 
     protected static $visitorPrefix = 'ROLE_WS_VISITOR';
     protected static $collaboratorPrefix = 'ROLE_WS_COLLABORATOR';
@@ -65,6 +66,11 @@ class Workspace
      * @ORM\Column(type="integer", nullable=false)
      */
     protected $maxUploadResources = 10000;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
@@ -134,15 +140,6 @@ class Workspace
     protected $selfUnregistration = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Competence\Competence",
-     *     mappedBy="workspace",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $competences;
-
-    /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
      */
     protected $creationDate;
@@ -151,6 +148,26 @@ class Workspace
      * @ORM\Column(name="is_personal", type="boolean")
      */
     protected $isPersonal = false;
+
+    /**
+     * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     */
+    protected $startDate;
+
+    /**
+     * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     */
+    protected $endDate;
+
+    /**
+     * @ORM\Column(name="is_access_date", type="boolean")
+     */
+    protected $isAccessDate = false;
+
+    /**
+     * @ORM\Column(name="workspace_type", type="integer", nullable=true)
+     */
+    protected $workspaceType;
 
     public function __construct()
     {
@@ -324,9 +341,9 @@ class Workspace
         return $this->maxUploadResources;
     }
 
-    public function setIsPersonal($boolean)
+    public function setIsPersonal($isPersonal)
     {
-        $this->isPersonal = true;
+        $this->isPersonal = $isPersonal;
     }
 
     public function isPersonal()
@@ -342,5 +359,55 @@ class Workspace
         );
 
         return $return;
+    }
+
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(\DateTime $endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    public function getIsAccessDate()
+    {
+        return $this->isAccessDate;
+    }
+
+    public function setIsAccessDate($isAccessDate)
+    {
+        $this->isAccessDate = $isAccessDate;
+    }
+
+    public function getWorkspaceType()
+    {
+        return $this->workspaceType;
+    }
+
+    public function setWorkspaceType($workspaceType)
+    {
+        $this->workspaceType = $workspaceType;
+    }
+
+    public function setMaxUsers($maxUsers)
+    {
+        $this->maxUsers = $maxUsers;
+    }
+
+    public function getMaxUsers()
+    {
+        return $this->maxUsers;
     }
 }

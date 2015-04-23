@@ -155,12 +155,15 @@ class ResourceManagerListener
         $directoryId = $this->resourceManager->getWorkspaceRoot($workspace)->getId();
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findAll();
+        $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findByResourceType(null);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes,
+                'resourceActions' => $resourceActions,
                 'jsonPath' => $jsonPath,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom()
@@ -176,11 +179,14 @@ class ResourceManagerListener
     public function resourceDesktop()
     {
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findByResourceType(null);
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
             array(
                 'resourceTypes' => $resourceTypes,
+                'resourceActions' => $resourceActions,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom()
             )

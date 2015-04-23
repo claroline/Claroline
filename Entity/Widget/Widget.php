@@ -46,11 +46,6 @@ class Widget
     protected $isConfigurable;
 
     /**
-     * @ORM\Column()
-     */
-    protected $icon;
-
-    /**
      * @ORM\Column(name="is_exportable", type="boolean")
      */
     protected $isExportable;
@@ -64,6 +59,16 @@ class Widget
      * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
      */
     protected $isDisplayableInDesktop = true;
+
+    /**
+     * @ORM\Column(name="default_width", type="integer", options={"default":4})
+     */
+    protected $defaultWidth = 4;
+
+    /**
+     * @ORM\Column(name="default_height", type="integer", options={"default":3})
+     */
+    protected $defaultHeight = 3;
 
     public function getId()
     {
@@ -100,16 +105,6 @@ class Widget
         $this->isConfigurable = $bool;
     }
 
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-    }
-
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
     public function setExportable($isExportable)
     {
         $this->isExportable = $isExportable;
@@ -138,6 +133,26 @@ class Widget
     public function setDisplayableInDesktop($bool)
     {
         $this->isDisplayableInDesktop = $bool;
+    }
+
+    public function getDefaultWidth()
+    {
+        return $this->defaultWidth;
+    }
+
+    public function setDefaultWidth($defaultWidth)
+    {
+        $this->defaultWidth = $defaultWidth;
+    }
+
+    public function getDefaultHeight()
+    {
+        return $this->defaultHeight;
+    }
+
+    public function setDefaultHeight($defaultHeight)
+    {
+        $this->defaultHeight = $defaultHeight;
     }
 
     public function __toString()
