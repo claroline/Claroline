@@ -130,7 +130,7 @@ function position(shape, color, i, prefix, value, size, points) {
         }
     });
 
-    $('#dragContainer' + grade).append('<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+    $('#dragContainer' + grade).append('<p style="position: absolute; left: 5px; top: -20px;">'
         + parseInt(grade + 1) + '</p>');
 
     alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);

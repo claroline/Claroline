@@ -116,7 +116,7 @@ function LoadPic(path, prefx, iddoc) {
 
         $('#Answer').append('<div id="dragContainer' + grade +
             '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
-            + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+            + '<p style="position: absolute; left: 5px; top: -20px;">'
             + parseInt(count + 1) + '</p></div>');
 
         //var stoppos = $(this).position();
@@ -140,12 +140,12 @@ function LoadPic(path, prefx, iddoc) {
         imgx = parseInt(leftpos);
         imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
 //            imgx=0;
-            alert(imgx);
+          //  alert(imgx);
         // Position y answer zone
         imgy = parseInt(toppos);
         imgy -= $('#Answer').position().top;
 //            imgy=0;
-            alert(imgy);
+          //  alert(imgy);
         // With the position of the dragged image
         $('#dragContainer' + grade).css({
             "position" : "absolute",
@@ -558,45 +558,47 @@ function setOrderAfterDel() {
     $("*[id^='dragContainer']").each(function () {
         num = count + 1;
       //  $(this).attr('id', String('dragContainer' + grade));
-        $(this).find('p').replaceWith(String('<p id="num' + num +'" style="position: absolute; left: 5px; top: -20px;">' + num + '</p>'));
+        $(this).find('p').replaceWith(String('<p style="position: absolute; left: 5px; top: -20px;">' + num + '</p>'));
         count++;
     });
-
-    count = 0;
-
     $("*[id^='img']").each(function () {
-        var oldId = $(this).attr('id');
-        num = count + 1;
-        $(this).attr('id', String('img' + count));
-        point[$(this).attr('id')] = oldPoints[oldId];
-        count++;
+        point[$(this).attr('id')] = oldPoints[$(this).attr('id')];
     });
 
-    count = 0;
-
-    $("*[id^='shape']").each(function () {
-        if ($(this).attr('id').length > 5) {
-            $(this).attr('id', String('shape' + count));
-            count++;
-        }
-    });
-
-    count = 0;
-
-    $("*[id^='color']").each(function () {
-        if ($(this).attr('id').length > 5) {
-            $(this).attr('id', String('color' + count));
-            count++;
-        }
-    });
-
-    count = 0;
-
-    $("*[id^='points']").each(function () {
-        if ($(this).attr('id').length > 6) {
-            $(this).attr('id', String('points' + count));
-            count++;
-        }
-    });
+//    count = 0;
+//
+//    $("*[id^='img']").each(function () {
+//        var oldId = $(this).attr('id');
+////        $(this).attr('id', String('img' + count));
+//        point[$(this).attr('id')] = oldPoints[oldId];
+////        count++;
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='shape']").each(function () {
+//        if ($(this).attr('id').length > 5) {
+//            $(this).attr('id', String('shape' + count));
+//            count++;
+//        }
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='color']").each(function () {
+//        if ($(this).attr('id').length > 5) {
+//            $(this).attr('id', String('color' + count));
+//            count++;
+//        }
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='points']").each(function () {
+//        if ($(this).attr('id').length > 6) {
+//            $(this).attr('id', String('points' + count));
+//            count++;
+//        }
+//    });
 }
 
