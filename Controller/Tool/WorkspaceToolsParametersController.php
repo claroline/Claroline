@@ -118,7 +118,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
 
         return array(
-            'form' => $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot)->createView(),
+            'form' => $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $ot->getContent())->createView(),
             'workspace' => $workspace,
             'wot' => $ot
         );
@@ -141,14 +141,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function workspaceOrderToolEditAction(Workspace $workspace, OrderedTool $workspaceOrderTool)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $workspaceOrderTool);
+        $form = $this->formFactory->create(FormFactory::TYPE_ORDERED_TOOL, array(), $workspaceOrderTool->getContent());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             //I know it's not that great but I couldn't find an other way
             $formData = $this->request->request->get('workspace_order_tool_edit_form');
             $this->toolManager->renameOrderedTool(
-                $formData['displayedName'],
+                $formData['content'],
                 $workspaceOrderTool
             );
 
@@ -156,7 +156,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
                 array(
                     'tool_id' => $workspaceOrderTool->getTool()->getId(),
                     'ordered_tool_id' => $workspaceOrderTool->getId(),
-                    'name' => $workspaceOrderTool->getDisplayedName()
+                    'name' => $workspaceOrderTool->getContent()->getTitle()
                 )
             );
         }

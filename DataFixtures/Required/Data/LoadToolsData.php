@@ -50,7 +50,7 @@ class LoadToolsData implements RequiredFixture
             $entity->setIsConfigurableInDesktop($tool[8]);
             $entity->setIsLockedForAdmin($tool[9]);
             $entity->setIsAnonymousExcluded($tool[10]);
-            $this->container->get('claroline.manager.tool_manager')->setDefaultToolTranslations($entity);
+            $entity->setContent($this->container->get('claroline.manager.tool_manager')->getOrderedToolDefaultTranslations($tool[0]));
             $manager->persist($entity);
             $this->createToolMaskDecoders($manager, $entity);
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
@@ -104,7 +104,22 @@ class LoadToolsData implements RequiredFixture
         $orderedTool->setType(0);
         $orderedTool->setOrder(1);
         $orderedTool->setLocked(false);
-        $this->container->get('claroline.manager.tool_manager')->setDefaultOrderedToolTranslations($orderedTool);
+        $locales = $this->container->get('claroline.manager.locale_manager')->getAvailableLocales();
+        $repository = $manager->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
+        $content = new Content();
+
+        foreach ($locales as $locale) {
+            $repository->translate(
+                $content,
+                'title',
+                $locale,
+                $this->container->get('translator')->trans($tool->getName(), array(), 'tools', $locale)
+            );
+            $manager->persist($content);
+        }
+
+        $content->setType('claro_tool_i18n');
+        $orderedTool->setContent($content);
         $orderedTool->setVisibleInDesktop(true);
         $manager->persist($orderedTool);
         $manager->flush();
