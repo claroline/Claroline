@@ -32,6 +32,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
+     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'correction' | trans }} {% endblock %}
@@ -61,7 +62,7 @@
             {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}
 
             <div id="Answer" style="position: relative;">
-                <img src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
+                <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
                                                       alt="AnswerImage" id="AnswerImage1"/>
             
                 {% set i = 0 %}{% set allInfo = '' %}

@@ -20,7 +20,7 @@ $(function () {
 
                 var marginTop = $('#AnswerImg').css("margin-top");
               
-                var x = stoppos.left - $('#AnswerImg').position().left;
+                var x = stoppos.left;
                 var y = stoppos.top - $('#AnswerImg').position().top - parseInt(marginTop);
 
                 tempCoords[event.target.id] = x + ' - ' + y;

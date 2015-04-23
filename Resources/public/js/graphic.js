@@ -97,6 +97,9 @@ function LoadPic(path, prefx, iddoc) {
     value = 0;
     grade = 0;
     point = {};
+    
+    //displays the button to add an answer
+    $('#addButtonAnswer').css({"display" : "inline"});
 }
 
 /**
@@ -108,7 +111,7 @@ function LoadPic(path, prefx, iddoc) {
  function addAnswerZone(noImage)
  {
     if($('#AnswerImage').length){
-        //For edition
+        //For edition : put in order if it adds points
         setOrderAfterDel();
 
         $('#Answer').append('<div id="dragContainer' + grade +
@@ -136,11 +139,13 @@ function LoadPic(path, prefx, iddoc) {
 
         imgx = parseInt(leftpos);
         imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
-
+//            imgx=0;
+            alert(imgx);
         // Position y answer zone
         imgy = parseInt(toppos);
         imgy -= $('#Answer').position().top;
-
+//            imgy=0;
+            alert(imgy);
         // With the position of the dragged image
         $('#dragContainer' + grade).css({
             "position" : "absolute",

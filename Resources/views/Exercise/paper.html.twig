@@ -10,6 +10,7 @@
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {% endblock %}
@@ -106,10 +107,10 @@
                                 {% set response = 'empty' %}
                             {% endif %}
 
-                            <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
                                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
                                 style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
-                        </p>
+                                </p>
                     </div>
 
                     <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
