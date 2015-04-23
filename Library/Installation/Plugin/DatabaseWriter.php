@@ -638,7 +638,7 @@ class DatabaseWriter
         $tool->setIsConfigurableInDesktop($toolConfiguration['is_configurable_in_desktop']);
         $tool->setIsLockedForAdmin($toolConfiguration['is_locked_for_admin']);
         $tool->setIsAnonymousExcluded($toolConfiguration['is_anonymous_excluded']);
-        $this->toolManager->setDefaultToolTranslations($tool);
+        $tool->setContent($this->toolManager->getOrderedToolDefaultTranslations($toolConfiguration['name']));
 
         if (isset($toolConfiguration['class'])) {
             $tool->setClass("{$toolConfiguration['class']}");

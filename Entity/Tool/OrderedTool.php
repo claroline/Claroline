@@ -17,8 +17,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\OrderedToolRepository")
@@ -38,9 +36,8 @@ use Gedmo\Translatable\Translatable;
  *
  * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
  * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
- * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Translation\OrderedToolTranslation")
  */
-class OrderedTool implements Translatable
+class OrderedTool
 {
     /**
      * @ORM\Id
@@ -75,11 +72,10 @@ class OrderedTool implements Translatable
     protected $order;
 
     /**
-     * @var string
-     * @Gedmo\Translatable
-     * @ORM\Column(length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
-    private $displayedName;
+    private $content;
 
     /**
      * @ORM\Column(name="is_visible_in_desktop", type="boolean")
@@ -113,13 +109,6 @@ class OrderedTool implements Translatable
      * @ORM\Column(name="is_locked", type="boolean")
      */
     protected $locked = false;
-
-    /**
-     * @Gedmo\Locale
-     * Used locale to override Translation listener`s locale
-     * this is not a mapped field of entity metadata, just a simple property
-     */
-    private $locale;
 
     public function __construct()
     {
@@ -159,6 +148,16 @@ class OrderedTool implements Translatable
     public function getOrder()
     {
         return $this->order;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
     }
 
     public function setUser(User $user = null)
@@ -209,25 +208,5 @@ class OrderedTool implements Translatable
     public function setLocked($locked)
     {
         $this->locked = $locked;
-    }
-
-    public function setDisplayedName($displayedName)
-    {
-        $this->displayedName = $displayedName;
-    }
-
-    public function getDisplayedName()
-    {
-        return $this->displayedName;
-    }
-
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    public function getTranslatableLocale()
-    {
-        return $this->locale;
     }
 }

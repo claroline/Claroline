@@ -40,24 +40,16 @@ class LocaleListener extends TranslatableListener
     public function postFlush(PostFlushEventArgs $args) {
         $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
+        $class = 'Claroline\CoreBundle\Entity\Content';
         $map = $uow->getIdentityMap();
 
-        $refreshable = array(
-            'Claroline\CoreBundle\Entity\Content',
-            'Claroline\CoreBundle\Entity\Tool\OrderedTool',
-            'Claroline\CoreBundle\Entity\Tool\Tool'
-        );
+        if (!array_key_exists($class, $map)) return;
 
-        foreach ($refreshable as $class) {
-            if (array_key_exists($class, $map)) {
-                //so it was in the identityMap hey !
-                foreach ($map[$class] as $entity) {
-                    $em->refresh($entity);
-                }
-            }
+        //so it was in the identityMap hey !
+        foreach ($map[$class] as $entity) {
+            $em->refresh($entity);
         }
     }
-
 
     public function handleTranslatableObjectUpdate(TranslatableAdapter $ea, $object, $isInsert)
     {
