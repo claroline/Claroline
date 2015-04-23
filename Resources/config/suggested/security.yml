@@ -49,14 +49,6 @@ security:
                 lifetime: 31536000 # 365 days
                 path:     /
                 domain:   ~
-            oauth:
-                resource_owners:
-                    facebook: /login/check_facebook
-                login_path: /login
-                failure_path: /login
-                use_forward: false
-                oauth_user_provider:
-                    service: claroline.facebook_provider
 
     access_decision_manager:
         allow_if_all_abstain: false

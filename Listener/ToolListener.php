@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -34,7 +33,6 @@ class ToolListener
     private $container;
     private $formFactory;
     private $httpKernel;
-    private $messageManager;
     private $rightsManager;
     private $router;
     private $securityContext;
@@ -50,7 +48,6 @@ class ToolListener
      *     "container"        = @DI\Inject("service_container"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "httpKernel"       = @DI\Inject("http_kernel"),
-     *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
      *     "securityContext"  = @DI\Inject("security.context"),
@@ -64,7 +61,6 @@ class ToolListener
         ContainerInterface $container,
         FormFactory $formFactory,
         $httpKernel,
-        MessageManager $messageManager,
         RightsManager $rightsManager,
         RouterInterface $router,
         SecurityContextInterface $securityContext,
@@ -77,7 +73,6 @@ class ToolListener
         $this->container = $container;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
-        $this->messageManager = $messageManager;
         $this->rightsManager = $rightsManager;
         $this->router = $router;
         $this->securityContext = $securityContext;
