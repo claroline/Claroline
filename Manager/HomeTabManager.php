@@ -222,6 +222,83 @@ class HomeTabManager
         $this->om->flush();
     }
 
+    public function reorderHomeTabConfigsByType(
+        $type,
+        HomeTabConfig $homeTabConfig,
+        $nextHTCId
+    )
+    {
+        $htcs = $this->homeTabConfigRepo->findHomeTabConfigsByType($type);
+        $nextId = intval($nextHTCId);
+        $order = 1;
+        $updated = false;
+
+        foreach ($htcs as $htc) {
+
+            if ($htc === $homeTabConfig) {
+                continue;
+            } elseif ($htc->getId() === $nextId) {
+                $homeTabConfig->setTabOrder($order);
+                $updated = true;
+                $this->om->persist($homeTabConfig);
+                $order++;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+
+            } else {
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+            }
+        }
+
+        if (!$updated) {
+            $homeTabConfig->setTabOrder($order);
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
+    }
+
+    public function reorderHomeTabConfigsByUserAndType(
+        User $user,
+        $type,
+        HomeTabConfig $homeTabConfig,
+        $nextHTCId
+    )
+    {
+        $htcs = $this->homeTabConfigRepo->findHomeTabConfigsByUserAndType($user, $type);
+        $nextId = intval($nextHTCId);
+        $order = 1;
+        $updated = false;
+
+        foreach ($htcs as $htc) {
+
+            if ($htc === $homeTabConfig) {
+                continue;
+            } elseif ($htc->getId() === $nextId) {
+                $homeTabConfig->setTabOrder($order);
+                $updated = true;
+                $this->om->persist($homeTabConfig);
+                $order++;
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+
+            } else {
+                $htc->setTabOrder($order);
+                $this->om->persist($htc);
+                $order++;
+            }
+        }
+
+        if (!$updated) {
+            $homeTabConfig->setTabOrder($order);
+            $this->om->persist($homeTabConfig);
+        }
+        $this->om->flush();
+    }
+
     public function createWorkspaceVersion(
         HomeTabConfig $homeTabConfig,
         Workspace $workspace
@@ -578,6 +655,11 @@ class HomeTabManager
         );
     }
 
+    public function getHomeTabByIdAndType($homeTabId, $type)
+    {
+        return $this->homeTabRepo->findOneBy(array('id' => $homeTabId, 'type' => $type));
+    }
+
 
     /**
      * HomeTabConfigRepository access methods
@@ -729,6 +811,26 @@ class HomeTabManager
         return $this->homeTabConfigRepo->findOrderOfLastWorkspaceUserHomeTabByUser($user);
     }
 
+    public function getHomeTabConfigsByType($type)
+    {
+        return $this->homeTabConfigRepo->findHomeTabConfigsByType($type);
+    }
+
+    public function getHomeTabConfigsByUserAndType(User $user, $type)
+    {
+        return $this->homeTabConfigRepo->findHomeTabConfigsByUserAndType($user, $type);
+    }
+
+    public function getOrderOfLastHomeTabByType($type)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastHomeTabByType($type);
+    }
+
+    public function getOrderOfLastHomeTabByUserAndType(User $user, $type)
+    {
+        return $this->homeTabConfigRepo->findOrderOfLastHomeTabByUserAndType($user, $type);
+    }
+
 
     /**
      * WidgetHomeTabConfigRepository access methods
@@ -803,6 +905,14 @@ class HomeTabManager
             $homeTab,
             $widgetInstance,
             $user
+        );
+    }
+
+    public function getWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
+    {
+        return $this->widgetHomeTabConfigRepo->findWidgetHomeTabConfigsByHomeTabAndType(
+            $homeTab,
+            $type
         );
     }
 }

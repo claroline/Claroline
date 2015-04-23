@@ -28,7 +28,6 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -42,12 +41,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Controller of the platform parameters section.
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
  */
 class ParametersController extends Controller
 {
@@ -63,9 +62,6 @@ class ParametersController extends Controller
     private $dbSessionValidator;
     private $refresher;
     private $hwiManager;
-    private $sc;
-    private $toolManager;
-    private $paramAdminTool;
     private $router;
     private $tokenManager;
     private $ipwlm;
@@ -147,8 +143,6 @@ class ParametersController extends Controller
      */
     public function indexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -162,8 +156,6 @@ class ParametersController extends Controller
      */
     public function generalFormAction(Request $request)
     {
-        $this->checkOpen();
-
         $descriptions = $this->contentManager->getTranslatedContent(array('type' => 'platformDescription'));
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
@@ -252,8 +244,6 @@ class ParametersController extends Controller
      */
     public function appearanceFormAction()
     {
-        $this->checkOpen();
-
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\AppearanceType(
@@ -313,8 +303,6 @@ class ParametersController extends Controller
      */
     public function mailIndexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -326,8 +314,6 @@ class ParametersController extends Controller
      */
     public function mailServerFormAction()
     {
-        $this->checkOpen();
-
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\MailServerType(
@@ -352,8 +338,6 @@ class ParametersController extends Controller
      */
     public function submitMailServerAction()
     {
-        $this->checkOpen();
-
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\MailServerType(
@@ -424,8 +408,6 @@ class ParametersController extends Controller
      */
     public function resetMailServerAction()
     {
-        $this->checkOpen();
-
         $data = array(
             'mailer_transport'  => 'smtp',
             'mailer_host'       => null,
@@ -450,8 +432,6 @@ class ParametersController extends Controller
      */
     public function registrationMailFormAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(
             new AdminForm\MailInscriptionType(),
             $this->mailManager->getMailInscription()
@@ -471,8 +451,6 @@ class ParametersController extends Controller
      */
     public function submitRegistrationMailAction()
     {
-        $this->checkOpen();
-
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
@@ -490,8 +468,6 @@ class ParametersController extends Controller
      */
     public function mailLayoutFormAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(
             new AdminForm\MailLayoutType(),
             $this->mailManager->getMailLayout()
@@ -511,8 +487,6 @@ class ParametersController extends Controller
      */
     public function submitMailLayoutAction()
     {
-        $this->checkOpen();
-
         $formData = $this->request->get('platform_parameters_form');
         $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
@@ -530,8 +504,6 @@ class ParametersController extends Controller
      */
     public function termsOfServiceFormAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType(
                 $this->configHandler->getParameter('terms_of_service'),
@@ -552,8 +524,6 @@ class ParametersController extends Controller
      */
     public function submitTermsOfServiceAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType(
                 $this->configHandler->getParameter('terms_of_service'),
@@ -588,8 +558,6 @@ class ParametersController extends Controller
      */
     public function indexingFormAction()
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(
             new AdminForm\IndexingType($this->configHandler->getLockedParamaters()),
             $this->configHandler->getPlatformConfig()
@@ -618,8 +586,6 @@ class ParametersController extends Controller
      */
     public function sessionFormAction()
     {
-        $this->checkOpen();
-
         $config = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\SessionType(
@@ -641,8 +607,6 @@ class ParametersController extends Controller
      */
     public function submitSessionAction()
     {
-        $this->checkOpen();
-
         $formData = $this->request->request->get('platform_session_form', array());
         $storageType = isset($formData['session_storage_type']) ?
             $formData['session_storage_type'] :
@@ -693,8 +657,6 @@ class ParametersController extends Controller
      */
     public function oauthIndexAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -724,7 +686,6 @@ class ParametersController extends Controller
      */
     public function maintenancePageAction()
     {
-        $this->checkOpen();
         //the current ip must be whitelisted so it can access the the plateform when it's under maintenance
         $this->ipwlm->addIP($_SERVER['REMOTE_ADDR']);
 
@@ -738,7 +699,6 @@ class ParametersController extends Controller
      */
     public function startMaintenanceAction()
     {
-        $this->checkOpen();
         MaintenanceHandler::enableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
@@ -751,7 +711,6 @@ class ParametersController extends Controller
      */
     public function endMaintenanceAction()
     {
-        $this->checkOpen();
         MaintenanceHandler::disableMaintenance();
 
         return new RedirectResponse($this->router->generate('claro_admin_parameters_index'));
@@ -771,7 +730,6 @@ class ParametersController extends Controller
      */
     public function securityTokenListAction($order, $direction)
     {
-        $this->checkOpen();
         $tokens = $this->tokenManager->getAllTokens($order, $direction);
 
         return array(
@@ -793,7 +751,6 @@ class ParametersController extends Controller
      */
     public function securityTokenCreateFormAction()
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(
             new AdminForm\SecurityTokenType(),
             new SecurityToken()
@@ -815,7 +772,6 @@ class ParametersController extends Controller
      */
     public function securityTokenCreateAction()
     {
-        $this->checkOpen();
         $securityToken = new SecurityToken();
         $form = $this->formFactory->create(
             new AdminForm\SecurityTokenType(),
@@ -852,7 +808,6 @@ class ParametersController extends Controller
      */
     public function securityTokenEditFormAction(SecurityToken $securityToken)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(
             new AdminForm\SecurityTokenType(),
             $securityToken
@@ -882,7 +837,6 @@ class ParametersController extends Controller
      */
     public function securityTokenEditAction(SecurityToken $securityToken)
     {
-        $this->checkOpen();
         $form = $this->formFactory->create(
             new AdminForm\SecurityTokenType(),
             $securityToken
@@ -919,7 +873,6 @@ class ParametersController extends Controller
      */
     public function securityTokenDeleteAction(SecurityToken $securityToken)
     {
-        $this->checkOpen();
         $this->tokenManager->deleteSecurityToken($securityToken);
 
         return new RedirectResponse(
@@ -940,8 +893,6 @@ class ParametersController extends Controller
      */
     public function sendDatasConfirmationFormAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -955,7 +906,6 @@ class ParametersController extends Controller
      */
     public function sendDatasConfirmAction()
     {
-        $this->checkOpen();
         $ds = DIRECTORY_SEPARATOR;
         $platformOptionsFile = $this->container->getParameter('kernel.root_dir') .
             $ds . 'config' . $ds . 'platform_options.yml';
@@ -1009,15 +959,6 @@ class ParametersController extends Controller
         }
 
         return $tmp;
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->paramAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 
     private function updateMailContent($formData, $form, $errors, $content)

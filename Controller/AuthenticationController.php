@@ -280,7 +280,7 @@ class AuthenticationController
      */
     public function newPasswordAction($hash)
     {
-        $user = $this->userManager->getResetPasswordHash($hash);
+        $user = $this->userManager->getByResetPasswordHash($hash);
         $form = $this->formFactory->create(FormFactory::TYPE_USER_RESET_PWD, array(), $user);
         $form->handleRequest($this->request);
 

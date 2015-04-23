@@ -12,38 +12,37 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Repository\ResourceTypeRepository;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Utilities;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
+use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
+use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
+use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
+use Claroline\CoreBundle\Manager\Exception\RightsException;
+use Claroline\CoreBundle\Manager\Exception\WrongClassException;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\DirectoryRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceShortcutRepository;
+use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Claroline\CoreBundle\Manager\Exception\MissingResourceNameException;
-use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
-use Claroline\CoreBundle\Manager\Exception\RightsException;
-use Claroline\CoreBundle\Manager\Exception\ExportResourceException;
-use Claroline\CoreBundle\Manager\Exception\WrongClassException;
-use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
-use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Library\Security\Utilities;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.resource_manager")
@@ -80,22 +79,26 @@ class ResourceManager
     private $secut;
     /* @var TranslatorInterface */
     private $translator;
+    /* @var PlatformConfigurationHandler */
+    private $platformConfigHandler;
+    private $filesDirectory;
     private $container;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "iconManager"     = @DI\Inject("claroline.manager.icon_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "container"       = @DI\Inject("service_container"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ut"              = @DI\Inject("claroline.utilities.misc"),
-     *     "secut"           = @DI\Inject("claroline.security.utilities"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "iconManager"           = @DI\Inject("claroline.manager.icon_manager"),
+     *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
+     *     "container"             = @DI\Inject("service_container"),
+     *     "rightsManager"         = @DI\Inject("claroline.manager.rights_manager"),
+     *     "dispatcher"            = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "secut"                 = @DI\Inject("claroline.security.utilities"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct (
@@ -108,7 +111,8 @@ class ResourceManager
         ClaroUtilities $ut,
         Utilities $secut,
         MaskManager $maskManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        PlatformConfigurationHandler $platformConfigHandler
     )
     {
         $this->resourceTypeRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceType');
@@ -127,6 +131,8 @@ class ResourceManager
         $this->secut = $secut;
         $this->container = $container;
         $this->translator = $translator;
+        $this->platformConfigHandler= $platformConfigHandler;
+        $this->filesDirectory = $container->getParameter('claroline.param.files_directory');
     }
 
     /**
@@ -754,8 +760,11 @@ class ResourceManager
                 $i = 1;
 
                 foreach ($node->getChildren() as $child) {
-                    $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
-                    $i++;
+
+                    if ($child->isActive()) {
+                        $this->copy($child, $newNode, $user, $i, $withRights, $withDirectoryContent, $rights);
+                        $i++;
+                    }
                 }
             }
         }
@@ -833,15 +842,18 @@ class ResourceManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @throws \LogicException
      */
-    public function delete(ResourceNode $node)
+    public function delete(ResourceNode $resourceNode)
     {
-        if ($node->getParent() === null) {
+        if ($resourceNode->getParent() === null) {
+
             throw new \LogicException('Root directory cannot be removed');
         }
-        $workspace = $node->getWorkspace();
+        $workspace = $resourceNode->getWorkspace();
+        $nodes = $this->getDescendants($resourceNode);
+        $nodes[] = $resourceNode;
+        $softDelete = $this->platformConfigHandler->getParameter('resource_soft_delete');
+
         $this->om->startFlushSuite();
-        $nodes = $this->getDescendants($node);
-        $nodes[] = $node;
 
         foreach ($nodes as $node) {
 
@@ -859,11 +871,38 @@ class ResourceManager
                     );
 
                     foreach ($event->getFiles() as $file) {
-                        unlink($file);
 
-                        $dir = $this->container->getParameter('claroline.param.files_directory') .
+                        if ($softDelete) {
+                            $parts = explode(
+                                $this->filesDirectory . DIRECTORY_SEPARATOR,
+                                $file
+                            );
+
+                            if (count($parts) === 2) {
+                                $deleteDir = $this->filesDirectory .
+                                    DIRECTORY_SEPARATOR .
+                                    'DELETED_FILES';
+                                $dest = $deleteDir .
+                                    DIRECTORY_SEPARATOR .
+                                    $parts[1];
+                                $additionalDirs = explode(DIRECTORY_SEPARATOR, $parts[1]);
+
+                                for ($i = 0; $i < count($additionalDirs) - 1; $i++) {
+                                    $deleteDir .= DIRECTORY_SEPARATOR . $additionalDirs[$i];
+                                }
+
+                                if (!is_dir($deleteDir)) {
+                                    mkdir($deleteDir, 0777, true);
+                                }
+                                rename($file, $dest);
+                            }
+                        } else {
+                            unlink($file);
+                        }
+                        $dir = $this->filesDirectory .
                             DIRECTORY_SEPARATOR .
-                            $workspace->getCode();
+                            'WORKSPACE_' .
+                            $workspace->getId();
 
                         if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
                             rmdir($dir);
@@ -877,28 +916,32 @@ class ResourceManager
                     array($node)
                 );
 
-                if ($node->getIcon()) {
+                if ($node->getIcon() && !$softDelete) {
                     $this->iconManager->delete($node->getIcon(), $workspace);
                 }
+                // Delete all associated shortcuts
+                $this->deleteAssociatedShortcuts($node);
 
-                /*
-                 * If the child isn't removed here aswell, doctrine will fail to remove $resChild
-                 * because it still has $resChild in its UnitOfWork or something (I have no idea
-                 * how doctrine works tbh). So if you remove this line the suppression will
-                 * not work for directory containing children.
-                 */
-                $this->om->remove($resource);
-                $this->om->remove($node);
+                if ($softDelete) {
+                    $node->setActive(false);
+                    $this->om->persist($node);
+                } else {
+                    /*
+                     * If the child isn't removed here aswell, doctrine will fail to remove $resChild
+                     * because it still has $resChild in its UnitOfWork or something (I have no idea
+                     * how doctrine works tbh). So if you remove this line the suppression will
+                     * not work for directory containing children.
+                     */
+                    $this->om->remove($resource);
+                    $this->om->remove($node);
+                }
             }
         }
-
-        if ($node->getIcon()) {
-            $this->iconManager->delete($node->getIcon(), $workspace);
-        }
-
-        $this->om->remove($node);
         $this->om->endFlushSuite();
-        $this->reorder($node->getParent());
+
+        if (!$softDelete) {
+            $this->reorder($resourceNode->getParent());
+        }
     }
 
     /**
@@ -1017,7 +1060,10 @@ class ResourceManager
             $children = $this->getDescendants($dir);
 
             foreach ($children as $child) {
-                if ($child->getResourceType()->getName() !== 'directory') {
+
+                if ($child->isActive() &&
+                    $child->getResourceType()->getName() !== 'directory') {
+
                     $toAppend[] = $child;
                 }
             }
@@ -1369,6 +1415,8 @@ class ResourceManager
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
         $newNode->setPublished($node->isPublished());
+        $newNode->setLicense($node->getLicense());
+        $newNode->setAuthor($node->getAuthor());
         $newNode->setIndex($index);
 
         if ($withRights) {
@@ -1649,5 +1697,16 @@ class ResourceManager
         }
 
         return $defaults;
+    }
+
+    private function deleteAssociatedShortcuts(ResourceNode $resourceNode)
+    {
+        $this->om->startFlushSuite();
+        $shortcuts = $this->shortcutRepo->findByTarget($resourceNode);
+
+        foreach ($shortcuts as $shortcut) {
+            $this->om->remove($shortcut->getResourceNode());
+        }
+        $this->om->endFlushSuite();
     }
 }

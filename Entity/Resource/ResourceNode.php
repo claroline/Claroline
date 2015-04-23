@@ -15,7 +15,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\License;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -38,12 +37,7 @@ class ResourceNode
     protected $id;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\License",
-     *     inversedBy="abstractResources",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\Column(nullable=true)
      */
     protected $license;
 
@@ -197,6 +191,16 @@ class ResourceNode
      */
     protected $logs;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $author;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": 1})
+     */
+    protected $active = true;
+
     public function __construct()
     {
         $this->rights = new ArrayCollection();
@@ -228,7 +232,7 @@ class ResourceNode
     /**
      * Returns the resource license.
      *
-     * @return \Claroline\CoreBundle\Entity\License
+     * @return string
      */
     public function getLicense()
     {
@@ -238,9 +242,9 @@ class ResourceNode
     /**
      * Sets the resource license.
      *
-     * @param \Claroline\CoreBundle\Entity\License
+     * @param string $license
      */
-    public function setLicense(License $license)
+    public function setLicense($license)
     {
         $this->license = $license;
     }
@@ -561,6 +565,26 @@ class ResourceNode
     public function getIndex()
     {
         return $this->index;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    public function setAuthor($author)
+    {
+        $this->author = $author;
+    }
+
+    public function isActive()
+    {
+        return $this->active;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = $active;
     }
 
     /**

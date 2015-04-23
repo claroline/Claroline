@@ -15,31 +15,30 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('desktop_and_home')")
+ */
 class DesktopConfigurationController extends Controller
 {
     private $desktopAdminTool;
-    private $securityContext;
     private $toolManager;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     *     "toolManager" = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
         ToolManager $toolManager
     )
     {
-        $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
-        $this->desktopAdminTool = $this->toolManager->getAdminToolByName('desktop_and_home');
     }
 
     /**
@@ -56,8 +55,6 @@ class DesktopConfigurationController extends Controller
      */
     public function adminDesktopConfigMenuAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -78,8 +75,6 @@ class DesktopConfigurationController extends Controller
      */
     public function adminDesktopConfigureToolAction($type = 0)
     {
-        $this->checkOpen();
-
         $menuType = intval($type);
         $tools = $this->toolManager->getDesktopToolsConfigurationArrayForAdmin($menuType);
         $orderedTools = $this->toolManager
@@ -103,8 +98,6 @@ class DesktopConfigurationController extends Controller
      */
     public function toggleVisibility(OrderedTool $orderedTool)
     {
-        $this->checkOpen();
-
         $isVisible = $orderedTool->isVisibleInDesktop();
         $orderedTool->setVisibleInDesktop(!$isVisible);
         $this->toolManager->editOrderedTool($orderedTool);
@@ -123,8 +116,6 @@ class DesktopConfigurationController extends Controller
      */
     public function toggleLock(OrderedTool $orderedTool)
     {
-        $this->checkOpen();
-
         $isLocked = $orderedTool->isLocked();
         $orderedTool->setLocked(!$isLocked);
         $this->toolManager->editOrderedTool($orderedTool);
@@ -153,8 +144,6 @@ class DesktopConfigurationController extends Controller
         $type = 0
     )
     {
-        $this->checkOpen();
-
         if (is_null($orderedTool->getUser()) && $orderedTool->getType() === intval($type)) {
 
             $this->toolManager->reorderAdminOrderedTool(
@@ -168,14 +157,5 @@ class DesktopConfigurationController extends Controller
 
             throw new AccessDeniedException();
         }
-    }
-
-    private function checkOpen()
-    {
-        if ($this->securityContext->isGranted('OPEN', $this->desktopAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 }
