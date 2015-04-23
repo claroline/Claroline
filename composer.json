@@ -50,7 +50,6 @@
         "natxet/CssMin": "3.0.2",
         "werkint/jsmin": "1.0.0",
         "nelmio/api-doc-bundle": "~2.7",
-        "hwi/oauth-bundle": "0.4.*@dev",
         "claroline/bundle-recorder": "~4.0",
         "claroline/kernel-bundle": "~1.0",
         "claroline/installation-bundle": "~4.0",
