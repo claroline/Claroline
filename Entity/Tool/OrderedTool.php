@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\OrderedToolRepository")
@@ -30,18 +32,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         @ORM\UniqueConstraint(
  *             name="ordered_tool_unique_tool_ws_type",
  *             columns={"tool_id", "workspace_id", "ordered_tool_type"}
- *         ),
- *         @ORM\UniqueConstraint(
- *             name="ordered_tool_unique_name_by_workspace",
- *             columns={"workspace_id", "name"}
  *         )
  *     }
  * )
- * @DoctrineAssert\UniqueEntity({"name", "workspace"})
+ *
  * @DoctrineAssert\UniqueEntity({"tool", "workspace", "type"})
  * @DoctrineAssert\UniqueEntity({"tool", "user", "type"})
+ * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Translation\OrderedToolTranslation")
  */
-class OrderedTool
+class OrderedTool implements Translatable
 {
     /**
      * @ORM\Id
@@ -76,9 +75,11 @@ class OrderedTool
     protected $order;
 
     /**
-     * @ORM\Column()
+     * @var string
+     * @Gedmo\Translatable
+     * @ORM\Column(length=255, nullable=true)
      */
-    protected $name;
+    private $displayedName;
 
     /**
      * @ORM\Column(name="is_visible_in_desktop", type="boolean")
@@ -112,6 +113,13 @@ class OrderedTool
      * @ORM\Column(name="is_locked", type="boolean")
      */
     protected $locked = false;
+
+    /**
+     * @Gedmo\Locale
+     * Used locale to override Translation listener`s locale
+     * this is not a mapped field of entity metadata, just a simple property
+     */
+    private $locale;
 
     public function __construct()
     {
@@ -151,16 +159,6 @@ class OrderedTool
     public function getOrder()
     {
         return $this->order;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function setUser(User $user = null)
@@ -211,5 +209,25 @@ class OrderedTool
     public function setLocked($locked)
     {
         $this->locked = $locked;
+    }
+
+    public function setDisplayedName($displayedName)
+    {
+        $this->displayedName = $displayedName;
+    }
+
+    public function getDisplayedName()
+    {
+        return $this->displayedName;
+    }
+
+    public function setTranslatableLocale($locale)
+    {
+        $this->locale = $locale;
+    }
+
+    public function getTranslatableLocale()
+    {
+        return $this->locale;
     }
 }

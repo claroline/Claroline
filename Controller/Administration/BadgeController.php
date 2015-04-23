@@ -82,7 +82,7 @@ class BadgeController extends Controller
     {
         $badge = new Badge();
 
-        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
+        $locales = $this->get('claroline.manager.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);

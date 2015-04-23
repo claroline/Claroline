@@ -323,7 +323,7 @@ class WorkspaceModelManager
                 $this->removeHomeTab($model, $oldHomeTab);
             }
         }
-        
+
         $this->addHomeTabs($model, $homeTabs);
         $this->om->endFlushSuite();
     }
@@ -387,7 +387,6 @@ class WorkspaceModelManager
             $workspaceOrderedTool = $this->toolManager->addWorkspaceTool(
                 $orderedTool->getTool(),
                 $orderedTool->getOrder(),
-                $orderedTool->getName(),
                 $workspace
             );
 

@@ -150,7 +150,7 @@ class HomeTab
     {
         return $this->roles->toArray();
     }
-    
+
     public function addRole(Role $role)
     {
         if (!$this->roles->contains($role)) {

@@ -19,14 +19,14 @@
             'edit-tool-name'
         );
     });
-    
+
     $('#tool-table-body').sortable({
         items: 'tr',
         cursor: 'move'
     });
-    
+
     $('#tool-table-body').on('sortupdate', function (event, ui) {
-        
+
         if (this === ui.item.parents('#tool-table-body')[0]) {
             var workspaceId = $('#tool-table').data('workspace-id');
             var orderedToolId = $(ui.item).data('ordered-tool-id');
@@ -35,7 +35,7 @@
             var execute = false;
             var otherOrderedToolId;
             var mode;
-            
+
             if (nextOrderedToolId !== undefined) {
                 otherOrderedToolId = nextOrderedToolId;
                 mode = 'next';
@@ -45,7 +45,7 @@
                 mode = 'previous';
                 execute = true;
             }
-            
+
             if (execute) {
                 $.ajax({
                     url: Routing.generate(
@@ -62,7 +62,7 @@
             }
         }
     });
-    
+
     $('#tool-table-body').on('click', '.granted-btn', function () {
         var currentBtn = $(this);
         var orderedToolId = $(this).data('ordered-tool-id');
@@ -70,7 +70,7 @@
         var action = $(this).data('decoder-name');
         var iconClass = $(this).data('icon-class');
         var inverseIconClass = $(this).data('inverse-icon-class');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_workspace_inverse_ordered_tool_right',
@@ -101,7 +101,7 @@
         var action = $(this).data('decoder-name');
         var iconClass = $(this).data('icon-class');
         var inverseIconClass = $(this).data('inverse-icon-class');
-        
+
         $.ajax({
             url: Routing.generate(
                 'claro_workspace_inverse_ordered_tool_right',
@@ -129,4 +129,3 @@
         $('#tool-' + tool.tool_id + '-name').html(tool.name);
     }
 })();
-

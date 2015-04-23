@@ -1,6 +1,6 @@
 activity: Activité
-author: 'Auteur'
-update_file: Mettre à jour le fichier
+administrate: Administrer
+author: Auteur
 compose: Composer
 copy: Copier
 delete: Supprimer
@@ -9,9 +9,11 @@ download: Télécharger
 edit: Editer
 edit-properties: 'Editer les propriétés'
 edit-rights: 'Editer les droits'
+empty: Vide
 export: Exporter
 file: Fichier
-license: 'License'
+insert: Insérer
+license: License
 open: Ouvrir
 open-tracking: 'Voir le suivi de l''objet'
 rename: Renommer
@@ -33,7 +35,5 @@ resource_properties_form_shareType: Redistribution
 resource_properties_form_userIcon: Icône
 resource_shortcut: Raccourcis
 text: Texte
+update_file: 'Mettre à jour le fichier'
 write: Ecrire
-administrate: Administrer
-empty: Vide
-insert: Insérer

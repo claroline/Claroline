@@ -1,8 +1,8 @@
 agenda: 'Last events'
+badge_usage: 'Badge usage'
 core_resource_logger: 'Overview of recent activities'
 my_workspaces: 'My workspaces'
 simple_text: Text
 widget_configuration_copy_warning: 'An error occured while copying configuration of widget <%widgetInstanceName%>'
 widget_instance_form_name: Name
 widget_instance_form_widget: Type
-badge_usage: 'Badge usage'

@@ -100,6 +100,29 @@
     </div>
 {% endblock %}
 
+{% block translatable_widget %}
+    <div {{ block('widget_container_attributes') }}>
+        <div class="content-menu float-right-top">
+            <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <span>{{ app.request.locale | upper }}</span>&nbsp;<i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                {% for child in form %}
+                    <li role="presentation" class="pointer-hand"><a role="menuitem">{{ child.vars.name | upper }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% for child in form %}
+            <div data-lang="{{ child.vars.name | upper }}"
+                 class="lang{% if app.request.locale != child.vars.name %} hide{% endif %}">
+                {{
+                    form_widget(child['title'])
+                }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
 {% block form_errors %}
     {% if errors|length > 0 %}
         {% set errorClass = form.parent is empty ? 'global-error' : 'field-error' %}

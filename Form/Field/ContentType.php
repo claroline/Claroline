@@ -37,7 +37,7 @@ class ContentType extends AbstractType
 
     /**
      * @InjectParams({
-     *     "localeManager" = @Inject("claroline.common.locale_manager"),
+     *     "localeManager" = @Inject("claroline.manager.locale_manager"),
      *     "contentManager" = @Inject("claroline.manager.content_manager")
      * })
      */

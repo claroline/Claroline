@@ -28,7 +28,7 @@ class LocaleSetter
     private $localeManager;
     /**
      * @InjectParams({
-     *     "localeManager"  = @Inject("claroline.common.locale_manager")
+     *     "localeManager"  = @Inject("claroline.manager.locale_manager")
      * })
      */
     public function __construct(LocaleManager $localeManager)

@@ -94,7 +94,7 @@ class WorkspaceController extends Controller
         $badge = new Badge();
         $badge->setWorkspace($workspace);
 
-        $locales = $this->get('claroline.common.locale_manager')->getAvailableLocales();
+        $locales = $this->get('claroline.manager.locale_manager')->getAvailableLocales();
         foreach ($locales as $locale) {
             $translation = new BadgeTranslation();
             $translation->setLocale($locale);

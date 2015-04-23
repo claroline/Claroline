@@ -204,19 +204,6 @@ class DesktopController extends Controller
     }
 
     /**
-     * @EXT\Template()
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     *
-     * Renders the left tool bar. Not routed.
-     *
-     * @return Response
-     */
-    public function renderToolListAction(User $user)
-    {
-        return array('tools' => $this->toolManager->getDisplayedDesktopOrderedTools($user));
-    }
-
-    /**
      * @EXT\Route(
      *     "tool/open/{toolName}",
      *     name="claro_desktop_open_tool",

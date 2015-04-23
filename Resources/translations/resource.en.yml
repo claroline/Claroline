@@ -1,6 +1,6 @@
 activity: Activity
-author: 'Author'
-update_file: Update file
+administrate: Administrate
+author: Author
 compose: 'Draw up'
 copy: Copy
 delete: Delete
@@ -9,9 +9,11 @@ download: Download
 edit: Edit
 edit-properties: 'Edit properties'
 edit-rights: 'Edit rights'
+empty: Empty
 export: Export
 file: File
-license: 'License'
+insert: Insert
+license: License
 open: Open
 open-tracking: 'View tracking'
 rename: Rename
@@ -31,7 +33,5 @@ resource_properties_form_published: Published
 resource_properties_form_resourceType: 'Resource type'
 resource_shortcut: Shortcut
 text: Text
+update_file: 'Update file'
 write: Write
-administrate: Administrate
-empty: Empty
-insert: Insert

@@ -93,7 +93,7 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
-        $localeManager = $this->get('claroline.common.locale_manager');
+        $localeManager = $this->get('claroline.manager.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
         $facets = $this->facetManager->findForcedRegistrationFacet();
         $form = $this->get('form.factory')->create(
@@ -120,7 +120,7 @@ class RegistrationController extends Controller
     {
         $this->checkAccess();
         $user = new User();
-        $localeManager = $this->get('claroline.common.locale_manager');
+        $localeManager = $this->get('claroline.manager.locale_manager');
         $termsOfService = $this->get('claroline.common.terms_of_service_manager');
         $facets = $this->facetManager->findForcedRegistrationFacet();
         $form = $this->get('form.factory')->create(new BaseProfileType($localeManager, $termsOfService, $this->translator, $facets), $user);

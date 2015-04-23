@@ -1,36 +1,36 @@
-activity: 'Actividad'
-author: 'Autor'
-update_file: 'Actualizar el documento'
-compose: 'Componer'
-copy: 'Copiar'
-delete: 'Suprimir'
-directory: 'Carpeta'
-download: 'Descargar'
-edit: 'Editar'
+activity: Actividad
+administrate: Administrar
+author: Autor
+compose: Componer
+copy: Copiar
+delete: Suprimir
+directory: Carpeta
+download: Descargar
+edit: Editar
 edit-properties: 'Editar las propiedades'
 edit-rights: 'Editar los derechos de acceso'
-export: 'Exportar'
-file: 'Archivo'
-license: 'Licencia'
-open: 'Abrir'
+empty: Vacío
+export: Exportar
+file: Archivo
+insert: Insertar
+license: Licencia
+open: Abrir
 open-tracking: 'Vista de seguimiento'
-rename: 'Renombrar'
+rename: Renombrar
 resource_name_form_name: 'Nombre del recurso'
 resource_properties_form_accessibleFrom: 'Accesible desde'
 resource_properties_form_accessibleUntil: 'Accesible hasta'
-resource_properties_form_copiable: 'Copiar'
+resource_properties_form_copiable: Copiar
 resource_properties_form_creationDate: 'Fecha de creación'
-resource_properties_form_creator: 'Creador'
-resource_properties_form_deletable: 'Suprimir'
-resource_properties_form_editable: 'Editar'
-resource_properties_form_exportable: 'Exportar'
-resource_properties_form_name: 'Nombre'
-resource_properties_form_newIcon: 'Icono'
+resource_properties_form_creator: Creador
+resource_properties_form_deletable: Suprimir
+resource_properties_form_editable: Editar
+resource_properties_form_exportable: Exportar
+resource_properties_form_name: Nombre
+resource_properties_form_newIcon: Icono
 resource_properties_form_published: Publicado
 resource_properties_form_resourceType: 'Tipo de recurso'
 resource_shortcut: 'Acceso directo'
-text: 'Texto'
-write: 'Escribir'
-administrate: Administrar
-empty: Vacío
-insert: Insertar
+text: Texto
+update_file: 'Actualizar el documento'
+write: Escribir

@@ -1,21 +1,21 @@
-An error occurred: 'Ha ocurrido un error'
-Are you sure you want to delete this theme?: 'Esta seguro que desea borrar este tema?'
-Cancel: 'Anular'
-Colors: 'Colores'
-Create New Theme: 'Crear un nuevo tema'
-Delete: 'Suprimir'
-Edit theme: 'Editar tema'
-Error: 'Error'
-More options: 'Mas opciones'
-New theme: 'Nuevo tema'
-Ok: 'Ok'
-Our themes were designed using Bootstrap: 'Nuestros temas fueron creados con Bootstrap'
-Preview: 'Prévisualizar'
-Save: 'Guardar'
-Theme Generator: 'Generador de temas'
-Theme name: 'Nombre del tema'
-Theme parameters: 'Parámetros del tema'
-This action is irreversible: 'Esta acción es irreversible'
-You might not have permission to write in theme folder: 'Puede que no tenga permiso para escribir en la carpeta del tema'
-if you have a doubt about the name of an element of the GUI: 'si tiene una duda sobre el nombre de un elemento de la interfaz gráfica de usuario'
-please read the documentation of Bootstrap 3: 'Por favor lea la documentación de Bootstrap 3'
+'An error occurred': 'Ha ocurrido un error'
+'Are you sure you want to delete this theme?': 'Esta seguro que desea borrar este tema?'
+Cancel: Anular
+Colors: Colores
+'Create New Theme': 'Crear un nuevo tema'
+Delete: Suprimir
+'Edit theme': 'Editar tema'
+Error: Error
+'More options': 'Mas opciones'
+'New theme': 'Nuevo tema'
+Ok: Ok
+'Our themes were designed using Bootstrap': 'Nuestros temas fueron creados con Bootstrap'
+Preview: Prévisualizar
+Save: Guardar
+'Theme Generator': 'Generador de temas'
+'Theme name': 'Nombre del tema'
+'Theme parameters': 'Parámetros del tema'
+'This action is irreversible': 'Esta acción es irreversible'
+'You might not have permission to write in theme folder': 'Puede que no tenga permiso para escribir en la carpeta del tema'
+'if you have a doubt about the name of an element of the GUI': 'si tiene una duda sobre el nombre de un elemento de la interfaz gráfica de usuario'
+'please read the documentation of Bootstrap 3': 'Por favor lea la documentación de Bootstrap 3'
