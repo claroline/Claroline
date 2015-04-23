@@ -35,10 +35,12 @@ class Tool
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Content")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\Column(name="display_name", nullable=true)
+     *
+     * Name that will be displayed in the user's desktop
+     * (can be edited in the administration section)
      */
-    private $content;
+    protected $displayName;
 
     /**
      * @ORM\Column()
@@ -139,16 +141,28 @@ class Tool
         return $this->id;
     }
 
-    public function setContent($content)
+    public function setName($name)
     {
-        $this->content = $content;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getContent()
+    public function getName()
     {
-        return $this->content;
+        return $this->name;
+    }
+
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getDisplayName()
+    {
+        return $this->displayName ?: $this->name;
     }
 
     public function setClass($class)
@@ -161,16 +175,6 @@ class Tool
     public function getClass()
     {
         return $this->class;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function setIsWorkspaceRequired($bool)
