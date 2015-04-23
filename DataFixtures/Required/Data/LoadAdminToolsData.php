@@ -34,6 +34,7 @@ class LoadAdminToolsData implements RequiredFixture
             array('registration_to_workspace', 'book'),
             array('platform_packages', 'wrench'),
             array('desktop_and_home', 'home'),
+            array('desktop_tools', 'pencil'),
             array('platform_logs', 'bars'),
             array('platform_analytics', 'bar-chart-o'),
             array('roles_management', 'users')

@@ -20,19 +20,7 @@ class ToolType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'content',
-            'content',
-            array(
-                'data' => $builder->getData(),
-                'theme_options' => array(
-                    'titlePlaceHolder' => 'tool name',
-                    'contentText' => false,
-                    'tinymce' => false
-                ),
-                'label' => 'name'
-            )
-        );
+        $builder->add('displayName', 'text');
     }
 
     public function getName()
