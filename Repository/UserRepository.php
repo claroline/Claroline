@@ -247,6 +247,36 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * Returns the users who are members of one of the given workspaces. Users's groups are not
      * taken into account.
      *
+     * @param Workspace|null $workspace
+     * @param boolean        $executeQuery
+     *
+     * @return User[]|\Doctrine\ORM\QueryBuilder
+     */
+    public function findUsersByWorkspace($workspace, $executeQuery = true)
+    {
+        $userQueryBuilder = $this->createQueryBuilder('u')
+            ->select('u')
+            ->join('u.roles', 'r')
+            ->andWhere('u.isEnabled = true')
+            ->orderBy('u.id');
+
+        if (null === $workspace) {
+            $userQueryBuilder->andWhere('r.workspace IS NULL');
+        }
+        else {
+            $userQueryBuilder
+                ->leftJoin('r.workspace', 'w')
+                ->andWhere('r.workspace = :workspace')
+                ->setParameter('workspace', $workspace);
+        };
+
+        return $executeQuery ? $userQueryBuilder->getQuery()->getResult() : $userQueryBuilder->getQuery();
+    }
+
+    /**
+     * Returns the users who are members of one of the given workspaces. Users's groups are not
+     * taken into account.
+     *
      * @param array   $workspaces
      * @param boolean $executeQuery
      *
@@ -964,51 +994,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $query->getOneOrNullResult();
     }
 
-    public function findAllEnabledUsers($executeQuery = true)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isEnabled = TRUE
-        ';
-
-        $query = $this->_em->createQuery($dql);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are members of one of the given workspaces
-     *
-     * @param Workspace $workspace
-     * @param boolean $executeQuery
-     *
-     * @internal param array $workspaces
-     * @return User[]|Query
-     */
-    public function findUsersWithBadgesByWorkspace($workspace, $executeQuery = true)
-    {
-        $queryBuilder = $this->createQueryBuilder('u')
-            ->select('DISTINCT u, ub, b')
-            ->join('u.roles', 'r')
-            ->leftJoin('u.userBadges', 'ub')
-            ->leftJoin('ub.badge', 'b')
-            ->andWhere('u.isEnabled = true')
-            ->orderBy('u.id');
-
-        if (null === $workspace) {
-            $queryBuilder->andWhere('r.workspace IS NULL');
-        }
-        else {
-            $queryBuilder
-                ->leftJoin('r.workspace', 'w')
-                ->andWhere('r.workspace = :workspace')
-                ->setParameter('workspace', $workspace);
-        }
-
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
-    }
-
     public function findUsersWithoutUserRole($executeQuery = true)
     {
         $dql = '
@@ -1300,7 +1285,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getSingleScalarResult() : $query;
     }
-    
+
     public function countByRoles(array $roles, $includeGrps)
     {
         if ($includeGrps) {
@@ -1313,10 +1298,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE r1 in (:roles)
                 AND u.isEnabled = true
                 OR r2 in (:roles)';
-                
+
                 $query = $this->_em->createQuery($dql);
                 $query->setParameter('roles', $roles);
-                
+
                 return $query->getSingleScalarResult();
         }
     }

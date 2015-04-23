@@ -138,7 +138,8 @@ class Validator
     protected function buildQuery(array $constraints, array $restrictions = null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->logRepository->defaultQueryBuilderForBadge();
+        $queryBuilder = $this->logRepository
+            ->createQueryBuilder('l')->orderBy('l.dateLog');
 
         foreach ($restrictions as $key => $restriction) {
             $queryBuilder
