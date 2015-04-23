@@ -15,5 +15,5 @@
             Routing.generate('claro_user_picker'),
             null
         );
-    });      
+    });
 })();

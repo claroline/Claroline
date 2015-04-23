@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -22,24 +21,20 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
-    private $facetManager;
     private $userManager;
     private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        FacetManager $facetManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     )
     {
-        $this->facetManager = $facetManager;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
     }
@@ -72,29 +67,9 @@ class UserController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function userPickerAction(User $authenticatedUser)
+    public function userPickerAction()
     {
-        $preferences = $this->facetManager->getVisiblePublicPreference();
-        $withMail = $preferences['mail'];
-        $users = $this->userManager->getUsersForUserPicker(
-            $authenticatedUser,
-            '',
-            $withMail,
-            1,
-            50,
-            'lastName',
-            'ASC'
-        );
-
-        return array(
-            'users' => $users,
-            'search' => '',
-            'withMail' => $withMail,
-            'page' => 1,
-            'max' => 50,
-            'orderedBy' => 'lastName',
-            'order' => 'ASC'
-        );
+        return array();
     }
 
     /**
@@ -115,12 +90,10 @@ class UserController extends Controller
         $order = 'ASC'
     )
     {
-        $preferences = $this->facetManager->getVisiblePublicPreference();
-        $withMail = $preferences['mail'];
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
             $search,
-            $withMail,
+            false,
             $page,
             $max,
             $orderedBy,
@@ -130,7 +103,6 @@ class UserController extends Controller
         return array(
             'users' => $users,
             'search' => $search,
-            'withMail' => $withMail,
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,

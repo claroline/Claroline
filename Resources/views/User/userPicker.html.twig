@@ -41,7 +41,7 @@
 {% from _self import sortUrl %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
-<div class="modal-dialog user-picker-modal">
+<div class="modal-dialog user-picker-modal" id="user-picker-modal">
     <form novalidate="novalidate"
           action=""
           id="user-picker-modal-form" 
@@ -59,92 +59,8 @@
                 {{ 'user_selector'|trans({}, 'platform') }}
             </h4>
         </div>
-        <div class='modal-body'
-             id="picker-users-list"
-        >
-        
-            {% if search != '' %}
-                <div class="alert alert-info">
-                    {{ 'results_for_search_on'|trans({}, 'platform') }} :
-                    "{{ search }}"
-                </div>
-            {% endif %}
-            
-            <div class="row">
-                <div class="col-md-6 pull-right">
-                    <div class="input-group margin-bottom-md">
-                        <input class="form-control search-user"
-                               type="text"
-                               id="search-user-input"
-                               placeholder="{{ 'search'|trans({}, 'platform') }}"
-                               value="{{ search }}"
-                        >
-                        <span class="input-group-btn">
-                            <button class="filter btn btn-default search-user-btn"
-                                    type="button"
-                                    id="search-user-btn"
-                            >
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 pull-right">
-                    <div class="input-group margin-bottom-md">
-                        {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'users_per_page') }}
-                    </div>
-                </div>
-            </div>
-            
-            {% if users.getNbPages() > 1 %}
-                {{ renderPager(users, search, max, orderedBy, order) }}
-            {% endif %}
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="text-center">
-                                <input type="checkbox"
-                                       id="picker-all-users-chk"
-                                >
-                            </th>
-                            <th>{{ 'firstName'|trans({}, 'platform') }}</th>
-                            <th>{{ 'lastName'|trans({}, 'platform') }}</th>
-                            <th>{{ 'username'|trans({}, 'platform') }}</th>
-                            
-                            {% if withMail %}
-                                <th>{{ 'mail'|trans({}, 'platform') }}</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        
-                        {% for user in users %}
-                            <tr>
-                                <td class="text-center">
-                                    <input type="checkbox"
-                                           class="picker-user-chk"
-                                           value="{{ user.getId() }}"
-                                    >
-                                </td>
-                                <td>{{ user.getFirstName() }}</td>
-                                <td>{{ user.getLastName() }}</td>
-                                <td>{{ user.getUsername() }}</td>
-                            
-                                {% if withMail %}
-                                    <td>{{ user.getMail() }}</td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            
-            {% if users.getNbPages() > 1 %}
-                {{ renderPager(users, search, max, orderedBy, order) }}
-            {% endif %}
+        <div class='modal-body' id="user-picker-body">
+            {{ render(controller('ClarolineCoreBundle:User:usersListForUserPicker')) }}
         </div>
             
         <div class="modal-footer">
@@ -162,3 +78,10 @@
         </div>
     </form>
 </div>
+
+{% block javascripts %}
+    <script type="text/javascript"
+            src="{{ asset('bundles/clarolinecore/js/user/userPicker.js') }}"
+    >
+    </script>
+{% endblock %}

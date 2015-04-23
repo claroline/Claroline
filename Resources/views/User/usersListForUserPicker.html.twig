@@ -1,0 +1,142 @@
+{% macro renderPager(pager, search, max, orderedBy, order) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_users_list_for_user_picker',
+                'routeParams': {
+                    'search': search,
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': order
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(search, max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_users_list_for_user_picker',
+            {
+                'search': search,
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(search, max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_users_list_for_user_picker',
+            {
+                'search': search,
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+
+        
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6 pull-right">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-user"
+                   type="text"
+                   id="search-user-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-user-btn"
+                        type="button"
+                        id="search-user-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6 pull-right">
+        <div class="input-group margin-bottom-md">
+            {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'users_per_page') }}
+        </div>
+    </div>
+</div>
+
+{% if users.getNbPages() > 1 %}
+    {{ renderPager(users, search, max, orderedBy, order) }}
+{% endif %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center">
+                    <input type="checkbox" id="picker-all-users-chk">
+                </th>
+                <th>{{ 'name'|trans({}, 'platform') }}</th>
+                <th>{{ 'username'|trans({}, 'platform') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for user in users %}
+                <tr>
+                    <td class="text-center">
+                        <input type="checkbox"
+                               class="picker-user-chk"
+                               value="{{ user.getId() }}"
+                        >
+                    </td>
+                    <td>{{ user.getFirstName() }} {{ user.getLastName() }}</td>
+                    <td>{{ user.getUsername() }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if users.getNbPages() > 1 %}
+    {{ renderPager(users, search, max, orderedBy, order) }}
+{% endif %}
+
+<div id="user-picker-datas-box"
+     data-search="{{ search }}"
+     data-page="{{ page }}"
+     data-max="{{ max }}"
+     data-ordered-by="{{ orderedBy }}"
+     data-order="{{ order }}"
+</div>
