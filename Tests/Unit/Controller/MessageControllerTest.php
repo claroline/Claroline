@@ -15,8 +15,8 @@ use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
+use Claroline\MessageBundle\Entity\Message;
+use Claroline\MessageBundle\Entity\UserMessage;
 
 class MessageControllerTest extends MockeryTestCase
 {

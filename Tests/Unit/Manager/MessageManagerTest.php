@@ -31,8 +31,8 @@ class MessageManagerTest extends MockeryTestCase
         $this->pagerFactory = $this->mock('Claroline\CoreBundle\Pager\PagerFactory');
         $this->groupRepo = $this->mock('Claroline\CoreBundle\Repository\GroupRepository');
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
-        $this->messageRepo = $this->mock('Claroline\CoreBundle\Repository\MessageRepository');
-        $this->userMessageRepo = $this->mock('Claroline\CoreBundle\Repository\UserMessageRepository');
+        $this->messageRepo = $this->mock('Claroline\MessageBundle\Repository\MessageRepository');
+        $this->userMessageRepo = $this->mock('Claroline\MessageBundle\Repository\UserMessageRepository');
         $this->om->shouldReceive('getRepository')
             ->with('ClarolineCoreBundle:Group')
             ->andReturn($this->groupRepo);
@@ -40,10 +40,10 @@ class MessageManagerTest extends MockeryTestCase
             ->with('ClarolineCoreBundle:User')
             ->andReturn($this->userRepo);
         $this->om->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:Message')
+            ->with('ClarolineMessageBundle:Message')
             ->andReturn($this->messageRepo);
         $this->om->shouldReceive('getRepository')
-            ->with('ClarolineCoreBundle:UserMessage')
+            ->with('ClarolineMessageBundle:UserMessage')
             ->andReturn($this->userMessageRepo);
         $this->manager = new MessageManager($this->om, $this->pagerFactory);
     }
@@ -53,11 +53,11 @@ class MessageManagerTest extends MockeryTestCase
         $sender = new User();
         $receiverA = new User();
         $receiverB = new User();
-        $msg = $this->mock('Claroline\CoreBundle\Entity\Message');
-        $msgParent = $this->mock('Claroline\CoreBundle\Entity\Message');
-        $userMessageA = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessageB = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
-        $userMessageC = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
+        $msg = $this->mock('Claroline\MessageBundle\Entity\Message');
+        $msgParent = $this->mock('Claroline\MessageBundle\Entity\Message');
+        $userMessageA = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
+        $userMessageB = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
+        $userMessageC = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
 
         $msg->shouldReceive('getTo')->once()->andReturn('user1;user2');
         $this->userRepo->shouldReceive('findByUsernames')
@@ -69,7 +69,7 @@ class MessageManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with($msg);
         $this->om->shouldReceive('factory')
             ->times(3)
-            ->with('Claroline\CoreBundle\Entity\UserMessage')
+            ->with('Claroline\MessageBundle\Entity\UserMessage')
             ->andReturn($userMessageA, $userMessageB, $userMessageC);
         $userMessageA->shouldReceive('setIsSent')->once()->with(true);
         $userMessageA->shouldReceive('setUser')->once()->with($sender);
@@ -134,8 +134,8 @@ class MessageManagerTest extends MockeryTestCase
     public function testSetMarkAsRemoved($flag, $managerMethod)
     {
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
-        $usrMsgA = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
-        $usrMsgB = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
+        $usrMsgA = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
+        $usrMsgB = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
         $this->userMessageRepo->shouldReceive('findByMessages')
             ->once()
             ->with($user, array('message1', 'message2'))
@@ -158,7 +158,7 @@ class MessageManagerTest extends MockeryTestCase
 
     public function testGetConversation()
     {
-        $msg = $this->mock('Claroline\CoreBundle\Entity\Message');
+        $msg = $this->mock('Claroline\MessageBundle\Entity\Message');
 
         $this->messageRepo->shouldReceive('findAncestors')->with($msg)->andReturn($msg);
         $this->assertEquals($msg, $this->manager->getConversation($msg));
@@ -166,7 +166,7 @@ class MessageManagerTest extends MockeryTestCase
 
     public function testRemove()
     {
-        $usrMsg = $this->mock('Claroline\CoreBundle\Entity\UserMessage');
+        $usrMsg = $this->mock('Claroline\MessageBundle\Entity\UserMessage');
 
         $this->om->shouldReceive('remove')->with($usrMsg)->once();
         $this->om->shouldReceive('flush')->once();

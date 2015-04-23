@@ -51,7 +51,7 @@ class LoadToolsData implements RequiredFixture
             $this->createToolMaskDecoders($manager, $entity);
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
 
-            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager' || $tool[0] === 'message') {
+            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager') {
                 $this->createAdminOrderedTool($manager, $entity);
             }
         }

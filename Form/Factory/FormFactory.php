@@ -19,7 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class FormFactory
 {
-    const TYPE_MESSAGE = 'message';
     const TYPE_ORDERED_TOOL = 'ordered_tool';
     const TYPE_TOOL = 'tool';
     const TYPE_USER = 'user';
@@ -60,10 +59,6 @@ class FormFactory
     const TYPE_IMPORT_USERS_IN_GROUP = 'import_users_in_group';
 
     private static $types = array(
-        self::TYPE_MESSAGE => array(
-            'formType' => 'Claroline\CoreBundle\Form\MessageType',
-            'entity' => 'Claroline\CoreBundle\Entity\Message'
-        ),
         self::TYPE_ORDERED_TOOL => array(
             'formType' => 'Claroline\CoreBundle\Form\WorkspaceOrderToolEditType',
             'entity' => 'Claroline\CoreBundle\Entity\Tool\OrderedTool'
