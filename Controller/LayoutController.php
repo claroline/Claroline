@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -35,7 +34,6 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
  */
 class LayoutController extends Controller
 {
-    private $messageManager;
     private $roleManager;
     private $workspaceManager;
     private $router;
@@ -48,7 +46,6 @@ class LayoutController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "messageManager"     = @DI\Inject("claroline.manager.message_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "router"             = @DI\Inject("router"),
@@ -62,7 +59,6 @@ class LayoutController extends Controller
      * })
      */
     public function __construct(
-        MessageManager $messageManager,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
@@ -75,7 +71,6 @@ class LayoutController extends Controller
         StrictDispatcher $dispatcher
     )
     {
-        $this->messageManager = $messageManager;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
