@@ -23,7 +23,6 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\MessageBundle\Manager\MessageManager;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
@@ -43,7 +42,6 @@ class RoleManager
     private $groupRepo;
     private $dispatcher;
     private $om;
-    private $messageManager;
     private $container;
     private $translator;
 
@@ -53,7 +51,6 @@ class RoleManager
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
      *     "container"      = @DI\Inject("service_container"),
      *     "translator"     = @DI\Inject("translator")
      * })
@@ -61,7 +58,6 @@ class RoleManager
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
-        MessageManager $messageManager,
         Container $container,
         Translator $translator
     )
@@ -71,7 +67,6 @@ class RoleManager
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->messageManager = $messageManager;
         $this->container = $container;
         $this->translator = $translator;
     }
@@ -717,7 +712,11 @@ class RoleManager
         }
 
         $sender = $this->container->get('security.context')->getToken()->getUser();
-        $this->messageManager->sendMessageToAbstractRoleSubject($ars, $content, $object, $sender);
+        $this->dispatcher->dispatch(
+            'claroline_message_sending',
+            'SendMessageEvent',
+            array($ars, $sender, $content, $object)
+        );
     }
 
     public function getPlatformNonAdminRoles($includeAnonymous = false)
