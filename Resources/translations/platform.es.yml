@@ -111,6 +111,7 @@ add: Agregar
 add_category: 'Agregar categoría'
 add_field_to_facet: 'Agregar un campo a una faceta'
 add_field_to_panel: add_field_to_panel
+add_filter: 'Agregar un filtro'
 add_group: 'Agregar grupo'
 add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
@@ -764,6 +765,10 @@ security_token_list: 'Lista de tokens de seguridad '
 security_tokens_management: 'Gestión de tokens de seguridad'
 see: Ver
 see_more: 'Ver más'
+select_a_group: 'Seleccione un grupo'
+select_a_role: 'Seleccione un role'
+select_a_type: 'Seleccione un tipo'
+select_a_workspace: 'Seleccione un espacio de trabajo'
 'select all': 'Seleccionar todo'
 select_all: 'Seleccionar todo'
 select_category: 'Seleccionar una categoría'

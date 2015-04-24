@@ -12,6 +12,9 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -21,20 +24,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
+    private $groupManager;
+    private $roleManager;
     private $userManager;
     private $workspaceManager;
 
     /**
      * @DI\InjectParams({
+     *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
+        GroupManager $groupManager,
+        RoleManager $roleManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     )
     {
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
     }
@@ -108,5 +119,99 @@ class UserController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "filters/list/type/{filterType}/for/user/picker",
+     *     name="claro_filters_list_for_user_picker",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function filtersListForUserPickerAction(
+        User $authenticatedUser,
+        $filterType
+    )
+    {
+        $datas = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName(
+            $authenticatedUser,
+            'ROLE_ADMIN'
+        );
+        $isAdmin = !is_null($adminRole);
+
+        switch ($filterType) {
+            case 'group':
+
+                if ($isAdmin) {
+                    $groups = $this->groupManager->getAllGroupsWithoutPager('name');
+                } else {
+                    $groups = $authenticatedUser->getGroups();
+                }
+
+                foreach ($groups as $group) {
+                    $id = $group->getId();
+                    $name = $group->getName();
+                    $datas[] = array('id' => $id, 'name' => $name);
+                }
+                break;
+
+            case 'role' :
+
+                if ($isAdmin) {
+                    $roles = $this->roleManager->getAllPlatformRoles();
+                } else {
+                    $roles = array();
+                }
+
+                foreach ($roles as $role) {
+                    $id = $role->getId();
+                    $name = $role->getTranslationKey();
+                    $datas[] = array('id' => $id, 'name' => $name);
+                }
+                break;
+
+            case 'workspace' :
+
+                if ($isAdmin) {
+                    $workspaces = $this->workspaceManager->getAllNonPersonalWorkspaces();
+                } else {
+                    $workspaces = $this->workspaceManager
+                        ->getWorkspacesByUser($authenticatedUser);
+                }
+
+                foreach ($workspaces as $workspace) {
+                    $id = $workspace->getId();
+                    $name = $workspace->getName() . ' [' . $workspace->getCode() . ']';
+                    $datas[] = array('id' => $id, 'name' => $name);
+                }
+                break;
+
+            default :
+                break;
+        }
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "workspace/{workspace}/roles/list/for/user/picker",
+     *     name="claro_workspace_roles_list_for_user_picker",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function workspaceRolesListForUserPickerAction(Workspace $workspace)
+    {
+        $datas = array();
+        $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
+
+        foreach ($wsRoles as $role) {
+            $datas[] = array('id' => $role->getId(), 'name' => $role->getTranslationKey());
+        }
+
+        return new JsonResponse($datas, 200);
     }
 }
