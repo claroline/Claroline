@@ -49,6 +49,24 @@ class Builder extends ContainerAware
 
         $this->addDivider($menu, '1');
 
+        $user = $securityContext->getToken()->getUser();
+        $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
+        $adminTools = array();
+        $excludedTools = array();
+
+        foreach ($lockedOrderedTools as $lockedOrderedTool) {
+            $lockedTool = $lockedOrderedTool->getTool();
+
+            if ($lockedOrderedTool->isVisibleInDesktop()) {
+                $adminTools[] = $lockedTool;
+            }
+            $excludedTools[] = $lockedTool;
+        }
+        $desktopTools = $toolManager->getDisplayedDesktopOrderedTools(
+            $user,
+            1,
+            $excludedTools
+        );
         /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $tools */
         $tools = array_merge($adminTools, $desktopTools);
 
