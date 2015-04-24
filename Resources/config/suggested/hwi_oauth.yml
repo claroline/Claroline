@@ -19,3 +19,15 @@ hwi_oauth:
 services:
     hwi_oauth.user.provider:
         class: HWI\Bundle\OAuthBundle\Security\Core\User\OAuthUserProvider
+
+security:
+    firewalls:
+        main:
+            oauth:
+                resource_owners:
+                    facebook: /login/check_facebook
+                login_path: /login
+                failure_path: /login
+                use_forward: false
+                oauth_user_provider:
+                    service: claroline.facebook_provider
