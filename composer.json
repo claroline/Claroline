@@ -23,7 +23,7 @@
         "doctrine/orm": "~2.4",
         "doctrine/doctrine-bundle": "~1.3",
         "twig/extensions": "1.2.0",
-        "sensio/distribution-bundle": "~2.3",
+        "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0.0",
         "sensio/generator-bundle": "~2.4",
         "jms/security-extra-bundle": "1.5.1",
