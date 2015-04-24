@@ -12,6 +12,7 @@
 namespace Claroline\MessageBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\SecurityContextInterface;
@@ -74,5 +75,24 @@ class MessageListener
 
             return $menu;
         }
+    }
+
+    /**
+     * @DI\Observe("claroline_message_sending")
+     *
+     * @param Claroline\CoreBundle\Event\SendMessageEvent $event
+     */
+    public function onMessageSending(SendMessageEvent $event)
+    {
+        $receiver = $event->getReceiver();
+        $sender = $event->getSender();
+        $content = $event->getContent();
+        $object = $event->getObject();
+        $this->messageManager->sendMessageToAbstractRoleSubject(
+            $receiver,
+            $content,
+            $object,
+            $sender
+        );
     }
 }
