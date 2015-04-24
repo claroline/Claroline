@@ -714,7 +714,7 @@ class RoleManager
         $sender = $this->container->get('security.context')->getToken()->getUser();
         $this->dispatcher->dispatch(
             'claroline_message_sending',
-            'SendMessageEvent',
+            'SendMessage',
             array($ars, $sender, $content, $object)
         );
     }
