@@ -17,7 +17,7 @@
         "symfony/symfony": "~2.3",
         "doctrine/doctrine-bundle": "~1.0",
         "doctrine/data-fixtures": "dev-master",
-        "claroline/kernel-bundle": "~1.0",
+        "claroline/kernel-bundle": "*",
         "claroline/migration-bundle": "*",
         "claroline/core-bundle": "*"
     },
