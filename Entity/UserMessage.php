@@ -28,8 +28,7 @@ class UserMessage
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     inversedBy="userMessages"
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
