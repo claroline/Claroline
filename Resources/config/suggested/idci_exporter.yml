@@ -14,11 +14,3 @@ idci_exporter:
                     transformer:
                         options:
                             template_name_format: 'export.json.twig'
-        badge:
-            class: 'Claroline\CoreBundle\Entity\Badge\Badge'
-            formats:
-                jsonp:
-                    transformer:
-                        service: "claroline.transformer.badge"
-                        options:
-                            template_name_format: 'export.json.twig'

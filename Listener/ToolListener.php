@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -34,7 +33,6 @@ class ToolListener
     private $container;
     private $formFactory;
     private $httpKernel;
-    private $messageManager;
     private $rightsManager;
     private $router;
     private $securityContext;
@@ -50,7 +48,6 @@ class ToolListener
      *     "container"        = @DI\Inject("service_container"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "httpKernel"       = @DI\Inject("http_kernel"),
-     *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
      *     "securityContext"  = @DI\Inject("security.context"),
@@ -64,7 +61,6 @@ class ToolListener
         ContainerInterface $container,
         FormFactory $formFactory,
         $httpKernel,
-        MessageManager $messageManager,
         RightsManager $rightsManager,
         RouterInterface $router,
         SecurityContextInterface $securityContext,
@@ -77,7 +73,6 @@ class ToolListener
         $this->container = $container;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
-        $this->messageManager = $messageManager;
         $this->rightsManager = $rightsManager;
         $this->router = $router;
         $this->securityContext = $securityContext;
@@ -95,16 +90,6 @@ class ToolListener
     public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
     {
          $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceAgenda($event->getWorkspace()));
     }
 
     /**
@@ -135,16 +120,6 @@ class ToolListener
     public function onDisplayDesktopParameters(DisplayToolEvent $event)
     {
         $event->setContent($this->desktopParameters());
-    }
-
-    /**
-     * @DI\Observe("open_tool_desktop_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopAgenda());
     }
 
     /**
@@ -215,23 +190,6 @@ class ToolListener
         return $response->getContent();
     }
 
-    public function workspaceAgenda(Workspace $workspace)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
-            ->findByWorkspaceId($workspace->getId(), true);
-        $canCreate = $this->container->get('security.context')
-            ->isGranted(array('agenda', 'edit'), $workspace);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array(
-                'workspace' => $workspace,
-                'canCreate' => $canCreate
-            )
-        );
-    }
-
     public function workspaceLogs($workspaceId)
     {
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace */
@@ -254,32 +212,6 @@ class ToolListener
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         return $response->getContent();
-    }
-
-    public function desktopAgenda()
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
-        $workspaces = array();
-        $filters = array();
-
-        foreach ($listEvents as $event) {
-            $filters[$event->getWorkspace()->getId()] = $event->getWorkspace()->getName();
-        }
-
-        if (count($listEventsDesktop) > 0) {
-            $filters[0] = $this->container->get('translator')->trans('desktop', array(), 'platform');
-        }
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
-            array(
-                'listEvents' => $listEventsDesktop,
-                'filters' => $filters
-            )
-        );
     }
 
     /**
@@ -334,38 +266,6 @@ class ToolListener
             )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-' . $tool->getClass());
-
-            return $menu;
-        }
-    }
-
-    /**
-     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        $tool = $event->getTool();
-
-        if ($user !== 'anon.') {
-            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
-            $messageTitle = $this->translator->trans(
-                'new_message_alert',
-                array('%count%' => $countUnreadMessages),
-                'platform'
-            );
-            $menu = $event->getMenu();
-            $messageMenuLink = $menu->addChild(
-                $this->translator->trans('messages', array(), 'cursus'),
-                array('route' => 'claro_message_list_received')
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
-            ->setExtra('title', $messageTitle);
-
-            if ($countUnreadMessages > 0) {
-                $messageMenuLink->setExtra('badge', $countUnreadMessages);
-            }
 
             return $menu;
         }

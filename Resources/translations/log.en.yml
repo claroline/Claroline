@@ -1,13 +1,8 @@
 'Show actions for': 'Show actions for'
 all: All
-badge: Badge
 'for user': 'For user'
 group: Group
 log_add_user: 'Add user'
-log_badge-awarding_filter: 'Badge awarding'
-log_badge-awarding_title: 'Badge awarding'
-log_badge-awarding_shortname: "Badge awarding"
-log_badge-awarding_sentence: "has been awarded a badge"
 log_change_right: 'Change rights'
 log_change_set: 'List of modified properties'
 log_context: 'Context:'

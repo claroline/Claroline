@@ -40,9 +40,6 @@ class PlatformConfiguration
     private $sessionDbDsn;
     private $sessionDbUser;
     private $sessionDbPassword;
-    private $facebookClientId;
-    private $facebookClientSecret;
-    private $facebookClientActive;
     private $formCaptcha;
     private $platformLimitDate;
     private $platformInitDate;
@@ -385,54 +382,6 @@ class PlatformConfiguration
     public function getRedirectAfterLogin()
     {
         return $this->redirectAfterLogin;
-    }
-
-    /**
-     * @param integer $facebookClientId
-     */
-    public function setFacebookClientId($facebookClientId)
-    {
-        $this->facebookClientId = $facebookClientId;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getFacebookClientId()
-    {
-        return $this->facebookClientId;
-    }
-
-    /**
-     * @param integer $facebookClientSecret
-     */
-    public function setFacebookClientSecret($facebookClientSecret)
-    {
-        $this->facebookClientSecret = $facebookClientSecret;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getFacebookClientSecret()
-    {
-        return $this->facebookClientSecret;
-    }
-
-    /**
-     * @param boolean $facebookClientActive
-     */
-    public function setFacebookClientActive($facebookClientActive)
-    {
-        $this->facebookClientActive = $facebookClientActive;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isFacebookClientActive()
-    {
-        return $this->facebookClientActive;
     }
 
     /**

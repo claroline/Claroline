@@ -20,13 +20,13 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\HomeManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -34,7 +34,6 @@ use Claroline\CoreBundle\Manager\HomeManager;
  */
 class LayoutController extends Controller
 {
-    private $messageManager;
     private $roleManager;
     private $workspaceManager;
     private $router;
@@ -43,10 +42,10 @@ class LayoutController extends Controller
     private $translator;
     private $configHandler;
     private $toolManager;
+    private $dipatcher;
 
     /**
      * @DI\InjectParams({
-     *     "messageManager"     = @DI\Inject("claroline.manager.message_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "router"             = @DI\Inject("router"),
@@ -55,11 +54,11 @@ class LayoutController extends Controller
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager")
+     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager"),
+     *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
-        MessageManager $messageManager,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
@@ -68,10 +67,10 @@ class LayoutController extends Controller
         Utilities $utils,
         Translator $translator,
         PlatformConfigurationHandler $configHandler,
-        HomeManager $homeManager
+        HomeManager $homeManager,
+        StrictDispatcher $dispatcher
     )
     {
-        $this->messageManager = $messageManager;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
@@ -81,6 +80,7 @@ class LayoutController extends Controller
         $this->translator = $translator;
         $this->configHandler = $configHandler;
         $this->homeManager = $homeManager;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -249,6 +249,14 @@ class LayoutController extends Controller
             'workspace' => $workspaceName,
             'role' => $roleName
         );
+    }
+
+    //not routed
+    public function injectJavascriptAction()
+    {
+        $event = $this->dispatcher->dispatch('inject_javascript_layout', 'InjectJavascript');
+
+        return new Response($event->getContent());
     }
 
     private function isImpersonated()

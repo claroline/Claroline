@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\CacheManager;
 use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Manager\HwiManager;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
@@ -83,7 +82,8 @@ class ParametersController extends Controller
      *     "contentManager"     = @DI\Inject("claroline.manager.content_manager"),
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
-     *     "hwiManager"         = @DI\Inject("claroline.manager.hwi_manager"),
+     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "sc"                 = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager"),
      *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
@@ -104,7 +104,8 @@ class ParametersController extends Controller
         CacheManager $cacheManager,
         DatabaseSessionValidator $sessionValidator,
         Refresher $refresher,
-        HwiManager $hwiManager,
+        ToolManager $toolManager,
+        SecurityContextInterface $sc,
         RouterInterface $router,
         IPWhiteListManager $ipwlm,
         SecurityTokenManager $tokenManager,
@@ -124,7 +125,9 @@ class ParametersController extends Controller
         $this->cacheManager       = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher          = $refresher;
-        $this->hwiManager         = $hwiManager;
+        $this->sc                 = $sc;
+        $this->toolManager        = $toolManager;
+        $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
         $this->router             = $router;
         $this->ipwlm              = $ipwlm;
         $this->tokenManager       = $tokenManager;
@@ -658,23 +661,6 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/oauth/facebook", name="claro_admin_facebook_form")
-     * @EXT\Template
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function facebookFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(
-            new AdminForm\FacebookType($this->configHandler->getLockedParamaters()),
-            $platformConfig
-        );
-
-        return array('form' => $form->createView());
-    }
-
-    /**
      * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo", options = {"expose"=true})
      *
      * @param $file
@@ -690,49 +676,6 @@ class ParametersController extends Controller
         } catch (\Exeption $e) {
             return new Response('false'); //useful in ajax
         }
-    }
-
-    /**
-     * @EXT\Route("/oauth/facebook/submit", name="claro_admin_facebook_form_submit")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:facebookForm.html.twig")
-     *
-     * Displays the administration section index.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function submitFacebookFormAction()
-    {
-        $platformConfig = $this->configHandler->getPlatformConfig();
-        $form = $this->formFactory->create(
-            new AdminForm\FacebookType($this->configHandler->getLockedParamaters()),
-            $platformConfig
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $data = array(
-                'facebook_client_id' => $form['facebook_client_id']->getData(),
-                'facebook_client_secret' => $form['facebook_client_secret']->getData(),
-                'facebook_client_active' => $form['facebook_client_active']->getData()
-            );
-
-            $errors = $this->hwiManager->validateFacebook(
-                $data['facebook_client_id'], $data['facebook_client_secret']
-            );
-
-            if (count($errors) === 0) {
-                $this->configHandler->setParameters($data);
-                $this->cacheManager->refresh();
-            } else {
-                foreach ($errors as $error) {
-                    $trans = $this->translator->trans($error, array(), 'platform');
-                    $form->addError(new FormError($trans));
-                }
-            }
-        }
-
-        return array('form' => $form->createView());
     }
 
     /**

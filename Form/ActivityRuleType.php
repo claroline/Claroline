@@ -62,15 +62,6 @@ class ActivityRuleType extends AbstractType
             )
         );
         $builder->add(
-            'badge',
-            'entity',
-            array(
-                'class' => 'ClarolineCoreBundle:Badge\Badge',
-                'property' => 'translations[1].name',
-                'required' => false
-            )
-        );
-        $builder->add(
             'result',
             'integer',
             array(

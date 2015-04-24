@@ -49,15 +49,6 @@ class Builder extends ContainerAware
 
         $this->addDivider($menu, '1');
 
-        $menu->addChild(
-            $translator->trans('my_badges', array(), 'platform'),
-            array(
-                'route' => 'claro_profile_view_badges'
-            )
-        )->setAttribute('class', 'dropdown')
-            ->setAttribute('role', 'presentation')
-            ->setExtra('icon', 'fa fa-trophy');
-
         $user = $securityContext->getToken()->getUser();
         $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
         $adminTools = array();
@@ -240,6 +231,20 @@ class Builder extends ContainerAware
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
             'claroline_desktop_parameters_menu_configure',
+            new ConfigureMenuEvent($factory, $menu)
+        );
+
+        return $menu;
+    }
+
+    public function externalAuthenticationMenu(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root')
+            ->setChildrenAttribute('class', 'nav nav-pills');
+
+        //allowing the menu to be extended
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_external_authentication_menu_configure',
             new ConfigureMenuEvent($factory, $menu)
         );
 
