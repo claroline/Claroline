@@ -51,7 +51,7 @@
         "werkint/jsmin": "1.0.0",
         "nelmio/api-doc-bundle": "~2.7",
         "claroline/bundle-recorder": "dev-dev-5.0 as 5.0",
-        "claroline/kernel-bundle": "dev-dev-5.0 as 5.0",
+        "claroline/kernel-bundle": "dev-dev-5.0 as 1.0",
         "claroline/installation-bundle": "dev-dev-5.0 as 5.0",
         "claroline/front-end-bundle": "~2.0",
         "claroline/migration-bundle": "dev-dev-5.0 as 5.0",
