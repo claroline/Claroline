@@ -95,4 +95,24 @@ class MessageListener
             $sender
         );
     }
+
+    /**
+     * @DI\Observe("claroline_message_sending_to_users")
+     *
+     * @param Claroline\CoreBundle\Event\SendMessageEvent $event
+     */
+    public function onMessageSendingToUsers(SendMessageEvent $event)
+    {
+        $users = $event->getUsers();
+        $sender = $event->getSender();
+        $content = $event->getContent();
+        $object = $event->getObject();
+        $message = $this->messageManager->create(
+            $content,
+            $object,
+            $users,
+            $sender
+        );
+        $this->messageManager->send($message);
+    }
 }
