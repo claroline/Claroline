@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
@@ -21,6 +22,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\ActivityEvaluationEvent;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -43,18 +46,21 @@ class ActivityManager
     private $om;
     private $rightsManager;
     private $sc;
+    private $dispatcher;
 
     /**
      * @InjectParams({
      *     "om"            = @Inject("claroline.persistence.object_manager"),
      *     "rightsManager" = @Inject("claroline.manager.rights_manager"),
-     *     "sc"            = @Inject("security.context")
+     *     "sc"            = @Inject("security.context"),
+     *     "dispatcher"    = @Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager            $om,
         RightsManager            $rightsManager,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        StrictDispatcher         $dispatcher
     )
     {
         $this->om                     = $om;
@@ -67,6 +73,7 @@ class ActivityManager
         $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
         $this->rightsManager          = $rightsManager;
         $this->sc                     = $sc;
+        $this->dispatcher             = $dispatcher;
     }
 
     /**
@@ -191,9 +198,8 @@ class ActivityManager
         $ruleScore = null;
         $ruleScoreMax = null;
 
-        if ($evaluationType === 'automatic' &&
-            count($activityParams->getRules()) > 0) {
-
+        if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC
+            && count($activityParams->getRules()) > 0) {
             $rule = $activityParams->getRules()->first();
             $ruleScore = $rule->getResult();
             $ruleScoreMax = $rule->getResultMax();
@@ -203,14 +209,18 @@ class ActivityManager
             $pastEvals = $this->pastEvaluationRepo
                 ->findPastEvaluationsByUserAndActivityParams($user, $activityParams);
         }
+
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
         $totalTime = $isFirstEvaluation ? null : $evaluation->getAttemptsDuration();
-        $pastStatus = ($activityStatus === 'incomplete' || $activityStatus === 'failed') ?
+        $pastStatus = $activityStatus === AbstractEvaluation::STATUS_INCOMPLETE
+            || $activityStatus === AbstractEvaluation::STATUS_FAILED ?
             $activityStatus :
-            'unknown';
+            AbstractEvaluation::STATUS_UNKNOWN;
+        $previousStatus = $evaluation ?
+            $evaluation->getStatus() :
+            AbstractEvaluation::STATUS_UNKNOWN;
 
         if (isset($rulesLogs['rules']) && is_array($rulesLogs['rules'])) {
-
             foreach ($rulesLogs['rules'] as $ruleLogs) {
                 $logs = $ruleLogs['logs'];
 
@@ -226,12 +236,9 @@ class ActivityManager
                     // Checks if the log is already associated to an existing
                     // PastEvaluation
                     if (!$isFirstEvaluation) {
-
                         foreach ($pastEvals as $pastEval) {
-
                             if (!is_null($pastEval->getLog()) &&
                                 $pastEval->getLog()->getId() === $log->getId()) {
-
                                 $pastEvalExisted = true;
                                 break;
                             }
@@ -303,22 +310,20 @@ class ActivityManager
         $pastEval->setScoreMax($scoreMax);
         $pastEval->setDuration($duration);
 
-        if (($activityStatus === 'completed' || $activityStatus === 'passed') &&
-            !is_null($score) && !is_null($ruleScore)) {
-
+        if (($activityStatus === AbstractEvaluation::STATUS_COMPLETED
+            || $activityStatus === AbstractEvaluation::STATUS_PASSED)
+            && !is_null($score)
+            && !is_null($ruleScore)) {
             $realStatus = $this->hasPassingScore($ruleScore, $ruleScoreMax, $score, $scoreMax) ?
                 $activityStatus :
-                'failed' ;
+                AbstractEvaluation::STATUS_FAILED;
             $pastEval->setStatus($realStatus);
         } else {
             $pastEval->setStatus($activityStatus);
         }
 
         $nbAttempts++;
-        $totalTime = $this->computeActivityTotalTime(
-            $totalTime,
-            $duration
-        );
+        $totalTime = $this->computeActivityTotalTime($totalTime, $duration);
         $this->om->persist($pastEval);
 
         if ($isFirstEvaluation) {
@@ -340,6 +345,10 @@ class ActivityManager
 
         $this->om->persist($evaluation);
         $this->om->flush();
+
+        if ($activityStatus !== $previousStatus && $evaluation->isTerminated()) {
+            $this->dispatchEvaluation($evaluation);
+        }
     }
 
     public function createActivityRule(
@@ -402,38 +411,32 @@ class ActivityManager
         $this->om->flush();
     }
 
-    public function createEvaluation(
-        User $user,
-        ActivityParameters $activityParams,
-        $evaluationType = null,
-        $date = null,
-        $status = null,
-        $nbAttempts = null,
-        $totalTime = null,
-        $sessionTime = null,
-        $score = null,
-        $scoreNum = null,
-        $scoreMin = null,
-        $scoreMax = null,
-        $details = null,
-        Log $log = null
-    )
+    /**
+     * Creates an empty activity evaluation for a user, so that an evaluation
+     * is available for display and edition even when the user hasn't actually
+     * performed the activity.
+     *
+     * @param User $user
+     * @param ActivityParameters $activityParams
+     * @return Evaluation
+     */
+    public function createBlankEvaluation(User $user, ActivityParameters $activityParams)
     {
+        $evaluationType = $activityParams->getEvaluationType();
+        $status = null;
+        $nbAttempts = null;
+
+        if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC) {
+            $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED;
+            $nbAttempts = 0;
+        }
+
         $evaluation = new Evaluation();
         $evaluation->setUser($user);
         $evaluation->setActivityParameters($activityParams);
         $evaluation->setType($evaluationType);
-        $evaluation->setDate($date);
         $evaluation->setStatus($status);
         $evaluation->setAttemptsCount($nbAttempts);
-        $evaluation->setAttemptsDuration($totalTime);
-        $evaluation->setDuration($sessionTime);
-        $evaluation->setScore($score);
-        $evaluation->setNumScore($scoreNum);
-        $evaluation->setScoreMin($scoreMin);
-        $evaluation->setScoreMax($scoreMax);
-        $evaluation->setDetails($details);
-        $evaluation->setLog($log);
 
         $this->om->persist($evaluation);
         $this->om->flush();
@@ -496,6 +499,10 @@ class ActivityManager
         $this->updatePastEvaluation($evaluation);
         $this->om->persist($evaluation);
         $this->om->flush();
+
+        if ($evaluation->isTerminated()) {
+            $this->dispatchEvaluation($evaluation);
+        }
     }
 
     public function editPastEvaluation(PastEvaluation $pastEvaluation)
@@ -787,5 +794,14 @@ class ActivityManager
         }
 
         $this->rightsManager->initializePermissions($nodesInitialized, $rolesInitialized);
+    }
+
+    private function dispatchEvaluation(Evaluation $evaluation)
+    {
+        $this->dispatcher->dispatch(
+            'activity_evaluation',
+            'ActivityEvaluation',
+            [$evaluation]
+        );
     }
 }

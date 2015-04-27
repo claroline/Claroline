@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Rule\Validator;
@@ -24,7 +25,6 @@ class ActivityRuleListener
 {
     private $activityManager;
     private $ruleValidator;
-    private $hasSucceded = false;
 
     /**
      * @DI\InjectParams({
@@ -62,7 +62,6 @@ class ActivityRuleListener
                     ->getActivityRuleByActionAndResource($action, $resourceNode);
 
             if (count($activityRules) > 0) {
-
                 foreach ($activityRules as $activityRule) {
                     $activityParams = $activityRule->getActivityParameters();
                     $accessFrom = $activityRule->getActiveFrom();
@@ -70,7 +69,6 @@ class ActivityRuleListener
 
                     if ((is_null($accessFrom) || $dateLog >= $accessFrom)
                         && (is_null($accessUntil) || $dateLog <= $accessUntil)) {
-
                         $nbRules = is_null($activityParams->getRules()) ?
                             0 :
                             count($activityParams->getRules());
@@ -80,31 +78,23 @@ class ActivityRuleListener
                             $ruleType = 'result';
 
                             foreach ($rules as $rule) {
-
                                 if (is_null($rule->getResult())) {
                                     $ruleType = 'occurrence';
                                     break;
                                 }
                             }
 
-                            $activityStatus = 'unknown';
-                            $rulesLogs = $this->ruleValidator->validate(
-                                $activityParams,
-                                $user
-                            );
+                            $rulesLogs = $this->ruleValidator->validate($activityParams, $user);
 
-                            if(isset($rulesLogs['validRules'])
+                            if (isset($rulesLogs['validRules'])
                                 && $rulesLogs['validRules'] >= $nbRules) {
-
-                                $activityStatus = ($ruleType === 'occurrence') ?
-                                    'completed' :
-                                    'passed';
-                                $this->hasSucceded = true;
+                                $activityStatus = $ruleType === 'occurrence' ?
+                                    AbstractEvaluation::STATUS_COMPLETED :
+                                    AbstractEvaluation::STATUS_PASSED;
                             } else {
-
-                                $activityStatus = ($ruleType === 'occurrence') ?
-                                    'incomplete' :
-                                    'failed';
+                                $activityStatus = $ruleType === 'occurrence' ?
+                                    AbstractEvaluation::STATUS_INCOMPLETE :
+                                    AbstractEvaluation::STATUS_FAILED;
                             }
 
                             $this->activityManager->manageEvaluation(

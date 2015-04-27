@@ -356,25 +356,11 @@ class ActivityController
         ActivityParameters $params
     )
     {
-        $evaluation = $this->activityManager
-            ->getEvaluationByUserAndActivityParams($currentUser, $params);
+        $evaluation =
+            $this->activityManager->getEvaluationByUserAndActivityParams($currentUser, $params) ?:
+            $this->activityManager->createBlankEvaluation($currentUser, $params);
         $pastEvals = $this->activityManager
             ->getPastEvaluationsByUserAndActivityParams($currentUser, $params);
-
-        if (is_null($evaluation)) {
-            $evaluationType = $params->getEvaluationType();
-            $status = ($evaluationType === 'automatic') ?
-                'not_attempted' :
-                null;
-
-            $evaluation = $this->activityManager->createEvaluation(
-                $currentUser,
-                $params,
-                null,
-                null,
-                $status
-            );
-        }
         $ruleScore = null;
         $isResultVisible = false;
 
