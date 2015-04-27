@@ -106,4 +106,45 @@ class EventRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function getLastEventsForDesktop(User $user, $limit = null)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            WHERE e.end > :dateEnd
+            AND e.user = :userId
+            AND e.isTask = false
+            ORDER BY e.start ASC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('dateEnd', time());
+
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        return $query->getResult();
+    }
+
+    public function getLastEventsForWorkspace($workspaceId, $limit = null)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            WHERE e.workspace = :workspaceId
+            AND e.isTask = false
+            ORDER BY e.start ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        return $query->getResult();
+    }
 }

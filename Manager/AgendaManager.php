@@ -266,7 +266,7 @@ class AgendaManager
             'start' => $startIso,
             'end' => $endIso,
             'color' => $event->getPriority(),
-            'allDay' => $event->getAllDay(),
+            'allDay' => $event->isAllDay(),
             'isTask' => $event->isTask(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
@@ -324,7 +324,7 @@ class AgendaManager
     private function setEventDate(Event $event)
     {
         //task don't have start nor ending
-        if ($event->getAllDay()) {
+        if ($event->isAllDay()) {
             $event->setStart(null);
             $event->setEnd(null);
         } else {

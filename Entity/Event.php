@@ -69,14 +69,19 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean")
+     * @ORM\Column(name="is_all_day", type="boolean")
      */
-    private $allDay = false;
+    private $isAllDay = false;
 
     /**
-     * @ORM\Column(name="istask", type="boolean")
+     * @ORM\Column(name="is_task", type="boolean")
      */
     private $isTask = false;
+
+    /**
+     * @ORM\Column(name="is_task_done", type="boolean")
+     */
+    private $isTaskDone = false;
 
     /**
      *
@@ -98,7 +103,7 @@ class Event
     public $startHours;
     public $endHours;
 
-    private $daterange;
+    private $dateRange;
 
     public function __construct()
     {
@@ -203,14 +208,14 @@ class Event
         $this->user = $user;
     }
 
-    public function getAllDay()
+    public function isAllDay()
     {
-        return $this->allDay;
+        return $this->isAllDay;
     }
 
-    public function setAllDay($allDay)
+    public function setIsAllDay($isAllDay)
     {
-        $this->allDay = (bool) $allDay;
+        $this->isAllDay = (bool) $isAllDay;
     }
 
     /**
@@ -278,14 +283,14 @@ class Event
         $this->endHours = $endHours;
     }
 
-    public function setDateRange($daterage)
+    public function setDateRange($dateRange)
     {
-        $this->daterange = $daterange;
+        $this->dateRange = $dateRange;
     }
 
     public function getDateRange()
     {
-        return $this->daterange;
+        return $this->dateRange;
     }
 
     public function setIsTask($isTask)
@@ -301,5 +306,17 @@ class Event
     public function isTask()
     {
         return $this->isTask;
+    }
+
+    public function setIsTaskDone($isTaskDone)
+    {
+        $this->isTaskDone = $isTaskDone;
+
+        return $this;
+    }
+
+    public function isTaskDone()
+    {
+        return $this->isTaskDone;
     }
 }

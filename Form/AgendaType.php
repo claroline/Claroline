@@ -64,7 +64,17 @@ class AgendaType extends AbstractType
             'isTask',
             'checkbox',
             array(
-                'label' => 'isTask'
+                'label' => 'isTask',
+                'required' => false
+            )
+        );
+
+        $builder->add(
+            'isAllDay',
+            'checkbox',
+            array(
+                'label' => 'isAllDay',
+                'required' => false
             )
         );
 

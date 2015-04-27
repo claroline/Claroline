@@ -4,7 +4,7 @@ namespace Claroline\AgendaBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\BundleBundle\Installation\AdditionalInstaller;
+use Claroline\AgendaBundle\Installation\AdditionalInstaller;
 
 /**
  * Bundle class.
@@ -18,12 +18,11 @@ class ClarolineAgendaBundle extends PluginBundle
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'agenda');
     }
 
-    /*
+
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
     }
-    */
 
     public function hasMigrations()
     {

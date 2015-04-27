@@ -12,5 +12,4 @@ class ClarolineAgendaExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {
     }
-
 }

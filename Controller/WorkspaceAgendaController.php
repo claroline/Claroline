@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class WorkspaceAgendaController extends Controller
 {
     private $security;
-    private $formFactory;
     private $om;
     private $request;
     private $agendaManager;

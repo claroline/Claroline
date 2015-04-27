@@ -32,8 +32,8 @@
         }
         calendar.flashbag =
             '<div class="alert alert-success">' +
-                '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-                Translator.trans('edit_event_success', {}, 'platform') +
+            '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
+            Translator.trans('edit_event_success', {}, 'platform') +
             '</div>';
 
         //initialize route & url depending on the context
@@ -148,6 +148,26 @@
                 resize(event, delta._days, delta._milliseconds / (1000 * 60));
             }
         });
+
+        if (getQueryVariable('year')) {
+            var year = !isNaN(getQueryVariable('year')) && getQueryVariable('year') ? getQueryVariable('year') : new Date('Y'),
+                month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
+                day = !isNaN(getQueryVariable('day')) && getQueryVariable('day') ? getQueryVariable('day') : new Date('d');
+            $('#calendar').fullCalendar('gotoDate', new Date(year, month, day))
+        }
+    };
+
+    var getQueryVariable = function (variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+
+        for (var i = 0, varsLength = vars.length; i < varsLength; i++) {
+            var pair = vars[i].split("=");
+            if(decodeURIComponent(pair[0]) == variable){
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        return null;
     };
 
     var hidePopovers = function () {
