@@ -16,9 +16,9 @@ use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -32,33 +32,33 @@ class AnnouncementManager
     private $om;
     private $userRepo;
     private $mailManager;
-    private $messageManager;
     private $sc;
+    private $eventDispatcher;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
-     *     "sc"             = @DI\Inject("security.context")
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
+     *     "sc"              = @DI\Inject("security.context"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        MessageManager $messageManager,
         MailManager $mailManager,
-        $sc
+        $sc,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
         $this->om               = $om;
-        $this->messageManager   = $messageManager;
         $this->mailManager      = $mailManager;
         $this->sc               = $sc;
         $this->userRepo         = $om->getRepository('ClarolineCoreBundle:User');
         $this->roleRepo         = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->eventDispatcher  = $eventDispatcher;
     }
 
     public function insertAnnouncement(Announcement $announcement)
@@ -116,13 +116,17 @@ class AnnouncementManager
     public function sendMessage(Announcement $announcement)
     {
         $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
-        $message = $this->messageManager->create(
-            $announcement->getContent(),
-            $announcement->getTitle(),
-            $targets,
-            $announcement->getCreator()
+        $this->eventDispatcher->dispatch(
+            'claroline_message_sending_to_users',
+            'SendMessage',
+            array(
+                $announcement->getCreator(),
+                $announcement->getContent(),
+                $announcement->getTitle(),
+                null,
+                $targets
+            )
         );
-        $this->messageManager->send($message);
     }
 
     public function sendMail(Announcement $announcement)
