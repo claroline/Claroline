@@ -5,12 +5,13 @@ namespace Icap\PortfolioBundle\Listener;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\Translation\Translator;
 
 /**
  * @DI\Service()
  */
-class ConfigureTopRightMenuListener
+class ConfigureTopMenuListener
 {
     /**
      * @var Translator
@@ -39,15 +40,28 @@ class ConfigureTopRightMenuListener
      *
      * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
      */
-    public function onMenuConfigure(ConfigureMenuEvent $event)
+    public function onRightMenuConfigure(ConfigureMenuEvent $event)
+    {
+        $this->addPortfolioLink($event->getMenu());
+    }
+
+    /**
+     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_my_portfolios")
+     *
+     * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
+     */
+    public function onLeftMenuConfigure(ConfigureMenuEvent $event)
+    {
+        $this->addPortfolioLink($event->getMenu());
+    }
+
+    protected function addPortfolioLink(ItemInterface $menu)
     {
         $menuItemConfig = ['route' => 'icap_portfolio_list'];
 
         if ($this->platformConfigHandler->getParameter('portfolio_url')) {
             $menuItemConfig = ['uri' => $this->platformConfigHandler->getParameter('portfolio_url')];
         }
-
-        $menu = $event->getMenu();
 
         $menu
             ->addChild(
