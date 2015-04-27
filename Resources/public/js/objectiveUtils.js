@@ -126,7 +126,7 @@
     };
 
     /**
-     * Removes an objective row which is a child of a user or a child row.
+     * Removes an objective row which is a child of a user or a group row.
      *
      * @param {HTMLAnchorElement}   removeLink
      * @param {String}              target      ("user"|"group")
