@@ -1,0 +1,15 @@
+<div class="modal-dialog">
+    <form role="form" action="{{ path('icap_socialmedia_like', {'resourceId' : resourceId}) }}"
+          method="get" class="modal-content" {{ form_enctype(form) }}>
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-thumbs-o-up"></i> {{ 'like_action'|trans({}, 'resource') }}</button>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+</div>

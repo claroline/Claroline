@@ -1,0 +1,4 @@
+socialmedia_controller:
+    resource: "@IcapSocialmediaBundle/Controller/"
+    type: annotation
+    prefix: /

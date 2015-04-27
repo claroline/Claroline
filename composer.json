@@ -1,0 +1,15 @@
+{
+    "name": "icap/socialmedia-bundle",
+    "description": "Social media bundle for Claroline Connect",
+    "keywords": ["Claroline", "Social media", "ICAP"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~4.1"
+    },
+    "autoload": {
+        "psr-0": { "Icap\\SocialmediaBundle": "" }
+    },
+    "target-dir": "Icap/SocialmediaBundle"
+}

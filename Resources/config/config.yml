@@ -1,0 +1,12 @@
+plugin:
+    has_options: false
+
+    resource_actions:
+        - name: like_action
+          is_form: true
+        - name: share_action
+          is_form: true
+        - name: comment_action
+          is_form: true
+        - name: note_action
+          is_form: true

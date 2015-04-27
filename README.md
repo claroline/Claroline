@@ -1,4 +1,4 @@
-SocialMediaBundle
+SocialmediaBundle
 ==========
 
 A Claroline plugin to add social media functionalities to resources (like, share etc.).
