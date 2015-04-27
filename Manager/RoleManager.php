@@ -715,7 +715,7 @@ class RoleManager
         $this->dispatcher->dispatch(
             'claroline_message_sending',
             'SendMessage',
-            array($ars, $sender, $content, $object)
+            array($sender, $content, $object, $ars)
         );
     }
 
