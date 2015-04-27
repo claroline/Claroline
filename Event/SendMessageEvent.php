@@ -21,18 +21,21 @@ class SendMessageEvent extends Event
     private $object;
     private $receiver;
     private $sender;
+    private $users;
 
     public function __construct(
-        AbstractRoleSubject $receiver,
         User $sender,
         $content,
-        $object
+        $object,
+        AbstractRoleSubject $receiver = null,
+        array $users = array()
     )
     {
-        $this->receiver = $receiver;
         $this->sender = $sender;
         $this->content = $content;
         $this->object = $object;
+        $this->receiver = $receiver;
+        $this->users = $users;
     }
 
     public function getContent()
@@ -73,5 +76,15 @@ class SendMessageEvent extends Event
     public function setSender(User $sender)
     {
         $this->sender = $sender;
+    }
+
+    public function getUsers()
+    {
+        return $this->users;
+    }
+
+    public function setUsers(array $users)
+    {
+        $this->users = $users;
     }
 }
