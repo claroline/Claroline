@@ -120,7 +120,6 @@ add_role: 'Ajouter un role'
 add_role_to_groups: Ajouter un rôle à %count% groupe(s)
 add_role_to_users: Ajouter un rôle à %count% utilisateur(s)
 add_roles_confirm_message: 'Voulez vous ajouter le(s) role(s) suivant(s) aux %count% élément(s) sélectionné(s): '
-add_sub_competence: 'Ajouter une sous-compétence'
 add_subcategory: 'Ajouter une sous-catégorie'
 add_tab: Ajouter un onglet
 add_tag: 'Ajouter un Tag'
@@ -212,12 +211,6 @@ collaborative: Collaboratif
 collaborator: Collaborateur
 comment: Commentaire
 communication: Communication
-competence: Compétence
-competence_creation: 'Création d''une compétence'
-competence_edition: 'Modification de la compétence'
-competence_referencial: Référentiel de compétences
-competences: Compétences
-competences_management: 'Gestion des compétences'
 completed: Terminé
 configuration: Configuration
 configure: Configurer
@@ -231,7 +224,6 @@ core_packages: Paquets du noyau
 create: Créer
 create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
-create_competence: 'Créer une compétence'
 create_facet: Créer une facette
 create_field: Créer un champ
 create_group: 'Créer un groupe'
@@ -244,7 +236,6 @@ create_new_user_account: 'Creation de votre compte ClarolineConnect'
 create_only: 'Création seulement'
 create_role: Créer un rôle
 create_security_token: 'Créer un jeton d''authentification'
-create_sub_competence: 'Créer une sous-compétence'
 create_subcategory: 'Créer une sous-catégorie'
 create_user: 'Créer un utilisateur'
 create_users: Créer les utilisateurs
@@ -311,8 +302,6 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
-delete_competence: 'Suppression d''une compétence'
-delete_competence_confirm_message: 'Voulez-vous vraiment supprimer cette compétence ?'
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
 delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
@@ -343,7 +332,6 @@ drop_file: 'Déposez le fichier'
 dsn: dsn
 duration: Durée
 edit: Modifier
-edit_competence: 'Modifier la compétence'
 edit_event_success: Événement mis à jour avec succès.
 edit_facet: Editer une facette
 edit_field: Editer un champ
@@ -525,10 +513,8 @@ limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
 link: Lien
-link_competence: 'Lier'
 link_outdated: 'le lien n''est plus valide'
 link_workspace: 'Lier un espace d''activités'
-linkable_competences: 'Compétences liables'
 links: Liens
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
@@ -626,7 +612,6 @@ no: non
 no_action_found: Aucune action trouvée.
 no_activity_in_workspace: Cet espace ne contient actuellement aucune activité.
 no_category: 'Il n''y a aucune catégorie'
-no_competence: 'Aucune compétence'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_group: 'Aucun groupe'
 no_group: Il n'y a aucun groupe.
@@ -750,7 +735,6 @@ registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove: Enlever
-remove_competence: 'Retirer la compétence'
 remove_event: Supprimer un événement
 remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
 remove_facet: Supprimer une facette
@@ -769,8 +753,6 @@ remove_resource_from_model: Retirer une ressource du modèle
 remove_resource_from_model_comfirm: Êtes-vous vraiment sûr de vouloir retirer cette ressource ?
 remove_role: Supprimer un rôle.
 remove_role_confirm: Êtes-vous sûr de vouloir supprimer le rôle %name% ?
-remove_sub_competence: 'Retirer la compétence du référentiel'
-remove_sub_competence_comfirm_message: 'Voulez-vous vraiment retirer cette compétence de ce référentiel ?'
 remove_subcategory: 'Retirer la sous-catégorie'
 remove_user_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
 remove_user_from_model: Retirer un utilisateur

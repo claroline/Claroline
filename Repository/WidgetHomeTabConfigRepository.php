@@ -337,4 +337,21 @@ class WidgetHomeTabConfigRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)
+    {
+        $dql = "
+            SELECT whtc
+            FROM Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig whtc
+            WHERE whtc.homeTab = :homeTab
+            AND whtc.type = :type
+            ORDER BY whtc.widgetOrder ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('homeTab', $homeTab);
+        $query->setParameter('type', $type);
+
+        return $query->getResult();
+    }
+
 }

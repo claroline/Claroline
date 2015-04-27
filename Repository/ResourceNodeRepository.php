@@ -102,6 +102,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         if ($isWorkspaceManager) {
             $builder->selectAsArray()
                 ->whereParentIs($parent)
+                ->whereActiveIs(true)
                 ->orderByIndex();
             $query = $this->_em->createQuery($builder->getDql());
             $query->setParameters($builder->getParameters());
@@ -115,6 +116,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         } else {
             $builder->selectAsArray(true)
                 ->whereParentIs($parent)
+                ->whereActiveIs(true)
                 ->whereHasRoleIn($roles)
                 ->whereIsAccessible($user);
 

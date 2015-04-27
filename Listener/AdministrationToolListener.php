@@ -9,7 +9,6 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\EventDispatcher\Event;
 
 /**
  *  @DI\Service()
@@ -189,7 +188,7 @@ class AdministrationToolListener
      * @param array $params
      * @param Event $event
      */
-    protected function redirect(array $params, Event $event)
+    protected function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

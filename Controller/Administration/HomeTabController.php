@@ -25,7 +25,6 @@ use Claroline\CoreBundle\Form\WidgetHomeTabConfigType;
 use Claroline\CoreBundle\Form\WidgetInstanceType;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
-use Claroline\CoreBundle\Manager\ToolManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,8 +33,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('home_tabs')")
+ */
 class HomeTabController extends Controller
 {
     private $eventDispatcher;
@@ -43,9 +46,6 @@ class HomeTabController extends Controller
     private $homeTabManager;
     private $request;
     private $widgetManager;
-    private $sc;
-    private $hometabAdminTool;
-    private $toolManager;
 
     /**
      * @DI\InjectParams({
@@ -53,9 +53,7 @@ class HomeTabController extends Controller
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "request"         = @DI\Inject("request"),
-     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager"),
-     *     "sc"              = @DI\Inject("security.context"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
+     *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -63,9 +61,7 @@ class HomeTabController extends Controller
         FormFactory $formFactory,
         HomeTabManager $homeTabManager,
         Request $request,
-        WidgetManager $widgetManager,
-        SecurityContextInterface $sc,
-        ToolManager $toolManager
+        WidgetManager $widgetManager
     )
     {
         $this->eventDispatcher  = $eventDispatcher;
@@ -73,9 +69,6 @@ class HomeTabController extends Controller
         $this->homeTabManager   = $homeTabManager;
         $this->request          = $request;
         $this->widgetManager    = $widgetManager;
-        $this->sc               = $sc;
-        $this->toolManager      = $toolManager;
-        $this->hometabAdminTool = $this->toolManager->getAdminToolByName('home_tabs');
     }
 
     /**
@@ -111,8 +104,6 @@ class HomeTabController extends Controller
      */
     public function adminHomeTabsConfigAction($homeTabType, $homeTabId = -1)
     {
-        $this->checkOpen();
-
         $homeTabConfigs = ($homeTabType === 'desktop') ?
             $this->homeTabManager->getAdminDesktopHomeTabConfigs() :
             $this->homeTabManager->getAdminWorkspaceHomeTabConfigs();
@@ -190,8 +181,6 @@ class HomeTabController extends Controller
      */
     public function adminHomeTabCreateFormAction($homeTabType)
     {
-        $this->checkOpen();
-
         $homeTabForm = $this->formFactory->create(
             new HomeTabType(null, true),
             new HomeTab()
@@ -225,8 +214,6 @@ class HomeTabController extends Controller
      */
     public function adminHomeTabCreateAction($homeTabType)
     {
-        $this->checkOpen();
-
         $isDesktop = ($homeTabType === 'desktop');
         $type = $isDesktop ? 'admin_desktop' : 'admin_workspace';
 
@@ -296,7 +283,6 @@ class HomeTabController extends Controller
         $homeTabType
     )
     {
-        $this->checkOpen();
         $this->checkAdminHomeTab($homeTab, $homeTabType);
         $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
 
@@ -343,7 +329,6 @@ class HomeTabController extends Controller
         $homeTabType
     )
     {
-        $this->checkOpen();
         $this->checkAdminHomeTab($homeTab, $homeTabType);
         $this->checkAdminHomeTabConfig($homeTabConfig, $homeTabType);
 
@@ -405,7 +390,6 @@ class HomeTabController extends Controller
         $homeTabType
     )
     {
-        $this->checkOpen();
         $this->checkAdminHomeTab($homeTab, $homeTabType);
         $this->homeTabManager->deleteHomeTab($homeTab);
 
@@ -462,7 +446,6 @@ class HomeTabController extends Controller
         WidgetHomeTabConfig $widgetHomeTabConfig
     )
     {
-        $this->checkOpen();
         $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
         $widgetInstance = $widgetHomeTabConfig->getWidgetInstance();
         $this->homeTabManager->deleteWidgetHomeTabConfig($widgetHomeTabConfig);
@@ -489,7 +472,6 @@ class HomeTabController extends Controller
         $column
     )
     {
-        $this->checkOpen();
         $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
         $widgetDisplayConfig->setRow($row);
         $widgetDisplayConfig->setColumn($column);
@@ -515,8 +497,6 @@ class HomeTabController extends Controller
      */
     public function adminWidgetInstanceCreateFormAction(HomeTab $homeTab, $homeTabType)
     {
-        $this->checkOpen();
-
         $isDesktop = ($homeTabType === 'desktop');
         $instanceForm = $this->formFactory->create(
             new WidgetInstanceType($isDesktop),
@@ -558,8 +538,6 @@ class HomeTabController extends Controller
      */
     public function adminWidgetInstanceCreateAction(HomeTab $homeTab, $homeTabType)
     {
-        $this->checkOpen();
-
         $isDesktop = ($homeTabType === 'desktop');
         $widgetInstance = new WidgetInstance();
         $widgetHomeTabConfig = new WidgetHomeTabConfig();
@@ -651,7 +629,6 @@ class HomeTabController extends Controller
         $homeTabType
     )
     {
-        $this->checkOpen();
         $this->checkAdminAccessForWidgetInstance($widgetInstance);
         $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
         $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
@@ -703,7 +680,6 @@ class HomeTabController extends Controller
         $homeTabType
     )
     {
-        $this->checkOpen();
         $this->checkAdminAccessForWidgetInstance($widgetInstance);
         $this->checkAdminAccessForWidgetHomeTabConfig($widgetHomeTabConfig);
         $this->checkAdminAccessForWidgetDisplayConfig($widgetDisplayConfig);
@@ -751,7 +727,7 @@ class HomeTabController extends Controller
                 200
             );
         } else {
-            
+
             return array(
                 'homeTabType' => $homeTabType,
                 'instanceForm' => $instanceForm->createView(),
@@ -781,7 +757,6 @@ class HomeTabController extends Controller
      */
     public function getAdminWidgetFormConfigurationAction(WidgetInstance $widgetInstance)
     {
-        $this->checkOpen();
         $this->checkAdminAccessForWidgetInstance($widgetInstance);
 
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
@@ -808,7 +783,6 @@ class HomeTabController extends Controller
      */
     public function updateAdminWidgetsDisplayConfigAction(array $widgetDisplayConfigs)
     {
-        $this->checkOpen();
         $toPersist = array();
 
         foreach ($widgetDisplayConfigs as $config) {
@@ -834,15 +808,6 @@ class HomeTabController extends Controller
         }
 
         return new Response('success', 200);
-    }
-
-    private function checkOpen()
-    {
-        if ($this->sc->isGranted('OPEN', $this->hometabAdminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
     }
 
     private function checkAdminHomeTab(HomeTab $homeTab, $homeTabType)
@@ -872,7 +837,7 @@ class HomeTabController extends Controller
     {
         if (!is_null($widgetInstance->getUser()) ||
             !is_null($widgetInstance->getWorkspace())) {
-            
+
             throw new AccessDeniedException();
         }
     }
