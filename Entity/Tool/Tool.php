@@ -15,15 +15,12 @@ use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
  * @ORM\Table(name="claro_tools")
- * @Gedmo\TranslationEntity(class="Claroline\CoreBundle\Entity\Translation\ToolTranslation")
  */
-class Tool implements Translatable
+class Tool
 {
     /**
      * @ORM\Id
@@ -38,11 +35,12 @@ class Tool implements Translatable
     protected $name;
 
     /**
-     * @var string
-     * @Gedmo\Translatable
-     * @ORM\Column(length=255, nullable=true)
+     * @ORM\Column(name="display_name", nullable=true)
+     *
+     * Name that will be displayed in the user's desktop
+     * (can be edited in the administration section)
      */
-    private $displayedName;
+    protected $displayName;
 
     /**
      * @ORM\Column()
@@ -132,14 +130,6 @@ class Tool implements Translatable
      */
     protected $pwsToolConfig;
 
-    /**
-     * @Gedmo\Locale
-     * Used locale to override Translation listener`s locale
-     * this is not a mapped field of entity metadata, just a simple property
-     */
-    private $locale;
-
-
     public function __construct()
     {
         $this->maskDecoders  = new ArrayCollection();
@@ -149,6 +139,30 @@ class Tool implements Translatable
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
+
+        return $this;
+    }
+
+    public function getDisplayName()
+    {
+        return $this->displayName ?: $this->name;
     }
 
     public function setClass($class)
@@ -161,16 +175,6 @@ class Tool implements Translatable
     public function getClass()
     {
         return $this->class;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
     }
 
     public function setIsWorkspaceRequired($bool)
@@ -328,25 +332,5 @@ class Tool implements Translatable
     public function getPwsToolConfig()
     {
         return $this->pwsToolConfig;
-    }
-
-    public function setDisplayedName($name)
-    {
-        $this->displayedName = $name;
-    }
-
-    public function getDisplayedName()
-    {
-        return $this->displayedName;
-    }
-
-    public function setTranslatableLocale($locale)
-    {
-        $this->locale = $locale;
-    }
-
-    public function getTranslatableLocale()
-    {
-        return $this->locale;
     }
 }

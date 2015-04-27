@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -114,6 +113,7 @@ class ToolManager
     /**
      * @param \Claroline\CoreBundle\Entity\Tool\Tool                   $tool
      * @param integer                                                  $position
+     * @param string                                                   $name
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
      *
      * @return \Claroline\CoreBundle\Entity\Tool\OrderedTool
@@ -123,6 +123,7 @@ class ToolManager
     public function addWorkspaceTool(
         Tool $tool,
         $position,
+        $name,
         Workspace $workspace,
         $orderedToolType = 0
     )
@@ -145,9 +146,9 @@ class ToolManager
 
         $orderedTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
         $orderedTool->setWorkspace($workspace);
+        $orderedTool->setName($name);
         $orderedTool->setOrder($position);
         $orderedTool->setTool($tool);
-        $this->setDefaultOrderedToolTranslations($orderedTool, false);
         $orderedTool->setType($orderedToolType);
         $this->om->persist($orderedTool);
         $this->om->flush();
@@ -349,7 +350,7 @@ class ToolManager
                     'visibility' => $roleVisibility,
                     'position' => $orderedTool->getOrder(),
                     'workspace' => $workspace,
-                    'displayedName' => $orderedTool->getDisplayedName(),
+                    'displayedName' => $orderedTool->getName(),
                     'orderTool' => $orderedTool,
                 );
             }
@@ -400,6 +401,7 @@ class ToolManager
                 $this->addWorkspaceTool(
                     $undisplayedTool,
                     $initPos,
+                    $undisplayedTool->getName(),
                     $workspace,
                     $type
                 );
@@ -448,10 +450,11 @@ class ToolManager
      * @param \Claroline\CoreBundle\Entity\Tool\Tool $tool
      * @param \Claroline\CoreBundle\Entity\User      $user
      * @param integer                                $position
+     * @param string                                 $name
      *
      * @throws ToolPositionAlreadyOccupiedException
      */
-    public function addDesktopTool(Tool $tool, User $user, $position, $type = 0)
+    public function addDesktopTool(Tool $tool, User $user, $position, $name, $type = 0)
     {
         $switchTool = $this->orderedToolRepo->findOneBy(
             array('user' => $user, 'order' => $position, 'type' => $type)
@@ -461,8 +464,8 @@ class ToolManager
             $desktopTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
             $desktopTool->setUser($user);
             $desktopTool->setTool($tool);
-            $this->setDefaultOrderedToolTranslations($desktopTool, false);
             $desktopTool->setOrder($position);
+            $desktopTool->setName($name);
             $desktopTool->setVisibleInDesktop(true);
             $desktopTool->setType($type);
             $this->om->persist($desktopTool);
@@ -643,6 +646,7 @@ class ToolManager
                 $requiredTool,
                 $user,
                 $position,
+                $requiredTool->getName(),
                 $type
             );
             $position++;
@@ -825,9 +829,9 @@ class ToolManager
             if (!$wot) {
                 $orderedTool = new OrderedTool();
                 $orderedTool->setUser($user);
+                $orderedTool->setName($tool->getName());
                 $orderedTool->setOrder($startPosition);
                 $orderedTool->setTool($tool);
-                $this->setDefaultOrderedToolTranslations($orderedTool, false);
                 $orderedTool->setVisibleInDesktop(false);
                 $orderedTool->setType($type);
                 $this->om->persist($orderedTool);
@@ -852,9 +856,9 @@ class ToolManager
 
             if (!$wot) {
                 $orderedTool = new OrderedTool();
+                $orderedTool->setName($tool->getName());
                 $orderedTool->setOrder($startPosition);
                 $orderedTool->setTool($tool);
-                $this->setDefaultOrderedToolTranslations($orderedTool, false);
                 $orderedTool->setVisibleInDesktop(false);
                 $orderedTool->setType($type);
                 $this->om->persist($orderedTool);
@@ -1252,11 +1256,6 @@ class ToolManager
         $this->om->endFlushSuite();
     }
 
-    public function getAdminDesktopOrderedTools()
-    {
-        return $this->orderedToolRepo->findBy(array('user' => null, 'workspace' => null));
-    }
-
     public function persistAdminTool(AdminTool $adminTool)
     {
         $this->om->persist($adminTool);
@@ -1305,78 +1304,5 @@ class ToolManager
             }
         }
         $this->om->flush();
-    }
-
-    public function renameOrderedTool($translations, OrderedTool $wot)
-    {
-        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
-
-        foreach ($translations as $lang => $translation) {
-            if (trim($translation['title']) !== '') {
-                $repository->translate(
-                    $wot,
-                    'displayedName',
-                    $lang,
-                    $translation['title']
-                );
-            }
-        }
-
-        $this->om->persist($wot);
-        $this->om->flush();
-    }
-
-    public function renameTool($translations, Tool $tool)
-    {
-        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
-
-        foreach ($translations as $lang => $translation) {
-            if (trim($translation['title']) !== '') {
-                $repository->translate(
-                    $tool,
-                    'displayedName',
-                    $lang,
-                    $translation['title']
-                );
-            }
-        }
-
-        $this->om->persist($tool);
-        $this->om->flush();
-    }
-
-    public function setDefaultOrderedToolTranslations(OrderedTool $orderedTool, $autoflush = true)
-    {
-        $locales = $this->container->get('claroline.manager.locale_manager')->getAvailableLocales();
-        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
-
-        foreach ($locales as $locale) {
-            $repository->translate(
-                $orderedTool,
-                'displayedName',
-                $locale,
-                $this->container->get('translator')->trans($orderedTool->getTool()->getName(), array(), 'tools', $locale)
-            );
-        }
-
-        $this->om->persist($orderedTool);
-        if ($autoflush) $this->om->flush();
-    }
-
-    public function setDefaultToolTranslations(Tool $tool)
-    {
-        $locales = $this->container->get('claroline.manager.locale_manager')->getAvailableLocales();
-        $repository = $this->om->getRepository('Claroline\CoreBundle\Entity\ContentTranslation');
-
-        foreach ($locales as $locale) {
-            $repository->translate(
-                $tool,
-                'displayedName',
-                $locale,
-                $this->container->get('translator')->trans($tool->getName(), array(), 'tools', $locale)
-            );
-        }
-
-        $this->om->persist($tool);
     }
 }

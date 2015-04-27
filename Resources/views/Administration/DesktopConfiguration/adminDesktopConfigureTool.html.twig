@@ -57,15 +57,12 @@
                                 <span class="fa fa-sort text-muted"></span>
                                 &nbsp;
                                 &nbsp;
-                                <a href="{{ path('claro_administration_desktop_order_tool_edit_form', {'tool': tool.getId()}) }}"
-                                    class="show-tool-edit-form"
-                                >
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                                &nbsp;
-                                &nbsp;
                                 <i class="fa fa-{{ tool.getClass() }}"></i>
-                                <span id="tool-{{ tool.getId() }}-name"> {{ tool.getDisplayedName() }} </span>
+                                {% if toolName == 'parameters' %}
+                                    {{ 'preferences'|trans({}, 'platform') }}
+                                {% else %}
+                                    {{ toolName|lower|trans({}, 'tools') }}
+                                {% endif %}
                             </td>
                             <td class="text-center">
                                 {% if orderedTool.isVisibleInDesktop() %}
@@ -79,7 +76,7 @@
                                     >
                                     </i>
                                 {% endif %}
-
+                                
                                 {% if orderedTool.isLocked() %}
                                     <i class="fa fa-lock lock-btn pointer-hand"
                                        data-ordered-tool-id="{{ orderedTool.getId() }}"
@@ -107,9 +104,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/clarolinecore/js/administration/editToolName.js') }}"
-            type="text/javascript"
-    ></script>
     <script src="{{ asset('bundles/clarolinecore/js/administration/adminDesktopConfigureTool.js') }}"
             type="text/javascript"
     >

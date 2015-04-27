@@ -145,18 +145,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            //I know it's not that great but I couldn't find an other way
-            $formData = $this->request->request->get('workspace_order_tool_edit_form');
-            $this->toolManager->renameOrderedTool(
-                $formData['displayedName'],
-                $workspaceOrderTool
-            );
+            $this->toolManager->editOrderedTool($form->getData());
 
             return new JsonResponse(
                 array(
                     'tool_id' => $workspaceOrderTool->getTool()->getId(),
                     'ordered_tool_id' => $workspaceOrderTool->getId(),
-                    'name' => $workspaceOrderTool->getDisplayedName()
+                    'name' => $workspaceOrderTool->getName()
                 )
             );
         }

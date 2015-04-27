@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
@@ -50,7 +49,7 @@ class LoadToolsData implements RequiredFixture
             $entity->setIsConfigurableInDesktop($tool[8]);
             $entity->setIsLockedForAdmin($tool[9]);
             $entity->setIsAnonymousExcluded($tool[10]);
-            $this->container->get('claroline.manager.tool_manager')->setDefaultToolTranslations($entity);
+
             $manager->persist($entity);
             $this->createToolMaskDecoders($manager, $entity);
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
@@ -104,10 +103,9 @@ class LoadToolsData implements RequiredFixture
         $orderedTool->setType(0);
         $orderedTool->setOrder(1);
         $orderedTool->setLocked(false);
-        $this->container->get('claroline.manager.tool_manager')->setDefaultOrderedToolTranslations($orderedTool);
+        $orderedTool->setName($tool->getName());
         $orderedTool->setVisibleInDesktop(true);
         $manager->persist($orderedTool);
-        $manager->flush();
     }
 
     public function setContainer($container)

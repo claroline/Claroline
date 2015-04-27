@@ -13,58 +13,9 @@ namespace Claroline\CoreBundle\Listener;
 
 use Gedmo\Translatable\TranslatableListener;
 use Doctrine\Common\EventArgs;
-use Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
-use Doctrine\ORM\Event\PostFlushEventArgs;
 
 class LocaleListener extends TranslatableListener
 {
-   /**
-    * Specifies the list of events to listen
-    *
-    * @return array
-    */
-    public function getSubscribedEvents()
-    {
-        return array(
-            'postLoad',
-            'postPersist',
-            'preFlush',
-            'onFlush',
-            'loadClassMetadata',
-            'postFlush'
-        );
-    }
-
-    //we need to refresh the translatable fields for some reason after an update.
-    //no idea why
-    public function postFlush(PostFlushEventArgs $args) {
-        $em = $args->getEntityManager();
-        $uow = $em->getUnitOfWork();
-        $map = $uow->getIdentityMap();
-
-        $refreshable = array(
-            'Claroline\CoreBundle\Entity\Content',
-            'Claroline\CoreBundle\Entity\Tool\OrderedTool',
-            'Claroline\CoreBundle\Entity\Tool\Tool'
-        );
-
-        foreach ($refreshable as $class) {
-            if (array_key_exists($class, $map)) {
-                //so it was in the identityMap hey !
-                foreach ($map[$class] as $entity) {
-                    $em->refresh($entity);
-                }
-            }
-        }
-    }
-
-
-    public function handleTranslatableObjectUpdate(TranslatableAdapter $ea, $object, $isInsert)
-    {
-        parent::handleTranslatableObjectUpdate($ea, $object, $isInsert);
-        $ea->getObjectManager()->refresh($object);
-    }
-
     public function postLoad(EventArgs $args)
     {
         $this->setLocale();

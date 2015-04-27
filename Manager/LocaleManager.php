@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
- * @Service("claroline.manager.locale_manager")
+ * @Service("claroline.common.locale_manager")
  */
 class LocaleManager
 {
