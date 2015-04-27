@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -59,7 +59,7 @@ class RoleManager
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         Container $container,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -764,11 +764,11 @@ class RoleManager
         if ($ars->hasRole($role->getName())) {
             return true;
         }
-        
+
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
             $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
-            
+
             if ($maxUsers <= $countByWorkspace) return false;
         }
 

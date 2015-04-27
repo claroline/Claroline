@@ -14,8 +14,8 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -37,7 +37,7 @@ class LayoutController extends Controller
     private $roleManager;
     private $workspaceManager;
     private $router;
-    private $security;
+    private $tokenStorage;
     private $utils;
     private $translator;
     private $configHandler;
@@ -49,7 +49,7 @@ class LayoutController extends Controller
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "security"           = @DI\Inject("security.context"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
@@ -63,9 +63,9 @@ class LayoutController extends Controller
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
         Utilities $utils,
-        Translator $translator,
+        TranslatorInterface $translator,
         PlatformConfigurationHandler $configHandler,
         HomeManager $homeManager,
         StrictDispatcher $dispatcher
@@ -75,7 +75,7 @@ class LayoutController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
         $this->router = $router;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
@@ -135,7 +135,7 @@ class LayoutController extends Controller
      */
     public function topBarAction(Workspace $workspace = null)
     {
-        if ($token = $this->security->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
         } else {
             $tools = array();
@@ -159,9 +159,10 @@ class LayoutController extends Controller
         } else {
             $roles = array('ROLE_ANONYMOUS');
         }
+        $adminTools = array();
 
         $adminTools = $this->toolManager->getAdminToolsByRoles(
-            $this->security->getToken()->getRoles()
+            $this->tokenStorage->getToken()->getRoles()
         );
 
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
@@ -209,7 +210,7 @@ class LayoutController extends Controller
      */
     public function renderWarningImpersonationAction()
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
         $impersonatedRole = null;
         $isRoleImpersonated = false;
@@ -261,7 +262,7 @@ class LayoutController extends Controller
 
     private function isImpersonated()
     {
-        if ($token = $this->security->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $role) {
                 if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
                     return true;
@@ -274,7 +275,7 @@ class LayoutController extends Controller
 
     private function findWorkspacesFromLogs()
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
         $wsLogs = $this->workspaceManager->getLatestWorkspacesByUser($user, $roles);

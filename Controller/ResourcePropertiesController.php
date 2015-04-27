@@ -16,7 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -30,15 +31,16 @@ class ResourcePropertiesController extends Controller
 {
 
     private $formFactory;
-    private $sc;
+    private $tokenStorage;
+    private $authorization;
     private $resourceManager;
     private $request;
     private $dispatcher;
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
-     *     "sc"              = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "request"         = @DI\Inject("request"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher")
@@ -47,14 +49,16 @@ class ResourcePropertiesController extends Controller
     public function __construct
     (
         FormFactory $formFactory,
-        SecurityContext $sc,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
         Request $request,
         StrictDispatcher $dispatcher
     )
     {
         $this->formFactory = $formFactory;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
         $this->request = $request;
         $this->dispatcher = $dispatcher;
@@ -198,7 +202,7 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
-            $arrayNode = $this->resourceManager->toArray($node, $this->sc->getToken());
+            $arrayNode = $this->resourceManager->toArray($node, $this->tokenStorage->getToken());
 
             return new JsonResponse($arrayNode);
         }
@@ -223,7 +227,7 @@ class ResourcePropertiesController extends Controller
      */
     private function checkAccess($permission, $collection)
     {
-        if (!$this->sc->isGranted($permission, $collection)) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException(print_r($collection->getErrorsForDisplay(), true));
         }
     }

@@ -34,7 +34,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
@@ -83,7 +83,6 @@ class ParametersController extends Controller
      *     "sessionValidator"   = @DI\Inject("claroline.session.database_validator"),
      *     "refresher"          = @DI\Inject("claroline.installation.refresher"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"                 = @DI\Inject("security.context"),
      *     "router"             = @DI\Inject("router"),
      *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager"),
      *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
@@ -97,7 +96,7 @@ class ParametersController extends Controller
         FormFactory $formFactory,
         LocaleManager $localeManager,
         Request $request,
-        Translator $translator,
+        TranslatorInterface $translator,
         TermsOfServiceManager $termsOfService,
         MailManager $mailManager,
         ContentManager $contentManager,
@@ -105,7 +104,6 @@ class ParametersController extends Controller
         DatabaseSessionValidator $sessionValidator,
         Refresher $refresher,
         ToolManager $toolManager,
-        SecurityContextInterface $sc,
         RouterInterface $router,
         IPWhiteListManager $ipwlm,
         SecurityTokenManager $tokenManager,
@@ -125,7 +123,6 @@ class ParametersController extends Controller
         $this->cacheManager       = $cacheManager;
         $this->dbSessionValidator = $sessionValidator;
         $this->refresher          = $refresher;
-        $this->sc                 = $sc;
         $this->toolManager        = $toolManager;
         $this->paramAdminTool     = $this->toolManager->getAdminToolByName('platform_parameters');
         $this->router             = $router;

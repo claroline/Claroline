@@ -27,8 +27,8 @@ class UserController extends Controller
     public function connectedUserAction()
     {
         /** @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $securityContext = $this->container->get('security.context');
-        $securityToken   = $securityContext->getToken();
+        $tokenStorage    = $this->container->get('security.token_storage');
+        $securityToken   = $tokenStorage->getToken();
 
         if (null !== $securityToken) {
             /** @var \Claroline\CoreBundle\Entity\User $user */
@@ -48,4 +48,3 @@ class UserController extends Controller
         ), Codes::HTTP_NOT_FOUND);
     }
 }
- 

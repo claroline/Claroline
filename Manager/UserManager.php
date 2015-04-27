@@ -32,7 +32,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -89,7 +89,7 @@ class UserManager
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
         ToolManager $toolManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
         TransfertManager $transfertManager,

@@ -35,12 +35,12 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ActivityController
 {
-    private $securityContext;
+    private $authorization;
     private $formFactory;
     private $request;
     private $activityManager;
@@ -49,7 +49,7 @@ class ActivityController
 
     /**
      * @InjectParams({
-     *     "securityContext"    = @Inject("security.context"),
+     *     "authorization"    = @Inject("security.authorization_checker"),
      *     "formFactory"        = @Inject("form.factory"),
      *     "request"            = @Inject("request_stack"),
      *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
@@ -58,7 +58,7 @@ class ActivityController
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorization,
         FormFactoryInterface $formFactory,
         RequestStack $request,
         ActivityManager $activityManager,
@@ -66,7 +66,7 @@ class ActivityController
         TranslatorInterface $translator
     )
     {
-        $this->securityContext = $securityContext;
+        $this->authorization = $authorization;
         $this->formFactory = $formFactory;
         $this->request = $request->getMasterRequest();
         $this->activityManager = $activityManager;
@@ -508,7 +508,7 @@ class ActivityController
 
     private function checkAccess($permission, $resource)
     {
-        if (!$this->securityContext->isGranted($permission, $resource)) {
+        if (!$this->authorization->isGranted($permission, $resource)) {
             throw new AccessDeniedException();
         }
     }

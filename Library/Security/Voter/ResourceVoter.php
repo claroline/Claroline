@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -58,7 +58,7 @@ class ResourceVoter implements VoterInterface
      */
     public function __construct(
         EntityManager $em,
-        Translator $translator,
+        TranslatorInterface $translator,
         Utilities $ut,
         MaskManager $maskManager,
         ResourceManager $resourceManager,

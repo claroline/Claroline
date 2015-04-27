@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -51,7 +51,7 @@ class WorkspaceTagController extends Controller
         SecurityContextInterface $securityContext,
         FormFactory $formFactory,
         Utilities $utils,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->workspaceManager = $workspaceManager;

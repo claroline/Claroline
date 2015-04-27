@@ -22,7 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -35,7 +35,7 @@ class ToolListener
     private $httpKernel;
     private $rightsManager;
     private $router;
-    private $securityContext;
+    private $tokenStorage;
     private $templating;
     private $toolManager;
     private $translator;
@@ -50,7 +50,7 @@ class ToolListener
      *     "httpKernel"       = @DI\Inject("http_kernel"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
-     *     "securityContext"  = @DI\Inject("security.context"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "templating"       = @DI\Inject("templating"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
@@ -63,7 +63,7 @@ class ToolListener
         $httpKernel,
         RightsManager $rightsManager,
         RouterInterface $router,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         $templating,
         ToolManager $toolManager,
         TranslatorInterface $translator,
@@ -75,7 +75,7 @@ class ToolListener
         $this->httpKernel = $httpKernel;
         $this->rightsManager = $rightsManager;
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
@@ -139,7 +139,7 @@ class ToolListener
         $canOpenResRights = true;
 
         if ($workspace->isPersonal() && !$this->rightsManager->canEditPwsPerm(
-            $this->container->get('security.context')->getToken()
+            $this->tokenStorage->getToken()
         )) {
             $canOpenResRights = false;
         }
@@ -221,7 +221,7 @@ class ToolListener
      */
     public function onTopBarLeftMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.' && !is_null($tool)) {
@@ -250,7 +250,7 @@ class ToolListener
      */
     public function onTopBarRightMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.' && !is_null($tool)) {
@@ -278,7 +278,7 @@ class ToolListener
      */
     public function onTopBarLeftMenuConfigureParameters(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.') {

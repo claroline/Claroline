@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Claroline\CoreBundle\Manager\UserManager;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Library\Security\Authenticator;
@@ -70,7 +70,7 @@ class AuthenticationController
         UserManager $userManager,
         EncoderFactory $encoderFactory,
         ObjectManager $om,
-        Translator $translator,
+        TranslatorInterface $translator,
         FormFactory $formFactory,
         Authenticator $authenticator,
         MailManager $mailManager,

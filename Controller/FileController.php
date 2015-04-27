@@ -111,7 +111,7 @@ class FileController extends Controller
         );
 
         return new JsonResponse(
-            array($manager->toArray($file->getResourceNode(), $this->get('security.context')->getToken()))
+            array($manager->toArray($file->getResourceNode(), $this->get('security.token_storage')->getToken()))
         );
     }
 
@@ -136,7 +136,7 @@ class FileController extends Controller
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => 'file'));
 
-        if (!$this->get('security.context')->isGranted('CREATE', $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted('CREATE', $collection)) {
             //use different header so we know something went wrong
             $content = $this->get('translator')->trans(
                 'resource_creation_denied',
@@ -178,7 +178,7 @@ class FileController extends Controller
         );
 
         $nodesArray[0] = $resourceManager->toArray(
-            $file->getResourceNode(), $this->get('security.context')->getToken()
+            $file->getResourceNode(), $this->get('security.token_storage')->getToken()
         );
 
         return new JsonResponse($nodesArray);
@@ -274,7 +274,7 @@ class FileController extends Controller
      */
     private function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -286,7 +286,7 @@ class FileController extends Controller
      */
     private function getCurrentUser()
     {
-        if (is_object($token = $this->get('security.context')->getToken()) and is_object($user = $token->getUser())) {
+        if (is_object($token = $this->get('security.token_storage')->getToken()) and is_object($user = $token->getUser())) {
             return $user;
         }
     }

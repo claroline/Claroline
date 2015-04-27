@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -47,7 +48,8 @@ class RolesController extends Controller
     private $groupManager;
     private $resourceManager;
     private $rightsManager;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
     private $formFactory;
     private $router;
     private $request;
@@ -63,7 +65,8 @@ class RolesController extends Controller
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"      = @DI\Inject("claroline.manager.rights_manager"),
      *     "facetManager"       = @DI\Inject("claroline.manager.facet_manager"),
-     *     "security"           = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "router"             = @DI\Inject("router"),
      *     "request"            = @DI\Inject("request"),
@@ -79,7 +82,8 @@ class RolesController extends Controller
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         FacetManager $facetManager,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
         Request $request,
@@ -94,7 +98,8 @@ class RolesController extends Controller
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->facetManager = $facetManager;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->request = $request;
@@ -530,7 +535,7 @@ class RolesController extends Controller
         $this->checkAccess($workspace);
         $canEdit = $this->hasEditionAccess($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        $currentUser = $this->security->getToken()->getUser();
+        $currentUser = $this->tokenStorage->getToken()->getUser();
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
         $pager = $search === '' ?
@@ -883,14 +888,14 @@ class RolesController extends Controller
 
     private function checkAccess(Workspace $workspace)
     {
-        if (!$this->security->isGranted('users', $workspace)) {
+        if (!$this->authorization->isGranted('users', $workspace)) {
             throw new AccessDeniedException();
         }
     }
 
     private function checkEditionAccess(Workspace $workspace)
     {
-        if (!$this->security->isGranted(array('users', 'edit'), $workspace)) {
+        if (!$this->authorization->isGranted(array('users', 'edit'), $workspace)) {
 
             throw new AccessDeniedException();
         }
@@ -898,6 +903,6 @@ class RolesController extends Controller
 
     private function hasEditionAccess(Workspace $workspace)
     {
-        return $this->security->isGranted(array('users', 'edit'), $workspace);
+        return $this->authorization->isGranted(array('users', 'edit'), $workspace);
     }
 }

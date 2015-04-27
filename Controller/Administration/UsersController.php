@@ -41,8 +41,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -66,6 +66,7 @@ class UsersController extends Controller
     private $userAdminTool;
     private $userManager;
     private $workspaceManager;
+    private $authorization;
 
     /**
      * @DI\InjectParams({
@@ -79,7 +80,7 @@ class UsersController extends Controller
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "router"                 = @DI\Inject("router"),
-     *     "sc"                     = @DI\Inject("security.context"),
+     *     "authorization"          = @DI\Inject("security.authorization_checker"),
      *     "session"                = @DI\Inject("session"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
@@ -98,12 +99,12 @@ class UsersController extends Controller
         RightsManager $rightsManager,
         RoleManager $roleManager,
         RouterInterface $router,
-        SecurityContextInterface $sc,
+        AuthorizationCheckerInterface $authorization,
         SessionInterface $session,
         StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
         ToolMaskDecoderManager $toolMaskDecoderManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     )
@@ -118,7 +119,7 @@ class UsersController extends Controller
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
         $this->router = $router;
-        $this->sc = $sc;
+        $this->authorization = $authorization;
         $this->session = $session;
         $this->toolManager = $toolManager;
         $this->toolMaskDecoderManager = $toolMaskDecoderManager;
@@ -155,7 +156,7 @@ class UsersController extends Controller
     public function userCreationFormAction()
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
+        $isAdmin = ($this->authorization->isGranted('ROLE_ADMIN')) ? true : false;
         $roles = $this->roleManager->getAllPlatformRoles();
         $unavailableRoles = [];
 
@@ -203,7 +204,7 @@ class UsersController extends Controller
     {
         $sessionFlashBag = $this->session->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->sc->isGranted('ROLE_ADMIN')) ? true : false;
+        $isAdmin = ($this->authorization->isGranted('ROLE_ADMIN')) ? true : false;
 
         $profileType = new ProfileCreationType(
             array($roleUser),
@@ -280,7 +281,7 @@ class UsersController extends Controller
     public function deleteAction(array $users)
     {
         foreach ($users as $user) {
-            if (!$this->sc->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
+            if (!$this->authorization->isGranted('ROLE_ADMIN') && $user->hasRole('ROLE_ADMIN')) {
                 throw new AccessDeniedException();
             }
 
@@ -476,14 +477,14 @@ class UsersController extends Controller
             }
 
             if (count($toUpdate) > 0) {
-                $additionalRoles = is_null($additionalRole) ? 
+                $additionalRoles = is_null($additionalRole) ?
                     array() :
                     array($additionalRole);
                 $updatedNames = $this->userManager->updateImportedUsers(
                     $toUpdate,
                     $additionalRoles
                 );
-                
+
                 foreach ($updatedNames as $name) {
                     $msg =  '<' . $name . '> ';
                     $msg .= $this->translator->trans(
