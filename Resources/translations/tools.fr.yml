@@ -1,8 +1,5 @@
 agenda: Agenda
 analytics: Tableau de bord
-badges: Badges
-message: Messagerie
-my_badges: Mes badges
 home: Accueil
 logs: Suivi
 parameters: Paramètres
@@ -11,7 +8,6 @@ users: Utilisateurs
 platform_parameters: Paramètres de la plateforme
 user_management: Gestion des utilisateurs
 workspace_management: Gestion des espaces d'activités
-badges_management: Gestion des badges
 registration_to_workspace: Inscription à des espaces d'activités
 platform_plugins: Plugins de la plateforme
 home_tabs: Onglets de la page d'accueil

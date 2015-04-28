@@ -26,6 +26,8 @@ use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service()
@@ -38,6 +40,8 @@ class ResourceManagerListener
     private $rightsManager;
     private $workspaceManager;
     private $userManager;
+    private $tokenStorage;
+    private $authorization;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +49,8 @@ class ResourceManagerListener
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"             = @DI\Inject("templating"),
      *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
-     *     "sc"                     = @DI\Inject("security.context"),
+     *     "authorization"          = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "requestStack"           = @DI\Inject("request_stack"),
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
@@ -61,7 +66,8 @@ class ResourceManagerListener
         StrictDispatcher $ed,
         $templating,
         $manager,
-        $sc,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         RequestStack $requestStack,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
@@ -76,7 +82,8 @@ class ResourceManagerListener
         $this->ed = $ed;
         $this->templating = $templating;
         $this->manager = $manager;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
@@ -146,7 +153,7 @@ class ResourceManagerListener
         $path = array();
 
         foreach ($ancestors as $ancestor) {
-            $path[] = $this->manager->toArray($ancestor, $this->sc->getToken());
+            $path[] = $this->manager->toArray($ancestor, $this->tokenStorage->getToken());
         }
 
         $jsonPath = json_encode($path);
@@ -208,7 +215,7 @@ class ResourceManagerListener
 
     private function workspaceResourceRightsForm(Workspace $workspace, $wsMax = 10)
     {
-        if (!$this->sc->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
 

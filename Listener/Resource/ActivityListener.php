@@ -29,7 +29,7 @@ use JMS\DiExtraBundle\Annotation\Observe;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Service
@@ -42,7 +42,7 @@ class ActivityListener
     private $request;
     private $persistence;
     private $activityManager;
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @InjectParams({
@@ -52,7 +52,7 @@ class ActivityListener
      *     "request"            = @Inject("request_stack"),
      *     "persistence"        = @Inject("claroline.persistence.object_manager"),
      *     "activityManager"    = @Inject("claroline.manager.activity_manager"),
-     *     "securityContext"    = @Inject("security.context")
+     *     "tokenStorage"       = @Inject("security.token_storage"),
      * })
      */
     public function __construct(
@@ -62,7 +62,7 @@ class ActivityListener
         $request,
         $persistence,
         ActivityManager $activityManager,
-        SecurityContextInterface $securityContext
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->router = $router;
@@ -71,7 +71,7 @@ class ActivityListener
         $this->request = $request->getMasterRequest();
         $this->persistence = $persistence;
         $this->activityManager = $activityManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -164,7 +164,7 @@ class ActivityListener
     {
         $activity = $event->getResource();
         $params = $activity->getParameters();
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $evaluation =
             $this->activityManager->getEvaluationByUserAndActivityParams($user, $params) ?:
             $this->activityManager->createBlankEvaluation($user, $params);

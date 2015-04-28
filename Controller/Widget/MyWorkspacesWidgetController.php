@@ -16,33 +16,33 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
 class MyWorkspacesWidgetController extends Controller
 {
-    private $securityContext;
+    private $tokenStorage;
     private $utils;
     private $workspaceManager;
     private $workspaceTagManager;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext"        = @DI\Inject("security.context"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "utils"                  = @DI\Inject("claroline.security.utilities"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager"    = @DI\Inject("claroline.manager.workspace_tag_manager")
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         Utilities $utils,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager
     )
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
@@ -86,7 +86,7 @@ class MyWorkspacesWidgetController extends Controller
                 }
                 break;
             default:
-                $token = $this->securityContext->getToken();
+                $token = $this->tokenStorage->getToken();
                 $roles = $this->utils->getRoles($token);
                 $datas = $this->workspaceTagManager
                     ->getDatasForWorkspaceListByUser($user, $roles);

@@ -19,7 +19,6 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service
@@ -29,7 +28,6 @@ class HomeListener
     private $container;
     private $httpKernel;
     private $homeTabManager;
-    private $securityContext;
     private $templating;
     private $workspaceManager;
 
@@ -38,7 +36,6 @@ class HomeListener
      *     "container"          = @DI\Inject("service_container"),
      *     "httpKernel"         = @DI\Inject("http_kernel"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "securityContext"    = @DI\Inject("security.context"),
      *     "templating"         = @DI\Inject("templating"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
      * })
@@ -47,7 +44,6 @@ class HomeListener
         ContainerInterface $container,
         HttpKernelInterface $httpKernel,
         HomeTabManager $homeTabManager,
-        SecurityContextInterface $securityContext,
         TwigEngine $templating,
         WorkspaceManager $workspaceManager
     )
@@ -55,7 +51,6 @@ class HomeListener
         $this->container = $container;
         $this->httpKernel = $httpKernel;
         $this->homeTabManager = $homeTabManager;
-        $this->securityContext = $securityContext;
         $this->templating = $templating;
         $this->workspaceManager = $workspaceManager;
     }

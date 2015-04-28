@@ -55,9 +55,6 @@ class PlatformConfigurationHandler
         'session_db_dsn' => null,
         'session_db_user' => null,
         'session_db_password' => null,
-        'facebook_client_id' => null,
-        'facebook_client_secret' => null,
-        'facebook_client_active' => null,
         'form_captcha' => true,
         'platform_limit_date' => 1559350861,//1 june 2019
         'platform_init_date' => 1388534461, //1 june 2014
@@ -168,9 +165,6 @@ class PlatformConfigurationHandler
         $config->setSessionDbDsn($this->parameters['session_db_dsn']);
         $config->setSessionDbUser($this->parameters['session_db_user']);
         $config->setSessionDbPassword($this->parameters['session_db_password']);
-        $config->setFacebookClientId($this->parameters['facebook_client_id']);
-        $config->setFacebookClientSecret($this->parameters['facebook_client_secret']);
-        $config->setFacebookClientActive($this->parameters['facebook_client_active']);
         $config->setFormCaptcha($this->parameters['form_captcha']);
         $config->setAccountDuration($this->parameters['account_duration']); //days
         $config->setPlatformLimitDate($this->parameters['platform_limit_date']);

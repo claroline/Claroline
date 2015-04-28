@@ -20,7 +20,6 @@ use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Manager\SimpleTextManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Service
@@ -30,7 +29,6 @@ class SimpleTextWidgetListener
     private $simpleTextManager;
     private $formFactory;
     private $templating;
-    private $sc;
     private $om;
 
     /**
@@ -38,7 +36,6 @@ class SimpleTextWidgetListener
      *      "simpleTextManager" = @DI\Inject("claroline.manager.simple_text_manager"),
      *      "formFactory"       = @DI\Inject("claroline.form.factory"),
      *      "templating"        = @DI\Inject("templating"),
-     *      "sc"                = @DI\Inject("security.context"),
      *      "om"                = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
@@ -46,14 +43,12 @@ class SimpleTextWidgetListener
         SimpleTextManager $simpleTextManager,
         FormFactory $formFactory,
         TwigEngine $templating,
-        SecurityContextInterface $sc,
         ObjectManager $om
     )
     {
         $this->simpleTextManager = $simpleTextManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
-        $this->sc = $sc;
         $this->om = $om;
     }
 

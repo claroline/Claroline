@@ -22,7 +22,7 @@
                       )
                   }}"
                   method="POST"
-            > 
+            >
                 {{ form_widget(instanceForm) }}
                 {{ form_widget(widgetHomeTabConfigForm) }}
                 {{ form_widget(displayConfigForm) }}
@@ -32,10 +32,9 @@
             <span class="btn btn-default" data-dismiss="modal">
                 {{ 'cancel'|trans({},'platform') }}
             </span>
-            <button type="button" id='create-btn' class="btn btn-primary">
+            <button type="button" id='create-btn' class="btn btn-primary" type="submit">
                 {{ 'ok'|trans({},'platform') }}
             </button>
         </div>
     </div>
 </div>
-

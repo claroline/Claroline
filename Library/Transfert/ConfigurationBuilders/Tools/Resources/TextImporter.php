@@ -96,7 +96,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
             return $this->container->get('claroline.manager.text_manager')->create(
                 $content,
                 'title',
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.token_storage')->getToken()->getUser()
             );
         }
     }

@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -35,7 +35,7 @@ class WidgetVoter implements VoterInterface
      *     "translator"   = @DI\Inject("translator"),
      * })
      */
-    public function __construct(EntityManager $em, Translator $translator)
+    public function __construct(EntityManager $em, TranslatorInterface $translator)
     {
         $this->em = $em;
         $this->translator = $translator;

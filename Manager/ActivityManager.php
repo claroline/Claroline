@@ -29,7 +29,7 @@ use Claroline\CoreBundle\Rule\Entity\Rule;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Service("claroline.manager.activity_manager")
@@ -45,21 +45,21 @@ class ActivityManager
     private $roleRepo;
     private $om;
     private $rightsManager;
-    private $sc;
+    private $tokenStorage;
     private $dispatcher;
 
     /**
      * @InjectParams({
      *     "om"            = @Inject("claroline.persistence.object_manager"),
      *     "rightsManager" = @Inject("claroline.manager.rights_manager"),
-     *     "sc"            = @Inject("security.context"),
+     *     "tokenStorage"  = @Inject("security.token_storage"),
      *     "dispatcher"    = @Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager            $om,
         RightsManager            $rightsManager,
-        SecurityContextInterface $sc,
+        TokenStorageInterface    $tokenStorage,
         StrictDispatcher         $dispatcher
     )
     {
@@ -72,7 +72,7 @@ class ActivityManager
         $this->pastEvaluationRepo     = $om->getRepository('ClarolineCoreBundle:Activity\PastEvaluation');
         $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
         $this->rightsManager          = $rightsManager;
-        $this->sc                     = $sc;
+        $this->tokenStorage           = $tokenStorage;
         $this->dispatcher             = $dispatcher;
     }
 
@@ -754,7 +754,7 @@ class ActivityManager
         $primary = $activity->getPrimaryResource();
         $secondaries = [];
         $nodes = [];
-        $token = $this->sc->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token === null ? $activity->getResourceNode()->getCreator(): $token->getUser();
 
         if ($primary) {

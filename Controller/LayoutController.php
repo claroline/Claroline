@@ -14,19 +14,19 @@ namespace Claroline\CoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\HomeManager;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * Actions of this controller are not routed. They're intended to be rendered
@@ -34,53 +34,53 @@ use Claroline\CoreBundle\Manager\HomeManager;
  */
 class LayoutController extends Controller
 {
-    private $messageManager;
     private $roleManager;
     private $workspaceManager;
     private $router;
-    private $security;
+    private $tokenStorage;
     private $utils;
     private $translator;
     private $configHandler;
     private $toolManager;
+    private $dipatcher;
 
     /**
      * @DI\InjectParams({
-     *     "messageManager"     = @DI\Inject("claroline.manager.message_manager"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "security"           = @DI\Inject("security.context"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator"),
      *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager")
+     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager"),
+     *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
-        MessageManager $messageManager,
         RoleManager $roleManager,
         WorkspaceManager $workspaceManager,
         ToolManager $toolManager,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
         Utilities $utils,
-        Translator $translator,
+        TranslatorInterface $translator,
         PlatformConfigurationHandler $configHandler,
-        HomeManager $homeManager
+        HomeManager $homeManager,
+        StrictDispatcher $dispatcher
     )
     {
-        $this->messageManager = $messageManager;
         $this->roleManager = $roleManager;
         $this->workspaceManager = $workspaceManager;
         $this->toolManager = $toolManager;
         $this->router = $router;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
         $this->translator = $translator;
         $this->configHandler = $configHandler;
         $this->homeManager = $homeManager;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -135,7 +135,7 @@ class LayoutController extends Controller
      */
     public function topBarAction(Workspace $workspace = null)
     {
-        if ($token = $this->security->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
         } else {
             $tools = array();
@@ -159,9 +159,10 @@ class LayoutController extends Controller
         } else {
             $roles = array('ROLE_ANONYMOUS');
         }
+        $adminTools = array();
 
         $adminTools = $this->toolManager->getAdminToolsByRoles(
-            $this->security->getToken()->getRoles()
+            $this->tokenStorage->getToken()->getRoles()
         );
 
         if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
@@ -209,7 +210,7 @@ class LayoutController extends Controller
      */
     public function renderWarningImpersonationAction()
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
         $impersonatedRole = null;
         $isRoleImpersonated = false;
@@ -251,9 +252,17 @@ class LayoutController extends Controller
         );
     }
 
+    //not routed
+    public function injectJavascriptAction()
+    {
+        $event = $this->dispatcher->dispatch('inject_javascript_layout', 'InjectJavascript');
+
+        return new Response($event->getContent());
+    }
+
     private function isImpersonated()
     {
-        if ($token = $this->security->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $role) {
                 if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
                     return true;
@@ -266,7 +275,7 @@ class LayoutController extends Controller
 
     private function findWorkspacesFromLogs()
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
         $wsLogs = $this->workspaceManager->getLatestWorkspacesByUser($user, $roles);

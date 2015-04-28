@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Validator("csv_workspace_validator")
@@ -26,24 +25,20 @@ class CsvWorkspaceValidator extends ConstraintValidator
 {
     private $translator;
     private $om;
-    private $sc;
 
     /**
      * @DI\InjectParams({
      *     "trans" = @DI\Inject("translator"),
-     *     "om"    = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sc"    = @DI\Inject("security.context")
+     *     "om"    = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
     public function __construct(
         TranslatorInterface $translator,
-        ObjectManager $om,
-        SecurityContextInterface $sc
+        ObjectManager $om
     )
     {
         $this->translator = $translator;
         $this->om = $om;
-        $this->sc = $sc;
     }
 
     public function validate($value, Constraint $constraint)
