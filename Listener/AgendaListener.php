@@ -11,6 +11,7 @@
 
 namespace Claroline\AgendaBundle\Listener;
 
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;

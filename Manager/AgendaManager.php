@@ -268,6 +268,7 @@ class AgendaManager
             'color' => $event->getPriority(),
             'allDay' => $event->isAllDay(),
             'isTask' => $event->isTask(),
+            'isTaskDone' => $event->isTaskDone(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
             'editable' => $this->security->isGranted('EDIT', $event),
@@ -323,10 +324,9 @@ class AgendaManager
      */
     private function setEventDate(Event $event)
     {
-        //task don't have start nor ending
         if ($event->isAllDay()) {
-            $event->setStart(null);
-            $event->setEnd(null);
+            $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
+            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 23:59:59'));
         } else {
             //we get the hours value directly from the property wich has been setted by the form.
             //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored

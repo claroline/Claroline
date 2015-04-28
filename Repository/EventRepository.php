@@ -53,12 +53,10 @@ class EventRepository extends EntityRepository
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace is NULL
-            AND e.isTask = :isTask
             AND e.user =:userId
             ORDER BY e.start DESC
             ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('isTask', $isTask);
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();

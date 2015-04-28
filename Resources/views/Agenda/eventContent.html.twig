@@ -13,9 +13,10 @@
 {% if event.workspace != null %}
 <div>{{ 'workspace'|trans({}, 'platform') }}: {{ event.workspace }}</div>
 {% endif %}
-{% if event.description is defined and event.description != null %}
-{{ 'description'|trans({}, 'platform') }} :
-<div style="max-height: 150px; overflow-y: auto;">
-     {{ event.description|raw }}
-</div>
+
+{% if event.description is not empty %}
+    {{ 'description'|trans({}, 'platform') }} :
+    <div style="max-height: 150px; overflow-y: auto;">
+         {{ event.description|raw }}
+    </div>
 {% endif %}

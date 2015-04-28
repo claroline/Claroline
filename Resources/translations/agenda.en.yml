@@ -11,7 +11,7 @@ agenda_form_start: 'Start date'
 agenda_form_startHours: 'Start hour'
 agenda_form_title: 'Title'
 agenda_form_author: 'Created by'
-all_day: All day
+all_day: the whole day
 apr: Apr
 april: April
 at: at
@@ -55,6 +55,7 @@ medium: Medium
 midnight: midnight
 modify: 'Modify an event'
 mon: Mon
+no_task_now: No task to do
 monday: Monday
 month: month
 next: '>'

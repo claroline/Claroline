@@ -13,17 +13,21 @@ namespace Claroline\AgendaBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Validator\Constraints\DateRange;
+use Claroline\AgendaBundle\Validator\Constraints\DateRange;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\AgendaBundle\Repository\EventRepository")
  * @ORM\Table(name="claro_event")
  * @DateRange()
  */
-class Event
+class Event implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -318,5 +322,15 @@ class Event
     public function isTaskDone()
     {
         return $this->isTaskDone;
+    }
+
+    public function jsonSerialize()
+    {
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        return $serializer->serialize($this, 'json');
     }
 }
