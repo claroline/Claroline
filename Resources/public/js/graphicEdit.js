@@ -137,7 +137,7 @@ function position(shape, color, i, prefix, value, size, points) {
 
     grade++;
     //Image center
-    $('#Answer').children('div').css({'margin': 'auto'});
+  //  $('#Answer').children('div').css({'margin': 'auto'});
 }
 
 function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {

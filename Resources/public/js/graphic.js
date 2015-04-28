@@ -69,7 +69,7 @@ function sendData(select, path, prefx) {
                     maxWidth: maxSize
                 });
                 //Image center
-                $('#Answer').children('div').css({'margin': 'auto'});
+              //  $('#Answer').children('div').css({'margin': 'auto'});
             });
         }
     });
