@@ -56,10 +56,12 @@
             </a>
         {% endif %}
     </div>
-
+<div class="list-group">
+    <div class="list-group-item">
     {% set inter = interQCM %}
     {% include "UJMExoBundle:Partial:correction/qcm.html.twig" %}
     <hr/>
     {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
-
+    </div>
+</div>
 {% endblock %}
