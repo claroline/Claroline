@@ -711,7 +711,7 @@ class RoleManager
             $object = $this->translator->trans('new_role_message_object', array(), 'platform');
         }
 
-        $sender = $this->container->get('security.context')->getToken()->getUser();
+        $sender = $this->container->get('security.token_storage')->getToken()->getUser();
         $this->dispatcher->dispatch(
             'claroline_message_sending',
             'SendMessage',
@@ -752,11 +752,11 @@ class RoleManager
         //cli always win!
         if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ||
             //web installer too
-            $this->container->get('security.context')->getToken() === null) {
+            $this->container->get('security.token_storage')->getToken() === null) {
             return true;
         }
 
-        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return false;
         }
 

@@ -21,7 +21,8 @@ use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -30,7 +31,8 @@ class WorkspaceTagController extends Controller
 {
     private $tagManager;
     private $workspaceManager;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $formFactory;
     private $utils;
     private $translator;
@@ -39,7 +41,8 @@ class WorkspaceTagController extends Controller
      * @DI\InjectParams({
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "tagManager"         = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "translator"         = @DI\Inject("translator")
@@ -48,7 +51,8 @@ class WorkspaceTagController extends Controller
     public function __construct(
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $tagManager,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         FormFactory $formFactory,
         Utilities $utils,
         TranslatorInterface $translator
@@ -56,7 +60,8 @@ class WorkspaceTagController extends Controller
     {
         $this->workspaceManager = $workspaceManager;
         $this->tagManager = $tagManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->formFactory = $formFactory;
         $this->utils = $utils;
         $this->translator = $translator;
@@ -84,7 +89,7 @@ class WorkspaceTagController extends Controller
      */
     public function addAdminTagChildren(WorkspaceTag $tag, $childrenString)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -176,7 +181,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagCreateFormAction()
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $workspaceTag = new WorkspaceTag();
@@ -205,7 +210,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagCreateAction()
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $workspaceTag = new WorkspaceTag();
@@ -313,7 +318,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagEditFormAction(WorkspaceTag $workspaceTag)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $form = $this->formFactory->create(
@@ -346,7 +351,7 @@ class WorkspaceTagController extends Controller
      */
     public function adminWorkspaceTagEditAction(WorkspaceTag $workspaceTag)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $form = $this->formFactory->create(
@@ -473,7 +478,7 @@ class WorkspaceTagController extends Controller
      */
     public function removeAdminTagHierarchy(WorkspaceTag $parentTag, WorkspaceTag $childTag)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -677,7 +682,7 @@ class WorkspaceTagController extends Controller
         $search
     )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $possibleChildrenPager = $search === '' ?
@@ -775,7 +780,7 @@ class WorkspaceTagController extends Controller
         WorkspaceTag $workspaceTag
     )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $relWorkspaceTag = $this->tagManager
@@ -852,7 +857,7 @@ class WorkspaceTagController extends Controller
      */
     public function manageAdminWorkspaceTagAction($page, $search)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $workspaces = ($search === '') ?
@@ -918,7 +923,7 @@ class WorkspaceTagController extends Controller
      */
     public function manageWorkspaceTagAction(User $currentUser, $page, $search)
     {
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         $roleNames = $this->utils->getRoles($token);
         $workspaces = ($search === '') ?
             $this->workspaceManager
@@ -984,7 +989,7 @@ class WorkspaceTagController extends Controller
         array $tags
     )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -1119,7 +1124,7 @@ class WorkspaceTagController extends Controller
      */
     public function organizeAdminWorkspaceTagAction()
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
@@ -1203,7 +1208,7 @@ class WorkspaceTagController extends Controller
      */
     public function deleteAdminWorkspaceTag(WorkspaceTag $workspaceTag)
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         if (is_null($workspaceTag->getUser())) {
@@ -1270,7 +1275,7 @@ class WorkspaceTagController extends Controller
         Workspace $workspace = null
     )
     {
-        if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
         if (is_null($workspaceTag->getUser())) {

@@ -54,7 +54,7 @@ class WorkspaceController extends Controller
      */
     public function logListAction(Workspace $workspace, $page)
     {
-        if (!$this->get('security.context')->isGranted('logs', $workspace)) {
+        if (!$this->get('security.authorization_checker')->isGranted('logs', $workspace)) {
             throw new AccessDeniedException();
         }
 

@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service
@@ -15,24 +15,24 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
  */
 class AdminToolAccessEvaluator
 {
-    private $securityContext;
+    private $authorization;
     private $em;
 
     /**
      * @DI\InjectParams({
-     *     "context"    = @DI\Inject("security.context"),
-     *     "em"         = @DI\Inject("doctrine.orm.entity_manager")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "em"            = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
      * @param SecurityContextInterface $context
      * @param EntityManagerInterface $em
      */
     public function __construct(
-        SecurityContextInterface $context,
+        AuthorizationCheckerInterface $authorization,
         EntityManagerInterface $em
     )
     {
-        $this->securityContext = $context;
+        $this->authorization = $authorization;
         $this->em = $em;
     }
 
@@ -54,6 +54,6 @@ class AdminToolAccessEvaluator
             );
         }
 
-        return $this->securityContext->isGranted('OPEN', $tool);
+        return $this->authorization->isGranted('OPEN', $tool);
     }
 }
