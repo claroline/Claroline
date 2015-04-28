@@ -208,7 +208,7 @@ function addLabel(container, deletechoice, table, codeContainer) {
     // Add the delete button
     $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
     $('#newTableLabel').find('td:last').append(contain.find('a.btn-danger'));
-
+    
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
@@ -219,7 +219,7 @@ function addLabel(container, deletechoice, table, codeContainer) {
 }
 
 function addProposal(container, deletechoice, table, codeContainer) {
-
+    
     var contain;
     var uniqProposalId = false;
     var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
@@ -247,7 +247,7 @@ function addProposal(container, deletechoice, table, codeContainer) {
     $('#newTableProposal').find('tr:last').append('<td class="classic"></td>');
     $('#newTableProposal').find('td:last').append(contain.find('a.btn-danger'));
     $('#newTableProposal').find('tr:last').append('<td class="classic origin"></td>');
-
+    
     // Remove the useless fileds form
     container.remove();
     table.next().remove();
@@ -415,6 +415,7 @@ function tableCreationLabel(container, table, button, deletechoice, LabelValue, 
         add.click(function (e) {
             $('#newTableLabel').find('tbody').append('<tr class="droppable"></tr>');
             addLabel(container, deletechoice, table, codeContainer);
+            replaceConnections();
             e.preventDefault(); // prevent add # in the url
             return false;
         });
@@ -437,6 +438,7 @@ function tableCreationProposal(container, table, button, deletechoice, ProposalV
         add.click(function (e) {
             $('#newTableProposal').find('tbody').append('<tr></tr>');
             addProposal(container, deletechoice, table, codeContainer);
+            replaceConnections();
             e.preventDefault(); // prevent add # in the url
             return false;
         });
@@ -504,24 +506,20 @@ function setOrderLabel() {
 }
 
 function responseBind() {
+    jsPlumb.setContainer($("body"));
 
-    jsPlumb.ready(function() {
-        jsPlumb.setContainer($("body"));
+    //Create all draggable in source.
+    source();
 
-        //Create all draggable in source.
-        source();
+    //Create all droppable in target
+    target();
 
-        //Create all droppable in target
-        target();
+    //defaults parameteres for all connections
+    defaultParameters();
 
-        //defaults parameteres for all connections
-        defaultParameters();
+    //if there are multiples same link
+    multiplesLinks();
 
-        //if there are multiples same link
-        multiplesLinks();
-
-        //for remove connections
-        removeConnections();
-
-    });
+    //for remove connections
+    removeConnections();
 }
