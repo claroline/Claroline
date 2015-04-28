@@ -74,7 +74,7 @@ class TextController extends Controller
         $this->checkAccess('EDIT', $collection);
 
         $request = $this->get('request');
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $text = $request->request->get('content');
         $em = $this->getDoctrine()->getManager();
         $version = $old->getVersion();
@@ -112,7 +112,7 @@ class TextController extends Controller
         $revisionRepo = $this->getDoctrine()->getManager()
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $isGranted = $this->container->get('security.context')->isGranted('EDIT', $collection);
+        $isGranted = $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection);
 
         return $this->render(
             'ClarolineCoreBundle:Text:index.html.twig',
@@ -140,7 +140,7 @@ class TextController extends Controller
      */
     public function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

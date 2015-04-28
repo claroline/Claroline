@@ -32,16 +32,20 @@ class DynamicConfigPass implements CompilerPassInterface
         //mailing
         $transport = new Definition();
         $transport->setClass('Swift_Transport');
-        $transport->setFactoryService('claroline.mailing.transport_factory');
-        $transport->setFactoryMethod('getTransport');
+        $transport->setFactory(array(
+            new Reference('claroline.mailing.transport_factory'),
+            'getTransport')
+        );
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
 
         //session storage
         $handler = new Definition();
         $handler->setClass('SessionHandlerInterface');
-        $handler->setFactoryService('claroline.session.handler_factory');
-        $handler->setFactoryMethod('getHandler');
+        $handler->setFactory(array(
+            new Reference('claroline.session.handler_factory'),
+            'getHandler')
+        );
         $container->setDefinition('session.handler', $handler);
 
         //cookie lifetime

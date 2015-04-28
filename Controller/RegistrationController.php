@@ -152,10 +152,10 @@ class RegistrationController extends Controller
 
             if ($this->get('claroline.config.platform_config_handler')->getParameter('auto_logging_after_registration')) {
                 //this is bad but I don't know any other way (yet)
-                $securityContext = $this->get('security.context');
+                $tokenStorage = $this->get('security.token_storage');
                 $providerKey = 'main';
                 $token = new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
-                $securityContext->setToken($token);
+                $tokenStorage->setToken($token);
                 //a bit hacky I know ~
                 return $this->get('claroline.authentication_handler')->onAuthenticationSuccess($this->request, $token);
             }
@@ -244,11 +244,11 @@ class RegistrationController extends Controller
      */
     private function checkAccess()
     {
-        $securityContext = $this->get('security.context');
+        $tokenStorage = $this->get('security.token_storage');
         $configHandler = $this->get('claroline.config.platform_config_handler');
         $isSelfRegistrationAllowed = $configHandler->getParameter('allow_self_registration');
 
-        if (!$securityContext->getToken()->getUser() instanceof User && $isSelfRegistrationAllowed) {
+        if (!$tokenStorage->getToken()->getUser() instanceof User && $isSelfRegistrationAllowed) {
             return;
         }
 

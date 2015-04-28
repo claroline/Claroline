@@ -31,7 +31,8 @@ use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
@@ -40,7 +41,8 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $eventDispatcher;
     private $configurationHandler;
     private $templating;
@@ -52,7 +54,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     /**
      * @DI\InjectParams({
-     *     "context"                = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "configurationHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
      *     "templating"             = @DI\Inject("templating"),
@@ -65,7 +68,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *
      */
     public function __construct(
-        SecurityContextInterface $context,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
         PlatformConfigurationHandler $configurationHandler,
         EngineInterface $templating,
@@ -76,7 +80,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         UserManager $userManager
     )
     {
-        $this->securityContext = $context;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->configurationHandler = $configurationHandler;
         $this->templating = $templating;
@@ -92,7 +97,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      */
     public function onLoginSuccess(InteractiveLoginEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getInitDate() === null) {
             $this->userManager->setUserInitDate($user);
@@ -103,7 +108,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($uri = $request->getSession()->get('redirect_route')) {
             $request->getSession()->remove('redirect_route');
@@ -153,7 +158,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && 200 === $event->getResponse()->getStatusCode()
             && !$event->getResponse() instanceof StreamedResponse
         ) {
-            if ($token =  $this->securityContext->getToken()) {
+            if ($token =  $this->tokenStorage->getToken()) {
                 if ('anon.' !== $user = $token->getUser()) {
                     $uri = $event->getRequest()->getRequestUri();
                     $user->setLastUri($uri);
@@ -202,7 +207,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             && $request->get('_route') !== 'claroline_locale_change'
             && $request->get('_route') !== 'claroline_locale_select'
             && $request->get('_route') !== 'bazinga_exposetranslation_js'
-            && ($token = $this->securityContext->getToken())
+            && ($token = $this->tokenStorage->getToken())
             && ($user = $token->getUser())
             && $user instanceof User
         ) {
@@ -221,8 +226,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
 
     public function isImpersonated()
     {
-        if ($this->securityContext->isGranted('ROLE_PREVIOUS_ADMIN')) {
-            foreach ($this->securityContext->getToken()->getRoles() as $role) {
+        if ($this->authorization->isGranted('ROLE_PREVIOUS_ADMIN')) {
+            foreach ($this->tokenStorage->getToken()->getRoles() as $role) {
                 if ($role instanceof SwitchUserRole) {
                     return true;
                 }

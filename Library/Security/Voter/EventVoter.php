@@ -55,13 +55,14 @@ class EventVoter
 
     private function eventVote(Event $event, TokenInterface $token, $action)
     {
-        $security = $this->container->get('security.context');
+        $authorization = $this->container->get('security.authorization_checker');
+        $tokenStorage = $this->container->get('security.token_storage');
         if (strtolower($action) === 'edit' || strtolower($action) === 'delete') {
             $isManager = $event->getWorkspace() ?
-                $security->isGranted('ROLE_WS_MANAGER_' . $event->getWorkspace()->getGuid()):
+                $authorization->isGranted('ROLE_WS_MANAGER_' . $event->getWorkspace()->getGuid()):
                 false;
 
-            $isCreator = $security->getToken()->getUser()->getUsername() ===  $event->getUser()->getUsername();
+            $isCreator = $tokenStorage->getToken()->getUser()->getUsername() ===  $event->getUser()->getUsername();
 
             return ($isManager | $isCreator) ? VoterInterface::ACCESS_GRANTED: VoterInterface::ACCESS_DENIED;
         }
@@ -78,4 +79,4 @@ class EventVoter
     {
         return true;
     }
-} 
+}

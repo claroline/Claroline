@@ -39,7 +39,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -55,7 +56,8 @@ class HomeController extends Controller
     private $request;
     private $roleManager;
     private $router;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $toolManager;
     private $utils;
     private $widgetManager;
@@ -69,7 +71,8 @@ class HomeController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
@@ -83,7 +86,8 @@ class HomeController extends Controller
         Request $request,
         RoleManager $roleManager,
         RouterInterface $router,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
         Utilities $utils,
         WidgetManager $widgetManager
@@ -96,7 +100,8 @@ class HomeController extends Controller
         $this->request = $request;
         $this->roleManager = $roleManager;
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
@@ -119,7 +124,7 @@ class HomeController extends Controller
      */
     public function displayDesktopHomeTabAction(User $user, $tabId)
     {
-        $roleNames = $this->utils->getRoles($this->securityContext->getToken());
+        $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user, $roleNames);
         $visibleAdminHomeTabConfigs = $this->homeTabManager
@@ -1570,7 +1575,7 @@ class HomeController extends Controller
 
     private function hasWorkspaceHomeToolAccess(Workspace $workspace)
     {
-        return $this->securityContext->isGranted('home', $workspace);
+        return $this->authorization->isGranted('home', $workspace);
     }
 
     private function checkWorkspaceAccessForHomeTab(
@@ -1673,7 +1678,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceEditionAccess(Workspace $workspace)
     {
-        if (!$this->securityContext->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
 
             throw new AccessDeniedException();
         }

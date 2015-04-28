@@ -24,7 +24,7 @@
                       }
                   ) }}"
                   method="POST"
-            > 
+            >
                 {{ form_row(homeTabForm.name) }}
                 {{ form_widget(homeTabConfigForm) }}
                 <div>
@@ -51,10 +51,9 @@
             <span class="btn btn-default" data-dismiss="modal">
                 {{ 'cancel'|trans({},'platform') }}
             </span>
-            <button type="button" id='edit-btn' class="btn btn-primary">
+            <button type="button" id='edit-btn' class="btn btn-primary" type="submit">
                 {{ 'ok'|trans({},'platform') }}
             </button>
         </div>
     </div>
 </div>
-

@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -42,7 +41,6 @@ class DirectoryListener
     private $resourceManager;
     private $rightsManager;
     private $maskManager;
-    private $security;
     private $eventDispatcher;
     private $formFactory;
     private $templating;
@@ -54,7 +52,6 @@ class DirectoryListener
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"        = @DI\Inject("security.context"),
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "templating"      = @DI\Inject("templating"),
      *     "container"       = @DI\Inject("service_container")
@@ -66,7 +63,6 @@ class DirectoryListener
         RightsManager $rightsManager,
         MaskManager $maskManager,
         StrictDispatcher $eventDispatcher,
-        SecurityContextInterface $security,
         FormFactoryInterface $formFactory,
         TwigEngine $templating,
         ContainerInterface $container
@@ -76,7 +72,6 @@ class DirectoryListener
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->container = $container;

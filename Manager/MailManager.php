@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Templating\EngineInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -48,7 +48,7 @@ class MailManager
     public function __construct(
         \Swift_Mailer $mailer,
         UrlGeneratorInterface $router,
-        Translator $translator,
+        TranslatorInterface $translator,
         PlatformConfigurationHandler $ch,
         ContainerInterface $container,
         CacheManager $cacheManager,

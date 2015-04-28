@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -69,7 +69,7 @@ class GroupsController extends Controller
         FormFactory $formFactory,
         Request $request,
         RouterInterface $router,
-        Translator $translator,
+        TranslatorInterface $translator,
         AuthenticationManager $authenticationManager
     )
     {

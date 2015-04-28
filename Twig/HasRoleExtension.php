@@ -23,12 +23,12 @@ class HasRoleExtension extends \Twig_Extension
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context")
+     *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct($securityContext)
+    public function __construct($tokenStorage)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -44,7 +44,7 @@ class HasRoleExtension extends \Twig_Extension
 
     public function hasRole($role)
     {
-        if ($token = $this->securityContext->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $tokenRole) {
                 if ($tokenRole->getRole() === $role) {
                     return true;
@@ -57,7 +57,7 @@ class HasRoleExtension extends \Twig_Extension
 
     public function isImpersonated()
     {
-        if ($token = $this->securityContext->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             foreach ($token->getRoles() as $role) {
                 if ($role instanceof \Symfony\Component\Security\Core\Role\SwitchUserRole) {
                     return true;

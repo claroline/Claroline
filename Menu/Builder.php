@@ -19,7 +19,7 @@ class Builder extends ContainerAware
     public function topBarRightMenu(FactoryInterface $factory, array $options)
     {
         $translator = $this->container->get('translator');
-        $securityContext = $this->container->get('security.context');
+        $tokenStorage = $this->container->get('security.token_storage');
         $hasRoleExtension = $this->container->get('claroline.core_bundle.twig.has_role_extension');
         $router = $this->container->get('router');
         $dispatcher = $this->container->get('event_dispatcher');
@@ -49,7 +49,7 @@ class Builder extends ContainerAware
 
         $this->addDivider($menu, '1');
 
-        $user = $securityContext->getToken()->getUser();
+        $user = $tokenStorage->getToken()->getUser();
         $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
         $adminTools = array();
         $excludedTools = array();
@@ -122,7 +122,7 @@ class Builder extends ContainerAware
     public function topBarLeftMenu(FactoryInterface $factory, array $options)
     {
         $translator = $this->container->get('translator');
-        $securityContext = $this->container->get('security.context');
+        $tokenStorage = $this->container->get('security.token_storage');
         $configHandler = $this->container->get('claroline.config.platform_config_handler');
 
         $menu = $factory->createItem('root')
@@ -138,7 +138,7 @@ class Builder extends ContainerAware
             ->setExtra('icon', 'fa fa-home')
             ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
 
-        $token = $securityContext->getToken();
+        $token = $tokenStorage->getToken();
 
         if ($token) {
             $user = $token->getUser();

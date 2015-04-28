@@ -61,7 +61,7 @@ class FileListener implements ContainerAwareInterface
         $this->resourceManager = $container->get('claroline.manager.resource_manager');
         $this->workspaceManager = $container->get('claroline.manager.workspace_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
-        $this->sc = $container->get('security.context');
+        $this->sc = $container->get('security.token_storage');
         $this->request = $container->get('request_stack');
         $this->httpKernel = $container->get('httpKernel');
         $this->filesDir = $container->getParameter('claroline.param.files_directory');
@@ -372,7 +372,7 @@ class FileListener implements ContainerAwareInterface
                 $resources[] = $this->resourceManager->create(
                     $directory,
                     $this->resourceManager->getResourceTypeByName('directory'),
-                    $this->sc->getToken()->getUser(),
+                    $this->tokenStorage->getToken()->getUser(),
                     $parent->getWorkspace(),
                     $parent,
                     null,
@@ -447,7 +447,7 @@ class FileListener implements ContainerAwareInterface
         return $this->resourceManager->create(
             $entityFile,
             $this->resourceManager->getResourceTypeByName('file'),
-            $this->sc->getToken()->getUser(),
+            $this->tokenStorage->getToken()->getUser(),
             $parent->getWorkspace(),
             $parent,
             null,
