@@ -464,10 +464,6 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
-        echo "edidtCriteriaAction";
-        //die();
-
-
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,

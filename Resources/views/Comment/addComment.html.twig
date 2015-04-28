@@ -1,4 +1,5 @@
 {% block dropzone_add_comment %}
+    <h3>{{ 'Add comment'|trans({}, 'innova_collecticiel') }}</h3>
     <div class="container">
         <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}
         action="{{ path('innova_collecticiel_add_comment',

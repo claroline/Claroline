@@ -2029,7 +2029,6 @@ class CorrectionController extends DropzoneBaseController
 
         // Récupération de la saisie du commentaire
         $request = $this->get('request');
-        var_dump($request);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

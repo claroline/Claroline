@@ -12,7 +12,7 @@
                 {% else %}
                     <thead>
                         <tr class="text-left">
-                            <th></th>
+{#                            <th></th> #}
                             <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Validated document'|trans({}, 'innova_collecticiel') }}<th>
@@ -22,7 +22,7 @@
                     <tbody>
                         {% for index, document in drop.documents %}
                             <tr id="row_{{ document.id }}">
-                                <td>{{ document.id }}</td>
+{#                                <td>{{ document.id }}</td> #}
                                 <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
                                 <td>
                                     {% if document.url is not null %}
