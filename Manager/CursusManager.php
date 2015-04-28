@@ -956,8 +956,17 @@ class CursusManager
             );
         }
         $workspace->setWorkspaceType(0);
-        $workspace->setStartDate($session->getStartDate());
-        $workspace->setEndDate($session->getEndDate());
+
+        $startDate = $session->getStartDate();
+        $endDate = $session->getEndDate();
+
+        if (!is_null($startDate)) {
+            $workspace->setStartDate($startDate);
+        }
+
+        if (!is_null($endDate)) {
+            $workspace->setEndDate($endDate);
+        }
         $this->workspaceManager->editWorkspace($workspace);
 
         return $workspace;
