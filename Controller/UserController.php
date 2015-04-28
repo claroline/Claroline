@@ -85,15 +85,40 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     "users/list/for/user/picker/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
      *     name="claro_users_list_for_user_picker",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"=""},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Route(
+     *     "users/list/for/user/picker/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_searched_users_list_for_user_picker",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"=""},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "name" = "groupIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "roles",
+     *      class="ClarolineCoreBundle:Role",
+     *      options={"multipleIds" = true, "name" = "roleIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
      * @EXT\Template()
      */
     public function usersListForUserPickerAction(
         User $authenticatedUser,
+        array $groups,
+        array $roles,
+        array $workspaces,
         $search = '',
         $page = 1,
         $max = 50,
@@ -108,7 +133,10 @@ class UserController extends Controller
             $page,
             $max,
             $orderedBy,
-            $order
+            $order,
+            $workspaces,
+            $roles,
+            $groups
         );
 
         return array(

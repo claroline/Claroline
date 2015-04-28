@@ -1301,18 +1301,22 @@ class UserManager
         array $searchedGroups = array()
     )
     {
-        $roles = $this->generateRoleRestrictions($user);
-        $groups = $this->generateGroupRestrictions($user);
+        $roles = count($searchedRoles) > 0 ?
+            $searchedRoles :
+            $this->generateRoleRestrictions($user);
+        $groups = count($searchedGroups) > 0 ?
+            $searchedGroups :
+            $this->generateGroupRestrictions($user);
         $users = $this->userRepo->findUsersForUserPicker(
             $search,
             $withMail,
             $orderedBy,
             $order,
             $roles,
-            $groups,
-            $searchedWorkspaces,
-            $searchedRoles,
-            $searchedGroups
+            $groups
+//            $searchedWorkspaces,
+//            $searchedRoles,
+//            $searchedGroups
         );
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
@@ -1321,7 +1325,7 @@ class UserManager
     private function generateRoleRestrictions(User $user)
     {
         $restrictions = array();
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_AMDIN');
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
         if (is_null($adminRole)) {
             $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
@@ -1354,7 +1358,7 @@ class UserManager
     private function generateGroupRestrictions(User $user)
     {
         $restrictions = array();
-        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_AMDIN');
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
 
         if (is_null($adminRole)) {
 

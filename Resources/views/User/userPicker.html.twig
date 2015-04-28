@@ -61,7 +61,8 @@
         </div>
         <div class='modal-body' id="user-picker-body">
             <div>
-                <h3 class="col-md-12">{{ 'filters'|trans({}, 'platform') }}</h3>
+                <ul class="col-md-12 list-inline" id="filters-list-box">
+                </ul>
                 <div class="col-md-12 margin-bottom-sm" id="box-filter-level-1">
                     <select class="form-control" id="filter-level-1">
                         <option value="none">
@@ -99,7 +100,9 @@
                 </div>
             </div>
             <hr>
-            {{ render(controller('ClarolineCoreBundle:User:usersListForUserPicker')) }}
+            <div id="user-picker-users-list">
+                {{ render(controller('ClarolineCoreBundle:User:usersListForUserPicker')) }}
+            </div>
         </div>
             
         <div class="modal-footer">
