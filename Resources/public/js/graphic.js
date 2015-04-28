@@ -137,14 +137,14 @@ function LoadPic(path, prefx, iddoc) {
         // Add it to the page
         $('#dragContainer' + grade).append(img);
 
-        imgx = parseInt(leftpos);
-        imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
-//            imgx=0;
+//        imgx = parseInt(leftpos);
+//        imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
+        imgx=0;
           //  alert(imgx);
         // Position y answer zone
-        imgy = parseInt(toppos);
-        imgy -= $('#Answer').position().top;
-//            imgy=0;
+//        imgy = parseInt(toppos);
+//        imgy -= $('#Answer').position().top;
+        imgy=0;
           //  alert(imgy);
         // With the position of the dragged image
         $('#dragContainer' + grade).css({

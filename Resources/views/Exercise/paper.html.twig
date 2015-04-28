@@ -92,12 +92,13 @@
                     <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
                         {{ "onlyOnce" | trans }}</em>
                     </h6>
-
+    </div>
+    <div style="margin-left: 10px;">
                     <div style="position: relative;" id="Answer">
                         <p id="ContainerCursorPaper">
                             {% set i = 1 %}
                             {% for coords in listCoords %}
-                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                                <img class="AnswerImage" src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
                                     id="cursor{{ i }}" style="position: absolute;"/>
                                 {% set i = i + 1 %}
                             {% endfor %}
@@ -257,6 +258,7 @@
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
             {% endif %}
+            </div>
         </form>
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}
