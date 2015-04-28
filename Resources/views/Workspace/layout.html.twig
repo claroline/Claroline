@@ -30,8 +30,8 @@
                             {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
                         </a>
                     </li>
-                    {% render controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
-                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})
+                    {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                        {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
                     %}
                     {% block resourceBreadcrumb %}
                         <li class="active">{{ _resource.getResourceNode().getName() }}</li>
@@ -53,7 +53,7 @@
     {% endif %}
     {% if not is_path_mode and workspace is defined %}
         {% if is_granted('OPEN', workspace) %}
-            {% render controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}) %}
+            {% render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) %}
         {% endif %}
 
     {% endif %}
