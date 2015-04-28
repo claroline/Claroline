@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\User;
@@ -171,9 +172,9 @@ class WorkspaceAnalyticsController extends Controller
     )
     {
         if (!$this->authorization->isGranted('analytics', $workspace)) {
-
             throw new AccessDeniedException();
         }
+
         $roleNames = $currentUser->getRoles();
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
 
@@ -245,23 +246,12 @@ class WorkspaceAnalyticsController extends Controller
                 $evaluationType = $params->getEvaluationType();
 
                 if (!isset($evaluationsAssoc[$activity->getId()])) {
-                    $status = ($evaluationType === 'automatic') ?
-                        'not_attempted' :
-                        null;
-
-                    $evaluation = $this->activityManager->createEvaluation(
-                        $currentUser,
-                        $params,
-                        null,
-                        null,
-                        $status
-                    );
-                    $evaluationsAssoc[$activity->getId()] = $evaluation;
+                    $evaluationsAssoc[$activity->getId()] = $this->activityManager
+                        ->createBlankEvaluation($currentUser, $params);
                 }
 
-                if ($evaluationType === 'automatic' &&
-                    count($params->getRules()) > 0) {
-
+                if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC
+                    && count($params->getRules()) > 0) {
                     $rule = $params->getRules()->first();
                     $isResultVisible = $rule->getIsResultVisible();
 
@@ -281,9 +271,10 @@ class WorkspaceAnalyticsController extends Controller
                     }
                 }
 
-                if ($evaluationsAssoc[$activity->getId()]->getStatus() === 'completed' ||
-                    $evaluationsAssoc[$activity->getId()]->getStatus() === 'passed') {
+                $status = $evaluationsAssoc[$activity->getId()]->getStatus();
 
+                if ($status === AbstractEvaluation::STATUS_COMPLETED
+                    || $status === AbstractEvaluation::STATUS_PASSED) {
                     $nbSuccess++;
                 }
             }
@@ -361,9 +352,8 @@ class WorkspaceAnalyticsController extends Controller
         $ruleScore = null;
         $isResultVisible = false;
 
-        if ($activityParameters->getEvaluationType() === 'automatic' &&
-            count($activityParameters->getRules()) > 0) {
-
+        if ($activityParameters->getEvaluationType() === AbstractEvaluation::TYPE_AUTOMATIC
+            && count($activityParameters->getRules()) > 0) {
             $rule = $activityParameters->getRules()->first();
             $score = $rule->getResult();
             $scoreMax = $rule->getResultMax();
@@ -428,9 +418,9 @@ class WorkspaceAnalyticsController extends Controller
         $isWorkspaceManager = $this->isWorkspaceManager($workspace, $roleNames);
 
         if (!$isWorkspaceManager) {
-
             throw new AccessDeniedException();
         }
+
         $resourceNode = $activity->getResourceNode();
         $activityParams = $activity->getParameters();
         $roles = $this->roleManager
@@ -442,6 +432,7 @@ class WorkspaceAnalyticsController extends Controller
         foreach ($usersPager as $user) {
             $users[] = $user;
         }
+
         $allEvaluations = $this->activityManager
             ->getEvaluationsByUsersAndActivityParams($users, $activityParams);
         $evaluations = array();
@@ -454,26 +445,15 @@ class WorkspaceAnalyticsController extends Controller
         $nbSuccess = 0;
 
         foreach ($users as $user) {
-
             if (!isset($evaluations[$user->getId()])) {
-                $evaluationType = $activityParams->getEvaluationType();
-                $status = ($evaluationType === 'automatic') ?
-                    'not_attempted' :
-                    null;
-
-                $evaluation = $this->activityManager->createEvaluation(
-                    $user,
-                    $activityParams,
-                    null,
-                    null,
-                    $status
-                );
-                $evaluations[$user->getId()] = $evaluation;
+                $evaluations[$user->getId()] = $this->activityManager
+                    ->createBlankEvaluation($user, $activityParams);
             }
 
-            if ($evaluations[$user->getId()]->getStatus() === 'completed' ||
-                $evaluations[$user->getId()]->getStatus() === 'passed') {
+            $status = $evaluations[$user->getId()]->getStatus();
 
+            if ($status === AbstractEvaluation::STATUS_COMPLETED
+                || $status === AbstractEvaluation::STATUS_PASSED) {
                 $nbSuccess++;
             }
         }
@@ -483,9 +463,8 @@ class WorkspaceAnalyticsController extends Controller
 
         $ruleScore = null;
 
-        if ($activityParams->getEvaluationType() === 'automatic' &&
-            count($activityParams->getRules()) > 0) {
-
+        if ($activityParams->getEvaluationType() === AbstractEvaluation::TYPE_AUTOMATIC
+            && count($activityParams->getRules()) > 0) {
             $rule = $activityParams->getRules()->first();
             $score = $rule->getResult();
             $scoreMax = $rule->getResultMax();

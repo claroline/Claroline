@@ -165,27 +165,9 @@ class ActivityListener
         $activity = $event->getResource();
         $params = $activity->getParameters();
         $user = $this->tokenStorage->getToken()->getUser();
-        $evaluation = $this->activityManager
-            ->getEvaluationByUserAndActivityParams($user, $params);
-
-        if (is_null($evaluation)) {
-            $evaluationType = $params->getEvaluationType();
-            $status = ($evaluationType === 'automatic') ?
-                'not_attempted' :
-                null;
-            $nbAttempts = ($evaluationType === 'automatic') ?
-                0 :
-                null;
-
-            $evaluation = $this->activityManager->createEvaluation(
-                $user,
-                $params,
-                $evaluationType,
-                null,
-                $status,
-                $nbAttempts
-            );
-        }
+        $evaluation =
+            $this->activityManager->getEvaluationByUserAndActivityParams($user, $params) ?:
+            $this->activityManager->createBlankEvaluation($user, $params);
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:Activity:index.html.twig',
