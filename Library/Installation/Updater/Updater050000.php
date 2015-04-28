@@ -21,11 +21,21 @@ class Updater050000 extends Updater
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
-    private function preUpdate()
+    public function preUpdate()
     {
-        
+        $this->log('Updating migration versions...');
+        $conn = $this->om->getConnection();
+        $rows = $conn->query("SELECT version from doctrine_clarolinecorebundle_versions where version=20150428152724");
+
+        if (count($rows) === 0) {
+            $this->log('Inserting migration 20150428152724.');
+            $conn->query("INSERT INTO doctrine_clarolinecorebundle_versions (version) VALUES (20150428152724)");
+        } else {
+            $this->log('Migrations found.');
+        }
+
     }
 }
