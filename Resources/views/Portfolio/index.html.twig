@@ -1,0 +1,81 @@
+{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+
+{% block content_body %}
+
+    <div class="portfolio-tabpanel" role="tabpanel">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="home-options active">
+                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-home"></i>
+                        <span class="visible-md-inline visible-lg-inline">Présentation</span>
+                    </span>
+                </a>
+            </li>
+            <li class="list-options">
+                <a href="#list" aria-controls="list" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-list"></i>
+                        <span class="visible-md-inline visible-lg-inline">Mes portfolios</span>
+                    </span>
+                </a>
+            </li>
+            <li class="guided-options">
+                <a href="#guided" aria-controls="list" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-list"></i>
+                        <span class="visible-md-inline visible-lg-inline">Mes portfolios suivis</span>
+                    </span>
+                </a>
+            </li>
+            <li class="guide-options">
+                <a href="#guide" aria-controls="guide" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-comments-o"></i>
+                        <span class="visible-md-inline visible-lg-inline">Espace d'échange</span>
+                    </span>
+                </a>
+            </li>
+            <li class="experiences-options">
+                <a href="#experiences" aria-controls="experiences" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-briefcase"></i>
+                        <span class="visible-md-inline visible-lg-inline">Expériences</span>
+                    </span>
+                </a>
+            </li>
+            <li class="formations-options">
+                <a href="#formations" aria-controls="formations" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-graduation-cap"></i>
+                        <span class="visible-md-inline visible-lg-inline">Formations</span>
+                    </span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home">
+                <p>
+                    Présentation
+                </p>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="list">
+                {% include 'IcapPortfolioBundle:Portfolio:list.html.twig' %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="guided">
+                {% include 'IcapPortfolioBundle:Portfolio:list_guided.html.twig' %}
+            </div>
+            <div role="tabpanel" class="tab-pane" id="guide">Espace d'échange</div>
+            <div role="tabpanel" class="tab-pane" id="experiences">Expériences</div>
+            <div role="tabpanel" class="tab-pane" id="formations">Formations</div>
+        </div>
+
+    </div>
+{% endblock %}

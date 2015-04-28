@@ -31,6 +31,26 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
+    public function indexAction(User $loggedUser, $page, $guidedPage)
+    {
+        $this->checkPortfolioToolAccess();
+
+        $ownedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgets($loggedUser, false);
+        $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, $page, 10);
+
+        $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
+        $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
+
+        $importManager          = $this->getImportManager();
+        $availableImportFormats = $importManager->getAvailableFormats();
+
+        return array(
+            'portfoliosPager'        => $portfoliosPager,
+            'guidedPortfoliosPager'  => $guidedPortfoliosPager,
+            'availableImportFormats' => $availableImportFormats
+        );
+    }
+
     public function listAction(User $loggedUser, $page, $guidedPage)
     {
         $this->checkPortfolioToolAccess();

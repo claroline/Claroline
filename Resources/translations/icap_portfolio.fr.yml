@@ -72,7 +72,6 @@ no_comments: 'Aucun commentaire'
 comment_type_your_message: 'Ecrivez votre message ici...'
 comment_send: 'Envoyer'
 configuration: 'Configuration'
-portfolio_i_guide: 'Portfolios dont je suis accompagnateur'
 see: 'Voir'
 guide_exchange: 'Echanger avec les accompagnateurs'
 portfolio_exchange_space: 'Espace d''échange sur les portfolios'
@@ -100,7 +99,7 @@ check_before_do_import: 'Si les données affichées sont correctes vous pouvez'
 experience_title: 'Expérience'
 experience_post: 'Intitulé du poste'
 experience_company_name: 'Entreprise'
-my_portfolios: 'Mes portfolios'
+my_portfolios: 'Mon espace portfolio'
 today: "aujourd'hui"
 formation_establishmentName: "Etablissement"
 formation_diploma : "Diplôme"

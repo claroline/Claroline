@@ -1,0 +1,106 @@
+@home-options-bg: #FFB61C;
+@list-options-bg: #E94B3B;
+@guided-options-bg: #449DD5;
+@guide-options-bg: #23AE89;
+@experiences-options-bg: #FFB61C;
+@formations-options-bg: #6A55C2;
+
+@tab-background-color: #f5f5f5;
+
+.portfolio-tabpanel {
+    ul.nav.nav-tabs {
+        & > li {
+            -webkit-transition: all 0.2s ease-in-out;
+            -moz-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            background-color: @tab-background-color;
+
+            span.icon-bg {
+                height : 3px;
+                left : 0px;
+                position : absolute;
+                top : 0;
+                -webkit-transition: height 0.2s ease-in-out;
+                -moz-transition: height 0.2s ease-in-out;
+                -o-transition: height 0.2s ease-in-out;
+                transition: height 0.2s ease-in-out;
+                width: 100%;
+                z-index: 0;
+            }
+
+            span.option-text {
+                position: relative;
+                z-index: 5;
+            }
+
+            & > a:not(.btn) {
+                margin-right: -1px !important;
+                border-top: 0px;
+                border-radius: 0;
+                &:focus, &:active {
+                    outline: none;
+                }
+            }
+
+            &:not(.active):hover {
+                .icon-bg {
+                    height: 100%;
+                }
+                a {
+                    color: #ffffff;
+                }
+            }
+
+            &.active > a:hover,
+            &.active > a:focus,
+            &:not(.active) a:hover,
+            &:not(.active) a:focus {
+                background-color: @tab-background-color;
+            }
+
+            &.active a {
+                background-color: @tab-background-color;
+            }
+
+            &.home-options {
+                .icon-bg {
+                    background-color: @home-options-bg;
+                }
+            }
+            &.list-options {
+                .icon-bg {
+                    background-color: @list-options-bg;
+                }
+            }
+            &.guided-options {
+                .icon-bg {
+                    background-color: @guided-options-bg;
+                }
+            }
+            &.guide-options {
+                .icon-bg {
+                    background-color: @guide-options-bg;
+                }
+            }
+            &.experiences-options {
+                .icon-bg {
+                    background-color: @experiences-options-bg;
+                }
+            }
+            &.formations-options {
+                .icon-bg {
+                    background-color: @formations-options-bg;
+                }
+            }
+        }
+    }
+
+    .tab-pane {
+        background-color: @tab-background-color;
+        border: 1px solid #ddd;
+        border-top: 0;
+        padding: 5px;
+        min-height: 120px;
+    }
+}

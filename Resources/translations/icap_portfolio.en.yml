@@ -72,7 +72,6 @@ no_comments: 'No comment'
 comment_type_your_message: 'Type your message here...'
 comment_send: 'Send'
 configuration: 'Configuration'
-portfolio_i_guide: 'Portfolios I am guide on'
 see: 'See'
 guide_exchange: 'Exchange with guides'
 portfolio_exchange_space: 'Portfolio exchange space'
@@ -100,7 +99,7 @@ check_before_do_import: 'If shown data are correct you can'
 experience_title: 'Experience'
 experience_post: 'Job title'
 experience_company_name: 'Company'
-my_portfolios: 'My portfolios'
+my_portfolios: 'My portfolio space'
 today: "today"
 formation_establishmentName: "Establishment"
 formation_diploma : "Diploma"

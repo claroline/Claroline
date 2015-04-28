@@ -1,210 +1,143 @@
-{% extends 'IcapPortfolioBundle::layout.html.twig' %}
-
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-list-alt',
-                'name': 'my_portfolios'|trans({}, 'icap_portfolio'),
-                'href': path('icap_portfolio_list')
-            }
-        ])
-    }}
-{% endblock %}
-
-{% block content_body %}
-    {% if 0 < guidedPortfoliosPager.nbResults %}
-    <div class="panel-group guided_portfolios_panel_group" id="guidedPortfoliosAccordion">
-        <div class="panel panel-info guided_portfolios_panel">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#guidedPortfoliosAccordion" href="#guidedPortfolios">
-                        {{ 'portfolio_i_guide'|trans({}, 'icap_portfolio') }}</a> <span class="badge">{{ guidedPortfoliosPager.nbResults }}</span>
-                </h4>
-            </div>
-            <div id="guidedPortfolios" class="panel-collapse collapse">
-                <div class="panel-body">
-                    <table class="table table-hover table_portfolios">
-                        <colgroup>
-                            <col class="nameCol">
-                            <col class="actionsCol">
-                        </colgroup>
-                        <tbody>
-                            {% for portfolio in guidedPortfoliosPager %}
-                                <tr class="portfolio">
-                                    <td>
-                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a><small> de {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}</small>
-                                    </td>
-                                    <td>
-                                        <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-sm btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-
-                {% if guidedPortfoliosPager.haveToPaginate %}
-                    {{
-                        pagerfanta(
-                            guidedPortfoliosPager,
-                            'twitter_bootstrap_translated',
-                            {
-                                'proximity' : 1,
-                                'routeName': 'icap_portfolio_list',
-                                'pageParameter': '[guidedPage]'
-                            }
-                        )
-                    }}
-                {%  endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="portfolio options">
-        <div class="btn-group btn-group-sm" role="group" aria-label="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}">
-            <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
-                <span class="fa fa-plus"></span> {{ 'add_portfolio'|trans({}, 'icap_portfolio') }}
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm" role="group">
-            <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary" data-toggle="tooltip"
-               data-container="body" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}" data-placement="top"
-               data-original-title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"><span class="fa fa-download"></span></a>
-            <button id="importButtonDropdown" type="button" class="btn btn-default dropdown-toggle import-dropdown" aria-expanded="false"
-                    data-toggle="dropdown">
-                <span class="caret"></span>
-                <span class="sr-only">{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}</span>
-            </button>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="importButtonDropdown">
-                {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
-                <li><a href="{{ path('icap_portfolio_import', {'format': availableImportFormatKey}) }}">{{ availableImportFormat }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    {% if 0 < portfoliosPager.nbResults %}
-        <table class="table table-hover table_portfolios">
-            <colgroup>
-                <col class="nameCol">
-                <col class="statusCol">
-                <col class="actionsCol">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>{{ 'title'|trans({}, 'icap_portfolio') }}</th>
-                    <th>{{ 'visibility'|trans({}, 'icap_portfolio') }}</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for portfolio in portfoliosPager %}
-                    <tr class="portfolio">
-                        <td>
-                            {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) %}
-                            <a href="{{ portfolioUrl }}"
-                               title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
-
-                            <a href="{{ portfolioUrl }}"
-                               title="{{ portfolioUrl }}" class="block text-muted">{{ url('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}</a>
-                        </td>
-                        <td>
-                            <span class="block visibility">
-                                <span class="badge {{ portfolio.visibility|visibilityLabel }}"></span>
-                                {{ portfolio.visibility|visibilityLabel|trans({}, 'icap_portfolio') }}
-                            </span>
-                            <small class="text-muted">
-                                {{ 'updated_on'|trans({'%date%': portfolio.lastUpdateDate|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
-                            </small>
-                        </td>
-                        <td>
-                            <div class="btn-group btn-group-xs">
-                                <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
-                                   class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
-                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}"
-                                           title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
-                                            <span class="fa fa-pencil"></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}"
-                                           title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
-                                            <span class="fa fa-cogs"></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ path('icap_portfolio_update_guides', {'id': portfolio.id}) }}"
-                                           title="{{ 'manage_guides'|trans({}, 'icap_portfolio') }}">
-                                            <span class="fa fa-users"></span> {{ 'manage_guides'|trans({}, 'icap_portfolio') }}
-                                        </a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
-                                                 data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
-                                                 data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.titleWidget.title}, 'icap_portfolio') }}"
-                                                 data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
-                                                 data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
-                                            <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            {% set countUnreadComments = portfolio.countUnreadComments %}
-                            <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
-                               title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
-                               class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
-                               data-toggle="tooltip" data-container="body" data-placement="top">
-                                <span class="fa fa-comment-o"></span>
-                                {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
-                            </a>
-                            <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
-                               download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
-                               data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-xs btn-default">
-                                <span class="fa fa-upload"></span>
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p class="well text-center clear">
-            {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': path('icap_portfolio_add')}, 'icap_portfolio')|raw }}
-        </p>
-    {% endif %}
-
-    {% if portfoliosPager.haveToPaginate %}
-        {{
-            pagerfanta(
-                portfoliosPager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'icap_portfolio_list'
-                }
-            )
-        }}
-    {%  endif %}
-    <div class="pull-right">
-        <a href="{{ path('icap_portfolio_comments_list') }}" title="{{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}"
-           class="btn btn-sm btn-default" data-toggle="tooltip" data-container="body" data-placement="top" >
-            <span class="fa fa-comments-o"></span>
+<div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="portfolio options">
+    <div class="btn-group btn-group-sm" role="group" aria-label="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}">
+        <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
+            <span class="fa fa-plus"></span> {{ 'add_portfolio'|trans({}, 'icap_portfolio') }}
         </a>
     </div>
-{% endblock %}
+    <div class="btn-group btn-group-sm" role="group">
+        <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary" data-toggle="tooltip"
+           data-container="body" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}" data-placement="top"
+           data-original-title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"><span class="fa fa-download"></span></a>
+        <button id="importButtonDropdown" type="button" class="btn btn-default dropdown-toggle import-dropdown" aria-expanded="false"
+                data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}</span>
+        </button>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="importButtonDropdown">
+            {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
+            <li><a href="{{ path('icap_portfolio_import', {'format': availableImportFormatKey}) }}">{{ availableImportFormat }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 
+{% if 0 < portfoliosPager.nbResults %}
+    <table class="table table-hover table_portfolios">
+        <colgroup>
+            <col class="nameCol">
+            <col class="statusCol">
+            <col class="actionsCol">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>{{ 'title'|trans({}, 'icap_portfolio') }}</th>
+                <th>{{ 'visibility'|trans({}, 'icap_portfolio') }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for portfolio in portfoliosPager %}
+                <tr class="portfolio">
+                    <td>
+                        {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) %}
+                        <a href="{{ portfolioUrl }}"
+                           title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
+
+                        <a href="{{ portfolioUrl }}"
+                           title="{{ portfolioUrl }}" class="block text-muted">{{ url('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}</a>
+                    </td>
+                    <td>
+                        <span class="block visibility">
+                            <span class="badge {{ portfolio.visibility|visibilityLabel }}"></span>
+                            {{ portfolio.visibility|visibilityLabel|trans({}, 'icap_portfolio') }}
+                        </span>
+                        <small class="text-muted">
+                            {{ 'updated_on'|trans({'%date%': portfolio.lastUpdateDate|date('date_format'|trans({}, 'platform') ~ ' H:i:s')}, 'icap_portfolio') }}
+                        </small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                               class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>
+                                    <a href="{{ path('icap_portfolio_rename', {'id': portfolio.id}) }}"
+                                       title="{{ 'rename'|trans({}, 'icap_portfolio') }}">
+                                        <span class="fa fa-pencil"></span> {{ 'rename'|trans({}, 'icap_portfolio') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}"
+                                       title="{{ 'update_visibility'|trans({}, 'icap_portfolio') }}">
+                                        <span class="fa fa-cogs"></span> {{ 'update_visibility'|trans({}, 'icap_portfolio') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('icap_portfolio_update_guides', {'id': portfolio.id}) }}"
+                                       title="{{ 'manage_guides'|trans({}, 'icap_portfolio') }}">
+                                        <span class="fa fa-users"></span> {{ 'manage_guides'|trans({}, 'icap_portfolio') }}
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
+                                             data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
+                                             data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.titleWidget.title}, 'icap_portfolio') }}"
+                                             data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
+                                             data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
+                                        <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% set countUnreadComments = portfolio.countUnreadComments %}
+                        <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                           title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
+                           class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
+                           data-toggle="tooltip" data-container="body" data-placement="top">
+                            <span class="fa fa-comment-o"></span>
+                            {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
+                        </a>
+                        <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
+                           download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
+                           data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-xs btn-default">
+                            <span class="fa fa-upload"></span>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="well text-center clear">
+        {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': path('icap_portfolio_add')}, 'icap_portfolio')|raw }}
+    </p>
+{% endif %}
+
+{% if portfoliosPager.haveToPaginate %}
+    {{
+        pagerfanta(
+            portfoliosPager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'icap_portfolio_list'
+            }
+        )
+    }}
+{%  endif %}
+<div class="pull-right">
+    <a href="{{ path('icap_portfolio_comments_list') }}" title="{{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}"
+       class="btn btn-sm btn-default" data-toggle="tooltip" data-container="body" data-placement="top" >
+        <span class="fa fa-comments-o"></span>
+    </a>
+</div>
 
 {% block javascripts %}
-    {{ parent() }}
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript">
         (function($) {

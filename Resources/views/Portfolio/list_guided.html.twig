@@ -1,0 +1,38 @@
+<table class="table table_portfolios">
+    <colgroup>
+        <col class="nameCol">
+        <col class="actionsCol">
+    </colgroup>
+    <tbody>
+        {% for portfolio in guidedPortfoliosPager %}
+            <tr class="portfolio">
+                <td>
+                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a><small> de {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}</small>
+                </td>
+                <td>
+                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-sm btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    Vous n'accompagnez aucun portfolio.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if guidedPortfoliosPager.haveToPaginate %}
+    {{
+        pagerfanta(
+            guidedPortfoliosPager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'icap_portfolio_list',
+                'pageParameter': '[guidedPage]'
+            }
+        )
+    }}
+{%  endif %}
