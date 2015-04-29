@@ -9,8 +9,26 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
-    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'
-    >
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
+    <style>
+        .edit-event {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0);
+            padding: 1px 3px 3px 5px;
+        }
+        .fc-event:hover .edit-event{
+            display: block;
+        }
+        .fc-day-grid-event > .fc-content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+        }
+    </style>
 {% endblock %}
 {% block breadcrumb %}
     {{
@@ -38,8 +56,7 @@
                     </a>
                     <a id="import-ics-btn" href="{{ path('claro_agenda_import_form') }}"
                        class="btn btn-default btn-xs"
-                       role="button"
-                            >
+                       role="button">
                         {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
                     </a>
                 </div>

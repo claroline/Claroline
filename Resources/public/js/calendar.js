@@ -67,19 +67,6 @@
                     Translator.trans('remove_event', {}, 'platform')
                 );
             })
-            // Popover edit button: trigger the edit form
-            .on('click', '.edit-event-link', function(event) {
-                event.preventDefault();
-                window.Claroline.Modal.displayForm(
-                    $(event.currentTarget).attr('href'),
-                    updateCalendarItemCallback,
-                    function () {
-                        $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
-                        $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
-                    },
-                    'form-event'
-                );
-            })
             // Hide the hours if the checkbox allDay is checked
             .on('click', '#agenda_form_isAllDay', function() {
                 $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
@@ -87,12 +74,6 @@
             // Hide the start date if the task is checked.
             .on('click', '#agenda_form_isTask', function() {
                 $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
-            })
-            .on('click', '.fa-check', function(event) {
-
-            })
-            .on('click', '.fa-square-o', function(event) {
-
             })
         ;
 
@@ -174,15 +155,16 @@
                                 .next().css('text-decoration', 'line-through');
                         }
                     })
-                }
-                // Show the popover of the event/task
-                else {
-                    $(this).popover({
-                        title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-                        content: Twig.render(EventContent, {'event': event}),
-                        html: true,
-                        container: 'body'
-                    });
+                } else if ($(jsEvent.target).hasClass('edit-event')) {
+                    window.Claroline.Modal.displayForm(
+                        window.Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
+                        updateCalendarItemCallback,
+                        function () {
+                            $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
+                            $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+                        },
+                        'form-event'
+                    );
                 }
             },
             //renders the popover for an event
@@ -231,6 +213,20 @@
     };
 
     var renderEvent = function (event, element) {
+        // Create the popover for all events/tasks
+        element.popover({
+            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
+            content: Twig.render(EventContent, {'event': event}),
+            html: true,
+            container: 'body',
+            placement: 'top',
+            trigger: 'hover'
+        });
+
+        if (event.editable) {
+            $(element[0]).find('.fc-title').append('<span class="fa fa-pencil pull-right edit-event"></span>');
+        }
+
         if (event.isTask) {
             var checkbox =  $(element[0]).find('.fc-time');
             checkbox
@@ -238,6 +234,11 @@
                 .html('')
                 .addClass('fa')
                 .removeClass('fc-time');
+
+            $(element[0]).css({
+                'background-color': 'rgb(144, 32, 32)',
+                'border-color': 'rgb(144, 32, 32)'
+            });
 
             if (event.isTaskDone) {
                 checkbox.addClass('fa-check');

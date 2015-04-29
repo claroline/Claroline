@@ -75,14 +75,14 @@
     {% endjavascripts %}
     <script type="text/javascript" src="{{ asset(calendarPath ~ 'lib/moment.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
-    <script type='text/javascript'src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
-    <script type='text/javascript'src='{{ asset('bundles/frontend/date.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolinecore/js/tool/calendar.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         $(function () {
             Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, {% if canCreate %}true{% else %}false{% endif %});
         });
     </script>
-    <script type='text/javascript'src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
 {% endblock javascripts %}

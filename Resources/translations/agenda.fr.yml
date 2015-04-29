@@ -47,6 +47,7 @@ july: Juillet
 jun: Juin
 june: Juin
 length: Durée
+limit_date: Date limite
 low: Basse
 mar: Mars
 march: Mars
@@ -79,6 +80,8 @@ start_date: 'Date de début'
 sun: Dim
 sunday: Dimanche
 task: Tâche
+task_done: Tâche réalisée !
+task_not_done: Tâche non finie !
 tasks: Tâches
 thu: Jeu
 thursday: Jeudi

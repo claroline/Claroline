@@ -23,8 +23,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Controller of the Agenda
@@ -52,7 +52,7 @@ class DesktopAgendaController extends Controller
         SecurityContextInterface $security,
         ObjectManager $om,
         Request $request,
-        Translator $translator,
+        TranslatorInterface $translator,
         AgendaManager $agendaManager,
         RouterInterface $router
     )
@@ -86,7 +86,6 @@ class DesktopAgendaController extends Controller
      * )
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
      *
-     * @param Workspace $workspace
      * @return array
      */
     public function addEventModalFormAction()
@@ -184,7 +183,6 @@ class DesktopAgendaController extends Controller
      * )
      * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
      *
-     * @param Workspace $workspace
      * @return array
      */
     public function importsEventsIcsAction()

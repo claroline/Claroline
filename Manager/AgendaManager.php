@@ -20,9 +20,9 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Component\Translation\Translator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -50,7 +50,7 @@ class AgendaManager
         $rootDir,
         SecurityContextInterface $security,
         RoleManager $rm,
-        Translator $translator,
+        TranslatorInterface $translator,
         Utilities $su
     )
     {
