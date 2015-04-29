@@ -161,12 +161,17 @@ class LayoutController extends Controller
         }
         $adminTools = array();
 
-        $adminTools = $this->toolManager->getAdminToolsByRoles(
-            $this->tokenStorage->getToken()->getRoles()
-        );
+        if ($token) {
+            $secRoles = $this->tokenStorage->getToken()->getRoles();
+        } else {
+            $secRoles = array();
+        }
 
-        if ($isLogged = !in_array('ROLE_ANONYMOUS', $roles)) {
-            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+        $adminTools = $this->toolManager->getAdminToolsByRoles($secRoles);
+        $isLogged = !in_array('ROLE_ANONYMOUS', $roles);
+
+        if ($isLogged) {
+            $tools = $this->toolManager->getAdminToolsByRoles($secRoles);
             $canAdministrate = count($tools) > 0;
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
