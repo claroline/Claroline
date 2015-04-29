@@ -2,7 +2,7 @@
 
 namespace Icap\WikiBundle\Listener;
 
-use Claroline\CoreBundle\Event\Badge\BadgeCreateValidationLinkEvent;
+use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
