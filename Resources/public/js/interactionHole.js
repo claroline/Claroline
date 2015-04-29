@@ -243,7 +243,7 @@ function addHole(indexBlank, valHole) {
 
     $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_response').val(valHole);
     //$('#ujm_exobundle_interactionholetype_holes_'+index+'_wordResponses_0_response').attr("readonly", true);
-    $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_score').attr("placeholder", langPoint);
+    //$('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_score').attr("placeholder", langPoint);
 
     // Remove the useless fileds form
     containerWR.remove();
@@ -356,7 +356,7 @@ function addWR(indexHole, idTabWR) {
     }
 
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
-    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
+    //$('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
 
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').focusout(function() {
         $(this).val($.trim($(this).val()));
