@@ -64,7 +64,7 @@ class CursusListener
     public function onPluginOptionsOpen(PluginOptionsEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCursusBundle:Cursus:displayedWordsConfiguration';
+        $params['_controller'] = 'ClarolineCursusBundle:Cursus:pluginConfigureForm';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

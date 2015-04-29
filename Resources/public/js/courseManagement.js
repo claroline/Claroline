@@ -171,7 +171,6 @@
             type: 'POST',
             success: function (datas) {
                 $('#registration-row-user-' + userId).remove();
-                console.log(datas);
                 
                 for (var i = 0; i < datas.length; i++) {
                     var sessionUserElement =
@@ -181,6 +180,15 @@
                                 datas[i]['user_last_name'] +
                                 ' <small>(' + datas[i]['username'] + ')</small>' +
                                 ' &nbsp;' +
+                                '<i class="fa fa-envelope-o user-send-confirmation-mail-btn pointer-hand"' +
+                                   ' data-toggle="tooltip"' +
+                                   ' data-placement="top"' +
+                                   ' data-container="#session-management-box"' +
+                                   ' title="' + Translator.trans('send_confirmation_mail_to_user', {}, 'cursus') + '"' +
+                                   ' data-session-id="' + sessionId + '"' +
+                                   ' data-user-id="' + datas[i]['user_id'] + '"' +
+                                '>' +    
+                                '</i> ' +
                                 '<i class="fa fa-times-circle unregister-user-from-session pointer-hand"' +
                                    ' data-toggle="tooltip"' +
                                    ' data-placement="top"' +
@@ -284,6 +292,37 @@
             }
         });
     });
+    
+    $('#sessions-box').on('click', '.session-send-confirmation-mail-btn', function () {
+        var sessionId = $(this).data('session-id');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_confirmation_mail_send',
+                {'session': sessionId}
+            ),
+            doNothing,
+            null,
+            Translator.trans('send_confirmation_mail_to_session_message', {}, 'cursus'),
+            Translator.trans('send_confirmation_mail', {}, 'cursus')
+        );
+    });
+    
+    $('#users-box').on('click', '.user-send-confirmation-mail-btn', function () {
+        var sessionId = $(this).data('session-id');
+        var userId = $(this).data('user-id');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_user_confirmation_mail_send',
+                {'session': sessionId, 'user': userId}
+            ),
+            doNothing,
+            null,
+            Translator.trans('send_confirmation_mail_to_user_message', {}, 'cursus'),
+            Translator.trans('send_confirmation_mail', {}, 'cursus')
+        );
+    });
 
     var removeUserRow = function (event, sessionUserId) {
         $('#row-session-user-' + sessionUserId).remove();
@@ -295,5 +334,7 @@
 
     var refreshPage = function () {
         window.location.reload();
-    }
+    };
+    
+    var doNothing = function() {};
 })();

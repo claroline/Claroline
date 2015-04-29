@@ -67,6 +67,15 @@
                         {{ user.getLastName() }}
                         <small>({{ user.getUsername() }})</small>
                         &nbsp;
+                        <i class="fa fa-envelope-o user-send-confirmation-mail-btn pointer-hand"
+                           data-toggle="tooltip"
+                           data-placement="top"
+                           data-container="#session-management-box"
+                           title="{{ 'send_confirmation_mail_to_user'|trans({}, 'cursus') }}"
+                           data-session-id="{{ session.getId() }}"
+                           data-user-id="{{ user.getId() }}"
+                        >    
+                        </i>
                         <i class="fa fa-times-circle unregister-user-from-session pointer-hand"
                            data-toggle="tooltip"
                            data-placement="top"

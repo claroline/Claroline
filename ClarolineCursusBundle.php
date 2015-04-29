@@ -12,11 +12,17 @@
 namespace Claroline\CursusBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CursusBundle\Library\Installation\AdditionalInstaller;
 
 class ClarolineCursusBundle extends PluginBundle
 {
     public function hasMigrations()
     {
         return true;
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
     }
 }

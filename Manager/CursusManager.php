@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -40,6 +41,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class CursusManager
 {
+    private $contentManager;
     private $eventDispatcher;
     private $om;
     private $pagerFactory;
@@ -59,6 +61,7 @@ class CursusManager
     
     /**
      * @DI\InjectParams({
+     *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
@@ -69,6 +72,7 @@ class CursusManager
      * })
      */
     public function __construct(
+        ContentManager $contentManager,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PagerFactory $pagerFactory,
@@ -78,6 +82,7 @@ class CursusManager
         WorkspaceManager $workspaceManager
     )
     {
+        $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
@@ -1015,6 +1020,21 @@ class CursusManager
             $this->om->persist($session);
         }
         $this->om->flush();
+    }
+
+    public function getConfirmationEmail()
+    {
+        return $this->contentManager->getContent(
+            array('type' => 'claro_cursusbundle_mail_confirmation')
+        );
+    }
+
+    public function persistConfirmationEmail($datas)
+    {
+        $this->contentManager->updateContent(
+            $this->getConfirmationEmail(),
+            $datas
+        );
     }
 
     private function generateWorkspaceCode($code)

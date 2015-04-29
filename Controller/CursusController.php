@@ -16,6 +16,7 @@ use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CursusType;
+use Claroline\CursusBundle\Form\pluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -654,13 +655,13 @@ class CursusController extends Controller
     
     /**
      * @EXT\Route(
-     *     "/displayed/words/configuration",
-     *     name="claro_cursus_displayed_words_configuration"
+     *     "/plugin/configure/form",
+     *     name="claro_cursus_plugin_configure_form"
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function displayedWordsConfigurationAction()
+    public function pluginConfigureFormAction()
     {
         $this->checkToolAccess();
         $displayedWords = array();
@@ -668,8 +669,45 @@ class CursusController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
-        
+
+        $form = $this->formFactory->create(
+            new pluginConfigurationType(),
+            $this->cursusManager->getConfirmationEmail()
+        );
+
         return array(
+            'form' => $form->createView(),
+            'defaultWords' => CursusDisplayedWord::$defaultKey,
+            'displayedWords' => $displayedWords
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/configure",
+     *     name="claro_cursus_plugin_configure"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:pluginConfigureForm.html.twig")
+     */
+    public function pluginConfigureAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+
+        $formData = $this->request->get('cursus_plugin_configuration_form');
+        $this->cursusManager->persistConfirmationEmail($formData['content']);
+        $form = $this->formFactory->create(
+            new pluginConfigurationType(),
+            $this->cursusManager->getConfirmationEmail()
+        );
+
+        return array(
+            'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords
         );

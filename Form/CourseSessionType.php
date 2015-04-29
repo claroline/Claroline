@@ -30,7 +30,7 @@ class CourseSessionType extends AbstractType
         $attr['autocomplete'] = 'off';
         $builder->add(
             'start_date',
-            'date',
+            'datepicker',
             array(
                 'required' => false,
                 'format' => 'dd-MM-yyyy',
@@ -41,7 +41,7 @@ class CourseSessionType extends AbstractType
         );
         $builder->add(
             'end_date',
-            'date',
+            'datepicker',
             array(
                 'required' => false,
                 'format' => 'dd-MM-yyyy',
