@@ -1,0 +1,86 @@
+add_event: 'Ajouter un événement'
+isTask: Tâche
+agenda_form_allDay: All day
+agenda_form_description: Description
+agenda_form_end: 'Date de fin'
+agenda_form_endHours: 'Heure de fin'
+agenda_form_priority: Priorité
+agenda_form_priority_High: Haute
+agenda_form_recurring: Répétition
+agenda_form_start: 'Date de début'
+agenda_form_startHours: 'Heure de début'
+agenda_form_title: Titre
+agenda_form_author: 'Créé par'
+apr: Avr
+april: Avril
+aug: Août
+august: Août
+cancel: Annuler
+close: Fermer
+confirm: 'Êtes-vous sûr ?'
+date_invalid: 'Une erreur s''est produite, vérifiez que la date début se situe avant la date de fin'
+day: jour
+dec: Déc
+december: Décembre
+end: Fin
+end_date: 'Date de fin'
+export: 'Exporter les événements'
+error: 'Une erreur s''est produite, veuillez réessayer'
+event: Evénement
+event_update: 'Modification enregistrée'
+feb: Févr
+february: Février
+filter_user: Filtrer par utilisateur
+filter_ws: Filtrer par espace d'activités
+fri: Ven
+friday: Vendredi
+high: Haute
+import_agenda_file_file: 'Importer'
+jan: Janv
+january: Janvier
+jul: Juil
+july: Juillet
+jun: Juin
+june: Juin
+length: Durée
+low: Basse
+mar: Mars
+march: Mars
+may: Mai
+medium: Normale
+modify: 'Modifier un événement'
+mon: Lun
+monday: Lundi
+month: mois
+next: '>'
+nextYear: '>>'
+'no event found': 'Pas d''événements'
+no_description: 'Pas de description'
+no_task_found: Pas de tâches
+nov: Nov
+november: Novembre
+oct: Oct
+october: Octobre
+prev: '<'
+prevYear: '<<'
+sat: Sam
+saturday: Samedi
+sep: Sept
+september: Septembre
+start_date: 'Date de début'
+sun: Dim
+sunday: Dimanche
+task: Tâche
+tasks: Tâches
+thu: Jeu
+thursday: Jeudi
+title: 'Le titre est obligatoire'
+today: auj
+tue: Mar
+tuesday: Mardi
+type: Type
+update: Modifier
+wed: Mer
+wednesday: Mercredi
+week: semaine
+workspace: 'Espace d''activités'

@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Utilities;
 
@@ -54,7 +54,7 @@ class AgendaManager
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
-        Translator $translator,
+        TranslatorInterface $translator,
         Utilities $su
     )
     {

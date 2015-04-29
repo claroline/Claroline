@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -52,7 +52,7 @@ class DesktopAgendaController extends Controller
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         Request $request,
-        Translator $translator,
+        TranslatorInterface $translator,
         AgendaManager $agendaManager,
         RouterInterface $router
     )
