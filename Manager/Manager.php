@@ -27,6 +27,7 @@ class Manager
     private $generator;
     private $writer;
     private $migrator;
+    private $supportedPlatforms;
 
     /**
      * Constructor.
@@ -147,18 +148,21 @@ class Manager
      */
     public function getAvailablePlatforms()
     {
-        $rDriverManager = new \ReflectionClass('Doctrine\DBAL\DriverManager');
-        $rMap = $rDriverManager->getProperty('_driverMap');
-        $rMap->setAccessible(true);
-        $driverMap = $rMap->getValue();
         $platforms = array();
 
-        foreach ($driverMap as $driverName => $driverClass) {
+        foreach ($this->getSupportedDrivers() as $driverName => $driverClass) {
             $driver = new $driverClass;
             $platforms[$driverName] = $driver->getDatabasePlatform();
         }
 
         return $platforms;
+    }
+
+    private function getSupportedDrivers()
+    {
+        return array(
+            'pdo_mysql' => 'Doctrine\DBAL\Driver\PDOMySql\Driver'
+        );
     }
 
     private function doMigrate(Bundle $bundle, $version, $direction)
