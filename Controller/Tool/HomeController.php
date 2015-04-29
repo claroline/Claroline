@@ -384,7 +384,9 @@ class HomeController extends Controller
                     'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
                     'color' => $widgetDisplayConfig->getColor(),
                     'name' => $widgetInstance->getName(),
-                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0
+                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
+                    'width' => $widget->getDefaultWidth(),
+                    'height' => $widget->getDefaultHeight()
                 ),
                 200
             );
@@ -621,7 +623,9 @@ class HomeController extends Controller
                     'color' => $widgetDisplayConfig->getColor(),
                     'name' => $widgetInstance->getName(),
                     'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
-                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0
+                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
+                    'width' => $widget->getDefaultWidth(),
+                    'height' => $widget->getDefaultHeight()
                 ),
                 200
             );

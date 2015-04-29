@@ -589,7 +589,9 @@ class HomeTabController extends Controller
                     'name' => $widgetInstance->getName(),
                     'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
                     'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
-                    'lock' => $widgetHomeTabConfig->isLocked() ? 1 : 0
+                    'lock' => $widgetHomeTabConfig->isLocked() ? 1 : 0,
+                    'width' => $widget->getDefaultWidth(),
+                    'height' => $widget->getDefaultHeight()
                 ),
                 200
             );
