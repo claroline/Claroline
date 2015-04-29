@@ -17,7 +17,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,7 +29,7 @@ class ToolListener
     private $activityRepo;
     private $evaluationRepo;
     private $resourceManager;
-    private $securityContext;
+    private $tokenStorage;
     private $templating;
     private $utils;
 
@@ -39,7 +39,7 @@ class ToolListener
      * @DI\InjectParams({
      *     "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *     "resourceManager"    = @DI\Inject("claroline.manager.resource_manager"),
-     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "templating"         = @DI\Inject("templating"),
      *     "utils"              = @DI\Inject("claroline.security.utilities")
      * })
@@ -47,14 +47,14 @@ class ToolListener
     public function __construct(
         EntityManager $em,
         ResourceManager $resourceManager,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         TwigEngine $templating,
         Utilities $utils
     )
     {
         $this->em = $em;
         $this->resourceManager = $resourceManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->utils = $utils;
         $this->activityRepo = $em->getRepository('ClarolineCoreBundle:Resource\Activity');
@@ -105,7 +105,7 @@ class ToolListener
 
     public function fetchActivitiesData($isDesktopTool, Workspace $workspace = null)
     {
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         $userRoles = $this->utils->getRoles($token);
 
         $criteria = array();
