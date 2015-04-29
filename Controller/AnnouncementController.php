@@ -29,8 +29,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -40,7 +41,8 @@ class AnnouncementController extends Controller
     private $eventDispatcher;
     private $formFactory;
     private $pagerFactory;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $translator;
     private $utils;
     private $workspaceManager;
@@ -51,7 +53,8 @@ class AnnouncementController extends Controller
      *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "pagerFactory"        = @DI\Inject("claroline.pager.pager_factory"),
-     *     "securityContext"     = @DI\Inject("security.context"),
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "translator"          = @DI\Inject("translator"),
      *     "utils"               = @DI\Inject("claroline.security.utilities"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager")
@@ -61,9 +64,10 @@ class AnnouncementController extends Controller
         AnnouncementManager $announcementManager,
         FormFactoryInterface $formFactory,
         PagerFactory $pagerFactory,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
-        Translator $translator,
+        TranslatorInterface $translator,
         Utilities $utils,
         WorkspaceManager $workspaceManager
     )
@@ -72,7 +76,8 @@ class AnnouncementController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->pagerFactory = $pagerFactory;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->translator = $translator;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;
@@ -170,7 +175,7 @@ class AnnouncementController extends Controller
     {
         $this->checkAccess('EDIT', $aggregate);
 
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $announcement = new Announcement();
         $form = $this->formFactory->create(new AnnouncementType(), $announcement);
         $request = $this->getRequest();
@@ -411,7 +416,7 @@ class AnnouncementController extends Controller
      */
     public function announcementsWorkspaceWidgetPagerAction(Workspace $workspace, $page)
     {
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
         $data = $this->announcementManager->getVisibleAnnouncementsByWorkspace($workspace, $roles);
         $pager = $this->pagerFactory->createPagerFromArray($data, $page, 5);
@@ -442,7 +447,7 @@ class AnnouncementController extends Controller
      */
     public function announcementsDesktopWidgetPagerAction($page)
     {
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
         $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
         $data = $this->announcementManager->getVisibleAnnouncementsByWorkspaces($workspaces, $roles);
@@ -469,7 +474,7 @@ class AnnouncementController extends Controller
     {
         $collection = new ResourceCollection(array($resource->getResourceNode()));
 
-        if (!$this->securityContext->isGranted($permission, $collection)) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

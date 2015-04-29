@@ -32,7 +32,6 @@ class AnnouncementManager
     private $om;
     private $userRepo;
     private $mailManager;
-    private $sc;
     private $eventDispatcher;
 
     /**
@@ -41,21 +40,18 @@ class AnnouncementManager
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
-     *     "sc"              = @DI\Inject("security.context"),
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager $om,
         MailManager $mailManager,
-        $sc,
         StrictDispatcher $eventDispatcher
     )
     {
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
         $this->om               = $om;
         $this->mailManager      = $mailManager;
-        $this->sc               = $sc;
         $this->userRepo         = $om->getRepository('ClarolineCoreBundle:User');
         $this->roleRepo         = $om->getRepository('ClarolineCoreBundle:Role');
         $this->eventDispatcher  = $eventDispatcher;
