@@ -5,7 +5,8 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
-
+use UJM\ExoBundle\Entity\Category;
+use Symfony\Component\Translation\Translator;
 use Claroline\CoreBundle\Entity\User;
 
 use UJM\ExoBundle\Entity\Exercise;
@@ -19,6 +20,7 @@ abstract class InteractionHandler
     protected $user;
     protected $exercise;
     protected $isClone = FALSE;
+    protected $translator;
 
     /**
      * Constructor
@@ -31,9 +33,10 @@ abstract class InteractionHandler
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param integer $exercise $exercise id Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
-     *
+     * @param Translation $translator
+     * 
      */
-    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1)
+    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, Translator $translator=NULL)
     {
         $this->form     = $form;
         $this->request  = $request;
@@ -41,6 +44,7 @@ abstract class InteractionHandler
         $this->exoServ  = $exoServ;
         $this->user     = $user;
         $this->exercise = $exercise;
+        $this->translator = $translator;
     }
 
     /**
@@ -128,7 +132,85 @@ abstract class InteractionHandler
             $this->em->persist($hint);
         }
     }
+    /**
+     * retrieve the first 50 characters of the issue if no title
+     */
+    protected function checkTitle()
+    {    
+        $title = $this->form->getData()->getInteraction()->getQuestion();
+        $invite =  $this->form->getData()->getInteraction()->getInvite();
+        if($title->getTitle() == "")
+        {
+            //removes html tags and entity code html
+            $provTitle=html_entity_decode(strip_tags($invite));
+                       
+            $newTitle=substr($provTitle,0,50);  
+            $title->setTitle($newTitle);
+        }
+    }
+    /**
+     * Check the category
+     */
+    protected function checkCategory()
+    {   
+        $data = $this->form->getData()->getInteraction()->getQuestion();       
+        $default = $this->translator->trans('default');
+        $uid=$this->user->getId();    
+        $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
 
+        $this->lockCategoryDefault($default,$ListeCategroy,$data);
+        
+            if($data->getCategory()== null)
+            {                         
+                $this->categoryDefault($default,$ListeCategroy,$data);
+            }
+    }
+    
+    /**
+     * Lock the category default
+     * @param string $default
+     * @param array $ListeCategroy
+     */
+    protected function lockCategoryDefault($default,$ListeCategroy)
+    { 
+        
+        foreach($ListeCategroy as $category)
+        {
+             if($category->getValue()== $default)
+             {
+                $category->setLocker('1');
+             }
+        }
+    }
+    
+    /**
+     * Creates or uses the default category
+     * @param type $default
+     * @param type $ListeCategroy
+     * @param type $data
+     */
+    protected function categoryDefault($default,$ListeCategroy,$data)
+    {
+        $checkCategory = False;
+        foreach($ListeCategroy as $category)
+                {
+                     if($category->getlocker()== '1')
+                     {
+                        $data->setCategory($category);
+                        $checkCategory = true;
+                     }
+                }
+                if($checkCategory==false)
+                { 
+                    $newCategory= new Category();
+                    $newCategory->setValue($default);
+                    $newCategory->setLocker(1);
+                    $newCategory->setUser($this->user);
+                    $this->em->persist($newCategory);
+                    $this->em->flush();
+                    $data->setCategory($newCategory);
+                }
+    }
     /**
      * Add the Interaction in the exercise if created since an exercise
      *

@@ -29,6 +29,15 @@ class Category
      */
     private $value;
 
+     /**
+     *
+     * @var boolean $locker
+     * 
+     * @ORM\Column(name="locker", type="boolean")
+     */
+    private $locker;
+    
+    
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
@@ -43,7 +52,7 @@ class Category
     {
         return $this->id;
     }
-
+    
     /**
      * Set value
      *
@@ -78,4 +87,23 @@ class Category
     {
         $this->user = $user;
     }
+    /**
+     * get locker
+     * 
+     * @return boolean
+     */
+    function getLocker() {
+        return $this->locker;
+    }
+
+    /**
+     * set locker
+     * 
+     * @param boolean $locker
+     */
+    function setLocker($locker) {
+        $this->locker = $locker;
+    }
+
+
 }

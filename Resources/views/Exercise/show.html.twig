@@ -104,21 +104,22 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        <tr class="hiddencells">
+                       {#---not operational---#} 
+                            {#<tr class="hiddencells">
                             <th class="classic">{{ 'Exercise.keepSameQuestion' | trans }}</th>
                             <td class="classic">
                                 {% if entity.keepSameQuestion == 0 %}
                                     <i class="fa fa-times-circle"></i>
                                 {% else %}
                                     <i class="fa fa-check-circle"></i>
-                                {% endif %}
-                            </td>
+                                {% endif %} 
+                            </td> #}
                         </tr>
                         <tr class="hiddencells">
                             <th class="classic">{{ 'creationDate' | trans }}</th>
                             <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
-                        <tr class="hiddencells">
+                        <tr style="display: none;">
                             <th class="classic">{{ 'duration' | trans }}</th>
                             <td class="classic">
                                 {% if entity.duration != 0 %}
@@ -128,7 +129,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        <tr class="hiddencells">
+                        <tr style="display: none;">
                             <th class="classic">{{ 'print paper' | trans }}</th>
                             <td class="classic">
                                 {% if entity.doprint == 0 %}
@@ -182,7 +183,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        <tr class="hiddencells">
+                        <tr style="display: none;">
                             <th class="classic">{{ 'lock attempt' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.lockAttempt == 0 %}

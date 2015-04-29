@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Form;
 
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\Category;
 
 class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
@@ -17,18 +18,18 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
     {
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
-
+            //Uses the default category if no category selected
+            $this->checkCategory();
+            $this->checkTitle();
             if($this->validateNbClone() === FALSE) {
                     return 'infoDuplicateQuestion';
             }
-
             if ( $this->form->isValid() ) {
-                $this->onSuccessAdd($this->form->getData());
-
-                return true;
-            }
+                    $this->onSuccessAdd($this->form->getData());
+                    return true;
+            } 
         }
-
+        
         return false;
     }
 

@@ -16,19 +16,23 @@ var langKeyWord;
 var langPoint;
 var langDel;
 
-function addFormHole(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
+function addFormHole( response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
-    langDel     = del;
+    langDel     = '<i class="fa fa-close"></i>';
 
-    tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody></tbody></table>');
-    $('tbody').sortable();
+    tableHoles.append('<table id="newTable" class="table table-striped table table-condensed"><thead id="Entete"><tr><th >' + size + '</th><th >' + orthography + '</th><th >' + selector + '</th><th >' + response + '</th><th >' + del + '</th></tr></thead><tbody></tbody></table>');
+    $('tbody').sortable();  
+    
+    $('#newTable').css({"display" : "none"});
+    
+
 }
 
-function addFormHoleEdit(add, response, point, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
+function addFormHoleEdit(response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
-    langDel     = del;
+    langDel     = '<i class="fa fa-close"></i>';
     var index;
     var i = 0;
 
@@ -65,7 +69,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
         }
 
         $('#newTable').find('.trHole:last').find('td:last')
-            .append('<table id="tabWR_' + index + '"><tbody></tbody></table>' + addwr);
+            .append('<table id="tabWR_' + index + '" class="table"><tbody></tbody></table>' + addwr);
 
         $('#add_keyword_' + index).click(function (e) {
             //var ind = $(this).parents(".trHole").index();
@@ -97,7 +101,7 @@ function addFormHoleEdit(add, response, point, size, orthography, del, selector,
             if ( (nbResponses == 0) && (i > 2) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
                 $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
                 $('#tabWR_' + index).find('td:last').append(
-                    '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+                    '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
                 );
 
                 // When click, delete the matching keyword's row in the table
@@ -294,6 +298,12 @@ function addHole(indexBlank, valHole) {
 
     changeSize(index, index);
     disableNotYetReady();
+    
+    if (($('#newTable').find('td').length) > 1) {
+        $('#newTable').css({"display" : "block"});
+    } else {
+        $('#newTable').css({"display" : "none"});
+    }
 }
 
 function addWR(indexHole, idTabWR) {
@@ -332,7 +342,7 @@ function addWR(indexHole, idTabWR) {
     if (indexWR > 0) {
         $('#tabWR_' + idTabWR).find('tr:last').append('<td class="classic"></td>');
         $('#tabWR_' + idTabWR).find('td:last').append(
-            '<a id="wr_' + indexHole + '_' + indexWR + '" href="#" class="btn btn-danger">' + langDel + '</a>'
+            '<a id="wr_' + indexHole + '_' + indexWR + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
         );
 
         // When click, delete the matching keyword's row in the table

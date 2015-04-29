@@ -8,6 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
+use UJM\ExoBundle\Repository\TypeQCMRepository;
+
 class InteractionQCMType extends AbstractType
 {
     private $user;
@@ -38,14 +40,16 @@ class InteractionQCMType extends AbstractType
             ->add(
                 'scoreRightResponse', 'text', array(
                     'required' => false,
-                    'label' => 'Inter_QCM.ScoreRightResponse'
+                    'label' => 'Inter_QCM.ScoreRightResponse',
+                    'attr'  => array( 'placeholder' => 'Points')
                 )
             );
         $builder
             ->add(
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
-                    'label' => 'Inter_QCM.ScoreFalseResponse'
+                    'label' => 'Inter_QCM.ScoreFalseResponse',
+                    'attr'  => array( 'placeholder' => 'Points','class'=>'col-md-2')
                 )
             );
         $builder
@@ -60,7 +64,13 @@ class InteractionQCMType extends AbstractType
             ->add(
                 'typeQCM', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
-                    'label' => 'TypeQCM.value'
+                    'label' => 'TypeQCM.value',
+                    'multiple' => false,
+                    'expanded' => true,
+                    'query_builder' => function(TypeQCMRepository $er) {
+                        return $er->createQueryBuilder('TypeQCM')
+                        ->orderBy('TypeQCM.value', 'DESC');
+                    }
                 )
             );
         $builder

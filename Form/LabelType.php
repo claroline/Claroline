@@ -16,15 +16,22 @@ class LabelType extends AbstractType
             )
             ->add(
                 'value', 'textarea', array(
-                    'label' => ' ', 'attr' => array('class' => 'labelVal')
-                ))
+                    'required' => true,
+                    'label' => ' ', 'attr' => array(
+                        'class' => 'labelVal form-control',
+                        'style' => 'height:34px;',
+                        'placeholder' => 'expected answer'
+                    )
+                )
+            )
             ->add(
                 'scoreRightResponse', 'text', array(
-                    'label' => ' ', 'attr' => array('style' => 'width:35px; text-align: end;','class' => 'labelScore'
+                    'required' => true,
+                    'label' => ' ', 'attr' => array('class' => 'labelScore', 'placeholder' => 'points'
                   )))
                 //add a field for correspondance, and will be replace by the our field
-            ->add( "correspondance", "choice", array("mapped"=>false)
-                  )
+//            ->add( "correspondance", "choice", array("mapped"=>false)
+//                  )
             ->add(
                 'positionForce', 'checkbox', array(
                     'required' => false, 'label' => ' '

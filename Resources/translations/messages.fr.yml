@@ -44,6 +44,7 @@ addDoc: Ajouter un document
 addProposal: Ajouter une proposition
 add hint: Ajouter un indice
 add user: Ajouter un utilisateur
+addZoneAnswer: Ajouter une zone de réponse
 administration: Administration
 advanced edition: Edition avancée
 after the last attempt: Après le dernier essai
@@ -87,6 +88,8 @@ changeName: Changer le nom du document
 changeOrder: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
 choice: Choix
 choose: Choisir
+choose_image : Choisir une image
+choose_category : Choisir une catégorie
 choose_type: Choisir un type
 chooseType: Choisissez le type de document à afficher
 close: Fermer
@@ -106,10 +109,11 @@ create: Créer
 create a new category: Créer une nouvelle catégorie
 create a new entry: Créer une nouvelle question
 creationDate: Date de création
-create hole : Créer un blanc
+create hole : Créer un trou
 
 # D
 date: Date
+default : Défaut
 delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
 delete document: Suppression de document
@@ -128,12 +132,12 @@ document: Document
 doNothing: Ne rien faire et revenir à la liste de mes documents
 drop category: Supprimer cette catégorie
 duplicate: Dupliquer
-duplicate this question: Dupliquer <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
+duplicate this question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
 duration: Durée
 
 # E
 edit: Editer
-edit a category: Editer une catégorie
+edit a category: Editer cette catégorie
 edit a question: Editer une question
 end date: Date de fin
 entry: Entrer
@@ -155,7 +159,7 @@ export CSV of results: Export CSV des résultats
 exportQTIExercise : Exporter les questions de l'exercice au format QTI
 
 # F
-feedback: Commentaire
+feedback: Feedback général
 findBy: Trouver par
 findIn: Trouver dans
 findLabel: Trouver un document avec un label spécifique
@@ -201,7 +205,7 @@ import QTI : Importer des questions au format QTI
 importQTIExercise: Importer un exercice au format QTI
 import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
-instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un blanc".
+instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 interactionGraphic creation: Création d'une question Graphique
 interactionGraphic Edition: Edition d'une question Graphique
@@ -270,6 +274,7 @@ noDocFound: Pas de document trouvé
 noFinish: Non terminé
 noHintShow: Indices non vus, pas de pénalité
 noImg: Vous devez télécharger une image
+noImgSelect: Vous devez sélectionner une image
 no label: Pas de labels associés
 noOne: Aucune
 noPaperFound: Aucune copie
@@ -483,8 +488,8 @@ Inter_Matching.shuffle: Ordre des propositions et des labels aléatoire
 
 Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
 
-Inter_QCM.ScoreRightResponse: Points pour la bonne réponse
-Inter_QCM.ScoreFalseResponse: Points pour une mauvaise réponse
+Inter_QCM.ScoreRightResponse: Résultat correct
+Inter_QCM.ScoreFalseResponse: Résultat incorrect
 Inter_QCM.shuffle: Ordre des choix aléatoire
 Inter_QCM.weightChoice: Attribuer les points par réponse
 
@@ -494,7 +499,7 @@ Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
 Label.value : Valeur
-Label.scoreRight: Score de la question
+Label.scoreRight: Score de l'association
 Label.positionForce: Forcer cette position
 
 LockAttempte.date: Date

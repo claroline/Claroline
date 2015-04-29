@@ -10,9 +10,9 @@ use UJM\ExoBundle\Form\InteractionHoleType;
 use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
-* InteractionHole controller.
-*
-*/
+ * InteractionHole controller.
+ * 
+ */
 class InteractionHoleController extends Controller
 {
 
@@ -33,11 +33,21 @@ class InteractionHoleController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
+        
+        //Get the lock category
+        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
+        if (empty($Locker)) {
+            $catLocker = "";
+        } else {
+            $catLocker = $Locker[0];
+        }
 
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator') 
         );
 
         $formHandler->setValidator($this->get('validator'));
@@ -69,6 +79,7 @@ class InteractionHoleController extends Controller
                         ));
             } else {
                 $form->addError(new FormError($holeHandler));
+                
             }
         }
 
@@ -78,6 +89,7 @@ class InteractionHoleController extends Controller
             'form'   => $form->createView(),
             'error'  => true,
             'exoID'  => $exoID
+              
             )
         );
 
@@ -87,7 +99,8 @@ class InteractionHoleController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $catLocker
             )
         );
     }
@@ -128,7 +141,8 @@ class InteractionHoleController extends Controller
         $formHandler = new InteractionHoleHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID
+            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->get('translator') 
         );
 
         $formHandler->setValidator($this->get('validator'));

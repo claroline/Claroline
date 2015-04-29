@@ -73,8 +73,10 @@ class CategoryController extends Controller
 
         if ($request->isXmlHttpRequest()) {
             $val = $request->request->get('value');
+            $lock = $request->request->get('locker');
             $entity  = new Category();
             $entity->setValue($val);
+            $entity->setLocker($lock);
             $entity->setUser($this->container->get('security.context')->getToken()->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);

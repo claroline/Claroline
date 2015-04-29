@@ -6,6 +6,7 @@ $('#feebackOptionalShow').css({"display" : "inline-block"});
 $('#descriptionOptionalHide').css({"display" : "none"});
 $('#feebackOptionalHide').css({"display" : "none"});
 
+
 //$("*[id$='_interaction_question_model']").attr("disabled", true);
 
 // Display the textarea
@@ -37,6 +38,20 @@ function HideOptional(type) {
         $('#descriptionOptional').css({"display" : "none"});
     }
 }
+/**
+ * Change the icon's link according to its status
+ *
+ * @param {string} idI : icon's id
+ * @param {string} idDiv : div's id which appears or disappears
+ */
+function statusButton(idI,idDiv) {
+    $('#'+idDiv).on('shown.bs.collapse', function () {
+      $('#'+idI).removeClass('').addClass('fa fa-eye-slash');
+    });
+    $('#'+idDiv).on('hidden.bs.collapse', function () {
+      $('#'+idI).removeClass('fa fa-eye-slash').addClass('');
+  });
+        }
 
 // Delete the name of the category
 function dropCategory() {
@@ -58,16 +73,62 @@ function dropCategory() {
     });
 }
 
+/**
+ * Recover all value of the menu category
+ */
 var allCategory = $('#categoryArray').val();
 var categoryArray = allCategory.split(';');
 
+/**
+ * For the view : question.html.twig
+ * Action on the button edition and deleted of category
+ *
+ * @var {int} idCat Id of the category
+ * @var {string} valueCat Category select
+ * @var {string} locker  Locked category for this user
+ */
 $("*[id$='_interaction_question_category']").change(function () {
-    displayDeleteCategory();
+    var idCat = $("*[id$='_interaction_question_category']").val();
+    var valueCat = $("*[id$='_interaction_question_category'] option:selected").text();
+    var locker=$('#locker').val();
+    displayDeleteCategory(idCat,valueCat,locker);
+    displayEditCategory(idCat,valueCat,locker);
 });
 
-function displayDeleteCategory() {
-    var idCat = $("*[id$='_interaction_question_category']").val();
+/**
+ * Display or no the edition category button
+ * @param {int} idCat Id of the category
+ * @param {string} valueCat Category select
+ * @param {string} locker Locked category for this user
+ */
+function displayEditCategory(idCat,valueCat,locker)
+{
+     for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
+        if (idCat == "") {
+                $('#editCategory').css({"display" : "none"});
+                 break;
+             } else {
+                 if(valueCat == locker )
+                 {
+                     $('#editCategory').css({"display" : "none"});
+                      break;
+                 }else
+                 {
+                     $('#editCategory').css({"display" : "inline-block"});
+                 }
 
+        }
+
+    }
+}
+
+/**
+ * Display or no the button edition category
+ * @param {int} idCat Id of the category
+ * @param {string} valueCat Category select
+ * @param {string} locker Locked category for this user
+ */
+function displayDeleteCategory(idCat,valueCat,locker) {
 
     for(var i = 0 ; i < categoryArray.length - 1 ; i++) {
         var index = categoryArray[i].substring(0, categoryArray[i].indexOf('/'));
@@ -84,7 +145,139 @@ function displayDeleteCategory() {
         } else {
             $('#linkedCategory').css({"display" : "inline-block"});
         }
+         if (idCat == "") {
+                $('#linkedCategory').css({"display" : "none"});
+                 break;
+             }
+       if (valueCat == locker)
+       {
+           $('#linkedCategory').css({"display" : "none"});
+                 break;
+       }
     }
 }
 
-displayDeleteCategory();
+
+
+// Delete button
+function addDelete(tr, deleteTrans) {
+
+    // Create the button to delete
+    var delLink = $('<a title="'+deleteTrans+'" href="#" class="btn btn-danger"><i class="fa fa-close"></i></a>');
+
+    // Add the button to the row
+    tr.append(delLink);
+
+    // When click, delete the matching row in the table
+    delLink.click(function(e) {
+        if(deleteTrans == 'newTableProposal' || deleteTrans == 'newTableLabel' ) {
+            replaceConnections();
+        }
+        $(this).parent('td').parent('tr').remove();
+        e.preventDefault();
+        return false;
+    });
+}
+
+$(document).ready(function() {
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').height(50);
+    displayOptionalFields();
+
+    //on ne passe par ici pour l'instant
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').on('load', function() {
+        placeholderTinyMCE();
+    });
+
+});
+
+function placeholderTinyMCE(){
+//    $('#mce-tinymce mce-container mce-panel').sortable({
+//
+//    });
+
+    $('#ujm_exobundle_interactionqcmtype_interaction_invite_ifr').contents().find("br").css( "background-color", "#BADA55" );
+}
+
+/**
+ * Enters edit advance
+ * @param {String} idTextarea
+ * @param {String}  btnEdition : the id button edition
+ * @param {Event} e
+ * @returns {Boolean}
+ */
+function advancedEdition(idTextarea,btnEdition,e){
+    var textarea;
+     // If the navavigator is chrome
+    var userNavigator = navigator.userAgent;
+    var positionText = userNavigator.indexOf("Chrome");
+    if(positionText !== -1) {
+        //the edition that after running action
+        $('body').append($('<input type="hidden" id="chrome"> '));
+        $('#chrome').remove();
+    }
+    if(idTextarea === 'interaction_question_description'){
+        textarea =$("*[id$='"+idTextarea+"']");
+    }
+    else{
+            textarea=$("#"+idTextarea);
+    }
+       textarea.addClass("claroline-tiny-mce hide");
+       textarea.data("data-theme","advanced");
+       $('#'+btnEdition).remove();
+       e.preventDefault();
+       return false;
+}
+
+/**
+ * Layout of the edition
+ */
+function displayOptionalFields(){
+  //Value select the category
+  var idCatSelect=$("*[id$='_interaction_question_category']").val();
+  //Value of the description
+  var valDescription =$("*[id$='_interaction_question_description']").text();
+
+  //Value of feelback
+  var valFeedback = $("*[id$='_interaction_feedBack']").text();
+
+  //Test category
+  if(idCatSelect !== "" )
+  {
+      $("#categoryDiv").collapse('show');
+  }
+  //Test description
+  if(valDescription !== "")
+  {
+      $("#descriptionDiv").collapse('show');
+      //Enables advanced edition
+      if(valDescription.match("<.+>.+|\s<\/.+>$"))
+      {
+          $("*[id$='_interaction_question_description']").addClass("claroline-tiny-mce hide");
+          $("*[id$='_interaction_question_description']").data("data-theme","advanced");
+          $("#buttonEdition").remove();
+      }
+  }
+  //Test feedback
+  if(valFeedback !== "")
+  {
+      $("#collepseinteraction").collapse('show');
+  }
+}
+
+/**
+ * Displays enabled tinyMCE by QCM et Matching
+ * @returns {undefined}
+ */
+function textareaAdvancedEdition()
+{
+    //Enables advanced edition QCM - Matching
+    $('.classic').find('textarea').each(function() {
+        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+        if($(this).val().match("<.+>.+|\s<\/.+>$")) {
+            var idProposalVal = $(this).attr("id");
+            $("#"+idProposalVal).addClass("claroline-tiny-mce hide");
+            $("#"+idProposalVal).data("data-theme","advanced");
+            $("#btnEdition_"+idProposalVal).remove();
+        }
+    });
+}

@@ -30,11 +30,19 @@ class InteractionGraphicController extends Controller
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
 
         $exoID = $this->container->get('request')->request->get('exercise');
-
+      
+        //Get the lock category
+        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user->getId());
+        if (empty($Locker)) {
+            $catLocker = "";
+        } else {
+            $catLocker = $Locker[0];
+        }
+         
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $user, $exoID
+            $user, $exoID, $this->get('translator')
         );
 
          $graphicHandler = $formHandler->processAdd();
@@ -87,7 +95,8 @@ class InteractionGraphicController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories()
+            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'locker' => $catLocker
             )
         );
     }
@@ -131,7 +140,8 @@ class InteractionGraphicController extends Controller
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser()
+            $this->container->get('security.context')->getToken()->getUser(),
+            $this->get('translator')
         );
 
         if ($formHandler->processUpdate($entity)) {

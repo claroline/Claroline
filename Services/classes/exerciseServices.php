@@ -1216,7 +1216,7 @@ class exerciseServices
 
         return $linkedCategory;
     }
-
+    
     /**
      * To control the max attemps, allow to know if an user can again execute an exercise
      *

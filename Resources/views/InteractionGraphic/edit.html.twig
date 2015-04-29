@@ -39,8 +39,8 @@
 
     {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-    <form id="InterGraphForm" onsubmit="return Check('{{ 'noTitle' | trans }}', '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
-        '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.question.title.vars.id }}', '{{ edit_form.interaction.invite.vars.id }}');"
+    <form id="InterGraphForm" onsubmit="return Check( '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
+        '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
         action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
         <div class="panel-body">
@@ -61,6 +61,9 @@
                 <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
             {% endif %}
         </div>
+        {% if locker != "" %}        
+        <input type="hidden" id="locker" value="{{locker.value}}"> 
+    {% endif %}
     </form>
 
 {% endblock %}
@@ -78,10 +81,11 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphic.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicEdit.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>
 
