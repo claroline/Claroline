@@ -1,6 +1,6 @@
-<h2>{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</h2>
+<h2 class="pull-left">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</h2>
 
-<div class="btn-toolbar pull-right portfolio_toolbar" role="toolbar" aria-label="portfolio options">
+<div class="btn-toolbar pull-left portfolio_toolbar" role="toolbar" aria-label="portfolio options">
     <div class="btn-group btn-group-sm" role="group" aria-label="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}">
         <a href="{{ path('icap_portfolio_add') }}" title="{{ 'add_portfolio'|trans({}, 'icap_portfolio') }}" class="btn btn-default">
             <span class="fa fa-plus"></span> {{ 'add_portfolio'|trans({}, 'icap_portfolio') }}
@@ -100,13 +100,13 @@
                         <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
                            title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
                            class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
-                           data-toggle="tooltip" data-container="body" data-placement="top">
+                           data-toggle="tooltip" data-container="body" data-placement="left">
                             <span class="fa fa-comment-o"></span>
                             {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
                         </a>
                         <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
                            download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
-                           data-toggle="tooltip" data-container="body" data-placement="top" class="btn btn-xs btn-default">
+                           data-toggle="tooltip" data-container="body" data-placement="left" class="btn btn-xs btn-default">
                             <span class="fa fa-upload"></span>
                         </a>
                     </td>
@@ -132,12 +132,6 @@
         )
     }}
 {%  endif %}
-<div class="pull-right">
-    <a href="{{ path('icap_portfolio_comments_list') }}" title="{{ 'portfolio_exchange_space'|trans({}, 'icap_portfolio') }}"
-       class="btn btn-sm btn-default" data-toggle="tooltip" data-container="body" data-placement="top" >
-        <span class="fa fa-comments-o"></span>
-    </a>
-</div>
 
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
