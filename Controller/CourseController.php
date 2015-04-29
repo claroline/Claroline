@@ -33,7 +33,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
@@ -47,6 +49,7 @@ class CourseController extends Controller
     private $mailManager;
     private $request;
     private $roleManager;
+    private $router;
     private $securityContext;
     private $toolManager;
     private $translator;
@@ -59,6 +62,7 @@ class CourseController extends Controller
      *     "mailManager"      = @DI\Inject("claroline.manager.mail_manager"),
      *     "requestStack"     = @DI\Inject("request_stack"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"           = @DI\Inject("router"),
      *     "securityContext"  = @DI\Inject("security.context"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
@@ -71,6 +75,7 @@ class CourseController extends Controller
         MailManager $mailManager,
         RequestStack $requestStack,
         RoleManager $roleManager,
+        RouterInterface $router,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
         Translator $translator,
@@ -82,6 +87,7 @@ class CourseController extends Controller
         $this->mailManager = $mailManager;
         $this->request = $requestStack->getCurrentRequest();
         $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
@@ -135,13 +141,22 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateForm.html.twig")
      */
     public function courseCreateFormAction(User $authenticatedUser)
     {
-        $form = $this->formFactory->create(new CourseType($authenticatedUser));
+        $displayedWords = array();
 
-        return array('form' => $form->createView());
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+        $form = $this->formFactory->create(new CourseType($authenticatedUser), new Course());
+
+        return array(
+            'form' => $form->createView(),
+            'displayedWords' => $displayedWords,
+            'type' => 'course'
+        );
     }
 
     /**
@@ -151,7 +166,7 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateForm.html.twig")
      */
     public function courseCreateAction(User $authenticatedUser)
     {
@@ -160,6 +175,12 @@ class CourseController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $icon = $form->get('icon')->getData();
+
+            if (!is_null($icon)) {
+                $iconPath = $this->cursusManager->saveIcon($icon);
+                $course->setIcon($iconPath);
+            }
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
@@ -170,10 +191,21 @@ class CourseController extends Controller
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
 
-            return new JsonResponse('success', 200);
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_course_index')
+            );
         } else {
+            $displayedWords = array();
 
-            return array('form' => $form->createView());
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
+
+            return array(
+                'form' => $form->createView(),
+                'displayedWords' => $displayedWords,
+                'type' => 'course'
+            );
         }
     }
 

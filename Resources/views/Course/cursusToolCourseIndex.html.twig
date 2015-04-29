@@ -67,7 +67,7 @@
             {
                 'name': displayedWords['course'],
                 'href': ''
-            },
+            }
         ])
     }}
 {% endblock %}
@@ -249,9 +249,9 @@
         {% endif %}
         
         <br>
-        <span id="course-create-btn" class="btn btn-default">
+        <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-default">
             {{ 'create_course'|trans({}, 'cursus') }}
-        </span>
+        </a>
     </div>
 
     <div id="view-course-description-box" class="modal fade" role="dialog" aria-hidden="true">

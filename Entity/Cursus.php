@@ -107,6 +107,11 @@ class Cursus
     protected $cursusGroups;
 
     /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $icon;
+
+    /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
      */
@@ -240,6 +245,16 @@ class Cursus
     public function getCursusGroups()
     {
         return $this->cursusGroups->toArray();
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
     }
 
     public function getRoot()

@@ -34,21 +34,26 @@ use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.cursus_manager")
  */
 class CursusManager
 {
+    private $container;
     private $contentManager;
     private $eventDispatcher;
+    private $iconsDirectory;
     private $om;
     private $pagerFactory;
     private $roleManager;
     private $templateDir;
     private $translator;
     private $workspaceManager;
+
     private $courseRepo;
     private $courseSessionRepo;
     private $cursusRepo;
@@ -61,6 +66,7 @@ class CursusManager
     
     /**
      * @DI\InjectParams({
+     *     "container"        = @DI\Inject("service_container"),
      *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
@@ -72,6 +78,7 @@ class CursusManager
      * })
      */
     public function __construct(
+        ContainerInterface $container,
         ContentManager $contentManager,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
@@ -82,8 +89,11 @@ class CursusManager
         WorkspaceManager $workspaceManager
     )
     {
+        $this->container = $container;
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->iconsDirectory = $this->container->getParameter('kernel.root_dir') .
+            '/../web/files/cursusbundle/icons/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
@@ -1057,6 +1067,17 @@ class CursusManager
         }
 
         return $currentCode;
+    }
+
+    public function saveIcon(UploadedFile $tmpFile)
+    {
+        $extension = $tmpFile->getClientOriginalExtension();
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() .
+            '.' .
+            $extension;
+        $tmpFile->move($this->iconsDirectory, $hashName);
+
+        return $this->iconsDirectory . $hashName;
     }
     
 
