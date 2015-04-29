@@ -18,16 +18,7 @@
                     <span class="icon-bg"></span>
                     <span class="option-text">
                         <i class="fa fa-list"></i>
-                        <span class="visible-md-inline visible-lg-inline">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</span>
-                    </span>
-                </a>
-            </li>
-            <li class="guided-options">
-                <a href="#guided" aria-controls="guided" role="tab" data-toggle="tab">
-                    <span class="icon-bg"></span>
-                    <span class="option-text">
-                        <i class="fa fa-list-alt"></i>
-                        <span class="visible-md-inline visible-lg-inline">{{ 'guided_portfolio'|trans({}, 'icap_portfolio') }}</span>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'portfolio'|trans({}, 'icap_portfolio') }}</span>
                     </span>
                 </a>
             </li>
@@ -54,9 +45,11 @@
                         {% include 'IcapPortfolioBundle:Portfolio:list.html.twig' %}
                     </div>
                 </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="guided">
-                {% include 'IcapPortfolioBundle:Portfolio:list_guided.html.twig' %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include 'IcapPortfolioBundle:Portfolio:list_guided.html.twig' %}
+                    </div>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="guide">Espace d'échange</div>
         </div>

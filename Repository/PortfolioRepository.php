@@ -29,11 +29,12 @@ class PortfolioRepository extends EntityRepository
      *
      * @return array|\Doctrine\ORM\Query
      */
-    public function findByUserWithWidgets(User $user, $executeQuery = true)
+    public function findByUserWithWidgetsAndComments(User $user, $executeQuery = true)
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->select('p', 'widgets')
             ->join('p.widgets','widgets')
+            ->leftJoin('p.comments','comments')
             ->andWhere('p.user = :userId')
             ->setParameter('userId', $user->getId())
         ;
