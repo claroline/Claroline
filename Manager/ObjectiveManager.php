@@ -31,7 +31,6 @@ class ObjectiveManager
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "manager"        = @DI\Inject("hevinci.competency.competency_manager"),
      *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
-
      * })
      *
      * @param ObjectManager     $om
