@@ -21,8 +21,7 @@ function defaultParameters() {
         Connector: "Straight",
         DropOptions: {tolerance:"touch"},
         Endpoint: "Dot",
-//        EndpointStyle: {fillStyle:"#777", radius: 5},
-         EndpointStyle: [ [ "Dot", { radius:5 } ], [ "Dot", { fillStyle:"#777" } ] ],
+        EndpointStyle: {fillStyle:"#777", radius: 5},
         HoverPaintStyle: {strokeStyle:"red"},
         LogEnabled: false,
         PaintStyle: { strokeStyle:"#777", lineWidth: 4}
@@ -65,13 +64,37 @@ function removeConnections() {
 
 function replaceConnections() {
     var connections = jsPlumb.getConnections();
+    // il ne faut pas enlever les endpoints
     jsPlumb.detachEveryConnection();
-    jsPlumb.unmakeEveryTarget();
     jsPlumb.unmakeEverySource();
+    jsPlumb.unmakeEveryTarget();
     source();
     target();
     
     for(var i = 0; i < connections.length; i++) {
-        jsPlumb.connect({source:connections[i].sourceId, target: connections[i].targetId});
+        jsPlumb.connect({
+            source:connections[i].sourceId,
+            target: connections[i].targetId,
+            ConnectionsDetachable:false,
+            Connector: "Straight",
+            DropOptions: {tolerance:"touch"},
+            Endpoint: "Dot",
+            EndpointStyle: {fillStyle:"#777", radius: 5},
+            HoverPaintStyle: {strokeStyle:"red"},
+            LogEnabled: false,
+            PaintStyle: { strokeStyle:"#777", lineWidth: 4}
+        });
     }
+}
+
+function placeProposal(idLabel, idProposal) {
+    //for exercice, if go on previous question, replace connections
+    $(function() {
+        jsPlumb.ready(function() {
+            jsPlumb.connect({
+                source: 'draggable_' + idProposal,
+                target: 'droppable_' + idLabel
+            });
+        });
+    });
 }

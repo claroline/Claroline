@@ -150,10 +150,13 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         $('#newTableLabel').find('tbody').append('<tr class="droppable"></tr>');
 
         if (typeof labels[ind] !== 'undefined') {
-            idlabel = labels[ind];
-            idproposals = valueCorres[idlabel];
-            $.each( idproposals, function(key, val) {//alert(proposals[val]);
-                $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
+            var idLabel = labels[ind];
+            var idProposal = valueCorres[idLabel];
+            $.each( idProposal, function(key, val) {//alert(proposals[val]);
+//                $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
+                var idPropJsPlumb = "jsPlumb_1_" + idProposal;
+                alert(labels.length);
+//                placeProposal(idlabel, idPropJsPlumb);
             });
         }
 
