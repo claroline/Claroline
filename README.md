@@ -1,3 +1,3 @@
 # MessageBundle
 
-Messagery for the Claroline CoreBundle.
+Internal messagery for the Claroline CoreBundle.
