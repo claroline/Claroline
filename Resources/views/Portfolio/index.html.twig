@@ -4,12 +4,12 @@
 
     <div class="portfolio-tabpanel" role="tabpanel">
         <ul class="nav nav-tabs" role="tablist">
-            <li class="home-options active">
-                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+            <li class="presentation-options active">
+                <a href="#presentation" aria-controls="presentation" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
                     <span class="option-text">
                         <i class="fa fa-home"></i>
-                        <span class="visible-md-inline visible-lg-inline">Présentation</span>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'presentation'|trans({}, 'icap_portfolio') }}</span>
                     </span>
                 </a>
             </li>
@@ -18,7 +18,7 @@
                     <span class="icon-bg"></span>
                     <span class="option-text">
                         <i class="fa fa-list"></i>
-                        <span class="visible-md-inline visible-lg-inline">Mes portfolios</span>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</span>
                     </span>
                 </a>
             </li>
@@ -26,8 +26,8 @@
                 <a href="#guided" aria-controls="guided" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
                     <span class="option-text">
-                        <i class="fa fa-list"></i>
-                        <span class="visible-md-inline visible-lg-inline">Mes portfolios suivis</span>
+                        <i class="fa fa-list-alt"></i>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'guided_portfolio'|trans({}, 'icap_portfolio') }}</span>
                     </span>
                 </a>
             </li>
@@ -36,20 +36,24 @@
                     <span class="icon-bg"></span>
                     <span class="option-text">
                         <i class="fa fa-comments-o"></i>
-                        <span class="visible-md-inline visible-lg-inline">Espace d'échange</span>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'exchange_space'|trans({}, 'icap_portfolio') }}</span>
                     </span>
                 </a>
             </li>
         </ul>
 
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="home">
+            <div role="tabpanel" class="tab-pane active" id="presentation">
                 <p>
-                    Présentation
+                    {{ 'presentation_message'|trans({}, 'icap_portfolio')|raw }}
                 </p>
             </div>
             <div role="tabpanel" class="tab-pane" id="list">
-                {% include 'IcapPortfolioBundle:Portfolio:list.html.twig' %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% include 'IcapPortfolioBundle:Portfolio:list.html.twig' %}
+                    </div>
+                </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="guided">
                 {% include 'IcapPortfolioBundle:Portfolio:list_guided.html.twig' %}
