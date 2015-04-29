@@ -55,6 +55,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             ->addRoutingResource(__DIR__ . "/Resources/config/{$routingFile}");
     }
 
+
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
         $bundleClass = get_class($bundle);
@@ -83,7 +84,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle'           => 'stfalcon_tinymce',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
             'FOS\RestBundle\FOSRestBundle'                                  => 'fos_rest',
-            'HWI\Bundle\OAuthBundle\HWIOAuthBundle'                         => 'hwi_oauth',
             'Gregwar\CaptchaBundle\GregwarCaptchaBundle'                    => 'gregwar_captcha',
             'Knp\Bundle\MenuBundle\KnpMenuBundle'                           => 'knp_menu'
         );

@@ -13,10 +13,10 @@
 <br>
 
 <div id="workspaces-list-element">
-    {% render controller(
+    {% render(controller(
         'ClarolineCoreBundle:Widget\\MyWorkspacesWidget:displayMyWorkspacesWidget',
         {'mode': 0}
-    ) %}
+    )) %}
 </div>
 
 {% block javascripts %}

@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -31,7 +31,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class LogListener
 {
     private $om;
-    private $securityContext;
+    private $tokenStorage;
     private $container;
     private $roleManager;
     private $ch;
@@ -39,7 +39,7 @@ class LogListener
     /**
      * @DI\InjectParams({
      *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
-     *     "context"             = @DI\Inject("security.context"),
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "container"           = @DI\Inject("service_container"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler")
@@ -47,14 +47,14 @@ class LogListener
      */
     public function __construct(
         ObjectManager $om,
-        SecurityContextInterface $context,
+        TokenStorageInterface $tokenStorage,
         $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch
     )
     {
         $this->om = $om;
-        $this->securityContext = $context;
+        $this->tokenStorage = $tokenStorage;
         $this->container = $container;
         $this->roleManager = $roleManager;
         $this->ch = $ch;
@@ -70,7 +70,7 @@ class LogListener
 
         //Event can override the doer
         if ($event->getDoer() === null) {
-            $token = $this->securityContext->getToken();
+            $token = $this->tokenStorage->getToken();
             if ($token === null) {
                 $doer = null;
                 $doerType = Log::doerTypePlatform;
@@ -202,7 +202,7 @@ class LogListener
      */
     public function isARepeat(LogGenericEvent $event)
     {
-        if ($this->securityContext->getToken() === null) {
+        if ($this->tokenStorage->getToken() === null) {
             //Only if have a user session;
             return false;
         }

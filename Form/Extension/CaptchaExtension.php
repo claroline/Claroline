@@ -37,7 +37,7 @@ class CaptchaExtension extends AbstractTypeExtension
         $ch = $this->container->get('claroline.config.platform_config_handler');
 
         if ($ch->getParameter('form_captcha')) {
-            $securityToken = $this->container->get('security.context')->getToken();
+            $securityToken = $this->container->get('security.token_storage')->getToken();
 
             if (null !== $securityToken && $securityToken->getUser() === 'anon.') {
                 $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {

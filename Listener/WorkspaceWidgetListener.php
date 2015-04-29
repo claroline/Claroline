@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -22,21 +22,21 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceWidgetListener
 {
-    private $securityContext;
+    private $authorization;
     private $templating;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext"    = @DI\Inject("security.context"),
-     *     "templating"         = @DI\Inject("templating")
+     *     "authorization"    = @DI\Inject("security.authorization_checker"),
+     *     "templating"       = @DI\Inject("templating")
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorization,
         TwigEngine $templating
     )
     {
-        $this->securityContext = $securityContext;
+        $this->authorization = $authorization;
         $this->templating = $templating;
     }
 
@@ -47,7 +47,7 @@ class WorkspaceWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        if (!$this->securityContext->isGranted('ROLE_USER')) {
+        if (!$this->authorization->isGranted('ROLE_USER')) {
 
             throw new AccessDeniedException();
         }

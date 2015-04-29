@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -66,7 +66,7 @@ class RightsManager
      * })
      */
     public function __construct(
-        Translator $translator,
+        TranslatorInterface $translator,
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         RoleManager $roleManager,

@@ -3,7 +3,7 @@
 {% block title %}{{ 'administration'|trans({}, 'platform')|striptags|raw }}{% endblock %}
 
 {% block leftbar %}
-    {% render controller("ClarolineCoreBundle:Administration:renderLeftBar") %}
+    {% render(controller("ClarolineCoreBundle:Administration:renderLeftBar")) %}
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
         {{ block("leftbar") }}
     </div>
     <div class="panel panel-default">
-        
+
         {% if not is_send_datas_confirmed() %}
             <div class="alert-update-mode">
                 <a href="{{ path('claro_admin_send_datas_confirm_form') }}">

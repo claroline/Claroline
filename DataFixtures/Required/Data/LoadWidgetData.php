@@ -32,7 +32,6 @@ class LoadWidgetData implements RequiredFixture
             array('core_resource_logger', true, true, true),
             array('simple_text', true, true, true),
             array('my_workspaces', false, true, false),
-            array('agenda', false, true, true)
         );
 
         foreach ($items as $item) {

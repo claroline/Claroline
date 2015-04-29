@@ -103,7 +103,7 @@ class ProfilePropertyManager
 
     public function getAccessesForCurrentUser()
     {
-        $roles = $this->container->get('security.context')->getToken();
+        $roles = $this->container->get('security.token_storage')->getToken();
         $rolenames = $this->secUtils->getRoles($roles);
 
         return $this->getAccessessByRoles($rolenames);

@@ -188,16 +188,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $initDate;
 
     /**
-     * @var UserMessage[]|ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
-     *     mappedBy="user"
-     * )
-     */
-    protected $userMessages;
-
-    /**
      * @var DesktopTool[]|ArrayCollection
      *
      * @ORM\OneToMany(
@@ -319,7 +309,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __construct()
     {
         parent::__construct();
-        $this->userMessages      = new ArrayCollection();
         $this->roles             = new ArrayCollection();
         $this->groups            = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();

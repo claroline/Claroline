@@ -75,7 +75,7 @@ class TextListener implements ContainerAwareInterface
     {
         $request = $this->container->get('request');
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $keys = array_keys($request->request->all());
         $id = array_pop($keys);
         $form = $this->container->get('claroline.form.factory')->create(FormFactory::TYPE_RESOURCE_TEXT, array($id));
@@ -156,7 +156,7 @@ class TextListener implements ContainerAwareInterface
     {
         $text = $event->getResource();
         $collection = new ResourceCollection(array($text->getResourceNode()));
-        $isGranted = $this->container->get('security.context')->isGranted('EDIT', $collection);
+        $isGranted = $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection);
         $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
             ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(

@@ -39,7 +39,7 @@ class ResourceManagerController extends Controller
         Role $role
     )
     {
-        $token = $this->get('security.context')->getToken();
+        $token = $this->get('security.token_storage')->getToken();
 
         if (
             $this->get('claroline.manager.rights_manager')->canEditPwsPerm($token)
@@ -49,7 +49,7 @@ class ResourceManagerController extends Controller
 
         $em = $this->get('doctrine.orm.entity_manager');
 
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+        if (!$this->get('security.authorization_checker')->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
 

@@ -23,7 +23,8 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
@@ -68,7 +69,8 @@ class WorkspaceController extends Controller
     private $tagManager;
     private $toolManager;
     private $eventDispatcher;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
     private $router;
     private $utils;
     private $formFactory;
@@ -92,7 +94,8 @@ class WorkspaceController extends Controller
      *     "tagManager"                = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "toolManager"               = @DI\Inject("claroline.manager.tool_manager"),
      *     "eventDispatcher"           = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"                  = @DI\Inject("security.context"),
+     *     "authorization"             = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"              = @DI\Inject("security.token_storage"),
      *     "router"                    = @DI\Inject("router"),
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
      *     "formFactory"               = @DI\Inject("claroline.form.factory"),
@@ -116,7 +119,8 @@ class WorkspaceController extends Controller
         WorkspaceTagManager $tagManager,
         ToolManager $toolManager,
         StrictDispatcher $eventDispatcher,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         UrlGeneratorInterface $router,
         Utilities $utils,
         FormFactory $formFactory,
@@ -139,7 +143,8 @@ class WorkspaceController extends Controller
         $this->tagManager = $tagManager;
         $this->toolManager = $toolManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->router = $router;
         $this->utils = $utils;
         $this->formFactory = $formFactory;
@@ -191,7 +196,7 @@ class WorkspaceController extends Controller
     public function listWorkspacesByUserAction()
     {
         $this->assertIsGranted('ROLE_USER');
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
 
@@ -225,10 +230,10 @@ class WorkspaceController extends Controller
      */
     public function listWorkspacesByUserForPickerAction()
     {
-        $isGranted = $this->security->isGranted('ROLE_USER');
+        $isGranted = $this->authorization->isGranted('ROLE_USER');
         $response = new JsonResponse('', 401);
         if ($isGranted === true) {
-            $token = $this->security->getToken();
+            $token = $this->tokenStorage->getToken();
             $user = $token->getUser();
 
             $workspaces = $this->workspaceManager
@@ -264,7 +269,7 @@ class WorkspaceController extends Controller
     public function listWorkspacesWithSelfRegistrationAction($search = '')
     {
         $this->assertIsGranted('ROLE_USER');
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->tagManager
             ->getDatasForSelfRegistrationWorkspaceList($user, $search);
@@ -290,7 +295,7 @@ class WorkspaceController extends Controller
      */
     public function listWorkspacesWithSelfUnregistrationAction(User $currentUser, $page = 1)
     {
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
 
         $workspacesPager = $this->workspaceManager
@@ -317,7 +322,7 @@ class WorkspaceController extends Controller
     public function creationFormAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
 
         return array('form' => $form->createView());
@@ -339,7 +344,7 @@ class WorkspaceController extends Controller
     public function createAction()
     {
         $this->assertIsGranted('ROLE_WS_CREATOR');
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $form = $this->formFactory->create(FormFactory::TYPE_WORKSPACE, array($user));
         $form->handleRequest($this->request);
         $ds = DIRECTORY_SEPARATOR;
@@ -361,10 +366,10 @@ class WorkspaceController extends Controller
                 $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
                 $config->setWorkspaceDescription($form->get('description')->getData());
 
-                $user = $this->security->getToken()->getUser();
+                $user = $this->tokenStorage->getToken()->getUser();
                 $this->workspaceManager->create($config, $user);
             }
-            $this->tokenUpdater->update($this->security->getToken());
+            $this->tokenUpdater->update($this->tokenStorage->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
 
             $msg = $this->get('translator')->trans(
@@ -408,7 +413,7 @@ class WorkspaceController extends Controller
         );
         $this->workspaceManager->deleteWorkspace($workspace);
 
-        $this->tokenUpdater->cancelUsurpation($this->security->getToken());
+        $this->tokenUpdater->cancelUsurpation($this->tokenStorage->getToken());
 
         $sessionFlashBag = $this->session->getFlashBag();
         $sessionFlashBag->add(
@@ -449,7 +454,7 @@ class WorkspaceController extends Controller
             $workspace = $this->resourceManager->getNode($rootId)->getWorkspace();
         }
 
-        $currentRoles = $this->utils->getRoles($this->security->getToken());
+        $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
         //do I need to display every tools.
         $hasManagerAccess = false;
         $managerRole = $this->roleManager->getManagerRole($workspace);
@@ -460,7 +465,7 @@ class WorkspaceController extends Controller
             }
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
+        if ($this->authorization->isGranted('ROLE_ADMIN')) {
             $hasManagerAccess = true;
         }
 
@@ -562,7 +567,7 @@ class WorkspaceController extends Controller
     )
     {
         $response = new JsonResponse('', 401);
-        $isGranted = $this->security->isGranted('OPEN', $workspace);
+        $isGranted = $this->authorization->isGranted('OPEN', $workspace);
 
         if ($isGranted===true) {
             $widgetData = array();
@@ -690,7 +695,7 @@ class WorkspaceController extends Controller
     )
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->security->isGranted('parameters', $workspace);
+        $canEdit = $this->authorization->isGranted('parameters', $workspace);
         $widgets = array();
         $homeTab = $this->homeTabManager->getHomeTabByIdAndWorkspace($homeTabId, $workspace);
         $isHomeTab = (intval($valid) === 1);
@@ -770,7 +775,7 @@ class WorkspaceController extends Controller
      */
     public function openAction(Workspace $workspace)
     {
-        $roles = $this->utils->getRoles($this->security->getToken());
+        $roles = $this->utils->getRoles($this->tokenStorage->getToken());
         $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
 
         if (count($tools) > 0) {
@@ -1045,7 +1050,7 @@ class WorkspaceController extends Controller
     {
         $this->assertIsGranted('ROLE_USER');
         $workspaces = $this->tagManager->getPagerAllWorkspacesWithSelfReg(
-            $this->security->getToken()->getUser(),
+            $this->tokenStorage->getToken()->getUser(),
             $page
         );
 
@@ -1098,7 +1103,7 @@ class WorkspaceController extends Controller
             $this->tagManager->deleteAllRelationsFromWorkspaceAndUser($workspace, $user);
 
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->security->setToken($token);
+            $this->tokenStorage->setToken($token);
 
             return new Response('success', 204);
         } catch (LastManagerDeleteException $e) {
@@ -1265,8 +1270,8 @@ class WorkspaceController extends Controller
     public function displayWorkspaceHomeTabAction(Workspace $workspace, $tabId)
     {
         $this->assertIsGranted('home', $workspace);
-        $canEdit = $this->security->isGranted('parameters', $workspace);
-        $roleNames = $this->utils->getRoles($this->security->getToken());
+        $canEdit = $this->authorization->isGranted('parameters', $workspace);
+        $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $workspaceHomeTabConfigs = $canEdit ?
             $this->homeTabManager->getWorkspaceHomeTabConfigsByWorkspace($workspace):
             $this->homeTabManager->getVisibleWorkspaceHomeTabConfigsByWorkspaceAndRoles(
@@ -1297,7 +1302,7 @@ class WorkspaceController extends Controller
                 $isHomeTab = true;
             }
         }
-        $isAnonymous = ($this->security->getToken()->getUser() === 'anon.');
+        $isAnonymous = ($this->tokenStorage->getToken()->getUser() === 'anon.');
 
         return array(
             'workspace' => $workspace,
@@ -1332,7 +1337,7 @@ class WorkspaceController extends Controller
     )
     {
         $response = new JsonResponse('', 401);
-        $isGranted = $this->security->isGranted('OPEN', $workspace);
+        $isGranted = $this->authorization->isGranted('OPEN', $workspace);
         if ($isGranted === true) {
             $workspaceHomeTabConfigs = $this->homeTabManager
                 ->getVisibleWorkspaceHomeTabConfigsByWorkspace($workspace);
@@ -1370,7 +1375,7 @@ class WorkspaceController extends Controller
     public function updateWorkspaceFavourite(Workspace $workspace)
     {
         $this->assertIsGranted('ROLE_USER');
-        $token = $this->security->getToken();
+        $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
         $roles = $this->utils->getRoles($token);
         $workspaceManagerRole = $this->roleManager
@@ -1478,7 +1483,7 @@ class WorkspaceController extends Controller
             $config->setRegistrationValidation(true);
             $config->setSelfUnregistration(true);
             $config->setWorkspaceDescription(true);
-            $this->workspaceManager->create($config, $this->security->getToken()->getUser());
+            $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->importRichText();
         } else {
             throw new \Exception('Invalid form');
@@ -1551,7 +1556,7 @@ class WorkspaceController extends Controller
     {
         $workspace = $this->workspaceManager->createWorkspaceFromModel(
             $model,
-            $this->security->getToken()->getUser(),
+            $this->tokenStorage->getToken()->getUser(),
             $form->get('name')->getData(),
             $form->get('code')->getData(),
             $form->get('description')->getData(),
@@ -1607,7 +1612,7 @@ class WorkspaceController extends Controller
 
     private function assertIsGranted($attributes, $object = null)
     {
-        if (false === $this->security->isGranted($attributes, $object)) {
+        if (false === $this->authorization->isGranted($attributes, $object)) {
             if ($object instanceof Workspace) $this->throwWorkspaceDeniedException($object);
         }
     }
@@ -1616,7 +1621,7 @@ class WorkspaceController extends Controller
     {
         $role = $this->roleManager->getManagerRole($workspace);
 
-        if (is_null($role) || !$this->security->isGranted($role->getName())) {
+        if (is_null($role) || !$this->authorization->isGranted($role->getName())) {
             throw new AccessDeniedException();
         }
     }

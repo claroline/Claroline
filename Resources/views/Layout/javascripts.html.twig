@@ -54,8 +54,6 @@
     "@ClarolineCoreBundle/Resources/views/Administration/Facet/panelElement.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Administration/Package/logs.html.twig"
-    "@ClarolineCoreBundle/Resources/views/Agenda/eventContent.html.twig"
-    "@ClarolineCoreBundle/Resources/views/Agenda/task.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/modelRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/userRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/groupRow.html.twig"
@@ -75,7 +73,6 @@
 <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}"></script>
 <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
 <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
@@ -125,30 +122,7 @@
         selector: '[data-toggle=tooltip]'
     });
 </script>
-{% if is_facebook_available() %}
-    <script>
-        (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/fr_FR/all.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-        window.fbAsyncInit = function() {
-            // init the FB JS SDK
-            FB.init({
-                appId      : '{{ get_facebook_app_id() }}',        // App ID from the app dashboard
-                status     : true,                                 // Check Facebook Login status
-                xfbml      : true,
-                cookie     : true
-            });
-            $('.facebook-connect').removeClass('hide');
-            $('#btn-logout').on('click', function() {
-                FB.logout(function(respose){});
-            })
-        };
-    </script>
-{% endif %}
+{{ render(controller('ClarolineCoreBundle:Layout:injectJavascript', {})) }}
 <script type="text/javascript">
     $('.maintenance-popover').popover();
 </script>

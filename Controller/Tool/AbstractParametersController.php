@@ -19,7 +19,7 @@ class AbstractParametersController extends Controller
 {
     protected function checkAccess(Workspace $workspace)
     {
-        if (!$this->get('security.context')->isGranted('parameters', $workspace)) {
+        if (!$this->get('security.authorization_checker')->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
     }

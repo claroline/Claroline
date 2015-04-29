@@ -1001,42 +1001,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.isEnabled = TRUE
         ';
-
         $query = $this->_em->createQuery($dql);
-
         return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are members of one of the given workspaces
-     *
-     * @param Workspace $workspace
-     * @param boolean $executeQuery
-     *
-     * @internal param array $workspaces
-     * @return User[]|Query
-     */
-    public function findUsersWithBadgesByWorkspace($workspace, $executeQuery = true)
-    {
-        $queryBuilder = $this->createQueryBuilder('u')
-            ->select('DISTINCT u, ub, b')
-            ->join('u.roles', 'r')
-            ->leftJoin('u.userBadges', 'ub')
-            ->leftJoin('ub.badge', 'b')
-            ->andWhere('u.isEnabled = true')
-            ->orderBy('u.id');
-
-        if (null === $workspace) {
-            $queryBuilder->andWhere('r.workspace IS NULL');
-        }
-        else {
-            $queryBuilder
-                ->leftJoin('r.workspace', 'w')
-                ->andWhere('r.workspace = :workspace')
-                ->setParameter('workspace', $workspace);
-        }
-
-        return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
 
     public function findUsersWithoutUserRole($executeQuery = true)
@@ -1330,7 +1296,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getSingleScalarResult() : $query;
     }
-    
+
     public function countByRoles(array $roles, $includeGrps)
     {
         if ($includeGrps) {
@@ -1343,10 +1309,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE r1 in (:roles)
                 AND u.isEnabled = true
                 OR r2 in (:roles)';
-                
+
                 $query = $this->_em->createQuery($dql);
                 $query->setParameter('roles', $roles);
-                
+
                 return $query->getSingleScalarResult();
         }
     }
