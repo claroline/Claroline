@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -48,7 +48,7 @@ class MessageController
     private $pagerFactory;
     private $request;
     private $router;
-    private $securityContext;
+    private $tokenStorage;
     private $userManager;
     private $utils;
     private $workspaceManager;
@@ -62,7 +62,7 @@ class MessageController
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "request"          = @DI\Inject("request"),
      *     "router"           = @DI\Inject("router"),
-     *     "securityContext"  = @DI\Inject("security.context"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "utils"            = @DI\Inject("claroline.security.utilities"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
@@ -76,7 +76,7 @@ class MessageController
         PagerFactory $pagerFactory,
         Request $request,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         UserManager $userManager,
         Utilities $utils,
         WorkspaceManager $workspaceManager
@@ -89,7 +89,7 @@ class MessageController
         $this->pagerFactory = $pagerFactory;
         $this->request = $request;
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->utils = $utils;
         $this->workspaceManager = $workspaceManager;
@@ -490,7 +490,7 @@ class MessageController
             }
         } else {
             $users = array();
-            $token = $this->securityContext->getToken();
+            $token = $this->tokenStorage->getToken();
             $roles = $this->utils->getRoles($token);
             $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
 

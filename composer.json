@@ -9,7 +9,7 @@
         "claroline/core-bundle": "*"
     },
     "autoload": {
-        "psr-0": { "Claroline\\Message": "" }
+        "psr-0": { "Claroline\\MessageBundle": "" }
     },
     "target-dir": "Claroline/MessageBundle"
 }

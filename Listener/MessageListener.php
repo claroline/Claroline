@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -24,24 +24,24 @@ use Symfony\Component\Translation\TranslatorInterface;
 class MessageListener
 {
     private $messageManager;
-    private $securityContext;
+    private $tokenStorage;
     private $translator;
 
     /**
      * @DI\InjectParams({
      *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
-     *     "securityContext" = @DI\Inject("security.context"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         MessageManager $messageManager,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
     )
     {
         $this->messageManager = $messageManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
 
@@ -52,7 +52,7 @@ class MessageListener
      */
     public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.') {

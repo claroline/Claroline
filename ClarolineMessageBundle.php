@@ -12,12 +12,25 @@
 namespace Claroline\MessageBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\MessageBundle\Installation\AdditionalInstaller;
 
 class ClarolineMessageBundle extends PluginBundle
 {
+    public function getConfiguration($environment)
+    {
+        $config = new ConfigurationBuilder();
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'message');
+    }
+
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
+    }
+
     public function hasMigrations()
     {
-        return false;
+        return true;
     }
 
     public function getRequiredFixturesDirectory($environment)
