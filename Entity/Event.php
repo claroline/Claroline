@@ -16,7 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Validator\Constraints\DateRange;
+use Claroline\AgendaBundle\Validator\Constraints\DateRange;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\AgendaBundle\Repository\EventRepository")

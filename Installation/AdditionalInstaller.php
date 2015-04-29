@@ -2,20 +2,10 @@
 
 namespace Claroline\AgendaBundle\Installation;
 
-use Claroline\InstalationBundle\Additional\AdditinalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
-class AdditionalInsaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller
 {
-    private $logger;
-
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        }
-    }
-
     public function preUpdate($currentVersion, $targetVersion)
     {
     }
