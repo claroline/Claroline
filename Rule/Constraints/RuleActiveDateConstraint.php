@@ -13,7 +13,12 @@ namespace Claroline\CoreBundle\Rule\Constraints;
 
 use Claroline\CoreBundle\Rule\Entity\Rule;
 use Doctrine\ORM\QueryBuilder;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service
+ * @DI\Tag("claroline.rule.constraint")
+ */
 class RuleActiveDateConstraint extends AbstractConstraint
 {
     /**
