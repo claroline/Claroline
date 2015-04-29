@@ -152,17 +152,17 @@
                                                  data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
                                                  data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.titleWidget.title}, 'icap_portfolio') }}"
                                                  data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
-                                                 data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}" data-toggle="tooltip"
-                                                 data-container="body" title="{{ 'delete'|trans({}, 'platform') }}" data-placement="top"
-                                                 data-original-title="{{ 'delete'|trans({}, 'platform') }}">
+                                                 data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
                                             <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
                                         </a>
                                     </li>
                                 </ul>
                             </div>
                             {% set countUnreadComments = portfolio.countUnreadComments %}
-                            <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
-                               class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}" data-toggle="tooltip" data-container="body" data-placement="top" >
+                            <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                               title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
+                               class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
+                               data-toggle="tooltip" data-container="body" data-placement="top">
                                 <span class="fa fa-comment-o"></span>
                                 {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
                             </a>

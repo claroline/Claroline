@@ -2,7 +2,7 @@
 
 angular.module('ui.badgePicker', [])
     .directive('uiBadgePicker', function () {
-        var url = Routing.generate("claro_badge_picker");
+        var url = Routing.generate("icap_badge_badge_picker");
         var data = {
             mode: "user"
         };
