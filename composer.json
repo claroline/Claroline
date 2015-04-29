@@ -21,7 +21,7 @@
         "doctrine/orm": "~2.2",
         "doctrine/migrations": "dev-master",
         "jdorn/sql-formatter": "~1.0",
-        "claroline/kernel-bundle": "*"
+        "claroline/kernel-bundle": "~5.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",
