@@ -31,9 +31,11 @@ class DynamicConfigPass implements CompilerPassInterface
     {
         //facebook
         $facebook = new Definition();
-        $facebook->setFactoryService('claroline.hwi.facebook_owner_factory');
-        $facebook->setFactoryMethod('getFacebookResourceOwner');
         $facebook->setClass('FacebookResourceOwner');
+        $facebook->setFactory(array(
+            new Reference('claroline.hwi.facebook_owner_factory'),
+            'getFacebookResourceOwner'
+        ));
         $container->removeDefinition('hwi_oauth.resource_owner.facebook');
         $container->setDefinition('hwi_oauth.resource_owner.facebook', $facebook);
     }
