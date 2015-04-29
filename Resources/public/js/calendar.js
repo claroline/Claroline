@@ -149,22 +149,40 @@
             },
             dayClick: renderAddEventForm,
             eventClick:  function (event, jsEvent, view) {
-                //don't do anything because it's the "edit" button from the popover that is going to trigger the modal
-                $(this).popover({
-                    title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-                    content: Twig.render(EventContent, {'event': event}),
-                    html: true,
-                    container: 'body'
-                });
-                // If the check symbol is click of a task, mark this task as "to do"
-                if (jsEvent.target.className === 'fa fa-check') {
-
-                } // if click on the checkbox of a task, mark this task as done
-                else if (jsEvent.target.className === 'fa fa-square-o') {
-
-                } // Show the popover of the event/task
+                // If click on the check symbol of a task, mark this task as "to do"
+                if ($(jsEvent.target).hasClass('fa-check')) {
+                    $.ajax({
+                        url: window.Routing.generate('claro_agenda_set_task_as_not_done', {'event': event.id}),
+                        type: 'GET',
+                        success: function() {
+                            $(jsEvent.target)
+                                .removeClass('fa-check')
+                                .addClass('fa-square-o')
+                                .next().css('text-decoration', 'none');
+                        }
+                    })
+                }
+                // If click on the checkbox of a task, mark this task as done
+                else if ($(jsEvent.target).hasClass('fa-square-o')) {
+                    $.ajax({
+                        url: window.Routing.generate('claro_agenda_set_task_as_done', {'event': event.id}),
+                        type: 'GET',
+                        success: function() {
+                            $(jsEvent.target)
+                                .removeClass('fa-square-o')
+                                .addClass('fa-check')
+                                .next().css('text-decoration', 'line-through');
+                        }
+                    })
+                }
+                // Show the popover of the event/task
                 else {
-
+                    $(this).popover({
+                        title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
+                        content: Twig.render(EventContent, {'event': event}),
+                        html: true,
+                        container: 'body'
+                    });
                 }
             },
             //renders the popover for an event
@@ -179,6 +197,7 @@
             }
         });
 
+        // If a year is define in the Url, redirect the calendar to that year, month and day
         if (getQueryVariable('year')) {
             var year = !isNaN(getQueryVariable('year')) && getQueryVariable('year') ? getQueryVariable('year') : new Date('Y'),
                 month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
@@ -211,7 +230,6 @@
         renderEvent(event, element);
     };
 
-    //@todo move this on the eventClick event ?
     var renderEvent = function (event, element) {
         if (event.isTask) {
             var checkbox =  $(element[0]).find('.fc-time');
