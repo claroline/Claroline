@@ -36,7 +36,7 @@ function formWordResponseEdit(nbResponses) {
         if (nbResponses == 0) {
             // Add the delete button
             $('#tablewr').find('tr:last').append('<td class="classic"></td>');
-            addDeleteMeuh($('#tablewr').find('td:last'), deleteWr);
+            addDelete($('#tablewr').find('td:last'), deleteWr);
         }
 
     });
@@ -64,7 +64,7 @@ function addWr(container, deleteWr) {
     );
 
     // Add the button to delete a choice
-    addDeleteMeuh(contain, deleteWr);
+    addDelete(contain, deleteWr);
 
     // Add the modified dataprototype to the page
     container.append(contain);
@@ -79,22 +79,6 @@ function addWr(container, deleteWr) {
 
     // Remove the useless fileds form
     container.remove();
-}
-
-// A supprimer avec refonte des interface, cette fonction dupliquée dans plusieurs JS sera dans allQuestionsType
-function addDeleteMeuh(tr, deleteTrans) {
-    alert('Ceci est un message de la fonction "addDeleteMeuh" : Ne pas oubliez de me supprimer avec le merge des vues !!!!!!!!!');
-    // Create the button to delete
-    var delLink = $('<a title="'+deleteTrans+'" href="#" class="btn btn-danger"><i class="fa fa-close"></i></a>');
-    // Add the button to the row
-    tr.append(delLink);
-    // When click, delete the matching row in the table
-    delLink.click(function(e) {
-    $(this).parent('td').parent('tr').remove();
-        e.preventDefault();
-        return false;
-    });
-    alert('PS : n\'oubliez pas de renommer mon appel et virer les alerts ...');
 }
 
 function addRowToTablewr(row) {
