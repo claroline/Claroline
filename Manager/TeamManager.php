@@ -23,7 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.team_manager")
@@ -55,7 +55,7 @@ class TeamManager
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->om = $om;
@@ -281,7 +281,7 @@ class TeamManager
         $team->setTeamManager($user);
 
         if (!is_null($teamManagerRole)) {
-            
+
             if (!is_null($currentTeamManager)) {
                 $this->roleManager
                     ->dissociateRole($currentTeamManager, $teamManagerRole);
@@ -310,7 +310,7 @@ class TeamManager
     {
         $this->om->startFlushSuite();
         $nodes = array();
-        
+
         foreach ($teams as $team) {
 
             if ($withDirectory) {
@@ -540,7 +540,7 @@ class TeamManager
         foreach ($decoders as $decoder) {
             $decoderName = $decoder->getName();
             $rights[$teamManagerRoleName][$decoderName] = true;
-            
+
             if ($decoderName !== 'administrate' && $decoderName !== 'delete') {
                 $rights[$teamRoleName][$decoderName] = true;
             }

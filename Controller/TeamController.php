@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class TeamController extends Controller
@@ -39,7 +39,7 @@ class TeamController extends Controller
     private $httpKernel;
     private $request;
     private $router;
-    private $securityContext;
+    private $authorization;
     private $teamManager;
 
     /**
@@ -48,7 +48,7 @@ class TeamController extends Controller
      *     "httpKernel"      = @DI\Inject("http_kernel"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
-     *     "securityContext" = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "teamManager"     = @DI\Inject("claroline.manager.team_manager")
      * })
      */
@@ -57,7 +57,7 @@ class TeamController extends Controller
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorization,
         TeamManager $teamManager
     )
     {
@@ -65,7 +65,7 @@ class TeamController extends Controller
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->authorization = $authorization;
         $this->teamManager = $teamManager;
     }
 
@@ -129,7 +129,7 @@ class TeamController extends Controller
         $teamsWithUsers = $this->teamManager
             ->getTeamsWithUsersByWorkspace($workspace);
         $nbUsers = array();
-        
+
         foreach ($teamsWithUsers as $teamWithUsers) {
             $nbUsers[$teamWithUsers['team']->getId()] = $teamWithUsers['nb_users'];
         }
@@ -1122,7 +1122,7 @@ class TeamController extends Controller
 
     private function checkToolAccess(Workspace $workspace)
     {
-        if (!$this->securityContext->isGranted('claroline_team_tool', $workspace)) {
+        if (!$this->authorization->isGranted('claroline_team_tool', $workspace)) {
 
             throw new AccessDeniedException();
         }
