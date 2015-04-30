@@ -18,14 +18,8 @@ class ClarolineAgendaBundle extends PluginBundle
         return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'agenda');
     }
 
-
     public function getAdditionalInstaller()
     {
         return new AdditionalInstaller();
-    }
-
-    public function hasMigrations()
-    {
-        return false;
     }
 }

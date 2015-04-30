@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -32,7 +32,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class AgendaController extends Controller
 {
-    private $security;
+    private $authorization;
     private $formFactory;
     private $request;
     private $agendaManager;
@@ -40,7 +40,7 @@ class AgendaController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "security"           = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
@@ -48,14 +48,14 @@ class AgendaController extends Controller
      * })
      */
     public function __construct(
-        SecurityContextInterface $security,
+        AuthorizationCheckerInterface $authorization,
         FormFactory $formFactory,
         Request $request,
         AgendaManager $agendaManager,
         RouterInterface $router
     )
     {
-        $this->security      = $security;
+        $this->authorization = $authorization;
         $this->formFactory   = $formFactory;
         $this->request       = $request;
         $this->agendaManager = $agendaManager;
@@ -231,7 +231,7 @@ class AgendaController extends Controller
     public function exportWorkspaceEventIcsAction(Workspace $workspace)
     {
         //if you can open the tool, you can export
-        if (!$this->security->isGranted('agenda', $workspace)) {
+        if (!$this->authorization->isGranted('agenda', $workspace)) {
             throw new AccessDeniedException("The event cannot be updated");
         }
 
@@ -273,7 +273,7 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
-        if (!$this->security->isGranted('EDIT', $event)) {
+        if (!$this->authorization->isGranted('EDIT', $event)) {
             throw new AccessDeniedException("The event cannot be updated");
         }
     }

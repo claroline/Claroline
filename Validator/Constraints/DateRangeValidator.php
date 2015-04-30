@@ -59,4 +59,4 @@ class DateRangeValidator extends ConstraintValidator
             $this->context->addViolation('valid_end_date_required');
         }
     }
-} 
+}

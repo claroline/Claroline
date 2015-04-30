@@ -6,18 +6,11 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller
 
 class AdditionalInstaller extends BaseInstaller
 {
-    protected $logger;
-
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        };
-    }
-
     public function preUpdate($currentVersion, $targetVersion)
     {
+        $updater = new Updater\MigrationUpdater($this->container);
+        $updater->setLogger($this->logger);
+        $updater->preUpdate();
     }
 
     public function postUpdate($currentVersion, $targetVersion)

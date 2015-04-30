@@ -16,22 +16,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Controller of the Agenda
  */
 class DesktopAgendaController extends Controller
 {
-    private $security;
+    private $tokenStorage;
     private $om;
     private $request;
     private $translator;
@@ -40,7 +40,7 @@ class DesktopAgendaController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "security"           = @DI\Inject("security.context"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
@@ -49,7 +49,7 @@ class DesktopAgendaController extends Controller
      * })
      */
     public function __construct(
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
         ObjectManager $om,
         Request $request,
         TranslatorInterface $translator,
@@ -57,7 +57,7 @@ class DesktopAgendaController extends Controller
         RouterInterface $router
     )
     {
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->om = $om;
         $this->request = $request;
         $this->translator = $translator;
@@ -73,7 +73,7 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $data = $this->agendaManager->desktopEvents($this->get('security.context')->getToken()->getUser());
+        $data = $this->agendaManager->desktopEvents($this->tokenStorage->getToken()->getUser());
 
         return new JsonResponse($data);
     }
@@ -136,7 +136,7 @@ class DesktopAgendaController extends Controller
      */
     public function tasksAction()
     {
-        $usr = $this->get('security.context')->getToken()->getUser();
+        $usr = $this->tokenStorage->getToken()->getUser();
         $events = $this->agendaManager->desktopEvents($usr, true);
 
         return array('events' => $events);
@@ -152,7 +152,7 @@ class DesktopAgendaController extends Controller
     public function widgetAction($order = null)
     {
         $em = $this-> get('doctrine.orm.entity_manager');
-        $usr = $this->get('security.context')->getToken()->getUser();
+        $usr = $this->tokenStorage->getToken()->getUser();
         $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, false);
         $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 

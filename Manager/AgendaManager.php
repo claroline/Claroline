@@ -17,12 +17,13 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -30,7 +31,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 class AgendaManager
 {
     private $om;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
     private $rm;
     private $translator;
     private $su;
@@ -39,7 +41,8 @@ class AgendaManager
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
-     *     "security"     = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"   = @DI\Inject("translator"),
      *     "su"           = @DI\Inject("claroline.security.utilities")
@@ -48,7 +51,8 @@ class AgendaManager
     public function __construct(
         ObjectManager $om,
         $rootDir,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
         TranslatorInterface $translator,
         Utilities $su
@@ -56,7 +60,8 @@ class AgendaManager
     {
         $this->rootDir = $rootDir;
         $this->om = $om;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->rm = $rm;
         $this->translator = $translator;
         $this->su = $su;
@@ -65,7 +70,7 @@ class AgendaManager
     public function addEvent(Event $event, $workspace = null)
     {
         $event->setWorkspace($workspace);
-        $event->setUser($this->security->getToken()->getUser());
+        $event->setUser($this->tokenStorage->getToken()->getUser());
         $this->setEventDate($event);
         $this->om->persist($event);
 
@@ -110,7 +115,7 @@ class AgendaManager
         if (isset($workspaceId)) {
             $listEvents = $repo->findByWorkspaceId($workspaceId, false);
         } else {
-            $usr = $this->security->getToken()->getUser();
+            $usr = $this->tokenStorage->getToken()->getUser();
             $listDesktop = $repo->findDesktop($usr, false);
             $listEventsU = $repo->findByUser($usr, false);
             $listEvents = array_merge($listEventsU, $listDesktop);
@@ -195,7 +200,7 @@ class AgendaManager
             $e->setEnd($ical->iCalDateToUnixTimestamp($event['DTEND']));
             $e->setDescription($event['DESCRIPTION']);
             if ($workspace) $e->setWorkspace($workspace);
-            $e->setUser($this->security->getToken()->getUser());
+            $e->setUser($this->tokenStorage->getToken()->getUser());
             $e->setPriority('#01A9DB');
             $this->om->persist($e);
             //the flush is required to generate an id
@@ -271,8 +276,8 @@ class AgendaManager
             'isTaskDone' => $event->isTaskDone(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
-            'editable' => $this->security->isGranted('EDIT', $event),
-            'deletable' => $this->security->isGranted('DELETE', $event),
+            'editable' => $this->authorization->isGranted('EDIT', $event),
+            'deletable' => $this->authorization->isGranted('DELETE', $event),
             'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
             'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
             'startFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $start),

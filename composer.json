@@ -9,7 +9,7 @@
         "claroline/core-bundle": "~5.0"
     },
     "autoload": {
-        "psr-0": { "Claroline\\Agenda": "" }
+        "psr-0": { "Claroline\\AgendaBundle": "" }
     },
-    "target-dir": "Claroline/Agenda"
+    "target-dir": "Claroline/AgendaBundle"
 }
