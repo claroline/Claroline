@@ -24,25 +24,21 @@ class MigrationUpdater extends Updater
         $this->om = $container->get('doctrine.orm.entity_manager');
     }
 
-    public function preUpdate()
+    public function preInstall()
     {
         $this->log('Updating migration versions...');
         $conn = $this->om->getConnection();
-        $stmt = $conn->query("show tables");
+        $schemaManager = $conn->getSchemaManager();
+        $tables = $schemaManager->listTables();
         $found = false;
 
-        while ($row = $stmt->fetch()) {
-            foreach ($row as $key => $val) {
-                if ($val === 'claro_message') $found = true;
-            }
+        foreach ($tables as $table) {
+            if ($table->getName() === 'claro_message') $found = true;
         }
 
-        if (!$found) {
+        if ($found) {
             $this->log('Inserting migration 20150429114010');
-            $conn->query("INSERT INTO doctrine_clarolineagendabundle_versions (version) VALUES (20150429114010)");
-        } else {
-            $this->log('Migrations found.');
+            $conn->query("INSERT INTO doctrine_clarolinemessagebundle_versions (version) VALUES (20150429114010)");
         }
-
     }
 }
