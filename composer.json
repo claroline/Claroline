@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.4.1",
         "ext-intl": "*",
-        "claroline/core-bundle": "~4.0",
+        "claroline/core-bundle": "~5.0",
         "icap/notification-bundle": "~2.0"
     },
     "autoload": {
