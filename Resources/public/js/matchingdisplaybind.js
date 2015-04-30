@@ -6,19 +6,62 @@ $(function() {
         jsPlumb.setContainer($("body"));
 
         //Create all draggable in source.
-        source();
+        jsPlumb.makeSource($(".origin"), {
+            anchor: "Right",
+            cssClass: "endPoints",
+            isSource: true
+        });
 
         //Create all droppable in target
-        target();
+         jsPlumb.makeTarget($(".droppable"), {
+            anchor: "Left",
+            cssClass: "endPoints",
+            isTarget: true        
+        });
 
         //defaults parameteres for all connections
-        defaultParameters();
+        jsPlumb.importDefaults({
+            ConnectionsDetachable:false,
+            Connector: "Straight",
+            DropOptions: {tolerance:"touch"},
+            Endpoint: "Dot",
+            EndpointStyle: {fillStyle:"#777", radius: 5},
+            HoverPaintStyle: {strokeStyle:"red"},
+            LogEnabled: false,
+            PaintStyle: { strokeStyle:"#777", lineWidth: 4}
+        });
 
         //if there are multiples same link
-        multiplesLinks();
+         jsPlumb.bind("beforeDrop", function(info){
+            var connection = jsPlumb.getConnections({
+                source:info["sourceId"],
+                target:info["targetId"]
+            });
+            if(connection.length !== 0){
+                //if the connection is already makes
+                if (info["sourceId"] == connection[0].sourceId && info["targetId"] == connection[0].targetId) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        });
 
         //for remove connections
-        removeConnections();
+        jsPlumb.bind("click", function(connection) {
+            var target = connection["target"]["id"];
+            var connectionsTarget = jsPlumb.getConnections({
+                target:target
+            });
+            if (connectionsTarget.length > 1) {
+                jsPlumb.detach(connection);
+            } else {
+                jsPlumb.detach(connection);
+                jsPlumb.removeAllEndpoints($("#" + target));
+            }
+        });
     });
 
     //for check in connections

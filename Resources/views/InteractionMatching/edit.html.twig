@@ -55,8 +55,8 @@
                 <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrderProposal();setOrderLabel();">{{ 'save' | trans }}</button>
                 <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
             </div>
-             {% if locker != "" %}        
-        <input type="hidden" id="locker" value="{{locker.value}}"> 
+             {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
     {% endif %}
         </form>
     </div>
@@ -69,7 +69,6 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionMatching.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/jsPlumb.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery.jsplumb-1.6.2-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.0-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
@@ -82,6 +81,6 @@
             '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}',
              '{{ typeMatching | raw }}', '{{ 'advanced edition' | trans }}', '{{ 'remove advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', {{ nbResponses }}, '{{ correspondence }}', '{{ tableLabel }}', '{{ tableProposal }}', '{{ 'correspondenceError' | trans }}', '{{ 'scoreError'| trans}}', '{{ 'Proposal.positionForce' | trans }}', '{{ 'Label.positionForce' | trans }}','{{ 'advanced edition' | trans }}');
             newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
-        });        
+        });
     </script>
 {% endblock %}
