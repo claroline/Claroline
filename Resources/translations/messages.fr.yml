@@ -214,7 +214,7 @@ inValidMark: Note invalide
 
 # I Intraction type (data in the DB)
 InteractionGraphic: Graphique
-InteractionHole: Blanc
+InteractionHole: Texte à trous
 InteractionMatching: Association
 InteractionOpen: Ouverte
 InteractionQCM: QCM
