@@ -34,7 +34,7 @@ class WidgetController extends Controller
      */
     public function updateWidgetBlogList(Request $request, WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
 
@@ -87,7 +87,7 @@ class WidgetController extends Controller
      */
     public function updateWidgetBlog(Request $request, WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
 
@@ -130,7 +130,7 @@ class WidgetController extends Controller
      */
     public function updateWidgetTagListBlog(Request $request, WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
 

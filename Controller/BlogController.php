@@ -40,7 +40,7 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $search = $this->getRequest()->get('search');
         if (null !== $search && '' !== $search) {
@@ -119,7 +119,7 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');

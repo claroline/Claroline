@@ -8,9 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service("icap_blog.form.post")
@@ -18,16 +18,16 @@ use JMS\DiExtraBundle\Annotation as DI;
 class PostType extends AbstractType
 {
     /** @var \Claroline\CoreBundle\Manager\EventManager */
-    private $securityContext;
+    private $authorizationChecker;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context")
+     *     "authorizationChecker" = @DI\Inject("security.authorization_checker")
      * })
      */
-    public function __construct(SecurityContext $securityContext)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker)
     {
-        $this->securityContext = $securityContext;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -53,16 +53,16 @@ class PostType extends AbstractType
             ->add('tags', 'tags')
         ;
 
-        $securityContext = $this->securityContext;
+        $authorizationChecker = $this->authorizationChecker;
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($securityContext, $options) {
+            function(FormEvent $event) use ($authorizationChecker, $options) {
                 $form = $event->getForm();
                 $data = $event->getData();
                 $blog = $data->getBlog();
 
-                if ($securityContext->isGranted('EDIT', $blog) || $securityContext->isGranted('POST', $blog)) {
+                if ($authorizationChecker->isGranted('EDIT', $blog) || $authorizationChecker->isGranted('POST', $blog)) {
                     $form->add('publicationDate', 'datepicker', array(
                             'required'      => false,
                             'read_only'     => true,

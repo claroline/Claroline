@@ -49,7 +49,7 @@ class Controller extends BaseController
         }
 
         foreach ($permissions as $permission) {
-            $currentIsGranted = $this->get('security.context')->isGranted($permission, $blog);
+            $currentIsGranted = $this->get('security.authorization_checker')->isGranted($permission, $blog);
             if ("OR" === $comparison) {
                 $isGranted = $isGranted || $currentIsGranted;
             }
@@ -75,7 +75,7 @@ class Controller extends BaseController
     protected function isUserGranted($permission, Blog $blog)
     {
         $checkPermission = false;
-        if ($this->get('security.context')->isGranted($permission, new ResourceCollection(array($blog->getResourceNode())))) {
+        if ($this->get('security.authorization_checker')->isGranted($permission, new ResourceCollection(array($blog->getResourceNode())))) {
             $checkPermission = true;
         }
 

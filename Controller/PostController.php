@@ -28,10 +28,9 @@ class PostController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $securityContext = $this->get('security.context');
-        $user            = $securityContext->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if (!$securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = null;
         }
 
@@ -113,7 +112,7 @@ class PostController extends Controller
     {
         $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $postStatus = Comment::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishPost()) {
@@ -147,7 +146,7 @@ class PostController extends Controller
     {
         $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $translator = $this->get('translator');
 
@@ -177,7 +176,7 @@ class PostController extends Controller
                     $unitOfWork->computeChangeSets();
                     $changeSet = $unitOfWork->getEntityChangeSet($post);
 
-                    if('update' === $action && !$this->get('security.context')->isGranted('EDIT', $blog)) {
+                    if('update' === $action && !$this->get('security.authorization_checker')->isGranted('EDIT', $blog)) {
                         $post->unpublish();
                     }
 
