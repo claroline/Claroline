@@ -19,6 +19,9 @@ function insertStyle(tOpen, deleteTrans) {
         e.preventDefault(); // prevent add # in the url
         return false;
     });
+
+    //todo delete to implement numerical questions
+    $("#ujm_exobundle_interactionopentype_typeopenquestion option[value='1']").remove();
 }
 
 function formWordResponseEdit(nbResponses) {
