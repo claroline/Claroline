@@ -222,6 +222,7 @@ InteractionQCM: QCM
 
 # K
 key word: Key word
+keys words: Keys words
 kind of question: What kind of question
 
 # L
@@ -555,5 +556,6 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Hints
 
 ujm_exobundle_categorytype_value: Name of the new category
 
+WordResonse.caseSensitive: Case sensitive
 WordResponse.score: Point to this response
 WordResponse.response_value: Word

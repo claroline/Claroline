@@ -100,6 +100,7 @@ class holeExport extends qtiExport
                 $mapEntry->setAttribute("mapKey", 'choice_'.$resp->getId());
             }
             $mapEntry->setAttribute("mappedValue",$resp->getScore());
+            $mapEntry->setAttribute("caseSensitive",$resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
             $i++;

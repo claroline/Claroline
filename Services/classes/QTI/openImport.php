@@ -12,6 +12,7 @@ use UJM\ExoBundle\Entity\InteractionOpen;
 class openImport extends qtiImport
 {
     protected $interactionOpen;
+    protected $codeType;
 
     /**
      * Implements the abstract method
@@ -20,7 +21,6 @@ class openImport extends qtiImport
      * @param qtiRepository $qtiRepos
      * @param DOMElement $assessmentItem assessmentItem of the question to imported
      *
-     * @return UJM\ExoBundle\Entity\InteractionOpen
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem) {
         $this->qtiRepos = $qtiRepos;
@@ -35,8 +35,6 @@ class openImport extends qtiImport
         $this->doctrine->getManager()->flush();
 
         $this->createInteractionOpen();
-
-        return $this->interactionOpen;
     }
 
     /**
@@ -71,9 +69,9 @@ class openImport extends qtiImport
      *
      */
     protected function getCodeTypeOpen() {
-        $type =$this->doctrine->getManager()
-                ->getRepository('UJMExoBundle:TypeOpenQuestion')
-                ->findOneByCode(2);
+        $type = $this->doctrine->getManager()
+                     ->getRepository('UJMExoBundle:TypeOpenQuestion')
+                     ->findOneByCode($this->codeType);
 
         return $type;
     }
@@ -86,17 +84,7 @@ class openImport extends qtiImport
      */
     protected function getPrompt()
     {
-        $text = '';
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        $eti = $ib->getElementsByTagName("extendedTextInteraction")->item(0);
-        if ($eti->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $eti->getElementsByTagName("prompt")->item(0);
-            $text = $this->domElementToString($prompt);
-            $text = str_replace('<prompt>', '', $text);
-            $text = str_replace('</prompt>', '', $text);
-            $text = html_entity_decode($text);
-        }
 
-        return $text;
+        return $this->getPromptChild();
     }
 }

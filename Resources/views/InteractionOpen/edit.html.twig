@@ -57,8 +57,8 @@
                     <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
                 {% endif %}
             </div>
-           {% if locker != "" %}        
-        <input type="hidden" id="locker" value="{{locker.value}}"> 
+           {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
     {% endif %}
         </form>
     </div>
@@ -74,8 +74,9 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            insertStyle('{{ typeOpen|raw }}');
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+            insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+            openEdit({{ nbResponses }});
+            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>
 {% endblock %}
