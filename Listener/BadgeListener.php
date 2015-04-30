@@ -2,7 +2,6 @@
 
 namespace Icap\DropzoneBundle\Listener;
 
-use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
 use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
@@ -76,7 +75,7 @@ class BadgeListener
      * @DI\Observe("badge-resource-icap_dropzone-drop_start-generate_validation_link")
      * @DI\Observe("badge-resource-icap_dropzone-dropzone_configure-generate_validation_link")
      */
-    public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $event)
+    public function onBagdeCreateValidationLink($event)
     {
         $content = null;
         $log     = $event->getLog();
