@@ -19,6 +19,9 @@
             background-color: rgba(0, 0, 0, 0);
             padding: 1px 3px 3px 5px;
         }
+        .fc-event {
+            min-height: 15px;
+        }
         .fc-event:hover .edit-event{
             display: block;
         }
@@ -27,6 +30,9 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 90%;
+        }
+        .is-task {
+            padding-right: 3px;
         }
     </style>
 {% endblock %}
@@ -61,8 +67,8 @@
                     </a>
                 </div>
 
-                {% if filters | length > 1 %}
-                    <div class="panel panel-default">
+                <div class="panel panel-default">
+                    {% if filters | length > 1 %}
                         <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
                         <div id="panel-owners" class="panel-body list-group in" style="padding:0">
                             <div id="selectWorkspace">
@@ -80,13 +86,42 @@
                                 {% endfor %}
                             </div>
                         </div>
-                    </div>
-                {% endif %}
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">{{'tasks'|trans({}, 'agenda')}}</div>
-                    <div id="tasks" class="panel-body list-group" style="padding:0">
-                        {% render controller('ClarolineAgendaBundle:DesktopAgenda:tasks') %}
+                    {% endif %}
+                    <div data-toggle="collapse" data-target="#panel-tasks" class="panel-heading">{{'filter_tasks'|trans({}, 'agenda')}}</div>
+                    <div id="panel-tasks" class="panel-body list-group in" style="padding:0">
+                        <div id="selectTask">
+                            <li class="list-group-item">
+                                <input
+                                        id="no-filter-tasks"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="no-filter-tasks"
+                                        checked
+                                        />
+                                <label for="no-filter-tasks">{{ 'no-filter-tasks'|trans({}, 'agenda') }}</label>
+                            </li>
+                            <li class="list-group-item">
+                                <input
+                                        id="hide-tasks"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="hide-tasks"
+                                        />
+                                <label for="hide-tasks">{{ 'hide_tasks'|trans({}, 'agenda') }}</label>
+                            </li>
+                            <li class="list-group-item">
+                                <input
+                                        id="hide-events"
+                                        type="radio"
+                                        name="tasks"
+                                        class="filter-tasks"
+                                        value="hide-events"
+                                        />
+                                <label for="hide-events">{{ 'show_task_only'|trans({}, 'agenda') }}</label>
+                            </li>
+                        </div>
                     </div>
                 </div>
 

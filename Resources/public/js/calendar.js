@@ -30,11 +30,6 @@
         } else {
             calendar.canCreate = canCreate;
         }
-        calendar.flashbag =
-            '<div class="alert alert-success">' +
-            '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-            Translator.trans('edit_event_success', {}, 'platform') +
-            '</div>';
 
         //initialize route & url depending on the context
         if (context !== 'desktop') {
@@ -84,20 +79,30 @@
                 workspaceIds.push(parseInt($(this).val()));
             });
 
-            filterCalendarItems(workspaceIds);
+            filterEvents(workspaceIds);
+        });
+
+        $('.filter-tasks').click(function () {
+            var workspaceIds = [];
+
+            $('.filter:checkbox:checked').each(function () {
+                workspaceIds.push(parseInt($(this).val()));
+            });
+
+            filterTasks(workspaceIds);
         });
 
         //INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
-                left: 'prev, next today',
+                left: 'prev today next',
                 center: 'title',
-                right: 'month, agendaWeek, agendaDay'
+                right: 'month agendaWeek agendaDay'
             },
             columnFormat: {
                 month: 'ddd',
-                week: 'ddd d/M',
-                day: 'dddd d/M'
+                week: 'ddd D/M',
+                day: 'dddd D/M'
             },
             buttonText: {
                 prev: t('prev'),
@@ -140,6 +145,7 @@
                                 .removeClass('fa-check')
                                 .addClass('fa-square-o')
                                 .next().css('text-decoration', 'none');
+                            rerenderEvent(event, $('.' + event.className));
                         }
                     })
                 }
@@ -153,6 +159,7 @@
                                 .removeClass('fa-square-o')
                                 .addClass('fa-check')
                                 .next().css('text-decoration', 'line-through');
+                            rerenderEvent(event, $('.' + event.className));
                         }
                     })
                 } else if ($(jsEvent.target).hasClass('edit-event')) {
@@ -166,6 +173,12 @@
                         'form-event'
                     );
                 }
+            },
+            eventDragStart: function(event, jsEvent, ui, view) {
+                $('.'+event.className).popover('hide');
+            },
+            eventDragStop: function(event, jsEvent, ui, view) {
+                $('.popover.in').remove();
             },
             //renders the popover for an event
             eventRender: function (event, element) {
@@ -185,7 +198,7 @@
                 month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
                 day = !isNaN(getQueryVariable('day')) && getQueryVariable('day') ? getQueryVariable('day') : new Date('d');
 
-            $('#calendar').fullCalendar('gotoDate', new Date(year, month, day))
+            $('#calendar').fullCalendar('gotoDate', year+'-'+month+'-'+day);
         }
     };
 
@@ -207,13 +220,13 @@
     };
 
     var rerenderEvent = function(event, element) {
-        //destroy old popover
+        $('.popover.in').remove();
         element.popover('destroy');
         renderEvent(event, element);
     };
 
     var renderEvent = function (event, element) {
-        // Create the popover for all events/tasks
+        // Create the popover for the event or the task
         element.popover({
             title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
             content: Twig.render(EventContent, {'event': event}),
@@ -232,7 +245,7 @@
             checkbox
                 .attr('data-event-id', event.id)
                 .html('')
-                .addClass('fa')
+                .addClass('fa is-task')
                 .removeClass('fc-time');
 
             $(element[0]).css({
@@ -312,18 +325,12 @@
     var updateCalendarItemCallback = function (event) {
         hidePopovers();
         updateCalendarItem(event);
-        $('.panel-body').first().prepend(calendar.flashbag);
     };
 
     var removeEvent = function (event, item, data) {
         hidePopovers();
         //Remove from the calendar if it exists.
         $('#calendar').fullCalendar('removeEvents', data.id);
-        //Remove from the task bar if it exists.
-        $('#li-task-' + data.id).remove();
-        if ($('#tasks-list').length === 0) {
-            $('#tasks-list').append("<div class=\"list-group-item task-item no-task\" style=\"font-style: italic\">{{ 'no_task_now'|trans({}, 'agenda') }}</div>");
-        }
     };
 
     /**
@@ -342,7 +349,6 @@
             'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             'type': 'POST',
             'success': function (event) {
-                $('.panel-body').first().prepend(calendar.flashbag);
                 rerenderEvent(event, $('.' + event.className));
             },
             'error': function () {
@@ -373,7 +379,7 @@
             for (var i = 0; i < workspaceIds.length; i++) {
                 $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                     //check for workspace
-                    eventObject.visible = ($.inArray(eventObject.workspace_id, workspaceIds) >= 0) ? true: false;
+                    eventObject.visible = ($.inArray(eventObject.workspace_id, workspaceIds) >= 0);
                     //check for desktop
                     if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
                         eventObject.visible = true;
@@ -385,21 +391,33 @@
     };
 
     var filterTasks = function (workspaceIds) {
+        var radioValue = $('input[type=radio].filter-tasks:checked').val();
         var numberOfChecked = $('.filter:checkbox:checked').length;
         var totalCheckboxes = $('.filter:checkbox').length;
 
-        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
-            $('.task-item').each(function () {
-                $(this).show();
-            });
-        } else {
-            //hide what's needed
-            $('.task-item').each(function() {
-                if ($.inArray(parseInt($(this).attr('data-workspace-id')), workspaceIds) < 0) {
-                    $(this).hide();
+        if (radioValue === 'no-filter-tasks') {
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
+                    eventObject.visible = true;
+
+                } else {
+                    eventObject.visible = $.inArray(eventObject.workspace_id, workspaceIds) >= 0;
+                    //check for desktop
+                    if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
+                        eventObject.visible = true;
+                    }
                 }
             });
+        } else if (radioValue === 'hide-tasks') {
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                eventObject.visible = !eventObject.isTask && $.inArray(eventObject.workspace_id, workspaceIds);
+            });
+        } else {
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                eventObject.visible = eventObject.isTask && $.inArray(eventObject.workspace_id, workspaceIds);
+            });
         }
+        $('#calendar').fullCalendar('rerenderEvents');
     };
 
     var hideFormhours = function() {
@@ -424,15 +442,5 @@
         if (!$('#agenda_form_isAllDay').is(':checked')) {
             $('#agenda_form_startHours').parent().parent().show();
         }
-    };
-
-    /**
-     * Filter by workspace ids.
-     * The id "0" is an exception for the desktop
-     * @param workspaceIds
-     */
-    var filterCalendarItems = function (workspaceIds) {
-        filterEvents(workspaceIds);
-        filterTasks(workspaceIds);
     };
 }) ();

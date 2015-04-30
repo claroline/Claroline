@@ -128,22 +128,6 @@ class DesktopAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/tasks",
-     *     name="claro_desktop_agenda_tasks"
-     * )
-     *
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
-     */
-    public function tasksAction()
-    {
-        $usr = $this->tokenStorage->getToken()->getUser();
-        $events = $this->agendaManager->desktopEvents($usr, true);
-
-        return array('events' => $events);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/widget/{order}",
      *     name="claro_desktop_agenda_widget"
      * )

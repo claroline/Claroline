@@ -9,9 +9,13 @@
 
 <div>{{ 'agenda_form_author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
 
-{% if event.workspace != null %}
-<div>{{ 'workspace'|trans({}, 'platform') }}: {{ event.workspace }}</div>
-{% endif %}
+<div>{{ 'workspace'|trans({}, 'platform') }}:
+    {% if event.workspace is null %}
+         {{ 'desktop'|trans({}, 'platform') }}
+    {% else %}
+        {{ event.workspace }}
+    {% endif %}
+</div>
 
 {% if event.description is not empty %}
     {{ 'description'|trans({}, 'platform') }} :

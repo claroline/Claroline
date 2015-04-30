@@ -136,6 +136,7 @@ class AgendaController extends Controller
      */
     public function setTaskAsNotDone(Event $event)
     {
+        $this->checkPermission($event);
         if (!$event->isTaskDone()) {
             throw new \Exception('This task is already mark as not done.');
         }
@@ -160,6 +161,7 @@ class AgendaController extends Controller
      */
     public function setTaskAsDone(Event $event)
     {
+        $this->checkPermission($event);
         if ($event->isTaskDone()) {
             throw new \Exception('This task is already mark as done.');
         }

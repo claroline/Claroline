@@ -21,7 +21,7 @@ cancel: Cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
-day: day
+day: Day
 dec: Dec
 december: December
 end: end
@@ -33,10 +33,12 @@ export: 'Export events'
 feb: Feb
 february: February
 filter_user: Filter by user
+filter_tasks: Filter the tasks
 filter_ws: Filter by workspace
 fri: Fri
 friday: Friday
 high: High
+hide_tasks: Hide all the tasks
 import_agenda_file_file: 'Import'
 isAllDay: All day
 in_x_days: In %nbDays% days
@@ -57,8 +59,9 @@ midnight: midnight
 modify: 'Modify an event'
 mon: Mon
 no_task_now: No task to do
+no-filter-tasks: No filter
 monday: Monday
-month: month
+month: Month
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
@@ -79,6 +82,7 @@ september: September
 start_date: 'Start date'
 sun: Sun
 sunday: Sunday
+show_task_only: Display only the tasks
 task: Task
 task_done: Task done !
 task_not_done: Task not done !
@@ -95,5 +99,5 @@ type: Type
 update: modify
 wed: Wed
 wednesday: Wednesday
-week: week
+week: Week
 workspace: Workspace
