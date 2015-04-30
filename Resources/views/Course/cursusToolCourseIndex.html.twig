@@ -67,7 +67,7 @@
             {
                 'name': displayedWords['course'],
                 'href': ''
-            },
+            }
         ])
     }}
 {% endblock %}
@@ -76,6 +76,11 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             {{ displayedWords['course'] }}
+            <a href="{{ path('claro_cursus_plugin_configure_form') }}"
+               class="pull-right"
+            >
+                <i class="fa fa-cog"></i>
+            </a>
         </h3>
     </div>
     <div class="panel-body">
@@ -217,14 +222,14 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            <span class="btn btn-default btn-sm edit-course-btn"
-                                  data-course-id="{{ courseId }}"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="{{ 'edit_course'|trans({}, 'cursus') }}"
+                            <a href="{{ path('claro_cursus_course_edit_form', {'course': courseId}) }}"
+                               class="btn btn-default btn-sm"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'edit_course'|trans({}, 'cursus') }}"
                             >
                                 <i class="fa fa-edit"></i>
-                            </span>
+                            </a>
                             <span class="btn btn-danger btn-sm delete-course-btn"
                                   data-course-id="{{ courseId }}"
                                   data-toggle="tooltip"
@@ -249,9 +254,9 @@
         {% endif %}
         
         <br>
-        <span id="course-create-btn" class="btn btn-default">
+        <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-default">
             {{ 'create_course'|trans({}, 'cursus') }}
-        </span>
+        </a>
     </div>
 
     <div id="view-course-description-box" class="modal fade" role="dialog" aria-hidden="true">

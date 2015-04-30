@@ -44,6 +44,7 @@ class CourseRepository extends EntityRepository
             FROM Claroline\CursusBundle\Entity\Course c
             WHERE UPPER(c.title) LIKE :search
             OR UPPER(c.code) LIKE :search
+            OR UPPER(c.description) LIKE :search
             ORDER BY c.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);

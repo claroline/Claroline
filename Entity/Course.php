@@ -89,6 +89,11 @@ class Course
      */
     protected $sessions;
 
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    protected $icon;
+
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
@@ -197,5 +202,15 @@ class Course
     public function getSessions()
     {
         return $this->sessions->toArray();
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
     }
 }

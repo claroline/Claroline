@@ -12,11 +12,13 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
@@ -26,21 +28,29 @@ use Claroline\CursusBundle\Form\CourseSessionType;
 use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
+/**
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('claroline_cursus_tool')")
+ */
 class CourseController extends Controller
 {
     private $cursusManager;
     private $formFactory;
+    private $mailManager;
     private $request;
     private $roleManager;
+    private $router;
     private $securityContext;
     private $toolManager;
     private $translator;
@@ -50,8 +60,10 @@ class CourseController extends Controller
      * @DI\InjectParams({
      *     "cursusManager"    = @DI\Inject("claroline.manager.cursus_manager"),
      *     "formFactory"      = @DI\Inject("form.factory"),
+     *     "mailManager"      = @DI\Inject("claroline.manager.mail_manager"),
      *     "requestStack"     = @DI\Inject("request_stack"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"           = @DI\Inject("router"),
      *     "securityContext"  = @DI\Inject("security.context"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
@@ -61,8 +73,10 @@ class CourseController extends Controller
     public function __construct(
         CursusManager $cursusManager,
         FormFactory $formFactory,
+        MailManager $mailManager,
         RequestStack $requestStack,
         RoleManager $roleManager,
+        RouterInterface $router,
         SecurityContextInterface $securityContext,
         ToolManager $toolManager,
         Translator $translator,
@@ -71,8 +85,10 @@ class CourseController extends Controller
     {
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
+        $this->mailManager = $mailManager;
         $this->request = $requestStack->getCurrentRequest();
         $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
@@ -97,7 +113,6 @@ class CourseController extends Controller
         $order = 'ASC'
     )
     {
-        $this->checkToolAccess();
         $displayedWords = array();
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
@@ -127,14 +142,22 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateForm.html.twig")
      */
     public function courseCreateFormAction(User $authenticatedUser)
     {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(new CourseType($authenticatedUser));
+        $displayedWords = array();
 
-        return array('form' => $form->createView());
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+        $form = $this->formFactory->create(new CourseType($authenticatedUser), new Course());
+
+        return array(
+            'form' => $form->createView(),
+            'displayedWords' => $displayedWords,
+            'type' => 'course'
+        );
     }
 
     /**
@@ -144,16 +167,21 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseCreateForm.html.twig")
      */
     public function courseCreateAction(User $authenticatedUser)
     {
-        $this->checkToolAccess();
         $course = new Course();
         $form = $this->formFactory->create(new CourseType($authenticatedUser), $course);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $icon = $form->get('icon')->getData();
+
+            if (!is_null($icon)) {
+                $hashName = $this->cursusManager->saveIcon($icon);
+                $course->setIcon($hashName);
+            }
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
@@ -164,10 +192,21 @@ class CourseController extends Controller
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
 
-            return new JsonResponse('success', 200);
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_course_index')
+            );
         } else {
+            $displayedWords = array();
 
-            return array('form' => $form->createView());
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
+
+            return array(
+                'form' => $form->createView(),
+                'displayedWords' => $displayedWords,
+                'type' => 'course'
+            );
         }
     }
 
@@ -178,13 +217,17 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseEditModalForm.html.twig")
+     * @EXT\Template()
      *
      * @param Course $course
      */
     public function courseEditFormAction(Course $course, User $authenticatedUser)
     {
-        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
         $form = $this->formFactory->create(
             new CourseType($authenticatedUser),
             $course
@@ -192,7 +235,9 @@ class CourseController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'course' => $course
+            'course' => $course,
+            'displayedWords' => $displayedWords,
+            'type' => 'course'
         );
     }
 
@@ -203,13 +248,12 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseEditModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseEditForm.html.twig")
      *
      * @param Course $course
      */
     public function courseEditAction(Course $course, User $authenticatedUser)
     {
-        $this->checkToolAccess();
         $form = $this->formFactory->create(
             new CourseType($authenticatedUser),
             $course
@@ -217,6 +261,12 @@ class CourseController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $icon = $form->get('icon')->getData();
+
+            if (!is_null($icon)) {
+                $hashName = $this->cursusManager->changeIcon($course, $icon);
+                $course->setIcon($hashName);
+            }
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
@@ -227,12 +277,21 @@ class CourseController extends Controller
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
 
-            return new JsonResponse('success', 200);
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_course_index')
+            );
         } else {
+            $displayedWords = array();
+
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
 
             return array(
                 'form' => $form->createView(),
-                'course' => $course
+                'course' => $course,
+                'displayedWords' => $displayedWords,
+                'type' => 'course'
             );
         }
     }
@@ -249,7 +308,6 @@ class CourseController extends Controller
      */
     public function courseDeleteAction(Course $course)
     {
-        $this->checkToolAccess();
         $this->cursusManager->deleteCourse($course);
 
         $message = $this->translator->trans(
@@ -276,8 +334,6 @@ class CourseController extends Controller
      */
     public function courseDescriptionDisplayAction(Course $course)
     {
-        $this->checkToolAccess();
-
         return array('description' => $course->getDescription());
     }
 
@@ -295,7 +351,6 @@ class CourseController extends Controller
      */
     public function courseManagementAction(Course $course)
     {
-        $this->checkToolAccess();
         $displayedWords = array();
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
@@ -333,7 +388,6 @@ class CourseController extends Controller
      */
     public function courseSessionCreateFormAction(Course $course)
     {
-        $this->checkToolAccess();
         $form = $this->formFactory->create(new CourseSessionType());
 
         return array('form' => $form->createView(), 'course' => $course);
@@ -350,7 +404,6 @@ class CourseController extends Controller
      */
     public function courseSessionCreateAction(Course $course, User $authenticatedUser)
     {
-        $this->checkToolAccess();
         $session = new CourseSession();
         $form = $this->formFactory->create(new CourseSessionType(), $session);
         $form->handleRequest($this->request);
@@ -400,7 +453,6 @@ class CourseController extends Controller
      */
     public function courseSessionEditFormAction(CourseSession $session)
     {
-        $this->checkToolAccess();
         $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
 
         return array('form' => $form->createView(), 'session' => $session);
@@ -417,7 +469,6 @@ class CourseController extends Controller
      */
     public function courseSessionEditAction(CourseSession $session)
     {
-        $this->checkToolAccess();
         $form = $this->formFactory->create(new CourseSessionEditType($session), $session);
         $form->handleRequest($this->request);
 
@@ -442,7 +493,6 @@ class CourseController extends Controller
      */
     public function courseSessionDeleteAction(CourseSession $session, $mode)
     {
-        $this->checkToolAccess();
         $withWorkspace = (intval($mode) === 1);
         $this->cursusManager->deleteCourseSession($session, $withWorkspace);
 
@@ -462,9 +512,9 @@ class CourseController extends Controller
      */
     public function courseSessionViewManagementAction(CourseSession $session)
     {
-        $this->checkToolAccess();
         $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
         $sessionGroups = $this->cursusManager->getSessionGroupsBySession($session);
+        $queues = $this->cursusManager->getSessionQueuesBySession($session);
         $learners = array();
         $tutors = array();
         $learnersGroups = array();
@@ -493,7 +543,8 @@ class CourseController extends Controller
             'learners' => $learners,
             'tutors' => $tutors,
             'learnersGroups' => $learnersGroups,
-            'tutorsGroups' => $tutorsGroups
+            'tutorsGroups' => $tutorsGroups,
+            'queues' => $queues
         );
     }
 
@@ -527,8 +578,6 @@ class CourseController extends Controller
         $order = 'ASC'
     )
     {
-        $this->checkToolAccess();
-
         $users = $search === '' ?
             $this->cursusManager->getUnregisteredUsersBySession(
                 $session,
@@ -578,7 +627,6 @@ class CourseController extends Controller
         $userType
     )
     {
-        $this->checkToolAccess();
         $results = array();
         $sessionUsers = $this->cursusManager->registerUsersToSession(
             $session,
@@ -613,7 +661,6 @@ class CourseController extends Controller
      */
     public function courseSessionUserUnregisterAction(CourseSessionUser $sessionUser)
     {
-        $this->checkToolAccess();
         $this->cursusManager->unregisterUsersFromSession(array($sessionUser));
 
         return new JsonResponse('success', 200);
@@ -631,20 +678,143 @@ class CourseController extends Controller
      */
     public function courseSessionGroupUnregisterAction(CourseSessionGroup $sessionGroup)
     {
-        $this->checkToolAccess();
         $this->cursusManager->unregisterGroupFromSession($sessionGroup);
 
         return new JsonResponse('success', 200);
     }
 
-    private function checkToolAccess()
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/confirmation/mail/send",
+     *     name="claro_cursus_course_session_confirmation_mail_send",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     */
+    public function courseSessionConfirmationMailSendAction(CourseSession $session)
     {
-        $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');
+        $confirmationEmail = $this->cursusManager->getConfirmationEmail();
 
-        if (is_null($cursusTool) ||
-            !$this->securityContext->isGranted('OPEN', $cursusTool)) {
+        if (!is_null($confirmationEmail)) {
+            $users = array();
+            $sessionUsers = $session->getSessionUsers();
 
-            throw new AccessDeniedException();
+            foreach ($sessionUsers as $sessionUser) {
+
+                if ($sessionUser->getUserType() === 0) {
+                    $users[] = $sessionUser->getUser();
+                }
+            }
+            $course = $session->getCourse();
+            $startDate = $session->getStartDate();
+            $endDate = $session->getEndDate();
+            $title = $confirmationEmail->getTitle();
+            $content = $confirmationEmail->getContent();
+            $title = str_replace('%course%', $course->getTitle(), $title);
+            $content = str_replace('%course%', $course->getTitle(), $content);
+            $title = str_replace('%session%', $session->getName(), $title);
+            $content = str_replace('%session%', $session->getName(), $content);
+
+            if (!is_null($startDate)) {
+                $title = str_replace('%start_date%', $session->getStartDate(), $title);
+                $content = str_replace('%start_date%', $session->getStartDate(), $content);
+            }
+
+            if (!is_null($endDate)) {
+                $title = str_replace('%end_date%', $session->getEndDate(), $title);
+                $content = str_replace('%end_date%', $session->getEndDate(), $content);
+            }
+            $this->mailManager->send($title, $content, $users);
         }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/user/{user}/confirmation/mail/send",
+     *     name="claro_cursus_course_session_user_confirmation_mail_send",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param User $user
+     */
+    public function courseSessionUserConfirmationMailSendAction(
+        CourseSession $session,
+        User $user
+    )
+    {
+        $confirmationEmail = $this->cursusManager->getConfirmationEmail();
+
+        if (!is_null($confirmationEmail)) {
+            $course = $session->getCourse();
+            $startDate = $session->getStartDate();
+            $endDate = $session->getEndDate();
+            $title = $confirmationEmail->getTitle();
+            $content = $confirmationEmail->getContent();
+            $title = str_replace('%course%', $course->getTitle(), $title);
+            $content = str_replace('%course%', $course->getTitle(), $content);
+            $title = str_replace('%session%', $session->getName(), $title);
+            $content = str_replace('%session%', $session->getName(), $content);
+
+            if (!is_null($startDate)) {
+                $title = str_replace('%start_date%', $session->getStartDate()->format('d-m-Y'), $title);
+                $content = str_replace('%start_date%', $session->getStartDate()->format('d-m-Y'), $content);
+            }
+
+            if (!is_null($endDate)) {
+                $title = str_replace('%end_date%', $session->getEndDate()->format('d-m-Y'), $title);
+                $content = str_replace('%end_date%', $session->getEndDate()->format('d-m-Y'), $content);
+            }
+            $this->mailManager->send($title, $content, array($user));
+        }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/registration/queue/{queue}/accept",
+     *     name="claro_cursus_course_session_user_registration_accept",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param User $user
+     */
+    public function courseSessionUserRegistrationAcceptAction(
+        CourseSessionRegistrationQueue $queue
+    )
+    {
+        $user = $queue->getUser();
+        $session = $queue->getSession();
+        $this->cursusManager->registerUsersToSession($session, array($user), 0);
+        $this->cursusManager->deleteSessionQueue($queue);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/registration/queue/{queue}/decline",
+     *     name="claro_cursus_course_session_user_registration_decline",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param User $user
+     */
+    public function courseSessionUserRegistrationDeclineAction(
+        CourseSessionRegistrationQueue $queue
+    )
+    {
+        $this->cursusManager->deleteSessionQueue($queue);
+
+        return new JsonResponse('success', 200);
     }
 }

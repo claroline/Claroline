@@ -11,11 +11,14 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CursusType;
+use Claroline\CursusBundle\Form\pluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -654,13 +657,13 @@ class CursusController extends Controller
     
     /**
      * @EXT\Route(
-     *     "/displayed/words/configuration",
-     *     name="claro_cursus_displayed_words_configuration"
+     *     "/plugin/configure/form",
+     *     name="claro_cursus_plugin_configure_form"
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function displayedWordsConfigurationAction()
+    public function pluginConfigureFormAction()
     {
         $this->checkToolAccess();
         $displayedWords = array();
@@ -668,8 +671,45 @@ class CursusController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
-        
+
+        $form = $this->formFactory->create(
+            new pluginConfigurationType(),
+            $this->cursusManager->getConfirmationEmail()
+        );
+
         return array(
+            'form' => $form->createView(),
+            'defaultWords' => CursusDisplayedWord::$defaultKey,
+            'displayedWords' => $displayedWords
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/configure",
+     *     name="claro_cursus_plugin_configure"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:pluginConfigureForm.html.twig")
+     */
+    public function pluginConfigureAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+
+        $formData = $this->request->get('cursus_plugin_configuration_form');
+        $this->cursusManager->persistConfirmationEmail($formData['content']);
+        $form = $this->formFactory->create(
+            new pluginConfigurationType(),
+            $this->cursusManager->getConfirmationEmail()
+        );
+
+        return array(
+            'form' => $form->createView(),
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords
         );
@@ -708,6 +748,137 @@ class CursusController extends Controller
         $sessionFlashBag->add('success', $msg);
         
         return new Response('success', 200);
+    }
+
+
+    /******************
+     * Widget methods *
+     ******************/
+
+
+    /**
+     * @EXT\Route(
+     *     "/courses/registration/widget",
+     *     name="claro_cursus_courses_registration_widget",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidget.html.twig")
+     */
+    public function coursesRegistrationWidgetAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/list/registration/widget/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_courses_list_for_registration_widget",
+     *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
+     */
+    public function coursesListForRegistrationWidgetAction(
+        User $authenticatedUser,
+        $search = '',
+        $page = 1,
+        $max = 20,
+        $orderedBy = 'title',
+        $order = 'ASC'
+    )
+    {
+        $courses = $search === '' ?
+            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
+            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+        $coursesArray = array();
+
+        foreach ($courses as $course) {
+            $coursesArray[] = $course;
+        }
+        $unstartedSessions = array();
+        $ongoingSessions = array();
+        $courseSessions = $this->cursusManager->getSessionsByCourses($coursesArray);
+
+        foreach ($courseSessions as $courseSession) {
+            $courseId = $courseSession->getCourse()->getId();
+            $status = $courseSession->getSessionStatus();
+
+            if ($status === 0) {
+
+                if (!isset($unstartedSessions[$courseId])) {
+                    $unstartedSessions[$courseId] = array();
+                }
+                $unstartedSessions[$courseId][] = $courseSession;
+            } elseif ($status === 1) {
+
+                if (!isset($ongoingSessions[$courseId])) {
+                    $ongoingSessions[$courseId] = array();
+                }
+                $ongoingSessions[$courseId][] = $courseSession;
+            }
+        }
+        $registeredSessions = array();
+        $pendingSessions = array();
+        $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers(
+            $courseSessions,
+            array($authenticatedUser),
+            0
+        );
+        $pendingRegistrations =
+            $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
+
+        foreach ($userSessions as $userSession) {
+            $registeredSessions[$userSession->getSession()->getId()] = true;
+        }
+
+        foreach ($pendingRegistrations as $pendingRegistration) {
+            $pendingSessions[$pendingRegistration->getSession()->getId()] = $pendingRegistration;
+        }
+
+        return array(
+            'courses' => $courses,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'unstartedSessions' => $unstartedSessions,
+            'ongoingSessions' => $ongoingSessions,
+            'registeredSessions' => $registeredSessions,
+            'pendingSessions' => $pendingSessions
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/course/session/{session}/self/register",
+     *     name="claro_cursus_course_session_self_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
+     */
+    public function courseSessionSelfRegisterAction(
+        CourseSession $session,
+        User $authenticatedUser
+    )
+    {
+        if ($session->getPublicRegistration()) {
+
+            if ($session->getRegistrationValidation()) {
+                $this->cursusManager->addUserToSessionQueue($authenticatedUser, $session);
+            } else {
+                $this->cursusManager->registerUsersToSession(
+                    $session,
+                    array($authenticatedUser),
+                    0
+                );
+            }
+        }
+
+        return new JsonResponse('success', 200);
     }
 
     private function checkToolAccess()

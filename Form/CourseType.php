@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\Image;
 
 class CourseType extends AbstractType
 {
@@ -44,6 +45,16 @@ class CourseType extends AbstractType
             'description',
             'tinymce',
             array('required' => false)
+        );
+        $builder->add(
+            'icon',
+            'file',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'label' => 'icon',
+                'constraints' => array(new Image())
+            )
         );
         $builder->add(
             'publicRegistration',

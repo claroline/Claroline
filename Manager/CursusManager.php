@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -22,6 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
@@ -33,20 +35,26 @@ use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.cursus_manager")
  */
 class CursusManager
 {
+    private $container;
+    private $contentManager;
     private $eventDispatcher;
+    private $iconsDirectory;
     private $om;
     private $pagerFactory;
     private $roleManager;
     private $templateDir;
     private $translator;
     private $workspaceManager;
+
     private $courseRepo;
     private $courseSessionRepo;
     private $cursusRepo;
@@ -59,6 +67,8 @@ class CursusManager
     
     /**
      * @DI\InjectParams({
+     *     "container"        = @DI\Inject("service_container"),
+     *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
      *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
@@ -69,6 +79,8 @@ class CursusManager
      * })
      */
     public function __construct(
+        ContainerInterface $container,
+        ContentManager $contentManager,
         EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         PagerFactory $pagerFactory,
@@ -78,7 +90,11 @@ class CursusManager
         WorkspaceManager $workspaceManager
     )
     {
+        $this->container = $container;
+        $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->iconsDirectory = $this->container->getParameter('kernel.root_dir') .
+            '/../web/files/cursusbundle/icons/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
@@ -956,8 +972,17 @@ class CursusManager
             );
         }
         $workspace->setWorkspaceType(0);
-        $workspace->setStartDate($session->getStartDate());
-        $workspace->setEndDate($session->getEndDate());
+
+        $startDate = $session->getStartDate();
+        $endDate = $session->getEndDate();
+
+        if (!is_null($startDate)) {
+            $workspace->setStartDate($startDate);
+        }
+
+        if (!is_null($endDate)) {
+            $workspace->setEndDate($endDate);
+        }
         $this->workspaceManager->editWorkspace($workspace);
 
         return $workspace;
@@ -1008,6 +1033,21 @@ class CursusManager
         $this->om->flush();
     }
 
+    public function getConfirmationEmail()
+    {
+        return $this->contentManager->getContent(
+            array('type' => 'claro_cursusbundle_mail_confirmation')
+        );
+    }
+
+    public function persistConfirmationEmail($datas)
+    {
+        $this->contentManager->updateContent(
+            $this->getConfirmationEmail(),
+            $datas
+        );
+    }
+
     private function generateWorkspaceCode($code)
     {
         $workspaceCodes = $this->workspaceManager->getWorkspaceCodesWithPrefix($code);
@@ -1028,6 +1068,60 @@ class CursusManager
         }
 
         return $currentCode;
+    }
+
+    public function saveIcon(UploadedFile $tmpFile)
+    {
+        $extension = $tmpFile->getClientOriginalExtension();
+        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid() .
+            '.' .
+            $extension;
+        $tmpFile->move($this->iconsDirectory, $hashName);
+
+        return $hashName;
+    }
+
+    public function changeIcon(Course $course, UploadedFile $tmpFile)
+    {
+        $icon = $course->getIcon();
+
+        if (!is_null($icon)) {
+            $iconPath = $this->iconsDirectory . $icon;
+            
+            try {
+                unlink($iconPath);
+            } catch(\Exception $e) {}
+        }
+
+        return $this->saveIcon($tmpFile);
+    }
+
+    public function addUserToSessionQueue(User $user, CourseSession $session)
+    {
+        $sessionUser = $this->getOneSessionUserBySessionAndUserAndType(
+            $session,
+            $user,
+            0
+        );
+
+        if (is_null($sessionUser)) {
+            $queue = $this->getOneSessionQueueBySessionAndUser($session, $user);
+
+            if (is_null($queue)) {
+                $queue = new CourseSessionRegistrationQueue();
+                $queue->setSession($session);
+                $queue->setUser($user);
+                $queue->setApplicationDate(new \DateTime());
+                $this->om->persist($queue);
+                $this->om->flush();
+            }
+        }
+    }
+
+    public function deleteSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $this->om->remove($queue);
+        $this->om->flush();
     }
     
 
@@ -1801,26 +1895,40 @@ class CursusManager
      * Access to CourseSessionRegistrationQueueRepository methods *
      **************************************************************/
 
-    public function getQueuesBySession(CourseSession $session, $executeQuery = true)
+    public function getSessionQueuesBySession(CourseSession $session, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findQueuesBySession($session, $executeQuery);
+        return $this->registrationQueueRepo->findSessionQueuesBySession(
+            $session,
+            $executeQuery
+        );
     }
 
-    public function getOneQueueBySessionAndUser(
+    public function getSessionQueuesByUser(User $user, $executeQuery = true)
+    {
+        return $this->registrationQueueRepo->findSessionQueuesByUser(
+            $user,
+            $executeQuery
+        );
+    }
+
+    public function getOneSessionQueueBySessionAndUser(
         CourseSession $session,
         User $user,
         $executeQuery = true
     )
     {
-        return $this->registrationQueueRepo->findOneQueueBySessionAndUser(
+        return $this->registrationQueueRepo->findOneSessionQueueBySessionAndUser(
             $session,
             $user,
             $executeQuery
         );
     }
 
-    public function getQueuesByCourse(Course $course, $executeQuery = true)
+    public function getSessionQueuesByCourse(Course $course, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findQueuesByCourse($course, $executeQuery);
+        return $this->registrationQueueRepo->findSessionQueuesByCourse(
+            $course,
+            $executeQuery
+        );
     }
 }
