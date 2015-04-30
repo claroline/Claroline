@@ -58,7 +58,7 @@ class SurveyController extends Controller
      *     "httpKernel"      = @DI\Inject("http_kernel"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker")
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "surveyManager"   = @DI\Inject("claroline.manager.survey_manager"),
      *     "templating"      = @DI\Inject("templating")
      * })
