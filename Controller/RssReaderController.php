@@ -29,7 +29,7 @@ class RssReaderController extends Controller
      */
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widget)) {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $widget)) {
             throw new AccessDeniedException();
         }
 
