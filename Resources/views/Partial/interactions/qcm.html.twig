@@ -5,14 +5,13 @@
     <div id="weightChoiceCheckbox" class="col-md-1">{{ form_widget(form.weightResponse) }}</div>
 </div>
 <!-- disabled -->
-    <div id="scoreReponse">
-        {{ form_errors(form.scoreRightResponse) }}
+    <div id="scoreReponse">       
         <label id="labelRightResponse" class="control-label col-md-1">{{'Inter_QCM.ScoreRightResponse' | trans }}</label>           
-        <div class="col-md-2">{{ form_widget(form.scoreRightResponse) }}</div>
-  
-        {{ form_errors(form.scoreFalseResponse) }}
+        <div class="col-md-2">{{ form_widget(form.scoreRightResponse) }}</div>    
         <label id="labelFalseResponse" class="control-label col-md-1">{{ 'Inter_QCM.ScoreFalseResponse' | trans }}</label>
         <div class="col-md-2">{{ form_widget(form.scoreFalseResponse) }}</div>
+        {{ form_errors(form.scoreRightResponse) }}
+        {{ form_errors(form.scoreFalseResponse) }}
     </div>
 </div>
 <!-- disabled off-->

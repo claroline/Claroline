@@ -26,12 +26,13 @@
        <label class="control-label col-md-1">{{ 'Interaction.invite' | trans }}</label>
        <div class="control-label col-md-7">
            {{ form_widget(form.interaction.invite) }}
+           {{ form_errors(form.interaction.invite) }}
        </div>   
        <div id="divHint" >
            <div id="hintError"></div>
            <div id="tableHint" class="control-label col-md-4"></div>
            {{ form_widget(form.interaction.hints) }}
-           {{ form_errors(form.interaction.hints) }}                      
+           <span style="color:#B40404">{{ form_errors(form.interaction.hints) }}</span>                      
        </div>
    </div>
 

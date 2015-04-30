@@ -32,7 +32,7 @@ class InteractionType extends AbstractType
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Interaction.invite',
                     'attr'  => array('placeholder' => 'Interaction.invite'),
-                    'required' => true
+                    'required' => false
                 )
             )
             ->add(
