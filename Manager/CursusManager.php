@@ -1105,7 +1105,7 @@ class CursusManager
         );
 
         if (is_null($sessionUser)) {
-            $queue = $this->getOneQueueBySessionAndUser($session, $user);
+            $queue = $this->getOneSessionQueueBySessionAndUser($session, $user);
 
             if (is_null($queue)) {
                 $queue = new CourseSessionRegistrationQueue();
@@ -1895,26 +1895,40 @@ class CursusManager
      * Access to CourseSessionRegistrationQueueRepository methods *
      **************************************************************/
 
-    public function getQueuesBySession(CourseSession $session, $executeQuery = true)
+    public function getSessionQueuesBySession(CourseSession $session, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findQueuesBySession($session, $executeQuery);
+        return $this->registrationQueueRepo->findSessionQueuesBySession(
+            $session,
+            $executeQuery
+        );
     }
 
-    public function getOneQueueBySessionAndUser(
+    public function getSessionQueuesByUser(User $user, $executeQuery = true)
+    {
+        return $this->registrationQueueRepo->findSessionQueuesByUser(
+            $user,
+            $executeQuery
+        );
+    }
+
+    public function getOneSessionQueueBySessionAndUser(
         CourseSession $session,
         User $user,
         $executeQuery = true
     )
     {
-        return $this->registrationQueueRepo->findOneQueueBySessionAndUser(
+        return $this->registrationQueueRepo->findOneSessionQueueBySessionAndUser(
             $session,
             $user,
             $executeQuery
         );
     }
 
-    public function getQueuesByCourse(Course $course, $executeQuery = true)
+    public function getSessionQueuesByCourse(Course $course, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findQueuesByCourse($course, $executeQuery);
+        return $this->registrationQueueRepo->findSessionQueuesByCourse(
+            $course,
+            $executeQuery
+        );
     }
 }

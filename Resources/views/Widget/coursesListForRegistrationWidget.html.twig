@@ -150,15 +150,27 @@
                                             ]
                                         </span>
                                         
-                                        {% if session.getPublicRegistration() %}
-                                            &nbsp;
-                                            <span class="btn btn-default btn-sm session-register-btn"
-                                                  data-session-id="{{ sessionId }}"
-                                            >
-                                                <i class="fa fa-sign-in"></i>
-                                                {{ 'self_register'|trans({}, 'cursus') }}
-                                            </span>
-                                        {% endif %}
+                                        <span id="session-registration-btn-{{ sessionId }}">
+                                            {% if registeredSessions[sessionId] is defined %}
+                                                &nbsp;
+                                                <span class="label label-success">
+                                                    {{ 'registered'|trans({}, 'platform') }}
+                                                </span>
+                                            {% elseif pendingSessions[sessionId] is defined %}
+                                                &nbsp;
+                                                <span class="label label-info">
+                                                    {{ 'pending'|trans({}, 'platform') }}
+                                                </span>
+                                            {% elseif session.getPublicRegistration() %}
+                                                &nbsp;
+                                                <span class="btn btn-default btn-sm session-register-btn"
+                                                      data-session-id="{{ sessionId }}"
+                                                >
+                                                    <i class="fa fa-sign-in"></i>
+                                                    {{ 'self_register'|trans({}, 'cursus') }}
+                                                </span>
+                                            {% endif %}
+                                        </span>
                                     </li>
                                 {% endfor %}
                             {% endif %}
@@ -187,15 +199,27 @@
                                             ]
                                         </span>
                                         
-                                        {% if session.getPublicRegistration() %}
-                                            &nbsp;
-                                            <span class="btn btn-default btn-sm session-register-btn"
-                                                  data-session-id="{{ sessionId }}"
-                                            >
-                                                <i class="fa fa-sign-in"></i>
-                                                {{ 'self_register'|trans({}, 'cursus') }}
-                                            </span>
-                                        {% endif %}
+                                        <span id="session-registration-btn-{{ sessionId }}">
+                                            {% if registeredSessions[sessionId] is defined %}
+                                                &nbsp;
+                                                <span class="label label-success">
+                                                    {{ 'registered'|trans({}, 'platform') }}
+                                                </span>
+                                            {% elseif pendingSessions[sessionId] is defined %}
+                                                &nbsp;
+                                                <span class="label label-info">
+                                                    {{ 'pending'|trans({}, 'platform') }}
+                                                </span>
+                                            {% elseif session.getPublicRegistration() %}
+                                                &nbsp;
+                                                <span class="btn btn-default btn-sm session-register-btn"
+                                                      data-session-id="{{ sessionId }}"
+                                                >
+                                                    <i class="fa fa-sign-in"></i>
+                                                    {{ 'self_register'|trans({}, 'cursus') }}
+                                                </span>
+                                            {% endif %}
+                                        </span>
                                     </li>
                                 {% endfor %}
                             {% endif %}

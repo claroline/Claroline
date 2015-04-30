@@ -781,6 +781,7 @@ class CursusController extends Controller
      * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
      */
     public function coursesListForRegistrationWidgetAction(
+        User $authenticatedUser,
         $search = '',
         $page = 1,
         $max = 20,
@@ -818,6 +819,23 @@ class CursusController extends Controller
                 $ongoingSessions[$courseId][] = $courseSession;
             }
         }
+        $registeredSessions = array();
+        $pendingSessions = array();
+        $userSessions = $this->cursusManager->getSessionUsersBySessionsAndUsers(
+            $courseSessions,
+            array($authenticatedUser),
+            0
+        );
+        $pendingRegistrations =
+            $this->cursusManager->getSessionQueuesByUser($authenticatedUser);
+
+        foreach ($userSessions as $userSession) {
+            $registeredSessions[$userSession->getSession()->getId()] = true;
+        }
+
+        foreach ($pendingRegistrations as $pendingRegistration) {
+            $pendingSessions[$pendingRegistration->getSession()->getId()] = $pendingRegistration;
+        }
 
         return array(
             'courses' => $courses,
@@ -827,7 +845,9 @@ class CursusController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'unstartedSessions' => $unstartedSessions,
-            'ongoingSessions' => $ongoingSessions
+            'ongoingSessions' => $ongoingSessions,
+            'registeredSessions' => $registeredSessions,
+            'pendingSessions' => $pendingSessions
         );
     }
 

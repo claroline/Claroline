@@ -514,7 +514,7 @@ class CourseController extends Controller
     {
         $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
         $sessionGroups = $this->cursusManager->getSessionGroupsBySession($session);
-        $queues = $this->cursusManager->getQueuesBySession($session);
+        $queues = $this->cursusManager->getSessionQueuesBySession($session);
         $learners = array();
         $tutors = array();
         $learnersGroups = array();

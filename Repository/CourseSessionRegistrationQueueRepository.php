@@ -18,7 +18,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CourseSessionRegistrationQueueRepository extends EntityRepository
 {
-    public function findQueuesBySession(CourseSession $session, $executeQuery = true)
+    public function findSessionQueuesBySession(CourseSession $session, $executeQuery = true)
     {
         $dql = '
             SELECT q
@@ -32,7 +32,21 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findOneQueueBySessionAndUser(
+    public function findSessionQueuesByUser(User $user, $executeQuery = true)
+    {
+        $dql = '
+            SELECT q
+            FROM Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue q
+            WHERE q.user = :user
+            ORDER BY q.applicationDate DESC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findOneSessionQueueBySessionAndUser(
         CourseSession $session,
         User $user,
         $executeQuery = true
@@ -52,7 +66,7 @@ class CourseSessionRegistrationQueueRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
-    public function findQueuesByCourse(Course $course, $executeQuery = true)
+    public function findSessionQueuesByCourse(Course $course, $executeQuery = true)
     {
         $dql = '
             SELECT q

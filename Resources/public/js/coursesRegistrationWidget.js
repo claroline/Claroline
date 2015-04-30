@@ -72,12 +72,16 @@
                 'claro_cursus_course_session_self_register',
                 {'session': sessionId}
             ),
-            doNothing,
-            null,
+            removeRegistrationBtn,
+            sessionId,
             Translator.trans('session_self_registration_message', {}, 'platform'),
             Translator.trans('session_registration', {}, 'platform')
         );
     });
     
-    var doNothing = function () {};
+    var removeRegistrationBtn = function (event, sessionId) {
+        $('#session-registration-btn-' + sessionId).empty();
+        var element = '<span class="label label-success"><i class="fa fa-check"></i></span>';
+        $('#session-registration-btn-' + sessionId).html(element);
+    };
 })();
