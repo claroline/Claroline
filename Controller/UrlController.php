@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UrlController extends Controller
 {
@@ -50,6 +51,10 @@ class UrlController extends Controller
      */
     public function changeUrlAction(ResourceNode $node)
     {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $node)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $url = $em->getRepository('HeVinciUrlBundle:Url')
             ->findOneBy(array('resourceNode' => $node->getId()));
