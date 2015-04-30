@@ -26,7 +26,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -36,7 +37,8 @@ class ScormController extends Controller
     private $om;
     private $request;
     private $scormManager;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
 
     /**
      * @DI\InjectParams({
@@ -44,7 +46,8 @@ class ScormController extends Controller
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "scormManager"       = @DI\Inject("claroline.manager.scorm_manager"),
-     *     "securityContext"    = @DI\Inject("security.context")
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
@@ -52,14 +55,16 @@ class ScormController extends Controller
         ObjectManager $om,
         RequestStack $requestStack,
         ScormManager $scormManager,
-        SecurityContextInterface $securityContext
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->request = $requestStack;
         $this->scormManager = $scormManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -81,7 +86,7 @@ class ScormController extends Controller
     public function renderScorm12ResourceAction(Scorm12Resource $scorm)
     {
         $this->checkAccess('OPEN', $scorm);
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
@@ -132,7 +137,7 @@ class ScormController extends Controller
      */
     public function renderScorm12ScoAction(Scorm12Sco $scorm12Sco)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $scorm = $scorm12Sco->getScormResource();
         $this->checkAccess('OPEN', $scorm);
 
@@ -213,7 +218,7 @@ class ScormController extends Controller
         $entry = $datasArray[11];
         $exitMode = $datasArray[12];
 
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user->getId() !== $studentId) {
             throw new AccessDeniedException();
@@ -364,7 +369,7 @@ class ScormController extends Controller
     public function renderScorm2004ResourceAction(Scorm2004Resource $scorm)
     {
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $rootScos = array();
         $trackings = array();
         $scos = $scorm->getScos();
@@ -415,7 +420,7 @@ class ScormController extends Controller
      */
     public function renderScorm2004ScoAction(Scorm2004Sco $scorm2004Sco)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $scorm = $scorm2004Sco->getScormResource();
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
 
@@ -513,7 +518,7 @@ class ScormController extends Controller
         Scorm2004Sco $scorm2004Sco
     )
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $datas = $this->request->getCurrentRequest()->request->all();
         $learnerId = isset($datas['cmi.learner_id']) ?
             (int)$datas['cmi.learner_id'] :
@@ -733,7 +738,7 @@ class ScormController extends Controller
     {
         $collection = new ResourceCollection(array($resource->getResourceNode()));
 
-        if (!$this->securityContext->isGranted($permission, $collection)) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -750,7 +755,7 @@ class ScormController extends Controller
     {
         $collection = new ResourceCollection(array($resource->getResourceNode()));
 
-        if (!$this->securityContext->isGranted($permission, $collection)) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

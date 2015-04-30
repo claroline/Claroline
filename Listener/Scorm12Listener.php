@@ -33,8 +33,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service
@@ -53,7 +52,6 @@ class Scorm12Listener
     // path to the Scorm unzipped files
     private $scormResourcesPath;
     private $scorm12ScoTrackingRepo;
-    private $securityContext;
     private $templating;
     private $translator;
     private $scormManager;
@@ -66,7 +64,6 @@ class Scorm12Listener
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
-     *     "securityContext"    = @DI\Inject("security.context"),
      *     "templating"         = @DI\Inject("templating"),
      *     "translator"         = @DI\Inject("translator"),
      *     "scormManager"       = @DI\Inject("claroline.manager.scorm_manager")
@@ -79,9 +76,8 @@ class Scorm12Listener
         ObjectManager $om,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $securityContext,
         TwigEngine $templating,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->container = $container;
@@ -96,7 +92,6 @@ class Scorm12Listener
         $this->scormResourcesPath = $this->container
             ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
-        $this->securityContext = $securityContext;
         $this->templating = $templating;
         $this->translator = $translator;
     }
