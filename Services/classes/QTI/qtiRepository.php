@@ -143,8 +143,8 @@ class qtiRepository {
                                         $interX= $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
-                                    case 'extendedTextInteraction': //open
-                                        $qtiImport = $this->container->get('ujm.qti_open_long_import');
+                                    case 'extendedTextInteraction': /*open (long or short)*/
+                                        $qtiImport = $this->longOrShort($ai);
                                         $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
@@ -218,6 +218,25 @@ class qtiRepository {
         }
 
         return $imported;
+    }
+
+    /**
+     * to determine if an open question is with long answer or short answer
+     *
+     * @access private
+     * @param  DOMElement $ai
+     *
+     * @return Service Container
+     */
+    private function longOrShort ($ai)
+    {
+        if ($ai->getElementsByTagName('mapping')->item(0)) {
+            $qtiImport = $this->container->get('ujm.qti_open_short_import');
+        } else {
+            $qtiImport = $this->container->get('ujm.qti_open_long_import');
+        }
+
+        return $qtiImport;
     }
 
     /**
