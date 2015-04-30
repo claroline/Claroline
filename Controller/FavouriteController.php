@@ -41,7 +41,7 @@ class FavouriteController extends Controller
     {
         $resource = $this->manager->getResourceFromNode($node);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $isFavourite = $this->get('claroline.persistence.object_manager')->getRepository('HeVinciFavouriteBundle:Favourite')
             ->findOneBy(array('user' => $user, 'resourceNode' => $node));
 

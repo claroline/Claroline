@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -19,25 +19,25 @@ use Symfony\Component\Templating\EngineInterface;
 class FavouriteListener extends ContainerAware
 {
     private $om;
-    private $sc;
+    private $tokenStorage;
     private $router;
     private $templatingEngine;
     /**
      * @DI\InjectParams({
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "sc"                 = @DI\Inject("security.context"),
-     *     "router"             = @DI\Inject("router"),
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "router"           = @DI\Inject("router"),
      *      "templatingEngine" = @DI\Inject("templating")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        SecurityContext $sc,
+        TokenStorageInterface $tokenStorage,
         Router $router,
         EngineInterface $templatingEngine
     ){
         $this->om = $om;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
         $this->router = $router;
         $this->templatingEngine = $templatingEngine;
     }
@@ -53,7 +53,7 @@ class FavouriteListener extends ContainerAware
         $favourite = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
             ->findBy(array(
                 'resourceNode' => $nodeId,
-                'user' => $this->sc->getToken()->getUser()
+                'user' => $this->tokenStorage->getToken()->getUser()
             ));
 
         $content = $this->templatingEngine->render(
@@ -76,7 +76,7 @@ class FavouriteListener extends ContainerAware
     public function onDisplay(DisplayWidgetEvent $event)
     {
         $favourites = $this->om->getRepository('HeVinciFavouriteBundle:Favourite')
-            ->findBy(array('user' => $this->sc->getToken()->getUser()));
+            ->findBy(array('user' => $this->tokenStorage->getToken()->getUser()));
 
         $content = $this->templatingEngine->render(
             'HeVinciFavouriteBundle:widget:favourite.html.twig',

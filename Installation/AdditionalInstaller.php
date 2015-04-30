@@ -18,4 +18,15 @@ class AdditionalInstaller extends BaseInstaller
             $em->flush();
         }
     }
+
+    public function postUninstall()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $menuAction = $em
+            ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findOneBy(array('name' => 'hevinci_favourite'));
+
+        $em->remove($menuAction);
+        $em->flush();
+    }
 }
