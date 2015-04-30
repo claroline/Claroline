@@ -66,9 +66,4 @@ class NotificationPluginConfigurationController extends Controller
     {
         return $this->get('icap.notification.manager.plugin_configuration');
     }
-
-    private function addFlash($key, $message)
-    {
-        $this->get("session")->getFlashBag()->add($key, $message);
-    }
-} 
+}
