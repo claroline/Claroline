@@ -11,7 +11,6 @@
 
 namespace Claroline\LdapBundle\Controller;
 
-use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\LdapBundle\Form\LdapType;
 use Claroline\LdapBundle\Manager\LdapManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -19,24 +18,25 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Templating\EngineInterface;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
- * Controller of the platform parameters section.
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('administration_tool_ldap')")
  */
 class LdapController extends Controller
 {
     private $ldap;
     private $request;
     private $formFactory;
-    private $securityContext;
     private $translator;
 
     /**
@@ -44,8 +44,6 @@ class LdapController extends Controller
      *     "ldap"               = @Inject("claroline.ldap_bundle.manager.ldap_manager"),
      *     "request"            = @Inject("request_stack"),
      *     "formFactory"        = @Inject("form.factory"),
-     *     "toolManager"        = @Inject("claroline.manager.tool_manager"),
-     *     "securityContext"    = @Inject("security.context"),
      *     "translator"         = @Inject("translator"),
      *     "templating"         = @Inject("templating")
      * })
@@ -54,17 +52,13 @@ class LdapController extends Controller
         LdapManager $ldap,
         FormFactory $formFactory,
         RequestStack $request,
-        ToolManager $toolManager,
-        SecurityContextInterface $securityContext,
-        Translator $translator,
+        TranslatorInterface $translator,
         EngineInterface $templating
     )
     {
         $this->ldap = $ldap;
         $this->request = $request->getMasterRequest();
         $this->formFactory = $formFactory;
-        $this->securityContext = $securityContext;
-        $this->adminTool = $toolManager->getAdminToolByName('administration_tool_ldap');
         $this->translator = $translator;
         $this->templating = $templating;
     }
@@ -77,8 +71,6 @@ class LdapController extends Controller
      */
     public function menuAction()
     {
-        $this->checkOpen();
-
         return array();
     }
 
@@ -90,8 +82,6 @@ class LdapController extends Controller
      */
     public function settingsAction()
     {
-        $this->checkOpen();
-
         $config = $this->ldap->getConfig();
         $servers = isset($config['servers']) ? $config['servers'] : null;
         $userCreation = isset($config['userCreation']) ? $config['userCreation'] : null;
@@ -107,8 +97,6 @@ class LdapController extends Controller
      */
     public function formAction($name = null)
     {
-        $this->checkOpen();
-
         $form = $this->formFactory->create(new LdapType(), $this->ldap->get($name));
 
         if ($this->request->getMethod() === 'POST' and $form->handleRequest($this->request) and $form->isValid()) {
@@ -141,8 +129,6 @@ class LdapController extends Controller
      */
     public function checkUserCreationAction($state)
     {
-        $this->checkOpen();
-
         $state = $state === 'true' ? true : false;
 
         if ($this->ldap->checkUserCreation($state)) {
@@ -159,8 +145,6 @@ class LdapController extends Controller
      */
     public function deleteAction($name)
     {
-        $this->checkOpen();
-
         if ($name and $this->ldap->deleteServer($name)) {
             return new Response('true');
         }
@@ -176,8 +160,6 @@ class LdapController extends Controller
      */
     public function serversAction()
     {
-        $this->checkOpen();
-
         return array('servers' => $this->ldap->getConfig()['servers']);
     }
 
@@ -189,8 +171,6 @@ class LdapController extends Controller
      */
     public function usersAction($name)
     {
-        $this->checkOpen();
-
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
@@ -221,8 +201,6 @@ class LdapController extends Controller
      */
     public function groupsAction($name)
     {
-        $this->checkOpen();
-
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
         $password = isset($server['password']) ? $server['password'] : null;
@@ -252,8 +230,6 @@ class LdapController extends Controller
      */
     public function exportAction()
     {
-        $this->checkOpen();
-
         return array('servers' => $this->ldap->getConfig()['servers']);
     }
 
@@ -265,8 +241,6 @@ class LdapController extends Controller
      */
     public function previewAction($type, $name)
     {
-        $this->checkOpen();
-
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
@@ -296,8 +270,6 @@ class LdapController extends Controller
      */
     public function exportFileAction($type, $name)
     {
-        $this->checkOpen();
-
         $users = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
@@ -348,8 +320,6 @@ class LdapController extends Controller
      */
     public function getEntriesAction($objectClass, $name)
     {
-        $this->checkOpen();
-
         $entries = array();
         $server = $this->ldap->get($name);
         $user = isset($server['user']) ? $server['user'] : null;
@@ -365,18 +335,4 @@ class LdapController extends Controller
 
         return new Response(json_encode($entries));
     }
-
-    /**
-     * Check if the user can open or change this admin tool.
-     *
-     */
-    private function checkOpen()
-    {
-        if ($this->securityContext->isGranted('OPEN', $this->adminTool)) {
-            return true;
-        }
-
-        throw new AccessDeniedException();
-    }
 }
-
