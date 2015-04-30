@@ -170,11 +170,14 @@
         {{ form_rest(form) }}
     </form>
 
+{#
+    InnovaERV / Voir issue #251
     <div class="row peer-review-options" {% if dropzone.peerReview %}style="display: none;"{% endif %}>
         <div class="col-md-12">
             <strong>1/2</strong>
         </div>
     </div>
+#}
     <div id="autoClosePrompt" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">

@@ -58,9 +58,10 @@ class DropzoneCommonType extends AbstractType
                      )
                 )
 */
-
+/*
+Suppression suite demande #251
             ->add('expectedTotalCorrection', 'integer', array('required' => true))
-
+*/
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
             ->add('diplayCorrectionsToLearners','checkbox', array('required' => false))
             ->add('allowCorrectionDeny','checkbox',array('required'=>false))
