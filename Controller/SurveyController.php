@@ -39,7 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SurveyController extends Controller
 {
@@ -47,7 +47,7 @@ class SurveyController extends Controller
     private $formFactory;
     private $request;
     private $router;
-    private $security;
+    private $authorization;
     private $surveyManager;
     private $templating;
 
@@ -58,7 +58,7 @@ class SurveyController extends Controller
      *     "httpKernel"      = @DI\Inject("http_kernel"),
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
-     *     "security"        = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker")
      *     "surveyManager"   = @DI\Inject("claroline.manager.survey_manager"),
      *     "templating"      = @DI\Inject("templating")
      * })
@@ -69,7 +69,7 @@ class SurveyController extends Controller
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
-        SecurityContextInterface $security,
+        AuthorizationCheckerInterface $authorization,
         SurveyManager $surveyManager,
         TwigEngine $templating
     )
@@ -79,7 +79,7 @@ class SurveyController extends Controller
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack;
         $this->router = $router;
-        $this->security = $security;
+        $this->authorization = $authorization;
         $this->surveyManager = $surveyManager;
         $this->templating = $templating;
     }
@@ -1051,7 +1051,7 @@ class SurveyController extends Controller
 
         if (!is_null($surveyAnswer)) {
             $questionsAnswers = $surveyAnswer->getQuestionsAnswers();
-            
+
             foreach ($questionsAnswers as $questionAnswer) {
                 $question = $questionAnswer->getQuestion();
                 $questionId = $question->getId();
@@ -1086,7 +1086,7 @@ class SurveyController extends Controller
                     foreach ($choiceAnswers as $choiceAnswer) {
                         $choiceId = $choiceAnswer->getChoice()->getId();
                         $answersDatas[$questionId][$choiceId] = $choiceId;
-                        
+
                         if ($choiceAnswer->getChoice()->isOther()) {
                             $answersDatas[$questionId]['other'] =
                                 $choiceAnswer->getContent();
@@ -1958,8 +1958,8 @@ class SurveyController extends Controller
     {
         $collection = new ResourceCollection(array($survey->getResourceNode()));
 
-        if (!$this->security->isGranted($right, $collection)) {
-            
+        if (!$this->authorization->isGranted($right, $collection)) {
+
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -1968,7 +1968,7 @@ class SurveyController extends Controller
     {
         $collection = new ResourceCollection(array($survey->getResourceNode()));
 
-        return $this->security->isGranted($right, $collection);
+        return $this->authorization->isGranted($right, $collection);
     }
 
     private function checkQuestionRight(Survey $survey, Question $question, $right)
