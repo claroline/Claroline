@@ -91,9 +91,10 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
         });
 
         $('#newTable').find('.trHole:last').find('td:last').find('input').each(function () {
+            //i = nb input found, 3 input per row (response, point, caseSensitive)
             if (i == 0) {
                 $('#tabWR_'+index).find('tbody').append('<tr class="trWR"></tr>');
-            } else if (i>1) {
+            } else if (i > 2) {
                 i = 0;
                 $('#tabWR_'+index).find('tbody').append('<tr class="trWR"></tr>');
             }
@@ -103,7 +104,7 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
             i++;
 
             //add buton delete for a key word
-            if ( (nbResponses == 0) && (i>1) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
+            if ( (nbResponses == 0) && (i > 2) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
                 $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
                 $('#tabWR_' + index).find('td:last').append(
                     '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
@@ -254,7 +255,7 @@ function addHole(indexBlank, valHole) {
 
     $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_response').val(valHole);
     //$('#ujm_exobundle_interactionholetype_holes_'+index+'_wordResponses_0_response').attr("readonly", true);
-    $('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_score').attr("placeholder", langPoint);
+    //$('#ujm_exobundle_interactionholetype_holes_' + index + '_wordResponses_0_score').attr("placeholder", langPoint);
 
     // Remove the useless fileds form
     containerWR.remove();
@@ -367,7 +368,7 @@ function addWR(indexHole, idTabWR) {
     }
 
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
-    $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
+    //$('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
 
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').focusout(function() {
         $(this).val($.trim($(this).val()));

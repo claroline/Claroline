@@ -99,6 +99,7 @@ abstract class qtiImport
         $this->qtiCat = new Category();
         $this->qtiCat->setValue("QTI");
         $this->qtiCat->setUser($this->user);
+        $this->qtiCat->setLocker(false);
         $this->doctrine->getManager()->persist($this->qtiCat);
         $this->doctrine->getManager()->flush();
     }

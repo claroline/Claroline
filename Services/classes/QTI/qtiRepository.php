@@ -143,8 +143,8 @@ class qtiRepository {
                                         $interX= $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
-                                    case 'extendedTextInteraction': //open
-                                        $qtiImport = $this->container->get('ujm.qti_open_import');
+                                    case 'extendedTextInteraction': /*open (long or short)*/
+                                        $qtiImport = $this->longOrShort($ai);
                                         $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
@@ -157,12 +157,9 @@ class qtiRepository {
                             }
                         }
                         if ($imported === false) {
-                            if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
-                                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
-                                $qtiImport = $this->container->get('ujm.qti_hole_import');
-                                $interX = $qtiImport->import($this, $ai);
-                                $imported = true;
-                            } else {
+                            $imported = $this->importOther($ai);
+                            if ($imported == false) {
+
                                 return 'qti unsupported format';
                             }
                         }
@@ -182,6 +179,64 @@ class qtiRepository {
         $this->removeDirectory();
 
         return true;
+    }
+
+    /**
+     * to try import other type of question
+     *
+     * @access private
+     * @param  DOMElement $ai
+     *
+     */
+    private function importOther($ai)
+    {
+        $imported = false;
+        $ib = $ai->getElementsByTagName('itemBody')->item(0);
+        $nbNodes = 0;
+        $promptTag = false;
+        $textEntryInteractionTag = false;
+        foreach ($ib->childNodes as $node) {
+            if(!($node instanceof \DomText)) {
+                $nbNodes++;
+            }
+            if ($node->nodeName == 'prompt') {
+                $promptTag = true;
+            }
+            if ($node->nodeName == 'textEntryInteraction') {
+                $textEntryInteractionTag = true;
+            }
+        }
+        if ($nbNodes == 2 && $promptTag === true && $textEntryInteractionTag === true) {
+            $qtiImport = $this->container->get('ujm.qti_open_one_word_import');
+            $interX = $qtiImport->import($this, $ai);
+            $imported = true;
+        } else if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
+                    || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
+                        $qtiImport = $this->container->get('ujm.qti_hole_import');
+                        $interX = $qtiImport->import($this, $ai);
+                        $imported = true;
+        }
+
+        return $imported;
+    }
+
+    /**
+     * to determine if an open question is with long answer or short answer
+     *
+     * @access private
+     * @param  DOMElement $ai
+     *
+     * @return Service Container
+     */
+    private function longOrShort ($ai)
+    {
+        if ($ai->getElementsByTagName('mapping')->item(0)) {
+            $qtiImport = $this->container->get('ujm.qti_open_short_import');
+        } else {
+            $qtiImport = $this->container->get('ujm.qti_open_long_import');
+        }
+
+        return $qtiImport;
     }
 
     /**
@@ -211,7 +266,7 @@ class qtiRepository {
                 return $qtiExport->export($interaction, $this);
 
             case "InteractionOpen":
-                $qtiExport = $this->container->get('ujm.qti_open_export');
+                $qtiExport = $this->serviceOpenQuestion($interaction->getId());
 
                 return $qtiExport->export($interaction, $this);
 
@@ -221,6 +276,27 @@ class qtiRepository {
                 return $qtiExport->export($interaction, $this);
 
         }
+    }
+
+    /**
+     * To select the service (long, oneWord, ...) for an open question
+     *
+     * @access private
+     *
+     * @param  Integer $interId id of the interaction
+     *
+     * @return instance of service ujm.qti_open
+     *
+     */
+    private function serviceOpenQuestion($interId)
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+                        ->getInteractionOpen($interId);
+        $type = ucfirst($interOpen[0]->getTypeOpenQuestion());
+        $serv = $this->container->get('ujm.qti_open_'.$type.'_export');
+
+        return $serv;
     }
 
 
