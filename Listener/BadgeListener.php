@@ -2,7 +2,6 @@
 
 namespace Icap\LessonBundle\Listener;
 
-use Icap\BadgeBundle\Event\BadgeCreateValidationLinkEvent;
 use Icap\BlogBundle\Event\Log\LogCommentCreateEvent;
 use Icap\BlogBundle\Event\Log\LogCommentDeleteEvent;
 use Icap\BlogBundle\Event\Log\LogPostCreateEvent;
@@ -44,7 +43,7 @@ class BadgeListener
      * @DI\Observe("badge-resource-icap_lesson-chapter_read-generate_validation_link")
      * @DI\Observe("badge-resource-icap_lesson-chapter_update-generate_validation_link")
      */
-    public function onBagdeCreateValidationLink(BadgeCreateValidationLinkEvent $event)
+    public function onBagdeCreateValidationLink($event)
     {
         $content = null;
         $log     = $event->getLog();
