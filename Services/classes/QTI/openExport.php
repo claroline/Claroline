@@ -30,7 +30,7 @@ class openExport extends qtiExport
                                 ->findOneBy(array('interaction' => $interaction->getId()));
 
         $this->qtiHead('extendedText', $this->question->getTitle());
-        $this->qtiResponseDeclaration('RESPONSE','string', 'single');
+        $this->qtiResponseDeclaration('RESPONSE','string', $this->getCardinality());
         $this->qtiOutComeDeclaration();
         $this->defaultValueTag();
         $this->itemBodyTag();
@@ -87,5 +87,22 @@ class openExport extends qtiExport
         $Tagvalue->appendChild($responsevalue);
         $defaultValue->appendChild($Tagvalue);
         $this->outcomeDeclaration->appendChild($defaultValue);
+    }
+
+    /**
+     * add the tag defaultValue in outcomeDeclaration
+     *
+     * @access private
+     *
+     * @return String value of cardinality for the responseDeclaration element
+     */
+    private function getCardinality()
+    {
+        $cardinality = 'single';
+        if ($this->interactionopen->getTypeOpenQuestion() == 'short') {
+            $cardinality = 'multiple';
+        }
+
+        return $cardinality;
     }
 }

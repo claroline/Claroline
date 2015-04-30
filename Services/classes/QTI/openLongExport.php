@@ -25,11 +25,6 @@ class openLongExport extends openExport
         $this->extendedTextInteractionTag();
         $this->promptTag($this->extendedTextInteraction);
 
-        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
-            $this->qtiFeedBack($interaction->getFeedBack());
-        }
-
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
         return $this->getResponse();
