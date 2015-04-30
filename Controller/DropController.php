@@ -102,7 +102,11 @@ class DropController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
-                $notFinishedDrop->setFinished(true);
+                // Début InnovaERV : vu avec Donovan //
+                // On ne ferme plus le collecticiel ici. //
+                // Par contre, on ne touche pas ailleurs, notamment lors de la fermeture automatiquement d'un collecticiel. //
+                // $notFinishedDrop->setFinished(true);
+                // fin InnovaERV :  //
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($notFinishedDrop);

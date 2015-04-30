@@ -144,10 +144,11 @@
     {% endif %}
 
     {% if drop is not null and drop.finished != true %}
-        <hr/>
         {% set nbDocument = drop.documents|length %}
         {% set documentListText = 'nbDocumentsInThisEvaluation'|transchoice(nbDocument, {}, 'innova_collecticiel') %}
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "condensed", documentListText) }}
+        {# Suppression de la liste des documents. InnovaERV, avril 2015 #}
+        {# <hr/> #}
+        {# {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "condensed", documentListText) }} #}
     {% endif %}
 
 
@@ -161,13 +162,15 @@
                 <div class="col-md-4">
                     {# Modification du nom du bouton et ajout de 2 traductions #}
                     {# Appel innova_collecticiel_drop dans DropController #}
-                    {% if drop is not null and drop.finished == false %}
+                    {# On ne peut pas "Compléter le collecticiel" donc j'enlève ce bouton #}
+{#                     {% if drop is not null and drop.finished == false %}
                         <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
                            class="btn btn-primary pull-right">{{ 'Complete evaluation'|trans({}, 'innova_collecticiel') }}</a>
                     {% else %}
+#}
                         <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
                            class="btn btn-primary pull-right">{{ 'Start evaluation'|trans({}, 'innova_collecticiel') }}</a>
-                    {% endif %}
+{#                  {% endif %} #}
                 </div>
             </div>
         {% endif %}
