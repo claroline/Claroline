@@ -10,6 +10,7 @@ window.onload = function () {
         var content = info[x].split(';');
         position(content[0], content[1], x, content[2], content[3], content[4], content[5]);
     }
+    
 };
 
 function position(shape, color, i, prefix, value, size, points) {
@@ -129,16 +130,19 @@ function position(shape, color, i, prefix, value, size, points) {
         }
     });
 
-    $('#dragContainer' + grade).append('<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
+    $('#dragContainer' + grade).append('<p style="position: absolute; left: 5px; top: -20px;">'
         + parseInt(grade + 1) + '</p>');
 
     alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);
 
     grade++;
+    //Image center
+  //  $('#Answer').children('div').css({'margin': 'auto'});
 }
 
 function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
 
+     
     var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
@@ -188,7 +192,16 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
             </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
-
-    $('#AlreadyPlacedArray').find('tbody').append(contenu);
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
+            $('#AlreadyPlacedArray').find('tbody').append(contenu);
+    //Button delete
+        $('#delete'+grade).click(function(e) {
+        $(this).parent('td').parent('tr').remove();
+        var chiffre = $(this).attr('id').replace('delete', '');  
+        $('#dragContainer'+chiffre).remove();
+        setOrderAfterDel();
+        e.preventDefault();
+    });  
+    //Displays the array anwser
+    $('#AlreadyPlacedArray').css({"display" : "inline"});
 }

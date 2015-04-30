@@ -53,12 +53,14 @@
             </a>
         {% endif %}
     </div>
-
+ <div class="list-group">
+        <div class="list-group-item">
     {% set inter = interHole %}
     {% include "UJMExoBundle:Partial:correction/hole.html.twig" %}
-
     <hr/>
     {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
+         </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}

@@ -1,5 +1,6 @@
 {#matching#}
 <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
+<link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -27,18 +28,20 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery-ui-touch-punch.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/instructions.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionMatching.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/jquery.jsplumb-1.6.2-min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/dom.jsPlumb-1.7.0-min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
 
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationMatchingEdit('{{ 'addLabel' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}',  '{{ typeMatching | raw }}', '{{ 'advanced edition' | trans }}',  '{{ 'remove advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', 0, '{}', '{}', '{}', '{{ 'correspondenceError' | trans }}', '{{ 'scoreError'| trans}}', '{{ 'Proposal.positionForce' | trans }}', '{{ 'Label.positionForce' | trans }}');
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        creationMatchingEdit('{{ 'addLabel' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}',  '{{ typeMatching | raw }}', '{{ 'advanced edition' | trans }}',  '{{ 'remove advanced edition' | trans }}', '{{ 'correspondence empty' | trans }}', 0, '{}', '{}', '{}', '{{ 'correspondenceError' | trans }}', '{{ 'scoreError'| trans}}', '{{ 'Proposal.positionForce' | trans }}', '{{ 'Label.positionForce' | trans }}','{{ 'advanced edition' | trans }}');
+        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationMatching('{{ 'addLabel' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'remove advanced edition' | trans }}',  '{{ 'correspondence empty' | trans }}', '{{ 'correspondenceError' | trans }}', '{{ 'scoreError'| trans}}', '{{ 'Proposal.positionForce' | trans }}', '{{ 'Label.positionForce' | trans }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        creationMatching('{{ 'addLabel' | trans }}', '{{ 'addProposal' | trans }}', '{{ 'delete' | trans }}', '{{ 'Label.value' | trans }}', '{{ 'Label.scoreRight' | trans }}', '{{ 'Proposal.value' | trans }}', '{{ 'numberProposal'| trans }}', '{{ 'correspondence' | trans }}', '{{ typeMatching|raw }}', '{{ 'advanced edition' | trans }}', '{{ 'remove advanced edition' | trans }}',  '{{ 'correspondence empty' | trans }}', '{{ 'correspondenceError' | trans }}', '{{ 'scoreError'| trans}}', '{{ 'Proposal.positionForce' | trans }}', '{{ 'Label.positionForce' | trans }}','{{ 'advanced edition' | trans }}');
+        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

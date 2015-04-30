@@ -10,6 +10,7 @@
     {{ parent() }}
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ asset('bundles/ujmexo/css/matchingOverview.css') }}" type="text/css" rel="stylesheet"/>
+    <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
 {% block title %} {{ 'paper' | trans }} {% endblock %}
@@ -91,12 +92,13 @@
                     <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
                         {{ "onlyOnce" | trans }}</em>
                     </h6>
-
+    </div>
+    <div style="margin-left: 30px;">
                     <div style="position: relative;" id="Answer">
                         <p id="ContainerCursorPaper">
                             {% set i = 1 %}
                             {% for coords in listCoords %}
-                                <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
+                                <img class="AnswerImage" src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
                                     id="cursor{{ i }}" style="position: absolute;"/>
                                 {% set i = i + 1 %}
                             {% endfor %}
@@ -106,10 +108,10 @@
                                 {% set response = 'empty' %}
                             {% endif %}
 
-                            <img src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
+                            <img class="AnswerImage" src="{{ asset(interactionToDisplayed.document.url) }}" alt="AnswerImg" id="AnswerImg"
                                 width="{{ interactionToDisplayed.width }}" height="{{ interactionToDisplayed.height }}"
                                 style="margin-top: 30px" onload="displayAnswersGraph('{{ response }}');"/>
-                        </p>
+                                </p>
                     </div>
 
                     <input type="hidden" id="nbpointer" name="nbpointer" value="{{ i }}"/>
@@ -132,11 +134,7 @@
 
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
 
-                    {% if interactionToDisplayed.typeopenquestion == 'long' %}
-                        <textarea name="interOpenLong" class="claroline-tiny-mce hide" data-theme="advanced" data-resource-picker="off" data-before-unload="off">
-                            {{ response }}
-                        </textarea>
-                    {% endif %}
+                    {% include "UJMExoBundle:Partial:paper/open.html.twig" %}
 
                     {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
 
@@ -255,6 +253,7 @@
                 <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
 
             {% endif %}
+            </div>
         </form>
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}

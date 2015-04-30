@@ -1,33 +1,23 @@
-<div>
-
 <div class="form-group row">
-    <label class="control-label col-md-3">{{ 'Inter_Hole.html' | trans }}</label>
-    <br><br>
+    <div id="Instructions" class="alert alert-info col-md-12">
+        <a class="close" onclick="HideInstruction();">&times;</a>
+        <p>{{ 'instruction add hole' | trans }}</p>
+    </div>
+    <label class="control-label col-md-1">{{ 'Inter_Hole.html' | trans }}</label> 
     <div id="holeEditor" class="col-md-9">{{ form_widget(form.html) }}</div>
 </div>
-
-<br><hr><br>
-
-<label class="control-label col-md-3">{{ 'hole' | trans }}</label>
-<br><br>
-<div id="Instructions" class="alert alert-info">
-    <a class="close" onclick="HideInstruction();">&times;</a>
-    <p>{{ 'instruction add hole' | trans }}</p>
+<div class="form-group">
+    <div class="btn-group">
+        <a id="create_hole" class="btn btn-primary" onclick="createHole();"><i class="fa fa-plus"></i> {{ 'create hole' | trans }}</a>
+        <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct"><i class="fa fa-question"></i></a>
+        <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct"><i class="fa fa-question"></i></a>
+    </div>  
 </div>
-</br>
-<a id="create_hole" class="btn btn-primary" onclick="createHole();">
-    <i class="fa fa-plus"></i> {{ 'create hole' | trans }}
-</a>
-<a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct">
-    <i class="fa fa-question"></i> {{ 'show Instructions' | trans }}
-</a>
-<a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct">
-    <i class="fa fa-question"></i> {{ 'hide Instructions' | trans }}
-</a>
-</br></br>
 {#{ form_row(form.holes) }#}
-<div id="holeError"></div>
-<div id="tableHoles"></div>
-{{ form_widget(form.holes) }}
-{{ form_errors(form.holes) }}
+<div id="holeError" class="form-group">
+    {{ form_errors(form.holes) }}
 </div>
+<div id="tableHoles" class="form-group" >
+     {{ form_widget(form.holes) }}
+</div>
+

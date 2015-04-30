@@ -16,8 +16,14 @@ class ProposalType extends AbstractType
             )
             ->add(
                 'value', 'textarea', array(
-                    'label' => ' '
-                 )
+                    'required' => true,
+                    'label' => ' ',
+                    'attr' => array(
+                        'class'=>'form-control',
+                        'style' => 'height:34px;',
+                        'placeholder' => 'expected answer'
+                    )
+                )
             )
             ->add(
                 'positionForce', 'checkbox', array(

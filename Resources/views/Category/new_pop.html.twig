@@ -21,6 +21,7 @@
 </div>
 
 <script type="text/javascript">
+   
     $("#submit_category").click(function () {
         var nom_cat = $("#category").val();
 
@@ -46,7 +47,8 @@
                     type: "POST",
                     url: "{{path('ujm_category_create_pop')}}",
                     data: {
-                        value: nom_cat
+                        value: nom_cat,
+                        locker : '0'
                     },
                     cache: false,
                     success: function(data){

@@ -13,7 +13,9 @@ class HintType extends AbstractType
         $builder
             ->add(
                 'value', 'textarea', array(
-                    'label' => 'Hint.value'
+                    'label' => 'Hint.value',
+                    'attr' => array('style' => 'height:57px',
+                                      'class'=> 'form-control')
                 )
             )
             ->add(

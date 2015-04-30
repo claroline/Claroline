@@ -53,10 +53,12 @@
             </a>
         {% endif %}
     </div>
-
-    {% set inter = interOpen %}
-    {% include "UJMExoBundle:Partial:correction/open.html.twig" %}
-
-   <hr/>
-   {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
+    <div class="list-group">
+        <div class="list-group-item">
+            {% set inter = interOpen %}
+            {% include "UJMExoBundle:Partial:correction/open.html.twig" %}
+            <hr/>
+            {% include "UJMExoBundle:Partial:correction/overviewScore.html.twig" %}
+        </div>
+    </div>
 {% endblock %}

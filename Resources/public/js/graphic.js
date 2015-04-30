@@ -1,5 +1,6 @@
 var el = $('#movable'); // To get the shape and the color of the answer zone
 var grade = 0; // Number of answer zone
+var count=0; //Value answer zone
 var imgx; // Coord x of the answer zone
 var imgy; // Coord y of the answer zone
 var j; // For for instruction
@@ -67,6 +68,8 @@ function sendData(select, path, prefx) {
                     minWidth: 70,
                     maxWidth: maxSize
                 });
+                //Image center
+              //  $('#Answer').children('div').css({'margin': 'auto'});
             });
         }
     });
@@ -94,97 +97,106 @@ function LoadPic(path, prefx, iddoc) {
     value = 0;
     grade = 0;
     point = {};
+    
+    //displays the button to add an answer
+    $('#addButtonAnswer').css({"display" : "inline"});
 }
 
-$(function () {
+/**
+ * Add an answer zone
+ *
+ * @param {String} noImage Information no image selected
+ * @returns array
+ */
+ function addAnswerZone(noImage)
+ {
+    if($('#AnswerImage').length){
+        //For edition : put in order if it adds points
+        setOrderAfterDel();
 
-    // Make the answer zones draggable
-    $('#movable').draggable({
-        containment : '#AnswerImage',
-        cursor : 'move',
+        $('#Answer').append('<div id="dragContainer' + grade +
+            '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
+            + '<p style="position: absolute; left: 5px; top: -20px;">'
+            + parseInt(count + 1) + '</p></div>');
 
-        // When stop drag
-        stop: function(event, ui) {
-            if($('#AnswerImage').length){
+        //var stoppos = $(this).position();
 
-                $('#Answer').append('<div id="dragContainer' + grade +
-                    '"><i class="fa fa-arrows" style="cursor: move; position: absolute; left: -10px; top: -15px;"></i>'
-                    + '<p id="num' + parseInt(grade + 1) +'" style="position: absolute; left: 5px; top: -20px;">'
-                    + parseInt(grade + 1) + '</p></div>');
+        var toppos = $('#Answer').position().top;
+        var leftpos = $('#Answer').find('.ui-wrapper').position().left;
 
-                var stoppos = $(this).position();
+        // Create a new image
+        var img = new Image();
 
-                // Create a new image
-                var img = new Image();
-
-                // Give it id corresonding of numbers of previous answer
-                img.id = 'img' + grade;
+        // Give it id corresonding of numbers of previous answer
+        img.id = 'img' + grade;
 
 
-                // With the url of the dragged image
-                $(img).attr('src', el.attr('src'));
+        // With the url of the dragged image
+        $(img).attr('src', el.attr('src'));
 
-                // Add it to the page
-                $('#dragContainer' + grade).append(img);
+        // Add it to the page
+        $('#dragContainer' + grade).append(img);
 
-                imgx = parseInt(stoppos.left);
-                imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
+//        imgx = parseInt(leftpos);
+//        imgx -= $('#Answer').position().left; // $('#Answer').prop('offsetLeft');
+        imgx=0;
+          //  alert(imgx);
+        // Position y answer zone
+//        imgy = parseInt(toppos);
+//        imgy -= $('#Answer').position().top;
+        imgy=0;
+          //  alert(imgy);
+        // With the position of the dragged image
+        $('#dragContainer' + grade).css({
+            "position" : "absolute",
+            "left" : String(imgx) + 'px',
+            "top"  : String(imgy) + 'px'
+        });
 
-                // Position y answer zone
-                imgy = parseInt(stoppos.top);
-                imgy -= $('#Answer').position().top;
+        // Make the new answer zone draggable and save its new position when stop drag
+        $(img).resizable({
+            aspectRatio: true,
+            minWidth: 10,
+            maxWidth: 500
+        });
 
-                // With the position of the dragged image
-                $('#dragContainer' + grade).css({
-                    "position" : "absolute",
-                    "left" : String(imgx) + 'px',
-                    "top"  : String(imgy) + 'px'
-                });
+        $('#dragContainer' + grade).draggable({
+            containment : '#AnswerImage',
+            cursor : 'move',
+            handle : 'i',
 
-                // Make the new answer zone draggable and save its new position when stop drag
-                $(img).resizable({
-                    aspectRatio: true,
-                    minWidth: 10,
-                    maxWidth: 500
-                });
-
-                $('#dragContainer' + grade).draggable({
-                    containment : '#AnswerImage',
-                    cursor : 'move',
-                    handle : 'i',
-
-                    stop: function(event, ui) {
-                        $(img).css("left", $(this).css("left"));
-                        $(img).css("top", $(this).css("top"));
-                    }
-                });
-
-                // Alter symbol score in order to insert right score into the database
-                var score = $('#points').val().replace(/[.,]/, '/');
-
-                // Save the score matching to an answer zone (thanks to its id)
-                point[img.id] = score;
-
-                var infos = getImageInformations($(img).attr('src'));
-
-                alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
-
-                grade++;
+            stop: function(event, ui) {
+                $(img).css("left", $(this).css("left"));
+                $(img).css("top", $(this).css("top"));
             }
-            // If add a new answer zone, the reference image go back to its initial place
-            if (event.target.id == 'movable') {
-                el.css({
-                    "left" : "0px",
-                    "top"  : "0px"
-                });
-            }
+        });
+
+        // Alter symbol score in order to insert right score into the database
+        var score = $('#points').val().replace(/[.,]/, '/');
+
+        // Save the score matching to an answer zone (thanks to its id)
+        point[img.id] = score;
+
+        var infos = getImageInformations($(img).attr('src'));
+
+        alreadyPlacedAnswersZone(infos['shape'], infos['color'], infos['pathImg'], score);
+
+        grade++;
+        count++;
+        //Creation head of the table
+        if ($('#AnswerImage').find('#dragContainer0').length > 1) {
+         $('#AlreadyPlacedArray').css({"display" : "none"});
+
+        } else {
+         $('#AlreadyPlacedArray').css({"display" : "inline"});
         }
-    });
-});
+    }else{
+        alert(noImage);
+    }
+}
 
 // Check if the score is a correct number
 function CheckScore(message, valueOfPoint) {
-
     var valToTest = '';
 
     if (valueOfPoint == 'default') {
@@ -204,7 +216,7 @@ function CheckScore(message, valueOfPoint) {
 }
 
 // Submit form without an empty field
-function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) {
+function Check( noQuestion, noImg, noAnswerZone, invite) {
 
     /*if ($("*[id$='_penalty']").length > 0) {
         $("*[id$='_penalty']").val($("*[id$='_penalty']").val().replace(/[-]/, ''));
@@ -220,12 +232,6 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
             break;
         }
     }
-
-    // No title
-    if ($('#' + questiontitle).val() == '') {
-        alert(noTitle);
-        return false;
-    } else {
 
         // No question asked
         if (tinyMCE.get(invite).getContent() == '') {
@@ -262,20 +268,20 @@ function Check(noTitle, noQuestion, noImg, noAnswerZone, questiontitle, invite) 
                             if (selectedZone.css("left") == 'auto') {
                                 position = container;
                             }
-
+                           
                             // Position x answer zone
                             imgx = parseInt(position.css("left").substring(0, position.css("left").indexOf('p')));
 
                             // Position y answer zone
                             imgy = parseInt(position.css("top").substring(0, position.css("top").indexOf('p')));
-
+                         //   alert('imgx:'+imgx+' imgy:'+imgy);
                             // Concatenate informations of the answer zones
                             var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
 
                             // And send it to the controller
                             $('#coordsZone').val($('#coordsZone').val() + val + ',');
                         }
-                    }
+
                 }
             }
         }
@@ -380,41 +386,41 @@ function switchColorShape(prefix, shape, color, target, targetColor) {
     }
 }
 
-// Key press for delete an answer zone
-document.addEventListener('keydown', function (e) {
-    if (e.keyCode === 83) { // Touch s down
-        pressS = true;
-    }
-}, false);
-
-document.addEventListener('keyup', function (e) {
-    if (e.keyCode === 83) { // Touch s up
-        pressS = false;
-    }
-}, false);
-
-document.addEventListener('click', function (e) {
-
-    // To delete an answer zone
-    if (pressS === true) {
-
-        for (j = 0 ; j < grade ; j++) {
-            if ($(e.target).hasClass('fa fa-arrows')) {
-                $(e.target).parent('div').remove();
-
-                var containerID = $(e.target).parent('div').attr('id');
-                var numToDel = parseInt(containerID.substring(containerID.indexOf('er') + 2, containerID.indexOf('er') + 3)) + 1;
-
-                $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
-
-                setOrderAfterDel();
-
-                break;
-            }
-        }
-        pressS = false;
-    }
-}, false);
+//// Key press for delete an answer zone
+//document.addEventListener('keydown', function (e) {
+//    if (e.keyCode === 83) { // Touch s down
+//        pressS = true;
+//    }
+//}, false);
+//
+//document.addEventListener('keyup', function (e) {
+//    if (e.keyCode === 83) { // Touch s up
+//        pressS = false;
+//    }
+//}, false);
+//
+//document.addEventListener('click', function (e) {
+//
+//    // To delete an answer zone
+//    if (pressS === true) {
+//
+//        for (j = 0 ; j < grade ; j++) {
+//            if ($(e.target).hasClass('fa fa-arrows')) {
+//                $(e.target).parent('div').remove();
+//
+//                var containerID = $(e.target).parent('div').attr('id');
+//                var numToDel = parseInt(containerID.substring(containerID.indexOf('er') + 2, containerID.indexOf('er') + 3)) + 1;
+//
+//                $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
+//
+//                setOrderAfterDel();
+//
+//                break;
+//            }
+ //       }
+//        pressS = false;
+//    }
+//}, false);
 
 function addPicture(url) {
     $.ajax({
@@ -436,12 +442,11 @@ $(document.body).on('hidden.bs.modal', function () {
 });
 
 function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
-
-    var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
+    var contenu = '<tr><td class="classic" width="25%">' + (parseInt(count) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
         contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
-                        <option value="circle">' + translations['tradCircle'] + '</option>\n\
+                        <option value="circle"> <img src="bundles/ujmexo/images/graphic/circlew.png"></option>\n\
                         <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
                     </select></td>'
     } else {
@@ -486,9 +491,18 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
             </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td></tr>';
-
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
     $('#AlreadyPlacedArray').find('tbody').append(contenu);
+
+    $('#delete'+grade).click(function(e) {
+        $(this).parent('td').parent('tr').remove();
+        var chiffre = $(this).attr('id').replace('delete', '');  
+        $('#dragContainer'+chiffre).remove();
+        setOrderAfterDel();
+        e.preventDefault();
+    });
+    //indice button delete
+   // m++;
 }
 
 function alterAlreadyPlaced(pathImg, alterSelect) {
@@ -529,59 +543,62 @@ function getImageInformations(src) {
 }
 
 function setOrderAfterDel() {
-    grade = 0;
+    count = 0;
     var oldPoints = point;
     point = {};
 
     $('#AlreadyPlacedArray').find('tr:not(:first)').each(function () {
-        num = grade + 1;
+        num = count + 1;
         $(this).find('td').eq(0).replaceWith('<td class="classic">' + num + '</td>');
-        grade++;
+        count++;
     });
 
-    grade = 0;
+    count = 0;
 
     $("*[id^='dragContainer']").each(function () {
-        num = grade + 1;
-        $(this).attr('id', String('dragContainer' + grade));
-        $(this).find('p').replaceWith(String('<p id="num' + num +'" style="position: absolute; left: 5px; top: -20px;">' + num + '</p>'));
-        grade++;
+        num = count + 1;
+      //  $(this).attr('id', String('dragContainer' + grade));
+        $(this).find('p').replaceWith(String('<p style="position: absolute; left: 5px; top: -20px;">' + num + '</p>'));
+        count++;
     });
-
-    grade = 0;
-
     $("*[id^='img']").each(function () {
-        var oldId = $(this).attr('id');
-        num = grade + 1;
-        $(this).attr('id', String('img' + grade));
-        point[$(this).attr('id')] = oldPoints[oldId];
-        grade++;
+        point[$(this).attr('id')] = oldPoints[$(this).attr('id')];
     });
 
-    grade = 0;
-
-    $("*[id^='shape']").each(function () {
-        if ($(this).attr('id').length > 5) {
-            $(this).attr('id', String('shape' + grade));
-            grade++;
-        }
-    });
-
-    grade = 0;
-
-    $("*[id^='color']").each(function () {
-        if ($(this).attr('id').length > 5) {
-            $(this).attr('id', String('color' + grade));
-            grade++;
-        }
-    });
-
-    grade = 0;
-
-    $("*[id^='points']").each(function () {
-        if ($(this).attr('id').length > 6) {
-            $(this).attr('id', String('points' + grade));
-            grade++;
-        }
-    });
+//    count = 0;
+//
+//    $("*[id^='img']").each(function () {
+//        var oldId = $(this).attr('id');
+////        $(this).attr('id', String('img' + count));
+//        point[$(this).attr('id')] = oldPoints[oldId];
+////        count++;
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='shape']").each(function () {
+//        if ($(this).attr('id').length > 5) {
+//            $(this).attr('id', String('shape' + count));
+//            count++;
+//        }
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='color']").each(function () {
+//        if ($(this).attr('id').length > 5) {
+//            $(this).attr('id', String('color' + count));
+//            count++;
+//        }
+//    });
+//
+//    count = 0;
+//
+//    $("*[id^='points']").each(function () {
+//        if ($(this).attr('id').length > 6) {
+//            $(this).attr('id', String('points' + count));
+//            count++;
+//        }
+//    });
 }
+

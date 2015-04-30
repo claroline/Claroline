@@ -20,21 +20,31 @@ class ChoiceType extends AbstractType
                 )
             )
             ->add(
-                'label', 'tinymce', array(
-                     'attr' => array('data-new-tab' => 'yes'),
-                    'label' => ' '
+                'label', 'textarea', array(
+                    'label' => ' ',
+                    'required' => true, 
+                    'attr' => array('style' => 'height:34px; ',
+                    'class'=>'form-control',
+                    'placeholder' => 'expected answer'               
+                    )
                 )
             )
             ->add(
                 'weight', 'text', array(
-                    'required' => false, 'label' => ' ', 'attr' => array('style' => 'width:50px; text-align: end;')
+                    'required' => false, 
+                    'label' => ' ',
+                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'points')
                 )
             )
             ->add(
-                'feedback', 'tinymce', array(
-                    'attr' => array('data-new-tab' => 'yes'),
-                    'required' => false, 'label' => ' '
-                )
+                   'feedback', 'textarea', array(
+                   'required' => false, 'label' => ' ',
+                   'attr' => array('class'=>'form-control',
+                                   'data-new-tab' => 'yes',
+                                   'placeholder' => 'Choice.feedback',
+                                   'style' => 'height:34px;'
+                       )
+                  )
             )
             ->add(
                 'positionForce', 'checkbox', array(

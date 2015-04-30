@@ -346,9 +346,7 @@ class exerciseServices
         $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
-        if ($interOpen->getTypeOpenQuestion() == 'long') {
-            $response = $request->request->get('interOpenLong');
-        }
+        $response = $request->request->get('interOpen');
 
         // Not assessment
         if ($paperID == 0) {
@@ -371,6 +369,17 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $score = -1;
+        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+            $score = $this->getScoreOpenOneWord($response, $interOpen);
+        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+            $score = $this->getScoreShortResponse($response, $interOpen);
+        }
+
+        if ($interOpen->getTypeOpenQuestion() != 'long') {
+            $score -= $penalty;
+            if ($score < 0) {
+                $score = 0;
+            }
         }
 
         $score .= '/'.$this->openMaxScore($interOpen);
@@ -484,9 +493,7 @@ class exerciseServices
                 $score += $wr->getScore();
             } else {
                 foreach ($hole->getWordResponses() as $wr) {
-                    if ($wr->getResponse() == $response) {
-                        $score += $wr->getScore();
-                    }
+                    $score += $this->getScoreWordResponse($wr, $response);
                 }
             }
         }
@@ -963,6 +970,16 @@ class exerciseServices
 
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
+        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+            $scoreMax = $this->doctrine
+                             ->getManager()
+                             ->getRepository('UJMExoBundle:WordResponse')
+                             ->getScoreMaxOneWord($interOpen->getId());
+        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+            $scoreMax = $this->doctrine
+                             ->getManager()
+                             ->getRepository('UJMExoBundle:WordResponse')
+                             ->getScoreMaxShort($interOpen->getId());
         }
 
         return $scoreMax;
@@ -1199,7 +1216,7 @@ class exerciseServices
 
         return $linkedCategory;
     }
-
+    
     /**
      * To control the max attemps, allow to know if an user can again execute an exercise
      *
@@ -1634,6 +1651,77 @@ class exerciseServices
         }
 
         return $resp;
+    }
+
+    /**
+     * Get score for an open question with one word
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * Return float
+     */
+    private function getScoreOpenOneWord($response, $interOpen)
+    {
+        $score = 0;
+        foreach ($interOpen->getWordResponses() as $wr) {
+            $score += $this->getScoreWordResponse($wr, $response);
+        }
+
+        return $score;
+
+    }
+
+    /**
+     * Get score for a question with key word
+     *
+     * @access private
+     *
+     * @param \UJM\ExoBundle\Entity\WordResponse $wr
+     * @param String $response
+     *
+     * Return float
+     */
+    private function getScoreWordResponse($wr, $response)
+    {
+        $score = 0;
+        if ( ((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
+                && $wr->getCaseSensitive() == false))
+                    || (trim($wr->getResponse()) == trim($response)) ) {
+            $score = $wr->getScore();
+        }
+
+        return $score;
+    }
+
+    /**
+     * Get score for an open question with short answer
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * Return float
+     */
+    private function getScoreShortResponse($response, $interOpen)
+    {
+        $score = 0;
+
+        foreach($interOpen->getWordResponses() as $wr) {
+            $pattern = '/'.$wr->getResponse().'/';
+            if (!$wr->getCaseSensitive()) {
+                $pattern .= 'i';
+            }
+            $subject = '/'.$response.'/';
+            if (preg_match($pattern, $subject)) {
+                $score += $wr->getScore();
+            }
+        }
+
+        return $score;
     }
 
     /**

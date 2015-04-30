@@ -29,15 +29,16 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     public function processAdd()
     {
+        
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
-
+            //Uses the default category if no category selected
+            $this->checkCategory();
+            $this->checkTitle();
             if ( $this->form->isValid() ) {
-
                 if($this->validateNbClone() === FALSE) {
                     return 'infoDuplicateQuestion';
                 }
-
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
@@ -65,6 +66,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     protected function onSuccessAdd($interHole)
     {
+        
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
         $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());

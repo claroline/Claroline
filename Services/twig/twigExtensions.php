@@ -58,6 +58,7 @@ class twigExtensions extends \Twig_Extension
             'getProposal'             => new \Twig_Function_Method($this, 'getProposal'),
             'explodeString'           => new \Twig_Function_Method($this, 'explodeString'),
             'initTabResponseMatching' => new \Twig_Function_Method($this, 'initTabResponseMatching'),
+            'goodResponseOpenOneWord' => new \Twig_Function_Method($this, 'goodResponseOpenOneWord'),
         );
 
     }
@@ -315,6 +316,24 @@ class twigExtensions extends \Twig_Extension
 
         return $questionRights;
 
+    }
+
+    /**
+     * return the good response for an open question with one word
+     *
+     * @access public
+     *
+     * @param integer $interOpenId id InteractionOpen
+     *
+     * Return integer
+     */
+    public function goodResponseOpenOneWord($interOpenId)
+    {
+
+        return $this->doctrine
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:WordResponse')
+                    ->getgoodResponseOneWord($interOpenId);
     }
 
     /**

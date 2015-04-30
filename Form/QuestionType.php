@@ -29,15 +29,20 @@ class QuestionType extends AbstractType
         $builder
             ->add(
                 'title', 'text', array(
-                    'label' => 'Question.title'
+                    'label' => 'Question.title',
+                    'required' => false,
+                    'attr'  => array( 'placeholder' => 'Question.title')
                 )
             )
             ->add(
                 'category', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
                     'label' => 'Category.value',
+                    'required' => false,
+                    'empty_value' => 'choose_category', 
+    
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
-                        if ($this->catID == -1) {
+                        if ($this->catID === -1) {
                             return $cr->getUserCategory($uid);
                         } else {
                             return $cr->createQueryBuilder('c')
@@ -47,9 +52,13 @@ class QuestionType extends AbstractType
                     }
                 )
             )
-            ->add('description', 'tinymce', array(
-                    'attr' => array('data-new-tab' => 'yes'),
-                    'label' => 'Question.description', 'required' => false
+            ->add('description', 'textarea', array(
+                    'label' => 'Question.description', 
+                    'required' => false,
+                    'attr'  => array( 'placeholder' => 'Question.description',
+                                      'class'=> 'form-control',
+                                      'data-new-tab' => 'yes'
+                                    )                    
                 )
             )
             ->add(

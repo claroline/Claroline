@@ -5,34 +5,34 @@ $(function() {
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
 
-        //Create all draggable in source
+        //Create all draggable in source.
         jsPlumb.makeSource($(".origin"), {
-            isSource: true,
             anchor: "Right",
             cssClass: "endPoints",
+            isSource: true
         });
 
         //Create all droppable in target
-        jsPlumb.makeTarget($(".droppable"), {
-            isTarget: true,
+         jsPlumb.makeTarget($(".droppable"), {
             anchor: "Left",
             cssClass: "endPoints",
+            isTarget: true        
         });
-        
+
         //defaults parameteres for all connections
         jsPlumb.importDefaults({
             ConnectionsDetachable:false,
             Connector: "Straight",
+            DropOptions: {tolerance:"touch"},
             Endpoint: "Dot",
             EndpointStyle: {fillStyle:"#777", radius: 5},
-            PaintStyle: { strokeStyle:"#777", lineWidth: 4},
             HoverPaintStyle: {strokeStyle:"red"},
             LogEnabled: false,
-            DropOptions: {tolerance:"touch"},
+            PaintStyle: { strokeStyle:"#777", lineWidth: 4}
         });
 
         //if there are multiples same link
-        jsPlumb.bind("beforeDrop", function(info){
+         jsPlumb.bind("beforeDrop", function(info){
             var connection = jsPlumb.getConnections({
                 source:info["sourceId"],
                 target:info["targetId"]
@@ -53,7 +53,7 @@ $(function() {
         jsPlumb.bind("click", function(connection) {
             var target = connection["target"]["id"];
             var connectionsTarget = jsPlumb.getConnections({
-                target:target,
+                target:target
             });
             if (connectionsTarget.length > 1) {
                 jsPlumb.detach(connection);

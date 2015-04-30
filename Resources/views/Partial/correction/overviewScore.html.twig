@@ -9,7 +9,7 @@
         <br/><hr/>
     {% endif %}
 
-    {% if (inter.interaction.type == 'InteractionOpen') %}
+    {% if (inter.interaction.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
        {{ 'not yet mark' | trans }}.
     {% else %}
         {{ 'mark' | trans }} : <span id="score">{{ score }}.</span>

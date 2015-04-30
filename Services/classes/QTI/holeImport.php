@@ -257,6 +257,11 @@ class holeImport extends qtiImport
             $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
             $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
             $keyWord->setHole($hole);
+            if ($mapEntry->getAttribute('caseSensitive') == true) {
+                $keyWord->setCaseSensitive(true);
+            } else {
+                $keyWord->setCaseSensitive(false);
+            }
             $this->doctrine->getManager()->persist($keyWord);
         }
     }
@@ -285,6 +290,11 @@ class holeImport extends qtiImport
                         if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
                             $score = $mapEntry->getAttribute('mappedValue');
                             $matchScore = true;
+                        }
+                        if ($mapEntry->getAttribute('caseSensitive') == true) {
+                            $keyWord->setCaseSensitive(true);
+                        } else {
+                            $keyWord->setCaseSensitive(false);
                         }
                     }
                     if ($matchScore === false) {

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UJM\ExoBundle\Entity\WordResponse
  *
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\WordResponseRepository")
  * @ORM\Table(name="ujm_word_response")
  */
 class WordResponse
@@ -27,6 +27,13 @@ class WordResponse
      * @ORM\Column(name="response", type="string", length=255)
      */
     private $response;
+
+    /**
+     * @var boolean $caseSensitive
+     *
+     * @ORM\Column(name="caseSensitive", type="boolean", nullable=true)
+     */
+    private $caseSensitive;
 
     /**
      * @var float $score
@@ -65,6 +72,26 @@ class WordResponse
     public function setResponse($response)
     {
         $this->response = $response;
+    }
+
+    /**
+     * Get caseSensitive
+     *
+     * @return boolean
+     */
+    public function getCaseSensitive()
+    {
+        return $this->caseSensitive;
+    }
+
+    /**
+     * Set caseSensitive
+     *
+     * @param boolean $caseSensitive
+     */
+    public function setCaseSensitive($caseSensitive)
+    {
+        $this->caseSensitive = $caseSensitive;
     }
 
     /**

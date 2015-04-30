@@ -15,6 +15,8 @@ UJM\ExoBundle\Entity\Choice:
     properties:
         weight:
             - UJM\ExoBundle\Validator\Constraints\isValidQCMMark: ~
+        label:
+             - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
 
 UJM\ExoBundle\Entity\InteractionOpen:
     properties:
@@ -31,7 +33,12 @@ UJM\ExoBundle\Entity\WordResponse:
         score:
             - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
 
-UJM\ExoBundle\Entity\Question:
-    properties:
-        category:
+#UJM\ExoBundle\Entity\Question:
+#    properties:
+#        category:
+#            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
+
+UJM\ExoBundle\Entity\Interaction: 
+  properties:
+        invite:
             - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
