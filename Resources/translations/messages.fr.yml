@@ -497,7 +497,7 @@ Inter_Hole.orthography: Autoriser les fautes d'orthographe
 Inter_Hole.score: Point
 Inter_Hole.size: Taille
 
-Label.value : Valeur
+Label.value : Label
 Label.scoreRight: Score de l'association
 Label.positionForce: Forcer cette position
 
@@ -511,7 +511,7 @@ Planning.end_time: Date de fin
 Planning.start_time: Date de début
 Points: Points
 
-Proposal.value: Réponse
+Proposal.value: Proposition
 Proposal.positionForce: Forcer cette position
 
 Question_creation: Création d'une question

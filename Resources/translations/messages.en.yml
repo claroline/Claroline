@@ -497,7 +497,7 @@ Inter_Hole.orthography: Allow misspellings
 Inter_Hole.score: Score
 Inter_Hole.size: Size
 
-Label.value : Value
+Label.value : Label
 Label.scoreRight: Score of the association
 Label.positionForce: Forced position
 
@@ -511,7 +511,7 @@ Planning.end_time: End Date
 Planning.start_time: Start date
 Points: Points
 
-Proposal.value: Response
+Proposal.value: Proposition
 Proposal.positionForce: Forced position
 
 Question_creation: Question creation
