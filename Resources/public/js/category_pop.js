@@ -15,4 +15,5 @@ function markCat(data) {
 
 $(document.body).on('hidden.bs.modal', function () {
     $('#modalcategory').remove();
+    $('#editCategory').css({"display" : "inline-block"});
 });
