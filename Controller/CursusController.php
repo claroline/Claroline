@@ -748,6 +748,59 @@ class CursusController extends Controller
         return new Response('success', 200);
     }
 
+
+    /******************
+     * Widget methods *
+     ******************/
+
+
+    /**
+     * @EXT\Route(
+     *     "/courses/registration/widget",
+     *     name="claro_cursus_courses_registration_widget",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidget.html.twig")
+     */
+    public function coursesRegistrationWidgetAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/list/registration/widget/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_courses_list_for_registration_widget",
+     *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
+     */
+    public function coursesListForRegistrationWidgetAction(
+        $search = '',
+        $page = 1,
+        $max = 20,
+        $orderedBy = 'title',
+        $order = 'ASC'
+    )
+    {
+        $courses = $search === '' ?
+            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
+            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+
+        return array(
+            'courses' => $courses,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+
     private function checkToolAccess()
     {
         $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');

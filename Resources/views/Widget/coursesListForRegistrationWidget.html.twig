@@ -1,0 +1,137 @@
+{% macro renderPager(pager, search, max, orderedBy, order) %}
+    {% if search is empty %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_courses_list_for_registration_widget',
+                    'routeParams': {
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order
+                    }
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_courses_list_for_registration_widget',
+                    'routeParams': {
+                        'search': search,
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order
+                    }
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% macro sortUrl(search, max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_users_list_for_user_picker',
+            {
+                'search': search,
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+        
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 pull-right">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-course"
+                   type="text"
+                   id="search-course-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-course-btn"
+                        type="button"
+                        id="search-course-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+
+{% if courses.getNbPages() > 1 %}
+    {{ renderPager(courses, search, max, orderedBy, order) }}
+{% endif %}
+
+<ul class="media-list">
+        
+    {% for course in courses %}
+        {% set icon = course.getIcon() %}
+    
+        {% if icon is empty %}
+            {% set iconPath = asset('files/cursusbundle/icons/no_icon.png') %}
+        {% else %}
+            {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
+        {% endif %}
+        <li class="media">
+            <div class="media-left col-md-2">
+                <img class="media-object"
+                     src="{{ iconPath }}"
+                     alt=""
+                >
+            </div>
+            <div class="media-body col-md-10">
+                <h4 class="media-heading">
+                    {{ course.getTitle() }}
+                </h4>
+                <div>
+                    {{ course.getDescription()|raw }}
+                </div>
+            </div>
+        </li>
+        
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+</ul>
+
+{% if courses.getNbPages() > 1 %}
+    {{ renderPager(courses, search, max, orderedBy, order) }}
+{% endif %}
+
+<div id="courses-registration-widget-datas-box"
+     data-search="{{ search }}"
+     data-max="{{ max }}"
+     data-ordered-by="{{ orderedBy }}"
+     data-order="{{ order }}"
+>
+</div>
