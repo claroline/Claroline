@@ -1077,7 +1077,22 @@ class CursusManager
             $extension;
         $tmpFile->move($this->iconsDirectory, $hashName);
 
-        return $this->iconsDirectory . $hashName;
+        return $hashName;
+    }
+
+    public function changeIcon(Course $course, UploadedFile $tmpFile)
+    {
+        $icon = $course->getIcon();
+
+        if (!is_null($icon)) {
+            $iconPath = $this->iconsDirectory . $icon;
+            
+            try {
+                unlink($iconPath);
+            } catch(\Exception $e) {}
+        }
+
+        return $this->saveIcon($tmpFile);
     }
     
 

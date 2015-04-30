@@ -178,8 +178,8 @@ class CourseController extends Controller
             $icon = $form->get('icon')->getData();
 
             if (!is_null($icon)) {
-                $iconPath = $this->cursusManager->saveIcon($icon);
-                $course->setIcon($iconPath);
+                $hashName = $this->cursusManager->saveIcon($icon);
+                $course->setIcon($hashName);
             }
             $this->cursusManager->persistCourse($course);
 
@@ -216,12 +216,17 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseEditModalForm.html.twig")
+     * @EXT\Template()
      *
      * @param Course $course
      */
     public function courseEditFormAction(Course $course, User $authenticatedUser)
     {
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
         $form = $this->formFactory->create(
             new CourseType($authenticatedUser),
             $course
@@ -229,7 +234,9 @@ class CourseController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'course' => $course
+            'course' => $course,
+            'displayedWords' => $displayedWords,
+            'type' => 'course'
         );
     }
 
@@ -240,7 +247,7 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:courseEditModalForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:courseEditForm.html.twig")
      *
      * @param Course $course
      */
@@ -253,6 +260,12 @@ class CourseController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $icon = $form->get('icon')->getData();
+
+            if (!is_null($icon)) {
+                $hashName = $this->cursusManager->changeIcon($course, $icon);
+                $course->setIcon($hashName);
+            }
             $this->cursusManager->persistCourse($course);
 
             $message = $this->translator->trans(
@@ -263,12 +276,21 @@ class CourseController extends Controller
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
 
-            return new JsonResponse('success', 200);
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_course_index')
+            );
         } else {
+            $displayedWords = array();
+
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
 
             return array(
                 'form' => $form->createView(),
-                'course' => $course
+                'course' => $course,
+                'displayedWords' => $displayedWords,
+                'type' => 'course'
             );
         }
     }
