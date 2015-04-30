@@ -5,6 +5,14 @@
 </div>
 
 {% block javascripts %}
+    <script type="text/javascript"
+            src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"
+    >
+    </script>
     <script
         src='{{ asset('bundles/clarolinecursus/js/coursesRegistrationWidget.js') }}'
         type="text/javascript"

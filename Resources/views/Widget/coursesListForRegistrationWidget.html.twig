@@ -94,6 +94,7 @@
 <ul class="media-list">
         
     {% for course in courses %}
+        {% set courseId = course.getId() %}
         {% set icon = course.getIcon() %}
     
         {% if icon is empty %}
@@ -115,6 +116,92 @@
                 <div>
                     {{ course.getDescription()|raw }}
                 </div>
+                <br>
+                
+                {% if unstartedSessions[courseId] is not defined and ongoingSessions[courseId] is not defined %}
+                    <div class="alert alert-warning">
+                        {{ 'no_session'|trans({}, 'cursus') }}
+                    </div>
+                {% else %}
+                    <div>
+                        <h4>{{ 'sessions'|trans({}, 'cursus') }}</h4>
+                        <ul>
+                            {% if unstartedSessions[courseId] is defined %}
+                                {% for session in unstartedSessions[courseId] %}
+                                    {% set sessionId = session.getId() %}
+                                    {% set startDate = session.getStartDate() %}
+                                    {% set endDate = session.getEndDate() %}
+                                    <li>
+                                        <span>
+                                            {{ session.getName() }}
+                                            [
+                                            {% if startDate is empty %}
+                                                ?
+                                            {% else %}
+                                                {{ startDate|intl_date_format }}
+                                            {% endif %}
+                                            <i class="fa fa-long-arrow-right"></i>
+
+                                            {% if endDate is empty %}
+                                                ?
+                                            {% else %}
+                                                {{ endDate|intl_date_format }}
+                                            {% endif %}
+                                            ]
+                                        </span>
+                                        
+                                        {% if session.getPublicRegistration() %}
+                                            &nbsp;
+                                            <span class="btn btn-default btn-sm session-register-btn"
+                                                  data-session-id="{{ sessionId }}"
+                                            >
+                                                <i class="fa fa-sign-in"></i>
+                                                {{ 'self_register'|trans({}, 'cursus') }}
+                                            </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                                    
+                            {% if ongoingSessions[courseId] is defined %}
+                                {% for session in ongoingSessions[courseId] %}
+                                    {% set sessionId = session.getId() %}
+                                    {% set startDate = session.getStartDate() %}
+                                    {% set endDate = session.getEndDate() %}
+                                    <li>
+                                        <span>
+                                            {{ session.getName() }}
+                                            [
+                                            {% if startDate is empty %}
+                                                ?
+                                            {% else %}
+                                                {{ startDate|intl_date_format }}
+                                            {% endif %}
+                                            <i class="fa fa-long-arrow-right"></i>
+
+                                            {% if endDate is empty %}
+                                                ?
+                                            {% else %}
+                                                {{ endDate|intl_date_format }}
+                                            {% endif %}
+                                            ]
+                                        </span>
+                                        
+                                        {% if session.getPublicRegistration() %}
+                                            &nbsp;
+                                            <span class="btn btn-default btn-sm session-register-btn"
+                                                  data-session-id="{{ sessionId }}"
+                                            >
+                                                <i class="fa fa-sign-in"></i>
+                                                {{ 'self_register'|trans({}, 'cursus') }}
+                                            </span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
             </div>
         </li>
         

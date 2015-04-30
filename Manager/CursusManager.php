@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
@@ -1093,6 +1094,34 @@ class CursusManager
         }
 
         return $this->saveIcon($tmpFile);
+    }
+
+    public function addUserToSessionQueue(User $user, CourseSession $session)
+    {
+        $sessionUser = $this->getOneSessionUserBySessionAndUserAndType(
+            $session,
+            $user,
+            0
+        );
+
+        if (is_null($sessionUser)) {
+            $queue = $this->getOneQueueBySessionAndUser($session, $user);
+
+            if (is_null($queue)) {
+                $queue = new CourseSessionRegistrationQueue();
+                $queue->setSession($session);
+                $queue->setUser($user);
+                $queue->setApplicationDate(new \DateTime());
+                $this->om->persist($queue);
+                $this->om->flush();
+            }
+        }
+    }
+
+    public function deleteSessionQueue(CourseSessionRegistrationQueue $queue)
+    {
+        $this->om->remove($queue);
+        $this->om->flush();
     }
     
 

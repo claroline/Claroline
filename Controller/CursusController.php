@@ -11,8 +11,10 @@
 
 namespace Claroline\CursusBundle\Controller;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CursusType;
@@ -789,6 +791,33 @@ class CursusController extends Controller
         $courses = $search === '' ?
             $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
             $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+        $coursesArray = array();
+
+        foreach ($courses as $course) {
+            $coursesArray[] = $course;
+        }
+        $unstartedSessions = array();
+        $ongoingSessions = array();
+        $courseSessions = $this->cursusManager->getSessionsByCourses($coursesArray);
+
+        foreach ($courseSessions as $courseSession) {
+            $courseId = $courseSession->getCourse()->getId();
+            $status = $courseSession->getSessionStatus();
+
+            if ($status === 0) {
+
+                if (!isset($unstartedSessions[$courseId])) {
+                    $unstartedSessions[$courseId] = array();
+                }
+                $unstartedSessions[$courseId][] = $courseSession;
+            } elseif ($status === 1) {
+
+                if (!isset($ongoingSessions[$courseId])) {
+                    $ongoingSessions[$courseId] = array();
+                }
+                $ongoingSessions[$courseId][] = $courseSession;
+            }
+        }
 
         return array(
             'courses' => $courses,
@@ -796,10 +825,41 @@ class CursusController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'unstartedSessions' => $unstartedSessions,
+            'ongoingSessions' => $ongoingSessions
         );
     }
 
+    /**
+     * @EXT\Route(
+     *     "/course/session/{session}/self/register",
+     *     name="claro_cursus_course_session_self_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
+     */
+    public function courseSessionSelfRegisterAction(
+        CourseSession $session,
+        User $authenticatedUser
+    )
+    {
+        if ($session->getPublicRegistration()) {
+
+            if ($session->getRegistrationValidation()) {
+                $this->cursusManager->addUserToSessionQueue($authenticatedUser, $session);
+            } else {
+                $this->cursusManager->registerUsersToSession(
+                    $session,
+                    array($authenticatedUser),
+                    0
+                );
+            }
+        }
+
+        return new JsonResponse('success', 200);
+    }
 
     private function checkToolAccess()
     {

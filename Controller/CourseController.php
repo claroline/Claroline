@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
@@ -513,6 +514,7 @@ class CourseController extends Controller
     {
         $sessionUsers = $this->cursusManager->getSessionUsersBySession($session);
         $sessionGroups = $this->cursusManager->getSessionGroupsBySession($session);
+        $queues = $this->cursusManager->getQueuesBySession($session);
         $learners = array();
         $tutors = array();
         $learnersGroups = array();
@@ -541,7 +543,8 @@ class CourseController extends Controller
             'learners' => $learners,
             'tutors' => $tutors,
             'learnersGroups' => $learnersGroups,
-            'tutorsGroups' => $tutorsGroups
+            'tutorsGroups' => $tutorsGroups,
+            'queues' => $queues
         );
     }
 
@@ -768,6 +771,49 @@ class CourseController extends Controller
             }
             $this->mailManager->send($title, $content, array($user));
         }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/registration/queue/{queue}/accept",
+     *     name="claro_cursus_course_session_user_registration_accept",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param User $user
+     */
+    public function courseSessionUserRegistrationAcceptAction(
+        CourseSessionRegistrationQueue $queue
+    )
+    {
+        $user = $queue->getUser();
+        $session = $queue->getSession();
+        $this->cursusManager->registerUsersToSession($session, array($user), 0);
+        $this->cursusManager->deleteSessionQueue($queue);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/registration/queue/{queue}/decline",
+     *     name="claro_cursus_course_session_user_registration_decline",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     *
+     * @param CourseSession $session
+     * @param User $user
+     */
+    public function courseSessionUserRegistrationDeclineAction(
+        CourseSessionRegistrationQueue $queue
+    )
+    {
+        $this->cursusManager->deleteSessionQueue($queue);
 
         return new JsonResponse('success', 200);
     }

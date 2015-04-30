@@ -63,4 +63,21 @@
             refreshCoursesList();
         }
     });
+
+    $('#courses-registration-widget').on('click', '.session-register-btn', function () {
+        var sessionId = $(this).data('session-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_self_register',
+                {'session': sessionId}
+            ),
+            doNothing,
+            null,
+            Translator.trans('session_self_registration_message', {}, 'platform'),
+            Translator.trans('session_registration', {}, 'platform')
+        );
+    });
+    
+    var doNothing = function () {};
 })();

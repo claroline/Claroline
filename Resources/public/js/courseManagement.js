@@ -323,6 +323,36 @@
             Translator.trans('send_confirmation_mail', {}, 'cursus')
         );
     });
+    
+    $('#users-box').on('click', '.accept-registration-btn', function () {
+        var queueId = $(this).data('queue-id');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_user_registration_accept',
+                {'queue': queueId}
+            ),
+            removeQueuedUserManagementBox,
+            queueId,
+            Translator.trans('accept_registration_confirm_message', {}, 'cursus'),
+            Translator.trans('accept_registration', {}, 'cursus')
+        );
+    });
+    
+    $('#users-box').on('click', '.decline-registration-btn', function () {
+        var queueId = $(this).data('queue-id');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_cursus_course_session_user_registration_decline',
+                {'queue': queueId}
+            ),
+            removeQueuedUser,
+            queueId,
+            Translator.trans('decline_registration_confirm_message', {}, 'cursus'),
+            Translator.trans('decline_registration', {}, 'cursus')
+        );
+    });
 
     var removeUserRow = function (event, sessionUserId) {
         $('#row-session-user-' + sessionUserId).remove();
@@ -337,4 +367,12 @@
     };
     
     var doNothing = function() {};
+    
+    var removeQueuedUserManagementBox = function(event, queueId) {
+        $('#row-queued-user-management-' + queueId).remove();
+    };
+    
+    var removeQueuedUser = function(event, queueId) {
+        $('#row-queued-user-' + queueId).remove();
+    };
 })();

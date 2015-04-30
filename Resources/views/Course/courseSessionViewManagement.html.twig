@@ -88,6 +88,34 @@
                     </td>
                 </tr>
             {% endfor %}
+                
+            {% for queue in queues %}
+                {% set queueId = queue.getId() %}
+                {% set queuedUser = queue.getUser() %}
+                <tr id="row-queued-user-{{ queueId }}">
+                    <td>
+                        {{ queuedUser.getFirstName() }}
+                        {{ queuedUser.getLastName() }}
+                        <small>({{ queuedUser.getUsername() }})</small>
+                        &nbsp;
+                        <span id="row-queued-user-management-{{ queueId }}">
+                            <span class="label label-default">
+                                {{ 'pending'|trans({}, 'platform') }}
+                            </span>
+                            <span class="label label-success pointer-hand accept-registration-btn"
+                                  data-queue-id="{{ queueId }}"
+                            >
+                                <i class="fa fa-check"></i>
+                            </span>
+                            <span class="label label-danger pointer-hand decline-registration-btn"
+                                  data-queue-id="{{ queueId }}"
+                            >
+                                <i class="fa fa-times"></i>
+                            </span>
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
         </table>
     </div>
     <div class="table-responsive">
