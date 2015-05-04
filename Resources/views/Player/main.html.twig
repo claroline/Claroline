@@ -4,11 +4,16 @@
     {{ parent() }}
 
     {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/player.css'
-        '@InnovaPathBundle/Resources/public/css/Player/*'
         '@InnovaPathBundle/Resources/public/css/tree-view.css'
         '@InnovaPathBundle/Resources/public/css/colors.css'
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}" />
+    {% endstylesheets %}
+
+    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/player2.css'
+        '@InnovaPathBundle/Resources/public/less/Player/app.less'
+    %}
+    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
@@ -16,7 +21,7 @@
     <div id="path-main-container" class="path-player">
         {# Summary #}
         <div id="full-tree" class="modal fade">
-            {% include 'InnovaPathBundle:Player:components/tree-browser.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'autoDisplayEnabled': autoDisplayEnabled } %}
+            {% include 'InnovaPathBundle:Player:components/tree-browser.html.twig' with { 'path': path, 'currentStep': currentStep, 'autoDisplayEnabled': autoDisplayEnabled } %}
         </div>
 
         <div class="row">
@@ -27,14 +32,14 @@
                         <span class="fa fa-list"></span>
                     </a>
 
-                    <a class="btn btn-default nav-button" rel="tooltip" data-original-title="{{ 'back_to_home' | trans({}, 'innova_tools') }}" href="{{ path('claro_workspace_open_tool', { workspaceId: workspace.id, toolName: 'home' }) }}">
+                    <a class="btn btn-default nav-button" rel="tooltip" data-original-title="{{ 'back_to_home' | trans({}, 'innova_tools') }}" href="{{ path('claro_workspace_open_tool', { workspaceId: _resource.workspace.id, toolName: 'home' }) }}">
                         <span class="fa fa-home"></span>
                     </a>
                 </div>
 
                 {# Breadcrumb #}
                 <div class="breadcrumbs">
-                    {% include 'InnovaPathBundle:Player:components/breadcrumbs.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep, 'roadBack': roadBack } %}
+                    {% include 'InnovaPathBundle:Player:components/breadcrumbs.html.twig' with { 'path': path, 'currentStep': currentStep, 'roadBack': roadBack } %}
                 </div>
             </div>
         </div>
@@ -47,7 +52,7 @@
 
             {# Step content #}
             <div class="current-step col-md-12">
-                {% include 'InnovaPathBundle:Player:components/current-step.html.twig' with { 'workspace': workspace, 'path': path, 'currentStep': currentStep } %}
+                {% include 'InnovaPathBundle:Player:components/current-step.html.twig' with { 'path': path, 'currentStep': currentStep } %}
             </div>
         </div>
     </div>
@@ -103,7 +108,6 @@
 
     <script type="text/javascript">
         var pathId      = {{ path.id }};
-        var workspaceId = {{ workspace.id }};
 
         $(document).ready(function() {
             {% if autoDisplaySummary %}
@@ -115,7 +119,6 @@
 
                 $.ajax({
                     url: Routing.generate('innova_path_player_toggle_summary', {
-                        workspaceId : workspaceId,
                         pathId      : pathId,
                         disabled    : isChecked ? 1 : 0
                     }),
