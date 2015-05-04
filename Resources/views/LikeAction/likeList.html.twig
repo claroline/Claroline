@@ -1,0 +1,6 @@
+{% for like in pager.currentPageResults %}
+    <div class="list-group-item">{{ like.user.firstName~" "~like.user.lastName }}</div>
+{% endfor %}
+{% if pager.hasNextPage and not parameters["page"] == 0 %}
+    <div class="list-group-item"><a class="btn btn-primary jscroll-like-list-next" href="{{ path("icap_socialmedia_likelist", parameters) }}" class="btn btn-primary">{{ "see_more"|trans({}, 'icap_socialmedia') }}</a></div>
+{% endif %}

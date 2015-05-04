@@ -14,10 +14,11 @@ namespace Icap\SocialmediaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="icap__socialmedia_like")
+ * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\LikeActionRepository")
+ *
  * Class LikeAction
  * @package Icap\SocialmediaBundle\Entity
- * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\LikeActionRepository")
- * @ORM\Table(name="icap__socialmedia_like")
  */
 class LikeAction extends ActionBase
 {

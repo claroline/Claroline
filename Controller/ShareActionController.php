@@ -12,24 +12,64 @@
 namespace Icap\SocialmediaBundle\Controller;
 
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\ShareAction;
+use Icap\SocialmediaBundle\Library\SocialShare\SocialShare;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ShareActionController extends Controller
 {
     /**
-     * @Route("/share.{_format}", name="icap_socialmedia_share", defaults={"_format" = "json"})
+     * @Route("/form/{resourceId}", name="icap_socialmedia_share_form", )
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"id" = "resourceId"})
+     * @Template()
+     * @param ResourceNode $resourceNode
+     * @param User $user
+     * @return array
+     */
+    public function formAction(ResourceNode $resourceNode, User $user)
+    {
+        $shareManager = $this->getShareActionManager();
+        $sharesCount = $shareManager->countShares(null, array("resource"=>$resourceNode->getId()));
+        $socialShare = new SocialShare();
+        $resourceUrl = "http://stackoverflow.com";//$this->generateUrl("claro_resource_open_short", array("node" => $resourceNode->getId()), true);
+
+        return array(
+            "resourceNode" => $resourceNode,
+            "networks" => $socialShare->getNetworks(),
+            "shares" => $sharesCount,
+            "resourceUrl" => $resourceUrl
+        );
+    }
+
+    /**
+     * @Route("/share", name="icap_socialmedia_share")
+     * @ParamConverter("user", options={"authenticatedUser" = false})
+     * @Template()
      * @param Request $request
      * @param User $user
      * @return bool
      */
-    public function shareAction(Request $request, User $user)
+    public function shareAction(Request $request, User $user = null)
     {
         $share = new ShareAction();
         $share->setUser($user);
-        $this->getShareActionManager()->createShare($request, $share);
+        $network = $request->get("network");
+        $options = $this->getShareActionManager()->createShare($request, $share);
+        $response = array();
+        if ($network !== null) {
+            $socialShare = new SocialShare();
+            $shareLink = $socialShare->getNetwork($network)->getShareLink($options["url"], array($options["title"]));
+            $response = new RedirectResponse($shareLink);
+        }
 
-        return true;
+        return $response;
     }
 } 

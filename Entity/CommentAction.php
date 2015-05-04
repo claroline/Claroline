@@ -14,10 +14,10 @@ namespace Icap\SocialmediaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="icap__socialmedia_comment")
+ * @ORM\Entity
  * Class CommentAction
  * @package Icap\SocialmediaBundle\Entity
- * @ORM\Entity
- * @ORM\Table(name="icap__socialmedia_comment")
  */
 class CommentAction extends ActionBase
 {

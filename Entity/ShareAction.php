@@ -14,10 +14,10 @@ namespace Icap\SocialmediaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="icap__socialmedia_share")
+ * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\ShareActionRepository")
  * Class ShareAction
  * @package Icap\SocialmediaBundle\Entity
- * @ORM\Entity
- * @ORM\Table(name="icap__socialmedia_share")
  */
 class ShareAction extends ActionBase
 {

@@ -15,9 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
+ * @ORM\MappedSuperclass
  * Class ActionBase
  * @package Icap\SocialmediaBundle\Entity
- * @ORM\MappedSuperclass
  */
 class ActionBase
 {
@@ -56,7 +56,7 @@ class ActionBase
      * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @JoinColumn(name="resource_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="resource_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $resource = null;
 
@@ -64,7 +64,7 @@ class ActionBase
      * @var \Claroline\CoreBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $user;
 
@@ -123,7 +123,7 @@ class ActionBase
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource
      * @return $this
      */
     public function setResource($resource)

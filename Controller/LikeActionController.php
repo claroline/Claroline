@@ -16,44 +16,11 @@ use Icap\SocialmediaBundle\Entity\LikeAction;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class LikeActionController extends Controller
 {
-    /**
-     * @Route("/like.{_format}", name="icap_socialmedia_like", defaults={"_format" = "json"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User $user
-     * @return bool
-     */
-    public function likeAction(Request $request, User $user)
-    {
-        $like = new LikeAction();
-        $like->setUser($user);
-        $this->getLikeActionManager()->createLike($request, $like);
-
-        return true;
-    }
-    
-    /**
-     * @Route("/unlike.{_format}", name="icap_socialmedia_unlike", defaults={"_format" = "json"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param User $user
-     * @return bool
-     */
-    public function unlikeAction(Request $request, User $user)
-    {
-        $likeActionManager = $this->getLikeActionManager();
-        $like = $likeActionManager->getLikeBy($request, $user);
-        if ($like !== null) {
-            $likeActionManager->removeLike($like);
-        }
-
-        return true;
-    }
-
     /**
      * @Route("/form/{resourceId}", name="icap_socialmedia_like_form", )
      * @ParamConverter("user", options={"authenticatedUser" = true})
@@ -64,32 +31,65 @@ class LikeActionController extends Controller
      */
     public function formAction($resourceId, User $user)
     {
-        $likes = $this->getLikeActionManager()->getLikesBy(array("resource"=>$resourceId));
+        $likeManager = $this->getLikeActionManager();
+        $criteria = array("resource" => $resourceId);
+        $userLike = $likeManager->getLikeBy($user, null, $criteria);
+        $likesQB = $likeManager->getLikesForPagination(null, $criteria);
+        $pager = $this->paginateQuery($likesQB, 1);
 
-        return array("resourceId" => $resourceId, "likes" => $likes);
+        return array("resourceId" => $resourceId, "pager" => $pager, "userLike" => $userLike);
     }
 
     /**
-     * @Route(
-     *  "/likes/count/{resourceId}",
-     *  name="icap_socialmedia_count_likes_resource",
-     *  requirements={"resourceId" = "\d+"}
-     * )
-     * @Route(
-     *  "/likes/count",
-     *  name="icap_socialmedia_count_likes"
-     * )
+     * @Route("/like", name="icap_socialmedia_like")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param $resourceId
+     * @param User $user
+     * @return bool
+     */
+    public function likeAction(Request $request, User $user)
+    {
+        $like = new LikeAction();
+        $like->setUser($user);
+        $this->getLikeActionManager()->createLike($request, $like);
+        $jsonResponse = new JsonResponse(true);
+
+        return $jsonResponse;
+    }
+
+    /**
+     * @Route("/unlike", name="icap_socialmedia_unlike")
+     * @ParamConverter("user", options={"authenticatedUser" = true})
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param User $user
+     * @return bool
+     */
+    public function unlikeAction(Request $request, User $user)
+    {
+        $likeActionManager = $this->getLikeActionManager();
+        $like = $likeActionManager->getLikeBy($user, $request);
+        if ($like !== null) {
+            $likeActionManager->removeLike($like);
+        }
+        $jsonResponse = new JsonResponse(true);
+
+        return $jsonResponse;
+    }
+
+    /**
+     * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"})
+     * @param Request $request
+     * @Template()
+     * @param $page
      * @return array
      */
-    public function countLikesAction(Request $request, $resourceId = null)
+    public function likeListAction(Request $request, $page)
     {
-        if ($resourceId !== null) {
-            $request->request->set("resource", $resourceId);
-        }
-        $likes = $this->getLikeActionManager()->countLikes($request);
+        $likesQB = $this->getLikeActionManager()->getLikesForPagination($request);
+        $pager = $this->paginateQuery($likesQB, $page);
+        $parameters = $request->query->all();
+        $parameters["page"] = ($pager->hasNextPage())?$pager->getNextPage():0;
 
-        return array('likes' => $likes);
+        return array("pager" => $pager, "parameters" => $parameters);
     }
 } 

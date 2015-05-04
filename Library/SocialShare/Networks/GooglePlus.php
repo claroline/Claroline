@@ -64,9 +64,9 @@ class GooglePlus implements NetworkInterface
         curl_close ($curl);
         $data = json_decode($curl_results, true);
 
-        if (isset($json[0]['result']['metadata']['globalCounts']['count']))
+        if (isset($data[0]['result']['metadata']['globalCounts']['count']))
         {
-            return intval($json[0]['result']['metadata']['globalCounts']['count']);
+            return intval($data[0]['result']['metadata']['globalCounts']['count']);
         } else {
             return 0;
         }

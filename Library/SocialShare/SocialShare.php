@@ -33,6 +33,15 @@ class SocialShare
         return $this->networks;
     }
 
+    /**
+     * @param $name
+     * @return NetworkInterface
+     */
+    public function getNetwork($name)
+    {
+        return $this->networks[$name];
+    }
+
     private function registerNetwork(NetworkInterface $network)
     {
         $this->networks[$network->getName()] = $network;

@@ -55,7 +55,7 @@ class Twitter implements NetworkInterface
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = json_decode(file_get_contents($api_url));
 
-        return isset($data['count'])?intval($data['count']):0;
+        return isset($data->count)?intval($data->count):0;
     }
 
     /**

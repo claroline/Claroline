@@ -33,6 +33,9 @@ class SocialmediaExtension extends \Twig_Extension
     {
         static $suffixes = array('', 'k', 'M', 'B', 'T');
         $number = intval($number);
+        if ($number == 0) {
+            return "&nbsp;";
+        }
         $base = log($number) / log(1000);
 
         return round(pow(1000, $base - floor($base)), $precision) . $suffixes[floor($base)];

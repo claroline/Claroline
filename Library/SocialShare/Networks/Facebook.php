@@ -53,7 +53,7 @@ class Facebook implements NetworkInterface
         $api_url = sprintf(self::API_URL, urlencode($url));
         $data = json_decode(file_get_contents($api_url));
 
-        return isset($data[0]['share_count'])?intval($data[0]['share_count']):0;
+        return isset($data[0]->share_count)?intval($data[0]->share_count):0;
     }
 
     /**

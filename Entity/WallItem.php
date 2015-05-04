@@ -15,10 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Class WallAction
- * @package Icap\SocialmediaBundle\Entity
- * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\WallActionRepository")
  * @ORM\Table(name="icap__socialmedia_wall_item")
+ * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\WallActionRepository")
  */
 class WallItem
 {
@@ -35,7 +33,7 @@ class WallItem
      * @var \Icap\SocialmediaBundle\Entity\LikeAction
      *
      * @ORM\ManyToOne(targetEntity="Icap\SocialmediaBundle\Entity\LikeAction")
-     * @JoinColumn(name="like_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="like_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $like = null;
 
@@ -43,7 +41,7 @@ class WallItem
      * @var \Icap\SocialmediaBundle\Entity\ShareAction
      *
      * @ORM\ManyToOne(targetEntity="Icap\SocialmediaBundle\Entity\ShareAction")
-     * @JoinColumn(name="share_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="share_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $share = null;
 
@@ -51,7 +49,7 @@ class WallItem
      * @var \Icap\SocialmediaBundle\Entity\CommentAction
      *
      * @ORM\ManyToOne(targetEntity="Icap\SocialmediaBundle\Entity\CommentAction")
-     * @JoinColumn(name="comment_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="comment_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $comment = null;
 
@@ -67,7 +65,7 @@ class WallItem
      * @var \Claroline\CoreBundle\Entity\User
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $user;
 

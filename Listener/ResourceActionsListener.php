@@ -61,8 +61,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:LikeAction:likeForm',
-                'resourceId'    => $event->getResource()->getId(),
+                '_controller'   => 'IcapSocialmediaBundle:LikeAction:form',
+                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
                 'user'          => $this->securityContext->getToken()->getUser()
             ],
             $event
@@ -76,8 +76,9 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:ShareAction:shareForm',
-                'resourceId'      => $event->getResource()->getId()
+                '_controller'   => 'IcapSocialmediaBundle:ShareAction:form',
+                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
+                'user'          => $this->securityContext->getToken()->getUser()
             ],
             $event
         );
@@ -90,8 +91,9 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:CommentAction:commentForm',
-                'resourceId'      => $event->getResource()->getId()
+                '_controller'   => 'IcapSocialmediaBundle:CommentAction:form',
+                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
+                'user'          => $this->securityContext->getToken()->getUser()
             ],
             $event
         );
@@ -105,7 +107,8 @@ class ResourceActionsListener
         $this->redirect(
             [
                 '_controller'   => 'IcapSocialmediaBundle:NoteAction:noteForm',
-                'resourceId'      => $event->getResource()->getId()
+                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
+                'user'          => $this->securityContext->getToken()->getUser()
             ],
             $event
         );
