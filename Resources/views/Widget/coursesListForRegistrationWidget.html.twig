@@ -102,6 +102,10 @@
         {% else %}
             {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
         {% endif %}
+        <h3 class="media-heading">
+            {{ course.getTitle() }}
+        </h3>
+        <hr>
         <li class="media">
             <div class="media-left col-md-2 text-center">
                 <img class="media-object"
@@ -111,127 +115,93 @@
                 >
             </div>
             <div class="media-body col-md-10">
-                <h4 class="media-heading">
-                    {{ course.getTitle() }}
-                </h4>
                 <div>
                     {{ course.getDescription()|raw }}
                 </div>
-                <br>
-                
-                {% if unstartedSessions[courseId] is not defined and ongoingSessions[courseId] is not defined %}
-                    <div class="alert alert-warning">
-                        {{ 'no_session'|trans({}, 'cursus') }}
-                    </div>
-                {% else %}
-                    <div>
-                        <h4>{{ 'sessions'|trans({}, 'cursus') }}</h4>
-                        <ul>
-                            {% if unstartedSessions[courseId] is defined %}
-                                {% for session in unstartedSessions[courseId] %}
-                                    {% set sessionId = session.getId() %}
-                                    {% set startDate = session.getStartDate() %}
-                                    {% set endDate = session.getEndDate() %}
-                                    <li>
-                                        <span>
-                                            {{ session.getName() }}
-                                            [
-                                            {% if startDate is empty %}
-                                                ?
-                                            {% else %}
-                                                {{ startDate|intl_date_format }}
-                                            {% endif %}
-                                            <i class="fa fa-long-arrow-right"></i>
-
-                                            {% if endDate is empty %}
-                                                ?
-                                            {% else %}
-                                                {{ endDate|intl_date_format }}
-                                            {% endif %}
-                                            ]
-                                        </span>
-                                        
-                                        <span id="session-registration-btn-{{ sessionId }}">
-                                            {% if registeredSessions[sessionId] is defined %}
-                                                &nbsp;
-                                                <span class="label label-success">
-                                                    {{ 'registered'|trans({}, 'platform') }}
-                                                </span>
-                                            {% elseif pendingSessions[sessionId] is defined %}
-                                                &nbsp;
-                                                <span class="label label-info">
-                                                    {{ 'pending'|trans({}, 'platform') }}
-                                                </span>
-                                            {% elseif session.getPublicRegistration() %}
-                                                &nbsp;
-                                                <span class="btn btn-default btn-sm session-register-btn"
-                                                      data-session-id="{{ sessionId }}"
-                                                >
-                                                    <i class="fa fa-sign-in"></i>
-                                                    {{ 'self_register'|trans({}, 'cursus') }}
-                                                </span>
-                                            {% endif %}
-                                        </span>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
-                                    
-                            {% if ongoingSessions[courseId] is defined %}
-                                {% for session in ongoingSessions[courseId] %}
-                                    {% set sessionId = session.getId() %}
-                                    {% set startDate = session.getStartDate() %}
-                                    {% set endDate = session.getEndDate() %}
-                                    <li>
-                                        <span>
-                                            {{ session.getName() }}
-                                            [
-                                            {% if startDate is empty %}
-                                                ?
-                                            {% else %}
-                                                {{ startDate|intl_date_format }}
-                                            {% endif %}
-                                            <i class="fa fa-long-arrow-right"></i>
-
-                                            {% if endDate is empty %}
-                                                ?
-                                            {% else %}
-                                                {{ endDate|intl_date_format }}
-                                            {% endif %}
-                                            ]
-                                        </span>
-                                        
-                                        <span id="session-registration-btn-{{ sessionId }}">
-                                            {% if registeredSessions[sessionId] is defined %}
-                                                &nbsp;
-                                                <span class="label label-success">
-                                                    {{ 'registered'|trans({}, 'platform') }}
-                                                </span>
-                                            {% elseif pendingSessions[sessionId] is defined %}
-                                                &nbsp;
-                                                <span class="label label-info">
-                                                    {{ 'pending'|trans({}, 'platform') }}
-                                                </span>
-                                            {% elseif session.getPublicRegistration() %}
-                                                &nbsp;
-                                                <span class="btn btn-default btn-sm session-register-btn"
-                                                      data-session-id="{{ sessionId }}"
-                                                >
-                                                    <i class="fa fa-sign-in"></i>
-                                                    {{ 'self_register'|trans({}, 'cursus') }}
-                                                </span>
-                                            {% endif %}
-                                        </span>
-                                    </li>
-                                {% endfor %}
-                            {% endif %}
-                        </ul>
-                    </div>
-                {% endif %}
             </div>
         </li>
+        <hr>
+                
+        {% if sessions[courseId] is not defined %}
+            <div class="alert alert-warning">
+                {{ 'no_session'|trans({}, 'cursus') }}.
+                
+                {% if courseQueues[courseId] is defined %}
+                    <span class="cancel-course-queue-request-btn pointer-hand"
+                          id="course-queue-btn-{{ courseId }}"
+                          data-course-id="{{ courseId }}"
+                    >
+                        <span class="label label-success">
+                            {{ 'request_done'|trans({}, 'platform') }}
+                        </span>
+                    </span>
+                {% else %}
+                    <span class="course-queue-request-btn pointer-hand"
+                          id="course-queue-btn-{{ courseId }}"
+                          data-course-id="{{ courseId }}"
+                    >
+                        <span class="label label-info">
+                            {{ 'next_session_registration_request'|trans({}, 'platform') }}
+                        </span>
+                    </span>
+                {% endif %}
+            </div>
+        {% else %}
+            <div>
+                <h4>{{ 'sessions'|trans({}, 'cursus') }}</h4>
+                <ul>
+                    {% for session in sessions[courseId] %}
+                        {% set sessionId = session.getId() %}
+                        {% set startDate = session.getStartDate() %}
+                        {% set endDate = session.getEndDate() %}
+                        <li>
+                            <span>
+                                {{ session.getName() }}
+                                [
+                                {% if startDate is empty %}
+                                    ?
+                                {% else %}
+                                    {{ startDate|intl_date_format }}
+                                {% endif %}
+                                <i class="fa fa-long-arrow-right"></i>
+
+                                {% if endDate is empty %}
+                                    ?
+                                {% else %}
+                                    {{ endDate|intl_date_format }}
+                                {% endif %}
+                                ]
+                            </span>
+
+                            <span id="session-registration-btn-{{ sessionId }}">
+                                {% if registeredSessions[sessionId] is defined %}
+                                    &nbsp;
+                                    <span class="label label-success">
+                                        {{ 'registered'|trans({}, 'platform') }}
+                                    </span>
+                                {% elseif pendingSessions[sessionId] is defined %}
+                                    &nbsp;
+                                    <span class="label label-info">
+                                        {{ 'pending'|trans({}, 'platform') }}
+                                    </span>
+                                {% elseif session.getPublicRegistration() %}
+                                    &nbsp;
+                                    <span class="btn btn-default btn-sm session-register-btn"
+                                          data-session-id="{{ sessionId }}"
+                                    >
+                                        <i class="fa fa-sign-in"></i>
+                                        {{ 'self_register'|trans({}, 'cursus') }}
+                                    </span>
+                                {% endif %}
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         
         {% if not loop.last %}
-            <hr>
+            <hr style="border: solid 2px">
         {% endif %}
     {% endfor %}
 </ul>
