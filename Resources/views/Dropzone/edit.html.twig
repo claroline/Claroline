@@ -22,12 +22,13 @@
         {{ macros.flashBox() }}
         <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
 
+            <!-- Paramètres ORI -->
             <li class="hometab-element {% block dropzone_edit_navTabs_param_element_class %}active {% endblock %}">
                 <a href="
                     {% block dropzone_edit_navTabs_param_link %}
                         {{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}
                     {% endblock %}" class="hometab-link">
-                    Paramètres
+                    {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                 </a>
             </li>
 
@@ -44,6 +45,45 @@
             {% endblock %}
 -->
 
+            <!-- (Mon) Espace collecticiel -->
+            {% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
+                <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %} {% endblock %}">
+                    <a id="editCriteriaLink" href="
+                    {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
+                        {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                        (Mon) Espace collecticiel
+                    </a>
+                </li>
+            {% endblock %}
+
+            <!-- Espaces partagés -->
+            {% block collecticiel_espace_partage_edit_navTabs_criteria_block %}
+                <li class="hometab-element peer-review-options {% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %} {% endblock %}">
+                    <a id="editCriteriaLink" href="
+                    {% block collecticiel_espace_partage_edit_navTabs_criteria_element_link %}
+                        {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                        Espaces partagés
+                    </a>
+                </li>
+            {% endblock %}
+
+
+            <!-- Demandes adressées  -->
+            {% block collecticiel_demande_edit_navTabs_criteria_block %}
+                <li class="hometab-element peer-review-options {% block collecticiel_demande_edit_navTabs_criteria_element_class %} {% endblock %}">
+                    <a id="editCriteriaLink" href="
+                    {% block collecticiel_demande_edit_navTabs_criteria_element_link %}
+                        {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                        Demandes adressées
+                    </a>
+                </li>
+            {% endblock %}
+
+
+            <!-- Ne pas toucher, bloc d'origine qui sert d'exemple -->
             {% block collecticiel_edit_navTabs_criteria_block %}
                 <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
                 <li class="hometab-element peer-review-options {% block collecticiel_edit_navTabs_criteria_element_class %} {% endblock %}">
