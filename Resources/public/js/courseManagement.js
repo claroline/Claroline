@@ -26,6 +26,11 @@
         );
     });
     
+    $('#edit-course-btn').on('click', function () {
+        var courseId = $(this).data('course-id');
+        
+    });
+    
     $('.show-users-btn').on('click', function () {
         var sessionId = $(this).data('session-id');
         

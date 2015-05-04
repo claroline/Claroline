@@ -212,16 +212,22 @@ class CourseController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/course/{course}/edit/form",
+     *     "cursus/course/{course}/edit/form/source/{source}",
      *     name="claro_cursus_course_edit_form",
+     *     defaults={"source"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @param Course $course
+     * @param int $source
      */
-    public function courseEditFormAction(Course $course, User $authenticatedUser)
+    public function courseEditFormAction(
+        Course $course,
+        User $authenticatedUser,
+        $source = 0
+    )
     {
         $displayedWords = array();
 
@@ -237,22 +243,29 @@ class CourseController extends Controller
             'form' => $form->createView(),
             'course' => $course,
             'displayedWords' => $displayedWords,
-            'type' => 'course'
+            'type' => 'course',
+            'source' => $source
         );
     }
 
     /**
      * @EXT\Route(
-     *     "cursus/course/{course}/edit",
+     *     "cursus/course/{course}/edit/source/{source}",
      *     name="claro_cursus_course_edit",
+     *     defaults={"source"=0},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Course:courseEditForm.html.twig")
      *
      * @param Course $course
+     * @param int $source
      */
-    public function courseEditAction(Course $course, User $authenticatedUser)
+    public function courseEditAction(
+        Course $course,
+        User $authenticatedUser,
+        $source = 0
+    )
     {
         $form = $this->formFactory->create(
             new CourseType($authenticatedUser),
@@ -276,10 +289,13 @@ class CourseController extends Controller
             );
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
-
-            return new RedirectResponse(
-                $this->router->generate('claro_cursus_tool_course_index')
-            );
+            $route = $source === 0 ?
+                $this->router->generate('claro_cursus_tool_course_index') :
+                $this->router->generate(
+                    'claro_cursus_course_management',
+                    array('course' => $course->getId())
+                );
+            return new RedirectResponse($route);
         } else {
             $displayedWords = array();
 
@@ -291,7 +307,8 @@ class CourseController extends Controller
                 'form' => $form->createView(),
                 'course' => $course,
                 'displayedWords' => $displayedWords,
-                'type' => 'course'
+                'type' => 'course',
+                'source' => $source
             );
         }
     }

@@ -797,26 +797,23 @@ class CursusController extends Controller
         foreach ($courses as $course) {
             $coursesArray[] = $course;
         }
-        $unstartedSessions = array();
-        $ongoingSessions = array();
-        $courseSessions = $this->cursusManager->getSessionsByCourses($coursesArray);
+        $sessions = array();
+        $courseSessions = $this->cursusManager->getSessionsByCourses(
+            $coursesArray,
+            'creationDate',
+            'ASC'
+        );
 
         foreach ($courseSessions as $courseSession) {
             $courseId = $courseSession->getCourse()->getId();
             $status = $courseSession->getSessionStatus();
 
-            if ($status === 0) {
+            if ($status === 0 || $status === 1) {
 
-                if (!isset($unstartedSessions[$courseId])) {
-                    $unstartedSessions[$courseId] = array();
+                if (!isset($sessions[$courseId])) {
+                    $sessions[$courseId] = array();
                 }
-                $unstartedSessions[$courseId][] = $courseSession;
-            } elseif ($status === 1) {
-
-                if (!isset($ongoingSessions[$courseId])) {
-                    $ongoingSessions[$courseId] = array();
-                }
-                $ongoingSessions[$courseId][] = $courseSession;
+                $sessions[$courseId][] = $courseSession;
             }
         }
         $registeredSessions = array();
@@ -836,6 +833,12 @@ class CursusController extends Controller
         foreach ($pendingRegistrations as $pendingRegistration) {
             $pendingSessions[$pendingRegistration->getSession()->getId()] = $pendingRegistration;
         }
+        $courseQueues = array();
+        $courseQueueRequests = $this->cursusManager->getCourseQueuesByUser($authenticatedUser);
+
+        foreach ($courseQueueRequests as $courseQueueRequest) {
+            $courseQueues[$courseQueueRequest->getCourse()->getId()] = true;
+        }
 
         return array(
             'courses' => $courses,
@@ -844,10 +847,10 @@ class CursusController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-            'unstartedSessions' => $unstartedSessions,
-            'ongoingSessions' => $ongoingSessions,
+            'sessions' => $sessions,
             'registeredSessions' => $registeredSessions,
-            'pendingSessions' => $pendingSessions
+            'pendingSessions' => $pendingSessions,
+            'courseQueues' => $courseQueues
         );
     }
 
@@ -877,6 +880,42 @@ class CursusController extends Controller
                 );
             }
         }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/course/{course}/queue/register",
+     *     name="claro_cursus_course_queue_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function courseQueueRegisterAction(
+        Course $course,
+        User $authenticatedUser
+    )
+    {
+        $this->cursusManager->addUserToCourseQueue($authenticatedUser, $course);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/course/{course}/queue/cancel",
+     *     name="claro_cursus_course_queue_cancel",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function courseQueueCancelAction(
+        Course $course,
+        User $authenticatedUser
+    )
+    {
+        $this->cursusManager->removeUserFromCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
     }

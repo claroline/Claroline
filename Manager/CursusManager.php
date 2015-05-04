@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
@@ -56,13 +57,14 @@ class CursusManager
     private $workspaceManager;
 
     private $courseRepo;
+    private $courseQueueRepo;
     private $courseSessionRepo;
     private $cursusRepo;
     private $cursusGroupRepo;
     private $cursusUserRepo;
     private $cursusWordRepo;
-    private $registrationQueueRepo;
     private $sessionGroupRepo;
+    private $sessionQueueRepo;
     private $sessionUserRepo;
     
     /**
@@ -103,6 +105,8 @@ class CursusManager
         $this->workspaceManager = $workspaceManager;
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
+        $this->courseQueueRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseRegistrationQueue');
         $this->courseSessionRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSession');
         $this->cursusRepo =
@@ -113,10 +117,10 @@ class CursusManager
             $om->getRepository('ClarolineCursusBundle:CursusUser');
         $this->cursusWordRepo =
             $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
-        $this->registrationQueueRepo =
-            $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
         $this->sessionGroupRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSessionGroup');
+        $this->sessionQueueRepo =
+            $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
         $this->sessionUserRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSessionUser');
     }
@@ -1123,6 +1127,41 @@ class CursusManager
         $this->om->remove($queue);
         $this->om->flush();
     }
+
+    public function addUserToCourseQueue(User $user, Course $course)
+    {
+        $queue = $this->getOneCourseQueueByCourseAndUser(
+            $course,
+            $user
+        );
+
+        if (is_null($queue)) {
+            $queue = new CourseRegistrationQueue();
+            $queue->setCourse($course);
+            $queue->setUser($user);
+            $queue->setApplicationDate(new \DateTime());
+            $this->om->persist($queue);
+            $this->om->flush();
+        }
+    }
+
+    public function removeUserFromCourseQueue(User $user, Course $course)
+    {
+        $queue = $this->getOneCourseQueueByCourseAndUser(
+            $course,
+            $user
+        );
+
+        if (!is_null($queue)) {
+            $this->deleteCourseQueue($queue);
+        }
+    }
+
+    public function deleteCourseQueue(CourseRegistrationQueue $queue)
+    {
+        $this->om->remove($queue);
+        $this->om->flush();
+    }
     
 
     /***************************************************
@@ -1897,7 +1936,7 @@ class CursusManager
 
     public function getSessionQueuesBySession(CourseSession $session, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findSessionQueuesBySession(
+        return $this->sessionQueueRepo->findSessionQueuesBySession(
             $session,
             $executeQuery
         );
@@ -1905,7 +1944,7 @@ class CursusManager
 
     public function getSessionQueuesByUser(User $user, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findSessionQueuesByUser(
+        return $this->sessionQueueRepo->findSessionQueuesByUser(
             $user,
             $executeQuery
         );
@@ -1917,7 +1956,7 @@ class CursusManager
         $executeQuery = true
     )
     {
-        return $this->registrationQueueRepo->findOneSessionQueueBySessionAndUser(
+        return $this->sessionQueueRepo->findOneSessionQueueBySessionAndUser(
             $session,
             $user,
             $executeQuery
@@ -1926,8 +1965,42 @@ class CursusManager
 
     public function getSessionQueuesByCourse(Course $course, $executeQuery = true)
     {
-        return $this->registrationQueueRepo->findSessionQueuesByCourse(
+        return $this->sessionQueueRepo->findSessionQueuesByCourse(
             $course,
+            $executeQuery
+        );
+    }
+
+
+    /*******************************************************
+     * Access to CourseRegistrationQueueRepository methods *
+     *******************************************************/
+
+    public function getCourseQueuesByCourse(Course $course, $executeQuery = true)
+    {
+        return $this->courseQueueRepo->findCourseQueuesByCourse(
+            $course,
+            $executeQuery
+        );
+    }
+
+    public function getCourseQueuesByUser(User $user, $executeQuery = true)
+    {
+        return $this->courseQueueRepo->findCourseQueuesByUser(
+            $user,
+            $executeQuery
+        );
+    }
+
+    public function getOneCourseQueueByCourseAndUser(
+        Course $course,
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->courseQueueRepo->findOneCourseQueueByCourseAndUser(
+            $course,
+            $user,
             $executeQuery
         );
     }
