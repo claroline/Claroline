@@ -70,7 +70,8 @@ function creationMatching(addchoice, addproposal, deletechoice, LabelValue, Scor
 // Question edition
 function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, ScoreRight, ProposalValue, numberProposal, correspondence, tMatching, advEdition, remAdvEdition, correspEmpty, nbResponses, valueCorrespondence, tableLabel, tableProposal, correspondenceError, scoreError, ProposalForcePosition, LabelForcePosition, edition) {
 
-    var index = 0;
+    var indexLabel = 0;
+    var indexProposal = 0;
     typeMatching = JSON.parse(tMatching);
     var valueCorres = JSON.parse(valueCorrespondence.replace(/&quot;/ig,'"'));
     var labels = JSON.parse(tableLabel.replace(/&quot;/ig,'"'));
@@ -90,7 +91,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
         $(this).find('.row').each(function() {
 
-            fillProposalArray($(this), index, edition);
+            fillProposalArray($(this), indexProposal, edition);
 
             //uncode chevrons
             $('.classic').find('textarea').each(function() {
@@ -113,7 +114,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         }
 
         $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
-
+        indexProposal++;
     });
     $('#newTableProposal').find('tr').last().remove();
 
@@ -124,7 +125,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
         $(this).find('.row').each(function() {
 
-            fillLabelArray($(this), index, edition);
+            fillLabelArray($(this), indexLabel, edition);
             $('.classic').find('textarea').each(function() {
                 $(this).val($(this).val().replace("&lt;", "<"));
                 $(this).val($(this).val().replace("&gt;", ">"));
@@ -173,7 +174,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 //        }
 
         ind++;
-        index++;
+        indexLabel++;
     });
 
     //for activate tinymce if there is html balise
