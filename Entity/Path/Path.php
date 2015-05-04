@@ -84,7 +84,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function getStructure()
     {
-        $isPublished = $this->getResourceNode()->isPublished();
+        $isPublished = $this->isPublished();
         if ($isPublished && !$this->modified) {
             // Rebuild the structure of the Path from generated data
             // This permits to merge modifications made on generated data into the Path
@@ -104,6 +104,13 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function isPublished()
     {
         return $this->resourceNode->isPublished();
+    }
+
+    public function setPublished($published)
+    {
+        $this->resourceNode->setPublished($published);
+
+        return $this;
     }
 
     /**
@@ -134,7 +141,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function addStep(Step $step)
     {
-        $this->steps->set($step->getId(), $step);
+        if (!$this->steps->contains($step)) {
+            $this->steps->add($step);
+        }
+
         $step->setPath($this);
         
         return $this;
@@ -147,7 +157,10 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function removeStep(Step $step)
     {
-        $this->steps->removeElement($step);
+        if ($this->steps->contains($step)) {
+            $this->steps->removeElement($step);
+        }
+
         $step->setPath(null);
         
         return $this;
@@ -190,42 +203,24 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function getRootStep()
     {
-        if (empty($this->steps)) {
-            // Current path has no step
-            throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . '). Path has no step.');
-        }
-        
         $root = null;
-        foreach ($this->steps as $step) {
-            if (null === $step->getParent()) {
-                // Root step found
-                $root = $step;
-                break;
+
+        if ($this->isPublished() && !empty($this->steps)) {
+            foreach ($this->steps as $step) {
+                if (null === $step->getParent()) {
+                    // Root step found
+                    $root = $step;
+                    break;
+                }
+            }
+
+            if (empty($root)) {
+                // Unable to find root step in steps list
+                throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . ').');
             }
         }
         
-        if (empty($root)) {
-            // Unable to find root step in steps list
-            throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . ').');
-        }
-        
         return $root;
-    }
-    
-    /**
-     * Initialize a new path entity with required info and structure
-     * @param string $name
-     * @return \Innova\PathBundle\Entity\Path\Path
-     */
-    public static function initialize($name = null)
-    {
-        $path = new Path();
-        $path->setName($name);
-
-        // Init path structure
-        $path->initializeStructure();
-    
-        return $path;
     }
 
     /**
@@ -275,10 +270,17 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
 
     public function jsonSerialize()
     {
+        $steps = array ();
+
+        $rootStep = $this->getRootStep();
+        if (!empty($rootStep)) {
+            $steps[] = $rootStep;
+        }
+
         return array (
             'name'        => $this->getResourceNode()->getName(),
             'description' => $this->description,
-            'steps'       => $this->steps->toArray(),
+            'steps'       => $steps,
         );
     }
 }
