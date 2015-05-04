@@ -17,12 +17,14 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
+use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Form\CourseQueuedUserTransferType;
 use Claroline\CursusBundle\Form\CourseSessionEditType;
 use Claroline\CursusBundle\Form\CourseSessionType;
 use Claroline\CursusBundle\Form\CourseType;
@@ -384,13 +386,15 @@ class CourseController extends Controller
             }
             $sessionsTab[$status][] = $session;
         }
+        $queues = $this->cursusManager->getCourseQueuesByCourse($course);
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
             'type' => 'course',
             'course' => $course,
-            'sessionsTab' => $sessionsTab
+            'sessionsTab' => $sessionsTab,
+            'queues' => $queues
         );
     }
 
@@ -833,5 +837,55 @@ class CourseController extends Controller
         $this->cursusManager->deleteSessionQueue($queue);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/queue/{queue}/user/transfer/form",
+     *     name="claro_cursus_course_queued_user_transfer_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseQueuedUserTransferModalForm.html.twig")
+     */
+    public function courseQueuedUserTransferFormAction(CourseRegistrationQueue $queue)
+    {
+        $course = $queue->getCourse();
+        $form = $this->formFactory->create(new CourseQueuedUserTransferType($course));
+
+        return array(
+            'form' => $form->createView(),
+            'queue' => $queue
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/queue/{queue}/user/transfer",
+     *     name="claro_cursus_course_queued_user_transfer",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:courseQueuedUserTransferModalForm.html.twig")
+     */
+    public function courseQueuedUserTransferAction(CourseRegistrationQueue $queue)
+    {
+        $queueId = $queue->getId();
+        $course = $queue->getCourse();
+        $form = $this->formFactory->create(new CourseQueuedUserTransferType($course));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $session = $form->get('session')->getData();
+            $this->cursusManager->transferQueuedUserToSession($queue, $session);
+
+            return new JsonResponse($queueId, 200);
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'queue' => $queue
+            );
+        }
     }
 }

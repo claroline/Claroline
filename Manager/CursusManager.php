@@ -1162,6 +1162,18 @@ class CursusManager
         $this->om->remove($queue);
         $this->om->flush();
     }
+
+    public function transferQueuedUserToSession(
+        CourseRegistrationQueue $queue,
+        CourseSession $session
+    )
+    {
+        $user = $queue->getUser();
+        $this->om->startFlushSuite();
+        $this->registerUsersToSession($session, array($user), 0);
+        $this->om->remove($queue);
+        $this->om->endFlushSuite();
+    }
     
 
     /***************************************************
