@@ -24,7 +24,7 @@
         "claroline/video-player-bundle": "~5.0",
         "claroline/survey-bundle": "~5.0",
         "claroline/rss-reader-bundle": "~5.0",
-        "claroline/web-resource-bundle": "~5.0",
+        "claroline/web-resource-bundle": "~5.0"
     },
     "scripts": {
         "pre-install-cmd": [
