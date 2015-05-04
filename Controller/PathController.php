@@ -10,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 // Controller dependencies
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\PublishingManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
 
 /**
