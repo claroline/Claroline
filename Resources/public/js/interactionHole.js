@@ -180,7 +180,7 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
 }
 
 function createHole() {
-    var blank = $.trim(tinyMCE.activeEditor.selection.getContent({format : 'text'}));
+    var blank = $.trim(tinyMCE.get('ujm_exobundle_interactionholetype_html').selection.getContent({format : 'text'}));
     blank = blank.replace(/\s{2,}/g, ' ');
 
     if (blank != '') {
