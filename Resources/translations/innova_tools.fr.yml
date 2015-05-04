@@ -21,8 +21,6 @@ choose_model: Choisir un modèle
 # D
 description: Description
 duration: Durée
-publish_success: Le parcours a été publié.
-publish_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
 delete: Supprimer
 
 # E

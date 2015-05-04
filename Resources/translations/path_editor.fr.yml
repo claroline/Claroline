@@ -1,63 +1,82 @@
-# b
-back: Quitter
-
 # c
 cancel: Annuler
+copy: copie
 
 # d
+delete_activity: Supprimer le lien avec l'activité
 delete_step: Supprimer l'étape
 description_help: Saisir une courte description du parcours
 discard_changes: Annuler les modifications
+draft: Non publié
 
 # e
 editor: Editeur de Parcours
 
-# f
-from: de
-
-# h
-help: Aide
+# m
+modified: avec des modifications en attente
 
 # n
 name_help: Saisir le nom du parcours
+no: Non
+no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
+no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
+no_templates: Il n'y a aucun modèle disponible.
 
 # o
 open_templates: Ouvrir les modèles
 
 # p
+path_description: Description
+path_name: Nom
+path_status: Statut
 path_save_success: Le parcours a correctement été sauvegardé.
 path_save_error: Une erreur s'est produite lors de la sauvegarde du parcours.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
-publish_and_preview: Publier & visualiser
+preview: Prévisualiser
+preview_with_pending_changes_button: Prévisualiser la dernière version publiée
+preview_with_pending_changes_message: Le Parcours a des modifications non sauvegardées ou non publiées.<br/><br/> Si vous le visualisez sans sauvegarde/publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
+preview_with_pending_changes_title: Modifications non publiées/sauvegardées
+primary_resource: Ressource principale
+properties: Propriétés
+publish: Publier
+publish_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
+publish_success: Le parcours a été publié.
+published: Publié
 
 # r
 redo: Rétablir
 resource_delete: Supprimer
-root_default_name: <sans nom>
-resources_browse: Ajouter
 resource_hide_parent: Masquer dans cette étape
 resource_show_parent: Afficher dans cette étape
 resource_propagate : Rendre disponible dans les étapes enfants
 resource_no_propagate : Rendre indisponible dans les étapes enfants
+resources_browse: Ajouter
+resources_replace: Remplacer
+root_default_name: <sans nom>
 
 # s
 save: Sauvegarder
-step_drag: Déplacer l'élément
-step_duration: Durée prévue
-step_who: Modalité de travail
-step_where: Lieu d'apprentissage
-step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
-step_has_duration: l'étape a une durée
-step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
-step_delete: Supprimer l'étape
-step_delete_children: Supprimer les enfants
-step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
-step_edit: Modifier l'étape
+save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter cette page ?
+secondary_resources: Ressources complémentaires
+see_activity: Voir l'activité
+select_activity: Sélectionner une activité existante
 step_add_child: Ajouter une étape
 step_copy: Copier
+step_delete: Supprimer l'étape
+step_delete_children: Supprimer les enfants
+step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
+step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
+step_description: Description
+step_drag: Déplacer l'élément
+step_duration: Durée prévue
+step_edit: Modifier l'étape
+step_has_duration: l'étape a une durée
+step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle
+step_who: Modalité de travail
+step_where: Lieu d'apprentissage
 
 # t
 templates: Modèles
@@ -71,36 +90,10 @@ template_edit_title: Modèle
 
 # u
 undo: Annuler
+unsaved: Non sauvegardé
 
 # w
 with_tutor: Tutoré
 
-primary_resource: Ressource principale
-secondary_resources: Ressources complémentaires
-properties: Propriétés
-
+# y
 yes: Oui
-no: Non
-select_activity: Selectionner une activité
-
-resources_replace: Remplacer
-no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
-no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
-
-save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter cette page ?
-select_activity: Sélectionner une activité existante
-see_activity: Voir l'activité
-delete_activity: Supprimer le lien avec l'activité
-
-no_templates: Il n'y a aucun modèle disponible.
-
-path_name: Nom
-path_status: Statut
-path_description: Description
-step_description: Description
-published: Publié
-modified: avec des modifications en attente
-draft: Non publié
-publish: Publier
-preview: Prévisualiser
-copy: copie
