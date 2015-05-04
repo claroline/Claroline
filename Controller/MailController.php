@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -36,17 +36,17 @@ class MailController extends Controller
     private $request;
     private $mailManager;
     private $router;
-    private $sc;
+    private $tokenStorage;
     private $ch;
 
     /**
      * @DI\InjectParams({
-     *     "formFactory" = @DI\Inject("claroline.form.factory"),
-     *     "request"     = @DI\Inject("request"),
-     *     "mailManager" = @DI\Inject("claroline.manager.mail_manager"),
-     *     "router"      = @DI\Inject("router"),
-     *     "sc"          = @DI\Inject("security.context"),
-     *     "ch"          = @DI\Inject("claroline.config.platform_config_handler")
+     *     "formFactory"  = @DI\Inject("claroline.form.factory"),
+     *     "request"      = @DI\Inject("request"),
+     *     "mailManager"  = @DI\Inject("claroline.manager.mail_manager"),
+     *     "router"       = @DI\Inject("router"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage"),
+     *     "ch"           = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
@@ -54,7 +54,7 @@ class MailController extends Controller
         Request $request,
         MailManager $mailManager,
         RouterInterface $router,
-        SecurityContextInterface $sc,
+        TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $ch
     )
     {
@@ -62,7 +62,7 @@ class MailController extends Controller
         $this->request = $request;
         $this->mailManager = $mailManager;
         $this->router = $router;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
         $this->ch = $ch;
     }
 
@@ -114,7 +114,7 @@ class MailController extends Controller
     {
         $form = $this->formFactory->create(FormFactory::TYPE_EMAIL);
         $form->handleRequest($this->request);
-        $sender = $this->sc->getToken()->getUser();
+        $sender = $this->tokenStorage->getToken()->getUser();
 
         if ($form->isValid()) {
             $data = $form->getData();

@@ -24,7 +24,7 @@ use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -42,7 +42,6 @@ class RoleManager
     private $groupRepo;
     private $dispatcher;
     private $om;
-    private $messageManager;
     private $container;
     private $translator;
 
@@ -52,7 +51,6 @@ class RoleManager
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "messageManager" = @DI\Inject("claroline.manager.message_manager"),
      *     "container"      = @DI\Inject("service_container"),
      *     "translator"     = @DI\Inject("translator")
      * })
@@ -60,9 +58,8 @@ class RoleManager
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
-        MessageManager $messageManager,
         Container $container,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -70,7 +67,6 @@ class RoleManager
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->om = $om;
         $this->dispatcher = $dispatcher;
-        $this->messageManager = $messageManager;
         $this->container = $container;
         $this->translator = $translator;
     }
@@ -715,8 +711,12 @@ class RoleManager
             $object = $this->translator->trans('new_role_message_object', array(), 'platform');
         }
 
-        $sender = $this->container->get('security.context')->getToken()->getUser();
-        $this->messageManager->sendMessageToAbstractRoleSubject($ars, $content, $object, $sender);
+        $sender = $this->container->get('security.token_storage')->getToken()->getUser();
+        $this->dispatcher->dispatch(
+            'claroline_message_sending',
+            'SendMessage',
+            array($sender, $content, $object, $ars)
+        );
     }
 
     public function getPlatformNonAdminRoles($includeAnonymous = false)
@@ -752,11 +752,11 @@ class RoleManager
         //cli always win!
         if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ||
             //web installer too
-            $this->container->get('security.context')->getToken() === null) {
+            $this->container->get('security.token_storage')->getToken() === null) {
             return true;
         }
 
-        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return false;
         }
 
@@ -764,11 +764,11 @@ class RoleManager
         if ($ars->hasRole($role->getName())) {
             return true;
         }
-        
+
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
             $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
-            
+
             if ($maxUsers <= $countByWorkspace) return false;
         }
 

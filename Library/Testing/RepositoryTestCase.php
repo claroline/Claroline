@@ -36,8 +36,6 @@ use Claroline\CoreBundle\Entity\Resource\Revision;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Message;
-use Claroline\CoreBundle\Entity\UserMessage;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Entity\Log\Log;
 
@@ -359,51 +357,6 @@ abstract class RepositoryTestCase extends WebTestCase
         $orderedTool->setOrder($position);
 
         self::create("orderedTool/{$user->getUsername()}-{$tool->getName()}", $orderedTool);
-    }
-
-    protected static function createMessage(
-        $alias,
-        User $sender,
-        array $receivers,
-        $object,
-        $content,
-        Message $parent = null,
-        $removed = false
-    )
-    {
-        $message = new Message();
-        $message->setSender($sender);
-        $message->setObject($object);
-        $message->setContent($content);
-        $message->setDate(self::$time);
-        $message->setTo('x1;x2;x3');
-
-        if ($parent) {
-            $message->setParent($parent);
-        }
-
-        self::$om->startFlushSuite();
-        self::create($alias, $message);
-
-        $userMessage = new UserMessage();
-        $userMessage->setIsSent(true);
-        $userMessage->setUser($sender);
-        $userMessage->setMessage($message);
-
-        if ($removed) {
-            $userMessage->markAsRemoved($removed);
-        }
-
-        self::create($alias . '/' . $sender->getUsername(), $userMessage);
-
-        foreach ($receivers as $receiver) {
-            $userMessage = new UserMessage();
-            $userMessage->setUser($receiver);
-            $userMessage->setMessage($message);
-            self::create($alias . '/' . $receiver->getUsername(), $userMessage);
-        }
-
-        self::$om->endFlushSuite();
     }
 
     protected static function createPlugin($vendor, $bundle)

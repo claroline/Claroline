@@ -16,8 +16,9 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Log\LogHiddenWorkspaceWidgetConfig;
@@ -36,7 +37,8 @@ class LogController extends Controller
     private $toolManager;
     private $workspaceManager;
     private $eventDispatcher;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
     private $formFactory;
     private $translator;
 
@@ -45,7 +47,8 @@ class LogController extends Controller
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher"),
-     *     "security"           = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "formFactory"        = @DI\Inject("claroline.form.factory"),
      *     "translator"         = @DI\Inject("translator")
      * })
@@ -54,15 +57,17 @@ class LogController extends Controller
         ToolManager $toolManager,
         WorkspaceManager $workspaceManager,
         EventDispatcherInterface $eventDispatcher,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         FormFactory $formFactory,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->toolManager      = $toolManager;
         $this->workspaceManager = $workspaceManager;
         $this->eventDispatcher  = $eventDispatcher;
-        $this->security         = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->formFactory      = $formFactory;
         $this->translator       = $translator;
     }
@@ -113,7 +118,7 @@ class LogController extends Controller
      */
     public function updateLogWorkspaceWidgetConfig(WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+        if (!$this->authorization->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
 
@@ -158,7 +163,7 @@ class LogController extends Controller
      */
     public function updateLogDesktopWidgetConfig(WidgetInstance $widgetInstance)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widgetInstance)) {
+        if (!$this->authorization->isGranted('edit', $widgetInstance)) {
             throw new AccessDeniedException();
         }
 
@@ -170,7 +175,7 @@ class LogController extends Controller
             $hiddenConfigs = array();
             $workspaces = array();
         } else {
-            $user = $this->security->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $hiddenConfigs = $em->getRepository('ClarolineCoreBundle:Log\LogHiddenWorkspaceWidgetConfig')
                 ->findBy(array('user' => $user));
             $workspaces = $this->workspaceManager

@@ -44,7 +44,7 @@ class HomeTabConfigRepository extends EntityRepository
             AND htc.user IS NULL
             AND htc.workspace IS NULL
             AND (
-                r IS NULL
+                r.id IS NULL
                 OR r.name IN (:roleNames)
             )
             ORDER BY htc.tabOrder ASC
@@ -203,7 +203,7 @@ class HomeTabConfigRepository extends EntityRepository
             AND htc.type = 'workspace'
             AND htc.visible = true
             AND (
-                r IS NULL
+                r.id IS NULL
                 OR r.name IN (:roleNames)
             )
             ORDER BY htc.tabOrder ASC

@@ -34,7 +34,7 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -50,7 +50,7 @@ class WorkspaceModelManager
     private $roleManager;
     private $toolManager;
     private $toolRightsManager;
-    private $sc;
+    private $tokenStorage;
     private $widgetManager;
 
     /**
@@ -65,7 +65,7 @@ class WorkspaceModelManager
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
      *     "toolManager"       = @DI\Inject("claroline.manager.tool_manager"),
      *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
-     *     "sc"                = @DI\Inject("security.context"),
+     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
      *     "widgetManager"     = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
@@ -78,7 +78,7 @@ class WorkspaceModelManager
         RoleManager              $roleManager,
         ToolManager              $toolManager,
         ToolRightsManager        $toolRightsManager,
-        SecurityContextInterface $sc,
+        TokenStorageInterface    $tokenStorage,
         WidgetManager            $widgetManager
     )
     {
@@ -91,7 +91,7 @@ class WorkspaceModelManager
         $this->toolManager       = $toolManager;
         $this->toolRightsManager = $toolRightsManager;
         $this->modelRepository   = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel');
-        $this->sc                = $sc;
+        $this->tokenStorage      = $tokenStorage;
         $this->widgetManager     = $widgetManager;
     }
 
@@ -106,8 +106,8 @@ class WorkspaceModelManager
         $model->setName($name);
         $model->setWorkspace($workspace);
 
-        if ($this->sc->getToken()->getUser() !== 'anon.') {
-            $model->addUser($this->sc->getToken()->getUser());
+        if ($this->tokenStorage->getToken()->getUser() !== 'anon.') {
+            $model->addUser($this->tokenStorage->getToken()->getUser());
         }
         $this->om->persist($model);
         $this->om->flush();
@@ -323,7 +323,7 @@ class WorkspaceModelManager
                 $this->removeHomeTab($model, $oldHomeTab);
             }
         }
-        
+
         $this->addHomeTabs($model, $homeTabs);
         $this->om->endFlushSuite();
     }

@@ -14,9 +14,10 @@
             }}" method="post" {{ form_enctype(form) }}>
             <div class="panel-body">
                 {{ form_widget(form) }}
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary">OK</button>
-                <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</div>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>
+                </div>
             </div>
         </form>
     </div>

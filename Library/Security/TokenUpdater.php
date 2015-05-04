@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -26,15 +26,15 @@ class TokenUpdater
 
     /**
      * @DI\InjectParams({
-     *     "context" = @DI\Inject("security.context"),
-     *     "om"      = @DI\Inject("claroline.persistence.object_manager")
+     *     "tokenStorage" = @DI\Inject("security.token_storage"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
-     * @param SecurityContextInterface $context
+     * @param TokenStorageInterface $tokenStorage
      */
-    public function __construct($context, $om)
+    public function __construct(TokenStorageInterface $tokenStorage, $om)
     {
-        $this->sc = $context;
+        $this->tokenStorage = $tokenStorage;
         $this->om = $om;
     }
 
@@ -71,13 +71,13 @@ class TokenUpdater
         $user = $token->getUser();
         $this->om->refresh($user);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->sc->setToken($token);
+        $this->tokenStorage->setToken($token);
     }
 
     private function updateNormal($token)
     {
         $user = $token->getUser();
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->sc->setToken($token);
+        $this->tokenStorage->setToken($token);
     }
 }

@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -37,7 +37,7 @@ class EventManager
     public function __construct(
         KernelInterface $kernel,
         ObjectManager $om,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->kernel = $kernel;

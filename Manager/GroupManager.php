@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -52,7 +52,7 @@ class GroupManager
     public function __construct(
         ObjectManager $om,
         PagerFactory $pagerFactory,
-        Translator $translator,
+        TranslatorInterface $translator,
         StrictDispatcher $eventDispatcher,
         RoleManager $roleManager
     )

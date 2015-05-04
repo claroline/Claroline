@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -30,18 +30,18 @@ use Claroline\CoreBundle\Entity\User;
  */
 class AuthenticatedUserConverter implements ParamConverterInterface
 {
-    private $securityContext;
+    private $tokenStorage;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "securityContext" = @DI\Inject("security.context"),
-     *     "translator" = @DI\Inject("translator")
+     *     "tokenStorage" = @DI\Inject("security.token_storage"),
+     *     "translator"   = @DI\Inject("translator")
      * })
      */
-    public function __construct(SecurityContextInterface $securityContext, Translator $translator)
+    public function __construct(TokenStorageInterface $tokenStorage, TranslatorInterface $translator)
     {
-        $this->securityContext  = $securityContext;
+        $this->tokenStorage  = $tokenStorage;
         $this->translator       = $translator;
     }
 
@@ -60,7 +60,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
         $options = $configuration->getOptions();
 
         if ($options['authenticatedUser'] === true) {
-            if (($user = $this->securityContext->getToken()->getUser()) instanceof User) {
+            if (($user = $this->tokenStorage->getToken()->getUser()) instanceof User) {
                 $request->attributes->set($parameter, $user);
 
                 return true;
@@ -89,7 +89,7 @@ class AuthenticatedUserConverter implements ParamConverterInterface
                 throw new AccessDeniedException();
             }
         } else {
-            $request->attributes->set($parameter, $user = $this->securityContext->getToken()->getUser());
+            $request->attributes->set($parameter, $user = $this->tokenStorage->getToken()->getUser());
         }
     }
 

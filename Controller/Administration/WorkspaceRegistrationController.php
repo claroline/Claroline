@@ -27,7 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -62,7 +62,7 @@ class WorkspaceRegistrationController extends Controller
         GroupManager $groupManager,
         RoleManager $roleManager,
         SessionInterface $session,
-        Translator $translator,
+        TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager

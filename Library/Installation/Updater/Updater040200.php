@@ -15,7 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
 
 class Updater040200 extends Updater
 {

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
@@ -26,26 +26,26 @@ class UnavailablePlatformListener
 {
     private $templating;
     private $ch;
-    private $sc;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *      "templating" = @DI\Inject("templating"),
-     *      "ch"         = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "sc"         = @DI\Inject("security.context"),
-     *      "kernel"     = @DI\Inject("kernel"),
+     *      "templating"   = @DI\Inject("templating"),
+     *      "ch"           = @DI\Inject("claroline.config.platform_config_handler"),
+     *      "tokenStorage" = @DI\Inject("security.token_storage"),
+     *      "kernel"       = @DI\Inject("kernel"),
      * })
      */
     public function __construct(
         TwigEngine $templating,
         PlatformConfigurationHandler $ch,
-        SecurityContextInterface $sc,
+        TokenStorageInterface $tokenStorage,
         HttpKernelInterface $kernel
     )
     {
         $this->templating = $templating;
         $this->ch = $ch;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
         $this->kernel = $kernel;
     }
 
@@ -55,7 +55,7 @@ class UnavailablePlatformListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if ($this->kernel->getEnvironment() === 'prod') {
-            $token = $this->sc->getToken();
+            $token = $this->tokenStorage->getToken();
             $isAdmin = false;
 
             if ($token) {
@@ -89,4 +89,4 @@ class UnavailablePlatformListener
             'claro_security_login_check'
         );
     }
-} 
+}

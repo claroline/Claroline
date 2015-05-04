@@ -25,7 +25,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -35,7 +36,8 @@ class ResourceRightsController
     private $rightsManager;
     private $maskManager;
     private $request;
-    private $sc;
+    private $tokenStorage;
+    private $authorization;
     private $wsTagManager;
     private $templating;
     private $roleManager;
@@ -47,7 +49,8 @@ class ResourceRightsController
      *     "rightsManager" = @DI\Inject("claroline.manager.rights_manager"),
      *     "maskManager"   = @DI\Inject("claroline.manager.mask_manager"),
      *     "requestStack"  = @DI\Inject("request_stack"),
-     *     "sc"            = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "wsTagManager"  = @DI\Inject("claroline.manager.workspace_tag_manager"),
      *     "templating"    = @DI\Inject("templating"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
@@ -59,7 +62,8 @@ class ResourceRightsController
         RightsManager $rightsManager,
         MaskManager $maskManager,
         RequestStack $requestStack,
-        SecurityContext $sc,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         WorkspaceTagManager $wsTagManager,
         TwigEngine $templating,
         RoleManager $roleManager,
@@ -69,7 +73,8 @@ class ResourceRightsController
     {
         $this->rightsManager = $rightsManager;
         $this->request = $requestStack;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->wsTagManager = $wsTagManager;
         $this->templating = $templating;
         $this->roleManager = $roleManager;
@@ -466,9 +471,9 @@ class ResourceRightsController
         //Here, we not only check is Administrate, but if it's a personal workspace and the feature was disabled
         //we can't either.
 
-        $isPwsRightEnabled = $this->rightsManager->canEditPwsPerm($this->sc->getToken());
+        $isPwsRightEnabled = $this->rightsManager->canEditPwsPerm($this->tokenStorage->getToken());
 
-        if (!$this->sc->isGranted($permission, $collection) || !$isPwsRightEnabled) {
+        if (!$this->authorization->isGranted($permission, $collection) || !$isPwsRightEnabled) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

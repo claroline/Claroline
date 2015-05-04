@@ -16,6 +16,7 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /*
  * Populates the anonymous token with a dedicated role.
@@ -29,7 +30,7 @@ class AnonymousAuthenticationListener implements ListenerInterface
     private $key;
     private $logger;
 
-    public function __construct(SecurityContextInterface $context, $key, LoggerInterface $logger = null)
+    public function __construct(TokenStorageInterface $context, $key, LoggerInterface $logger = null)
     {
         $this->context = $context;
         $this->key     = $key;
