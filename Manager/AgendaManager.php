@@ -98,10 +98,13 @@ class AgendaManager
 
     public function desktopEvents(User $usr, $allDay = false)
     {
-        $listEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findByUser($usr, $allDay);
         $desktopEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, $allDay);
+        $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
 
-        return array_merge($this->convertEventsToArray($listEvents), $this->convertEventsToArray($desktopEvents));
+        return array_merge(
+            $this->convertEventsToArray($workspaceEventsAndTasks),
+            $this->convertEventsToArray($desktopEvents)
+        );
     }
 
     /**
@@ -331,7 +334,7 @@ class AgendaManager
     {
         if ($event->isAllDay()) {
             $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
-            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 23:59:59'));
+            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 23:59:00') + 60);
         } else {
             //we get the hours value directly from the property wich has been setted by the form.
             //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored

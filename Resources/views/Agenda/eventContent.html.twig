@@ -10,10 +10,10 @@
 <div>{{ 'agenda_form_author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
 
 <div>{{ 'workspace'|trans({}, 'platform') }}:
-    {% if event.workspace is null %}
+    {% if event.workspace_id is null %}
          {{ 'desktop'|trans({}, 'platform') }}
     {% else %}
-        {{ event.workspace }}
+        {{ event.workspace_name }}
     {% endif %}
 </div>
 

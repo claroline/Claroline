@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
-{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.2.1/' %}
+{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.3.1/' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "agenda" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
@@ -11,19 +11,8 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
     <style>
-        .edit-event {
-            display: none;
-            position: absolute;
-            top: 0;
-            right: 0;
-            background-color: rgba(0, 0, 0, 0);
-            padding: 1px 3px 3px 5px;
-        }
         .fc-event {
             min-height: 15px;
-        }
-        .fc-event:hover .edit-event{
-            display: block;
         }
         .fc-day-grid-event > .fc-content {
             white-space: nowrap;

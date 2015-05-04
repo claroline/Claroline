@@ -12,6 +12,7 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
+    var $calPopOver;
 
     function t(key) {
         return Translator.trans(key, {}, 'agenda');
@@ -72,7 +73,7 @@
             })
         ;
 
-        $('.filter').click(function () {
+        $('.filter,.filter-tasks').click(function () {
             var workspaceIds = [];
 
             $('.filter:checkbox:checked').each(function () {
@@ -82,22 +83,12 @@
             filterEvents(workspaceIds);
         });
 
-        $('.filter-tasks').click(function () {
-            var workspaceIds = [];
-
-            $('.filter:checkbox:checked').each(function () {
-                workspaceIds.push(parseInt($(this).val()));
-            });
-
-            filterTasks(workspaceIds);
-        });
-
         //INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
-                left: 'prev today next',
+                left: 'prev,next, today',
                 center: 'title',
-                right: 'month agendaWeek agendaDay'
+                right: 'month,agendaWeek,agendaDay'
             },
             columnFormat: {
                 month: 'ddd',
@@ -128,8 +119,9 @@
             timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
             '': 'h:mm{ - h:mm}',
-            allDaySlot: false,
+            allDayText: t('isAllDay'),
             lazyFetching : false,
+            fixedWeekCount: false,
             eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
                 move(event, delta._days, delta._milliseconds / (1000 * 60));
             },
@@ -145,7 +137,9 @@
                                 .removeClass('fa-check')
                                 .addClass('fa-square-o')
                                 .next().css('text-decoration', 'none');
-                            rerenderEvent(event, $('.' + event.className));
+                            $('.'+event.className).popover('destroy');
+                            event.isTaskDone = false;
+                            createPopover(event);
                         }
                     })
                 }
@@ -159,10 +153,12 @@
                                 .removeClass('fa-square-o')
                                 .addClass('fa-check')
                                 .next().css('text-decoration', 'line-through');
-                            rerenderEvent(event, $('.' + event.className));
+                            $('.'+event.className).popover('destroy');
+                            event.isTaskDone = true;
+                            createPopover(event);
                         }
                     })
-                } else if ($(jsEvent.target).hasClass('edit-event')) {
+                } else if (event.editable) {
                     window.Claroline.Modal.displayForm(
                         window.Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
                         updateCalendarItemCallback,
@@ -174,13 +170,18 @@
                     );
                 }
             },
-            eventDragStart: function(event, jsEvent, ui, view) {
-                $('.'+event.className).popover('hide');
+            eventDragStart: function (event) {
+                destroyPopover(event);
             },
-            eventDragStop: function(event, jsEvent, ui, view) {
-                $('.popover.in').remove();
+            eventDragStop : function (event) {
+                createPopover(event);
             },
-            //renders the popover for an event
+            eventResizeStart: function (event, jsEvent, io, view) {
+                destroyPopover(event);
+            },
+            eventResizeStop: function (event) {
+                createPopover(event);
+            },
             eventRender: function (event, element) {
                 //event are unfiltered by default
                 event.visible = event.visible === undefined ? true: event.visible;
@@ -220,25 +221,13 @@
     };
 
     var rerenderEvent = function(event, element) {
-        $('.popover.in').remove();
-        element.popover('destroy');
+        hidePopovers();
         renderEvent(event, element);
     };
 
     var renderEvent = function (event, element) {
-        // Create the popover for the event or the task
-        element.popover({
-            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-            content: Twig.render(EventContent, {'event': event}),
-            html: true,
-            container: 'body',
-            placement: 'top',
-            trigger: 'hover'
-        });
-
-        if (event.editable) {
-            $(element[0]).find('.fc-title').append('<span class="fa fa-pencil pull-right edit-event"></span>');
-        }
+        //// Create the popover for the event or the task
+        createPopover(event);
 
         if (event.isTask) {
             var checkbox =  $(element[0]).find('.fc-time');
@@ -327,8 +316,16 @@
         updateCalendarItem(event);
     };
 
+    var showPopover = function (event) {
+        $('.' + event.className).popover('show');
+    };
+
+    var destroyPopover = function (event) {
+        $('.' + event.className).popover('destroy');
+    };
+
     var removeEvent = function (event, item, data) {
-        hidePopovers();
+        removePopovers();
         //Remove from the calendar if it exists.
         $('#calendar').fullCalendar('removeEvents', data.id);
     };
@@ -370,54 +367,74 @@
     var filterEvents = function (workspaceIds) {
         var numberOfChecked = $('.filter:checkbox:checked').length;
         var totalCheckboxes = $('.filter:checkbox').length;
+        var radioValue = $('input[type=radio].filter-tasks:checked').val();
         //if all checkboxes or none checkboxes are checked display all events
-        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
+        if (((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) && radioValue === 'no-filter-tasks') {
             $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                 eventObject.visible = true;
             });
         } else {
-            for (var i = 0; i < workspaceIds.length; i++) {
-                $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                    //check for workspace
-                    eventObject.visible = ($.inArray(eventObject.workspace_id, workspaceIds) >= 0);
-                    //check for desktop
-                    if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
-                        eventObject.visible = true;
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                var workspaceId = eventObject.workspace_id === null ? 0 : eventObject.workspace_id;
+
+                if (radioValue === 'no-filter-tasks') {
+                    eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0;
+                }
+                // Hide all the tasks
+                else if (radioValue === 'hide-tasks') {
+                    eventObject.visible = !eventObject.isTask;
+
+                    if (!eventObject.isTask) {
+                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
                     }
-                });
-            }
+                }
+                // Hide all the events
+                else {
+                    eventObject.visible = eventObject.isTask;
+
+                    if (eventObject.isTask) {
+                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
+                    }
+                }
+            });
         }
         $('#calendar').fullCalendar('rerenderEvents');
     };
 
-    var filterTasks = function (workspaceIds) {
-        var radioValue = $('input[type=radio].filter-tasks:checked').val();
-        var numberOfChecked = $('.filter:checkbox:checked').length;
-        var totalCheckboxes = $('.filter:checkbox').length;
+    var createPopover = function (event) {
+        var startDate = new Date(event.start._d),
+            startDay = startDate.getDate(),
+            startMonth = startDate.getMonth() >= 9 ? parseInt(startDate.getMonth()+1) : '0' + parseInt(startDate.getMonth()+1),
+            startYear = startDate.getFullYear(),
+            startHours = event.allDay ? '' : ' ' +startDate.getHours() + ':' + startDate.getMinutes();
 
-        if (radioValue === 'no-filter-tasks') {
-            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
-                    eventObject.visible = true;
+        event.startFormatted = startDay + '/' + startMonth + '/' + startYear + startHours;
 
-                } else {
-                    eventObject.visible = $.inArray(eventObject.workspace_id, workspaceIds) >= 0;
-                    //check for desktop
-                    if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
-                        eventObject.visible = true;
-                    }
-                }
-            });
-        } else if (radioValue === 'hide-tasks') {
-            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                eventObject.visible = !eventObject.isTask && $.inArray(eventObject.workspace_id, workspaceIds);
-            });
+        // End date is null if the start date is the same
+        if (event.end) {
+            var endDate = new Date(event.end._d),
+                endDay = endDate.getDate(),
+                endMonth = endDate.getMonth() >= 9 ? parseInt(endDate.getMonth()+1) : '0' + parseInt(endDate.getMonth()+1),
+                endYear = endDate.getFullYear(),
+                endHours = event.allDay ? '' : ' ' + endDate.getHours() + ':' + endDate.getMinutes();
+
+            event.endFormatted = startDay + '/' + startMonth + '/' + startYear + startHours;
         } else {
-            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                eventObject.visible = eventObject.isTask && $.inArray(eventObject.workspace_id, workspaceIds);
-            });
+            event.endFormatted = event.startFormatted;
         }
-        $('#calendar').fullCalendar('rerenderEvents');
+
+        $('.'+event.className).popover({
+            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
+            content: Twig.render(EventContent, {'event': event}),
+            html: true,
+            container: 'body',
+            placement: 'top',
+            trigger: 'hover'
+        });
+    };
+
+    var removePopovers = function() {
+        $('.popover.top').remove();
     };
 
     var hideFormhours = function() {

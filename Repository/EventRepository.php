@@ -42,6 +42,30 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /*
+     * Get all the events and the tasks of the user for all the workspace where is allowed to write
+     */
+    public function findEventsAndTasksOfWorkspaceForTheUser($user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            ORDER BY e.start DESC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
     /**
      * @param User $user
      * @param boolean $allDay
