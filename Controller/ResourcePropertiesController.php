@@ -39,6 +39,7 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
