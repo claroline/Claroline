@@ -70,6 +70,7 @@ class ImportUserType extends AbstractType
                     'label' => 'roles',
                     'mapped' => false,
                     'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'choice_translation_domain' => true,
                     'expanded' => true,
                     'multiple' => false,
                     'property' => 'translationKey',

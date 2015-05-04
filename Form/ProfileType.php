@@ -124,6 +124,7 @@ class ProfileType extends AbstractType
                         'mapped' => false,
                         'data' => $this->platformRoles,
                         'class' => 'Claroline\CoreBundle\Entity\Role',
+                        'choice_translation_domain' => true,
                         'expanded' => true,
                         'multiple' => true,
                         'property' => 'translationKey',
