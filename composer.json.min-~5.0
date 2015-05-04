@@ -1,0 +1,61 @@
+{
+    "name": "claroline/claroline",
+    "description": "Claroline Connect",
+    "autoload": {
+        "psr-0": { "": "src/" }
+    },
+    "require": {
+        "php": ">=5.4.1",
+        "sensio/distribution-bundle": "~2.3.4",
+        "claroline/bundle-recorder": "~5.0",
+        "claroline/core-bundle": "~5.0",
+        "claroline/web-installer": "~5.0"
+    },
+    "scripts": {
+        "pre-install-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations"
+        ],
+        "pre-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::checkForPendingOperations",
+            "Claroline\\CoreBundle\\Library\\Maintenance\\MaintenanceHandler::enableMaintenance"
+        ],
+        "post-package-install": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logInstallOperation"
+        ],
+        "post-package-update": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logUpdateOperation"
+        ],
+        "pre-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::prepareUninstallOperation"
+        ],
+        "post-package-uninstall": [
+            "Claroline\\BundleRecorder\\ScriptHandler::logUninstallOperation"
+        ],
+        "post-install-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+        ],
+        "post-update-cmd": [
+            "Claroline\\BundleRecorder\\ScriptHandler::buildBundleFile",
+            "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "bin-dir": "bin",
+        "github-protocols": ["https", "http", "git"],
+        "cache-files-ttl": 0
+    },
+    "extra": {
+        "symfony-app-dir": "app",
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink"
+    }
+}
