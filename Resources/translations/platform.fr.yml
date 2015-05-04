@@ -446,9 +446,9 @@ home: Accueil
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
-home_tab_bookmark_confirm_message: 'Cet onglet sera disponible dans votre bureau'
-home_tab_bookmark_confirm_title: 'Ajouter cet onglet à vos favoris'
-home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de vos favoris ?'
+home_tab_bookmark_confirm_message: 'Cet onglet sera disponible sur votre bureau'
+home_tab_bookmark_confirm_title: 'Epingler cet onglet au bureau'
+home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de votre bureau ?'
 home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
 home_tab_config_form_locked: 'Verrouillé'
 home_tab_config_form_visible: 'Visible'
