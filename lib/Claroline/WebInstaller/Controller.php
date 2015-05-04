@@ -34,7 +34,9 @@ class Controller
         $ds = DIRECTORY_SEPARATOR;
         $configFile = $container->getAppDirectory() .
             $ds . 'config' . $ds . 'platform_options.yml';
-        $this->configHandler = new PlatformConfigurationHandler($configFile);
+        $lockedFile = $container->getAppDirectory() .
+            $ds . 'config' . $ds . 'locked_platform_options.yml';
+        $this->configHandler = new PlatformConfigurationHandler($configFile, $lockedFile);
     }
 
     public function languageStep()
