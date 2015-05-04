@@ -43,8 +43,8 @@ class AgendaListener
      * @DI\InjectParams({
      *     "formFactory"    = @DI\Inject("claroline.form.factory"),
      *     "templating"     = @DI\Inject("templating"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "authorization"  = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
      *     "container"      = @DI\Inject("service_container"),
      *     "router"         = @DI\Inject("router"),
      *     "requestStack"   = @DI\Inject("request_stack"),
@@ -73,7 +73,7 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("widget_agenda")
+     * @DI\Observe("widget_agenda_")
      *
      * @param DisplayWidgetEvent $event
      */
@@ -117,7 +117,7 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("open_tool_workspace_agenda")
+     * @DI\Observe("open_tool_workspace_agenda_")
      *
      * @param DisplayToolEvent $event
      */
@@ -127,7 +127,7 @@ class AgendaListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_agenda")
+     * @DI\Observe("open_tool_desktop_agenda_")
      *
      * @param DisplayToolEvent $event
      */

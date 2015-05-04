@@ -12,4 +12,11 @@ class AdditionalInstaller extends BaseInstaller
         $updater->setLogger($this->logger);
         $updater->preInstall();
     }
+
+    public function postInstall()
+    {
+        $updater = new Updater\MigrationUpdater($this->container);
+        $updater->setLogger($this->logger);
+        $updater->postInstall();
+    }
 }
