@@ -188,19 +188,21 @@ class QtiController extends Controller {
 
        $zip = new \ZipArchive();
        $zip->open($tmpFileName, \ZipArchive::CREATE);
+       
+       $userName = $this->container->get('security.context')->getToken()->getUser()->getUserName();
 
        foreach ($qdirs as $dir) {
            $iterator = new \DirectoryIterator($dir);
                foreach ($iterator as $element) {
                    if (!$element->isDot() && $element->isFile() && $element->getExtension() != "xml") {
                        $path = $element->getPath();
-                       $partDirectory = str_replace('./uploads/ujmexo/qti/admin/'.$title.'/questions/questionDoc_','', $path);
+                       $partDirectory = str_replace('./uploads/ujmexo/qti/'.$userName.'/'.$title.'/questions/questionDoc_','', $path);
 
                        $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/'.$element->getFilename());
                    }
                    if (!$element->isDot() && $element->isFile() && $element->getExtension() == "xml") {
                        $path = $element->getPath();
-                       $partDirectory = str_replace('./uploads/ujmexo/qti/admin/'.$title.'/questions/question_','', $path);
+                       $partDirectory = str_replace('./uploads/ujmexo/qti/'.$userName.'/'.$title.'/questions/question_','', $path);
                        $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/question_'.$partDirectory.'.'.$element->getExtension());
                    }
                }
