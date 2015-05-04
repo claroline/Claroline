@@ -3,9 +3,6 @@ services:
     innova_path.controller.path:
         class: %innova_path.controller.path.class%
         arguments:
-            session:           @session
-            router:            @router
-            translator:        @translator
             pathManager:       @innova_path.manager.path
             publishingManager: @innova_path.manager.publishing
         scope: request
