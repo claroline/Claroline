@@ -49,7 +49,7 @@
                  * @returns {boolean}
                  */
                 isEmpty: function () {
-                    return 0 <= historyIndex;
+                    return -1 == historyIndex;
                 },
 
                 /**
