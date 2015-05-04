@@ -71,7 +71,7 @@ class PathController
      * )
      * @Method("PUT")
      */
-    public function publishAction(Workspace $workspace, Path $path)
+    public function publishAction(Path $path)
     {
         $this->pathManager->checkAccess('EDIT', $path);
 
