@@ -11,34 +11,31 @@
 namespace Claroline\MessageBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
+use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\Version;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MigrationUpdater extends Updater
 {
     private $container;
-    private $om;
+    private $conn;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->om = $container->get('doctrine.orm.entity_manager');
+        $this->conn = $container->get('database_connection');
     }
 
     public function preInstall()
     {
-        $this->log('Updating migration versions...');
-        $conn = $this->om->getConnection();
-        $schemaManager = $conn->getSchemaManager();
-        $tables = $schemaManager->listTables();
-        $found = false;
-
-        foreach ($tables as $table) {
-            if ($table->getName() === 'claro_message') $found = true;
-        }
-
-        if ($found) {
-            $this->log('Inserting migration 20150429114010');
-            $conn->query("INSERT INTO doctrine_clarolinemessagebundle_versions (version) VALUES (20150429114010)");
+        if ($this->conn->getSchemaManager()->tablesExist(['claro_message'])) {
+            $this->log('Found existing database schema: skipping install migration...');
+            $config = new Configuration($this->conn);
+            $config->setMigrationsTableName('doctrine_clarolinemessagebundle_versions');
+            $config->setMigrationsNamespace('claro_message'); // required but useless
+            $config->setMigrationsDirectory('claro_message'); // idem
+            $version = new Version($config, '20150429114010', 'stdClass');
+            $version->markMigrated();
         }
     }
 }
