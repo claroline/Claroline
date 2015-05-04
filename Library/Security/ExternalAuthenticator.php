@@ -23,6 +23,7 @@ use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Claroline\CoreBundle\Manager\UserManager;
 
 /**
  * @Service()
@@ -31,28 +32,63 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
 {
     private $encoderFactory;
     private $authenticationManager;
+    private $userManager;
 
     /**
      * @InjectParams({
      *     "encoderFactory"         = @Inject("security.encoder_factory"),
      *     "authenticationManager"  = @Inject("claroline.common.authentication_manager"),
+     *     "userManager"            = @Inject("claroline.manager.user_manager")
      * })
      *
      */
-    public function __construct(EncoderFactoryInterface $encoderFactory,AuthenticationManager $authenticationManager)
+    public function __construct(
+        EncoderFactoryInterface $encoderFactory,
+        AuthenticationManager $authenticationManager,
+        UserManager $userManager
+    )
     {
         $this->encoderFactory = $encoderFactory;
         $this->authenticationManager = $authenticationManager;
+        $this->userManager = $userManager;
     }
 
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         try {
             $user = $userProvider->loadUserByUsername($token->getUsername());
+            $this->authenticate($user);
         } catch (UsernameNotFoundException $e) {
-            throw new AuthenticationException('Invalid username or password');
+            //$this->searchInProviders($token);
         }
+    }
 
+    public function supportsToken(TokenInterface $token, $providerKey)
+    {
+        return $token instanceof UsernamePasswordToken
+            && $token->getProviderKey() === $providerKey;
+    }
+
+    public function createToken(Request $request, $username, $password, $providerKey)
+    {
+        return new UsernamePasswordToken($username, $password, $providerKey);
+    }
+
+    private function searchInProviders(TokenInterface $token)
+    {
+        $drivers = $this->authenticationManager->getDrivers();
+
+        foreach ($drivers as $driver) {
+            $found = $this->authenticationManager->authenticate($driver, $token->getUsername(), $token->getCredentials());
+
+            if ($found) {
+
+            }
+        }
+    }
+
+    private function authenticate(User $user)
+    {
         $encoder = $this->encoderFactory->getEncoder($user);
         $passwordValid = $encoder->isPasswordValid(
             $user->getPassword(),
@@ -60,6 +96,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
             $user->getSalt()
         );
 
+        //do we want an external authentication
         if ($user->getAuthentication() and $user->getAuthentication() !== '' && $token->getCredentials()) {
             if (!$this->authenticationManager->authenticate(
                 $user->getAuthentication(), $user->getUsername(), $token->getCredentials()
@@ -70,6 +107,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
             return new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
         }
 
+        //do we want a regular authentication
         if ($passwordValid) {
 
             //throw new \Exception(var_dump($user->getAuthentication()));
@@ -87,16 +125,4 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
 
         throw new AuthenticationException('Invalid username or password');
     }
-
-    public function supportsToken(TokenInterface $token, $providerKey)
-    {
-        return $token instanceof UsernamePasswordToken
-            && $token->getProviderKey() === $providerKey;
-    }
-
-    public function createToken(Request $request, $username, $password, $providerKey)
-    {
-        return new UsernamePasswordToken($username, $password, $providerKey);
-    }
 }
-
