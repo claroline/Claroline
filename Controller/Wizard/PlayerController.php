@@ -15,19 +15,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Innova\PathBundle\Manager\StepManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * Player controller
  * @author Innovalangues <contact@innovalangues.net>
  * 
  * @Route(
- *      "workspace/{workspaceId}/path/{pathId}",
- *      name = "innova_path_player",
+ *      "player/{id}",
+ *      name    = "innova_path_player",
  *      service = "innova_path.controller.path_player"
  * )
- * @ParamConverter("workspace", class = "ClarolineCoreBundle:Workspace\Workspace", options = { "mapping": {"workspaceId": "id"} })
- * @ParamConverter("path",      class = "InnovaPathBundle:Path\Path",              options = { "mapping": {"pathId": "id"} })
  */
 class PlayerController
 {
@@ -71,7 +68,7 @@ class PlayerController
     /**
      * Set current request
      * @param  \Symfony\Component\HttpFoundation\Request   $request
-     * @return \Innova\PathBundle\Controller\PlayerController
+     * @return \Innova\PathBundle\Controller\Wizard\PlayerController
      */
     public function setRequest(Request $request = null)
     {
@@ -82,22 +79,27 @@ class PlayerController
 
     /**
      * Display path player
-     * @param  \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param  \Innova\PathBundle\Entity\Path\Path              $path
-     * @param  \Innova\PathBundle\Entity\Step                   $currentStep
+     * @param  \Innova\PathBundle\Entity\Path\Path $path
+     * @param  \Innova\PathBundle\Entity\Step      $currentStep
      * @return array
      *
      * @Route(
-     *      "/step/{stepId}",
-     *      name = "innova_path_player_index",
-     *      options = { "expose" = true }
+     *      "/{stepId}",
+     *      name     = "innova_path_player_wizard",
+     *      defaults = { "stepId" = null },
+     *      options  = { "expose" = true }
      * )
      * @ParamConverter("currentStep", class="InnovaPathBundle:Step", options = { "mapping": {"stepId": "id"} })
      * @Method("GET")
      * @Template("InnovaPathBundle:Player:main.html.twig")
      */
-    public function displayAction(Workspace $workspace, Path $path, Step $currentStep)
+    public function displayAction(Path $path, Step $currentStep = null)
     {
+        if (empty($currentStep)) {
+            // Get the root step of the path
+            $currentStep = $path->getRootStep();
+        }
+
         // Check if path summary needs to be displayed automatically
         $autoDisplaySummary = $this->isSummaryAutoDisplayed($path, $currentStep);
 
@@ -108,7 +110,8 @@ class PlayerController
         $this->session->set('lastStepId', $currentStep->getId());
 
         return array (
-            'workspace'          => $workspace,
+            '_resource' => $path,
+
             'path'               => $path,
             'currentStep'        => $currentStep,
             'roadBack'           => $roadBack,
@@ -215,7 +218,7 @@ class PlayerController
      * )
      * @Method("PUT")
      */
-    public function toggleSummaryAutoDisplayAction(Workspace $workspace, Path $path, $disabled)
+    public function toggleSummaryAutoDisplayAction(Path $path, $disabled)
     {
         $disabled = filter_var($disabled, FILTER_VALIDATE_BOOLEAN);
 

@@ -30,17 +30,17 @@ class PathListener extends ContainerAware
     {
         $path = $event->getResource();
         if ($path->isPublished()) {
+            // Path is published => display the Player
             $route = $this->container->get('router')->generate(
-                'innova_path_player_index',
+                'innova_path_player_wizard',
                 array (
-                    'workspaceId' => $path->getWorkspace()->getId(),
-                    'pathId'      => $path->getId(),
-                    'stepId'      => $path->getRootStep()->getId()
+                    'id'     => $path->getId(),
+                    'stepId' => $path->getRootStep()->getId()
                 )
             );
         }
         else {
-            // if path is not published redirect to editor
+            // Path is not published (so we can't play the Path) => display the Editor
             $route = $this->container->get('router')->generate(
                 'innova_path_editor_wizard',
                 array (

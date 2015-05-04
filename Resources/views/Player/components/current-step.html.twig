@@ -16,13 +16,13 @@
                         </h5>
                     </div>
                     <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                    {% for child in currentStep.children %}
+                        {% for child in currentStep.children %}
                         <li class="list-group-item">
-                        <a href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: child.id }) }}">
-                        {{ child.name }}
-                        </a>
+                            <a href="{{ path('innova_path_player_wizard', { id: path.id, stepId: child.id }) }}">
+                                {{ child.name }}
+                            </a>
                         </li>
-                    {% endfor %}
+                        {% endfor %}
                     </ul>
                 </div>
             {% endif %}
