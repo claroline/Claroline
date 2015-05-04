@@ -2,16 +2,12 @@
 
 namespace Innova\PathBundle\Controller;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 // Controller dependencies
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\PublishingManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -38,24 +34,6 @@ use Innova\PathBundle\Entity\Path\Path;
 class PathController
 {
     /**
-     * Current session
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
-     */
-    protected $session;
-    
-    /**
-     * Router manager
-     * @var \Symfony\Component\Routing\RouterInterface
-     */
-    protected $router;
-    
-    /**
-     * Translation manager
-     * @var \Symfony\Component\Translation\TranslatorInterface
-     */
-    protected $translator;
-
-    /**
      * Current path manager
      * @var \Innova\PathBundle\Manager\PathManager
      */
@@ -70,22 +48,13 @@ class PathController
     /**
      * Class constructor
      *
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Symfony\Component\Routing\RouterInterface                 $router
-     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      * @param \Innova\PathBundle\Manager\PathManager                     $pathManager
      * @param \Innova\PathBundle\Manager\PublishingManager               $publishingManager
      */
     public function __construct(
-        SessionInterface         $session,
-        RouterInterface          $router,
-        TranslatorInterface      $translator,
         PathManager              $pathManager,
         PublishingManager        $publishingManager)
     {
-        $this->session           = $session;
-        $this->router            = $router;
-        $this->translator        = $translator;
         $this->pathManager       = $pathManager;
         $this->publishingManager = $publishingManager;
     }
@@ -100,34 +69,27 @@ class PathController
      *     requirements = {"id" = "\d+"},
      *     options      = {"expose" = true}
      * )
-     * @Method("GET")
+     * @Method("PUT")
      */
     public function publishAction(Workspace $workspace, Path $path)
     {
         $this->pathManager->checkAccess('EDIT', $path);
 
+        $response = array ();
         try {
             $this->publishingManager->publish($path);
 
             // Publish success
-            $this->session->getFlashBag()->add(
-                'success',
-                $this->translator->trans('publish_success', array(), 'innova_tools')
-            );
+            $response['status']   = 'OK';
+            $response['messages'] = array ();
+            $response['data']     = json_decode($path->getStructure()); // Send updated data
         } catch (\Exception $e) {
             // Error
-            $this->session->getFlashBag()->add(
-                'error',
-                $e->getMessage()
-            );
+            $response['status']   = 'ERROR';
+            $response['messages'] = $e->getMessage();
+            $response['data']     = null;
         }
-
-        // Redirect to path list
-        $url = $this->router->generate('claro_workspace_open_tool', array (
-            'workspaceId' => $path->getWorkspace()->getId(),
-            'toolName' => 'innova_path'
-        ));
         
-        return new RedirectResponse($url, 302);
+        return new JsonResponse($response);
     }
 }
