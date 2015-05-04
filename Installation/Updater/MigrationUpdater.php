@@ -19,13 +19,13 @@ class MigrationUpdater extends Updater
 {
     private $container;
     private $conn;
-    private $om;
+    private $em;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->conn = $container->get('database_connection');
-        $this->om = $container->get('claroline.persistence.object_manager');
+        $this->em = $container->get('doctrine.orm.entity_manager');
     }
 
     public function preInstall()
@@ -58,22 +58,36 @@ class MigrationUpdater extends Updater
             $this->log("Re-using previous agenda {$type}...");
             $current = $this->find($type, 'agenda_');
             $current->setName('agenda_tmp');
-            $this->om->forceFlush();
+            $this->em->flush();
             $previous->setName('agenda_');
             $previous->setPlugin($current->getPlugin());
-            $this->om->remove($current);
-            $this->om->forceFlush();
+            $this->em->flush();
+            $this->delete($type, 'agenda_tmp');
         }
     }
 
     private function find($type, $name)
     {
-        $class = $type === 'tool' ?
+        return $this->em
+            ->getRepository($this->getClassFromType($type))
+            ->findOneBy(['name' => $name]);
+    }
+
+    private function delete($type, $name)
+    {
+        $this->em->createQueryBuilder()
+            ->delete()
+            ->from($this->getClassFromType($type), 't')
+            ->where('t.name = :name')
+            ->getQuery()
+            ->setParameter(':name', $name)
+            ->execute();
+    }
+
+    private function getClassFromType($type)
+    {
+        return $type === 'tool' ?
             'Claroline\CoreBundle\Entity\Tool\Tool' :
             'Claroline\CoreBundle\Entity\Widget\Widget';
-
-        return $this->om
-            ->getRepository($class)
-            ->findOneBy(['name' => $name]);
     }
 }
