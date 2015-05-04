@@ -126,6 +126,8 @@ class PublishingManager
      */
     public function publish(Path $path)
     {
+        // TODO : publish all linked resources if needed
+
         // Start Publishing
         $this->start($path);
 
@@ -152,7 +154,7 @@ class PublishingManager
         $this->manageRights();
 
         // Mark Path as published
-        /*$this->path->setPublished(true);*/
+        $this->path->setPublished(true);
         $this->path->setModified(false);
 
         // Persist data
