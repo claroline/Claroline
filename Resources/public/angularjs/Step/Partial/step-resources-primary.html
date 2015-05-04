@@ -16,12 +16,15 @@
 </div>
 
 <div class="panel-body" data-ng-show="!stepFormCtrl.collapsedPanels.resourcePrimary">
+    <!-- No resource message -->
     <em data-ng-show="null == stepFormCtrl.step.primaryResource">{{ 'no_primary_resource'|trans:{}:'path_editor' }}</em>
-    <div data-ng-show="null != stepFormCtrl.step.primaryResource" class="row">
-        <div class="col-md-2 col-sm-2 text-right">
+
+    <!-- Resource -->
+    <div data-ng-show="null != stepFormCtrl.step.primaryResource">
+        <div style="display:inline-block; vertical-align: middle; margin-right: 15px;">
             <img height="60" data-ng-src="{{ resourceIcons[stepFormCtrl.step.primaryResource.type] || resourceIcons['custom/default'] }}" alt="{{ stepFormCtrl.step.primaryResource.type }}" />
         </div>
-        <div class="col-md-10 col-sm-10">
+        <div style="display:inline-block; vertical-align: middle;">
             <p class="h4">{{ stepFormCtrl.step.primaryResource.name }}</p>
             <a href="#" class="btn btn-xs btn-danger" data-ng-click="stepFormCtrl.removePrimaryResource()">
                 <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_editor' }}

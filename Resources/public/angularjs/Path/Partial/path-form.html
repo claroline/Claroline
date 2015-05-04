@@ -12,18 +12,23 @@
 
                 <nav class="navbar navbar-default navbar-static-top" role="navigation">
                     <ul class="nav navbar-nav navbar-left">
+                        <!-- Undo from history button -->
                         <li data-ng-class="{ 'disabled': pathFormCtrl.historyDisabled.undo }">
                             <a href="#" data-ng-click="pathFormCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_editor' }}">
                                 <span class="fa fa-reply"></span>
                                 <span class="sr-only"> {{ 'undo'|trans:{}:'path_editor' }}</span>
                             </a>
                         </li>
+
+                        <!-- Redo from history button -->
                         <li data-ng-class="{ 'disabled': pathFormCtrl.historyDisabled.redo }">
                             <a href="#" data-ng-click="pathFormCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_editor' }}">
                                 <span class="fa fa-share"></span>
                                 <span class="sr-only">{{ 'redo'|trans:{}:'path_editor' }}</span>
                             </a>
                         </li>
+
+                        <!-- Open templates list button-->
                         <li>
                             <a data-pageslide="left" href="#sidebar-left" role="button">
                                 <span class="fa fa-download"></span> {{ 'open_templates'|trans:{}:'path_editor' }}
@@ -32,17 +37,22 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
+                        <!-- Save button -->
+                        <li data-ng-class="{ 'disabled': !pathFormCtrl.unsaved }">
                             <a href="#" data-ng-click="pathFormCtrl.save()">
                                 <span class="fa fa-floppy-o"></span> {{ 'save'|trans:{}:'path_editor' }}
                             </a>
                         </li>
-                        <li>
-                            <a href="#" data-ng-click="pathFormCtrl.preview()">
+
+                        <!-- Publish button -->
+                        <li data-ng-class="{ 'disabled': pathFormCtrl.published && !pathFormCtrl.modified }">
+                            <a href="#" data-ng-click="pathFormCtrl.publish()">
                                 <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_editor' }}
                             </a>
                         </li>
-                        <li>
+
+                        <!-- Preview button -->
+                        <li data-ng-class="{ 'disabled': !pathFormCtrl.published }">
                             <a href="#" data-ng-click="pathFormCtrl.preview()">
                                 <span class="fa fa-eye"></span> {{ 'preview'|trans:{}:'path_editor' }}
                             </a>
@@ -68,14 +78,17 @@
                     <div class="row form-group">
                         <label class="control-label col-md-3">{{ 'path_status'|trans:{}:'path_editor' }}</label>
                         <div class="col-md-9">
+                            <!-- Path not saved -->
+                            <p data-ng-if="pathFormCtrl.unsaved" class="form-control-static text-danger">{{ 'unsaved'|trans:{}:'path_editor' }}</p>
+
                             <!-- Path not published -->
-                            <p data-ng-if="!pathFormCtrl.published" class="form-control-static text-danger">{{ 'draft'|trans:{}:'path_editor' }}</p>
+                            <p data-ng-if="!pathFormCtrl.published && !pathFormCtrl.unsaved" class="form-control-static text-danger">{{ 'draft'|trans:{}:'path_editor' }}</p>
 
                             <!-- Path published without modifications -->
-                            <p data-ng-if="pathFormCtrl.published && !pathFormCtrl.modified" class="form-control-static text-success">{{ 'published'|trans:{}:'path_editor' }}</p>
+                            <p data-ng-if="pathFormCtrl.published && !pathFormCtrl.modified && !pathFormCtrl.unsaved" class="form-control-static text-success">{{ 'published'|trans:{}:'path_editor' }}</p>
 
                             <!-- Path published with modifications -->
-                            <p data-ng-if="pathFormCtrl.published && pathFormCtrl.modified" class="form-control-static text-warning">{{ 'published'|trans:{}:'path_editor' }} {{ 'modified'|trans:{}:'path_editor' }}</p>
+                            <p data-ng-if="pathFormCtrl.published && pathFormCtrl.modified && !pathFormCtrl.unsaved" class="form-control-static text-warning">{{ 'published'|trans:{}:'path_editor' }} {{ 'modified'|trans:{}:'path_editor' }}</p>
                         </div>
                     </div>
                 </div>

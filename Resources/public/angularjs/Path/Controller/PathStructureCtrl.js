@@ -83,6 +83,7 @@
             this.setCurrentStep = function (step) {
                 // Set the current Step
                 this.currentStep                   = step;
+
                 // Get inherited resources for this step
                 this.currentStepInheritedResources = PathService.getStepInheritedResources(this.structure, this.currentStep);
             };

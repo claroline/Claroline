@@ -52,7 +52,7 @@
                             if ('error' != data) {
                                 // No error
                                 formTemplate.id = data;
-                                TemplateFactory.replaceTemplate(formTemplate);
+                                TemplateService.replaceTemplate(formTemplate);
 
                                 AlertService.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
                             }

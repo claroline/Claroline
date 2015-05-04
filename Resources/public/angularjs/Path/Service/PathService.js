@@ -51,8 +51,27 @@
                  * Publish path modifications
                  * @param {number} id
                  */
-                publish: function (id) {
+                publish: function (id, path) {
+                    return $http
+                        .put(Routing.generate('innova_path_publish', { id: id }))
 
+                        .success(function (response) {
+                            if ('ERROR' === response.status) {
+                                for (var i = 0; i < response.messages.length; i++) {
+                                    AlertService.addAlert('error', response.messages[i]);
+                                }
+                            } else {
+                                // Get updated data
+                                angular.copy(response.data, path);
+
+                                // Display confirm message
+                                AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_editor'));
+                            }
+                        })
+
+                        .error(function (response) {
+                            AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_editor'));
+                        });
                 },
 
                 /**

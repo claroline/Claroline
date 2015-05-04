@@ -7,8 +7,9 @@
 
     angular.module('PathModule').controller('PathFormCtrl', [
         'HistoryService',
+        'ConfirmService',
         'PathService',
-        function PathFormCtrl(HistoryService, PathService) {
+        function PathFormCtrl(HistoryService, ConfirmService, PathService) {
             /**
              * ID of the current path
              * @type {number}
@@ -46,6 +47,7 @@
              */
             this.redo = function () {
                 if (HistoryService.canRedo()) {
+                    // Inject history data
                     HistoryService.redo(this.path);
                 }
             };
@@ -57,6 +59,7 @@
                 PathService.save(this.id, this.path).then(function () {
                     // Mark path as modified
                     this.modified = true;
+                    this.unsaved  = false;
                 }.bind(this));
             };
 
@@ -64,7 +67,7 @@
              * Publish the path modifications
              */
             this.publish = function () {
-                PathService.publish(this.id).then(function () {
+                PathService.publish(this.id, this.path).then(function () {
                     this.modified  = false;
                     this.published = true;
                     this.unsaved   = false;
@@ -75,12 +78,32 @@
              * Preview path into player
              */
             this.preview = function () {
-                if (!this.published) {
-                    // Path not published => there is nothing to preview
-                } else if (this.modified) {
-                    // Path modified => modifications will not be visible before publishing
-                } else {
-                    // Open player to preview the path
+                if (this.published) {
+                    // Path needs to be published at least once to be previewed
+
+                    var url = Routing.generate('innova_path_player_wizard', {
+                        id: this.id
+                    });
+
+                    if (this.modified || this.unsaved) {
+                        // Path modified => modifications will not be visible before publishing so warn user
+                        ConfirmService.open(
+                            // Confirm options
+                            {
+                                title:         Translator.trans('preview_with_pending_changes_title',   {}, 'path_editor'),
+                                message:       Translator.trans('preview_with_pending_changes_message', {}, 'path_editor'),
+                                confirmButton: Translator.trans('preview_with_pending_changes_button',  {}, 'path_editor')
+                            },
+
+                            // Confirm success callback
+                            function () {
+                                window.open(url, '_blank');
+                            }
+                        );
+                    } else {
+                        // Open player to preview the path
+                        window.open(url, '_blank');
+                    }
                 }
             };
         }

@@ -27,6 +27,7 @@
                 this.name              = name;
                 this.children          = [];
                 this.activityId        = null;
+                this.resourceId        = null;
                 this.primaryResource   = null;
                 this.resources         = [];
                 this.excludedResources = [];
@@ -128,7 +129,7 @@
                 addSecondaryResource: function (step, type, id, name) {
                     var resource = new StepResource(type, id, name);
                     if (!this.hasResource(step, resource)) {
-                        if (!step.resources instanceof Array) {
+                        if (typeof step.resources == 'undefined' || !step.resources instanceof Array) {
                             step.resources = [];
                         }
 
@@ -145,7 +146,7 @@
                  */
                 removeResource: function (step, resource) {
                     // Remove from included resources
-                    if (typeof step.resources !== 'undefined' && null !== step.resources) {
+                    if (typeof step.resources !== 'undefined' && step.resources) {
                         for (var i = 0; i < step.resources.length; i++) {
                             if (resource.id === step.resources[i].id) {
                                 step.resources.splice(i, 1);
@@ -182,12 +183,15 @@
                  */
                 hasResource: function (step, resource) {
                     var resourceExists = false;
-                    for (var i = 0; i < step.resources.length; i++) {
-                        var stepResource = step.resources[i];
-                        if (stepResource.resourceId === resource.resourceId) {
-                            resourceExists = true;
 
-                            break;
+                    if (typeof step.resources !== 'undefined' && step.resources) {
+                        for (var i = 0; i < step.resources.length; i++) {
+                            var stepResource = step.resources[i];
+                            if (stepResource.resourceId === resource.resourceId) {
+                                resourceExists = true;
+
+                                break;
+                            }
                         }
                     }
 

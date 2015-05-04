@@ -16,8 +16,8 @@
                 scope: {
                     id        : '=', // ID of the path
                     path      : '=', // Data of the path
-                    modified  : '=',
-                    published : '='
+                    modified  : '=', // Is Path have pending modifications ?
+                    published : '='  // Is path published ?
                 },
                 link: function (scope, element, attrs, pathFormCtrl) {
                     // Set controller variables
@@ -28,7 +28,12 @@
 
                     // Update history each time a path is changed
                     scope.$watch('path', function (newValue) {
-                        console.log('path updated');
+                        console.log(newValue);
+                        if (!HistoryService.isEmpty()) {
+                            // Initialization is already done, so mark path as unsaved for each modification
+                            pathFormCtrl.unsaved = true;
+                        }
+
                         HistoryService.update(newValue);
                     }, true);
                 }
