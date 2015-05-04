@@ -113,7 +113,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
         }
 
         $('#newTableProposal').find('tbody').append('<tr><td></td></tr>');
-        
+
     });
     $('#newTableProposal').find('tr').last().remove();
 
@@ -123,7 +123,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
     containerLabel.children().first().children('div').each(function() {
 
         $(this).find('.row').each(function() {
-            
+
             fillLabelArray($(this), index, edition);
             $('.classic').find('textarea').each(function() {
                 $(this).val($(this).val().replace("&lt;", "<"));
@@ -149,7 +149,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
             $('#newTableLabel').find('tr:last').append('<td class="classic"></td>');
             adddelete($('#newTableLabel').find('td:last'), deletechoice, 0);
         }
-        
+
 //        $('#newTableLabel').find('tbody').append('<tr class="droppable"></tr>');
         $('#newTableLabel').find('tbody').append('<tr></tr>');
 
@@ -160,7 +160,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
                 $('#' + ind + '_correspondence option[value="' + proposals[val] + '"]').prop('selected', true);
             });
         }
-        
+
         //        if (typeof labels[ind] !== 'undefined') {
 //            var idLabel = labels[ind];
 //            var idProposal = valueCorres[idLabel];
@@ -192,7 +192,7 @@ function creationMatchingEdit(addchoice, addproposal, deletechoice, LabelValue, 
 
     whichChange();
     whichChecked();
-    
+
 //    responseBind();
 }
 
@@ -220,7 +220,7 @@ function addLabel(container, deletechoice, table, codeContainer, edition) {
     container.find('.row').each(function () {
         fillLabelArray($(this), indexLabel, edition);
     });
-    
+
     //for replace the correspondance field of the form, by our field
     $('#newTableLabel').find("select").each(function () {
         $id = $(this).attr("class");
@@ -240,7 +240,7 @@ function addLabel(container, deletechoice, table, codeContainer, edition) {
     table.next().remove();
 
     whichChecked();
-    
+
 //    responseBind();
 }
 
@@ -248,7 +248,7 @@ function addProposal(container, deletechoice, table, codeContainer, edition) {
 
     // for getting correspondances
     getCorrespondances();
-    
+
     var contain;
     var uniqProposalId = false;
     var indexProposal = $('#newTableProposal').find('tr:not(:first)').length;
@@ -299,7 +299,7 @@ function addProposal(container, deletechoice, table, codeContainer, edition) {
     });
 
     whichChecked();
-    
+
 //    responseBind();
 }
 
@@ -373,7 +373,8 @@ function check_form(nbrProposals, nbrLabels) {
 
     if (correspondence == false) {
 
-        return confirm(correspEmptyLang);
+        alert(correspEmptyLang);
+        return  false;
     }
 }
 
@@ -416,7 +417,7 @@ function fillProposalArray(row, index, edition) {
         $('#newTableProposal').find('td:last').append('<span id="spanProposal_'+idProposalVal+'" class="input-group"></span>');
         $('#spanProposal_'+idProposalVal+'').append(row.find('textarea'));
         $('#spanProposal_'+idProposalVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_'+idProposalVal+'" onClick="advancedEdition(\'ujm_exobundle_interactionmatchingtype_proposals_'+index+'_value\',\'btnEdition_'+idProposalVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
-        
+
     }
 
     if(row.find('input').length) {
