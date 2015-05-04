@@ -86,6 +86,45 @@
                 <br>
             </div>
                 
+            {% if queues|length > 0 %}
+                <div id="course-queue-users-box">
+                    <h4>
+                        {{ 'queued_users'|trans({}, 'cursus') }}
+                        &nbsp;
+                        <i class="fa fa-chevron-right pointer-hand"
+                           data-toggle="collapse"
+                           data-target="#queued-users-tab"
+                        >
+                        </i>
+                    </h4>
+                    <div class="table-responsive collapse" id="queued-users-tab">
+                        <br>
+                        <table class="table">
+                            
+                            {% for queue in queues %}
+                                {% set queuedUser = queue.getUser() %}
+                                <tr id="queued-user-row-{{ queue.getId() }}">
+                                    <td>
+                                        {{ queuedUser.getFirstName() }}
+                                        {{ queuedUser.getLastName() }}
+                                        ({{ queuedUser.getUsername() }})
+                                        
+                                        {% if sessionsTab[0] is defined or sessionsTab[0] is defined %}
+                                            &nbsp;
+                                            <i class="fa fa-sign-in pointer-hand transfer-to-session-btn"
+                                               data-queue-id="{{ queue.getId() }}"
+                                            >
+                                            </i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <br>
+            {% endif %}
+                
             <div id="sessions-box">
                 <h4>
                     {{ 'sessions'|trans({}, 'cursus') }}

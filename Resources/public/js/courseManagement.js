@@ -26,11 +26,6 @@
         );
     });
     
-    $('#edit-course-btn').on('click', function () {
-        var courseId = $(this).data('course-id');
-        
-    });
-    
     $('.show-users-btn').on('click', function () {
         var sessionId = $(this).data('session-id');
         
@@ -358,6 +353,19 @@
             Translator.trans('decline_registration', {}, 'cursus')
         );
     });
+    
+    $('.transfer-to-session-btn').on('click', function () {
+        var queueId = $(this).data('queue-id')
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_cursus_course_queued_user_transfer_form',
+                {'queue': queueId}
+            ),
+            removeCourseQueueRow,
+            function() {}
+        );
+    });
 
     var removeUserRow = function (event, sessionUserId) {
         $('#row-session-user-' + sessionUserId).remove();
@@ -371,13 +379,17 @@
         window.location.reload();
     };
     
-    var doNothing = function() {};
+    var doNothing = function () {};
     
-    var removeQueuedUserManagementBox = function(event, queueId) {
+    var removeQueuedUserManagementBox = function (event, queueId) {
         $('#row-queued-user-management-' + queueId).remove();
     };
     
     var removeQueuedUser = function(event, queueId) {
         $('#row-queued-user-' + queueId).remove();
+    };
+    
+    var removeCourseQueueRow = function (queueId) {
+        $('#queued-user-row-' + queueId).remove();
     };
 })();
