@@ -5,6 +5,9 @@ namespace Innova\PathBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
+
 /**
  * Step
  *
@@ -129,7 +132,7 @@ class Step implements \JsonSerializable
      * @param \Claroline\CoreBundle\Entity\Resource\Activity $activity
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setActivity(\Claroline\CoreBundle\Entity\Resource\Activity $activity)
+    public function setActivity(Activity $activity)
     {
         $this->activity = $activity;
 
@@ -149,7 +152,7 @@ class Step implements \JsonSerializable
      * @param \Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters
      * @return \Innova\PathBundle\Entity\Step
      */
-    public function setParameters(\Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters)
+    public function setParameters(ActivityParameters $parameters)
     {
         $this->parameters = $parameters;
 
@@ -256,7 +259,10 @@ class Step implements \JsonSerializable
      */
     public function addChild(Step $step)
     {
-        $this->children->set($step->getId(), $step);
+        if (!$this->children->contains($step)) {
+            $this->children->add($step);
+        }
+
         $step->setParent($this);
         
         return $this;
@@ -269,7 +275,10 @@ class Step implements \JsonSerializable
      */
     public function removeChild(Step $step) 
     {
-        $this->children->removeElement($step);
+        if ($this->children->contains($step)) {
+            $this->children->removeElement($step);
+        }
+
         $step->setParent(null);
         
         return $this;
@@ -443,13 +452,19 @@ class Step implements \JsonSerializable
     {
         // TODO : add missing Activity Properties (duration, withTutor, etc.)
 
+        $children = array ();
+        if (!empty($this->children)) {
+            $children = array_values($this->children->toArray());
+        }
+
         return array (
-            'id'          => $this->id,                  // A local id for the step in the path (reuse step ID)
-            'lvl'         => $this->lvl,                 // The depth of the step in the path structure
-            'activityId'  => $this->activity->getId(),   // The ID of the linked Activity
-            'name'        => $this->getName(),           // The name of the linked Activity (used as Step name)
-            'description' => $this->getDescription(),    // The description of the linked Activity (used as Step description)
-            'children'    => $this->children->toArray(), // The children of the step
+            'id'          => $this->id,                // A local ID for the step in the path (reuse step ID)
+            'resourceId'  => $this->id,                // The real ID of the Step into the DB
+            'lvl'         => $this->lvl,               // The depth of the step in the path structure
+            'activityId'  => $this->activity->getId(), // The ID of the linked Activity
+            'name'        => $this->getName(),         // The name of the linked Activity (used as Step name)
+            'description' => $this->getDescription(),  // The description of the linked Activity (used as Step description)
+            'children'    => $children,                // The children of the step
         );
     }
 }
