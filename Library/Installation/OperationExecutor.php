@@ -108,7 +108,6 @@ class OperationExecutor
             }
         }
 
-        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
         rename($this->operationFile, $this->operationFile . '.bup');
     }
 
