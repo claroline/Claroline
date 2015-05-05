@@ -4,7 +4,7 @@ namespace Icap\NotificationBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\DataCollectorTranslator;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -28,7 +28,7 @@ class ConfigureMenuListener
      * })
      */
     public function __construct(
-        Translator $translator,
+        DataCollectorTranslator $translator,
         NotificationManager $notificationManager,
         TwigEngine $templating,
         SecurityContext $securityContext
