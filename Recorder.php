@@ -117,10 +117,13 @@ class Recorder
 
             if (count($bundles) > 0) {
                 if (isset($autoload['psr-4'])) {
-                    foreach ($bundles as $index => $bundle) {
-                        // psr-4 prefix must be prepended to bundle class
-                        $prefixes = array_keys($autoload['psr-4']);
-                        $bundles[$index] = array_shift($prefixes) . $bundle;
+                //This condition was added for sf2.7 (they decided to use psr-4 and for some reason, it broke everything).
+                    if (count($autoload['psr-4']) === 1) {
+                        foreach ($bundles as $index => $bundle) {
+                            // psr-4 prefix must be prepended to bundle class
+                            $prefixes = array_keys($autoload['psr-4']);
+                            $bundles[$index] = array_shift($prefixes) . $bundle;
+                        }
                     }
                 }
 
