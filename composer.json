@@ -52,7 +52,7 @@
         "nelmio/api-doc-bundle": "~2.7",
         "claroline/bundle-recorder": "~5.0",
         "claroline/kernel-bundle": "~5.0",
-        "claroline/installation-bundle": "~5.0",
+        "claroline/installation-bundle": "dev-master",
         "claroline/front-end-bundle": "~5.0",
         "claroline/migration-bundle": "~5.0",
         "johngrogg/ics-parser": "dev-master",
