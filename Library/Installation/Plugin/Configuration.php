@@ -21,15 +21,17 @@ class Configuration implements ConfigurationInterface
     private $plugin;
     private $listNames;
     private $listTools;
+    private $listWidgets;
     private $updateMode;
     private $listResourceActions;
 
-    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions)
+    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions, array $listWidgets)
     {
         $this->plugin     = $plugin;
         $this->listNames  = $resourceNames;
         $this->listTools  = $listTools;
         $this->listResourceActions = $listResourceActions;
+        $this->listWidgets = $listWidgets;
         $this->updateMode = false;
     }
 
@@ -207,17 +209,31 @@ class Configuration implements ConfigurationInterface
 
     private function addWidgetSection($pluginSection)
     {
+        $widgets    = $this->listWidgets;
         $plugin     = $this->plugin;
         $pluginFqcn = get_class($plugin);
         $imgFolder  = $plugin->getImgFolder();
         $ds         = DIRECTORY_SEPARATOR;
+        $updateMode = $this->isInUpdateMode();
 
         $pluginSection
             ->arrayNode('widgets')
                 ->prototype('array')
                     ->children()
                         ->scalarNode('name')
-                        ->isRequired()->end()
+                            ->isRequired()
+                                ->validate()
+                                ->ifTrue(
+                                    function ($v) use ($pluginFqcn, $widgets, $updateMode) {
+                                        return !$updateMode && !call_user_func_array(
+                                            __CLASS__ . '::isNameAlreadyExist',
+                                            array($pluginFqcn . '-' .$v, $widgets)
+                                        );
+                                    }
+                                )
+                                ->thenInvalid($pluginFqcn . " : the widget name already exists")
+                            ->end()
+                        ->end()
                         ->booleanNode('is_configurable')->isRequired()->end()
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
                         ->scalarNode('default_width')->defaultValue(4)->end()
@@ -257,10 +273,10 @@ class Configuration implements ConfigurationInterface
                             ->isRequired()
                                 ->validate()
                                 ->ifTrue(
-                                    function ($v) use ($tools, $updateMode) {
+                                    function ($v) use ($pluginFqcn, $tools, $updateMode) {
                                         return !$updateMode && !call_user_func_array(
                                             __CLASS__ . '::isNameAlreadyExist',
-                                            array($v, $tools)
+                                            array($pluginFqcn . '-' .$v, $tools)
                                         );
                                     }
                                 )

@@ -18,7 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ToolRepository")
- * @ORM\Table(name="claro_tools")
+ * @ORM\Table(
+ *      name="claro_tools",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="tool_plugin_unique",columns={"name", "plugin_id"})}
+ * )
  */
 class Tool
 {
@@ -30,7 +33,7 @@ class Tool
     protected $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      */
     protected $name;
 
@@ -213,13 +216,16 @@ class Tool
         return $this->isVisible;
     }
 
-    public function setPlugin(Plugin $plugin)
+    public function setPlugin(Plugin $plugin = null)
     {
         $this->plugin = $plugin;
 
         return $this;
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Plugin
+     */
     public function getPlugin()
     {
         return $this->plugin;

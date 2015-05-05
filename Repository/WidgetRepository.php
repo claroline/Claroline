@@ -15,4 +15,14 @@ use Doctrine\ORM\EntityRepository;
 
 class WidgetRepository extends EntityRepository
 {
+    /**
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool|]
+     */
+    public function findAllWithPlugin()
+    {
+        return $this->createQueryBuilder('widget')
+            ->leftJoin('widget.plugin', 'plugin')
+            ->getQuery()
+            ->getResult();
+    }
 }
