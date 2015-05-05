@@ -100,6 +100,33 @@
                 </div>
             </div>
             <hr>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <span data-toggle="collapse"
+                              href="#collapse-box"
+                              class="pointer-hand"
+                        >
+                            {{ 'selected_users'|trans({}, 'platform') }}
+                        </span>
+                        &nbsp;
+                        <span class="badge" id="selected-users-box-badge">
+                            0
+                        </span>
+                    </h4>
+                </div>
+                <div id="collapse-box"
+                     class="panel-collapse collapse"
+                >
+                    <div class="panel-body">
+                        <ul class="list-inline" id="selected-users-list-box">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr>
+                
             <div id="user-picker-users-list">
                 {{ render(controller('ClarolineCoreBundle:User:usersListForUserPicker')) }}
             </div>

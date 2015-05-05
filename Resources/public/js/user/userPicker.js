@@ -11,7 +11,6 @@
     'use strict';
     
     var currentSearch = $('#user-picker-datas-box').data('search');
-//    var currentPage = $('#user-picker-datas-box').data('page');
     var currentMax = $('#user-picker-datas-box').data('max');
     var currentOrderedBy = $('#user-picker-datas-box').data('ordered-by');
     var currentOrder = $('#user-picker-datas-box').data('order');
@@ -322,6 +321,37 @@
         }
     }
     
+    function uncheckUser(userId)
+    {
+        $('#picker-user-chk-' + userId).prop('checked', false);
+    }
+    
+    function updateSelectedUsersBadge()
+    {
+        $('#selected-users-box-badge').html(userIds.length);
+    }
+    
+    function addUserToSelectedUsersBox(userId, name)
+    {
+        $('#selected-user-label-' + userId).remove();
+        var element =
+            '<li class="user-element" id="selected-user-label-' +
+            userId +
+            '">' +
+            '<span class="label label-primary">' +
+            name +
+            ' <i class="fa fa-times-circle remove-selected-user-btn pointer-hand" data-user-id="' +
+            userId +
+            '"></i>' +
+            '</span></li>';
+        $('#selected-users-list-box').append(element);
+    }
+    
+    function removeUserFromSelectedUsersBox(userId)
+    {
+        $('#selected-user-label-' + userId).remove();
+    }
+    
     function refreshUsersList()
     {
         var route = currentSearch === '' ?
@@ -431,9 +461,21 @@
             var lastName = $(this).data('user-last-name');
             var username = $(this).data('user-username');
             selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+            addUserToSelectedUsersBox(userId, selectedUsers[userId]);
         } else {
             selectedUsers[userId] = null;
+            removeUserFromSelectedUsersBox(userId);
         }
         updateIdsArray('user');
+        updateSelectedUsersBadge();
+    });
+    
+    $('#selected-users-list-box').on('click', '.remove-selected-user-btn', function () {
+        var userId = $(this).data('user-id');
+        selectedUsers[userId] = null;
+        removeUserFromSelectedUsersBox(userId);
+        uncheckUser(userId);
+        updateIdsArray('user');
+        updateSelectedUsersBadge();
     });
 })();
