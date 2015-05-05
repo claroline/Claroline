@@ -72,18 +72,6 @@ class AdministrationToolListener
     }
 
     /**
-     * @DI\Observe("administration_tool_badges_management")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenBadgesManagement(OpenAdministrationToolEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration/Badge:list';
-        $this->redirect($params, $event);
-    }
-
-    /**
      * @DI\Observe("administration_tool_registration_to_workspace")
      *
      * @param OpenAdministrationToolEvent $event
@@ -172,7 +160,7 @@ class AdministrationToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
         $this->redirect($params, $event);
     }
-    
+
     protected function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate(array(), null, $params);

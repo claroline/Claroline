@@ -277,7 +277,11 @@ class ThemeService
     private function retrieveThemes()
     {
         if ($this->themes === null) {
-            $this->themes = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
+            try {
+                $this->themes = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
+            } catch (\Exception $e) {
+                return array();
+            }
         }
 
         return $this->themes;

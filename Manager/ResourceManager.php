@@ -1676,7 +1676,7 @@ class ResourceManager
      */
     public function getDefaultUploadDestinations()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         if ($user == 'anon.') return array();
 
         $pws = $user->getPersonalWorkspace();

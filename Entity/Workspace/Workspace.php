@@ -95,15 +95,6 @@ class Workspace
 
     /**
      * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Event",
-     *     mappedBy="workspace",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $events;
-
-    /**
-     * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\OrderedTool",
      *     mappedBy="workspace",
      *     cascade={"persist", "merge"}
@@ -207,11 +198,6 @@ class Workspace
     public function setDescription($description)
     {
         $this->description = $description;
-    }
-
-    public function getEvents()
-    {
-        return $this->events;
     }
 
     public function getResources()

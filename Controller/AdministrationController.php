@@ -17,33 +17,33 @@ use Symfony\Component\HttpFoundation\Response;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Manager\ToolManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use \Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdministrationController extends Controller
 {
     private $eventDispatcher;
     private $toolManager;
-    private $sc;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "sc"              = @DI\Inject("security.context"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "container"       = @DI\Inject("service_container")
      * })
      */
     public function __construct(
         StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
-        SecurityContextInterface $sc,
+        TokenStorageInterface $tokenStorage,
         $container
     )
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager = $toolManager;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
         $this->container = $container;
     }
 
@@ -61,7 +61,7 @@ class AdministrationController extends Controller
      */
     public function indexAction()
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->sc->getToken()->getRoles());
+        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
 
         if (count($tools) === 0) {
             throw new AccessDeniedException();
@@ -98,7 +98,7 @@ class AdministrationController extends Controller
      */
     public function renderLeftBarAction()
     {
-        $tools = $this->toolManager->getAdminToolsByRoles($this->sc->getToken()->getRoles());
+        $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
 
         return array('tools' => $tools);
     }

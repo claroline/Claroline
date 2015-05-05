@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.import_csv_manager")
@@ -47,7 +47,7 @@ class ImportCsvManager
      */
     public function __construct(
         ObjectManager $om,
-        Translator $translator,
+        TranslatorInterface $translator,
         GroupManager $groupManager,
         RoleManager $roleManager,
         UserManager $userManager,
@@ -856,10 +856,10 @@ class ImportCsvManager
             }
         }
         $this->om->endFlushSuite();
-        
+
         return $logs;
     }
-    
+
     public function manageWorkspaceGroupUnregistration(array $datas)
     {
         $logs = array();
@@ -929,7 +929,7 @@ class ImportCsvManager
             }
         }
         $this->om->endFlushSuite();
-        
+
         return $logs;
     }
 

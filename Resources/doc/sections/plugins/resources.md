@@ -295,7 +295,7 @@ public function onOpen(OpenResourceEvent $event)
 {
     $text = $event->getResource();
     $collection = new ResourceCollection(array($text->getResourceNode()));
-    $isGranted = $this->container->get('security.context')->isGranted('WRITE', $collection);
+    $isGranted = $this->container->get('security.authorization_checker')->isGranted('WRITE', $collection);
     $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
         ->getRepository('ClarolineCoreBundle:Resource\Revision');
     $content = $this->container->get('templating')->render(
@@ -378,7 +378,7 @@ public function changeUrlAction(ResourceNode $node)
     $em = $this->getDoctrine()->getManager();
     $url = $em->getRepository('HeVinciUrlBundle:Url')
         ->findOneBy(array('resourceNode' => $node->getId()));
-        
+
     $form = $this->formFactory->create(new UrlChangeType(), $url);
     $form->handleRequest($this->request);
 

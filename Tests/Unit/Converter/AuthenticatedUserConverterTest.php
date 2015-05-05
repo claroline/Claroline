@@ -31,7 +31,7 @@ class AuthenticatedUserConverterTest extends MockeryTestCase
         $this->securityContext = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $this->token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $this->securityContext->shouldReceive('getToken')->andReturn($this->token);
-        $this->translator = $this->mock('Symfony\Bundle\FrameworkBundle\Translation\Translator');
+        $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
         $this->converter = new AuthenticatedUserConverter($this->securityContext, $this->translator);
     }
 

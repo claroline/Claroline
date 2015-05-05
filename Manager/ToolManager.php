@@ -1053,7 +1053,7 @@ class ToolManager
 
     public function getPersonalWorkspaceToolConfigForCurrentUser()
     {
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->container->get('security.token_storage')->getToken();
         $user = $token->getUser();
 
         //maybe from the utils thing

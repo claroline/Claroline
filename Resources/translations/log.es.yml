@@ -1,13 +1,8 @@
 Show actions for: 'Mostrar acciones de'
 all: 'Todos'
-badge: 'Insignia'
 for user: 'Para el usuario'
 group: 'grupo'
 log_add_user: 'Agregar usuario'
-log_badge-awarding_filter: 'Atribución de una insignia'
-log_badge-awarding_sentence: "ha obtenido una atribución de una insignia"
-log_badge-awarding_shortname: "Atribución de una insignia"
-log_badge-awarding_title: 'Atribución de una insignia'
 log_change_right: 'Cambiar los derechos'
 log_change_set: 'Lista de modificación de propiedades'
 log_context: 'Contexto:'

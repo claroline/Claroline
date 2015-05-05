@@ -30,7 +30,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\ValidatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -87,7 +87,7 @@ class UserManager
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
         ToolManager $toolManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         ValidatorInterface $validator,
         WorkspaceManager $workspaceManager,
         TransfertManager $transfertManager,
@@ -208,7 +208,7 @@ class UserManager
      */
     public function deleteUser(User $user)
     {
-        if ($this->container->get('security.context')->getToken()->getUser()->getId() === $user->getId()) {
+        if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
         }
         $userRole = $this->roleManager->getUserRoleByUser($user);
@@ -380,8 +380,8 @@ class UserManager
                     if ($toAdd) $additionalRoles[] = $this->objectManager->merge($toAdd);
                 }
 
-                if ($this->container->get('security.context')->getToken()) {
-                    $this->objectManager->merge($this->container->get('security.context')->getToken()->getUser());
+                if ($this->container->get('security.token_storage')->getToken()) {
+                    $this->objectManager->merge($this->container->get('security.token_storage')->getToken()->getUser());
                 }
             }
         }
@@ -1285,7 +1285,7 @@ class UserManager
     {
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->container->get('security.context')->setToken($token);
+        $this->container->get('security.token_storage')->setToken($token);
     }
 
     public function getUsersForUserPicker(

@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Listener;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -21,20 +20,16 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class AjaxAuthenticationListener
 {
-    private $securityContext;
-
     /**
      * @DI\InjectParams({
-     *     "context" = @DI\Inject("security.context"),
      *     "templating" = @DI\Inject("templating"),
      *     "session"= @DI\Inject("session")
      * })
      *
      * @param SecurityContextInterface $context
      */
-    public function __construct(SecurityContextInterface $context, $templating, $session)
+    public function __construct($templating, $session)
     {
-        $this->securityContext = $context;
         $this->templating = $templating;
         $this->session = $session;
     }

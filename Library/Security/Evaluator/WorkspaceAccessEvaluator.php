@@ -38,12 +38,12 @@ class WorkspaceAccessEvaluator
     public function canAccessWorkspace($attr)
     {
         $request = $this->container->get('request');
-        $security = $this->container->get('security.context');
+        $authorization = $this->container->get('security.authorization_checker');
         //get
         $workspace = $request->query->get('workspace');
 
         if ($workspace) {
-            if (false === $this->security->isGranted($attr, $workspace)) {
+            if (false === $this->authorization->isGranted($attr, $workspace)) {
                 $this->throwWorkspaceDeniedException($workspace);
             }
         }

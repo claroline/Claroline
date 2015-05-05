@@ -32,16 +32,20 @@ class DynamicConfigPass implements CompilerPassInterface
         //mailing
         $transport = new Definition();
         $transport->setClass('Swift_Transport');
-        $transport->setFactoryService('claroline.mailing.transport_factory');
-        $transport->setFactoryMethod('getTransport');
+        $transport->setFactory(array(
+            new Reference('claroline.mailing.transport_factory'),
+            'getTransport')
+        );
         $container->removeDefinition('swiftmailer.mailer.default.transport');
         $container->setDefinition('swiftmailer.mailer.default.transport', $transport);
 
         //session storage
         $handler = new Definition();
         $handler->setClass('SessionHandlerInterface');
-        $handler->setFactoryService('claroline.session.handler_factory');
-        $handler->setFactoryMethod('getHandler');
+        $handler->setFactory(array(
+            new Reference('claroline.session.handler_factory'),
+            'getHandler')
+        );
         $container->setDefinition('session.handler', $handler);
 
         //cookie lifetime
@@ -52,13 +56,5 @@ class DynamicConfigPass implements CompilerPassInterface
 
         //notification
         $container->setAlias('icap.notification.orm.entity_manager', 'claroline.persistence.object_manager');
-
-        //facebook
-        $facebook = new Definition();
-        $facebook->setFactoryService('claroline.hwi.resource_owner_factory');
-        $facebook->setFactoryMethod('getFacebookResourceOwner');
-        $facebook->setClass('FacebookResourceOwner');
-        $container->removeDefinition('hwi_oauth.resource_owner.facebook');
-        $container->setDefinition('hwi_oauth.resource_owner.facebook', $facebook);
     }
 }

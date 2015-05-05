@@ -19,7 +19,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -43,7 +43,7 @@ class WidgetManager
      *     "translator" = @DI\Inject("translator")
      * })
      */
-    public function __construct(ObjectManager $om, RouterInterface $router, Translator $translator)
+    public function __construct(ObjectManager $om, RouterInterface $router, TranslatorInterface $translator)
     {
         $this->om = $om;
         $this->widgetDisplayConfigRepo = $om->getRepository('ClarolineCoreBundle:Widget\WidgetDisplayConfig');
@@ -450,7 +450,7 @@ class WidgetManager
         WidgetDisplayConfig $widgetDisplayConfig = null
     )
     {
-        
+
         if (!is_null($widgetInstance)) {
             $this->om->persist($widgetInstance);
         }
