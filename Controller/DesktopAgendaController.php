@@ -150,7 +150,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      * @return array
      */
     public function importEventsModalForm()
@@ -165,7 +165,7 @@ class DesktopAgendaController extends Controller
      *     "/import",
      *     name="claro_agenda_import"
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
      * @return array
      */

@@ -86,18 +86,19 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findByWorkspaceId($workspaceId, $isTask, $limit = null)
+    public function findByWorkspaceId($workspaceId, $isTask = null, $limit = null)
     {
+        $isTaskSql = $isTask !== null ? 'AND e.isTask = '. $isTask: '';
         $dql = "
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace = :workspaceId
-            AND e.isTask = :isTask
+            " . $isTaskSql . "
             ORDER BY e.end DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
-        $query->setParameter('isTask', $isTask);
+
         if ($limit > 0) {
             $query->setMaxResults($limit);
         }

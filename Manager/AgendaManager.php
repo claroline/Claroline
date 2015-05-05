@@ -226,7 +226,7 @@ class AgendaManager
     public function displayEvents(Workspace $workspace, $allDay = false)
     {
         $events = $this->om->getRepository('ClarolineAgendaBundle:Event')
-            ->findbyWorkspaceId($workspace->getId(), $allDay);
+            ->findByWorkspaceId($workspace->getId());
 
         return $this->convertEventsToArray($events);
     }
@@ -265,7 +265,7 @@ class AgendaManager
         $startDate->setTimeStamp($start);
         $startIso = $startDate->format(\DateTime::ISO8601);
         $endDate = new \DateTime();
-        $startDate->setTimeStamp($end);
+        $endDate->setTimeStamp($end);
         $endIso = $startDate->format(\DateTime::ISO8601);
 
         return array(
@@ -283,8 +283,6 @@ class AgendaManager
             'deletable' => $this->authorization->isGranted('DELETE', $event),
             'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
             'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
-            'startFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $start),
-            'endFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $end),
             'endHours' => $event->getEndHours(),
             'startHours' => $event->getStartHours(),
             'className' => 'event_' . $event->getId()

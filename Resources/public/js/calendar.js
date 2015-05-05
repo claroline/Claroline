@@ -12,7 +12,6 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
-    var $calPopOver;
 
     function t(key) {
         return Translator.trans(key, {}, 'agenda');
@@ -52,7 +51,7 @@
         });
 
         $('body')
-            // Delete the event from the form button
+            // Delete the event from the form and the popover button
             .on('click', '.delete-event', function (event) {
                 event.preventDefault();
                 window.Claroline.Modal.confirmRequest(
@@ -83,7 +82,7 @@
             filterEvents(workspaceIds);
         });
 
-        //INITIALIZE CALENDAR
+        // INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
                 left: 'prev,next, today',
@@ -122,126 +121,80 @@
             allDayText: t('isAllDay'),
             lazyFetching : false,
             fixedWeekCount: false,
-            eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-                move(event, delta._days, delta._milliseconds / (1000 * 60));
-            },
+            eventDrop: onEventDrop,
             dayClick: renderAddEventForm,
-            eventClick:  function (event, jsEvent, view) {
-                // If click on the check symbol of a task, mark this task as "to do"
-                if ($(jsEvent.target).hasClass('fa-check')) {
-                    $.ajax({
-                        url: window.Routing.generate('claro_agenda_set_task_as_not_done', {'event': event.id}),
-                        type: 'GET',
-                        success: function() {
-                            $(jsEvent.target)
-                                .removeClass('fa-check')
-                                .addClass('fa-square-o')
-                                .next().css('text-decoration', 'none');
-                            $('.'+event.className).popover('destroy');
-                            event.isTaskDone = false;
-                            createPopover(event);
-                        }
-                    })
-                }
-                // If click on the checkbox of a task, mark this task as done
-                else if ($(jsEvent.target).hasClass('fa-square-o')) {
-                    $.ajax({
-                        url: window.Routing.generate('claro_agenda_set_task_as_done', {'event': event.id}),
-                        type: 'GET',
-                        success: function() {
-                            $(jsEvent.target)
-                                .removeClass('fa-square-o')
-                                .addClass('fa-check')
-                                .next().css('text-decoration', 'line-through');
-                            $('.'+event.className).popover('destroy');
-                            event.isTaskDone = true;
-                            createPopover(event);
-                        }
-                    })
-                } else if (event.editable) {
-                    window.Claroline.Modal.displayForm(
-                        window.Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
-                        updateCalendarItemCallback,
-                        function () {
-                            $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
-                            $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
-                        },
-                        'form-event'
-                    );
-                }
-            },
-            eventDragStart: function (event) {
-                destroyPopover(event);
-            },
-            eventDragStop : function (event) {
-                createPopover(event);
-            },
-            eventResizeStart: function (event, jsEvent, io, view) {
-                destroyPopover(event);
-            },
-            eventResizeStop: function (event) {
-                createPopover(event);
-            },
-            eventRender: function (event, element) {
-                //event are unfiltered by default
-                event.visible = event.visible === undefined ? true: event.visible;
-                if (!event.visible) return false;
-                renderEvent(event, element);
-            },
-            eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                resize(event, delta._days, delta._milliseconds / (1000 * 60));
-            }
+            eventClick:  onEventClick,
+            eventDestroy: onEventDestroy,
+            eventMouseover: onEventMouseover,
+            eventMouseout: onEventMouseout,
+            eventRender: onEventRender,
+            eventResize: onEventResize
         });
 
         // If a year is define in the Url, redirect the calendar to that year, month and day
-        if (getQueryVariable('year')) {
-            var year = !isNaN(getQueryVariable('year')) && getQueryVariable('year') ? getQueryVariable('year') : new Date('Y'),
-                month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
-                day = !isNaN(getQueryVariable('day')) && getQueryVariable('day') ? getQueryVariable('day') : new Date('d');
+        redirectCalendar();
+    };
 
-            $('#calendar').fullCalendar('gotoDate', year+'-'+month+'-'+day);
+    var onEventDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
+        resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'move');
+    };
+
+    var onEventClick = function (event, jsEvent) {
+        var $this = $(this);
+        // If click on the check symbol of a task, mark this task as "to do"
+        if ($(jsEvent.target).hasClass('fa-check')) {
+            markTaskAsToDo(event, jsEvent, $this);
+        }
+        // If click on the checkbox of a task, mark this task as done
+        else if ($(jsEvent.target).hasClass('fa-square-o')) {
+            markTaskAsDone(event, jsEvent, $this);
+        }
+        // Show the modal form if the user can edit the event
+        else if (event.editable) {
+            showEditForm(event);
         }
     };
 
-    var getQueryVariable = function (variable) {
-        var query = window.location.search.substring(1);
-        var vars = query.split("&");
-
-        for (var i = 0, varsLength = vars.length; i < varsLength; i++) {
-            var pair = vars[i].split("=");
-            if(decodeURIComponent(pair[0]) == variable){
-                return decodeURIComponent(pair[1]);
-            }
-        }
-        return null;
+    var onEventDestroy = function (event, $element) {
+        $element.popover('destroy');
     };
 
-    var hidePopovers = function () {
-        $('.fc-event').popover('hide');
+    var onEventMouseover = function () {
+        $(this).popover('show');
     };
 
-    var rerenderEvent = function(event, element) {
-        hidePopovers();
+    var onEventMouseout = function () {
+        $(this).popover('hide');
+    };
+
+    var onEventRender = function (event, element) {
+        // Events are unfiltered by default
+        event.visible = event.visible === undefined ? true: event.visible;
+        if (!event.visible) return false;
         renderEvent(event, element);
     };
 
-    var renderEvent = function (event, element) {
-        //// Create the popover for the event or the task
-        createPopover(event);
+    var onEventResize = function (event, delta, revertFunc, jsEvent, ui, view) {
+        resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
+    };
 
+    var renderEvent = function (event, $element) {
+        // Create the popover for the event or the task
+        createPopover(event, $element);
+
+        // If it's a task
         if (event.isTask) {
-            var checkbox =  $(element[0]).find('.fc-time');
-            checkbox
-                .attr('data-event-id', event.id)
-                .html('')
-                .addClass('fa is-task')
-                .removeClass('fc-time');
-
-            $(element[0]).css({
+            var eventContent =  $element.find('.fc-content');
+            // Remove the date
+            eventContent.find('.fc-time').remove();
+            $element.css({
                 'background-color': 'rgb(144, 32, 32)',
                 'border-color': 'rgb(144, 32, 32)'
             });
+            eventContent.prepend('<span class="task fa" data-event-id="' + event.id + '"></span>');
 
+            // Add the checkbox if the task is not done or the check symbol if the task is done
+            var checkbox = eventContent.find('.task');
             if (event.isTaskDone) {
                 checkbox.addClass('fa-check');
                 checkbox.next().css('text-decoration', 'line-through');
@@ -312,33 +265,13 @@
     };
 
     var updateCalendarItemCallback = function (event) {
-        hidePopovers();
         updateCalendarItem(event);
     };
 
-    var showPopover = function (event) {
-        $('.' + event.className).popover('show');
-    };
-
-    var destroyPopover = function (event) {
-        $('.' + event.className).popover('destroy');
-    };
-
     var removeEvent = function (event, item, data) {
-        removePopovers();
-        //Remove from the calendar if it exists.
         $('#calendar').fullCalendar('removeEvents', data.id);
     };
 
-    /**
-     * If action = 'move': the event will be moved
-     * If action = 'resize': the event will be resized
-     *
-     * @param event
-     * @param dayDelta
-     * @param minuteDelta
-     * @param action
-     */
     var resizeOrMove = function (event, dayDelta, minuteDelta, action) {
         var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
 
@@ -346,7 +279,7 @@
             'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             'type': 'POST',
             'success': function (event) {
-                rerenderEvent(event, $('.' + event.className));
+
             },
             'error': function () {
                 //do more error handling here
@@ -356,19 +289,11 @@
         });
     };
 
-    var move = function (event, dayDelta, minuteDelta) {
-        resizeOrMove(event, dayDelta, minuteDelta, 'move');
-    };
-
-    var resize = function (event, dayDelta, minuteDelta) {
-        resizeOrMove(event, dayDelta, minuteDelta, 'resize');
-    };
-
     var filterEvents = function (workspaceIds) {
         var numberOfChecked = $('.filter:checkbox:checked').length;
         var totalCheckboxes = $('.filter:checkbox').length;
         var radioValue = $('input[type=radio].filter-tasks:checked').val();
-        //if all checkboxes or none checkboxes are checked display all events
+        // If all checkboxes or none checkboxes are checked display all events
         if (((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) && radioValue === 'no-filter-tasks') {
             $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                 eventObject.visible = true;
@@ -401,40 +326,74 @@
         $('#calendar').fullCalendar('rerenderEvents');
     };
 
-    var createPopover = function (event) {
-        var startDate = new Date(event.start._d),
-            startDay = startDate.getDate(),
-            startMonth = startDate.getMonth() >= 9 ? parseInt(startDate.getMonth()+1) : '0' + parseInt(startDate.getMonth()+1),
-            startYear = startDate.getFullYear(),
-            startHours = event.allDay ? '' : ' ' +startDate.getHours() + ':' + startDate.getMinutes();
-
-        event.startFormatted = startDay + '/' + startMonth + '/' + startYear + startHours;
-
-        // End date is null if the start date is the same
-        if (event.end) {
-            var endDate = new Date(event.end._d),
-                endDay = endDate.getDate(),
-                endMonth = endDate.getMonth() >= 9 ? parseInt(endDate.getMonth()+1) : '0' + parseInt(endDate.getMonth()+1),
-                endYear = endDate.getFullYear(),
-                endHours = event.allDay ? '' : ' ' + endDate.getHours() + ':' + endDate.getMinutes();
-
-            event.endFormatted = startDay + '/' + startMonth + '/' + startYear + startHours;
-        } else {
-            event.endFormatted = event.startFormatted;
+    var createPopover = function (event, $element) {
+        // In FullCalendar 2.3.1, the end date is null when the start date is the same
+        if (event.end === null) {
+            event.end = event.start;
         }
-
-        $('.'+event.className).popover({
-            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
+        convertDateTimeToString();
+        $element.popover({
+            title: event.title,
             content: Twig.render(EventContent, {'event': event}),
             html: true,
             container: 'body',
-            placement: 'top',
-            trigger: 'hover'
+            placement: 'top'
         });
     };
 
-    var removePopovers = function() {
-        $('.popover.top').remove();
+    var convertDateTimeToString = function () {
+        Twig.setFilter('convertDateTimeToString', function (value, isAllDay) {
+            if (isAllDay) {
+                // We have to subtract 1 day for the all day event because, it end on the next day at midnight. For example, the end date of a all day event of the 05/04/15 will be on the 06/04/15 00:00. So for a better user experience, we subtract 1 day.
+                return moment(value).subtract(1, 'day').format('DD/MM/YYYY')
+            } else {
+                return moment(value).format('DD/MM/YYYY HH:mm');
+            }
+        });
+    };
+
+    var markTaskAsToDo = function (event, jsEvent, $element) {
+        $.ajax({
+            url: window.Routing.generate('claro_agenda_set_task_as_not_done', {'event': event.id}),
+            type: 'GET',
+            success: function() {
+                $(jsEvent.target)
+                    .removeClass('fa-check')
+                    .addClass('fa-square-o')
+                    .next().css('text-decoration', 'none');
+                $element.popover('destroy');
+                event.isTaskDone = false;
+                createPopover(event, $element);
+            }
+        })
+    };
+
+    var markTaskAsDone = function (event, jsEvent, $element) {
+        $.ajax({
+            url: window.Routing.generate('claro_agenda_set_task_as_done', {'event': event.id}),
+            type: 'GET',
+            success: function() {
+                $(jsEvent.target)
+                    .removeClass('fa-square-o')
+                    .addClass('fa-check')
+                    .next().css('text-decoration', 'line-through');
+                $element.popover('destroy');
+                event.isTaskDone = true;
+                createPopover(event, $element);
+            }
+        })
+    };
+
+    var showEditForm = function (event) {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
+            updateCalendarItemCallback,
+            function () {
+                $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
+                $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+            },
+            'form-event'
+        )
     };
 
     var hideFormhours = function() {
@@ -458,6 +417,29 @@
         $('#agenda_form_start').parent().parent().show();
         if (!$('#agenda_form_isAllDay').is(':checked')) {
             $('#agenda_form_startHours').parent().parent().show();
+        }
+    };
+
+    var getQueryVariable = function (variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+
+        for (var i = 0, varsLength = vars.length; i < varsLength; i++) {
+            var pair = vars[i].split("=");
+            if(decodeURIComponent(pair[0]) == variable){
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        return null;
+    };
+
+    var redirectCalendar = function () {
+        if (getQueryVariable('year')) {
+            var year = !isNaN(getQueryVariable('year')) && getQueryVariable('year') ? getQueryVariable('year') : new Date('Y'),
+                month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
+                day = !isNaN(getQueryVariable('day')) && getQueryVariable('day') ? getQueryVariable('day') : new Date('d');
+
+            $('#calendar').fullCalendar('gotoDate', year + '-' + month + '-' + day);
         }
     };
 }) ();

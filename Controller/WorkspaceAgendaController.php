@@ -82,29 +82,12 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/tasks",
-     *     name="claro_workspace_agenda_tasks"
-     * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'OPEN'})")
-     * @param Workspace $workspace
-     *
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
-     */
-    public function tasksAction(Workspace $workspace)
-    {
-        $events = $this->om->getRepository('ClarolineAgendaBundle:Event')->findByWorkspaceId($workspace->getId(), true);
-
-        return array('events' => $this->agendaManager->convertEventsToArray($events));
-    }
-
-    /**
-     * @EXT\Route(
      *     "/workspace/{workspace}/import/modal/form",
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
      * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
-     * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      * @return array
      */
     public function importEventsModalForm(Workspace $workspace)
@@ -119,7 +102,7 @@ class WorkspaceAgendaController extends Controller
      *     "/workspace/{workspace}/import",
      *     name="claro_workspace_agenda_import"
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
      * @param Workspace $workspace
      * @return array
