@@ -8,7 +8,7 @@ use HeVinci\CompetencyBundle\Repository\LevelRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("hevinci_form_ability")
@@ -35,7 +35,7 @@ class AbilityType extends AbstractType
                 'label' => 'level_',
                 'translation_domain' => 'competency',
                 'class' => 'HeVinciCompetencyBundle:Level',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'query_builder' => function (LevelRepository $repo) use ($options) {
                     return $repo->getFindByCompetencyBuilder($options['competency']);
                 },
@@ -53,7 +53,7 @@ class AbilityType extends AbstractType
         return 'hevinci_form_ability';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',

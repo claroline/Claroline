@@ -6,7 +6,7 @@ use HeVinci\CompetencyBundle\Validator\UniqueCompetency;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("hevinci_form_competency")
@@ -35,7 +35,7 @@ class CompetencyType extends AbstractType
         return 'hevinci_form_competency';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',

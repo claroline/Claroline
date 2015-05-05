@@ -3,13 +3,13 @@
     "type": "claroline-plugin",
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~4.2"
-    },
-    "autoload": {
-        "psr-0": { "HeVinci\\CompetencyBundle": "" }
+        "claroline/core-bundle": "~5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6"
+    },
+    "autoload": {
+        "psr-0": { "HeVinci\\CompetencyBundle": "" }
     },
     "target-dir": "HeVinci/CompetencyBundle"
 }

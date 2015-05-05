@@ -11,7 +11,7 @@ use HeVinci\CompetencyBundle\Validator\ExistingAbility;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -57,7 +57,7 @@ class AbilityImportType extends AbstractType
             ->add('level', 'entity', [
                 'label' => 'level_',
                 'class' => 'HeVinciCompetencyBundle:Level',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'query_builder' => function (LevelRepository $repo) use ($options) {
                     return $repo->getFindByCompetencyBuilder($options['competency']);
                 },
@@ -70,7 +70,7 @@ class AbilityImportType extends AbstractType
         return 'hevinci_form_ability_import';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'competency',

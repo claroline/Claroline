@@ -6,7 +6,7 @@ use HeVinci\CompetencyBundle\Form\DataTransformer\LevelTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service
@@ -19,7 +19,7 @@ class LevelsType extends AbstractType
         $builder->addModelTransformer(new LevelTransformer());
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'label' => 'levels',
