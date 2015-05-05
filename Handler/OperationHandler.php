@@ -97,7 +97,7 @@ class OperationHandler extends BaseHandler
     }
 
     /**
-     * @return array
+     * @return \Claroline\BundleRecorder\Operation[]
      */
     public function getOperations()
     {
