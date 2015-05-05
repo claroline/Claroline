@@ -115,7 +115,11 @@
                     <td class="text-center">
                         <input type="checkbox"
                                class="picker-user-chk"
+                               id="picker-user-chk-{{ user.getId() }}"
                                value="{{ user.getId() }}"
+                               data-user-first-name="{{ user.getFirstName() }}"
+                               data-user-last-name="{{ user.getLastName() }}"
+                               data-user-username="{{ user.getUsername() }}"
                         >
                     </td>
                     <td>{{ user.getFirstName() }} {{ user.getLastName() }}</td>

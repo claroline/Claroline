@@ -26,6 +26,8 @@
     var groupIds = [];
     var roleIds = [];
     var workspaceIds = [];
+    var userIds = [];
+    var selectedUsers = [];
     var parameters = {};
     parameters.groupIds = groupIds;
     parameters.roleIds = roleIds;
@@ -189,6 +191,16 @@
                 parameters.workspaceIds = workspaceIds;
                 break;
                 
+            case 'user':
+                userIds = [];
+                
+                for (var key in selectedUsers) {
+                    
+                    if (selectedUsers[key] !== null) {
+                        userIds.push(parseInt(key));
+                    }
+                }
+                break;
             default:
                 break
         }
@@ -303,6 +315,13 @@
         }
     }
     
+    function checkSelectedUsers()
+    {
+        for (var i = 0; i < userIds.length; i++) {
+            $('#picker-user-chk-' + userIds[i]).prop('checked', true);
+        }
+    }
+    
     function refreshUsersList()
     {
         var route = currentSearch === '' ?
@@ -330,6 +349,7 @@
             type: 'GET',
             success: function (datas) {
                 $('#user-picker-users-list').html(datas);
+                checkSelectedUsers();
             }
         });
     }
@@ -345,6 +365,7 @@
             type: 'GET',
             success: function (datas) {
                 $('#user-picker-users-list').html(datas);
+                checkSelectedUsers();
             }
         });
     });
@@ -357,7 +378,7 @@
     $('#user-picker-modal').on('keypress', '#search-user-input', function(e) {
         
         if (e.keyCode === 13) {
-            event.preventDefault();
+            e.preventDefault();
             currentSearch = $(this).val();
             refreshUsersList();
         }
@@ -391,13 +412,6 @@
         createFilter();
         resetFilters(true, true, true);
         refreshUsersList();
-        
-        console.log('GROUP:');
-        console.log(groupFilters);
-        console.log('ROLE:');
-        console.log(roleFilters);
-        console.log('WORKSPACE:');
-        console.log(workspaceFilters);
     });
     
     $('#user-picker-modal').on('click', '.delete-filter-btn', function () {
@@ -407,12 +421,19 @@
         deleteFilter(type, parseInt(value));
         parentElement.remove();
         refreshUsersList();
+    });
+    
+    $('#user-picker-modal').on('click', '.picker-user-chk', function () {
+        var userId = $(this).val();
         
-        console.log('GROUP:');
-        console.log(groupFilters);
-        console.log('ROLE:');
-        console.log(roleFilters);
-        console.log('WORKSPACE:');
-        console.log(workspaceFilters);
+        if ($(this).prop('checked')) {
+            var firstName = $(this).data('user-first-name');
+            var lastName = $(this).data('user-last-name');
+            var username = $(this).data('user-username');
+            selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+        } else {
+            selectedUsers[userId] = null;
+        }
+        updateIdsArray('user');
     });
 })();
