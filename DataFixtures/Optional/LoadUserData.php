@@ -59,14 +59,14 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
     /**
      * {@inheritDoc}
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $objectManager)
     {
-        /** @var \CLaroline\CoreBundle\Manager\UserManager $userCreator */
+        /** @var \Claroline\CoreBundle\Manager\UserManager $userCreator */
         $userCreator = $this->container->get('claroline.manager.user_manager');
-        /** @var \CLaroline\CoreBundle\Manager\RoleManager $roleManager */
+        /** @var \Claroline\CoreBundle\Manager\RoleManager $roleManager */
         $roleManager = $this->container->get('claroline.manager.role_manager');
-        /** @var \CLaroline\CoreBundle\Repository\ResourceNodeRepository $resourceRepo */
-        $resourceRepo = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
+        /** @var \Claroline\CoreBundle\Repository\ResourceNodeRepository $resourceRepo */
+        $resourceRepo = $objectManager->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
 
         foreach ($this->users as $names => $role) {
             $namesArray = explode(' ', $names);
@@ -81,6 +81,7 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
             $user->setUserName($username);
             $user->setPlainPassword($username);
             $user->setMail('mail_' . uniqid() . '@claroline.net');
+            $objectManager->persist($user);
             $roleManager->associateRole($user, $this->getReference("role/{$role}"));
 
             if ($this->withWorkspace) {
@@ -91,12 +92,12 @@ class LoadUserData extends AbstractFixture implements ContainerAwareInterface
                     $resourceRepo->findWorkspaceRoot($user->getPersonalWorkspace())
                 );
             } else {
-                $manager->persist($user);
+                $objectManager->persist($user);
             }
 
             $this->addReference("user/{$names}", $user);
 
-            $manager->flush();
+            $objectManager->flush();
         }
     }
 }
