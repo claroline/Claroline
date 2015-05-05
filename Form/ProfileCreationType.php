@@ -86,6 +86,7 @@ class ProfileCreationType extends AbstractType
                 'entity',
                 array(
                     'label' => 'roles',
+                    'choice_translation_domain' => true,
                     'mapped' => false,
                     'data' => $this->platformRoles,
                     'class' => 'Claroline\CoreBundle\Entity\Role',

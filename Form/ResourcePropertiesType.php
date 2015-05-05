@@ -72,6 +72,7 @@ class ResourcePropertiesType extends AbstractType
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
+                'choice_translation_domain' => true,
                 'expanded' => false,
                 'multiple' => false,
                 'property' => 'name',

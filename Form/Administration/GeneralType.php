@@ -96,6 +96,7 @@ class GeneralType extends AbstractType
                     'mapped' => false,
                     'data' => $this->role,
                     'class' => 'Claroline\CoreBundle\Entity\Role',
+                    'choice_translation_domain' => true,
                     'expanded' => false,
                     'multiple' => false,
                     'property' => 'translationKey',

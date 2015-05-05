@@ -37,6 +37,7 @@ class GroupSettingsType extends GroupType
             array(
                 'label' => 'roles',
                 'class' => 'Claroline\CoreBundle\Entity\Role',
+                'choice_translation_domain' => true,
                 'data' => $this->roles,
                 'mapped' => false,
                 'expanded' => true,
