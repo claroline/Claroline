@@ -11,34 +11,83 @@
 namespace Claroline\AgendaBundle\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
+use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\Version;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MigrationUpdater extends Updater
 {
     private $container;
-    private $om;
+    private $conn;
+    private $em;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->om = $container->get('doctrine.orm.entity_manager');
+        $this->conn = $container->get('database_connection');
+        $this->em = $container->get('doctrine.orm.entity_manager');
     }
 
     public function preInstall()
     {
-        $this->log('Updating migration versions...');
-        $conn = $this->om->getConnection();
-        $schemaManager = $conn->getSchemaManager();
-        $tables = $schemaManager->listTables();
-        $found = false;
+        $this->skipInstallIfMigratingFromCore();
+    }
 
-        foreach ($tables as $table) {
-            if ($table->getName() === 'claro_event') $found = true;
-        }
+    public function postInstall()
+    {
+        $this->reusePreviousExtensionIfAny('tool');
+        $this->reusePreviousExtensionIfAny('widget');
+    }
 
-        if ($found) {
-            $this->log('Inserting migration 20150429110105');
-            $conn->query("INSERT INTO doctrine_clarolineagendabundle_versions (version) VALUES (20150429110105)");
+    private function skipInstallIfMigratingFromCore()
+    {
+        if ($this->conn->getSchemaManager()->tablesExist(['claro_event'])) {
+            $this->log('Found existing database schema: skipping install migration...');
+            $config = new Configuration($this->conn);
+            $config->setMigrationsTableName('doctrine_clarolineagendabundle_versions');
+            $config->setMigrationsNamespace('claro_event'); // required but useless
+            $config->setMigrationsDirectory('claro_event'); // idem
+            $version = new Version($config, '20150429110105', 'stdClass');
+            $version->markMigrated();
         }
+    }
+
+    private function reusePreviousExtensionIfAny($type)
+    {
+        if ($previous = $this->find($type, 'agenda')) {
+            $this->log("Re-using previous agenda {$type}...");
+            $current = $this->find($type, 'agenda_');
+            $current->setName('agenda_tmp');
+            $this->em->flush();
+            $previous->setName('agenda_');
+            $previous->setPlugin($current->getPlugin());
+            $this->em->flush();
+            $this->delete($type, 'agenda_tmp');
+        }
+    }
+
+    private function find($type, $name)
+    {
+        return $this->em
+            ->getRepository($this->getClassFromType($type))
+            ->findOneBy(['name' => $name]);
+    }
+
+    private function delete($type, $name)
+    {
+        $this->em->createQueryBuilder()
+            ->delete()
+            ->from($this->getClassFromType($type), 't')
+            ->where('t.name = :name')
+            ->getQuery()
+            ->setParameter(':name', $name)
+            ->execute();
+    }
+
+    private function getClassFromType($type)
+    {
+        return $type === 'tool' ?
+            'Claroline\CoreBundle\Entity\Tool\Tool' :
+            'Claroline\CoreBundle\Entity\Widget\Widget';
     }
 }
