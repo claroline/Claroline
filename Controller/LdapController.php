@@ -123,22 +123,6 @@ class LdapController extends Controller
     }
 
     /**
-     * @Route("/usercreation/{state}", name="claro_admin_ldap_check_user_creation", options = {"expose"=true})
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function checkUserCreationAction($state)
-    {
-        $state = $state === 'true' ? true : false;
-
-        if ($this->ldap->checkUserCreation($state)) {
-            return new Response('true');
-        }
-
-        return new Response('false');
-    }
-
-    /**
      * @Route("/delte/{name}", name="claro_admin_ldap_delete", options = {"expose"=true})
      *
      * @return \Symfony\Component\HttpFoundation\Response

@@ -36,14 +36,32 @@ class LdapType extends AbstractType
             'host',
             'text',
             array(
-                'label' => 'platform_parameters_form_host',
+                'label' => 'host',
                 'constraints' => array(new NotBlank())
             )
         )
-        ->add('port', 'number', array('label' => 'platform_parameters_form_port'))
+        ->add('port', 'number', array('label' => 'port'))
         ->add('dn', 'text', array('label' => 'distinguished_name'))
         ->add('user', 'text', array('label' => 'username'))
-        ->add('password', 'password', array('label' => 'password'));
+        ->add('password', 'password', array('label' => 'password'))
+        ->add(
+            'protocol_version',
+            'choice',
+            array(
+                'choices' => array('1' => '1', '2' => '2', '3' => '3'),
+                'required' => true,
+                'label' => 'protocol_version',
+                'data' => 3
+            )
+        );
+        $builder->add('append_dn', 'checkbox', array(
+            'label'     => 'append_dn',
+            'required'  => false,
+        ));
+        $builder->add('auto_creation', 'checkbox', array(
+            'label'     => 'auto_creation',
+            'required'  => false,
+        ));
     }
 
     public function getName()
@@ -53,6 +71,6 @@ class LdapType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array('translation_domain' => 'ldap'));
     }
 }

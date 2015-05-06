@@ -17,3 +17,12 @@ ldap_save_groups_settings_error: In order to save the settings, you must provide
 ldap_save_users_settings_error: In order to save the settings, you must provide the username, name, last name, email and password
 ldap_user_class: User class
 users_settings: Users settings
+name: Name
+host: Host
+port: Port
+distinguished_name: DN
+username: Username
+password: Password
+protocol_version: Version
+append_dn: Concat dn
+auto_creation: Create user if missing

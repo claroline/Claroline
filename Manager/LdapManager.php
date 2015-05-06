@@ -37,24 +37,25 @@ class LdapManager
 
     /**
      * This method create the LDAP link identifier on success and test the connection.
-     *
-     * @param server An array containing LDAP informations as host, port or dn.
+     * @param server   An array containing LDAP informations as host, port or dn.
      *
      * @return boolean
      */
     public function connect($server, $user = null, $password = null)
     {
-        if ($server and isset($server['host'])) {
-            if (isset($server['port']) and is_long($server['port'])) {
+        if ($server && isset($server['host'])) {
+            if (isset($server['port']) && is_long($server['port'])) {
                 $this->connect = ldap_connect($server['host'], $server['port']);
             } else {
                 $this->connect = ldap_connect($server['host']);
             }
 
-            if ($this->connect and $user and $password) {
-                return @ldap_bind($this->connect, $user, $password);
+            ldap_set_option($this->connect, LDAP_OPT_PROTOCOL_VERSION, $server['protocol_version']);
+
+            if ($this->connect && $user && $password) {
+                return ldap_bind($this->connect, $user, $password);
             } else if ($this->connect) {
-                return @ldap_bind($this->connect);
+                return ldap_bind($this->connect);
             }
         }
     }
@@ -65,6 +66,39 @@ class LdapManager
     public function close()
     {
         ldap_close($this->connect);
+    }
+
+    public function findUser($server, $user)
+    {
+        $server = $this->get($server);
+        $filter = '(&(objectClass=' . $server['objectClass'] . '))';
+        $search = ldap_search(
+            $this->connect,
+            $this->prepareUsername($server, $user),
+            $filter,
+            array(
+                $server['userName'],
+                $server['firstName'],
+                $server['lastName'],
+                $server['email'],
+                'userpassword'
+            )
+        );
+
+        $entries = $this->getEntries($search);
+        $user = array();
+
+        foreach ($entries as $entry) {
+            if ($entry) {
+                $user['username'] = $entry[$server['userName']][0];
+                $user['first_name'] = $entry[$server['firstName']][0];
+                $user['last_name'] = $entry[$server['lastName']][0];
+                $user['email'] = $entry[$server['email']][0];
+                $user['password'] = $entry['userpassword'][0];
+            }
+        }
+
+        return $user;
     }
 
     /**
@@ -127,20 +161,6 @@ class LdapManager
     }
 
     /**
-     * Change configuration of automatic user creation when loggin by LDAP
-     *
-     * @param state A boolean
-     *
-     * @return boolean
-     */
-    public function checkUserCreation($state)
-    {
-        $this->config['userCreation'] = $state;
-
-        return $this->saveConfig();
-    }
-
-    /**
      * Delete a server configuration if the newest one replace it.
      *
      * @param name The name of the server
@@ -196,7 +216,7 @@ class LdapManager
             $this->config['servers'][$server['name']] = $server;
         }
 
-        return file_put_contents($this->path, $this->dumper->dump($this->config));
+        return file_put_contents($this->path, $this->dumper->dump($this->config, 3));
     }
 
     /**
@@ -320,8 +340,19 @@ class LdapManager
      */
     public function authenticate($name, $user, $password)
     {
-        if ($this->connect($this->get($name), $user, $password)) {
+        $server = $this->get($name);
+
+        if ($this->connect($server, $this->prepareUsername($server, $user), $password)) {
             return true;
         }
+    }
+
+    private function prepareUsername($server, $user)
+    {
+        if ($server['append_dn']) {
+            return $server['userName'] . '=' . $user . ',' . $server['dn'];
+        }
+
+        return $user;
     }
 }
