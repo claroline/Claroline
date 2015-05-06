@@ -14,6 +14,7 @@
     var currentMax = $('#user-picker-datas-box').data('max');
     var currentOrderedBy = $('#user-picker-datas-box').data('ordered-by');
     var currentOrder = $('#user-picker-datas-box').data('order');
+    var currentMode = $('#user-picker-datas-box').data('mode');
     var filterType = 'none';
     var secondFilterValue = 'none';
     var secondFilterName = 'none';
@@ -389,6 +390,11 @@
         $('#selected-user-label-' + userId).remove();
     }
     
+    function emptySelectedUsersBox()
+    {
+        $('#selected-users-list-box').empty();
+    }
+    
     function refreshUsersList()
     {
         var route = currentSearch === '' ?
@@ -397,7 +403,8 @@
                 {
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
-                    'order': currentOrder
+                    'order': currentOrder,
+                    'mode': currentMode
                 }
             ) :
             Routing.generate(
@@ -406,7 +413,8 @@
                     'search': currentSearch,
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
-                    'order': currentOrder
+                    'order': currentOrder,
+                    'mode': currentMode
                 }
             );
         route += '?' + $.param(parameters);
@@ -497,16 +505,27 @@
     $('#user-picker-modal').on('click', '.picker-user-chk', function () {
         var userId = $(this).val();
         
-        if ($(this).prop('checked')) {
+        if (currentMode === 'multiple') {
+            
+            if ($(this).prop('checked')) {
+                var firstName = $(this).data('user-first-name');
+                var lastName = $(this).data('user-last-name');
+                var username = $(this).data('user-username');
+                selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+                addUserToSelectedUsersBox(userId, selectedUsers[userId]);
+            } else {
+                selectedUsers[userId] = null;
+                removeUserFromSelectedUsersBox(userId);
+            }
+        } else if (currentMode === 'single') {
             var firstName = $(this).data('user-first-name');
             var lastName = $(this).data('user-last-name');
             var username = $(this).data('user-username');
+            emptySelectedUsersBox();
+            selectedUsers = [];
             selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
             addUserToSelectedUsersBox(userId, selectedUsers[userId]);
-        } else {
-            selectedUsers[userId] = null;
-            removeUserFromSelectedUsersBox(userId);
-        }
+        } 
         updateIdsArray('user');
         updateSelectedUsersBadge();
     });

@@ -6,9 +6,11 @@
             <input type="text"
                    class="form-control user-picker"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
+                   data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
             >
             <span class="input-group-btn">
                 <button class="btn btn-default user-picker"
+                        data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
                         type="button"
                 >
                     <i class="fa fa-user"></i>

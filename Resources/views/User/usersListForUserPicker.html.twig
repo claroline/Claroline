@@ -1,4 +1,4 @@
-{% macro renderPager(pager, search, max, orderedBy, order) %}
+{% macro renderPager(pager, search, max, orderedBy, order, mode) %}
     {% if search is empty %}
         {{
             pagerfanta(
@@ -10,7 +10,8 @@
                     'routeParams': {
                         'max': max,
                         'orderedBy': orderedBy,
-                        'order': order
+                        'order': order,
+                        'mode': mode
                     }
                 }
             )
@@ -27,7 +28,8 @@
                         'search': search,
                         'max': max,
                         'orderedBy': orderedBy,
-                        'order': order
+                        'order': order,
+                        'mode': mode
                     }
                 }
             )
@@ -35,7 +37,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(search, max, orderedBy, order) %}
+{% macro sortUrl(search, max, orderedBy, order, mode) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
     {% else %}
@@ -49,7 +51,8 @@
                 'search': search,
                 'max': max,
                 'orderedBy': orderedBy,
-                'order': newOrder
+                'order': newOrder,
+                'mode': mode
             }
         )
     }}
@@ -95,14 +98,16 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order) }}
-{% endif %}
+    {{ renderPager(users, search, max, orderedBy, order, mode) }}
+{% endif %}{{ mode }}
 <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
                 <th class="text-center">
-                    <input type="checkbox" id="picker-all-users-chk">
+                    {% if mode == 'multiple' %}
+                        <input type="checkbox" id="picker-all-users-chk">
+                    {% endif %}
                 </th>
                 <th>{{ 'name'|trans({}, 'platform') }}</th>
                 <th>{{ 'username'|trans({}, 'platform') }}</th>
@@ -113,14 +118,26 @@
             {% for user in users %}
                 <tr>
                     <td class="text-center">
-                        <input type="checkbox"
-                               class="picker-user-chk"
-                               id="picker-user-chk-{{ user.getId() }}"
-                               value="{{ user.getId() }}"
-                               data-user-first-name="{{ user.getFirstName() }}"
-                               data-user-last-name="{{ user.getLastName() }}"
-                               data-user-username="{{ user.getUsername() }}"
-                        >
+                        {% if mode == 'multiple' %}
+                            <input type="checkbox"
+                                   class="picker-user-chk"
+                                   id="picker-user-chk-{{ user.getId() }}"
+                                   value="{{ user.getId() }}"
+                                   data-user-first-name="{{ user.getFirstName() }}"
+                                   data-user-last-name="{{ user.getLastName() }}"
+                                   data-user-username="{{ user.getUsername() }}"
+                            >
+                        {% elseif mode == 'single' %}
+                            <input type="radio"
+                                   name="picker-user-radio"
+                                   class="picker-user-chk"
+                                   id="picker-user-chk-{{ user.getId() }}"
+                                   value="{{ user.getId() }}"
+                                   data-user-first-name="{{ user.getFirstName() }}"
+                                   data-user-last-name="{{ user.getLastName() }}"
+                                   data-user-username="{{ user.getUsername() }}"
+                            >
+                        {% endif %}
                     </td>
                     <td>{{ user.getFirstName() }} {{ user.getLastName() }}</td>
                     <td>{{ user.getUsername() }}</td>
@@ -131,7 +148,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode) }}
 {% endif %}
 
 <div id="user-picker-datas-box"
@@ -140,4 +157,5 @@
      data-max="{{ max }}"
      data-ordered-by="{{ orderedBy }}"
      data-order="{{ order }}"
+     data-mode="{{ mode }}"
 </div>

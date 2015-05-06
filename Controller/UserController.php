@@ -71,29 +71,30 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker",
+     *     "user/picker/mode/{mode}",
      *     name="claro_user_picker",
+     *     defaults={"mode"="multiple"},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function userPickerAction()
+    public function userPickerAction($mode = 'mutiple')
     {
-        return array();
+        return array('mode' => $mode);
     }
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
      *     name="claro_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"=""},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple"},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "users/list/for/user/picker/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
      *     name="claro_searched_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"=""},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple"},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -123,7 +124,8 @@ class UserController extends Controller
         $page = 1,
         $max = 50,
         $orderedBy = 'lastName',
-        $order = 'ASC'
+        $order = 'ASC',
+        $mode = 'multiple'
     )
     {
         $users = $this->userManager->getUsersForUserPicker(
@@ -145,7 +147,8 @@ class UserController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'mode' => $mode
         );
     }
 
