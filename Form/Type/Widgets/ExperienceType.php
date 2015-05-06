@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
@@ -59,7 +59,7 @@ class ExperienceType extends AbstractWidgetType
         return 'icap_portfolio_widget_form_experience';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

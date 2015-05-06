@@ -4,7 +4,7 @@ namespace Icap\PortfolioBundle\Form\Type;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\FormType

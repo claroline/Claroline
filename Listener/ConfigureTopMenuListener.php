@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Menu\ItemInterface;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service()
@@ -14,7 +14,7 @@ use Symfony\Component\Translation\DataCollectorTranslator;
 class ConfigureTopMenuListener
 {
     /**
-     * @var DataCollectorTranslator
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -29,7 +29,7 @@ class ConfigureTopMenuListener
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
-    public function __construct(DataCollectorTranslator $translator, PlatformConfigurationHandler $platformConfigHandler)
+    public function __construct(TranslatorInterface $translator, PlatformConfigurationHandler $platformConfigHandler)
     {
         $this->translator = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
