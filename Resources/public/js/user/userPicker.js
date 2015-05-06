@@ -511,6 +511,29 @@
         updateSelectedUsersBadge();
     });
     
+    $('#user-picker-modal').on('click', '#picker-all-users-chk', function () {
+        if ($(this).prop('checked')) {
+            $('.picker-user-chk').each(function () {
+                $(this).prop('checked', true);
+                var userId = $(this).val();
+                var firstName = $(this).data('user-first-name');
+                var lastName = $(this).data('user-last-name');
+                var username = $(this).data('user-username');
+                selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+                addUserToSelectedUsersBox(userId, selectedUsers[userId]);
+            });
+        } else {
+            $('.picker-user-chk').each(function () {
+                $(this).prop('checked', false);
+                var userId = $(this).val();
+                selectedUsers[userId] = null;
+                removeUserFromSelectedUsersBox(userId);
+            });
+        }
+        updateIdsArray('user');
+        updateSelectedUsersBadge();
+    });
+    
     $('#selected-users-list-box').on('click', '.remove-selected-user-btn', function () {
         var userId = $(this).data('user-id');
         selectedUsers[userId] = null;
