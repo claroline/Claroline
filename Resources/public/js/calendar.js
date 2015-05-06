@@ -121,6 +121,7 @@
             allDayText: t('isAllDay'),
             lazyFetching : false,
             fixedWeekCount: false,
+            eventLimit: 4,
             eventDrop: onEventDrop,
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
@@ -232,25 +233,7 @@
             tasksList.append(html);
         }
 
-        $('#calendar').fullCalendar(
-            'renderEvent',
-            {
-                id: event.id,
-                title: event.title,
-                start: event.start,
-                end: event.end,
-                allDay: event.allDay,
-                color: event.color,
-                description : event.description,
-                deletable: event.deletable,
-                editable: event.editable,
-                endFormatted: event.endFormatted,
-                startFormatted: event.startFormatted,
-                owner: event.owner,
-                isTask: event.isTask,
-                isTaskDone: event.isTaskDone
-            }
-        );
+        $('#calendar').fullCalendar('renderEvent', event);
     };
 
     var addItemsToCalendar = function (events) {
@@ -279,11 +262,7 @@
             'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             'type': 'POST',
             'success': function (event) {
-
-            },
-            'error': function () {
-                //do more error handling here
-                alert('error');
+                // Update the event to change the popover's data
                 updateCalendarItem(event);
             }
         });
@@ -342,10 +321,15 @@
     };
 
     var convertDateTimeToString = function () {
-        Twig.setFilter('convertDateTimeToString', function (value, isAllDay) {
+        Twig.setFilter('convertDateTimeToString', function (value, isAllDay, isEndDate) {
+            isEndDate = typeof isEndDate !== 'undefined' ? isEndDate : false;
             if (isAllDay) {
-                // We have to subtract 1 day for the all day event because, it end on the next day at midnight. For example, the end date of a all day event of the 05/04/15 will be on the 06/04/15 00:00. So for a better user experience, we subtract 1 day.
-                return moment(value).subtract(1, 'day').format('DD/MM/YYYY')
+                // We have to subtract 1 day for the all day events because it end on the next day at midnight. So for a better user's experience, we subtract 1 day for the end date.
+                if (isEndDate) {
+                    return moment(value).subtract(1, 'day').format('DD/MM/YYYY');
+                } else {
+                    return moment(value).format('DD/MM/YYYY');
+                }
             } else {
                 return moment(value).format('DD/MM/YYYY HH:mm');
             }

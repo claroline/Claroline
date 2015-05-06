@@ -265,7 +265,7 @@ class AgendaManager
         $startDate->setTimeStamp($start);
         $startIso = $startDate->format(\DateTime::ISO8601);
         $endDate = new \DateTime();
-        $endDate->setTimeStamp($end);
+        $startDate->setTimeStamp($end);
         $endIso = $startDate->format(\DateTime::ISO8601);
 
         return array(
@@ -285,7 +285,8 @@ class AgendaManager
             'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
             'endHours' => $event->getEndHours(),
             'startHours' => $event->getStartHours(),
-            'className' => 'event_' . $event->getId()
+            'className' => 'event_' . $event->getId(),
+            'durationEditable' => !$event->isTask() // If it's a task, disable resizing
         );
     }
 

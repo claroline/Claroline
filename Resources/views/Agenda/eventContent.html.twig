@@ -3,8 +3,8 @@
 {% if event.isTask %}
     <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay) }}</div>
 {% else %}
-    <div>{{ 'agenda_form_start'|trans({}, 'agenda') }}: {{ event.start._i|convertDateTimeToString(event.allDay) }}</div>
-    <div>{{ 'agenda_form_end'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay) }}</div>
+        <div>{{ 'agenda_form_start'|trans({}, 'agenda') }}: {{ event.start._i|convertDateTimeToString(event.allDay) }}</div>
+        <div>{{ 'agenda_form_end'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
 {% endif %}
 
 <div>{{ 'agenda_form_author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
