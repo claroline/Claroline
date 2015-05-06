@@ -16,6 +16,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\SimpleFormAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -57,9 +58,9 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
     {
         try {
             $user = $userProvider->loadUserByUsername($token->getUsername());
-            $this->authenticate($user);
+            return $this->authenticate($user, $token, $providerKey);
         } catch (UsernameNotFoundException $e) {
-            //$this->searchInProviders($token);
+            return $this->getFromProviders($token, $providerKey);
         }
     }
 
@@ -74,7 +75,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
         return new UsernamePasswordToken($username, $password, $providerKey);
     }
 
-    private function searchInProviders(TokenInterface $token)
+    private function getFromProviders(TokenInterface $token, $providerKey)
     {
         $drivers = $this->authenticationManager->getDrivers();
 
@@ -82,12 +83,24 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
             $found = $this->authenticationManager->authenticate($driver, $token->getUsername(), $token->getCredentials());
 
             if ($found) {
+                $data = $this->authenticationManager->findUser($driver, $token->getUsername());
+                $user = new User();
+                $user->setFirstName($data['first_name']);
+                $user->setPlainPassword($data['password']);
+                $user->setLastName($data['last_name']);
+                $user->setUsername($data['username']);
+                $user->setMail($data['email']);
+                $user->setAuthentication($driver);
+                $iser = $this->userManager->createUser($user, false);
 
+                return new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
             }
         }
+
+        throw new AuthenticationException('Invalid username or password');
     }
 
-    private function authenticate(User $user)
+    private function authenticate(User $user, TokenInterface $token, $providerKey)
     {
         $encoder = $this->encoderFactory->getEncoder($user);
         $passwordValid = $encoder->isPasswordValid(
