@@ -6,6 +6,19 @@ use Icap\BadgeBundle\Installation\Updater\Updater040100;
 
 class AdditionalInstaller extends BaseInstaller
 {
+    public function preInstall()
+    {
+        $updater = new Updater\MigrationUpdater($this->container);
+        $updater->setLogger($this->logger);
+        $updater->preInstall();
+    }
+
+    public function postInstall()
+    {
+        $updater = new Updater\MigrationUpdater($this->container);
+        $updater->setLogger($this->logger);
+        $updater->postInstall();
+    }
     public function postUpdate($currentVersion, $targetVersion)
     {
         if (version_compare($currentVersion, '4.0.0', '<')) {
