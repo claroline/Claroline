@@ -7,7 +7,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 /**
  * @DI\FormType

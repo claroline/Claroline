@@ -19,7 +19,7 @@ class WidgetFactory
     /** @var WidgetTypeManager  */
     protected $widgetTypeManager;
 
-    /** @var Translator  */
+    /** @var TranslatorInterface  */
     protected $translator;
 
     /**

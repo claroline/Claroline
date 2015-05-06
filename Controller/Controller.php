@@ -18,7 +18,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\Translation\Translator
+     * @return \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface
      */
     public function getSessionFlashbag()
     {
