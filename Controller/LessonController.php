@@ -37,7 +37,7 @@ class LessonController extends Controller
     protected function checkAccess($permission, Lesson $lesson)
     {
         $collection = new ResourceCollection(array($lesson->getResourceNode()));
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
