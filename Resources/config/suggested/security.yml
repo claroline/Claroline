@@ -38,7 +38,6 @@ security:
             simple_form:
                 authenticator: claroline.core_bundle.library.security.external_authenticator
                 check_path: /login_check
-                login_path: /login
             form_login:
                 success_handler: claroline.authentication_handler
                 failure_handler: claroline.security.ajax_authentication_failure_handler
