@@ -76,6 +76,13 @@ class AuthenticationManager
         }
     }
 
+    public function findUser($driver, $user)
+    {
+        $service = $this->getService($driver);
+
+        return $service->findUser($this->getServerName($driver), $user);
+    }
+
     /**
      * Return authentication driver manager
      *
@@ -105,4 +112,3 @@ class AuthenticationManager
     }
 
 }
-
