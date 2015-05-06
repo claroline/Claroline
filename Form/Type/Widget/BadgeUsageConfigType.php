@@ -5,7 +5,7 @@ namespace Icap\BadgeBundle\Form\Type\Widget;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\FormType(alias="badge_usage_widget_config")
@@ -28,7 +28,7 @@ class BadgeUsageConfigType extends AbstractType
         return 'badge_usage_widget_config';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

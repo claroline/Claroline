@@ -7,9 +7,9 @@ use Doctrine\ORM\EntityRepository;
 use Icap\BadgeBundle\Repository\BadgeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("icap_badge.form.badge.collection")
@@ -22,27 +22,27 @@ class BadgeCollectionType extends AbstractType
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
 
-    /** @var SecurityContext */
-    private $securityContext;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *     "badgeRepository"       = @DI\Inject("icap_badge.repository.badge"),
+     *     "badgeRepository" = @DI\Inject("icap_badge.repository.badge"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "securityContext"       = @DI\Inject("security.context")
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(BadgeRepository $badgeRepository, PlatformConfigurationHandler $platformConfigHandler, SecurityContext $securityContext)
+    public function __construct(BadgeRepository $badgeRepository, PlatformConfigurationHandler $platformConfigHandler, TokenStorageInterface $tokenStorage)
     {
-        $this->badgeRepository       = $badgeRepository;
+        $this->badgeRepository = $badgeRepository;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->securityContext       = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $builder
             ->add('name', 'text')
@@ -68,7 +68,7 @@ class BadgeCollectionType extends AbstractType
         return 'badge_collection_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

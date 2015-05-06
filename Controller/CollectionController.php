@@ -26,7 +26,7 @@ class CollectionController extends Controller
             throw $this->createNotFoundException("Collection not shared.");
         }
 
-        if (!$this->container->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->container->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $showBanner = false;
         }
         else {

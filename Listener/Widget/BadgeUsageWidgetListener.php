@@ -8,7 +8,6 @@ use Icap\BadgeBundle\Manager\BadgeManager;
 use Icap\BadgeBundle\Manager\BadgeWidgetManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

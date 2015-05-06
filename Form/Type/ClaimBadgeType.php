@@ -5,9 +5,9 @@ namespace Icap\BadgeBundle\Form\Type;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -21,27 +21,27 @@ class ClaimBadgeType extends AbstractType
     /** @var PlatformConfigurationHandler */
     private $platformConfigHandler;
 
-    /** @var \Symfony\Component\Security\Core\SecurityContextInterface */
-    private $securityContext;
+    /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
-     *     "translator"            = @DI\Inject("translator"),
+     *     "translator" = @DI\Inject("translator"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "securityContext"       = @DI\Inject("security.context")
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(TranslatorInterface $translator, PlatformConfigurationHandler $platformConfigHandler, SecurityContextInterface $securityContext)
+    public function __construct(TranslatorInterface $translator, PlatformConfigurationHandler $platformConfigHandler, TokenStorageInterface $tokenStorage)
     {
-        $this->translator            = $translator;
+        $this->translator = $translator;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->securityContext       = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $locale = (null === $user->getLocale()) ? $this->platformConfigHandler->getParameter("locale_language") : $user->getLocale();
 
@@ -62,7 +62,7 @@ class ClaimBadgeType extends AbstractType
         return 'badge_claim_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

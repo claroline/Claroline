@@ -6,7 +6,7 @@ use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("icap_badge.entity_listener.badge")
@@ -17,19 +17,19 @@ class LocaleSetterListener
     /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
     private $platformConfigHandler;
 
-    /** @var \Symfony\Component\Security\Core\SecurityContext */
-    private $securityContext;
+    /** @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface */
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "securityContext"       = @DI\Inject("security.context")
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(PlatformConfigurationHandler $platformConfigHandler, SecurityContext $securityContext)
+    public function __construct(PlatformConfigurationHandler $platformConfigHandler, TokenStorageInterface $tokenStorage)
     {
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->securityContext       = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -43,7 +43,7 @@ class LocaleSetterListener
         $platformLocale = $this->platformConfigHandler->getParameter('locale_language');
         $userLocale = null;
 
-        if ($token = $this->securityContext->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             if ('anon.' !== $user = $token->getUser()) {
                 $userLocale = $user->getLocale();
             }

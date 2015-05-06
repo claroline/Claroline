@@ -445,7 +445,7 @@ class WorkspaceController extends Controller
 
     private function checkUserIsAllowed(Workspace $workspace)
     {
-        if (!$this->get('security.context')->isGranted('badges', $workspace)) {
+        if (!$this->get('security.authorization_checker')->isGranted('badges', $workspace)) {
             throw new AccessDeniedException();
         }
     }

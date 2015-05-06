@@ -371,7 +371,7 @@ class AdministrationController extends Controller
         $badgeAdminTool = $this->container->get('claroline.manager.tool_manager')
             ->getAdminToolByName('badges_management');
 
-        if ($this->container->get('security.context')->isGranted('OPEN', $badgeAdminTool)) {
+        if ($this->container->get('security.authorization_checker')->isGranted('OPEN', $badgeAdminTool)) {
             return true;
         }
 
