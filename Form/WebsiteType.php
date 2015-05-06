@@ -10,7 +10,7 @@ namespace Icap\WebsiteBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 class WebsiteType extends AbstractType{
@@ -24,7 +24,7 @@ class WebsiteType extends AbstractType{
         return 'icap_website_type';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'icap_website',

@@ -28,7 +28,7 @@ class Controller extends BaseController{
     protected function checkAccess($permission, Website $website)
     {
         $collection = new ResourceCollection(array($website->getResourceNode()));
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
         //$logEvent = new LogResourceReadEvent($website->getResourceNode());
@@ -48,7 +48,7 @@ class Controller extends BaseController{
             $collection = new ResourceCollection(array($website->getResourceNode()));
         }
         $checkPermission = false;
-        if ($this->get('security.context')->isGranted($permission, $collection)) {
+        if ($this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             $checkPermission = true;
         }
         return $checkPermission;
@@ -90,7 +90,7 @@ class Controller extends BaseController{
      */
     protected function getLoggedUser()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if (is_string($user)) {
             $user = null;
         }
