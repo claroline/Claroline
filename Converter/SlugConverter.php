@@ -4,7 +4,6 @@ namespace Icap\BadgeBundle\Converter;
 
 use Icap\BadgeBundle\Repository\BadgeRepository;
 use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
