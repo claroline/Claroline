@@ -68,7 +68,7 @@ class EventRepository extends EntityRepository
 
     /**
      * @param User $user
-     * @param boolean $allDay
+     * @param boolean $isTask
      * @return array
      */
     public function findDesktop(User $user, $isTask)
@@ -130,7 +130,7 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getLastEventsForDesktop(User $user, $limit = null)
+    public function getFutureDesktopEvents(User $user, $limit = null)
     {
         $dql = "
             SELECT e
@@ -138,13 +138,13 @@ class EventRepository extends EntityRepository
             WHERE e.end > :dateEnd
             AND e.user = :userId
             AND e.isTask = false
+            AND e.workspace is null
             ORDER BY e.start ASC
         ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('dateEnd', time());
-
         if ($limit) {
             $query->setMaxResults($limit);
         }
@@ -152,21 +152,27 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function getLastEventsForWorkspace($workspaceId, $limit = null)
+    public function getFutureWorkspaceEvents($user)
     {
         $dql = "
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
-            WHERE e.workspace = :workspaceId
-            AND e.isTask = false
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            WHERE e.isTask = :isTask
+            AND e.end > :endDate
             ORDER BY e.start ASC
         ";
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('workspaceId', $workspaceId);
-
-        if ($limit) {
-            $query->setMaxResults($limit);
-        }
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('isTask', false);
+        $query->setParameter('endDate', time());
 
         return $query->getResult();
     }

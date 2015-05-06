@@ -1,18 +1,16 @@
 {% for event in listEvents %}
     <div>
         <span class="fa fa-calendar"></span>
-        {% if event.start|date('d/m/Y') == date('+1day')|date('d/m/Y') %}
+        {% if event.start|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
             {{ 'tomorrow'|trans({}, 'agenda') }},
         {% elseif event.start|date('d/m/Y') == date('now')|date('d/m/Y') %}
-            {% if event.start|date('U') - date('now')|date('U') <= 0 %}
-                {{ 'now'|trans({}, 'agenda') }},
-            {% else %}
-                {{ 'today_widget'|trans({}, 'agenda') }},
-            {% endif %}
+            {{ 'today_widget'|trans({}, 'agenda') }},
+        {% elseif event.start|date('U') - date('now')|date('U') <= 0 %}
+            {{ 'now'|trans({}, 'agenda') }},
         {% elseif event.start|date('U') - date('now')|date('U') < 518400 %}
-                {{ 'in_x_days'|trans({
-                    '%nbDays%': ((event.start|date('U') - date('now')|date('U'))/86400)|round
-                }, 'agenda') }},
+            {{ 'in_x_days'|trans({
+                '%nbDays%': ((event.start|date('U') - date('now')|date('U'))/86400)|round
+            }, 'agenda') }},
         {% else %}
             {{ event.start|date('l')|lower()|trans({}, 'agenda') }}
             {{ event.start|date('d/m/Y') }},
@@ -20,9 +18,9 @@
         <div style="display: inline-block">
             <a href="
             {% if event.workspace is null %}
-                {{ path('claro_desktop_open_tool', {'toolName': 'agenda'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+                {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
             {% else %}
-                {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+                {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
             {% endif %}"
             class="info-of-event"
             tabindex="0"

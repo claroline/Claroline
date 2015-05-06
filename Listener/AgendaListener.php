@@ -90,7 +90,8 @@ class AgendaListener
     public function workspaceWidgetAgenda($id)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getLastEventsForWorkspace($id);
+        $user = $this->tokenStorage->getToken()->getUser();
+        $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureWorkspaceEvents($user);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
@@ -98,6 +99,7 @@ class AgendaListener
         );
     }
 
+    // TODO sort the list of events
     public function desktopWidgetAgenda()
     {
         if (!$this->request) {
@@ -106,11 +108,12 @@ class AgendaListener
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         $user = $this->tokenStorage->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->getLastEventsForDesktop($user);
+        $listDesktopEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureDesktopEvents($user);
+        $listWorkspaceEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureWorkspaceEvents($user);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => $listEventsDesktop)
+            array('listEvents' => array_merge($listDesktopEvents, $listWorkspaceEvents))
         );
     }
 

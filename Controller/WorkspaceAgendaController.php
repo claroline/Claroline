@@ -68,7 +68,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_show",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'OPEN'})")
+     * @SEC\PreAuthorize("canAccessWorkspace('agenda_', 'OPEN')")
      * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -86,7 +86,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     * @SEC\PreAuthorize("canAccessWorkspace('agenda_', 'edit')")
      * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      * @return array
      */
@@ -103,7 +103,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_import"
      * )
      * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     * @SEC\PreAuthorize("canAccessWorkspace('agenda_', 'edit')")
      * @param Workspace $workspace
      * @return array
      */
@@ -128,10 +128,11 @@ class WorkspaceAgendaController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     * @SEC\PreAuthorize("canAccessWorkspace('agenda_', 'edit')")
      * @param Workspace $workspace
      * @return array
      */
+
     public function addEventModalFormAction(Workspace $workspace)
     {
         $formType = $this->get('claroline.form.agenda');
@@ -153,7 +154,7 @@ class WorkspaceAgendaController extends Controller
      * )
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     * @SEC\PreAuthorize("canAccessWorkspace({'agenda_', 'edit'})")
      * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response

@@ -279,7 +279,7 @@ class AgendaManager
             'isTaskDone' => $event->isTaskDone(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
-            'editable' => $this->authorization->isGranted('EDIT', $event),
+            'editable' => $this->authorization->isGranted('edit', $event),
             'deletable' => $this->authorization->isGranted('DELETE', $event),
             'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
             'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,

@@ -141,18 +141,21 @@
     };
 
     var onEventClick = function (event, jsEvent) {
-        var $this = $(this);
-        // If click on the check symbol of a task, mark this task as "to do"
-        if ($(jsEvent.target).hasClass('fa-check')) {
-            markTaskAsToDo(event, jsEvent, $this);
-        }
-        // If click on the checkbox of a task, mark this task as done
-        else if ($(jsEvent.target).hasClass('fa-square-o')) {
-            markTaskAsDone(event, jsEvent, $this);
-        }
-        // Show the modal form if the user can edit the event
-        else if (event.editable) {
-            showEditForm(event);
+        // If the user can edit the event
+        if (event.editable) {
+            var $this = $(this);
+            // If click on the check symbol of a task, mark this task as "to do"
+            if ($(jsEvent.target).hasClass('fa-check')) {
+                markTaskAsToDo(event, jsEvent, $this);
+            }
+            // If click on the checkbox of a task, mark this task as done
+            else if ($(jsEvent.target).hasClass('fa-square-o')) {
+                markTaskAsDone(event, jsEvent, $this);
+            }
+            // Show the modal form
+            else {
+                showEditForm(event);
+            }
         }
     };
 
@@ -171,6 +174,7 @@
     var onEventRender = function (event, element) {
         // Events are unfiltered by default
         event.visible = event.visible === undefined ? true: event.visible;
+
         if (!event.visible) return false;
         renderEvent(event, element);
     };
