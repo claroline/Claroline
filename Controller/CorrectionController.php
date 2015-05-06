@@ -699,7 +699,7 @@ class CorrectionController extends DropzoneBaseController
             ->getDoctrine()
             ->getRepository('IcapDropzoneBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
             if ($correction->getDrop()->getUser()->getId() != $userId) {
                 throw new AccessDeniedException();
@@ -1289,7 +1289,7 @@ class CorrectionController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
         // if loggued user is not the drop owner and is not admin.
-        if (false === $this->get('security.context')->isGranted('ROLE_ADMIN') && $this->get('security.context')->getToken()->getUser()->getId() != $dropUser->getId()) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $this->get('security.authorization_checker')->getToken()->getUser()->getId() != $dropUser->getId()) {
             throw new AccessDeniedException();
         }
 

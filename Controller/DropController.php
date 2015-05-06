@@ -702,9 +702,9 @@ class DropController extends DropzoneBaseController
         // check  if the User is allowed to open the dropZone.
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         // getting the userId to check if the current drop owner match with the loggued user.
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
-        $isAllowedToEdit = $this->get('security.context')->isGranted('EDIT', $collection);
+        $isAllowedToEdit = $this->get('security.authorization_checker')->isGranted('EDIT', $collection);
 
 
         // getting the data
