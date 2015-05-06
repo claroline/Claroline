@@ -114,9 +114,9 @@ class PostController extends Controller
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $postStatus = Comment::STATUS_UNPUBLISHED;
+        $postStatus = Post::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishPost()) {
-            $postStatus = Comment::STATUS_PUBLISHED;
+            $postStatus = Post::STATUS_PUBLISHED;
         }
         $post = new Post();
         $post
@@ -124,6 +124,10 @@ class PostController extends Controller
             ->setAuthor($this->getUser())
             ->setStatus($postStatus)
         ;
+
+        if ($postStatus === Post::STATUS_PUBLISHED) {
+            $post->setPublicationDate(new \DateTime());
+        }
 
         $translator = $this->get('translator');
 

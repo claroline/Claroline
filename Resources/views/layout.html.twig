@@ -114,7 +114,7 @@
                     </a>
                 {% endif %}
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+                    {{ render(controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class})) }}
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}
                     <div class="btn-group">
