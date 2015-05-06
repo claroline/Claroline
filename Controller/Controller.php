@@ -35,7 +35,7 @@ class Controller extends BaseController
     protected function checkAccess($permission, Wiki $wiki)
     {
         $collection = new ResourceCollection(array($wiki->getResourceNode()));
-        if (!$this->get('security.context')->isGranted($permission, $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 
@@ -56,7 +56,7 @@ class Controller extends BaseController
             $collection = new ResourceCollection(array($wiki->getResourceNode()));
         }
         $checkPermission = false;
-        if ($this->get('security.context')->isGranted($permission, $collection)) {
+        if ($this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             $checkPermission = true;
         }
 
@@ -260,7 +260,7 @@ class Controller extends BaseController
      */
     protected function getLoggedUser()
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         if (is_string($user)) {
             $user = null;
         }
