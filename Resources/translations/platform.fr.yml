@@ -392,6 +392,7 @@ file_form_shareType_0: Oui
 file_form_shareType_1: Non
 files: Fichiers
 filter: Filtrer
+filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
 firstName: Prénom
 first_name: Prénom
@@ -615,8 +616,8 @@ no_action_found: Aucune action trouvée.
 no_activity_in_workspace: Cet espace ne contient actuellement aucune activité.
 no_category: 'Il n''y a aucune catégorie'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
+no_filter: 'Aucun filtre'
 no_group: 'Aucun groupe'
-no_group: Il n'y a aucun groupe.
 no_home_tab: 'Il n''y a aucun onglet'
 no_learning_outcomes: 'Aucun référentiel de compétences'
 no_message: 'Aucun message'

@@ -289,6 +289,8 @@
             default:
                 break;
         }
+        displayFilterCreationBox(0);
+        updateFiltersBadge();
     }
     
     function deleteFilter(type, value)
@@ -312,6 +314,7 @@
             default:
                 break;
         }
+        updateFiltersBadge();
     }
     
     function checkSelectedUsers()
@@ -328,7 +331,41 @@
     
     function updateSelectedUsersBadge()
     {
-        $('#selected-users-box-badge').html(userIds.length);
+        var nbUsers = userIds.length;
+        $('#selected-users-box-badge').html(nbUsers);
+        
+        if (nbUsers === 0) {
+            $('#no-user-alert').show('slow', function () {});
+        } else {
+            $('#no-user-alert').hide('slow', function () {});
+        }
+    }
+    
+    function updateFiltersBadge()
+    {
+        var nbFilters = groupIds.length + roleIds.length + workspaceIds.length;
+        $('#filters-box-badge').html(nbFilters);
+        
+        if (nbFilters === 0) {
+            $('#no-filter-alert').show('slow', function () {});
+        } else {
+            $('#no-filter-alert').hide('slow', function () {});
+        }
+    }
+    
+    function displayFilterCreationBox(mode)
+    {
+        if (mode === 1) {
+            $('#show-filter-creation-box-btn').hide('slow', function () {});
+            $('#filter-creation-box').show('slow', function () {
+                $('#filter-creation-box').removeClass('hidden');
+            });
+        } else {
+            $('#filter-creation-box').hide('slow', function () {});
+            $('#show-filter-creation-box-btn').show('slow', function () {
+                $('#show-filter-creation-box-btn').removeClass('hidden');
+            });
+        }
     }
     
     function addUserToSelectedUsersBox(userId, name)
@@ -417,6 +454,10 @@
     $('#user-picker-modal').on('change', '#max-select', function () {
         currentMax = $(this).val();
         refreshUsersList();
+    });
+    
+    $('#user-picker-modal').on('click', '#show-filter-creation-box-btn', function () {
+        displayFilterCreationBox(1);
     });
     
     $('#user-picker-modal').on('change', '#filter-level-1', function () {

@@ -356,6 +356,7 @@ file_form_shareType_0: 'Si'
 file_form_shareType_1: false
 files: 'Archivos'
 filter: 'Filtro'
+filters: 'Filtros'
 find_workspaces: 'Espacios de trabajo publicos'
 firstName: 'Nombre'
 first_name: 'Apellido'
@@ -546,8 +547,8 @@ no_action_found: No hay acciones.
 no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
-no_group: 'No hay grupos'
-no_group: No hay grupo.
+no_filter: 'No hay filtro'
+no_group: 'No hay grupo'
 no_home_tab: 'No hay pestañas'
 no_message: 'No hay mensajes'
 no_search_results: 'Su búsqueda no ha producido ningún resultado.'
