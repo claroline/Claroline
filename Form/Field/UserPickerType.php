@@ -63,6 +63,7 @@ class UserPickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['multiple'] = $options['multiple'];
+        $view->vars['show_all_users'] = $options['show_all_users'];
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
@@ -77,6 +78,7 @@ class UserPickerType extends AbstractType
             array(
                 'translation_domain' => 'platform',
                 'multiple' => true,
+                'show_all_users' => false,
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,

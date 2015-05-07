@@ -1,4 +1,4 @@
-{% macro renderPager(pager, search, max, orderedBy, order, mode, showUsername, showMail, showCode) %}
+{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showUsername, showMail, showCode) %}
     {% if search is empty %}
         {{
             pagerfanta(
@@ -12,6 +12,7 @@
                         'orderedBy': orderedBy,
                         'order': order,
                         'mode': mode,
+                        'showAllUsers': showAllUsers,
                         'showUsername': showUsername,
                         'showMail': showMail,
                         'showCode': showCode
@@ -33,6 +34,7 @@
                         'orderedBy': orderedBy,
                         'order': order,
                         'mode': mode,
+                        'showAllUsers': showAllUsers,
                         'showUsername': showUsername,
                         'showMail': showMail,
                         'showCode': showCode
@@ -43,7 +45,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(search, max, orderedBy, order, mode, showUsername, showMail, showCode) %}
+{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showUsername, showMail, showCode) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
     {% else %}
@@ -59,6 +61,7 @@
                 'orderedBy': orderedBy,
                 'order': newOrder,
                 'mode': mode,
+                'showAllUsers': showAllUsers,
                 'showUsername': showUsername,
                 'showMail': showMail,
                 'showCode': showCode
@@ -107,7 +110,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showUsername, showMail, showCode) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showUsername, showMail, showCode) }}
 {% endif %}
 <div class="table-responsive">
     <table class="table">
@@ -119,14 +122,14 @@
                     {% endif %}
                 </th>
                 <th>
-                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showUsername, showMail, showCode) }}">
+                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
                         {{ 'name'|trans({}, 'platform') }}
                     </a>
                 </th>
                 
                 {% if showUsername == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'username', order, mode, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
                             {{ 'username'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -134,7 +137,7 @@
                 
                 {% if showMail == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
                             {{ 'mail'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -142,7 +145,7 @@
                 
                 {% if showCode == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
                             {{ 'code'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -195,7 +198,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showUsername, showMail, showCode) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showUsername, showMail, showCode) }}
 {% endif %}
 
 <div id="user-picker-datas-box"
@@ -205,6 +208,7 @@
      data-ordered-by="{{ orderedBy }}"
      data-order="{{ order }}"
      data-mode="{{ mode }}"
+     data-show-all-users="{{ showAllUsers }}"
      data-show-username="{{ showUsername }}"
      data-show-mail="{{ showMail }}"
      data-show-code="{{ showCode }}"

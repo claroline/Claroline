@@ -15,6 +15,7 @@
     var currentOrderedBy = $('#user-picker-datas-box').data('ordered-by');
     var currentOrder = $('#user-picker-datas-box').data('order');
     var currentMode = $('#user-picker-datas-box').data('mode');
+    var currentShowAllUsers = $('#user-picker-datas-box').data('show-all-users');
     var currentShowUsername = $('#user-picker-datas-box').data('show-username');
     var currentShowMail = $('#user-picker-datas-box').data('show-mail');
     var currentShowCode = $('#user-picker-datas-box').data('show-code');
@@ -438,6 +439,7 @@
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
                     'mode': currentMode,
+                    'showAllUsers': currentShowAllUsers,
                     'showUsername': currentShowUsername,
                     'showMail': currentShowMail,
                     'showCode': currentShowCode
@@ -451,6 +453,7 @@
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
                     'mode': currentMode,
+                    'showAllUsers': currentShowAllUsers,
                     'showUsername': currentShowUsername,
                     'showMail': currentShowMail,
                     'showCode': currentShowCode

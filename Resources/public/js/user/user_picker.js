@@ -12,6 +12,7 @@
     
     $('body').on('click', '.user-picker', function () {
         var multiple = $(this).data('multiple');
+        var showAllUsers = $(this).data('show-all-users');
         var showUsername = $(this).data('show-username');
         var showMail = $(this).data('show-mail');
         var showCode = $(this).data('show-code');
@@ -53,6 +54,7 @@
             'claro_user_picker',
             {
                 'mode': multiple,
+                'showAllUsers': showAllUsers,
                 'showUsername': showUsername,
                 'showMail': showMail,
                 'showCode': showCode

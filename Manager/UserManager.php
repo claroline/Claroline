@@ -1291,6 +1291,7 @@ class UserManager
     public function getUsersForUserPicker(
         User $user,
         $search = '',
+        $withAllUsers = false,
         $withUsername = true,
         $withMail = false,
         $withCode = false,
@@ -1315,9 +1316,15 @@ class UserManager
             $groups = $searchedGroups;
             $workspaces = $searchedWorkspaces;
         } else {
-            $roles = $this->generateRoleRestrictions($user);
-            $groups = $this->generateGroupRestrictions($user);
-            $workspaces = $this->generateWorkspaceRestrictions($user);
+            $roles = $withAllUsers ?
+                array() :
+                $this->generateRoleRestrictions($user);
+            $groups = $withAllUsers ?
+                array() :
+                $this->generateGroupRestrictions($user);
+            $workspaces = $withAllUsers ?
+                array() :
+                $this->generateWorkspaceRestrictions($user);
         }
         $users = $this->userRepo->findUsersForUserPicker(
             $search,

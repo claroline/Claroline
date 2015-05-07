@@ -71,9 +71,9 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/mode/{mode}/show/{showUsername}/{showMail}/{showCode}",
+     *     "user/picker/mode/{mode}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}",
      *     name="claro_user_picker",
-     *     defaults={"mode"="multiple","showUsername"=1,"showMail"=0,"showCode"=0},
+     *     defaults={"mode"="multiple","showAllUsers"=0,"showUsername"=1,"showMail"=0,"showCode"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -105,6 +105,7 @@ class UserController extends Controller
         array $forcedRoles,
         array $forcedWorkspaces,
         $mode = 'mutiple',
+        $showAllUsers = 0,
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0
@@ -133,6 +134,7 @@ class UserController extends Controller
 
         return array(
             'mode' => $mode,
+            'showAllUsers' => $showAllUsers,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
             'showCode' => $showCode,
@@ -145,15 +147,15 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/{showUsername}/{showMail}/{showCode}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}",
      *     name="claro_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple","showUsername"=1,"showMail"=0,"showCode"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple","showAllUsers"=0,"showUsername"=1,"showMail"=0,"showCode"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/{showUsername}/{showMail}/{showCode}/search/{search}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}/search/{search}",
      *     name="claro_searched_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple","showUsername"=1,"showMail"=0,"showCode"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="multiple","showAllUsers"=0,"showUsername"=1,"showMail"=0,"showCode"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -209,11 +211,13 @@ class UserController extends Controller
         $orderedBy = 'lastName',
         $order = 'ASC',
         $mode = 'multiple',
+        $showAllUsers = 0,
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0
     )
     {
+        $withAllUsers = intval($showAllUsers) === 1;
         $withUsername = intval($showUsername) === 1;
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
@@ -241,6 +245,7 @@ class UserController extends Controller
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
             $search,
+            $withAllUsers,
             $withUsername,
             $withMail,
             $withCode,
@@ -265,6 +270,7 @@ class UserController extends Controller
             'orderedBy' => $orderedBy,
             'order' => $order,
             'mode' => $mode,
+            'showAllUsers' => $showAllUsers,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
             'showCode' => $showCode,
