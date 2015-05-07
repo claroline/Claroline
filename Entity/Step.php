@@ -229,7 +229,10 @@ class Step implements \JsonSerializable
      */
     public function setParent(Step $parent = null)
     {
-        $this->parent = $parent;
+        if ($parent != $this->parent) {
+            $this->parent = $parent;
+            $parent->addChild($this);
+        }
 
         return $this;
     }
@@ -261,9 +264,8 @@ class Step implements \JsonSerializable
     {
         if (!$this->children->contains($step)) {
             $this->children->add($step);
+            $step->setParent($this);
         }
-
-        $step->setParent($this);
         
         return $this;
     }
@@ -277,9 +279,8 @@ class Step implements \JsonSerializable
     {
         if ($this->children->contains($step)) {
             $this->children->removeElement($step);
+            $step->setParent(null);
         }
-
-        $step->setParent(null);
         
         return $this;
     }
@@ -296,7 +297,7 @@ class Step implements \JsonSerializable
         $parent = $this->getParent();
         if (!empty($parent)) {
             // Current step has a parent
-            $siblings = $parent->getChildren();
+            $siblings = clone $parent->getChildren();
         
             // Remove current step from parent children
             $siblings->removeElement($this);
@@ -385,6 +386,53 @@ class Step implements \JsonSerializable
         }
     }
 
+    public function isRoot()
+    {
+        return null === $this->parent;
+    }
+
+    public function getPrevious()
+    {
+        $previous = null;
+
+        // If current step is the Root of the Tree, there is no previous step
+        if (!$this->isRoot()) {
+            $siblings = $this->parent->getChildren();
+
+            $currentIndex = $siblings->indexOf($this);
+            if (false !== $currentIndex && !empty($siblings[$currentIndex - 1])) {
+                $previous = $siblings[$currentIndex - 1];
+            } else {
+                // Previous is empty so current step has no sibling previous it => so previous is parent
+                $previous = $this->parent;
+            }
+        }
+
+        return $previous;
+    }
+
+    public function getNext()
+    {
+        $next = null;
+
+        if ($this->children->count() > 0) {
+            // Get the first child as next step
+            $next = $this->children->first();
+        } else if (!$this->isRoot()) {
+            // Ascend to parent to current step siblings
+            $siblings = $this->parent->getChildren();
+
+            $currentIndex = $siblings->indexOf($this);
+            if (false !== $currentIndex && !empty($siblings[$currentIndex + 1])) {
+                $next = $siblings[$currentIndex + 1];
+            } else {
+                // Next is empty so current step has no sibling after it
+            }
+        }
+
+        return $next;
+    }
+
     /**
      * Get inherited resources
      * @return ArrayCollection
@@ -450,21 +498,74 @@ class Step implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        // TODO : add missing Activity Properties (duration, withTutor, etc.)
+        $jsonArray = array (
+            'id'          => $this->id,               // A local ID for the step in the path (reuse step ID)
+            'resourceId'  => $this->id,               // The real ID of the Step into the DB
+            'lvl'         => $this->lvl,              // The depth of the step in the path structure
+            'name'        => $this->getName(),        // The name of the linked Activity (used as Step name)
+            'description' => $this->getDescription(), // The description of the linked Activity (used as Step description)
+        );
 
+        // Get activity properties
+        if (!empty($this->activity)) {
+            // Get activity ID
+            $jsonArray['activityId']  = $this->activity->getId(); // The ID of the linked Activity
+
+            // Get primary resource
+            $primaryResource = $this->activity->getPrimaryResource();
+            if (!empty($primaryResource)) {
+                $jsonArray['primaryResource'] = array (
+                    'id'         => $primaryResource->getId(),
+                    'resourceId' => $primaryResource->getId(),
+                    'name'       => $primaryResource->getName(),
+                    'type'       => $primaryResource->getMimeType(),
+                );
+            } else {
+                $jsonArray['primaryResource'] = null;
+            }
+        }
+
+        // Get parameters
+        if (!empty($this->parameters)) {
+            // Get parameters of the step
+            $parameters = $this->parameters;
+        } else if (!empty($this->activity)) {
+            // Get parameters of the Activity
+            $parameters = $this->activity->getParameters();
+        }
+
+        if (!empty($parameters)) {
+            // Secondary resources
+            $jsonArray['resources'] = array();
+
+            $secondaryResources = $parameters->getSecondaryResources();
+            if (!empty($secondaryResources)) {
+                foreach ($secondaryResources as $secondaryResource) {
+                    $jsonArray['resources'][] = array(
+                        'id'         => $secondaryResource->getId(),
+                        'resourceId' => $secondaryResource->getId(),
+                        'name'       => $secondaryResource->getName(),
+                        'type'       => $secondaryResource->getMimeType(),
+                        /*'propagateToChildren' => true,*/
+                    );
+                }
+            }
+
+            // Global Parameters
+            $jsonArray['withTutor'] = $parameters->isWithTutor();
+            $jsonArray['who']       = $parameters->getWho();
+            $jsonArray['where']     = $parameters->getWhere();
+            $jsonArray['duration']  = $parameters->getMaxDuration(); // Duration in seconds
+        }
+
+        // Get step children
         $children = array ();
         if (!empty($this->children)) {
             $children = array_values($this->children->toArray());
         }
 
-        return array (
-            'id'          => $this->id,                // A local ID for the step in the path (reuse step ID)
-            'resourceId'  => $this->id,                // The real ID of the Step into the DB
-            'lvl'         => $this->lvl,               // The depth of the step in the path structure
-            'activityId'  => $this->activity->getId(), // The ID of the linked Activity
-            'name'        => $this->getName(),         // The name of the linked Activity (used as Step name)
-            'description' => $this->getDescription(),  // The description of the linked Activity (used as Step description)
-            'children'    => $children,                // The children of the step
-        );
+        $jsonArray['children'] = $children;
+
+        return $jsonArray;
     }
 }
