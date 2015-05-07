@@ -145,6 +145,11 @@
                         {% set version = package.version | replace({'v': ''})  %}
                         {{ package.name }}
                     </a>
+                    {% if fetchNew == false and package.isConfigurable() %}
+                        <a href="{{ path('claro_admin_plugin_parameters', {'pluginShortName': package.name}) }}">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                    {% endif %}
                     <span class="badge alert-info">{{ version }}</span>
 
                     <span class="pull-right">
