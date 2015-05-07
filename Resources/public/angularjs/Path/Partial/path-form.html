@@ -3,10 +3,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
-                        {{ 'editor'|trans:{}:'path_editor' }} <small data-ng-bind="pathFormCtrl.path.name"></small>
-                    </h3>
-
+                    <h3 class="panel-title">{{ pathFormCtrl.path.name }}</h3>
                     <alert-box></alert-box>
                 </div>
 
@@ -75,7 +72,7 @@
                         </div>
                     </div>
 
-                    <div class="row form-group">
+                    <div class="row form-group form-last">
                         <label class="control-label col-md-3">{{ 'path_status'|trans:{}:'path_editor' }}</label>
                         <div class="col-md-9">
                             <!-- Path not saved -->

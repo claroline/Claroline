@@ -26,7 +26,7 @@
     <!-- Actions available -->
     <span data-ng-show="showButtons == step.id || pathStructureCtrl.currentStep == step" class="step-actions btn-group" data-nodrag="">
         <!-- Add child -->
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.addStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
+        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathStructureCtrl.addStep(step)" data-ng-disabled="step.lvl >= pathStructureCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_editor' }}">
             <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_editor' }}</span>
         </a>
