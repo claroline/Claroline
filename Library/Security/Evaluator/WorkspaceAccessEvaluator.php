@@ -4,10 +4,13 @@ namespace Claroline\CoreBundle\Library\Security\Evaluator;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\Controller\Exception\WorkspaceAccessDeniedException;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @DI\Service
+ * @DI\Service("claroline.core_bundle.library.security.evaluator.workspace_access_evaluator", scope="request")
  * @DI\Tag(
  *     name="security.expressions.function_evaluator",
  *     attributes={"function"="canAccessWorkspace"}
@@ -16,16 +19,21 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class WorkspaceAccessEvaluator
 {
     private $securityContext;
-    private $em;
+    private $request;
 
     /**
      * @DI\InjectParams({
-     *     "container" = @DI\Inject("service_container"),
+     *     "request"       = @DI\Inject("request"),
+     *     "authorization" = @DI\Inject("security.authorization_checker")
      * })
      */
-    public function __construct($container)
+    public function __construct(
+        Request $request,
+        AuthorizationCheckerInterface $authorization
+    )
     {
-        $this->container = $container;
+        $this->request = $request;
+        $this->authorization = $authorizaton;
     }
 
     /**
@@ -37,10 +45,8 @@ class WorkspaceAccessEvaluator
      */
     public function canAccessWorkspace($attr)
     {
-        $request = $this->container->get('request');
-        $authorization = $this->container->get('security.authorization_checker');
-        //get
-        $workspace = $request->query->get('workspace');
+        $workspace = $this->request->attributes->get('workspace');
+        if (!$workspace) throw new \Exception('There is no workspace in the request to use for the canAccessWorkspace evaluator.');
 
         if ($workspace) {
             if (false === $this->authorization->isGranted($attr, $workspace)) {
@@ -53,7 +59,7 @@ class WorkspaceAccessEvaluator
 
     private function throwWorkspaceDeniedException(Workspace $workspace)
     {
-        $exception = new Exception\WorkspaceAccessDeniedException();
+        $exception = new WorkspaceAccessDeniedException();
         $exception->setWorkspace($workspace);
 
         throw $exception;
