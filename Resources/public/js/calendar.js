@@ -13,10 +13,6 @@
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
 
-    function t(key) {
-        return Translator.trans(key, {}, 'agenda');
-    }
-
     calendar.initialize = function (
         context,
         workspaceId,
@@ -94,24 +90,21 @@
                 prevYear: t('prevYear'),
                 nextYear: t('nextYear'),
                 today: t('today'),
-                month: t('month'),
+                month: t('month_'),
                 week: t('week'),
-                day: t('day')
+                day: t('day_')
             },
             firstDay: 1,
-            monthNames: [t('january'), t('february'), t('march'), t('april'), t('may'), t('june'), t('july'),
-                t('august'), t('september'), t('october'), t('november'), t('december')],
-            monthNamesShort: [t('jan'), t('feb'), t('mar'), t('apr'), t('may'), t('ju'), t('jul'),
-                t('aug'), t('sept'),  t('oct'), t('nov'), t('dec')],
-            dayNames: [ t('sunday'),t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday'), t('saturday')],
-            dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
+            monthNames: t(['month.january', 'month.february', 'month.march', 'month.april', 'month.may', 'month.june', 'month.july', 'month.august', 'month.september', 'month.october', 'month.november', 'month.december']),
+            monthNamesShort: t(['month.jan', 'month.feb', 'month.mar', 'month.apr', 'month.may', 'month.ju', 'month.jul', 'month.aug', 'month.sept',  'month.oct', 'month.nov', 'month.dec']),
+            dayNames: t(['day.sunday', 'day.monday', 'day.tuesday', 'day.wednesday', 'day.thursday', 'day.friday', 'day.saturday']),
+            dayNamesShort: t(['day.sun', 'day.mon', 'day.tue', 'day.wed', 'day.thu', 'day.fri', 'day.sat']),
             editable: true,
             //This is the url wich will get the events from ajax the 1st time the calendar is launched
             events: calendar.showUrl,
             axisFormat: 'HH:mm',
             timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
-            '': 'h:mm{ - h:mm}',
             allDayText: t('isAllDay'),
             lazyFetching : false,
             fixedWeekCount: false,
@@ -227,15 +220,6 @@
     };
 
     var addEventAndTaskToCalendar = function (event) {
-        if (event.isTask) {
-            var html = Twig.render(Task, {'event': event});
-            var tasksList = $('#tasks-list');
-            if (tasksList.length === 1 && tasksList.find('.no-task')) {
-                tasksList.children().first().remove();
-            }
-            tasksList.append(html);
-        }
-
         $('#calendar').fullCalendar('renderEvent', event);
     };
 
@@ -260,7 +244,6 @@
 
     var resizeOrMove = function (event, dayDelta, minuteDelta, action) {
         var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
-        console.log(event)
         $.ajax({
             url: Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             type: 'POST',
@@ -442,4 +425,15 @@
 
         return workspaceIds;
     };
+
+    function t(key) {
+        if (typeof key === 'object') {
+            var transWords = [];
+            for (var i = 0; i < key.length; i++) {
+                transWords.push(Translator.trans(key[i], {}, 'agenda'));
+            }
+            return transWords;
+        }
+        return Translator.trans(key, {}, 'agenda');
+    }
 }) ();

@@ -27,9 +27,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-/**
- * Controller of the Agenda
- */
 class AgendaController extends Controller
 {
     private $authorization;

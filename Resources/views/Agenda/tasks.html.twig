@@ -1,9 +1,0 @@
-<div id="tasks-list">
-    {% for event in events %}
-        {% if event.isTask %}
-            {% include "ClarolineAgendaBundle:Agenda:task.html.twig" with {'event': event} %}
-        {% endif %}
-    {% else %}
-        <div class="list-group-item task-item no-task" style="font-style: italic">{{ 'no_task_now'|trans({}, 'agenda') }}</div>
-    {% endfor %}
-</div>

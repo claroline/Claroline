@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -24,6 +25,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\CoreBundle\Library\Security\Utilities;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
  * @DI\Service("claroline.manager.agenda_manager")
@@ -36,6 +38,7 @@ class AgendaManager
     private $rm;
     private $translator;
     private $su;
+    private $container;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +48,8 @@ class AgendaManager
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"   = @DI\Inject("translator"),
-     *     "su"           = @DI\Inject("claroline.security.utilities")
+     *     "su"           = @DI\Inject("claroline.security.utilities"),
+     *     "container"    = @DI\Inject("service_container")
      * })
      */
     public function __construct(
@@ -55,7 +59,8 @@ class AgendaManager
         AuthorizationCheckerInterface $authorization,
         RoleManager $rm,
         TranslatorInterface $translator,
-        Utilities $su
+        Utilities $su,
+        ContainerInterface $container
     )
     {
         $this->rootDir = $rootDir;
@@ -65,6 +70,7 @@ class AgendaManager
         $this->rm = $rm;
         $this->translator = $translator;
         $this->su = $su;
+        $this->container = $container;
     }
 
     public function addEvent(Event $event, $workspace = null)
@@ -80,7 +86,7 @@ class AgendaManager
 
         $this->om->flush();
 
-        return $this->toArray($event);
+        return $event->jsonSerialize();
     }
 
     /**
@@ -89,7 +95,7 @@ class AgendaManager
      */
     public function deleteEvent(Event $event)
     {
-        $removed = $this->toArray($event);
+        $removed = $event->jsonSerialize();
         $this->om->remove($event);
         $this->om->flush();
 
@@ -128,44 +134,6 @@ class AgendaManager
         $fileName = $this->writeToICS($calendar, $workspaceId);
 
         return $fileName;
-    }
-
-    private function writeEvent(Event $e)
-    {
-        $event = "BEGIN:VEVENT\n";
-        $event .= "DTSTART:".date('Ymd',$e->getStart()->getTimestamp())."T".date('Hi',$e->getStart()->getTimestamp())."00\r\n";
-        $event .= "DTEND:".date('Ymd',$e->getEnd()->getTimestamp())."T".date('Hi',$e->getEnd()->getTimestamp())."00\r\n";
-        $event .= "CLASS:CLAROLINECONNECT \r\n";
-        $event .= "DESCRIPTION:".$e->getDescription()."\r\n";
-        $event .= "LOCATION: \r\n";
-        $event .= "STATUS:CONFIRMED\r\n";
-        $event .= "SUMMARY:".$e->getTitle()."\r\n";
-        $event .= "END:VEVENT\r\n";
-
-        return $event;
-    }
-
-    /**
-     * @param $array $events
-     * @return strings file in ics format
-     */
-    private function writeCalendar($arrayEvents)
-    {
-        $date = new \Datetime();
-        $tz = $date->getTimezone();
-        $calendar = "BEGIN:VCALENDAR"."\n";
-
-        foreach ($arrayEvents as $value) {
-            $calendar .= "PRODID:-BayBuk\n";
-            $calendar .= "VERSION:2.0\n";
-            $calendar .= "CALSCALE:GREGORIAN\n";
-            $calendar .= "METHOD:PUBLISH\n";
-            $calendar .= "X-WR-CALNAME:".$value->getUser()->getUsername()."\n";
-            $calendar .= "X-WR-TIMEZONE:".$tz->getName()."\n";
-            $calendar .= $this->writeEvent($value);
-        }
-        $calendar .= "END:VCALENDAR";
-        return $calendar;
     }
 
     /**
@@ -208,7 +176,7 @@ class AgendaManager
             $this->om->persist($e);
             //the flush is required to generate an id
             $this->om->flush();
-            $tabs[] = $this->toArray($e);
+            $tabs[] = $e->jsonSerialize();
         }
         //$this->om->endFlushSuite();
 
@@ -220,7 +188,7 @@ class AgendaManager
         $this->setEventDate($event);
         $this->om->flush();
 
-        return $this->toArray($event);
+        return $event->jsonSerialize();
     }
 
     public function displayEvents(Workspace $workspace, $allDay = false)
@@ -236,7 +204,7 @@ class AgendaManager
         $event->setEnd($event->getEnd()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
 
-        return $this->toArray($event);
+        return $event->jsonSerialize();
     }
 
     public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
@@ -250,44 +218,7 @@ class AgendaManager
         $this->updateStartDate($event, $dayDelta, $minuteDelta);
         $this->updateEndDate($event, $dayDelta, $minuteDelta);
 
-        return $this->toArray($event);
-    }
-
-    /**
-     * @param Event $event
-     * @return array
-     */
-    public function toArray(Event $event)
-    {
-        $start = is_null($event->getStart()) ? null : $event->getStart()->getTimestamp();
-        $end = is_null($event->getEnd()) ? null : $event->getEnd()->getTimestamp();
-        $startDate = new \DateTime();
-        $startDate->setTimeStamp($start);
-        $startIso = $startDate->format(\DateTime::ISO8601);
-        $endDate = new \DateTime();
-        $startDate->setTimeStamp($end);
-        $endIso = $startDate->format(\DateTime::ISO8601);
-
-        return array(
-            'id' => $event->getId(),
-            'title' => $event->getTitle(),
-            'start' => $startIso,
-            'end' => $endIso,
-            'color' => $event->getPriority(),
-            'allDay' => $event->isAllDay(),
-            'isTask' => $event->isTask(),
-            'isTaskDone' => $event->isTaskDone(),
-            'owner' => $event->getUser()->getUsername(),
-            'description' => $event->getDescription(),
-            'editable' => $this->authorization->isGranted('edit', $event),
-            'deletable' => $this->authorization->isGranted('DELETE', $event),
-            'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
-            'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
-            'endHours' => $event->getEndHours(),
-            'startHours' => $event->getStartHours(),
-            'className' => 'event_' . $event->getId(),
-            'durationEditable' => !$event->isTask() // If it's a task, disable resizing
-        );
+        return $event->jsonSerialize();
     }
 
     public function convertEventsToArray(array $events)
@@ -295,7 +226,7 @@ class AgendaManager
         $data = array();
 
         foreach ($events as $event) {
-            $data[] = $this->toArray($event);
+            $data[] = $event->jsonSerialize();
         }
 
         return $data;
@@ -359,5 +290,23 @@ class AgendaManager
         );
 
         return $listEvents;
+    }
+
+    /**
+     * @param array $events
+     * @return Twig view in ics format
+     */
+    private function writeCalendar(array $events)
+    {
+        $date = new \Datetime();
+        $tz = $date->getTimezone();
+
+        return $this->container->get('templating')->render(
+            'ClarolineAgendaBundle:Tool:exportIcsCalendar.ics.twig',
+            array(
+                'tzName' => $tz->getName(),
+                'events' => $events
+            )
+        );
     }
 }

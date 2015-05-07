@@ -119,7 +119,7 @@ class DesktopAgendaController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'action' => $this->router->generate('claro_desktop_agenda_add_event_form', array())
+            'action' => $this->router->generate('claro_desktop_agenda_add', array())
         );
     }
 

@@ -13,10 +13,6 @@ namespace Claroline\AgendaBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -75,7 +71,7 @@ class Event implements \JsonSerializable
     /**
      * @ORM\Column(name="is_all_day", type="boolean")
      */
-    private $isAllDay = false;
+    private $allDay = false;
 
     /**
      * @ORM\Column(name="is_task", type="boolean")
@@ -214,12 +210,12 @@ class Event implements \JsonSerializable
 
     public function isAllDay()
     {
-        return $this->isAllDay;
+        return $this->allDay;
     }
 
     public function setIsAllDay($isAllDay)
     {
-        $this->isAllDay = (bool) $isAllDay;
+        $this->allDay = (bool) $isAllDay;
     }
 
     /**
@@ -326,11 +322,34 @@ class Event implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
+        $start = is_null($this->getStart()) ? null : $this->getStart()->getTimestamp();
+        $end = is_null($this->getEnd()) ? null : $this->getEnd()->getTimestamp();
+        $startDate = new \DateTime();
+        $startDate->setTimeStamp($start);
+        $startIso = $startDate->format(\DateTime::ISO8601);
+        $endDate = new \DateTime();
+        $startDate->setTimeStamp($end);
+        $endIso = $startDate->format(\DateTime::ISO8601);
 
-        $serializer = new Serializer($normalizers, $encoders);
-
-        return $serializer->serialize($this, 'json');
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'start' => $startIso,
+            'end' => $endIso,
+            'color' => $this->getPriority(),
+            'allDay' => $this->isAllDay(),
+            'isTask' => $this->isTask(),
+            'isTaskDone' => $this->isTaskDone(),
+            'owner' => $this->getUser()->getUsername(),
+            'description' => $this->getDescription(),
+            'editable' => true,
+            'deletable' => true,
+            'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId(): null,
+            'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName(): null,
+            'endHours' => $this->getEndHours(),
+            'startHours' => $this->getStartHours(),
+            'className' => 'event_' . $this->getId(),
+            'durationEditable' => !$this->isTask() // If it's a task, disable resizing
+        ];
     }
 }

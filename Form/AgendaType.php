@@ -59,13 +59,16 @@ class AgendaType extends AbstractType
         $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
         $attr['autocomplete'] = 'off';
         $builder
-            ->add('title', 'text', array('required' => true));
+            ->add('title', 'text', array(
+                'label' => 'form.title',
+                'required' => true
+            ));
 
         $builder->add(
             'isTask',
             'checkbox',
             array(
-                'label' => 'isTask',
+                'label' => 'form.task',
                 'required' => false
             )
         );
@@ -74,7 +77,7 @@ class AgendaType extends AbstractType
             'isAllDay',
             'checkbox',
             array(
-                'label' => 'isAllDay',
+                'label' => 'form.all_day',
                 'required' => false
             )
         );
@@ -83,6 +86,7 @@ class AgendaType extends AbstractType
                 'start',
                 'datepicker',
                 array(
+                    'label' => 'form.start',
                     'required'  => true,
                     'widget'    => 'single_text',
                     'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
@@ -96,6 +100,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'time',
                 array(
+                    'label' => 'form.start_hours',
                     'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
@@ -107,6 +112,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'time',
                 array(
+                    'label' => 'form.start_hours',
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'
@@ -118,6 +124,7 @@ class AgendaType extends AbstractType
             'end',
             'datepicker',
             array(
+                'label' => 'form.end',
                 'required'  => true,
                 'widget'    => 'single_text',
                 'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
@@ -132,6 +139,7 @@ class AgendaType extends AbstractType
                 'endHours',
                 'time',
                 array(
+                    'label' => 'form.end_hours',
                     'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
@@ -143,6 +151,7 @@ class AgendaType extends AbstractType
                 'endHours',
                 'time',
                 array(
+                    'label' => 'form.end_hours',
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'
@@ -155,6 +164,7 @@ class AgendaType extends AbstractType
                 'priority',
                 'choice',
                 array(
+                    'label' => 'form.description',
                     'choices' => array(
                         '#FF0000' => 'high',
                         '#01A9DB' => 'medium',
@@ -166,7 +176,10 @@ class AgendaType extends AbstractType
         $builder->add(
             'recurring',
             'choice',
-            array('choices' => $recurring)
+            array(
+                'label' => 'form.recurring',
+                'choices' => $recurring
+            )
         );
     }
 

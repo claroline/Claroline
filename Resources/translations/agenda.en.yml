@@ -12,92 +12,94 @@ agenda_form_startHours: 'Start hour'
 agenda_form_title: 'Title'
 agenda_form_author: 'Created by'
 all_day: the whole day
-apr: Apr
-april: April
 at: at
-aug: Aug
-august: August
 cancel: Cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
-day: Day
-dec: Dec
-december: December
+day_: Day
+day:
+    mon: Mon
+    monday: Monday
+    tue: Tue
+    tuesday: Tuesday
+    wed: Wed
+    wednesday: Wednesday
+    thu: Thu
+    thursday: Thursday
+    fri: Fri
+    friday: Friday
+    sat: Sat
+    saturday: Saturday
+    sun: Sun
+    sunday: Sunday
 end: end
 end_date: 'End date'
 error: 'An unexpected error occurred, please try again'
 event: Event
 event_update: 'Event modified'
 export: 'Export events'
-feb: Feb
-february: February
 filter_user: Filter by user
 filter_tasks: Filter the tasks
 filter_ws: Filter by workspace
-fri: Fri
-friday: Friday
 high: High
 hide_tasks: Hide all the tasks
-import_agenda_file_file: 'Import'
+import_agenda_file_file: Import
 isAllDay: All day
 in_x_days: In %nbDays% days
-jan: Jan
-january: January
-jul: Jul
-july: July
-jun: Jun
-june: June
 length: Length
 limit_date: Limit date
 low: Low
-mar: Mar
-march: March
-may: May
 medium: Medium
 midnight: midnight
-modify: 'Modify an event'
-mon: Mon
+modify: Modify an event
 no_task_now: No task to do
 no-filter-tasks: No filter
-monday: Monday
-month: Month
+month_: Month
+month:
+    jan: Jan
+    january: January
+    feb: Feb
+    february: February
+    mar: Mar
+    march: March
+    apr: Apr
+    april: April
+    may: May
+    jun: Jun
+    june: June
+    jul: Jul
+    july: July
+    aug: Aug
+    august: August
+    sept: Sept
+    september: September
+    oct: Oct
+    october: October
+    nov: Nov
+    november: November
+    dec: Dec
+    december: December
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
 no_description: 'No description'
 no_task_found: No task found
 noon: noon
-nov: Nov
-november: November
 now: Now
-oct: Oct
-october: October
 prev: '<'
 prevYear: '<<'
-sat: Sat
-saturday: Saturday
-sept: Sept
-september: September
 start_date: 'Start date'
-sun: Sun
-sunday: Sunday
 show_task_only: Display only the tasks
 task: Task
 task_done: Task done !
 task_not_done: Task not done !
 tasks: Tasks
-thu: Thu
-thursday: Thursday
 title: 'Title can not be empty'
-today: today
+today: Today
 today_widget: Today
 tomorrow: Tomorrow
-tue: Tue
-tuesday: Tuesday
 type: Type
 update: modify
-wed: Wed
-wednesday: Wednesday
 week: Week
 workspace: Workspace

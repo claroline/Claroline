@@ -53,6 +53,11 @@ class DateRangeValidator extends ConstraintValidator
                     $this->context->addViolation($constraint->message);
                 }
             }
+
+            if ($object->getEnd()->getTimeStamp()  + $object->endHours -
+                $object->getStart()->getTimeStamp() - $object->startHours < 60*15) {
+                $this->context->addViolation('date_range_too_small');
+            }
         }
 
         if ($object->getEnd() === null) {
