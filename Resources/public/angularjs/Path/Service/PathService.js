@@ -6,8 +6,9 @@
 
     angular.module('PathModule').factory('PathService', [
         '$http',
+        '$q',
         'AlertService',
-        function PathService($http, AlertService) {
+        function PathService($http, $q, AlertService) {
             return {
                 /**
                  * Save modification to DB
@@ -24,8 +25,9 @@
                         }
                     };
 
-                    // Call server
-                    return $http
+                    var deferred = $q.defer();
+
+                    $http
                         .put(Routing.generate('innova_path_editor_wizard_save', { id: id }), dataToSave)
 
                         .success(function (response) {
@@ -33,26 +35,37 @@
                                 for (var i = 0; i < response.messages.length; i++) {
                                     AlertService.addAlert('error', response.messages[i]);
                                 }
+
+                                deferred.reject(response);
                             } else {
                                 // Get updated data
                                 angular.copy(response.data, path);
 
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_editor'));
+
+                                deferred.resolve(response);
                             }
                         })
 
                         .error(function (response) {
                             AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_editor'));
+
+                            deferred.reject(response);
                         });
+
+                    return deferred.promise;
                 },
 
                 /**
                  * Publish path modifications
                  * @param {number} id
+                 * @param {object} path
                  */
                 publish: function (id, path) {
-                    return $http
+                    var deferred = $q.defer();
+
+                    $http
                         .put(Routing.generate('innova_path_publish', { id: id }))
 
                         .success(function (response) {
@@ -60,18 +73,26 @@
                                 for (var i = 0; i < response.messages.length; i++) {
                                     AlertService.addAlert('error', response.messages[i]);
                                 }
+
+                                deferred.reject(response);
                             } else {
                                 // Get updated data
                                 angular.copy(response.data, path);
 
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_editor'));
+
+                                deferred.resolve(response);
                             }
                         })
 
                         .error(function (response) {
                             AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_editor'));
+
+                            deferred.reject(response);
                         });
+
+                    return deferred.promise;
                 },
 
                 /**
