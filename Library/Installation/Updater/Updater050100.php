@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class Updater050003 extends Updater
+class Updater050100 extends Updater
 {
     private $container;
     private $om;
@@ -25,7 +25,7 @@ class Updater050003 extends Updater
 
     public function postUpdate()
     {
-        $this->log('Updating defualt workspacetemplate directory...');
+        $this->log('Updating default workspace template directory...');
         $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
         $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
