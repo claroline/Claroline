@@ -78,26 +78,12 @@ class WorkspaceAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route("/{workspace}/tasks", name="claro_workspace_agenda_tasks")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
-     *
-     * @param Workspace $workspace
-     * @return array
-     */
-    public function tasksAction(Workspace $workspace)
-    {
-        $events = $this->om->getRepository('ClarolineAgendaBundle:Event')->findByWorkspaceId($workspace->getId(), true);
-
-        return array('events' => $this->agendaManager->convertEventsToArray($events));
-    }
-
-    /**
      * @EXT\Route(
      *     "/workspace/{workspace}/import/modal/form",
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
      * @return array
      */
@@ -110,7 +96,7 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route("/workspace/{workspace}/import", name="claro_workspace_agenda_import")
-     * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
      * @param Workspace $workspace
      * @return array
@@ -140,6 +126,7 @@ class WorkspaceAgendaController extends Controller
      * @param Workspace $workspace
      * @return array
      */
+
     public function addEventModalFormAction(Workspace $workspace)
     {
         $formType = $this->get('claroline.form.agenda');
@@ -155,10 +142,7 @@ class WorkspaceAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/{workspace}/add",
-     *     name="claro_workspace_agenda_add_event"
-     * )
+     * @EXT\Route("/{workspace}/add", name="claro_workspace_agenda_add_event")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
      *

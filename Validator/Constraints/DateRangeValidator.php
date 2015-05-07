@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Validator\Constraints;
+namespace Claroline\AgendaBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -22,34 +22,41 @@ class DateRangeValidator extends ConstraintValidator
 {
     public function validate($object, Constraint $constraint)
     {
-        if (!$object->getAllDay()) {
-
-            //check if the startHours and endHours are valid
+        // If the checkbox isAllDay is checked and isTask is unchecked
+        if ($object->isAllDay() && !$object->isTask()) {
+            if ($object->getStart() === null) {
+                $this->context->addViolation('valid_start_date_required');
+            }
+        }
+        // If isAllDay is unchecked and isTask is checked
+        else if (!$object->isAllDay() && $object->isTask()) {
+            if ($object->endHours === null) {
+                $this->context->addViolation('valid_end_hour_required');
+            }
+        }
+        // If isAllDay and isTask are unchecked
+        else if (!$object->isAllDay() && !$object->isTask()) {
+            if ($object->getStart() === null) {
+                $this->context->addViolation('valid_start_date_required');
+            }
+            if ($object->startHours === null) {
+                $this->context->addViolation('valid_start_hour_required');
+            }
             if ($object->startHours === null) {
                 $this->context->addViolation('valid_start_hour_required');
             }
 
-            if ($object->endHours === null) {
-                $this->context->addViolation('valid_end_hour_required');
-            }
-
-            if ($object->getStart() === null) {
-                $this->context->addViolation('valid_start_date_required');
-            }
-
-            if ($object->getEnd() === null) {
-                $this->context->addViolation('valid_end_date_required');
-            }
-
-            if ($object->endHours === null || $object->startHours === null) {
-                return;
-            }
-
-            if ($object->getStart()->getTimeStamp() + $object->startHours >
-                $object->getEnd()->getTimeStamp()  + $object->endHours
-            ) {
-                $this->context->addViolation($constraint->message);
+            if ($object->getStart() !== null && $object->getEnd() !== null) {
+                if ($object->getStart()->getTimeStamp() + $object->startHours >
+                    $object->getEnd()->getTimeStamp()  + $object->endHours
+                ) {
+                    $this->context->addViolation($constraint->message);
+                }
             }
         }
+
+        if ($object->getEnd() === null) {
+            $this->context->addViolation('valid_end_date_required');
+        }
     }
-} 
+}

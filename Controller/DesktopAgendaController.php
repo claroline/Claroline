@@ -124,18 +124,6 @@ class DesktopAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route("/tasks", name="claro_desktop_agenda_tasks")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
-     */
-    public function tasksAction()
-    {
-        $usr = $this->tokenStorage->getToken()->getUser();
-        $events = $this->agendaManager->desktopEvents($usr, true);
-
-        return array('events' => $events);
-    }
-
-    /**
      * @EXT\Route("/widget/{order}", name="claro_desktop_agenda_widget")
      * @EXT\Template("ClarolineAgendaBundle:Widget:agenda_widget.html.twig")
      */
@@ -156,7 +144,8 @@ class DesktopAgendaController extends Controller
      *     name="claro_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     *
      * @return array
      */
     public function importEventsModalForm()
@@ -168,7 +157,7 @@ class DesktopAgendaController extends Controller
 
     /**
      * @EXT\Route("/import", name="claro_agenda_import")
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
      * @return array
      */

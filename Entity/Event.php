@@ -13,6 +13,10 @@ namespace Claroline\AgendaBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +27,7 @@ use Claroline\AgendaBundle\Validator\Constraints\DateRange;
  * @ORM\Table(name="claro_event")
  * @DateRange()
  */
-class Event
+class Event implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -69,14 +73,19 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean")
+     * @ORM\Column(name="is_all_day", type="boolean")
      */
-    private $allDay = false;
+    private $isAllDay = false;
 
     /**
-     * @ORM\Column(name="istask", type="boolean")
+     * @ORM\Column(name="is_task", type="boolean")
      */
     private $isTask = false;
+
+    /**
+     * @ORM\Column(name="is_task_done", type="boolean")
+     */
+    private $isTaskDone = false;
 
     /**
      *
@@ -98,7 +107,7 @@ class Event
     public $startHours;
     public $endHours;
 
-    private $daterange;
+    private $dateRange;
 
     public function __construct()
     {
@@ -203,14 +212,14 @@ class Event
         $this->user = $user;
     }
 
-    public function getAllDay()
+    public function isAllDay()
     {
-        return $this->allDay;
+        return $this->isAllDay;
     }
 
-    public function setAllDay($allDay)
+    public function setIsAllDay($isAllDay)
     {
-        $this->allDay = (bool) $allDay;
+        $this->isAllDay = (bool) $isAllDay;
     }
 
     /**
@@ -278,14 +287,14 @@ class Event
         $this->endHours = $endHours;
     }
 
-    public function setDateRange($daterage)
+    public function setDateRange($dateRange)
     {
-        $this->daterange = $daterange;
+        $this->dateRange = $dateRange;
     }
 
     public function getDateRange()
     {
-        return $this->daterange;
+        return $this->dateRange;
     }
 
     public function setIsTask($isTask)
@@ -301,5 +310,27 @@ class Event
     public function isTask()
     {
         return $this->isTask;
+    }
+
+    public function setIsTaskDone($isTaskDone)
+    {
+        $this->isTaskDone = $isTaskDone;
+
+        return $this;
+    }
+
+    public function isTaskDone()
+    {
+        return $this->isTaskDone;
+    }
+
+    public function jsonSerialize()
+    {
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new GetSetMethodNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        return $serializer->serialize($this, 'json');
     }
 }

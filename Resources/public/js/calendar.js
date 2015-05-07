@@ -30,11 +30,6 @@
         } else {
             calendar.canCreate = canCreate;
         }
-        calendar.flashbag =
-            '<div class="alert alert-success">' +
-                '<a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>' +
-                Translator.trans('edit_event_success', {}, 'platform') +
-            '</div>';
 
         //initialize route & url depending on the context
         if (context !== 'desktop') {
@@ -55,54 +50,49 @@
             );
         });
 
-        $('body').on('click', '.delete-event', function (event) {
-            event.preventDefault();
-            window.Claroline.Modal.confirmRequest(
-                $(event.currentTarget).attr('href'),
-                removeEvent,
-                undefined,
-                Translator.trans('remove_event_confirm', {}, 'platform'),
-                Translator.trans('remove_event', {}, 'platform')
-            );
-        });
+        $('body')
+            // Delete the event from the form and the popover button
+            .on('click', '.delete-event', function (event) {
+                event.preventDefault();
+                window.Claroline.Modal.confirmRequest(
+                    $(event.currentTarget).attr('href'),
+                    removeEvent,
+                    undefined,
+                    Translator.trans('remove_event_confirm', {}, 'platform'),
+                    Translator.trans('remove_event', {}, 'platform')
+                );
+            })
+            // Hide the hours if the checkbox allDay is checked
+            .on('click', '#agenda_form_isAllDay', function() {
+                $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+            })
+            // Hide the start date if the task is checked.
+            .on('click', '#agenda_form_isTask', function() {
+                $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
+            })
+        ;
 
-        //popover edit button: trigger the edit form
-        $('body').on('click', '.edit-event-link', function(event) {
-            event.preventDefault();
-            window.Claroline.Modal.displayForm(
-                $(event.currentTarget).attr('href'),
-                updateCalendarItemCallback,
-                function () {$('#agenda_form_isTask').is(':checked') ? hideFormDates(): showFormDates();},
-                'form-event'
-            );
-        });
-
-        $('.filter').click(function () {
+        $('.filter,.filter-tasks').click(function () {
             var workspaceIds = [];
 
             $('.filter:checkbox:checked').each(function () {
                 workspaceIds.push(parseInt($(this).val()));
             });
 
-            filterCalendarItems(workspaceIds);
+            filterEvents(workspaceIds);
         });
 
-        //hide the dates if it's a task.
-        $('body').on('click', '#agenda_form_isTask', function() {
-            $('#agenda_form_isTask').is(':checked') ? hideFormDates(): showFormDates();
-        });
-
-        //INITIALIZE CALENDAR
+        // INITIALIZE CALENDAR
         $('#calendar').fullCalendar({
             header: {
-                left: 'prev, next today',
+                left: 'prev,next, today',
                 center: 'title',
-                right: 'month, agendaWeek, agendaDay'
+                right: 'month,agendaWeek,agendaDay'
             },
             columnFormat: {
                 month: 'ddd',
-                week: 'ddd d/M',
-                day: 'dddd d/M'
+                week: 'ddd D/M',
+                day: 'dddd D/M'
             },
             buttonText: {
                 prev: t('prev'),
@@ -128,48 +118,96 @@
             timeFormat: 'H:mm',
             agenda: 'h:mm{ - h:mm}',
             '': 'h:mm{ - h:mm}',
-            allDaySlot: false,
+            allDayText: t('isAllDay'),
             lazyFetching : false,
-            eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
-                move(event, delta._days, delta._milliseconds / (1000 * 60));
-            },
+            fixedWeekCount: false,
+            eventLimit: 4,
+            eventDrop: onEventDrop,
             dayClick: renderAddEventForm,
-            eventClick:  function (event, jsEvent, view) {
-                //don't do anything because it's the "edit" button from the popover that is going to trigger the modal
-            },
-            //renders the popover for an event
-            eventRender: function (event, element) {
-                //event are unfiltered by default
-                event.visible = event.visible === undefined ? true: event.visible;
-                if (!event.visible) return false;
-                renderEvent(event, element);
-            },
-            eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
-                resize(event, delta._days, delta._milliseconds / (1000 * 60));
-            }
+            eventClick:  onEventClick,
+            eventDestroy: onEventDestroy,
+            eventMouseover: onEventMouseover,
+            eventMouseout: onEventMouseout,
+            eventRender: onEventRender,
+            eventResize: onEventResize
         });
+
+        // If a year is define in the Url, redirect the calendar to that year, month and day
+        redirectCalendar();
     };
 
-    var hidePopovers = function () {
-        $('.fc-event').popover('hide');
-    }
+    var onEventDrop = function (event, delta, revertFunc, jsEvent, ui, view) {
+        resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'move');
+    };
 
-    var rerenderEvent = function(event, element) {
-        //destroy old popover
-        element.popover('destroy');
+    var onEventClick = function (event, jsEvent) {
+        // If the user can edit the event
+        if (event.editable) {
+            var $this = $(this);
+            // If click on the check symbol of a task, mark this task as "to do"
+            if ($(jsEvent.target).hasClass('fa-check')) {
+                markTaskAsToDo(event, jsEvent, $this);
+            }
+            // If click on the checkbox of a task, mark this task as done
+            else if ($(jsEvent.target).hasClass('fa-square-o')) {
+                markTaskAsDone(event, jsEvent, $this);
+            }
+            // Show the modal form
+            else {
+                showEditForm(event);
+            }
+        }
+    };
+
+    var onEventDestroy = function (event, $element) {
+        $element.popover('destroy');
+    };
+
+    var onEventMouseover = function () {
+        $(this).popover('show');
+    };
+
+    var onEventMouseout = function () {
+        $(this).popover('hide');
+    };
+
+    var onEventRender = function (event, element) {
+        // Events are unfiltered by default
+        event.visible = event.visible === undefined ? true: event.visible;
+
+        if (!event.visible) return false;
         renderEvent(event, element);
-    }
+    };
 
-    //@todo move this on the eventClick event ?
-    var renderEvent = function (event, element) {
-        var eventContent = Twig.render(EventContent, {'event': event});
-        element.popover({
-            title: event.title + '<button type="button" class="pop-close close" data-dismiss="popover" aria-hidden="true">&times;</button>',
-            content: eventContent,
-            html: true,
-            container: 'body'
-        });
-    }
+    var onEventResize = function (event, delta, revertFunc, jsEvent, ui, view) {
+        resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
+    };
+
+    var renderEvent = function (event, $element) {
+        // Create the popover for the event or the task
+        createPopover(event, $element);
+
+        // If it's a task
+        if (event.isTask) {
+            var eventContent =  $element.find('.fc-content');
+            // Remove the date
+            eventContent.find('.fc-time').remove();
+            $element.css({
+                'background-color': 'rgb(144, 32, 32)',
+                'border-color': 'rgb(144, 32, 32)'
+            });
+            eventContent.prepend('<span class="task fa" data-event-id="' + event.id + '"></span>');
+
+            // Add the checkbox if the task is not done or the check symbol if the task is done
+            var checkbox = eventContent.find('.task');
+            if (event.isTaskDone) {
+                checkbox.addClass('fa-check');
+                checkbox.next().css('text-decoration', 'line-through');
+            } else {
+                checkbox.addClass('fa-square-o');
+            }
+        }
+    };
 
     var renderAddEventForm = function (date) {
         if (calendar.canCreate) {
@@ -189,65 +227,38 @@
         }
     };
 
-    var addEventToCalendar = function (event) {
-        $('#calendar').fullCalendar(
-            'renderEvent',
-            {
-                id: event.id,
-                title: event.title,
-                start: event.start,
-                end: event.end,
-                allDay: event.allDay,
-                color: event.color,
-                description : event.description,
-                deletable: event.deletable,
-                editable: event.editable,
-                endFormatted: event.endFormatted,
-                startFormatted: event.startFormatted,
-                owner: event.owner
+    var addEventAndTaskToCalendar = function (event) {
+        if (event.isTask) {
+            var html = Twig.render(Task, {'event': event});
+            var tasksList = $('#tasks-list');
+            if (tasksList.length === 1 && tasksList.find('.no-task')) {
+                tasksList.children().first().remove();
             }
-        );
-    };
+            tasksList.append(html);
+        }
 
-    var addTaskToCalendar = function (event) {
-        var html = Twig.render(Task, {'event': event});
-        $('#tasks-list').append(html);
-    }
+        $('#calendar').fullCalendar('renderEvent', event);
+    };
 
     var addItemsToCalendar = function (events) {
         for (var i = 0; i < events.length; i++) {
-            events[i].allDay ? addTaskToCalendar(events[i]):  addEventToCalendar(events[i]);
+            addEventAndTaskToCalendar(events[i]);
         }
-    }
+    };
 
     var updateCalendarItem = function (event) {
         removeEvent(undefined, undefined, event);
         addItemsToCalendar(new Array(event));
-    }
+    };
 
     var updateCalendarItemCallback = function (event) {
-        hidePopovers();
         updateCalendarItem(event);
-        $('.panel-body').first().prepend(calendar.flashbag);
-    }
+    };
 
     var removeEvent = function (event, item, data) {
-        hidePopovers();
-        //Remove from the calendar if it exists.
         $('#calendar').fullCalendar('removeEvents', data.id);
-        //Remove from the task bar if it exists.
-        $('#li-task-' + data.id).hide();
-    }
+    };
 
-    /**
-     * If action = 'move': the event will be moved
-     * If action = 'resize': the event will be resized
-     *
-     * @param event
-     * @param dayDelta
-     * @param minuteDelta
-     * @param action
-     */
     var resizeOrMove = function (event, dayDelta, minuteDelta, action) {
         var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
 
@@ -255,85 +266,168 @@
             'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
             'type': 'POST',
             'success': function (event) {
-                $('.panel-body').first().prepend(calendar.flashbag);
-                rerenderEvent(event, $('.' + event.className));
-            },
-            'error': function () {
-                //do more error handling here
-                alert('error');
+                // Update the event to change the popover's data
                 updateCalendarItem(event);
             }
         });
-    }
-
-    var move = function (event, dayDelta, minuteDelta) {
-        resizeOrMove(event, dayDelta, minuteDelta, 'move');
-    }
-
-    var resize = function (event, dayDelta, minuteDelta) {
-        resizeOrMove(event, dayDelta, minuteDelta, 'resize');
-    }
+    };
 
     var filterEvents = function (workspaceIds) {
         var numberOfChecked = $('.filter:checkbox:checked').length;
         var totalCheckboxes = $('.filter:checkbox').length;
-        //if all checkboxes or none checkboxes are checked display all events
-        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
+        var radioValue = $('input[type=radio].filter-tasks:checked').val();
+        // If all checkboxes or none checkboxes are checked display all events
+        if (((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) && radioValue === 'no-filter-tasks') {
             $('#calendar').fullCalendar('clientEvents', function (eventObject) {
                 eventObject.visible = true;
             });
         } else {
-            for (var i = 0; i < workspaceIds.length; i++) {
-                $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                    //check for workspace
-                    eventObject.visible = ($.inArray(eventObject.workspace_id, workspaceIds) >= 0) ? true: false;
-                    //check for desktop
-                    if (($.inArray(0, workspaceIds) >= 0) && eventObject.workspace_id === null) {
-                        eventObject.visible = true;
+            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+                var workspaceId = eventObject.workspace_id === null ? 0 : eventObject.workspace_id;
+
+                if (radioValue === 'no-filter-tasks') {
+                    eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0;
+                }
+                // Hide all the tasks
+                else if (radioValue === 'hide-tasks') {
+                    eventObject.visible = !eventObject.isTask;
+
+                    if (!eventObject.isTask) {
+                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
                     }
-                });
-            }
+                }
+                // Hide all the events
+                else {
+                    eventObject.visible = eventObject.isTask;
+
+                    if (eventObject.isTask) {
+                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
+                    }
+                }
+            });
         }
         $('#calendar').fullCalendar('rerenderEvents');
-    }
+    };
 
-    var filterTasks = function (workspaceIds) {
-        var numberOfChecked = $('.filter:checkbox:checked').length;
-        var totalCheckboxes = $('.filter:checkbox').length;
-
-        if ((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) {
-            $('.task-item').each(function () {
-                $(this).show();
-            });
-        } else {
-            //hide what's needed
-            $('.task-item').each(function() {
-                if ($.inArray(parseInt($(this).attr('data-workspace-id')), workspaceIds) < 0) $(this).hide();
-            });
+    var createPopover = function (event, $element) {
+        // In FullCalendar 2.3.1, the end date is null when the start date is the same
+        if (event.end === null) {
+            event.end = event.start;
         }
-    }
+        convertDateTimeToString();
+        $element.popover({
+            title: event.title,
+            content: Twig.render(EventContent, {'event': event}),
+            html: true,
+            container: 'body',
+            placement: 'top'
+        });
+    };
 
-    var hideFormDates = function() {
-        $('#agenda_form_end').parent().parent().hide();
+    var convertDateTimeToString = function () {
+        Twig.setFilter('convertDateTimeToString', function (value, isAllDay, isEndDate) {
+            isEndDate = typeof isEndDate !== 'undefined' ? isEndDate : false;
+            if (isAllDay) {
+                // We have to subtract 1 day for the all day events because it end on the next day at midnight. So for a better user's experience, we subtract 1 day for the end date.
+                if (isEndDate) {
+                    return moment(value).subtract(1, 'day').format('DD/MM/YYYY');
+                } else {
+                    return moment(value).format('DD/MM/YYYY');
+                }
+            } else {
+                return moment(value).format('DD/MM/YYYY HH:mm');
+            }
+        });
+    };
+
+    var markTaskAsToDo = function (event, jsEvent, $element) {
+        $.ajax({
+            url: window.Routing.generate('claro_agenda_set_task_as_not_done', {'event': event.id}),
+            type: 'GET',
+            success: function() {
+                $(jsEvent.target)
+                    .removeClass('fa-check')
+                    .addClass('fa-square-o')
+                    .next().css('text-decoration', 'none');
+                $element.popover('destroy');
+                event.isTaskDone = false;
+                createPopover(event, $element);
+            }
+        })
+    };
+
+    var markTaskAsDone = function (event, jsEvent, $element) {
+        $.ajax({
+            url: window.Routing.generate('claro_agenda_set_task_as_done', {'event': event.id}),
+            type: 'GET',
+            success: function() {
+                $(jsEvent.target)
+                    .removeClass('fa-square-o')
+                    .addClass('fa-check')
+                    .next().css('text-decoration', 'line-through');
+                $element.popover('destroy');
+                event.isTaskDone = true;
+                createPopover(event, $element);
+            }
+        })
+    };
+
+    var showEditForm = function (event) {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
+            updateCalendarItemCallback,
+            function () {
+                $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
+                $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+            },
+            'form-event'
+        )
+    };
+
+    var hideFormhours = function() {
         $('#agenda_form_endHours').parent().parent().hide();
+        $('#agenda_form_startHours').parent().parent().hide();
+    };
+
+    var showFormhours = function() {
+        $('#agenda_form_endHours').parent().parent().show();
+        if (!$('#agenda_form_isTask').is(':checked')) {
+            $('#agenda_form_startHours').parent().parent().show();
+        }
+    };
+
+    var hideStartDate = function() {
         $('#agenda_form_start').parent().parent().hide();
         $('#agenda_form_startHours').parent().parent().hide();
-    }
+    };
 
-    var showFormDates = function() {
-        $('#agenda_form_end').parent().parent().show();
-        $('#agenda_form_endHours').parent().parent().show();
+    var showStartDate = function() {
         $('#agenda_form_start').parent().parent().show();
-        $('#agenda_form_startHours').parent().parent().show();
-    }
+        if (!$('#agenda_form_isAllDay').is(':checked')) {
+            $('#agenda_form_startHours').parent().parent().show();
+        }
+    };
 
-    /**
-     * Filter by workspace ids.
-     * The id "0" is an exception for the desktop
-     * @param selected
-     */
-    var filterCalendarItems = function (workspaceIds) {
-        filterEvents(workspaceIds);
-        filterTasks(workspaceIds);
-    }
+    var getQueryVariable = function (variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+
+        for (var i = 0, varsLength = vars.length; i < varsLength; i++) {
+            var pair = vars[i].split("=");
+            if(decodeURIComponent(pair[0]) == variable){
+                return decodeURIComponent(pair[1]);
+            }
+        }
+        return null;
+    };
+
+    var redirectCalendar = function () {
+        if (getQueryVariable('year')) {
+            var year = !isNaN(getQueryVariable('year')) && getQueryVariable('year') ? getQueryVariable('year') : new Date('Y'),
+                month = !isNaN(getQueryVariable('month')) && getQueryVariable('month') ? getQueryVariable('month') : new Date('m'),
+                day = !isNaN(getQueryVariable('day')) && getQueryVariable('day') ? getQueryVariable('day') : new Date('d');
+
+            $('#calendar').fullCalendar('gotoDate', year + '-' + month + '-' + day);
+        }
+    };
 }) ();

@@ -22,10 +22,4 @@ class ClarolineAgendaBundle extends PluginBundle
     {
         return new AdditionalInstaller();
     }
-
-
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

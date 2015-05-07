@@ -98,10 +98,13 @@ class AgendaManager
 
     public function desktopEvents(User $usr, $allDay = false)
     {
-        $listEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findByUser($usr, $allDay);
         $desktopEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, $allDay);
+        $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
 
-        return array_merge($this->convertEventsToArray($listEvents), $this->convertEventsToArray($desktopEvents));
+        return array_merge(
+            $this->convertEventsToArray($workspaceEventsAndTasks),
+            $this->convertEventsToArray($desktopEvents)
+        );
     }
 
     /**
@@ -223,7 +226,7 @@ class AgendaManager
     public function displayEvents(Workspace $workspace, $allDay = false)
     {
         $events = $this->om->getRepository('ClarolineAgendaBundle:Event')
-            ->findbyWorkspaceId($workspace->getId(), $allDay);
+            ->findByWorkspaceId($workspace->getId());
 
         return $this->convertEventsToArray($events);
     }
@@ -271,19 +274,19 @@ class AgendaManager
             'start' => $startIso,
             'end' => $endIso,
             'color' => $event->getPriority(),
-            'allDay' => $event->getAllDay(),
+            'allDay' => $event->isAllDay(),
             'isTask' => $event->isTask(),
+            'isTaskDone' => $event->isTaskDone(),
             'owner' => $event->getUser()->getUsername(),
             'description' => $event->getDescription(),
-            'editable' => $this->authorization->isGranted('EDIT', $event),
+            'editable' => $this->authorization->isGranted('edit', $event),
             'deletable' => $this->authorization->isGranted('DELETE', $event),
             'workspace_id' => $event->getWorkspace() ? $event->getWorkspace()->getId(): null,
             'workspace_name' => $event->getWorkspace() ? $event->getWorkspace()->getName(): null,
-            'startFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $start),
-            'endFormatted' => date($this->translator->trans('date_range.format.with_hours', array(), 'platform'), $end),
             'endHours' => $event->getEndHours(),
             'startHours' => $event->getStartHours(),
-            'className' => 'event_' . $event->getId()
+            'className' => 'event_' . $event->getId(),
+            'durationEditable' => !$event->isTask() // If it's a task, disable resizing
         );
     }
 
@@ -328,10 +331,9 @@ class AgendaManager
      */
     private function setEventDate(Event $event)
     {
-        //task don't have start nor ending
-        if ($event->getAllDay()) {
-            $event->setStart(null);
-            $event->setEnd(null);
+        if ($event->isAllDay()) {
+            $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
+            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 23:59:00') + 60);
         } else {
             //we get the hours value directly from the property wich has been setted by the form.
             //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored

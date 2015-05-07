@@ -11,9 +11,10 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
@@ -120,6 +121,56 @@ class AgendaController extends Controller
             ),
             'event' => $event
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "set-task/{event}/as-not-done",
+     *     name="claro_agenda_set_task_as_not_done",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @throws \Exception
+     * @param $event Event
+     * @return Response
+     */
+    public function setTaskAsNotDone(Event $event)
+    {
+        $this->checkPermission($event);
+        if (!$event->isTaskDone()) {
+            throw new \Exception('This task is already mark as not done.');
+        }
+
+        $event->setIsTaskDone(false);
+        $om = $this->getDoctrine()->getManager();
+        $om->flush();
+
+        return new Response();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/set-task/{event}/as-done",
+     *     name="claro_agenda_set_task_as_done",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @throws \Exception
+     * @param $event Event
+     * @return Response
+     */
+    public function setTaskAsDone(Event $event)
+    {
+        $this->checkPermission($event);
+        if ($event->isTaskDone()) {
+            throw new \Exception('This task is already mark as done.');
+        }
+
+        $event->setIsTaskDone(true);
+        $om = $this->getDoctrine()->getManager();
+        $om->flush();
+
+        return new Response();
     }
 
     /**

@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @DI\Service("claroline.form.agenda")
@@ -64,7 +65,17 @@ class AgendaType extends AbstractType
             'isTask',
             'checkbox',
             array(
-                'label' => 'isTask'
+                'label' => 'isTask',
+                'required' => false
+            )
+        );
+
+        $builder->add(
+            'isAllDay',
+            'checkbox',
+            array(
+                'label' => 'isAllDay',
+                'required' => false
             )
         );
 
@@ -72,11 +83,12 @@ class AgendaType extends AbstractType
                 'start',
                 'datepicker',
                 array(
-                    'required'  => false,
+                    'required'  => true,
                     'widget'    => 'single_text',
                     'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
                     'attr'      => $attr,
-                    'autoclose' => true
+                    'autoclose' => true,
+                    'constraints' => new Assert\Date()
                     )
                 );
         if (!$this->editMode) {
@@ -106,11 +118,12 @@ class AgendaType extends AbstractType
             'end',
             'datepicker',
             array(
-                'required'  => false,
+                'required'  => true,
                 'widget'    => 'single_text',
                 'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
                 'attr'      => $attr,
-                'autoclose' => true
+                'autoclose' => true,
+                'constraints' => new Assert\Date()
             )
         );
 
@@ -137,7 +150,6 @@ class AgendaType extends AbstractType
             );
         }
 
-        //$builder->add('allDay', 'checkbox');
         $builder->add('description', 'tinymce')
             ->add(
                 'priority',
