@@ -35,7 +35,7 @@
                     // Auto close alert
                     $timeout(function () {
                         this.closeAlert(alert);
-                    }.bind(this), 10000);
+                    }.bind(this), 8000);
 
                     return this;
                 },
