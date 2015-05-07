@@ -1327,9 +1327,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         array $roleRestrictions = array(),
         array $groupRestrictions = array(),
         array $workspaceRestrictions = array(),
-//        array $searchedRoles = array(),
-//        array $searchedGroups = array(),
         array $excludedUsers = array(),
+        array $forcedGroups = array(),
+        array $forcedRoles = array(),
+        array $forcedWorkspaces = array(),
         $executeQuery = true
     )
     {
@@ -1338,6 +1339,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $withRoles = count($roleRestrictions) > 0;
         $withWorkspaces = count($workspaceRestrictions) > 0;
         $withExcludedUsers = count($excludedUsers) > 0;
+        $withForcedGroups = count($forcedGroups) > 0;
+        $withForcedRoles = count($forcedRoles) > 0;
+        $withForcedWorkspaces = count($forcedWorkspaces) > 0;
 
         $dql = '
             SELECT DISTINCT u
@@ -1417,6 +1421,57 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ';
         }
 
+        if ($withForcedGroups) {
+            $dql .= '
+                AND u IN (
+                    SELECT ufg
+                    FROM Claroline\CoreBundle\Entity\User ufg
+                    JOIN ufg.groups ufgg
+                    WITH ufgg IN (:forcedGroups)
+                )
+            ';
+        }
+
+        if ($withForcedRoles) {
+            $dql .= '
+                AND (
+                    u IN (
+                        SELECT ufr
+                        FROM Claroline\CoreBundle\Entity\User ufr
+                        JOIN ufr.roles ufrr
+                        WITH ufrr IN (:forcedRoles)
+                    )
+                    OR u IN (
+                        SELECT ufr2
+                        FROM Claroline\CoreBundle\Entity\User ufr2
+                        JOIN ufr2.groups ufr2g
+                        JOIN ufr2g.roles ufr2gr
+                        WITH ufr2gr IN (:forcedRoles)
+                    )
+                )
+            ';
+        }
+
+        if ($withForcedWorkspaces) {
+            $dql .= '
+                AND (
+                    u IN (
+                        SELECT ufw
+                        FROM Claroline\CoreBundle\Entity\User ufw
+                        JOIN ufw.roles ufwr
+                        WITH ufwr.workspace IN (:forcedWorkspaces)
+                    )
+                    OR u IN (
+                        SELECT ufw2
+                        FROM Claroline\CoreBundle\Entity\User ufw2
+                        JOIN ufw2.groups ufw2g
+                        JOIN ufw2g.roles ufw2gr
+                        WITH ufw2gr.workspace IN (:forcedWorkspaces)
+                    )
+                )
+            ';
+        }
+
         if ($withSearch) {
             $dql .= '
                 AND (
@@ -1464,17 +1519,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $query->setParameter('workspaceRestrictions', $workspaceRestrictions);
         }
 
-//        if ($withSearchedWs) {
-//            $query->setParameter('searchedWorkspaces', $searchedWorkspaces);
-//        }
-//
-//        if ($withSearchedRoles) {
-//            $query->setParameter('searchedRoles', $searchedRoles);
-//        }
-//
-//        if ($withSearchedGroups) {
-//            $query->setParameter('searchedGroups', $searchedGroups);
-//        }
+        if ($withForcedGroups) {
+            $query->setParameter('forcedGroups', $forcedGroups);
+        }
+
+        if ($withForcedRoles) {
+            $query->setParameter('forcedRoles', $forcedRoles);
+        }
+
+        if ($withForcedWorkspaces) {
+            $query->setParameter('forcedWorkspaces', $forcedWorkspaces);
+        }
 
         if ($withExcludedUsers) {
             $query->setParameter('excludedUsers', $excludedUsers);

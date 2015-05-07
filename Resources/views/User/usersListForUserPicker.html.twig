@@ -209,4 +209,7 @@
      data-show-mail="{{ showMail }}"
      data-show-code="{{ showCode }}"
      data-excluded-users="{% for id in excludedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-groups="{% for id in forcedGroupsIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-roles="{% for id in forcedRolesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-workspaces="{% for id in forcedWorkspacesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
 </div>

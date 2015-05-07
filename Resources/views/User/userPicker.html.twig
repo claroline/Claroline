@@ -1,46 +1,3 @@
-{% macro renderPager(pager, search, max, orderedBy, order) %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_users_list_for_user_picker',
-                'routeParams': {
-                    'search': search,
-                    'max': max,
-                    'orderedBy': orderedBy,
-                    'order': order
-                }
-            }
-        )
-    }}
-{% endmacro %}
-
-{% macro sortUrl(search, max, orderedBy, order) %}
-    {% if order == 'ASC' %}
-        {% set newOrder = 'DESC' %}
-    {% else %}
-        {% set newOrder = 'ASC' %}
-    {% endif %}
-
-    {{
-        path(
-            'claro_users_list_for_user_picker',
-            {
-                'search': search,
-                'max': max,
-                'orderedBy': orderedBy,
-                'order': newOrder
-            }
-        )
-    }}
-{% endmacro %}
-
-{% from _self import renderPager %}
-{% from _self import sortUrl %}
-{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
-
 <div class="modal-dialog user-picker-modal" id="user-picker-modal">
     <form novalidate="novalidate"
           action=""
@@ -169,7 +126,10 @@
                             'showCode': showCode,
                         },
                         {
-                            'excludedUserIds': excludedUsersIds
+                            'excludedUserIds': excludedUsersIds,
+                            'forcedGroupIds': forcedGroupsIds,
+                            'forcedRoleIds': forcedRolesIds,
+                            'forcedWorkspaceIds': forcedWorkspacesIds
                         }
                     )) 
                 }}

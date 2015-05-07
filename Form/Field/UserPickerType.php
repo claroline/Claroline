@@ -67,6 +67,9 @@ class UserPickerType extends AbstractType
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
         $view->vars['excluded_users'] = $options['excluded_users'];
+        $view->vars['forced_groups'] = $options['forced_groups'];
+        $view->vars['forced_roles'] = $options['forced_roles'];
+        $view->vars['forced_workspaces'] = $options['forced_workspaces'];
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -77,7 +80,10 @@ class UserPickerType extends AbstractType
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,
-                'excluded_users' => array()
+                'excluded_users' => array(),
+                'forced_groups' => array(),
+                'forced_roles' => array(),
+                'forced_workspaces' => array()
             )
         );
     }
