@@ -15,7 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetRepository")
- * @ORM\Table(name="claro_widget")
+ * @ORM\Table(
+ *      name="claro_widget",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="widget_plugin_unique",columns={"name", "plugin_id"})}
+ * )
  */
 class Widget
 {
@@ -36,7 +39,7 @@ class Widget
     protected $plugin;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      */
     protected $name;
 

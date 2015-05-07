@@ -283,4 +283,15 @@ class ToolRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool|]
+     */
+    public function findAllWithPlugin()
+    {
+        return $this->createQueryBuilder('tool')
+            ->leftJoin('tool.plugin', 'plugin')
+            ->getQuery()
+            ->getResult();
+    }
 }
