@@ -28,7 +28,8 @@
      */
     tinymce.claroline = {
         'disableBeforeUnload': false,
-        'domChange': null
+        'domChange': null,
+        'buttons': {}
     };
 
     /**
@@ -127,151 +128,6 @@
         $(element).parents('.modal').first().toggleClass('fullscreen');
     };
 
-    /**
-     * This method is fired when one or more resources are added to the editor
-     * with a resource picker.
-     *
-     * @param nodes An array of resource nodes.
-     *
-     */
-    tinymce.claroline.callBack = function (nodes, currentDirectoryId, isWidget)
-    {
-        if (!isWidget) {
-            var nodeId = _.keys(nodes)[0];
-            var mimeType = nodes[_.keys(nodes)][2] !== '' ? nodes[_.keys(nodes)][2] : 'unknown/mimetype';
-            var openInNewTab = tinymce.activeEditor.getParam('picker').openResourcesInNewTab ? '1' : '0';
-
-            $.ajax(home.path + 'resource/embed/' + nodeId + '/' + mimeType + '/' + openInNewTab)
-                .done(function (data) {
-                    tinymce.activeEditor.insertContent(data);
-                    if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
-                        tinymce.claroline.editorChange(tinymce.activeEditor);
-                    }
-                })
-                .error(function () {
-                    modal.error();
-                });
-        } else {
-            var workspaceId = nodes[0].parents.workspace;
-            var homeTabId = nodes[0].parents.tab;
-            var widgetId = nodes[0].id;
-
-            var url = home.path +
-                "workspaces/" + workspaceId +
-                "/tab/" + homeTabId +
-                "/widget/" + widgetId +
-                "/embed";
-
-            $.ajax(url)
-                .done(function (data) {
-                    tinymce.activeEditor.insertContent(data);
-                    if (!tinymce.activeEditor.plugins.fullscreen.isFullscreen()) {
-                        tinymce.claroline.editorChange(tinymce.activeEditor);
-                    }
-                })
-                .error(function () {
-                    modal.error();
-                });
-        }
-    };
-
-    /**
-     * Open a resource picker from a TinyMCE editor.
-     */
-    tinymce.claroline.resourcePickerOpen = function ()
-    {
-        if (!resourceManager.hasPicker('tinyMcePicker')) {
-            resourceManager.createPicker('tinyMcePicker', {
-                callback: tinymce.claroline.callBack,
-                isTinyMce: true
-            }, true);
-        } else {
-            resourceManager.picker('tinyMcePicker', 'open');
-        }
-    };
-
-    /**
-     * Open a resource picker from a TinyMCE editor.
-     */
-    tinymce.claroline.directoryPickerOpen = function ()
-    {
-        if (!resourceManager.hasPicker('tinyMceDirectoryPicker')) {
-            resourceManager.createPicker('tinyMceDirectoryPicker', {
-                callback: tinymce.claroline.directoryPickerCallBack,
-                resourceTypes: ['directory'],
-                isDirectorySelectionAllowed: true,
-                isPickerMultiSelectAllowed: false
-            }, true);
-        } else {
-            resourceManager.picker('tinyMceDirectoryPicker', 'open');
-        }
-    };
-
-    /**
-     * Open a directory picker from a TinyMCE editor.
-     */
-    tinymce.claroline.directoryPickerCallBack = function(nodes)
-    {
-        for (var id in nodes) {
-            var val = nodes[id][4];
-            var path = nodes[id][3];
-        }
-
-        //file_form_destination
-        var html = '<option value="' + val + '">' + path + '</option>';
-        $('#file_form_destination').append(html);
-        $('#file_form_destination').val(val);
-    }
-
-    /**
-     * Add resource picker and upload files buttons in a TinyMCE editor if data-resource-picker is on.
-     *
-     * @param editor A TinyMCE editor object.
-     *
-     */
-    tinymce.claroline.addResourcePicker = function (editor)
-    {
-        if ($(editor.getElement()).data('resource-picker') !== 'off') {
-            editor.addButton('resourcePicker', {
-                'icon': 'none fa fa-folder-open',
-                'classes': 'widget btn',
-                'tooltip': translator.trans('resources', {}, 'platform'),
-                'onclick': function () {
-                    tinymce.activeEditor = editor;
-                    tinymce.claroline.resourcePickerOpen();
-                }
-            });
-            editor.addButton('fileUpload', {
-                'icon': 'none fa fa-file',
-                'classes': 'widget btn',
-                'tooltip': translator.trans('upload', {}, 'platform'),
-                'onclick': function () {
-                    tinymce.activeEditor = editor;
-                    modal.fromRoute('claro_upload_modal', null, function (element) {
-                        element.on('click', '.resourcePicker', function () {
-                            tinymce.claroline.resourcePickerOpen();
-                        })
-                        .on('click', '.filePicker', function () {
-                            $('#file_form_file').click();
-                        })
-                        .on('change', '#file_form_destination', function(event) {
-                            if ($('#file_form_destination').val() === 'others') {
-                                tinymce.claroline.directoryPickerOpen();
-                            }
-                        })
-                        .on('change', '#file_form_file', function () {
-                            common.uploadfile(
-                                this,
-                                element,
-                                $('#file_form_destination').val(),
-                                tinymce.claroline.callBack
-                            );
-                        })
-                    });
-                }
-            });
-        }
-    };
 
     /**
      * Setup configuration of TinyMCE editor.
@@ -313,8 +169,19 @@
             }
         });
 
-        tinymce.claroline.addResourcePicker(editor);
         tinymce.claroline.setBeforeUnloadActive(editor);
+        var buttons = $('#' + editor.id).attr('data-custom-buttons').split(" ");
+        for (var i=0; i < buttons.length; i++) {
+            var functionKey = buttons[i];
+            var functBtn = tinymce.claroline.buttons[functionKey];
+            if (functBtn) {
+                functBtn(editor);
+            } else {
+                console.error('The function ' + functionKey + ' is not defined');
+            }
+        }
+
+
         $('body').bind('ajaxComplete', function () {
             setTimeout(function () {
                 if (editor.getElement() && editor.getElement().value === '') {
