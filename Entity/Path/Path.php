@@ -213,11 +213,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
                     break;
                 }
             }
-
-            if (empty($root)) {
-                // Unable to find root step in steps list
-                throw new \Exception('Unable to find root Step for ' . get_class($this) . ' (ID = ' . $this->id . ').');
-            }
         }
         
         return $root;
