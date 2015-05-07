@@ -18,6 +18,8 @@
 
             this.structure = [];
 
+            this.maxDepth = 8; // Do not allow adding children to steps at the max depth
+
             /**
              * Step currently displayed into Step form
              * @type {null}
@@ -92,7 +94,9 @@
              * Add a new step child to specified step
              */
             this.addStep = function (parentStep) {
-                StepService.new(parentStep);
+                if (parentStep.lvl < this.maxDepth) {
+                    StepService.new(parentStep);
+                }
             };
 
             /**
