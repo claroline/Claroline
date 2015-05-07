@@ -26,6 +26,7 @@ class TinymceType extends TextareaType
 {
     private $defaultAttributes = array(
         'class' => 'claroline-tiny-mce hide',
+        'data-custom-buttons' => 'resource_picker upload_file'
     );
 
     public function buildForm(FormBuilderInterface $builder, array $options)

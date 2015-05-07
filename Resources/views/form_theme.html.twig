@@ -61,6 +61,10 @@
     {% endspaceless %}
 {% endblock %}
 
+{% block tinymce_widget %}
+    {{ form_widget(form) }}
+{% endblock %}
+
 {% block content_widget %}
     <div {{ block('widget_container_attributes') }}>
         <div class="content-menu float-right-top">
