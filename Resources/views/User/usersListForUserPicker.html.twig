@@ -208,4 +208,5 @@
      data-show-username="{{ showUsername }}"
      data-show-mail="{{ showMail }}"
      data-show-code="{{ showCode }}"
+     data-excluded-users="{% for id in excludedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
 </div>

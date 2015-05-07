@@ -66,14 +66,20 @@ class UserPickerType extends AbstractType
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
+        $view->vars['excluded_users'] = $options['excluded_users'];
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('multiple' => true));
-        $resolver->setDefaults(array('show_username' => true));
-        $resolver->setDefaults(array('show_mail' => false));
-        $resolver->setDefaults(array('show_code' => false));
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(
+            array(
+                'translation_domain' => 'platform',
+                'multiple' => true,
+                'show_username' => true,
+                'show_mail' => false,
+                'show_code' => false,
+                'excluded_users' => array()
+            )
+        );
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)

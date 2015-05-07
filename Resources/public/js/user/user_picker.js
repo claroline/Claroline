@@ -15,21 +15,30 @@
         var showUsername = $(this).data('show-username');
         var showMail = $(this).data('show-mail');
         var showCode = $(this).data('show-code');
+        var userIdsTxt = $(this).data('excluded-users');
+        userIdsTxt = userIdsTxt.trim();
+        var userIds = userIdsTxt !== '' ?
+            userIdsTxt.split(';') :
+            [];
+        var parameters = {};
+        parameters.excludedUserIds = userIds;
         
         if (multiple === undefined) {
             multiple = 'multiple';
         }
+        var route = Routing.generate(
+            'claro_user_picker',
+            {
+                'mode': multiple,
+                'showUsername': showUsername,
+                'showMail': showMail,
+                'showCode': showCode
+            }
+        );
+        route += '?' + $.param(parameters);
         
         window.Claroline.Modal.fromUrl(
-            Routing.generate(
-                'claro_user_picker',
-                {
-                    'mode': multiple,
-                    'showUsername': showUsername,
-                    'showMail': showMail,
-                    'showCode': showCode
-                }
-            ),
+            route,
             null
         );
     });

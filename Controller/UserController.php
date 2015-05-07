@@ -77,20 +77,33 @@ class UserController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "excludedUsers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "excludedUserIds"}
+     * )
      * @EXT\Template()
      */
     public function userPickerAction(
+        array $excludedUsers,
         $mode = 'mutiple',
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0
     )
     {
+        $excludedIds = array();
+
+        foreach ($excludedUsers as $excludedUser) {
+            $excludedIds[] = $excludedUser->getId();
+        }
+
         return array(
             'mode' => $mode,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
-            'showCode' => $showCode
+            'showCode' => $showCode,
+            'excludedUsersIds' => $excludedIds
         );
     }
 
@@ -123,6 +136,11 @@ class UserController extends Controller
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "workspaceIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "excludedUsers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "excludedUserIds"}
+     * )
      * @EXT\Template()
      */
     public function usersListForUserPickerAction(
@@ -130,6 +148,7 @@ class UserController extends Controller
         array $groups,
         array $roles,
         array $workspaces,
+        array $excludedUsers,
         $search = '',
         $page = 1,
         $max = 50,
@@ -144,6 +163,11 @@ class UserController extends Controller
         $withUsername = intval($showUsername) === 1;
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
+        $excludedIds = array();
+
+        foreach ($excludedUsers as $excludedUser) {
+            $excludedIds[] = $excludedUser->getId();
+        }
 
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -157,7 +181,8 @@ class UserController extends Controller
             $order,
             $workspaces,
             $roles,
-            $groups
+            $groups,
+            $excludedUsers
         );
 
         return array(
@@ -170,7 +195,8 @@ class UserController extends Controller
             'mode' => $mode,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
-            'showCode' => $showCode
+            'showCode' => $showCode,
+            'excludedUsersIds' => $excludedIds
         );
     }
 

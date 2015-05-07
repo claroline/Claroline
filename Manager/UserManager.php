@@ -1300,7 +1300,8 @@ class UserManager
         $order = 'ASC',
         array $searchedWorkspaces = array(),
         array $searchedRoles = array(),
-        array $searchedGroups = array()
+        array $searchedGroups = array(),
+        array $excludedUsers = array()
     )
     {
         if (count($searchedRoles) > 0 ||
@@ -1324,7 +1325,8 @@ class UserManager
             $order,
             $roles,
             $groups,
-            $workspaces
+            $workspaces,
+            $excludedUsers
         );
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);

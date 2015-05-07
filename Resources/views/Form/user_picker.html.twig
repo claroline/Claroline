@@ -10,10 +10,15 @@
                    data-show-username="{% if show_username %}1{% else %}0{% endif %}"
                    data-show-mail="{% if show_mail %}1{% else %}0{% endif %}"
                    data-show-code="{% if show_code %}1{% else %}0{% endif %}"
+                   data-excluded-users="{% for user in excluded_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
             >
             <span class="input-group-btn">
                 <button class="btn btn-default user-picker"
                         data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
+                        data-show-username="{% if show_username %}1{% else %}0{% endif %}"
+                        data-show-mail="{% if show_mail %}1{% else %}0{% endif %}"
+                        data-show-code="{% if show_code %}1{% else %}0{% endif %}"
+                        data-excluded-users="{% for user in excluded_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                         type="button"
                 >
                     <i class="fa fa-user"></i>

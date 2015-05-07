@@ -1329,6 +1329,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         array $workspaceRestrictions = array(),
 //        array $searchedRoles = array(),
 //        array $searchedGroups = array(),
+        array $excludedUsers = array(),
         $executeQuery = true
     )
     {
@@ -1336,6 +1337,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $withGroups = count($groupRestrictions) > 0;
         $withRoles = count($roleRestrictions) > 0;
         $withWorkspaces = count($workspaceRestrictions) > 0;
+        $withExcludedUsers = count($excludedUsers) > 0;
 
         $dql = '
             SELECT DISTINCT u
@@ -1409,6 +1411,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ';
         }
 
+        if ($withExcludedUsers) {
+            $dql .= '
+                AND u NOT IN (:excludedUsers)
+            ';
+        }
+
         if ($withSearch) {
             $dql .= '
                 AND (
@@ -1467,6 +1475,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 //        if ($withSearchedGroups) {
 //            $query->setParameter('searchedGroups', $searchedGroups);
 //        }
+
+        if ($withExcludedUsers) {
+            $query->setParameter('excludedUsers', $excludedUsers);
+        }
 
         if ($withSearch) {
             $upperSearch = strtoupper($search);

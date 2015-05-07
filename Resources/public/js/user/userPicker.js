@@ -18,6 +18,11 @@
     var currentShowUsername = $('#user-picker-datas-box').data('show-username');
     var currentShowMail = $('#user-picker-datas-box').data('show-mail');
     var currentShowCode = $('#user-picker-datas-box').data('show-code');
+    var excludedUserIdsTxt = $('#user-picker-datas-box').data('excluded-users');
+    excludedUserIdsTxt = excludedUserIdsTxt.trim();
+    var excludedUserIds = excludedUserIdsTxt !== '' ?
+        excludedUserIdsTxt.split(';') :
+        [];
     var filterType = 'none';
     var secondFilterValue = 'none';
     var secondFilterName = 'none';
@@ -35,6 +40,7 @@
     parameters.groupIds = groupIds;
     parameters.roleIds = roleIds;
     parameters.workspaceIds = workspaceIds;
+    parameters.excludedUserIds = excludedUserIds;
     
     function displaySecondFilter()
     {
