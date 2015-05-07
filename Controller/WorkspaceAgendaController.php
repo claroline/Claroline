@@ -66,8 +66,8 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_show",
      *     options = {"expose"=true}
      * )
-     * @param Workspace $workspace
      *
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction(Workspace $workspace)
@@ -78,14 +78,11 @@ class WorkspaceAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/{workspace}/tasks",
-     *     name="claro_workspace_agenda_tasks"
-     * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'OPEN'})")
-     * @param Workspace $workspace
-     *
+     * @EXT\Route("/{workspace}/tasks", name="claro_workspace_agenda_tasks")
      * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
+     *
+     * @param Workspace $workspace
+     * @return array
      */
     public function tasksAction(Workspace $workspace)
     {
@@ -100,8 +97,8 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
      * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
+     *
      * @return array
      */
     public function importEventsModalForm(Workspace $workspace)
@@ -112,12 +109,9 @@ class WorkspaceAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/workspace/{workspace}/import",
-     *     name="claro_workspace_agenda_import"
-     * )
+     * @EXT\Route("/workspace/{workspace}/import", name="claro_workspace_agenda_import")
      * @EXT\Template("ClarolineAgendaBundle:Tool\workspace\agenda:importIcsModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     *
      * @param Workspace $workspace
      * @return array
      */
@@ -142,7 +136,7 @@ class WorkspaceAgendaController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
+     *
      * @param Workspace $workspace
      * @return array
      */
@@ -167,9 +161,8 @@ class WorkspaceAgendaController extends Controller
      * )
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'edit'})")
-     * @param Workspace $workspace
      *
+     * @param Workspace $workspace
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addEventAction(Workspace $workspace)
