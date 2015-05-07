@@ -22,6 +22,7 @@
                     name = Translator.trans('root_default_name', {}, 'path_editor');
                 }
 
+                // Initialize step properties
                 this.id                = IdentifierService.generateUUID();
                 this.lvl               = lvl;
                 this.name              = name;
@@ -31,6 +32,10 @@
                 this.primaryResource   = null;
                 this.resources         = [];
                 this.excludedResources = [];
+                this.withTutor         = false;
+                this.who               = null;
+                this.where             = null;
+                this.duration          = null;
             };
 
             /**
@@ -41,6 +46,7 @@
              * @constructor
              */
             var StepResource = function StepResource(type, id, name) {
+                // Initialize resource properties
                 this.id                  = IdentifierService.generateUUID();
                 this.resourceId          = id ? id : null;
                 this.name                = name ? name : null;
@@ -169,7 +175,7 @@
                     // Loop through children to remove propagation of the deleted resource
                     if (typeof step.children != 'undefined' && null !== step.children) {
                         for (var k = 0; k < step.children.length; k++) {
-                            this.removeResource(step.children[k], resource.id);
+                            this.removeResource(step.children[k], resource);
                         }
                     }
 
