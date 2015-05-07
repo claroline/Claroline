@@ -16,10 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Manager\Exception\NoEventFoundException;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -68,7 +66,6 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_show",
      *     options = {"expose"=true}
      * )
-     * @SEC\PreAuthorize("canAccessWorkspace({'agenda', 'OPEN'})")
      * @param Workspace $workspace
      *
      * @return \Symfony\Component\HttpFoundation\Response
