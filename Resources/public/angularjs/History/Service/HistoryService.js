@@ -105,7 +105,7 @@
                     }
 
                     // Returns a copy of the history
-                    angular.copy(data, currentData);
+                    angular.merge(currentData, data);
 
                     return currentData;
                 },
@@ -125,7 +125,7 @@
                     }
 
                     // Returns a copy of the history
-                    angular.copy(data, currentData);
+                    angular.merge(currentData, data);
 
                     return currentData;
                 },
