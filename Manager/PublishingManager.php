@@ -219,7 +219,7 @@ class PublishingManager
                 $currentPropagatedResources = array();
                 if (!empty($stepStructure->resources)) {
                     foreach ($stepStructure->resources as $resource) {
-                        if ($resource->propagateToChildren) {
+                        if (!empty($resource->propagateToChildren) && $resource->propagateToChildren) {
                             // Resource is propagated
                             $currentPropagatedResources[] = array(
                                 'id'         => $resource->id,
