@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\Controller\Exception\WorkspaceAccessDeniedException;
+use Claroline\CoreBundle\Controller\Exception\WorkspaceAccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -33,7 +33,7 @@ class WorkspaceAccessEvaluator
     )
     {
         $this->request = $request;
-        $this->authorization = $authorizaton;
+        $this->authorization = $authorization;
     }
 
     /**
