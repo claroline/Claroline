@@ -1,34 +1,35 @@
-<div class="panel panel-default">
-    <div id="step-title" class="panel-heading">
-        <div class="bg-lvl-{{ currentStep.lvl }} lvl-indicator-xlarge">&nbsp;</div>
-        <h4 class="panel-title path-tab-btn" data-target="#current-step-text">{{ currentStep.name }}</h4>
-    </div>
+<div class="panel panel-default panel-step">
+    <div class="lvl-indicator lvl-{{ currentStep.lvl }}">&nbsp;</div>
 
     <div class="panel-body">
-        {% if currentStep.children is not empty %}
-            {% if currentStep.description is null %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h5 class="panel-title text-center">
-                            <a data-toggle="collapse" href="#collapse-children">
-                            {{ 'next_step' | trans({}, 'path_player') }}
-                            </a>
-                        </h5>
-                    </div>
-                    <ul id="collapse-children" class="list-group collapse {% if currentStep.description is null %}in{% endif %}">
-                        {% for child in currentStep.children %}
-                        <li class="list-group-item">
-                            <a href="{{ path('innova_path_player_wizard', { id: path.id, stepId: child.id }) }}">
-                                {{ child.name }}
-                            </a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-        {% endif %}
+        <div class="row">
+            <!-- Previous step button -->
+            <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                {% set previousStep = currentStep.getPrevious() %}
+                {% if null != previousStep %}
+                <a href="{{ path('innova_path_player_wizard', { id: _resource.id, stepId: previousStep.id }) }}" class="btn btn-block btn-default">
+                    <span class="fa fa-arrow-left"></span>
+                    <span class="sr-only">previous</span>
+                </a>
+                {% endif %}
+            </div>
 
-        {% set allParents = currentStep.getParents() %}
+            <!-- Step title -->
+            <div class="col-md-10 col-sm-8 col-xs-8 text-center">
+                <h4>{{ currentStep.name }}</h4>
+            </div>
+
+            <!-- Next step button -->
+            <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                {% set nextStep = currentStep.getNext() %}
+                {% if null != nextStep %}
+                <a href="{{ path('innova_path_player_wizard', { id: _resource.id, stepId: nextStep.id }) }}" class="btn btn-block btn-default">
+                    <span class="sr-only">next</span>
+                    <span class="fa fa-arrow-right"></span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
 
         <div id="current-step-text" class="current-step-text path-tab">
             {{ currentStep.description | raw }}
