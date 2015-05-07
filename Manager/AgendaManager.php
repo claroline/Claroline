@@ -259,8 +259,8 @@ class AgendaManager
      */
     public function toArray(Event $event)
     {
-        $start = is_null($event->getStart())? null : $event->getStart()->getTimestamp();
-        $end = is_null($event->getEnd())? null : $event->getEnd()->getTimestamp();
+        $start = is_null($event->getStart()) ? null : $event->getStart()->getTimestamp();
+        $end = is_null($event->getEnd()) ? null : $event->getEnd()->getTimestamp();
         $startDate = new \DateTime();
         $startDate->setTimeStamp($start);
         $startIso = $startDate->format(\DateTime::ISO8601);
@@ -333,7 +333,7 @@ class AgendaManager
     {
         if ($event->isAllDay()) {
             $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
-            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 23:59:00') + 60);
+            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 24:00:00'));
         } else {
             //we get the hours value directly from the property wich has been setted by the form.
             //That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
@@ -342,5 +342,22 @@ class AgendaManager
             $event->setStart($event->getStart()->getTimestamp() + $event->startHours + 3600);
             $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours + 3600);
         }
+    }
+
+    public function sortEvents($listEvents)
+    {
+        usort(
+            $listEvents,
+            function($a, $b) {
+                $aStartTimestamp = $a->getStart()->getTimestamp();
+                $bStartTimestamp = $b->getStart()->getTimestamp();
+                if ($aStartTimestamp == $bStartTimestamp) {
+                    return 0;
+                }
+                return $aStartTimestamp > $bStartTimestamp ? 1 : -1;
+            }
+        );
+
+        return $listEvents;
     }
 }

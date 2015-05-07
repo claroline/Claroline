@@ -73,13 +73,7 @@
         ;
 
         $('.filter,.filter-tasks').click(function () {
-            var workspaceIds = [];
-
-            $('.filter:checkbox:checked').each(function () {
-                workspaceIds.push(parseInt($(this).val()));
-            });
-
-            filterEvents(workspaceIds);
+            filterEvents(getWorkspaceFilterChecked());
         });
 
         // INITIALIZE CALENDAR
@@ -122,6 +116,7 @@
             lazyFetching : false,
             fixedWeekCount: false,
             eventLimit: 4,
+            timezone: 'local',
             eventDrop: onEventDrop,
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
@@ -172,10 +167,14 @@
     };
 
     var onEventRender = function (event, element) {
-        // Events are unfiltered by default
-        event.visible = event.visible === undefined ? true: event.visible;
+        if (event.visible === undefined) {
+            filterEvent(event, getWorkspaceFilterChecked());
+        }
 
-        if (!event.visible) return false;
+        if (!event.visible) {
+            return false;
+        }
+
         renderEvent(event, element);
     };
 
@@ -261,51 +260,54 @@
 
     var resizeOrMove = function (event, dayDelta, minuteDelta, action) {
         var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
-
+        console.log(event)
         $.ajax({
-            'url': Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
-            'type': 'POST',
-            'success': function (event) {
+            url: Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
+            type: 'POST',
+            success: function (event) {
                 // Update the event to change the popover's data
                 updateCalendarItem(event);
             }
         });
     };
 
-    var filterEvents = function (workspaceIds) {
+    var filterEvent = function (event, workspaceIds) {
         var numberOfChecked = $('.filter:checkbox:checked').length;
         var totalCheckboxes = $('.filter:checkbox').length;
         var radioValue = $('input[type=radio].filter-tasks:checked').val();
         // If all checkboxes or none checkboxes are checked display all events
         if (((totalCheckboxes - numberOfChecked === 0) || (numberOfChecked === 0)) && radioValue === 'no-filter-tasks') {
-            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                eventObject.visible = true;
-            });
+            event.visible = true;
         } else {
-            $('#calendar').fullCalendar('clientEvents', function (eventObject) {
-                var workspaceId = eventObject.workspace_id === null ? 0 : eventObject.workspace_id;
+            var workspaceId = event.workspace_id === null ? 0 : event.workspace_id;
 
-                if (radioValue === 'no-filter-tasks') {
-                    eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0;
-                }
-                // Hide all the tasks
-                else if (radioValue === 'hide-tasks') {
-                    eventObject.visible = !eventObject.isTask;
+            if (radioValue === 'no-filter-tasks') {
+                event.visible = $.inArray(workspaceId, workspaceIds) >= 0;
+            }
+            // Hide all the tasks
+            else if (radioValue === 'hide-tasks') {
+                event.visible = !event.isTask;
 
-                    if (!eventObject.isTask) {
-                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
-                    }
+                if (!event.isTask) {
+                    event.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
                 }
-                // Hide all the events
-                else {
-                    eventObject.visible = eventObject.isTask;
+            }
+            // Hide all the events
+            else {
+                event.visible = event.isTask;
 
-                    if (eventObject.isTask) {
-                        eventObject.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
-                    }
+                if (event.isTask) {
+                    event.visible = $.inArray(workspaceId, workspaceIds) >= 0 || workspaceIds.length === 0;
                 }
-            });
+            }
         }
+    };
+
+    var filterEvents = function (workspaceIds) {
+        $('#calendar').fullCalendar('clientEvents', function (eventObject) {
+            filterEvent(eventObject, workspaceIds);
+        });
+
         $('#calendar').fullCalendar('rerenderEvents');
     };
 
@@ -429,5 +431,15 @@
 
             $('#calendar').fullCalendar('gotoDate', year + '-' + month + '-' + day);
         }
+    };
+
+    var getWorkspaceFilterChecked = function () {
+        var workspaceIds = [];
+
+        $('.filter:checkbox:checked').each(function () {
+            workspaceIds.push(parseInt($(this).val()));
+        });
+
+        return workspaceIds;
     };
 }) ();

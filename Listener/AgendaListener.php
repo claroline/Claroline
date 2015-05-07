@@ -11,6 +11,7 @@
 
 namespace Claroline\AgendaBundle\Listener;
 
+use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
@@ -38,6 +39,7 @@ class AgendaListener
     private $router;
     private $request;
     private $httpKernel;
+    private $agendaManager;
 
     /**
      * @DI\InjectParams({
@@ -48,7 +50,8 @@ class AgendaListener
      *     "container"      = @DI\Inject("service_container"),
      *     "router"         = @DI\Inject("router"),
      *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "httpKernel"     = @DI\Inject("http_kernel")
+     *     "httpKernel"     = @DI\Inject("http_kernel"),
+     *     "agendaManager"  = @DI\Inject("claroline.manager.agenda_manager")
      * })
      */
     public function __construct(
@@ -59,7 +62,8 @@ class AgendaListener
         ContainerInterface $container,
         RouterInterface $router,
         RequestStack $requestStack,
-        HttpKernelInterface $httpKernel
+        HttpKernelInterface $httpKernel,
+        AgendaManager $agendaManager
     )
     {
         $this->formFactory = $formFactory;
@@ -70,6 +74,7 @@ class AgendaListener
         $this->router = $router;
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
+        $this->agendaManager = $agendaManager;
     }
 
     /**
@@ -99,7 +104,6 @@ class AgendaListener
         );
     }
 
-    // TODO sort the list of events
     public function desktopWidgetAgenda()
     {
         if (!$this->request) {
@@ -111,11 +115,14 @@ class AgendaListener
         $listDesktopEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureDesktopEvents($user);
         $listWorkspaceEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureWorkspaceEvents($user);
 
+        $listEvents = $this->agendaManager->sortEvents(array_merge($listDesktopEvents, $listWorkspaceEvents));
+
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => array_merge($listDesktopEvents, $listWorkspaceEvents))
+            array('listEvents' => $listEvents)
         );
     }
+
 
     /**
      * @DI\Observe("open_tool_workspace_agenda_")
