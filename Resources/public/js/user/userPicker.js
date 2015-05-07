@@ -15,6 +15,9 @@
     var currentOrderedBy = $('#user-picker-datas-box').data('ordered-by');
     var currentOrder = $('#user-picker-datas-box').data('order');
     var currentMode = $('#user-picker-datas-box').data('mode');
+    var currentShowUsername = $('#user-picker-datas-box').data('show-username');
+    var currentShowMail = $('#user-picker-datas-box').data('show-mail');
+    var currentShowCode = $('#user-picker-datas-box').data('show-code');
     var filterType = 'none';
     var secondFilterValue = 'none';
     var secondFilterName = 'none';
@@ -404,7 +407,10 @@
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
-                    'mode': currentMode
+                    'mode': currentMode,
+                    'showUsername': currentShowUsername,
+                    'showMail': currentShowMail,
+                    'showCode': currentShowCode
                 }
             ) :
             Routing.generate(
@@ -414,7 +420,10 @@
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
-                    'mode': currentMode
+                    'mode': currentMode,
+                    'showUsername': currentShowUsername,
+                    'showMail': currentShowMail,
+                    'showCode': currentShowCode
                 }
             );
         route += '?' + $.param(parameters);

@@ -63,10 +63,16 @@ class UserPickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['multiple'] = $options['multiple'];
+        $view->vars['show_username'] = $options['show_username'];
+        $view->vars['show_mail'] = $options['show_mail'];
+        $view->vars['show_code'] = $options['show_code'];
     }
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('multiple' => true));
+        $resolver->setDefaults(array('show_username' => true));
+        $resolver->setDefaults(array('show_mail' => false));
+        $resolver->setDefaults(array('show_code' => false));
         $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 

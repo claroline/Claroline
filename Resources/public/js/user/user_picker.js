@@ -12,13 +12,24 @@
     
     $('body').on('click', '.user-picker', function () {
         var multiple = $(this).data('multiple');
+        var showUsername = $(this).data('show-username');
+        var showMail = $(this).data('show-mail');
+        var showCode = $(this).data('show-code');
         
         if (multiple === undefined) {
             multiple = 'multiple';
         }
         
         window.Claroline.Modal.fromUrl(
-            Routing.generate('claro_user_picker', {'mode': multiple}),
+            Routing.generate(
+                'claro_user_picker',
+                {
+                    'mode': multiple,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode
+                }
+            ),
             null
         );
     });

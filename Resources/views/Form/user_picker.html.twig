@@ -7,6 +7,9 @@
                    class="form-control user-picker"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
                    data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
+                   data-show-username="{% if show_username %}1{% else %}0{% endif %}"
+                   data-show-mail="{% if show_mail %}1{% else %}0{% endif %}"
+                   data-show-code="{% if show_code %}1{% else %}0{% endif %}"
             >
             <span class="input-group-btn">
                 <button class="btn btn-default user-picker"

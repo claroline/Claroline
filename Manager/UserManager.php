@@ -1291,7 +1291,9 @@ class UserManager
     public function getUsersForUserPicker(
         User $user,
         $search = '',
+        $withUsername = true,
         $withMail = false,
+        $withCode = false,
         $page = 1,
         $max = 50,
         $orderedBy = 'lastName',
@@ -1315,7 +1317,9 @@ class UserManager
         }
         $users = $this->userRepo->findUsersForUserPicker(
             $search,
+            $withUsername,
             $withMail,
+            $withCode,
             $orderedBy,
             $order,
             $roles,

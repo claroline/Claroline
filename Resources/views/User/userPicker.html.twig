@@ -159,7 +159,17 @@
             <hr>
                 
             <div id="user-picker-users-list">
-                {{ render(controller('ClarolineCoreBundle:User:usersListForUserPicker', {'mode': mode})) }}
+                {{ render(
+                    controller(
+                        'ClarolineCoreBundle:User:usersListForUserPicker',
+                        {
+                            'mode': mode,
+                            'showUsername': showUsername,
+                            'showMail': showMail,
+                            'showCode': showCode,
+                        }
+                    )) 
+                }}
             </div>
         </div>
             
