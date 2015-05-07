@@ -1,61 +1,56 @@
 .nav-buttons {
     margin-right: 5px;
+
+    .btn{
+        padding: 8px;
+    }
 }
 
-.nav-buttons .btn{
-    padding:8px;
-}
+.path-player {
+    .breadcrumbs ul {
+        border-radius: 3px;
+        font-size: 0;
+        margin: 0;
+        margin-bottom: 20px;
+        padding: 0;
 
-.path-player .breadcrumbs ul {
-    border-radius: 3px;
-    font-size: 0;
-    margin: 0;
-    margin-bottom: 20px;
-}
+        > li {
+            list-style-type: none;
+            display: inline-block;
+            position: relative;
+            font-size: 14px;
+            margin: 0;
+            margin-bottom: 1px;
 
-.path-player .breadcrumbs ul,
-.path-player .breadcrumbs ul > li {
-    padding: 0;
-    list-style-type: none;
-}
+            &:first-child {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
 
-.path-player .breadcrumbs ul > li {
-    display: inline-block;
-    position: relative;
-    font-size: 14px;
-    margin: 0;
-    margin-bottom: 1px;
-}
+            > a {
+                display: block;
+                padding: 8px 16px;
+                padding-left: 30px;
+                line-height: 20px;
+                font-weight: bold;
+                color: #FFFFFF;
+                text-shadow: -1px 0 0 rgba(0, 0, 0, 0.2), 1px 0 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.7);
 
-.path-player .breadcrumbs ul > li:first-child {
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-}
-
-.path-player .breadcrumbs ul > li > a {
-    display: block;
-    padding: 8px 16px;
-    padding-left: 30px;
-    line-height: 20px;
-    font-weight: bold;
-    color: #FFFFFF;
-    text-shadow:    -1px 0 0 rgba(0, 0, 0, 0.2), 
-                    1px 0 0 rgba(0, 0, 0, 0.7),
-                    0 -1px 0 rgba(0, 0, 0, 0.2),
-                    0 1px 0 rgba(0, 0, 0, 0.7);
-}
-
-.path-player .breadcrumbs ul > li > a:after {
-    content: "";
-    position: absolute;
-    right: -18px;
-    top: 0;
-    z-index: 5;
-    border-top:    18px solid rgba(0, 0, 0, 0);
-    border-bottom: 18px solid rgba(0, 0, 0, 0);
-    border-left-width: 18px;
-    border-left-style: solid;
-    color:transparent;
+                &:after {
+                    content: "";
+                    position: absolute;
+                    right: -18px;
+                    top: 0;
+                    z-index: 5;
+                    border-top:    18px solid rgba(0, 0, 0, 0);
+                    border-bottom: 18px solid rgba(0, 0, 0, 0);
+                    border-left-width: 18px;
+                    border-left-style: solid;
+                    color:transparent;
+                }
+            }
+        }
+    }
 }
 
 .path-player .breadcrumbs ul > .lvl-0 > a {
@@ -101,7 +96,7 @@
 /* breadcrumb childrens border-radius */
 .path-player .breadcrumbs ul.dropdown-menu li{  
     border-radius: 3px 0 0 3px;
-    display:block;
+    display: block;
 }
 
 /* override breadcrumb childrens h:over background */
@@ -111,20 +106,20 @@
 }
 
 .path-player .breadcrumbs li.dropdown{
-    position:relative;
+    position: relative;
 }
 
 .path-player .breadcrumbs a.dropdown-label{
-    padding-right:22px;
+    padding-right: 22px;
 }
 
 .path-player .breadcrumbs a.dropdown-toggle{
-    padding-right:6px;
-    padding-left:6px;
-    margin:auto;
-    position:absolute;
-    top:0;
-    right:0;
+    padding-right: 6px;
+    padding-left: 6px;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 .path-player .breadcrumbs li > a.step:hover {
@@ -132,9 +127,9 @@
 }
 
 .path-player .breadcrumbs ul > li > a.children {
-    color:grey;
-    text-shadow:0;
-    text-shadow:none;
+    color: grey;
+    text-shadow: 0;
+    text-shadow: none;
 }
 
 .path-player .breadcrumbs ul > li.terminal > a:after {
@@ -142,16 +137,16 @@
 }
 
 .path-player .breadcrumbs ul > li.terminal {
-   border-top-right-radius:3px;
-   border-bottom-right-radius:3px;
-   padding-right:5px;
+   border-top-right-radius: 3px;
+   border-bottom-right-radius: 3px;
+   padding-right: 5px;
 }
 
 /* GHOST */
 .path-player .breadcrumbs ul > li.ghost {
-    opacity:0.25;
+    opacity: 0.25;
 }
 
 .path-player .breadcrumbs ul > li.ghost:hover {
-    opacity:1;   
+    opacity: 1;
 }
