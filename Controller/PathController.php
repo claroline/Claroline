@@ -85,7 +85,7 @@ class PathController
         } catch (\Exception $e) {
             // Error
             $response['status']   = 'ERROR';
-            $response['messages'] = $e->getMessage();
+            $response['messages'] = array( $e->getMessage() );
             $response['data']     = null;
         }
         
