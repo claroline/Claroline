@@ -163,11 +163,6 @@
         }
     });
     
-    $('.grid-stack').gridstack({
-        width: 12,
-        animate: true
-    });
-    
     $('#widgets-section').on('click', '#create-widget-instance', function () {
         window.Claroline.Modal.displayForm(
             Routing.generate(

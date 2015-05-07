@@ -33,7 +33,7 @@
                      data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                      data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                      data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
-                     {% if widgetHomeTabConfig.isLocked() %}
+                     {% if widgetHomeTabConfig.isLocked() or not editionMode %}
                          data-gs-no-resize="true"
                          data-gs-no-move="true"
                      {% endif %}
@@ -52,7 +52,7 @@
                         >
                             <h3 class="panel-title">
 
-                                {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab %}
+                                {% if not widgetHomeTabConfig.isLocked() and not isLockedHomeTab and editionMode %}
                                     <span class="pull-right">
                                         <i class="fa fa-times close {% if widgetHomeTabConfig.getType() == 'desktop' %}close-widget-btn{% else %}hide-widget-btn{% endif %}"
                                            data-widget-hometab-config-id="{{ whtcId }}"
@@ -90,7 +90,7 @@
         {% endfor %}
     </div>
 
-    {% if isVisibleHomeTab and not isLockedHomeTab %}
+    {% if isVisibleHomeTab and not isLockedHomeTab and editionMode %}
         <br>
         <div id="create-widget-instance" class="panel panel-default">
             <div class="panel-heading pointer-hand text-center">
