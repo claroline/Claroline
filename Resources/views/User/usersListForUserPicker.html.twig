@@ -82,7 +82,7 @@
 {% endif %}
 
 <div class="row">
-    <div class="col-md-6 pull-right">
+    <div class="col-md-6">
         <div class="input-group margin-bottom-md">
             <input class="form-control search-user"
                    type="text"
@@ -100,10 +100,8 @@
             </span>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-6 pull-right">
-        <div class="input-group margin-bottom-md">
+    <div class="col-md-6">
+        <div class="input-group margin-bottom-md pull-right">
             {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'users_per_page') }}
         </div>
     </div>
@@ -155,13 +153,14 @@
         <tbody>
 
             {% for user in users %}
+                {% set userId = user.getId() %}
                 <tr>
                     <td class="text-center">
                         {% if mode == 'multiple' %}
                             <input type="checkbox"
                                    class="picker-user-chk"
-                                   id="picker-user-chk-{{ user.getId() }}"
-                                   value="{{ user.getId() }}"
+                                   id="picker-user-chk-{{ userId }}"
+                                   value="{{ userId }}"
                                    data-user-first-name="{{ user.getFirstName() }}"
                                    data-user-last-name="{{ user.getLastName() }}"
                                    data-user-username="{{ user.getUsername() }}"
@@ -170,26 +169,50 @@
                             <input type="radio"
                                    name="picker-user-radio"
                                    class="picker-user-chk"
-                                   id="picker-user-chk-{{ user.getId() }}"
-                                   value="{{ user.getId() }}"
+                                   id="picker-user-chk-{{ userId }}"
+                                   value="{{ userId }}"
                                    data-user-first-name="{{ user.getFirstName() }}"
                                    data-user-last-name="{{ user.getLastName() }}"
                                    data-user-username="{{ user.getUsername() }}"
                             >
                         {% endif %}
                     </td>
-                    <td>{{ user.getFirstName() }} {{ user.getLastName() }}</td>
+                    <td>
+                        <span class="picker-user-select pointer-hand"
+                              data-user-id="{{ userId }}"
+                        >
+                            {{ user.getFirstName() }} {{ user.getLastName() }}
+                        </span>
+                    </td>
                 
                     {% if showUsername == 1 %}
-                        <td>{{ user.getUsername() }}</td>
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getUsername() }}
+                            </span>
+                        </td>
                     {% endif %}
                 
                     {% if showMail == 1 %}
-                        <td>{{ user.getMail() }}</td>
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getMail() }}
+                            </span>
+                        </td>
                     {% endif %}
 
                     {% if showCode == 1 %}
-                        <td>{{ user.getAdministrativeCode() }}</td>
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {{ user.getAdministrativeCode() }}
+                            </span>
+                        </td>
                     {% endif %}
                 </tr>
             {% endfor %}

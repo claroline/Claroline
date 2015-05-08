@@ -324,7 +324,6 @@
             default:
                 break;
         }
-        displayFilterCreationBox(0);
         updateFiltersBadge();
     }
     
@@ -385,21 +384,6 @@
             $('#no-filter-alert').show('slow', function () {});
         } else {
             $('#no-filter-alert').hide('slow', function () {});
-        }
-    }
-    
-    function displayFilterCreationBox(mode)
-    {
-        if (mode === 1) {
-            $('#show-filter-creation-box-btn').hide('slow', function () {});
-            $('#filter-creation-box').show('slow', function () {
-                $('#filter-creation-box').removeClass('hidden');
-            });
-        } else {
-            $('#filter-creation-box').hide('slow', function () {});
-            $('#show-filter-creation-box-btn').show('slow', function () {
-                $('#show-filter-creation-box-btn').removeClass('hidden');
-            });
         }
     }
     
@@ -506,10 +490,6 @@
         refreshUsersList();
     });
     
-    $('#user-picker-modal').on('click', '#show-filter-creation-box-btn', function () {
-        displayFilterCreationBox(1);
-    });
-    
     $('#user-picker-modal').on('change', '#filter-level-1', function () {
         filterType = $(this).val();
         displaySecondFilter();
@@ -594,6 +574,17 @@
         updateIdsArray('user');
         updateSelectedUsersBadge();
     });
+    
+    $('#user-picker-modal').on('click', '.picker-user-select', function () {
+        var userId = $(this).data('user-id');
+        $('#picker-user-chk-' + userId).trigger('click');
+    });
+    
+//    $('#user-picker-modal').on('click', '.submit', function () {
+//        console.log('submit');
+//        $('.user-picker-input').val(userIds[0]);
+//        $('#user-picker-close-modal-btn').trigger('click');
+//    });
     
     $('#selected-users-list-box').on('click', '.remove-selected-user-btn', function () {
         var userId = $(this).data('user-id');
