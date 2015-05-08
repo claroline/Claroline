@@ -18,7 +18,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -62,27 +61,30 @@ class UserPickerType extends AbstractType
 
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
+        $view->vars['picker_name'] = $options['picker_name'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['show_all_users'] = $options['show_all_users'];
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
-        $view->vars['excluded_users'] = $options['excluded_users'];
+        $view->vars['blacklist'] = $options['blacklist'];
         $view->vars['forced_groups'] = $options['forced_groups'];
         $view->vars['forced_roles'] = $options['forced_roles'];
         $view->vars['forced_workspaces'] = $options['forced_workspaces'];
     }
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
             array(
                 'translation_domain' => 'platform',
+                'picker_name' => 'picker-name',
                 'multiple' => true,
                 'show_all_users' => false,
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,
-                'excluded_users' => array(),
+                'blacklist' => array(),
                 'forced_groups' => array(),
                 'forced_roles' => array(),
                 'forced_workspaces' => array()

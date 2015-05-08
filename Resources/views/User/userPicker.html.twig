@@ -153,6 +153,19 @@
     </form>
 </div>
 
+<div id="user-picker-main-datas-box"
+     data-picker-name="{{ pickerName }}"
+     data-mode="{{ mode }}"
+     data-show-all-users="{{ showAllUsers }}"
+     data-show-username="{{ showUsername }}"
+     data-show-mail="{{ showMail }}"
+     data-show-code="{{ showCode }}"
+     data-excluded-users="{% for id in excludedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-groups="{% for id in forcedGroupsIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-roles="{% for id in forcedRolesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-workspaces="{% for id in forcedWorkspacesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+</div>
+
 {% block javascripts %}
     <script type="text/javascript"
             src="{{ asset('bundles/clarolinecore/js/user/userPicker.js') }}"

@@ -11,6 +11,7 @@
     'use strict';
     
     $('body').on('click', '.user-picker', function () {
+        var pickerName = $(this).data('picker-name');
         var multiple = $(this).data('multiple');
         var showAllUsers = $(this).data('show-all-users');
         var showUsername = $(this).data('show-username');
@@ -53,6 +54,7 @@
         var route = Routing.generate(
             'claro_user_picker',
             {
+                'pickerName': pickerName,
                 'mode': multiple,
                 'showAllUsers': showAllUsers,
                 'showUsername': showUsername,

@@ -71,7 +71,7 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/mode/{mode}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}",
+     *     "user/picker/name/{pickerName}/mode/{mode}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}",
      *     name="claro_user_picker",
      *     defaults={"mode"="multiple","showAllUsers"=0,"showUsername"=1,"showMail"=0,"showCode"=0},
      *     options = {"expose"=true}
@@ -104,6 +104,7 @@ class UserController extends Controller
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
+        $pickerName,
         $mode = 'mutiple',
         $showAllUsers = 0,
         $showUsername = 1,
@@ -133,6 +134,7 @@ class UserController extends Controller
         }
 
         return array(
+            'pickerName' => $pickerName,
             'mode' => $mode,
             'showAllUsers' => $showAllUsers,
             'showUsername' => $showUsername,

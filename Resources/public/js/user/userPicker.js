@@ -14,31 +14,32 @@
     var currentMax = $('#user-picker-datas-box').data('max');
     var currentOrderedBy = $('#user-picker-datas-box').data('ordered-by');
     var currentOrder = $('#user-picker-datas-box').data('order');
-    var currentMode = $('#user-picker-datas-box').data('mode');
-    var currentShowAllUsers = $('#user-picker-datas-box').data('show-all-users');
-    var currentShowUsername = $('#user-picker-datas-box').data('show-username');
-    var currentShowMail = $('#user-picker-datas-box').data('show-mail');
-    var currentShowCode = $('#user-picker-datas-box').data('show-code');
+    var pickerName = $('#user-picker-main-datas-box').data('picker-name');
+    var mode = $('#user-picker-main-datas-box').data('mode');
+    var showAllUsers = $('#user-picker-main-datas-box').data('show-all-users');
+    var showUsername = $('#user-picker-main-datas-box').data('show-username');
+    var showMail = $('#user-picker-main-datas-box').data('show-mail');
+    var showCode = $('#user-picker-main-datas-box').data('show-code');
     
-    var excludedUserIdsTxt = '' + $('#user-picker-datas-box').data('excluded-users');
+    var excludedUserIdsTxt = '' + $('#user-picker-main-datas-box').data('excluded-users');
     excludedUserIdsTxt = excludedUserIdsTxt.trim();
     var excludedUserIds = excludedUserIdsTxt !== '' ?
         excludedUserIdsTxt.split(';') :
         [];
     
-    var groupIdsTxt = '' + $('#user-picker-datas-box').data('forced-groups');
+    var groupIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-groups');
     groupIdsTxt = groupIdsTxt.trim();
     var forcedGroupIds = groupIdsTxt !== '' ?
         groupIdsTxt.split(';') :
         [];
 
-    var roleIdsTxt = '' + $('#user-picker-datas-box').data('forced-roles');
+    var roleIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-roles');
     roleIdsTxt = roleIdsTxt.trim();
     var forcedRoleIds = roleIdsTxt !== '' ?
         roleIdsTxt.split(';') :
         [];
 
-    var workspaceIdsTxt = '' + $('#user-picker-datas-box').data('forced-workspaces');
+    var workspaceIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-workspaces');
     workspaceIdsTxt = workspaceIdsTxt.trim();
     var forcedWorkspaceIds = workspaceIdsTxt !== '' ?
         workspaceIdsTxt.split(';') :
@@ -422,11 +423,11 @@
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
-                    'mode': currentMode,
-                    'showAllUsers': currentShowAllUsers,
-                    'showUsername': currentShowUsername,
-                    'showMail': currentShowMail,
-                    'showCode': currentShowCode
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode
                 }
             ) :
             Routing.generate(
@@ -436,11 +437,11 @@
                     'max': currentMax,
                     'orderedBy': currentOrderedBy,
                     'order': currentOrder,
-                    'mode': currentMode,
-                    'showAllUsers': currentShowAllUsers,
-                    'showUsername': currentShowUsername,
-                    'showMail': currentShowMail,
-                    'showCode': currentShowCode
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode
                 }
             );
         route += '?' + $.param(parameters);
@@ -527,7 +528,7 @@
     $('#user-picker-modal').on('click', '.picker-user-chk', function () {
         var userId = $(this).val();
         
-        if (currentMode === 'multiple') {
+        if (mode === 'multiple') {
             
             if ($(this).prop('checked')) {
                 var firstName = $(this).data('user-first-name');
@@ -539,7 +540,7 @@
                 selectedUsers[userId] = null;
                 removeUserFromSelectedUsersBox(userId);
             }
-        } else if (currentMode === 'single') {
+        } else if (mode === 'single') {
             var firstName = $(this).data('user-first-name');
             var lastName = $(this).data('user-last-name');
             var username = $(this).data('user-username');
@@ -580,11 +581,11 @@
         $('#picker-user-chk-' + userId).trigger('click');
     });
     
-//    $('#user-picker-modal').on('click', '.submit', function () {
-//        console.log('submit');
-//        $('.user-picker-input').val(userIds[0]);
-//        $('#user-picker-close-modal-btn').trigger('click');
-//    });
+    $('#user-picker-modal').on('click', '.submit', function () {
+        console.log(pickerName);
+        $('#user-picker-input-' + pickerName).val(userIds[0]);
+        $('#user-picker-close-modal-btn').trigger('click');
+    });
     
     $('#selected-users-list-box').on('click', '.remove-selected-user-btn', function () {
         var userId = $(this).data('user-id');
