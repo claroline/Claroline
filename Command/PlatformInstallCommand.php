@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
 
 /**
  * Performs a fresh installation of the platform based on bundles listed
@@ -41,6 +42,9 @@ class PlatformInstallCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(sprintf('<comment>%s - Installing the platform...</comment>', date('H:i:s')));
+        $databaseCreator = new CreateDatabaseDoctrineCommand();
+        $databaseCreator->setContainer($this->getContainer());
+        $databaseCreator->run(new ArrayInput(array()), $output);
 
         $verbosityLevelMap = array(
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,

@@ -65,10 +65,13 @@ class ConfigurationChecker implements CheckerInterface
         }
 
         $tools = array();
-        $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAll();
+        /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $listTool */
+        $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAllWithPlugin();
 
         foreach ($listTool as $tool) {
-            $tools[] = $tool->getName();
+            $toolPlugin = $tool->getPlugin();
+
+            $tools[] = sprintf("%s%s", ($toolPlugin ? $toolPlugin->getBundleFQCN() . '-' : ''), $tool->getName());
         }
 
         $resourceActions = array();
@@ -78,8 +81,18 @@ class ConfigurationChecker implements CheckerInterface
             $resourceActions[] = $resourceAction->getName();
         }
 
+        $widgets = array();
+        /** @var \Claroline\CoreBundle\Entity\Widget\Widget[] $listWidget */
+        $listWidget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAllWithPlugin();
+
+        foreach ($listWidget as $widget) {
+            $widgetPlugin = $widget->getPlugin();
+
+            $widgets[] = sprintf("%s%s", ($widgetPlugin ? $widgetPlugin->getBundleFQCN() . '-' : ''), $widget->getName());
+        }
+
         $processor = new Processor();
-        $configuration = new Configuration($plugin, $names, $tools, $resourceActions);
+        $configuration = new Configuration($plugin, $names, $tools, $resourceActions, $widgets);
         $configuration->setUpdateMode($updateMode);
 
         try {

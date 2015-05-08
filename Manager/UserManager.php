@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -1286,6 +1287,41 @@ class UserManager
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', array($user));
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->container->get('security.token_storage')->setToken($token);
+    }
+
+    public function persistUserOptions(UserOptions $options)
+    {
+        $this->objectManager->persist($options);
+        $this->objectManager->flush();
+    }
+
+    public function getUserOptions(User $user)
+    {
+        $options = $user->getOptions();
+
+        if (is_null($options)) {
+            $options = new UserOptions();
+            $options->setUser($user);
+            $this->objectManager->persist($options);
+            $user->setOptions($options);
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
+        }
+
+        return $options;
+    }
+
+    public function switchDesktopMode(User $user)
+    {
+        $options = $this->getUserOptions($user);
+        $mode = $options->getDesktopMode();
+
+        if ($mode === UserOptions::READ_ONLY_MODE) {
+            $options->setDesktopMode(UserOptions::EDITION_MODE);
+        } else {
+            $options->setDesktopMode(UserOptions::READ_ONLY_MODE);
+        }
+        $this->persistUserOptions($options);
     }
 
     public function getUsersForUserPicker(

@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -59,6 +60,7 @@ class HomeController extends Controller
     private $tokenStorage;
     private $authorization;
     private $toolManager;
+    private $userManager;
     private $utils;
     private $widgetManager;
 
@@ -74,6 +76,7 @@ class HomeController extends Controller
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -89,6 +92,7 @@ class HomeController extends Controller
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
+        UserManager $userManager,
         Utilities $utils,
         WidgetManager $widgetManager
     )
@@ -103,6 +107,7 @@ class HomeController extends Controller
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->toolManager = $toolManager;
+        $this->userManager = $userManager;
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
     }
@@ -203,12 +208,15 @@ class HomeController extends Controller
                 );
             }
         }
+        $options = $this->userManager->getUserOptions($user);
+        $editionMode = $options->getDesktopMode() === 1;
 
         return array(
             'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
             'workspaceUserHTCs' => $workspaceUserHTCs,
-            'tabId' => $homeTabId
+            'tabId' => $homeTabId,
+            'editionMode' => $editionMode
         );
     }
 
@@ -1527,6 +1535,21 @@ class HomeController extends Controller
         $widgetDisplayConfig->setRow($row);
         $widgetDisplayConfig->setColumn($column);
         $this->widgetManager->persistWidgetDisplayConfigs(array($widgetDisplayConfig));
+
+        return new Response('success', 204);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "desktop/mode/switch",
+     *     name="claro_desktop_mode_switch",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function desktopSwitchModeAction(User $user)
+    {
+        $this->userManager->switchDesktopMode($user);
 
         return new Response('success', 204);
     }

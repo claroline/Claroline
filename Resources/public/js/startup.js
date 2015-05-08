@@ -86,7 +86,6 @@
 
     //Required for the resource manager, when we want to open a directory after a search
     Twig.setFunction('getCurrentUrl', function() {
-        location = window.location.href;
         return location.pathname;
     });
 

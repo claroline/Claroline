@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,7 +24,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,6 +40,7 @@ class DesktopController extends Controller
     private $request;
     private $router;
     private $toolManager;
+    private $userManager;
     private $widgetManager;
 
     /**
@@ -50,6 +51,7 @@ class DesktopController extends Controller
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
@@ -60,6 +62,7 @@ class DesktopController extends Controller
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
+        UserManager $userManager,
         WidgetManager $widgetManager
     )
     {
@@ -69,6 +72,7 @@ class DesktopController extends Controller
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->toolManager = $toolManager;
+        $this->userManager = $userManager;
         $this->widgetManager = $widgetManager;
     }
 
@@ -192,6 +196,8 @@ class DesktopController extends Controller
                 $widgets[] = $widget;
             }
         }
+        $options = $this->userManager->getUserOptions($user);
+        $editionMode = $options->getDesktopMode() === 1;
 
         return array(
             'widgetsDatas' => $widgets,
@@ -199,7 +205,8 @@ class DesktopController extends Controller
             'isLockedHomeTab' => $isLockedHomeTab,
             'homeTabId' => $homeTabId,
             'initWidgetsPosition' => $initWidgetsPosition,
-            'isWorkspace' => $isWorkspace
+            'isWorkspace' => $isWorkspace,
+            'editionMode' => $editionMode
         );
     }
 

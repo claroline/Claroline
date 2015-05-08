@@ -788,7 +788,7 @@ class WorkspaceController extends Controller
             );
 
             return new RedirectResponse($route);
-            }
+        }
     }
 
     /**
