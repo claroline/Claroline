@@ -38,14 +38,12 @@
             </form>
         </div>
         <div class="modal-footer">
-            {% block footer %}
-                <span class="btn btn-default" data-dismiss="modal">
-                    {{ 'cancel'|trans({}, 'platform') }}
-                </span>
-                <button type="submit" class="btn btn-primary">
-                    {{ 'ok'|trans({}, 'platform') }}
-                </button>
-            {% endblock %}
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </span>
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
         </div>
     </div>
 </div>
