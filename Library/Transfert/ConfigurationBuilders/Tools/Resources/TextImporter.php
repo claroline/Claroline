@@ -53,20 +53,22 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $rootPath = $this->getRootPath();
 
         $rootNode
-            ->children()
-                ->arrayNode('file')
-                    ->children()
-                        ->scalarNode('path')->isRequired()
-                            ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($rootPath) {
-                                        return call_user_func_array(
-                                            __CLASS__ . '::fileNotExists',
-                                            array($v, $rootPath)
-                                        );
-                                    }
-                                )
-                                ->thenInvalid("The file %s doesn't exists")
+            ->prototype('array')
+                ->children()
+                    ->arrayNode('file')
+                        ->children()
+                            ->scalarNode('path')->isRequired()
+                                ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($rootPath) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::fileNotExists',
+                                                array($v, $rootPath)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The file %s doesn't exists")
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
