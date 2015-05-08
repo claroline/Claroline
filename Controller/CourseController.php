@@ -33,13 +33,12 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -53,7 +52,6 @@ class CourseController extends Controller
     private $request;
     private $roleManager;
     private $router;
-    private $securityContext;
     private $toolManager;
     private $translator;
     private $workspaceManager;
@@ -66,7 +64,6 @@ class CourseController extends Controller
      *     "requestStack"     = @DI\Inject("request_stack"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "router"           = @DI\Inject("router"),
-     *     "securityContext"  = @DI\Inject("security.context"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
@@ -79,9 +76,8 @@ class CourseController extends Controller
         RequestStack $requestStack,
         RoleManager $roleManager,
         RouterInterface $router,
-        SecurityContextInterface $securityContext,
         ToolManager $toolManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         WorkspaceManager $workspaceManager
     )
     {
@@ -91,7 +87,6 @@ class CourseController extends Controller
         $this->request = $requestStack->getCurrentRequest();
         $this->roleManager = $roleManager;
         $this->router = $router;
-        $this->securityContext = $securityContext;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
         $this->workspaceManager = $workspaceManager;

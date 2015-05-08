@@ -35,7 +35,7 @@ use Claroline\CursusBundle\Event\Log\LogCourseSessionUserUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -66,7 +66,7 @@ class CursusManager
     private $sessionGroupRepo;
     private $sessionQueueRepo;
     private $sessionUserRepo;
-    
+
     /**
      * @DI\InjectParams({
      *     "container"        = @DI\Inject("service_container"),
@@ -88,7 +88,7 @@ class CursusManager
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
         $templateDir,
-        Translator $translator,
+        TranslatorInterface $translator,
         WorkspaceManager $workspaceManager
     )
     {
@@ -124,17 +124,17 @@ class CursusManager
         $this->sessionUserRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSessionUser');
     }
-    
+
     public function persistCursusDisplayedWord(CursusDisplayedWord $word)
     {
         $this->om->persist($word);
         $this->om->flush();
     }
-    
+
     public function getDisplayedWord($word)
     {
         $cursusDisplayedWord = $this->cursusWordRepo->findOneByWord($word);
-        
+
         if (is_null($cursusDisplayedWord)) {
             $result = $this->translator->trans($word, array(), 'cursus');
         } else {
@@ -143,7 +143,7 @@ class CursusManager
                 $this->translator->trans($word, array(), 'cursus'):
                 $displayedWord;
         }
-        
+
         return $result;
     }
 
@@ -250,7 +250,7 @@ class CursusManager
             $this->om->endFlushSuite();
         }
     }
-    
+
     public function registerUserToCursus(Cursus $cursus, User $user)
     {
         $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
@@ -349,7 +349,7 @@ class CursusManager
                 $users
             );
             $course = $cursus->getCourse();
-                    
+
             if (!is_null($course)) {
                 $coursesToUnregister[] = $course;
             }
@@ -1091,7 +1091,7 @@ class CursusManager
 
         if (!is_null($icon)) {
             $iconPath = $this->iconsDirectory . $icon;
-            
+
             try {
                 unlink($iconPath);
             } catch(\Exception $e) {}
@@ -1174,12 +1174,12 @@ class CursusManager
         $this->om->remove($queue);
         $this->om->endFlushSuite();
     }
-    
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
      ***************************************************/
-    
+
     public function getOneDisplayedWordByWord($word)
     {
         return $this->cursusWordRepo->findOneByWord($word);
@@ -1292,7 +1292,7 @@ class CursusManager
             $this->pagerFactory->createPagerFromArray($cursus, $page, $max) :
             $this->pagerFactory->createPager($cursus, $page, $max);
     }
-    
+
     public function getCursusByIds(array $ids, $executeQuery = true)
     {
         return count($ids) > 0 ?

@@ -23,29 +23,29 @@ use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CursusController extends Controller
 {
     private $cursusManager;
     private $formFactory;
     private $request;
-    private $securityContext;
+    private $authorization;
     private $toolManager;
     private $translator;
-    
+
     /**
      * @DI\InjectParams({
      *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "securityContext" = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"      = @DI\Inject("translator")
      * })
@@ -54,15 +54,15 @@ class CursusController extends Controller
         CursusManager $cursusManager,
         FormFactory $formFactory,
         RequestStack $requestStack,
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
-        $this->securityContext = $securityContext;
+        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -85,12 +85,12 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $displayedWords = array();
-        
+
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
         $allRootCursus = $this->cursusManager->getAllRootCursus();
-        
+
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
@@ -340,13 +340,13 @@ class CursusController extends Controller
         }
         $hierarchy = array();
         $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
-        
+
         foreach ($allCursus as $oneCursus) {
             $parent = $oneCursus->getParent();
-            
+
             if (!is_null($parent)) {
                 $parentId = $parent->getId();
-                
+
                 if (!isset($hierarchy[$parentId])) {
                     $hierarchy[$parentId] = array();
                 }
@@ -648,13 +648,13 @@ class CursusController extends Controller
             return new JsonResponse('Forbidden', 403);
         }
     }
-    
-    
+
+
     /********************************
      * Plugin configuration methods *
      ********************************/
-    
-    
+
+
     /**
      * @EXT\Route(
      *     "/plugin/configure/form",
@@ -667,7 +667,7 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $displayedWords = array();
-        
+
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
@@ -714,7 +714,7 @@ class CursusController extends Controller
             'displayedWords' => $displayedWords
         );
     }
-    
+
     /**
      * @EXT\Route(
      *     "/admin/displayed/word/{key}/change/{value}",
@@ -726,16 +726,16 @@ class CursusController extends Controller
      */
     public function displayedWordChangeAction($key, $value = '')
     {
-        $this->securityContext->isGranted('ROLE_ADMIN');
+        $this->authorization->isGranted('ROLE_ADMIN');
         $displayedWord = $this->cursusManager->getOneDisplayedWordByWord($key);
-        
+
         if (is_null($displayedWord)) {
             $displayedWord = new CursusDisplayedWord();
             $displayedWord->setWord($key);
         }
         $displayedWord->setDisplayedWord($value);
         $this->cursusManager->persistCursusDisplayedWord($displayedWord);
-        
+
         $sessionFlashBag = $this->get('session')->getFlashBag();
         $msg = $this->translator->trans('the_displayed_word_for', array(), 'cursus') .
             ' [' .
@@ -746,7 +746,7 @@ class CursusController extends Controller
             . $value .
             ']';
         $sessionFlashBag->add('success', $msg);
-        
+
         return new Response('success', 200);
     }
 
@@ -923,9 +923,9 @@ class CursusController extends Controller
     private function checkToolAccess()
     {
         $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool');
-        
+
         if (is_null($cursusTool) ||
-            !$this->securityContext->isGranted('OPEN', $cursusTool)) {
+            !$this->authorization->isGranted('OPEN', $cursusTool)) {
 
             throw new AccessDeniedException();
         }

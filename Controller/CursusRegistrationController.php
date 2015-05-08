@@ -22,35 +22,35 @@ use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CursusRegistrationController extends Controller
 {
     private $cursusManager;
-    private $securityContext;
+    private $authorization;
     private $toolManager;
     private $translator;
 
     /**
      * @DI\InjectParams({
      *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "securityContext" = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
         CursusManager $cursusManager,
-        SecurityContextInterface $securityContext,
+        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
-        Translator $translator
+        TranslatorInterface $translator
     )
     {
         $this->cursusManager = $cursusManager;
-        $this->securityContext = $securityContext;
+        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -787,7 +787,7 @@ class CursusRegistrationController extends Controller
         $cursusTool = $this->toolManager->getAdminToolByName('claroline_cursus_tool_registration');
 
         if (is_null($cursusTool) ||
-            !$this->securityContext->isGranted('OPEN', $cursusTool)) {
+            !$this->authorization->isGranted('OPEN', $cursusTool)) {
 
             throw new AccessDeniedException();
         }
