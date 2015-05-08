@@ -108,8 +108,7 @@ class TeamManager
                 $creatableResources
             );
             $node = $team->getDirectory()->getResourceNode();
-            $node->setPrevious(null);
-            $node->setNext(null);
+            $node->setIndex(1);
             $this->om->persist($node);
             $teams[] = $team;
             $nodes[] = $node;
@@ -574,24 +573,12 @@ class TeamManager
     {
         if (count($nodes) > 0) {
             $rootNode = $this->resourceManager->getWorkspaceRoot($workspace);
-            $lastNode = $this->resourceManager
-                ->findPreviousOrLastRes($rootNode);
+            $index = $this->resourceManager->getLastIndex($rootNode) + 1;
 
-            if (!is_null($lastNode)) {
-                $nodes[0]->setPrevious($lastNode);
-                $lastNode->setNext($nodes[0]);
-                $this->om->persist($nodes[0]);
-                $this->om->persist($lastNode);
-            }
-
-            for ($i = 0; $i < count($nodes); $i++) {
-
-                if (isset($nodes[$i]) && isset($nodes[$i + 1])) {
-                    $nodes[$i]->setNext($nodes[$i + 1]);
-                    $nodes[$i + 1]->setPrevious($nodes[$i]);
-                    $this->om->persist($nodes[$i]);
-                    $this->om->persist($nodes[$i + 1]);
-                }
+            foreach ($nodes as $node) {
+                $node->setIndex($index);
+                $this->om->persist($node);
+                $index++;
             }
         }
     }
