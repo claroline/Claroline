@@ -99,7 +99,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $importer = $this->getImporterByName($item['item']['type']);
 
                 if (!$importer && $this->env === 'dev') {
-                    throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
+                    //throw new InvalidConfigurationException('The importer ' . $item['item']['type'] . ' does not exist');
                 }
 
                 if ($importer && isset($item['item']['data'])) {
@@ -173,7 +173,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
-                $res = array(); 
+                $res = array();
                 if (isset($item['item']['data'])) $res['data'] = $item['item']['data'];
                 //get the entity from an importer
                 $importer = $this->getImporterByName($item['item']['type']);
