@@ -18,7 +18,7 @@
 </div>
 
 {% if event.description is not empty %}
-    {{ 'description'|trans({}, 'platform') }} :
+    {{ 'form.description'|trans({}, 'agenda') }} :
     <div style="max-height: 150px; overflow-y: auto;">
          {{ event.description|raw }}
     </div>

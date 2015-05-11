@@ -84,7 +84,6 @@ class Event implements \JsonSerializable
     private $isTaskDone = false;
 
     /**
-     *
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\AgendaBundle\Entity\EventCategory",
      *      inversedBy="events"

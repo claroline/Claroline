@@ -1,16 +1,5 @@
 add_event: 'Add new event'
 isTask: Task
-agenda_form_allDay: All day
-agenda_form_description: Description
-agenda_form_end: 'End date'
-agenda_form_endHours: 'End hour'
-agenda_form_priority: Priority
-agenda_form_priority_High: High
-agenda_form_recurring: Repeats
-agenda_form_start: 'Start date'
-agenda_form_startHours: 'Start hour'
-agenda_form_title: 'Title'
-agenda_form_author: 'Created by'
 all_day: the whole day
 at: at
 cancel: Cancel
@@ -33,6 +22,9 @@ day:
     saturday: Saturday
     sun: Sun
     sunday: Sunday
+date_agenda_display_format: MM-DD-YYYY
+date_agenda_display_format_for_calendar: m-d-Y
+date_agenda_display_format_for_form: MM-dd-yyyy
 end: end
 end_date: 'End date'
 error: 'An unexpected error occurred, please try again'
@@ -42,6 +34,19 @@ export: 'Export events'
 filter_user: Filter by user
 filter_tasks: Filter the tasks
 filter_ws: Filter by workspace
+form:
+    all_day: All day
+    description: Description
+    end: End date
+    end_hours: End hours
+    task: Task
+    priority: Priority
+    priority_hight: Hight
+    recurring: Recurring
+    start: Start date
+    start_hours: Start hours
+    title: Title
+    author: Author
 high: High
 hide_tasks: Hide all the tasks
 import_agenda_file_file: Import

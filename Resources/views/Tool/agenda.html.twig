@@ -51,7 +51,7 @@
         {{
             macros.desktopBreadcrumbs([
                 {
-                    'name': 'agenda'|trans({}, 'platform'),
+                    'name': 'agenda'|trans({}, 'agenda'),
                     'href': ''
                 }
             ])
@@ -61,7 +61,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'agenda'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'agenda') }}</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -155,14 +155,13 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">{{ 'agenda_form_priority'|trans({}, 'agenda') }}</div>
+                    <div class="panel-heading">{{ 'form.priority'|trans({}, 'agenda') }}</div>
                     <div class="panel-body list-group" style="padding:0">
                         <div class="list-group-item" style="color:#FF0000">  {{ 'high'|trans({}, 'agenda') }} </div>
                         <div class="list-group-item" style="color:#01A9DB"> {{ 'medium'|trans({}, 'agenda') }} </div>
                         <div class="list-group-item" style="color:#848484"> {{ 'low'|trans({}, 'agenda') }} </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
