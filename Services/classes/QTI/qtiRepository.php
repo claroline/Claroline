@@ -157,7 +157,9 @@ class qtiRepository {
                             }
                         }
                         if ($imported === false) {
-                            $imported = $this->importOther($ai);
+                            $other = $this->importOther($ai);
+                            $interX = $other[0];
+                            $imported = $other[1];
                             if ($imported == false) {
 
                                 return 'qti unsupported format';
@@ -187,10 +189,13 @@ class qtiRepository {
      * @access private
      * @param  DOMElement $ai
      *
+     *  @return array
      */
     private function importOther($ai)
     {
         $imported = false;
+        $interX   = NULL;
+        $response = array();
         $ib = $ai->getElementsByTagName('itemBody')->item(0);
         $nbNodes = 0;
         $promptTag = false;
@@ -217,7 +222,10 @@ class qtiRepository {
                         $imported = true;
         }
 
-        return $imported;
+        $response[] = $interX;
+        $response[] = $imported;
+
+        return $response;
     }
 
     /**
