@@ -2,13 +2,13 @@
     "name": "ujm/exo-bundle",
     "type": "claroline-plugin",
     "require": {
-        "claroline/core-bundle": "~4.0"
+        "claroline/core-bundle": "~5.0"
     },
     "autoload": {
         "psr-0": { "UJM\\ExoBundle": "" }
     },
     "target-dir": "UJM/ExoBundle",
     "extra": {
-        "dbVersion": "20150416104535"
+        "dbVersion": "20150511153909"
     }
 }
