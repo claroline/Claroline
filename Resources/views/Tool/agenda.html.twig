@@ -181,11 +181,11 @@
     <script type='text/javascript'>
         {% if workspace is not defined %}
             $(function () {
-                Claroline.Calendar.initialize('desktop');
+                Claroline.Calendar.initialize('desktop', "undefined", '{{ canEditEvent|json_encode|raw }}');
             });
         {% else %}
             $(function () {
-                Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, {% if canCreate %}true{% else %}false{% endif %});
+                Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, '{{ canEditEvent|json_encode|raw }}');
             });
         {% endif %}
     </script>

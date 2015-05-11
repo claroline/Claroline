@@ -12,7 +12,7 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
-    var canCreateEvent;
+    var canEditEvent;
     var addUrl;
     var showUrl;
     var $calendarElement = $('#calendar');
@@ -21,18 +21,18 @@
     calendar.initialize = function (
         context,
         workspaceId,
-        canCreate
+        canEdit
     ) {
         context = context || 'desktop';
         workspaceId = workspaceId || null;
         //the creation is enabled by default
-        if (canCreate === undefined) {
-            canCreateEvent = true;
+        if (canEdit === undefined) {
+            canEditEvent = true;
         } else {
-            canCreateEvent = canCreate;
+            canEditEvent = JSON.parse(canEdit);
         }
 
-        //initialize route & url depending on the context
+        // Initialize route & url depending on the context
         if (context !== 'desktop') {
             addUrl = Routing.generate('claro_workspace_agenda_add_event_form', {'workspace': workspaceId});
             showUrl = Routing.generate('claro_workspace_agenda_show', {'workspace': workspaceId});
@@ -77,7 +77,6 @@
             monthNamesShort: t(['month.jan', 'month.feb', 'month.mar', 'month.apr', 'month.may', 'month.ju', 'month.jul', 'month.aug', 'month.sept',  'month.oct', 'month.nov', 'month.dec']),
             dayNames: t(['day.sunday', 'day.monday', 'day.tuesday', 'day.wednesday', 'day.thursday', 'day.friday', 'day.saturday']),
             dayNamesShort: t(['day.sun', 'day.mon', 'day.tue', 'day.wed', 'day.thu', 'day.fri', 'day.sat']),
-            editable: true,
             //This is the url wich will get the events from ajax the 1st time the calendar is launched
             events: showUrl,
             axisFormat: 'HH:mm',
@@ -109,22 +108,23 @@
 
      function onEventClick(event, jsEvent)
      {
-        // If the user can edit the event
-        if (event.editable) {
-            var $this = $(this);
-            // If click on the check symbol of a task, mark this task as "to do"
-            if ($(jsEvent.target).hasClass('fa-check')) {
-                markTaskAsToDo(event, jsEvent, $this);
-            }
-            // If click on the checkbox of a task, mark this task as done
-            else if ($(jsEvent.target).hasClass('fa-square-o')) {
-                markTaskAsDone(event, jsEvent, $this);
-            }
-            // Show the modal form
-            else {
-                showEditForm(event);
-            }
-        }
+         var workspaceId = event.workspace_id ? event.workspace_id : 0;
+         if (canEditEvent[workspaceId]) {
+             // If the user can edit the event
+             var $this = $(this);
+             // If click on the check symbol of a task, mark this task as "to do"
+             if ($(jsEvent.target).hasClass('fa-check')) {
+                 markTaskAsToDo(event, jsEvent, $this);
+             }
+             // If click on the checkbox of a task, mark this task as done
+             else if ($(jsEvent.target).hasClass('fa-square-o')) {
+                 markTaskAsDone(event, jsEvent, $this);
+             }
+             // Show the modal form
+             else {
+                 showEditForm(event);
+             }
+         }
     }
 
     function onEventDestroy(event, $element)
@@ -164,6 +164,11 @@
     {
         // Create the popover for the event or the task
         createPopover(event, $element);
+        var workspaceId = event.workspace_id ? event.workspace_id : 0;
+        event.editable = canEditEvent[workspaceId];
+        if (event.editable) {
+            $element.addClass('fc-draggable');
+        }
 
         // If it's a task
         if (event.isTask) {
@@ -189,7 +194,8 @@
 
     function renderAddEventForm(date)
     {
-        if (canCreateEvent && !isFormShown) {
+        for(var key in canEditEvent) break;
+        if (canEditEvent[key] && !isFormShown) {
             var dateVal = moment(date).format(t('date_agenda_display_format'));
 
             var postRenderAddEventAction = function (html) {
@@ -373,7 +379,7 @@
                     $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
                 },
                 'form-event'
-            )
+            );
 
             isFormShown = true;
         }

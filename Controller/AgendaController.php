@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
@@ -34,6 +35,7 @@ class AgendaController extends Controller
     private $request;
     private $agendaManager;
     private $router;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
@@ -42,6 +44,7 @@ class AgendaController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"             = @DI\Inject("router"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
@@ -49,7 +52,8 @@ class AgendaController extends Controller
         FormFactory $formFactory,
         Request $request,
         AgendaManager $agendaManager,
-        RouterInterface $router
+        RouterInterface $router,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->authorization = $authorization;
@@ -57,6 +61,7 @@ class AgendaController extends Controller
         $this->request       = $request;
         $this->agendaManager = $agendaManager;
         $this->router        = $router;
+        $this->tokenStorage  = $tokenStorage;
     }
 
     /**
@@ -128,7 +133,7 @@ class AgendaController extends Controller
      * )
      *
      * @throws \Exception
-     * @param $event Event
+     * @param  Event $event
      * @return Response
      */
     public function setTaskAsNotDone(Event $event)
@@ -153,7 +158,7 @@ class AgendaController extends Controller
      * )
      *
      * @throws \Exception
-     * @param $event Event
+     * @param  Event $event
      * @return Response
      */
     public function setTaskAsDone(Event $event)
@@ -230,7 +235,7 @@ class AgendaController extends Controller
     public function exportWorkspaceEventIcsAction(Workspace $workspace)
     {
         //if you can open the tool, you can export
-        if (!$this->authorization->isGranted('agenda', $workspace)) {
+        if (!$this->authorization->isGranted('agenda_', $workspace)) {
             throw new AccessDeniedException("The event cannot be updated");
         }
 
@@ -272,8 +277,15 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
-        if (!$this->authorization->isGranted('EDIT', $event)) {
-            throw new AccessDeniedException("The event cannot be updated");
+        if ($event->getWorkspace()) {
+            if (!$this->authorization->isGranted(array('agenda_', 'edit'), $event->getWorkspace())) {
+                throw new AccessDeniedException("You cannot edit the agenda");
+            }
+            return;
+        }
+
+        if ($this->tokenStorage->getToken()->getUser() != $event->getUser()) {
+            throw new AccessDeniedException("You cannot edit the agenda");
         }
     }
 }

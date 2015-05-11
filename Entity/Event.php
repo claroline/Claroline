@@ -341,8 +341,6 @@ class Event implements \JsonSerializable
             'isTaskDone' => $this->isTaskDone(),
             'owner' => $this->getUser()->getUsername(),
             'description' => $this->getDescription(),
-            'editable' => true,
-            'deletable' => true,
             'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId(): null,
             'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName(): null,
             'endHours' => $this->getEndHours(),

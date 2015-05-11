@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -33,31 +34,34 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
  */
 class WorkspaceAgendaController extends Controller
 {
-    private $formFactory;
     private $om;
     private $request;
     private $agendaManager;
     private $router;
+    private $authorization;
 
     /**
      * @DI\InjectParams({
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
-     *     "router"             = @DI\Inject("router")
+     *     "router"             = @DI\Inject("router"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker")
      * })
      */
     public function __construct(
         ObjectManager $om,
         Request $request,
         AgendaManager $agendaManager,
-        RouterInterface $router
+        RouterInterface $router,
+        AuthorizationCheckerInterface $authorization
     )
     {
         $this->om = $om;
         $this->request = $request;
         $this->agendaManager = $agendaManager;
         $this->router = $router;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -72,6 +76,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function showAction(Workspace $workspace)
     {
+        $this->checkOpenAccess($workspace);
         $data = $this->agendaManager->displayEvents($workspace);
 
         return new JsonResponse($data, 200);
@@ -85,10 +90,12 @@ class WorkspaceAgendaController extends Controller
      * )
      * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
+     * @param Workspace $workspace
      * @return array
      */
     public function importEventsModalForm(Workspace $workspace)
     {
+        $this->checkEditAccess($workspace);
         $form = $this->createForm(new ImportAgendaType());
 
         return array('form' => $form->createView(), 'workspace' => $workspace);
@@ -103,6 +110,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importsEventsIcsAction(Workspace $workspace)
     {
+        $this->checkEditAccess($workspace);
         $form = $this->createForm(new ImportAgendaType());
         $form->handleRequest($this->request);
 
@@ -129,6 +137,7 @@ class WorkspaceAgendaController extends Controller
 
     public function addEventModalFormAction(Workspace $workspace)
     {
+        $this->checkEditAccess($workspace);
         $formType = $this->get('claroline.form.agenda');
         $form = $this->createForm($formType, new Event());
 
@@ -151,6 +160,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventAction(Workspace $workspace)
     {
+        $this->checkEditAccess($workspace);
         $formType = $this->get('claroline.form.agenda');
         $form = $this->createForm($formType, new Event());
         $form->handleRequest($this->request);
@@ -169,5 +179,19 @@ class WorkspaceAgendaController extends Controller
                 'claro_workspace_agenda_add_event', array('workspace' => $workspace->getId())
             )
         );
+    }
+
+    public function checkOpenAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted('agenda_', $workspace)) {
+            throw new AccessDeniedException("You cannot open the agenda");
+        }
+    }
+
+    public function checkEditAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
+            throw new AccessDeniedException("You cannot edit the agenda");
+        }
     }
 }
