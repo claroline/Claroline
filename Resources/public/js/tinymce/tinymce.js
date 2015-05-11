@@ -170,7 +170,11 @@
         });
 
         tinymce.claroline.setBeforeUnloadActive(editor);
-        var buttons = $('#' + editor.id).attr('data-custom-buttons').split(" ");
+        var buttonsDatas = $('#' + editor.id).attr('data-custom-buttons');
+        var buttons = (buttonsDatas === undefined) ?
+            [] :
+            buttonsDatas.split(" ");
+        
         for (var i=0; i < buttons.length; i++) {
             var functionKey = buttons[i];
             var functBtn = tinymce.claroline.buttons[functionKey];
