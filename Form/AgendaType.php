@@ -159,19 +159,26 @@ class AgendaType extends AbstractType
             );
         }
 
-        $builder->add('description', 'tinymce')
-            ->add(
-                'priority',
-                'choice',
-                array(
-                    'label' => 'form.description',
-                    'choices' => array(
-                        '#FF0000' => 'high',
-                        '#01A9DB' => 'medium',
-                        '#848484' => 'low'
-                    )
+        $builder->add(
+            'description',
+            'tinymce',
+            array(
+                'label' => 'form.description'
+            )
+        );
+
+        $builder->add(
+            'priority',
+            'choice',
+            array(
+                'label' => 'form.priority',
+                'choices' => array(
+                    '#FF0000' => 'high',
+                    '#01A9DB' => 'medium',
+                    '#848484' => 'low'
                 )
-            );
+            )
+        );
 
         $builder->add(
             'recurring',

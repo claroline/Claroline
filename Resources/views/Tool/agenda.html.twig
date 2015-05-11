@@ -51,7 +51,7 @@
         {{
             macros.desktopBreadcrumbs([
                 {
-                    'name': 'agenda'|trans({}, 'agenda'),
+                    'name': 'agenda'|trans({}, 'tools'),
                     'href': ''
                 }
             ])
@@ -61,7 +61,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'agenda'|trans({}, 'agenda') }}</h3>
+        <h3 class="panel-title">{{ 'agenda'|trans({}, 'tools') }}</h3>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -85,13 +85,13 @@
                            class="btn btn-default btn-xs"
                            role="button"
                                 >
-                            {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                            {{ 'import_agenda_file'|trans({}, 'agenda') }}
                         </a>
                     {% elseif workspace is not defined %}
                         <a id="import-ics-btn" href="{{ path('claro_agenda_import_form') }}"
                            class="btn btn-default btn-xs"
                            role="button">
-                            {{ 'import_agenda_file_file'|trans({}, 'agenda') }}
+                            {{ 'import_agenda_file'|trans({}, 'agenda') }}
                         </a>
                     {% endif %}
                 </div>

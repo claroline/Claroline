@@ -42,7 +42,7 @@ form:
     title: Titulo
     author: Creado por
 high: 'Alta'
-import_agenda_file_file: 'Importar'
+import_agenda_file: 'Importar'
 length: 'Duracón'
 low: 'Baja'
 medium: 'Media'

@@ -49,7 +49,7 @@ form:
     author: Author
 high: High
 hide_tasks: Hide all the tasks
-import_agenda_file_file: Import
+import_agenda_file: Import
 isAllDay: All day
 in_x_days: In %nbDays% days
 length: Length
