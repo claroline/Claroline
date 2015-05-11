@@ -36,14 +36,13 @@ class LoadOptionsData extends AbstractFixture
             $this->newTOPEN($val, $code);
         }
 
-        //This fixture is in the migrations files
-        /*$valTmatching = array();
+        $valTmatching = array();
         $valTmatching[1] = 'To bind';
         $valTmatching[2] = 'To drag';
 
         foreach ($valTmatching as $code => $val) {
             $this->newTMatching($val, $code);
-        }*/
+        }
 
         $this->manager->flush();
     }
@@ -66,13 +65,13 @@ class LoadOptionsData extends AbstractFixture
         $this->manager->persist($topen);
     }
 
-    /*private function newTMatching($val, $code)
+    private function newTMatching($val, $code)
     {
         $tmatch = new TypeMatching();
         $tmatch->setValue($val);
         $tmatch->setCode($code);
 
         $this->manager->persist($tmatch);
-    }*/
+    }
 
 }
