@@ -12,11 +12,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Updater050100 extends Updater
 {
     private $container;
-    private $om;
 
     public function __construct(ContainerInterface $container)
     {
@@ -25,10 +25,15 @@ class Updater050100 extends Updater
 
     public function postUpdate()
     {
-        $this->log('Updating default workspace template directory...');
-        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
-        $sourcePath = $this->container->getParameter('claroline.param.default_template');
-        @unlink($destinationPath);
-        copy($sourcePath, $destinationPath);
+        $this->log('Moving default template...');
+
+        $fileDir = $this->container->getParameter('claroline.param.files_directory');
+        $defaultTemplate = $this->container->getParameter('claroline.param.default_template');
+        $newTemplateDir = $fileDir . '/templates';
+        $newTemplate = $newTemplateDir . '/default.zip';
+
+        $fs = new Filesystem();
+        $fs->mkdir($newTemplateDir);
+        $fs->copy($defaultTemplate, $newTemplate);
     }
 }

@@ -80,6 +80,9 @@ class ToolsImporter extends Importer implements ConfigurationInterface
             }
         }
 
+        $availableRoleName[] = 'ROLE_ANONYMOUS';
+        $availableRoleName[] = 'ROLE_USER';
+
         $rootNode
             ->prototype('array')
                 ->children()
