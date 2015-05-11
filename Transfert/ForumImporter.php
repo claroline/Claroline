@@ -110,7 +110,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
     {
         $forum = new Forum();
         $repo = $this->om->getRepository('ClarolineCoreBundle:User');
-        
+
         if (isset($data['data'])) {
             foreach ($data['data'] as $category) {
                 $entityCategory = new Category();
