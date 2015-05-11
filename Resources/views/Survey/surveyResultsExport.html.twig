@@ -1,0 +1,8 @@
+<h1>{{ survey.getResourceNode().getName()|raw }}</h1>
+
+{% for question in questions %}
+    {% set questionId = question.getId() %}
+    {{ results[questionId]|raw }}
+    <br>
+    <br>
+{% endfor %}

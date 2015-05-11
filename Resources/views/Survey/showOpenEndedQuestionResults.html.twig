@@ -1,47 +1,91 @@
-{% macro renderPager(pager, surveyId, questionId, max) %}
-    {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_survey_results_show',
-                'routeParams': {'survey': surveyId, 'question': questionId, 'max': max}
-            }
-        )
-    }}
-{% endmacro %}
+{% if forExport %}
+    <table class="table table-responsive">
+        <tr>
+            <td colspan="2">
+                <h2>{{ question.getQuestion()|raw }}</h2>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <b>
+                    {{ 'question_form_type'| trans({}, 'survey') }} :
+                    {{ question.getType()| trans({}, 'survey') }}
+                </b>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <b>
+                    {{ 'number_of_respondents'|trans({}, 'survey') }} :
+                    {{ answers|length }}
+                </b>
+            </td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <th class="text-center">{{ 'user'|trans({}, 'platform') }}</th>
+            <th class="text-center">{{ 'answer'|trans({}, 'survey') }}</th>
+        </tr>
 
-{% from _self import renderPager %}
+        {% for answer in answers %}
+            {% set user = answer.getQuestionAnswer().getSurveyAnswer().getUser() %}
+            <tr>
+                <td>
+                    {{ user.getFirstName() }}
+                    {{ user.getLastName() }}
+                </td>
+                <td>
+                    {{ answer.getContent()|raw }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    {% macro renderPager(pager, surveyId, questionId, max) %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_survey_results_show',
+                    'routeParams': {'survey': surveyId, 'question': questionId, 'max': max}
+                }
+            )
+        }}
+    {% endmacro %}
 
-<div>
+    {% from _self import renderPager %}
+
     <div>
-        <label>{{ 'number_of_respondents'|trans({}, 'survey') }} :</label>
-        <span>{{ answers|length }}</span>
+        <div>
+            <label>{{ 'number_of_respondents'|trans({}, 'survey') }} :</label>
+            <span>{{ answers|length }}</span>
+        </div>
+        {% if answers|length > 0 %}
+            <br>
+            {% if answers.getNbPages() > 1 %}
+                {{ renderPager(answers, survey.getId(), question.getId(), max) }}
+            {% endif %}
+            <ul class="list-group">
+                {% for answer in answers %}
+                    <li class="list-group-item">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h1 class="panel-title">
+                                    {{ answer.getQuestionAnswer().getSurveyAnswer().getUser().getUsername() }}
+                                </h1>
+                            </div>
+                            <div class="panel-body">
+                            {{ answer.getContent()|raw }}
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if answers.getNbPages() > 1 %}
+                {{ renderPager(answers, survey.getId(), question.getId(), max) }}
+            {% endif %}
+        {% endif %}
     </div>
-    {% if answers|length > 0 %}
-        <br>
-        {% if answers.getNbPages() > 1 %}
-            {{ renderPager(answers, survey.getId(), question.getId(), max) }}
-        {% endif %}
-        <ul class="list-group">
-            {% for answer in answers %}
-                <li class="list-group-item">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h1 class="panel-title">
-                                {{ answer.getQuestionAnswer().getSurveyAnswer().getUser().getUsername() }}
-                            </h1>
-                        </div>
-                        <div class="panel-body">
-                        {{ answer.getContent()|raw }}
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        {% if answers.getNbPages() > 1 %}
-            {{ renderPager(answers, survey.getId(), question.getId(), max) }}
-        {% endif %}
-    {% endif %}
-</div>
+{% endif %}

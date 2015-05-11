@@ -15,6 +15,30 @@
 
 {% block section_content %}
     <div class="panel-body">
+        <div class="dropdown pull-right">
+            <i class="fa fa-cog pull-right pointer-hand dropdown-toggle"
+               id="dropdownMenu1"
+               data-toggle="dropdown"
+            ></i>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                <li role="presentation">
+                    <a role="menuitem"
+                       tabindex="-1"
+                       href="{{ path('claro_survey_results_export', {'survey': surveyId}) }}"
+                    >
+                        {{ 'export_all_results'|trans({}, 'survey') }}
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a role="menuitem"
+                       tabindex="-1"
+                       href="{{ path('claro_survey_question_results_export', {'survey': surveyId, 'question': currentQuestion.getId()}) }}"
+                    >
+                        {{ 'export_question_results'|trans({}, 'survey') }}
+                    </a>
+                </li>
+            </ul>
+        </div>
         
         {% if questions|length > 0 %}
         <ul class="nav nav-tabs">

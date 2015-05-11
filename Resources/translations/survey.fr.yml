@@ -6,6 +6,7 @@ add_question_box_title: 'Ajouter une question au sondage'
 allow_edition_after_submission: 'Authoriser la modification de la réponse'
 allow_multiple_response: 'Réponses multiples'
 an_answer_is_required: 'Une réponse est requise'
+answer: Réponse
 answer_to_survey: 'Répondre au sondage'
 choice: Choix
 choice_display: 'Affichage des choix'
@@ -29,6 +30,8 @@ edit_question_title_btn_explanation: 'Modifier le titre'
 edit_survey: 'Modifier le sondage'
 edition: Modification
 end_date: 'Date de fin'
+export_all_results: 'Exporter tous les résultats'
+export_question_results: 'Exporter les résultats de la question'
 horizontal: Horizontal
 how_to_publish_message: 'Le sondage n''est pas encore publié. Personne ne peut y répondre. Vous pouvez le publier dans <Paramètres>.'
 label_for_choice_other: 'Libellé du choix "Autre"'

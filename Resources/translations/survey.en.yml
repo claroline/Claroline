@@ -6,6 +6,7 @@ add_question_box_title: 'Add a question to survey'
 allow_edition_after_submission: 'Allow edition after submission'
 allow_multiple_response: 'Multiple response'
 an_answer_is_required: 'An answer is required'
+answer: Answer
 answer_to_survey: 'Answer to survey'
 choice: Choice
 choice_display: 'Choice display'
@@ -29,6 +30,8 @@ edit_question_title_btn_explanation: 'Edit title'
 edit_survey: 'Edit survey'
 edition: Edition
 end_date: 'End date'
+export_all_results: 'Export all results'
+export_question_results: 'Export question results'
 horizontal: Horizontal
 how_to_publish_message: 'The survey is not published yet. Nobody can answer it. You can publish it in <Parameters>.'
 label_for_choice_other: 'Label for choice "Other"'

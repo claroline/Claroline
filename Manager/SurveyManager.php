@@ -625,6 +625,19 @@ class SurveyManager
             $this->pagerFactory->createPager($answers, $page, $max);
     }
 
+    public function getOpenEndedAnswersBySurveyAndQuestionWithoutPager(
+        Survey $survey,
+        Question $question,
+        $executeQuery = true
+    )
+    {
+        return $this->openEndedQuestionAnswerRepo->findAnswersBySurveyAndQuestion(
+            $survey,
+            $question,
+            $executeQuery
+        );
+    }
+
 
     /************************************************************
      * Access to MultipleChoiceQuestionAnswerRepository methods *
