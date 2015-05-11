@@ -71,9 +71,9 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/name/{pickerName}/mode/{mode}/show/all/{showAllUsers}/{showUsername}/{showMail}/{showCode}",
+     *     "user/picker/name/{pickerName}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showUsername}/{showMail}/{showCode}",
      *     name="claro_user_picker",
-     *     defaults={"mode"="multiple","showAllUsers"=0,"showUsername"=1,"showMail"=0,"showCode"=0},
+     *     defaults={"mode"="multiple","showAllUsers"=0,"showFilters"=1,"showUsername"=1,"showMail"=0,"showCode"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -81,6 +81,11 @@ class UserController extends Controller
      *     "excludedUsers",
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "excludedUserIds"}
+     * )
+     * @EXT\ParamConverter(
+     *     "forcedUsers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "forcedUserIds"}
      * )
      * @EXT\ParamConverter(
      *     "forcedGroups",
@@ -101,24 +106,31 @@ class UserController extends Controller
      */
     public function userPickerAction(
         array $excludedUsers,
+        array $forcedUsers,
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
         $pickerName,
         $mode = 'mutiple',
         $showAllUsers = 0,
+        $showFilters = 1,
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0
     )
     {
         $excludedIds = array();
+        $forcedUsersIds = array();
         $forcedGroupsIds = array();
         $forcedRolesIds = array();
         $forcedWorkspacesIds = array();
 
         foreach ($excludedUsers as $excludedUser) {
             $excludedIds[] = $excludedUser->getId();
+        }
+
+        foreach ($forcedUsers as $forcedUser) {
+            $forcedUsersIds[] = $forcedUser->getId();
         }
 
         foreach ($forcedGroups as $forcedGroup) {
@@ -137,10 +149,12 @@ class UserController extends Controller
             'pickerName' => $pickerName,
             'mode' => $mode,
             'showAllUsers' => $showAllUsers,
+            'showFilters' => $showFilters,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
             'showCode' => $showCode,
             'excludedUsersIds' => $excludedIds,
+            'forcedUsersIds' => $forcedUsersIds,
             'forcedGroupsIds' => $forcedGroupsIds,
             'forcedRolesIds' => $forcedRolesIds,
             'forcedWorkspacesIds' => $forcedWorkspacesIds
@@ -182,6 +196,11 @@ class UserController extends Controller
      *      options={"multipleIds" = true, "name" = "excludedUserIds"}
      * )
      * @EXT\ParamConverter(
+     *     "forcedUsers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "forcedUserIds"}
+     * )
+     * @EXT\ParamConverter(
      *     "forcedGroups",
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "forcedGroupIds"}
@@ -204,6 +223,7 @@ class UserController extends Controller
         array $roles,
         array $workspaces,
         array $excludedUsers,
+        array $forcedUsers,
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
@@ -223,26 +243,6 @@ class UserController extends Controller
         $withUsername = intval($showUsername) === 1;
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
-        $excludedIds = array();
-        $forcedGroupsIds = array();
-        $forcedRolesIds = array();
-        $forcedWorkspacesIds = array();
-
-        foreach ($excludedUsers as $excludedUser) {
-            $excludedIds[] = $excludedUser->getId();
-        }
-
-        foreach ($forcedGroups as $forcedGroup) {
-            $forcedGroupsIds[] = $forcedGroup->getId();
-        }
-
-        foreach ($forcedRoles as $forcedRole) {
-            $forcedRolesIds[] = $forcedRole->getId();
-        }
-
-        foreach ($forcedWorkspaces as $forcedWorkspace) {
-            $forcedWorkspacesIds[] = $forcedWorkspace->getId();
-        }
 
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -259,6 +259,7 @@ class UserController extends Controller
             $roles,
             $groups,
             $excludedUsers,
+            $forcedUsers,
             $forcedGroups,
             $forcedRoles,
             $forcedWorkspaces
@@ -275,11 +276,7 @@ class UserController extends Controller
             'showAllUsers' => $showAllUsers,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
-            'showCode' => $showCode,
-            'excludedUsersIds' => $excludedIds,
-            'forcedGroupsIds' => $forcedGroupsIds,
-            'forcedRolesIds' => $forcedRolesIds,
-            'forcedWorkspacesIds' => $forcedWorkspacesIds
+            'showCode' => $showCode
         );
     }
 

@@ -14,6 +14,7 @@
         var pickerName = $(this).data('picker-name');
         var multiple = $(this).data('multiple');
         var showAllUsers = $(this).data('show-all-users');
+        var showFilters = $(this).data('show-filters');
         var showUsername = $(this).data('show-username');
         var showMail = $(this).data('show-mail');
         var showCode = $(this).data('show-code');
@@ -22,6 +23,12 @@
         userIdsTxt = userIdsTxt.trim();
         var userIds = userIdsTxt !== '' ?
             userIdsTxt.split(';') :
+            [];
+        
+        var forcedUserIdsTxt = '' + $(this).data('forced-users');
+        forcedUserIdsTxt = forcedUserIdsTxt.trim();
+        var forcedUserIds = forcedUserIdsTxt !== '' ?
+            forcedUserIdsTxt.split(';') :
             [];
     
         var groupIdsTxt = '' + $(this).data('forced-groups');
@@ -44,6 +51,7 @@
     
         var parameters = {};
         parameters.excludedUserIds = userIds;
+        parameters.forcedUserIds = forcedUserIds;
         parameters.forcedGroupIds = forcedGroupIds;
         parameters.forcedRoleIds = forcedRoleIds;
         parameters.forcedWorkspaceIds = forcedWorkspaceIds;
@@ -57,6 +65,7 @@
                 'pickerName': pickerName,
                 'mode': multiple,
                 'showAllUsers': showAllUsers,
+                'showFilters': showFilters,
                 'showUsername': showUsername,
                 'showMail': showMail,
                 'showCode': showCode

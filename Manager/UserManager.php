@@ -1339,6 +1339,7 @@ class UserManager
         array $searchedRoles = array(),
         array $searchedGroups = array(),
         array $excludedUsers = array(),
+        array $forcedUsers = array(),
         array $forcedGroups = array(),
         array $forcedRoles = array(),
         array $forcedWorkspaces = array()
@@ -1373,6 +1374,7 @@ class UserManager
             $groups,
             $workspaces,
             $excludedUsers,
+            $forcedUsers,
             $forcedGroups,
             $forcedRoles,
             $forcedWorkspaces

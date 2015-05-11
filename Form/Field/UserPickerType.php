@@ -64,10 +64,12 @@ class UserPickerType extends AbstractType
         $view->vars['picker_name'] = $options['picker_name'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['show_all_users'] = $options['show_all_users'];
+        $view->vars['show_filters'] = $options['show_filters'];
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
         $view->vars['blacklist'] = $options['blacklist'];
+        $view->vars['whitelist'] = $options['whitelist'];
         $view->vars['forced_groups'] = $options['forced_groups'];
         $view->vars['forced_roles'] = $options['forced_roles'];
         $view->vars['forced_workspaces'] = $options['forced_workspaces'];
@@ -81,10 +83,12 @@ class UserPickerType extends AbstractType
                 'picker_name' => 'picker-name',
                 'multiple' => true,
                 'show_all_users' => false,
+                'show_filters' => true,
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,
                 'blacklist' => array(),
+                'whitelist' => array(),
                 'forced_groups' => array(),
                 'forced_roles' => array(),
                 'forced_workspaces' => array()

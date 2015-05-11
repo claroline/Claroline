@@ -18,71 +18,74 @@
         </div>
         <div class='modal-body' id="user-picker-body">
             <div class="panel-group" role="tablist" aria-multiselectable="true">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <span data-toggle="collapse"
-                                  href="#collapse-filters-box"
-                                  class="pointer-hand"
-                            >
-                                {{ 'filters'|trans({}, 'platform') }}
-                            </span>
-                            &nbsp;
-                            <span class="badge" id="filters-box-badge">
-                                0
-                            </span>
-                        </h4>
-                    </div>
-                    <div id="collapse-filters-box"
-                         class="panel-collapse collapse"
-                    >
-                        <div class="panel-body">
-                            <div class="alert alert-warning" id="no-filter-alert">
-                                {{ 'no_filter'|trans({}, 'platform') }}
-                            </div>
-                            <ul class="col-md-12 list-inline" id="filters-list-box">
-                            </ul>
-                            <hr>
-                            <div id="filter-creation-box">
-                                <div class="col-md-12 margin-bottom-sm" id="box-filter-level-1">
-                                    <select class="form-control" id="filter-level-1">
-                                        <option value="none">
-                                            --- {{ 'select_a_filter_type'|trans({}, 'platform') }} ---
-                                        </option>
-                                        <option value="group">
-                                            {{ 'group'|trans({}, 'platform') }}
-                                        </option>
-                                        <option value="role">
-                                            {{ 'role'|trans({}, 'platform') }}
-                                        </option>
-                                        <option value="workspace">
-                                            {{ 'workspace'|trans({}, 'platform') }}
-                                        </option>
-                                    </select>
+                
+                {% if showFilters == 1 %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <span data-toggle="collapse"
+                                      href="#collapse-filters-box"
+                                      class="pointer-hand"
+                                >
+                                    {{ 'filters'|trans({}, 'platform') }}
+                                </span>
+                                &nbsp;
+                                <span class="badge" id="filters-box-badge">
+                                    0
+                                </span>
+                            </h4>
+                        </div>
+                        <div id="collapse-filters-box"
+                             class="panel-collapse collapse"
+                        >
+                            <div class="panel-body">
+                                <div class="alert alert-warning" id="no-filter-alert">
+                                    {{ 'no_filter'|trans({}, 'platform') }}
                                 </div>
-                                <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-2">
-                                    <select class="form-control" id="filter-level-2">
-                                        <option value="none">
-                                            {{ 'none'|trans({}, 'platform') }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-3">
-                                    <select class="form-control" id="filter-level-3">
-                                        <option value="none">
-                                            {{ 'none'|trans({}, 'platform') }}
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="col-md-12 hidden" id="box-filter-create-btn">
-                                    <span class="btn btn-primary" id="filter-create-btn">
-                                        {{ 'add_filter'|trans({}, 'platform') }}
-                                    </span>
+                                <ul class="col-md-12 list-inline" id="filters-list-box">
+                                </ul>
+                                <hr>
+                                <div id="filter-creation-box">
+                                    <div class="col-md-12 margin-bottom-sm" id="box-filter-level-1">
+                                        <select class="form-control" id="filter-level-1">
+                                            <option value="none">
+                                                --- {{ 'select_a_filter_type'|trans({}, 'platform') }} ---
+                                            </option>
+                                            <option value="group">
+                                                {{ 'group'|trans({}, 'platform') }}
+                                            </option>
+                                            <option value="role">
+                                                {{ 'role'|trans({}, 'platform') }}
+                                            </option>
+                                            <option value="workspace">
+                                                {{ 'workspace'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-2">
+                                        <select class="form-control" id="filter-level-2">
+                                            <option value="none">
+                                                {{ 'none'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 margin-bottom-sm hidden" id="box-filter-level-3">
+                                        <select class="form-control" id="filter-level-3">
+                                            <option value="none">
+                                                {{ 'none'|trans({}, 'platform') }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 hidden" id="box-filter-create-btn">
+                                        <span class="btn btn-primary" id="filter-create-btn">
+                                            {{ 'add_filter'|trans({}, 'platform') }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
@@ -127,6 +130,7 @@
                         },
                         {
                             'excludedUserIds': excludedUsersIds,
+                            'forcedUserIds': forcedUsersIds,
                             'forcedGroupIds': forcedGroupsIds,
                             'forcedRoleIds': forcedRolesIds,
                             'forcedWorkspaceIds': forcedWorkspacesIds
@@ -161,6 +165,7 @@
      data-show-mail="{{ showMail }}"
      data-show-code="{{ showCode }}"
      data-excluded-users="{% for id in excludedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-forced-users="{% for id in forcedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-groups="{% for id in forcedGroupsIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-roles="{% for id in forcedRolesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-workspaces="{% for id in forcedWorkspacesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"

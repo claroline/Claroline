@@ -9,6 +9,15 @@
 
 (function () {
     'use strict';
+    function UserPicker(whiteList)
+    {
+        this.whiteList = whiteList;
+        
+        this.getWhiteList = function () {
+            
+            return this.whiteList;
+        };
+    }
     
     var currentSearch = $('#user-picker-datas-box').data('search');
     var currentMax = $('#user-picker-datas-box').data('max');
@@ -25,6 +34,12 @@
     excludedUserIdsTxt = excludedUserIdsTxt.trim();
     var excludedUserIds = excludedUserIdsTxt !== '' ?
         excludedUserIdsTxt.split(';') :
+        [];
+    
+    var forcedUserIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-users');
+    forcedUserIdsTxt = forcedUserIdsTxt.trim();
+    var forcedUserIds = forcedUserIdsTxt !== '' ?
+        forcedUserIdsTxt.split(';') :
         [];
     
     var groupIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-groups');
@@ -64,6 +79,7 @@
     parameters.roleIds = roleIds;
     parameters.workspaceIds = workspaceIds;
     parameters.excludedUserIds = excludedUserIds;
+    parameters.forcedUserIds = forcedUserIds;
     parameters.forcedGroupIds = forcedGroupIds;
     parameters.forcedRoleIds = forcedRoleIds;
     parameters.forcedWorkspaceIds = forcedWorkspaceIds;
@@ -582,7 +598,6 @@
     });
     
     $('#user-picker-modal').on('click', '.submit', function () {
-        console.log(pickerName);
         $('#user-picker-input-' + pickerName).val(userIds[0]);
         $('#user-picker-close-modal-btn').trigger('click');
     });

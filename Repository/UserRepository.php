@@ -1328,6 +1328,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         array $groupRestrictions = array(),
         array $workspaceRestrictions = array(),
         array $excludedUsers = array(),
+        array $forcedUsers = array(),
         array $forcedGroups = array(),
         array $forcedRoles = array(),
         array $forcedWorkspaces = array(),
@@ -1339,6 +1340,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $withRoles = count($roleRestrictions) > 0;
         $withWorkspaces = count($workspaceRestrictions) > 0;
         $withExcludedUsers = count($excludedUsers) > 0;
+        $withForcedUsers = count($forcedUsers) > 0;
         $withForcedGroups = count($forcedGroups) > 0;
         $withForcedRoles = count($forcedRoles) > 0;
         $withForcedWorkspaces = count($forcedWorkspaces) > 0;
@@ -1418,6 +1420,12 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if ($withExcludedUsers) {
             $dql .= '
                 AND u NOT IN (:excludedUsers)
+            ';
+        }
+
+        if ($withForcedUsers) {
+            $dql .= '
+                AND u IN (:forcedUsers)
             ';
         }
 
@@ -1517,6 +1525,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         if ($withWorkspaces) {
             $query->setParameter('workspaceRestrictions', $workspaceRestrictions);
+        }
+
+        if ($withForcedUsers) {
+            $query->setParameter('forcedUsers', $forcedUsers);
         }
 
         if ($withForcedGroups) {
