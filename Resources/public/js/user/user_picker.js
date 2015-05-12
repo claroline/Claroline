@@ -12,6 +12,7 @@
     
     $('body').on('click', '.user-picker', function (event) {
         var pickerName = $(this).data('picker-name');
+        var pickerTitle = $(this).data('picker-title');
         var multiple = $(this).data('multiple');
         var showAllUsers = $(this).data('show-all-users');
         var showFilters = $(this).data('show-filters');
@@ -63,6 +64,7 @@
             'claro_user_picker',
             {
                 'pickerName': pickerName,
+                'pickerTitle': pickerTitle,
                 'mode': multiple,
                 'showAllUsers': showAllUsers,
                 'showFilters': showFilters,

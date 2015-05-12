@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.form.user_picker")
@@ -26,20 +27,24 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class UserPickerType extends AbstractType
 {
+    private $translator;
     private $userManager;
     private $userPickerTransformer;
 
     /**
      * @DI\InjectParams({
+     *     "translator"            = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "userPickerTransformer" = @DI\Inject("claroline.transformer.user_picker")
      * })
      */
     public function __construct(
+        TranslatorInterface $translator,
         UserManager $userManager,
         UserPickerTransfromer $userPickerTransformer
     )
     {
+        $this->translator = $translator;
         $this->userManager = $userManager;
         $this->userPickerTransformer = $userPickerTransformer;
     }
@@ -62,6 +67,7 @@ class UserPickerType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['picker_name'] = $options['picker_name'];
+        $view->vars['picker_title'] = $options['picker_title'];
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['show_all_users'] = $options['show_all_users'];
         $view->vars['show_filters'] = $options['show_filters'];
@@ -81,6 +87,11 @@ class UserPickerType extends AbstractType
             array(
                 'translation_domain' => 'platform',
                 'picker_name' => 'picker-name',
+                'picker_title' => $this->translator->trans(
+                    'user_selector',
+                    array(),
+                    'platform'
+                ),
                 'multiple' => true,
                 'show_all_users' => false,
                 'show_filters' => true,

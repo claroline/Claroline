@@ -21,6 +21,7 @@
                    id="user-picker-input-view-{{ picker_name }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
                    data-picker-name="{{ picker_name }}"
+                   data-picker-title="{{ picker_title }}"
                    data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
                    data-show-all-users="{% if show_all_users %}1{% else %}0{% endif %}"
                    data-show-filters="{% if show_filters %}1{% else %}0{% endif %}"
@@ -36,6 +37,7 @@
             <span class="input-group-btn">
                 <span class="btn btn-default user-picker"
                         data-picker-name="{{ picker_name }}"
+                        data-picker-title="{{ picker_title }}"
                         data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
                         data-show-all-users="{% if show_all_users %}1{% else %}0{% endif %}"
                         data-show-filters="{% if show_filters %}1{% else %}0{% endif %}"
