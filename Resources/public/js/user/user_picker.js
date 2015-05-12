@@ -10,7 +10,7 @@
 (function () {
     'use strict';
     
-    $('body').on('click', '.user-picker', function () {
+    $('body').on('click', '.user-picker', function (event) {
         var pickerName = $(this).data('picker-name');
         var multiple = $(this).data('multiple');
         var showAllUsers = $(this).data('show-all-users');

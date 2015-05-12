@@ -2,10 +2,23 @@
 
 {% block userpicker_widget %}
     {% spaceless %}
+        <input type="hidden"
+
+               {% if multiple %}
+                   name="{{ full_name }}[]"
+               {% else %}
+                   name="{{ full_name }}"
+               {% endif %}
+
+               {% if value is not empty %}value="{{ value['id'] }}"{% endif %}
+               id="user-picker-input-{{ picker_name }}"
+        >
         <div class="input-group">
             <input type="text"
                    class="form-control user-picker user-picker-input"
-                   id="user-picker-input-{{ picker_name }}"
+                       
+                   {% if value is not empty %}value="{{ value['name'] }}"{% endif %}
+                   id="user-picker-input-view-{{ picker_name }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
                    data-picker-name="{{ picker_name }}"
                    data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
@@ -21,7 +34,7 @@
                    data-forced-workspaces="{% for workspace in forced_workspaces %}{{ workspace.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
             >
             <span class="input-group-btn">
-                <button class="btn btn-default user-picker"
+                <span class="btn btn-default user-picker"
                         data-picker-name="{{ picker_name }}"
                         data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
                         data-show-all-users="{% if show_all_users %}1{% else %}0{% endif %}"
@@ -37,7 +50,7 @@
                         type="button"
                 >
                     <i class="fa fa-user"></i>
-                </button>
+                </span>
             </span>
         </div>
     {% endspaceless %}

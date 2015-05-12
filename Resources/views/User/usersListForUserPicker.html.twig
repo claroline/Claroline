@@ -163,7 +163,9 @@
                                    value="{{ userId }}"
                                    data-user-first-name="{{ user.getFirstName() }}"
                                    data-user-last-name="{{ user.getLastName() }}"
-                                   data-user-username="{{ user.getUsername() }}"
+                                   {% if showUsername == '1' %}
+                                       data-user-username="{{ user.getUsername() }}"
+                                   {% endif %}
                             >
                         {% elseif mode == 'single' %}
                             <input type="radio"
@@ -173,7 +175,9 @@
                                    value="{{ userId }}"
                                    data-user-first-name="{{ user.getFirstName() }}"
                                    data-user-last-name="{{ user.getLastName() }}"
-                                   data-user-username="{{ user.getUsername() }}"
+                                   {% if showUsername == '1' %}
+                                       data-user-username="{{ user.getUsername() }}"
+                                   {% endif %}
                             >
                         {% endif %}
                     </td>

@@ -34,29 +34,70 @@ class UserPickerTransfromer implements DataTransformerInterface
         $this->userManager = $userManager;
     }
 
-    public function transform($user)
+    public function transform($value)
     {
-        if ($user instanceof User) {
+        if (is_array($value) || $value instanceof Collection) {
+            $transformedData = array();
 
-            return $user->getId();
+            foreach ($value as $user) {
+                $transformedData[] = array(
+                    'id' => $user->getId(),
+                    'name' => $user->getFirstName() . ' ' . $user->getLastName()
+                );
+            }
+
+            return $transformedData;
         }
 
-        return "";
+        if ($value instanceof User) {
+
+            return array(
+                'id' => $value->getId(),
+                'name' => $value->getFirstName() . ' ' . $value->getLastName(),
+            );
+        }
+
+        return null;
     }
 
     public function reverseTransform($userId)
     {
-        if (!$userId) {
+        if (empty($userId)) {
 
             return null;
+        } elseif (is_array($userId)) {
+            $idsTxt = $userId[0];
+            $ids = explode(',', $idsTxt);
+            $users = array();
+
+            foreach ($ids as $id) {
+                $user = $this->userManager->getUserById(intval($id));
+
+                if (is_null($user)) {
+
+                    throw new TransformationFailedException();
+                } else {
+                    $users[] = $user;
+                }
+            }
+
+            if (count($users) === 0) {
+
+                return null;
+            } else {
+
+                return $users;
+            }
+        } else {
+            $user = $this->userManager->getUserById($userId);
+
+            if (is_null($user)) {
+
+                throw new TransformationFailedException();
+            } else {
+
+                return $user;
+            }
         }
-        $user = $this->userManager->getUserById($userId);
-
-        if (is_null($user)) {
-
-            throw new TransformationFailedException();
-        }
-
-        return $user;
     }
 }

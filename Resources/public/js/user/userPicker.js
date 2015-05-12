@@ -9,15 +9,6 @@
 
 (function () {
     'use strict';
-    function UserPicker(whiteList)
-    {
-        this.whiteList = whiteList;
-        
-        this.getWhiteList = function () {
-            
-            return this.whiteList;
-        };
-    }
     
     var currentSearch = $('#user-picker-datas-box').data('search');
     var currentMax = $('#user-picker-datas-box').data('max');
@@ -248,7 +239,10 @@
                 for (var key in selectedUsers) {
                     
                     if (selectedUsers[key] !== null) {
-                        userIds.push(parseInt(key));
+                        userIds.push({
+                            id: parseInt(key),
+                            name: selectedUsers[key]
+                        });
                     }
                 }
                 break;
@@ -371,7 +365,7 @@
     function checkSelectedUsers()
     {
         for (var i = 0; i < userIds.length; i++) {
-            $('#picker-user-chk-' + userIds[i]).prop('checked', true);
+            $('#picker-user-chk-' + userIds[i]['id']).prop('checked', true);
         }
     }
     
@@ -549,8 +543,13 @@
             if ($(this).prop('checked')) {
                 var firstName = $(this).data('user-first-name');
                 var lastName = $(this).data('user-last-name');
-                var username = $(this).data('user-username');
-                selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+                
+                if (parseInt(showUsername) === 1) {
+                    var username = $(this).data('user-username');
+                    selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+                } else {
+                    selectedUsers[userId] = firstName + ' ' + lastName;
+                }
                 addUserToSelectedUsersBox(userId, selectedUsers[userId]);
             } else {
                 selectedUsers[userId] = null;
@@ -559,10 +558,15 @@
         } else if (mode === 'single') {
             var firstName = $(this).data('user-first-name');
             var lastName = $(this).data('user-last-name');
-            var username = $(this).data('user-username');
             emptySelectedUsersBox();
             selectedUsers = [];
-            selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+                
+            if (parseInt(showUsername) === 1) {
+                var username = $(this).data('user-username');
+                selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
+            } else {
+                selectedUsers[userId] = firstName + ' ' + lastName;
+            }
             addUserToSelectedUsersBox(userId, selectedUsers[userId]);
         } 
         updateIdsArray('user');
@@ -598,7 +602,21 @@
     });
     
     $('#user-picker-modal').on('click', '.submit', function () {
-        $('#user-picker-input-' + pickerName).val(userIds[0]);
+        
+        if (mode === 'multiple') {
+            var ids = [];
+            var names = [];
+
+            for (var i = 0; i < userIds.length; i++) {
+                ids[i] = parseInt(userIds[i]['id']);
+                names[i] = userIds[i]['name'];
+            }
+            $('#user-picker-input-' + pickerName).val(ids);
+            $('#user-picker-input-view-' + pickerName).val(names);
+        } else if (mode === 'single') {
+            $('#user-picker-input-' + pickerName).val(parseInt(userIds[0]['id']));
+            $('#user-picker-input-view-' + pickerName).val(userIds[0]['name']);
+        }
         $('#user-picker-close-modal-btn').trigger('click');
     });
     
