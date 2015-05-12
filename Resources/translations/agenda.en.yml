@@ -23,13 +23,11 @@ day:
     sun: Sun
     sunday: Sunday
 date_agenda_display_format: MM-DD-YYYY
-date_agenda_display_format_for_calendar: m-d-Y
 date_agenda_display_format_for_form: MM-dd-yyyy
 end: end
 end_date: 'End date'
 error: 'An unexpected error occurred, please try again'
 event: Event
-event_update: 'Event modified'
 export: 'Export events'
 filter_user: Filter by user
 filter_tasks: Filter the tasks
@@ -94,6 +92,8 @@ noon: noon
 now: Now
 prev: '<'
 prevYear: '<<'
+remove_event: Remove an event
+remove_event_confirm: Are you sure you want to remove this event ?
 start_date: 'Start date'
 show_task_only: Display only the tasks
 task: Task
@@ -106,5 +106,6 @@ today_widget: Today
 tomorrow: Tomorrow
 type: Type
 update: modify
+update_event: Update an event
 week: Week
 workspace: Workspace

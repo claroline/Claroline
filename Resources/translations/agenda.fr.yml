@@ -23,14 +23,12 @@ day:
     sun: Dim
     sunday: Dimanche
 date_agenda_display_format: DD-MM-YYYY
-date_agenda_display_format_for_calendar: d-m-Y
 date_agenda_display_format_for_form: dd-MM-yyyy
 end: Fin
 end_date: 'Date de fin'
 export: 'Exporter les événements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event: Evénement
-event_update: 'Modification enregistrée'
 filter_user: Filtrer par utilisateur
 filter_ws: Filtrer par espace d'activités
 filter_tasks: Filtrer les tâches
@@ -94,6 +92,8 @@ now: Maintenant
 no_task_now: Aucune tâche à réaliser
 prev: '<'
 prevYear: '<<'
+remove_event: Supprimer un événement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
 start_date: 'Date de début'
 show_task_only: Montrer que les tâches
 task: Tâche
@@ -106,5 +106,6 @@ today_widget: Aujourd'hui
 tomorrow: Demain
 type: Type
 update: Modifier
+update_event: Mettre à jour un événement
 week: Semaine
 workspace: 'Espace d''activités'

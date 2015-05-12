@@ -12,7 +12,7 @@
     {% if workspace is defined %}
         {{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") | striptags | raw }}
     {% else %}
-        {{ parent() ~ ' - ' ~ "agenda" | trans({}, "platform") | striptags | raw }}
+        {{ parent() ~ ' - ' ~ "agenda" | trans({}, "tools") | striptags | raw }}
     {% endif %}
 {% endblock %}
 

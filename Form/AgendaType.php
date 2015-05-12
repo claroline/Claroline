@@ -89,7 +89,7 @@ class AgendaType extends AbstractType
                     'label' => 'form.start',
                     'required'  => true,
                     'widget'    => 'single_text',
-                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                    'format'    => 'date_agenda_display_format_for_form',
                     'attr'      => $attr,
                     'autoclose' => true,
                     'constraints' => new Assert\Date()
@@ -127,7 +127,7 @@ class AgendaType extends AbstractType
                 'label' => 'form.end',
                 'required'  => true,
                 'widget'    => 'single_text',
-                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                'format'    => 'date_agenda_display_format_for_form',
                 'attr'      => $attr,
                 'autoclose' => true,
                 'constraints' => new Assert\Date()

@@ -194,6 +194,7 @@
 
     function renderAddEventForm(date)
     {
+        // Select the first id of the json canEditEvent
         for(var key in canEditEvent) break;
         if (canEditEvent[key] && !isFormShown) {
             var dateVal = moment(date).format(t('date_agenda_display_format'));
@@ -470,8 +471,8 @@
                     $(event.currentTarget).attr('href'),
                     removeEvent,
                     undefined,
-                    Translator.trans('remove_event_confirm', {}, 'platform'),
-                    Translator.trans('remove_event', {}, 'platform')
+                    t('remove_event_confirm'),
+                    t('remove_event')
                 );
             })
             // Hide the hours if the checkbox allDay is checked
