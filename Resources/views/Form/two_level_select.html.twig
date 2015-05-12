@@ -23,17 +23,17 @@
             {
                 var preselectedValuePath = null;
                 for (var key in choices) {
-                    if (typeof choices[key].label != 'undefined') {
+                    if (!choices[key].choices) {
                         choicesTree[choices[key].label] = choices[key].value;
                         if (preselectedValue == choices[key].value) {
                             preselectedValuePath = pathToNode.slice();
                             preselectedValuePath.push(choices[key].label);
                         }
                     } else {
-                        choicesTree[key] = {};
+                        choicesTree[choices[key].label] = {};
                         var newPathToNode = pathToNode.slice();
                         newPathToNode.push(key);
-                        var tempPreselectedPath = buildChoicesTree(choices[key], choicesTree[key], newPathToNode, preselectedValue);
+                        var tempPreselectedPath = buildChoicesTree(choices[key].choices, choicesTree[choices[key].label], newPathToNode, preselectedValue);
                         if (tempPreselectedPath != null) {
                             preselectedValuePath = tempPreselectedPath;
                         }
