@@ -48,6 +48,8 @@ Show: Afficher
 'You can use the full screen version of the text editor to include HTML': 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
 'Your changes have been saved': 'Vos changements ont été sauvegardés'
 accept: Accepter
+accessible_from: 'Accessible à partir du'
+accessible_until: 'Accessible jusqu''au'
 account_created: 'Compte créé'
 account_duration_label: 'Durée de vie des comptes (jours)'
 account_general_statistics: 'Statistiques générales sur les comptes'
@@ -136,6 +138,7 @@ answer: Répondre
 anywhere: 'N''importe où'
 appearance: Apparence
 apply: Appliquer
+apply_recursively_to_directories: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 at_least_one_category_has_to_be_selected: 'Au moins une catégorie doit être selectionnée'
 attempt: Tentative
 attempts: Tentatives
@@ -143,6 +146,7 @@ auth_mode: 'Mode d''authentification'
 authentication: Authentification
 authentication_invalid: 'La source d''authentification %authentication% de la ligne %line% n''est pas valide.'
 authentication_source: 'Source d''authentification'
+author: Auteur
 automatic: Automatique
 available: Disponible
 available_widgets: 'Widgets disponibles'
@@ -181,6 +185,8 @@ choose_resource_form_type: 'Type de ressource'
 classify_my_workspaces: 'Classer mes espaces'
 classify_workspaces: 'Classer les espaces'
 classroom: 'En classe'
+client_ip: 'Adresse IP du client'
+client_name: 'Nom du client'
 close: Fermer
 closed_account: 'Compte clos'
 code: Code
@@ -188,6 +194,7 @@ code_found_at: 'Le code %code% a été trouvé aux lignes %lines%.'
 collaborative: Collaboratif
 collaborator: Collaborateur
 collapse: Replier
+color: Couleur
 comment: Commentaire
 communication: Communication
 completed: Terminé
@@ -195,6 +202,7 @@ configuration: Configuration
 configure: Configurer
 confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
+content: Contenu
 cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
 copies: Copies
@@ -301,6 +309,7 @@ display: Afficher
 display_at_registration: 'Afficher à la création du compte'
 display_captcha: 'Afficher les captcha pour les anonymes'
 display_options: 'Options d''affichage'
+displayable_in_workspace_list: 'Visible dans la liste des espaces'
 distinguished_name: 'Nom distinctif (DN)'
 does_not_exist: 'n''existe pas'
 does_not_exist_in_workspace: 'n''existe pas dans l''espace d''activités'
@@ -313,8 +322,8 @@ drop_file: 'Déposez le fichier'
 dsn: dsn
 duration: Durée
 edit: Modifier
-edit_facet: Editer une facette
-edit_field: Editer un champ
+edit_facet: 'Editer une facette'
+edit_field: 'Editer un champ'
 edit_password: 'Modifier le mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification du mot de passe.'
 edit_password_error_current: 'Votre mot de passe actuel n''est pas correct.'
@@ -348,6 +357,7 @@ evaluation-manual: Manuelle
 evaluation_edition: Evaluation
 evaluation_type: 'Type d''évaluation'
 excel_export: 'Export excel'
+expiration_date: 'Date d''expiration'
 export: Exporter
 exportable: Exportable
 external_pdo_database: 'Base de données externe (PDO)'
@@ -388,9 +398,6 @@ grant_access: 'Donner l''accès'
 group: Groupe
 group_configuration: 'Configuration du groupe'
 group_creation: 'Création d''un groupe'
-name: Nom
-roles: Rôles
-role: Rôle
 group_parameter: 'Paramètres du groupe'
 groups: Groupes
 groups_list: 'Liste des groupes'
@@ -422,8 +429,6 @@ home_tab_bookmark_confirm_message: 'Cet onglet sera disponible sur votre bureau'
 home_tab_bookmark_confirm_title: 'Epingler cet onglet au bureau'
 home_tab_bookmark_delete_confirm_message: 'Voulez-vous vraiment retirer cet onglet de votre bureau ?'
 home_tab_bookmark_delete_confirm_title: 'Retrait de l''onglet'
-locked: Verrouillé
-visible: Visible
 home_tab_creation: 'Création d''un onglet'
 home_tab_delete_confirm_message: 'Voulez-vous vraiment supprimer cet onglet ?'
 home_tab_delete_confirm_title: 'Suppression de l''onglet'
@@ -434,6 +439,7 @@ home_tab_widgets_configuration: 'Configuration des widgets de l''onglet'
 home_tabs: 'Onglets de la page d''accueil'
 home_tabs_configuration: 'Configuration des onglets de la page d''accueil'
 host: Host
+icon: Icône
 id: Id
 id_col: 'Colonne des identifiants'
 identical_group_name: 'Nom de groupe identique'
@@ -486,6 +492,7 @@ learning_place: 'Lieu d''apprentissage'
 learning_profil: 'Profile d''apprentissage'
 leave_this_page: 'Si vous quittez cette page, vous risquez de perdre vos modifications.'
 left: Gauche
+license: License
 limit: Limite
 line_number: 'Ligne %line%:'
 line_per_page: 'Résultats par page'
@@ -498,6 +505,7 @@ list_users: 'Lister les utilisateurs'
 list_view: 'Vue en liste (beta)'
 list_workspaces: 'Tous les espaces d''activités'
 lock: Verrouiller
+locked: Verrouillé
 login: Connexion
 login_failure: 'La connexion a échoué. Vérifiez que votre nom d''utilisateur et votre mot de passe sont corrects.'
 logout: Déconnexion
@@ -506,9 +514,6 @@ logs_error_location: 'En cas d''erreur, les logs se trouvent dans le dossier app
 mail: Mail
 mail_click: 'Cliquez sur ce lien pour réinitialiser votre mot de passe'
 mail_config_problem: 'Veuillez contacter l''administrateur pour réinitialiser votre mot de passe.'
-content: Contenu
-object: Objet
-receiver: destinataire(s)
 mail_invalid: 'Le format de votre email n''est pas valide'
 mail_layout: 'Mise en page des emails.'
 mail_login: 'Cliquez sur le lien'
@@ -537,6 +542,7 @@ max_storage_size: 'Espace de stockage maximum'
 media_most_viewed: 'Media les plus consultés'
 menu_bar: 'Barre de menu'
 menu_bar_configuration: 'Configuration de la barre de menu'
+message: Message
 message_form_content: Contenu
 message_form_object: Objet
 message_form_to: A
@@ -698,11 +704,14 @@ public_profile_undiscoverable_anonymously_text: 'Vous devez être <a href="%logi
 public_profile_undiscoverable_text: 'Nous n''avons trouvé aucun profil concordant pour <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'La personnalisation de l''URL de votre profil public n''est possible qu''une seule fois'
 public_registration: 'Inscription publique'
+public_unregistration: 'Désinscription publique'
 public_url_help: 'Note : Votre URL personnalisée doit comprendre au maximum 30 lettres ou chiffres. Ne pas utiliser d''espaces, de symboles ou de caractères spéciaux.'
 public_workspace_empty: 'Il n''y a aucun espace d''activités public.'
 public_workspaces: 'Espaces d''activités publics'
 publish: Publié
 publish_resource: 'Publier la ressource'
+published: Publié
+receiver: destinataire(s)
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 register: Inscription
@@ -710,14 +719,16 @@ register_to_a_public_workspace: 'Inscription à un espace d''activités public'
 register_to_a_workspace: 'M''inscrire à un espace'
 registered: Inscrit
 registered_groups: 'Groupes enregistrés'
+registered_user_amount: 'Nombre de personnes inscrites'
 registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
+registration_validation: 'Validation de l''inscription'
 remove: Enlever
-remove_facet: Supprimer une facette
-remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
-remove_field: Supprimer une champ
-remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?
+remove_facet: 'Supprimer une facette'
+remove_facet_confirm: 'Etes-vous sur de vouloir supprimer la facette %name% ?'
+remove_field: 'Supprimer une champ'
+remove_field_confirm: 'Etes-vous sur de vouloir supprimer le champ %name% ?'
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_from_model: 'Retirer un groupe'
 remove_group_from_model_confirm: 'Êtes-vous sûr de vouloir retirer le groupe %groupe% ?'
@@ -759,12 +770,7 @@ resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %t
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
 resource_limit_exceeded: 'La limite maximale (%max%) de ressource est dépassée. Vous avez déjà créé %current% ressources.'
 resource_picker: 'Sélecteur de ressources'
-edit: Editer
-export: Exporter
-open: Ouvrir
-share: Partager
-view: Voir
-apply_recursively_to_directories: 'Appliquer au contenu du répertoire et aux sous-répertoires'
+resource_type: 'Type de ressource'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
 resources_most_downloaded: 'Ressources les plus téléchargées'
@@ -801,9 +807,6 @@ search_workspace: 'Rechercher un espace d''activités'
 security_token: 'Jeton de d''authentification'
 security_token_delete_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce jeton d''authentification ?'
 security_token_delete_confirm_title: 'Suppression du jeton d''authentification'
-client_ip: 'Adresse IP du client'
-client_name: 'Nom du client'
-token: Token
 security_token_list: 'Liste des jetons d''authentification'
 security_tokens_management: 'Gestion des jetons d''authentification'
 see: Voir
@@ -823,7 +826,6 @@ selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés
 self_registration: Auto-inscription
 send: Envoyer
 send_mail: 'Envoyer un mail'
-message: Message
 send_message: 'Envoyer un message'
 send_message_to_workspace: 'Envoyer un message'
 send_message_to_workspace_info: 'Cette liste reprend les espaces d''activités dont vous êtes le gestionnaire.'
@@ -1012,9 +1014,6 @@ warning_user_impersonation: 'Vous êtes connecté en tant que %user%.'
 warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du workspace %workspace%.'
 widget: Widget
 widget_configuration: 'Configuration du widget'
-color: Couleur
-locked: Verrouillé
-visible: Visible
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
@@ -1033,21 +1032,11 @@ workspace.name_not_blank: 'Veuillez spécifier un nom pour ce workspace.'
 workspace_administration: Administration
 workspace_classification: 'Classification des espaces d''activités'
 workspace_code_invalid: 'Le code %code% est déjà utilisé à la ligne %line%.'
+workspace_creator: 'Créateur de l''espace'
 workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
-code: Code
-creation_date: 'Date de création'
-workspace_creator: 'Créateur de l''espace'
-description: Description
-displayable_in_workspace_list: 'Visible dans la liste des espaces'
-expiration_date: 'Date d''expiration'
-name: Nom
-registered_user_amount: 'Nombre de personnes inscrites'
-registration_validation: 'Validation de l''inscription'
-public_registration: 'Inscription publique'
-public_unregistration: 'Désinscription publique'
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'
@@ -1082,23 +1071,9 @@ workspaces_management: 'Gestions des espaces d''activités '
 workspaces_per_page: 'Espaces par page'
 wrong_captcha: 'Le code ne correspond pas avec l''image indiquée'
 ws_creator: 'Créateur d''espaces'
-license: License
 ws_most_viewed: 'Espaces d''activités les plus consultés'
 'yes': Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
-author: Auteur
-accessible_from: 'Accessible à partir du'
-accessible_until: 'Accessible jusqu''au'
-copy: Copier
-creation_date: 'Date de création'
-creator: Créateur
-delete: Supprimer
-edit: Editer
-export: Exporter
-name: Nom
-published: Publié
-resource_type: 'Type de ressource'
-icon: Icône

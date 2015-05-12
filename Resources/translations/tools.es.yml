@@ -1,14 +1,5 @@
-analytics: Tablero de control
-home: 'Inicio'
-logs: 'Registros'
-parameters: 'Parámetros'
-resource_manager: 'Recursos'
-users: 'Usuarios'
-platform_parameters: Parámetros de la plataforma
-user_management: Gestión de usuarios
-workspace_management: Gestión de espacios de trabajo
-registration_to_workspace: Inscripción a un espacio de trabajo
-platform_plugins: Plugins de la plataforma
+analytics: 'Tablero de control'
+home: Inicio
 home_tabs: Pestañas
 learning_profil: 'Perfil de aprendizaje'
 logs: Registros

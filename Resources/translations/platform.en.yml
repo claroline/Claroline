@@ -62,7 +62,6 @@ activate_notifications: 'Activate notifications'
 activate_personal_workspace_creation: 'Activate personal workspace creation.'
 active_widgets: 'Active widgets'
 activities: Activities
-activities_tracking: 'Activities tracking'
 activity_already: 'This resource is already in the activity'
 activity_remove_primary_resource: 'Remove the primary resource'
 activity_resource_not_allowed: 'You cannot add a resource of this type'
@@ -186,6 +185,8 @@ choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 classroom: Classroom
+client_ip: 'Client IP address'
+client_name: 'Client name'
 close: Close
 closed_account: 'Closed account'
 code: Code
@@ -193,6 +194,7 @@ code_found_at: 'The code %code% was found at lines %lines%.'
 collaborative: Collaborative
 collaborator: Collaborator
 collapse: Collapse
+color: Color
 comment: Comment
 communication: Communication
 completed: Completed
@@ -200,6 +202,7 @@ configuration: Configuration
 configure: Configure
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
+content: Content
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
 copies: Copies
@@ -306,6 +309,7 @@ display: Display
 display_at_registration: 'Display at registration'
 display_captcha: 'Display captcha for anonymous'
 display_options: 'Display options'
+displayable_in_workspace_list: Displayable
 distinguished_name: 'Distinguished Name (DN)'
 does_not_exist: 'doesn''t exist'
 does_not_exist_in_workspace: 'doesn''t exist in workspace'
@@ -320,7 +324,6 @@ duration: Duration
 edit: Edit
 edit_facet: 'Edit a facet'
 edit_field: 'Edit a field'
-edit_panel_facet: 'Edit a panel'
 edit_password: 'Edit the password'
 edit_password_error: 'An error occured while editing the password.'
 edit_password_error_current: 'The current password is not correct.'
@@ -354,6 +357,7 @@ evaluation-manual: Manual
 evaluation_edition: Evaluation
 evaluation_type: 'Evaluation type'
 excel_export: 'Excel export'
+expiration_date: 'Expiration date'
 export: Export
 exportable: Exportable
 external_pdo_database: 'External database (PDO)'
@@ -388,7 +392,7 @@ generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
-generate_url_subscription_success: 'You have been added to the workspace'
+generate_url_subscription_sucsess: generate_url_subscription_sucsess
 get_mail_notifications: 'I want to be notified by email on %adress%.'
 grant_access: 'Grant access'
 group: Group
@@ -425,8 +429,6 @@ home_tab_bookmark_confirm_message: 'This Home tab will be available in your desk
 home_tab_bookmark_confirm_title: 'Pin Home tab on desktop'
 home_tab_bookmark_delete_confirm_message: 'Do you really want to unpin this Home tab from desktop ?'
 home_tab_bookmark_delete_confirm_title: 'Unpin Home tab from desktop'
-locked: Locked
-visible: Visible
 home_tab_creation: 'Home tab creation'
 home_tab_delete_confirm_message: 'Do you really want to delete this Home tab ?'
 home_tab_delete_confirm_title: 'Delete Home tab'
@@ -482,7 +484,6 @@ lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_attempt_date: 'Last attempt'
 last_manager_error_message: 'You can''t remove every manager.'
-last_modification: 'Last modification'
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
@@ -500,11 +501,11 @@ link_outdated: 'link is no more valid'
 link_workspace: 'Link workspace'
 links: Links
 list_groups: 'List groups'
-list_role: 'Role list'
 list_users: 'List users'
 list_view: 'List view (beta)'
 list_workspaces: 'List workspaces'
 lock: Lock
+locked: Locked
 login: Login
 login_failure: 'Login has failed. Check your username and password are correct.'
 logout: Logout
@@ -513,9 +514,6 @@ logs_error_location: 'The log files are located in app/logs/update-xxx.log.'
 mail: Mail
 mail_click: 'Click on this link to reset your password'
 mail_config_problem: 'Please contact your administrator platform to reinitialize your password.'
-content: Content
-object: Object
-receiver: Receiver(s)
 mail_invalid: 'Mail format is not valid'
 mail_layout: 'Mail layout.'
 mail_login: 'Your Claroline''s login'
@@ -544,6 +542,7 @@ max_storage_size: 'Maximum storage size'
 media_most_viewed: 'Most viewed media'
 menu_bar: 'Menu bar'
 menu_bar_configuration: 'Menu bar configuration'
+message: Message
 message_form_content: Content
 message_form_object: Object
 message_form_to: To
@@ -624,6 +623,7 @@ not_blank_expected: 'This value should not be blank'
 note: Note
 notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
+notifications: notifications
 number: Number
 number_of_attempts: 'Number of attempts'
 number_of_attempts_explanation: 'The meaning of the number of attempts can vary depending on the activity. It is not necessarily the number of times the activity has been performed.'
@@ -674,6 +674,7 @@ picture: 'User picture'
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
 platform_expiration_date: 'Platform expiration date'
+platform_icon: platform_icon
 platform_init_date: 'Platform activation date'
 platform_parameters: 'Platform parameters'
 platform_plugins: 'Platform plugins'
@@ -703,12 +704,14 @@ public_profile_undiscoverable_anonymously_text: 'You must be <a href="%loginUrl%
 public_profile_undiscoverable_text: 'We didn''t find any profile corresponding to <strong>%publicUrl%</strong>'
 public_profile_url_tuning_only_once: 'Public profile URL tuning is possible just once'
 public_registration: 'Public registration'
+public_unregistration: 'Public unregistration'
 public_url_help: 'Note : Your tuned URL must have maximum 30 letters or figures. Don''t use whitspaces, symbols or special characters.'
 public_workspace_empty: 'There are no public workspaces.'
 public_workspaces: 'Public workspaces'
 publish: Publish
 publish_resource: 'Publish resource'
 published: Published
+receiver: Receiver(s)
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 redirect_after_login: 'Redirect to last visited page'
 register: Register
@@ -716,9 +719,11 @@ register_to_a_public_workspace: 'Register to a public workspace'
 register_to_a_workspace: 'Register to a workspace'
 registered: Registered
 registered_groups: 'Registered groups'
+registered_user_amount: 'Number of subscriber(s)'
 registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
+registration_validation: 'Registration validation'
 remove: Remove
 remove_facet: 'Remove a facet'
 remove_facet_confirm: 'Do you really want to remove the facet %name% ?'
@@ -741,12 +746,12 @@ remove_user_confirm_message: 'Are you sure you want to delete this user?'
 remove_user_from_model: 'Remove a user from the model'
 remove_user_from_model_confirm: 'Are you sure you want to remove the user %name%?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
-remove_workspace_confirm_workspace: 'Are you sure you want to delete this workspace?'
+remove_workspace_confirm: remove_workspace_confirm
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
 remove_workspace_from_selection: 'Remove workspace from selection'
 remove_workspace_role_warning: 'Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.'
-remove_workspaces_confirm_workspaces: 'Are you sure you want to delete these %count% workspaces?'
+remove_workspaces_confirm: remove_workspaces_confirm
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -763,6 +768,7 @@ resource_action_denied_message: 'The action %action% couldn''t be done on ''%pat
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
 resource_delete: 'Are you sure you want to delete this resource ?'
+resource_limit_exceeded: resource_limit_exceeded
 resource_picker: 'Resource picker'
 resource_type: 'Resource type'
 resources: Resources
@@ -801,9 +807,6 @@ search_workspace: 'Search for a workspace'
 security_token: 'Security Token'
 security_token_delete_confirm_message: 'Do you really want to delete this security token ?'
 security_token_delete_confirm_title: 'Delete security token'
-client_ip: 'Client IP address'
-client_name: 'Client name'
-token: Token
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
@@ -823,8 +826,6 @@ selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
 self_registration: Auto-inscription
 send: Send
 send_mail: 'Send a mail'
-message: Message
-object: Object
 send_message: 'Send a message'
 send_message_to_workspace: 'Send a message'
 send_message_to_workspace_info: 'This list shows the workspaces of which you are the manager.'
@@ -857,6 +858,7 @@ statistics: Statistics
 statistics_data: 'number of workspaces and users'
 status: Status
 steal_session: 'Steal the session'
+storage_limit_exceeded: storage_limit_exceeded
 storage_type: 'Storage type'
 storage_used: 'Storage used'
 subcategories: Subcategories
@@ -1012,9 +1014,6 @@ warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
 widget: Widget
 widget_configuration: 'Widget configuration'
-color: Color
-locked: Locked
-visible: Visible
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1033,22 +1032,11 @@ workspace.name_not_blank: 'The workspace''s name is required.'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_code_invalid: 'The code %code% is already used (line %line%).'
+workspace_creator: 'Creator of the workspace'
 workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
-code: Code
-creation_date: 'Creation date'
-workspace_creator: 'Creator of the workspace'
-description: Description
-displayable_in_workspace_list: Displayable
-expiration_date: 'Expiration date'
-name: Name
-registered_user_amount: 'Number of subscriber(s)'
-registration_validation: 'Registration validation'
-public_registration: 'Public registration'
-public_unregistration: 'Public unregistration'
-workspace_form_type: Type
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'

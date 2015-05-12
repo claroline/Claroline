@@ -30,7 +30,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:plugin:create')
             ->setDescription(
-                'Create a claroline plugin in your vendor directory'
+                'Create a claroline plugin in your vendor directory (does not support camel case yet)'
             );
         $this->setDefinition(
             array(
@@ -58,7 +58,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         );
         //todo admin tool
         //todo top bar shortcut
-        //todo oauth (the whole system must be implemented here)
+        //todo oauth
 
         $this->addOption(
             'install',
