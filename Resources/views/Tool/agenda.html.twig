@@ -18,7 +18,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
@@ -174,18 +174,18 @@
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>
-    <script type="text/javascript" src="{{ asset(calendarPath ~ 'lib/moment.min.js') }}"></script>
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
     <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript'>
         {% if workspace is not defined %}
             $(function () {
-                Claroline.Calendar.initialize('desktop', "undefined", '{{ canEditEvent|json_encode|raw }}');
+                Claroline.Calendar.initialize('desktop', "undefined", '{{ editableWorkspaces|json_encode|raw }}');
             });
         {% else %}
             $(function () {
-                Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, '{{ canEditEvent|json_encode|raw }}');
+                Claroline.Calendar.initialize('workspace', {{ workspace.getId() }}, '{{ editableWorkspaces|json_encode|raw }}');
             });
         {% endif %}
     </script>

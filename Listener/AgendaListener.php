@@ -146,13 +146,13 @@ class AgendaListener
 
     public function workspaceAgenda(Workspace $workspace)
     {
-        $canEditEvent = $this->authorization->isGranted(array('agenda_', 'edit'), $workspace);
+        $editableWorkspaces = $this->authorization->isGranted(array('agenda_', 'edit'), $workspace);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Tool:agenda.html.twig',
             array(
                 'workspace' => $workspace,
-                'canEditEvent' => array($workspace->getId() => $canEditEvent)
+                'editableWorkspaces' => array($workspace->getId() => $editableWorkspaces)
             )
         );
     }
@@ -164,12 +164,12 @@ class AgendaListener
         $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, true);
         $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findByUser($usr, false);
         $filters = array();
-        $canEditEvent = array(0 => true);
+        $editableWorkspaces = array(0 => true);
 
         foreach ($listEvents as $event) {
             $workspaceId = $event->getWorkspace()->getId();
             $filters[$workspaceId] = $event->getWorkspace()->getName();
-            $canEditEvent[$workspaceId] = $this->authorization->isGranted(
+            $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(
                 array('agenda_', 'edit'),
                 $event->getWorkspace()
             );
@@ -183,7 +183,7 @@ class AgendaListener
             'ClarolineAgendaBundle:Tool:agenda.html.twig',
             array(
                 'filters' => $filters,
-                'canEditEvent' => $canEditEvent
+                'editableWorkspaces' => $editableWorkspaces
             )
         );
     }
