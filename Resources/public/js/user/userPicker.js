@@ -392,9 +392,9 @@
         $('#selected-users-box-badge').html(nbUsers);
         
         if (nbUsers === 0) {
-            $('#no-user-alert').show('slow', function () {});
+            $('#picker-no-user-alert').show('slow', function () {});
         } else {
-            $('#no-user-alert').hide('slow', function () {});
+            $('#picker-no-user-alert').hide('slow', function () {});
         }
     }
     
@@ -404,9 +404,9 @@
         $('#filters-box-badge').html(nbFilters);
         
         if (nbFilters === 0) {
-            $('#no-filter-alert').show('slow', function () {});
+            $('#picker-no-filter-alert').show('slow', function () {});
         } else {
-            $('#no-filter-alert').hide('slow', function () {});
+            $('#picker-no-filter-alert').hide('slow', function () {});
         }
     }
     
@@ -481,20 +481,25 @@
     function initializeSelectedUsers()
     {
         var idsValues = $('#user-picker-input-' + pickerName).val();
-        var namesValues = $('#user-picker-input-view-' + pickerName).val();
-        var ids = idsValues.split(',');
-        var names = namesValues.split(',');
-        var matched = (ids.length === names.length);
-        var matchedSelected = (selectedUserIds.length === selectedUserNames.length);
-        
-        for (var i = 0; i < ids.length; i++) {
-            
-            if (!isNaN(parseInt(ids[i]))) {
-                var name = matched ? names[i] : '???';
-                selectedUsers[ids[i]] = name;
-                addUserToSelectedUsersBox(ids[i], name);
+        var namesValues = (mode === 'multiple') ?
+            $('#user-picker-input-' + pickerName).data('selected-users-names') :
+            $('#user-picker-input-view-' + pickerName).val();
+    
+        if (namesValues !== undefined) {
+            var ids = idsValues.split(',');
+            var names = namesValues.split(';;;');
+            var matched = (ids.length === names.length);
+
+            for (var i = 0; i < ids.length; i++) {
+
+                if (!isNaN(parseInt(ids[i]))) {
+                    var name = matched ? names[i] : '???';
+                    selectedUsers[ids[i]] = name;
+                    addUserToSelectedUsersBox(ids[i], name);
+                }
             }
         }
+        var matchedSelected = (selectedUserIds.length === selectedUserNames.length);
         
         for (var i = 0; i < selectedUserIds.length; i++) {
             var name = matchedSelected ? selectedUserNames[i] : '???';

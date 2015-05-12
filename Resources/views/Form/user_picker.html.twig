@@ -18,6 +18,10 @@
                    {% endif %}
                {% endif %}
                id="user-picker-input-{{ picker_name }}"
+               
+               {% if multiple and value is not empty %}
+                   data-selected-users-names="{% for v in value %}{{ v['name'] }}{% if not loop.last %};;;{% endif %}{% endfor %}"
+               {% endif %}
         >
         <div class="input-group">
             <input type="text"
