@@ -5,7 +5,7 @@ namespace Icap\BadgeBundle\Event\Log;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Icap\BadgeBundle\Entity\Badge;
 use Claroline\CoreBundle\Entity\User;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 
 class LogBadgeAwardEvent extends LogGenericEvent implements NotifiableInterface
 {
