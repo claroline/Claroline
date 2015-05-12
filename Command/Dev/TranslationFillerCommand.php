@@ -47,6 +47,12 @@ class TranslationFillerCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'What is the bundle fqcn ?'
         );
+        $this->addOption(
+            'fill',
+            'f',
+            InputOption::VALUE_NONE,
+            'Override the translations file'
+        );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -94,6 +100,27 @@ class TranslationFillerCommand extends ContainerAwareCommand
         $mainFile = $this->getContainer()->get('kernel')->locateResource($mainShortPath);
         $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
 
+        if ($input->getOption('fill')) $this->fill($mainFile, $filledFile);
+        $this->showUntranslated($filledFile, $output);
+    }
+
+    private function showUntranslated($filledFile,  OutputInterface $output)
+    {
+        $output->writeln('<comment> These lines may contain incorrect translations </comment>');
+        $line = 1;
+        $translations = Yaml::parse($filledFile);
+
+        foreach ($translations as $key => $value) {
+            if ($key === $value) {
+                $output->writeln(sprintf('line %s - %s', $line, $key));
+            }
+
+            $line++;
+        }
+    }
+
+    private function fill($mainFile, $filledFile)
+    {
         $mainTranslations = Yaml::parse($mainFile);
         $translations = Yaml::parse($filledFile);
 
