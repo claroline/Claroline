@@ -9,7 +9,7 @@
             $(document).ready(function () {
                 var choices = {{form.vars['choices']|json_encode()|raw}};
                 var choicesTree = {};
-                var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['value']}}");
+                var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['data']}}");
                 if (preselectedValuePath == null) {
                     preselectedValuePath = [choices[0]['label']];
                 }
@@ -25,7 +25,7 @@
                 for (var key in choices) {
                     if (!choices[key].choices) {
                         choicesTree[choices[key].label] = choices[key].value;
-                        if (preselectedValue == choices[key].value) {
+                        if (preselectedValue == choices[key].data) {
                             preselectedValuePath = pathToNode.slice();
                             preselectedValuePath.push(choices[key].label);
                         }
