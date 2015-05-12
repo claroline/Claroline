@@ -23,7 +23,8 @@ class MailInscriptionType extends AbstractType
             'content',
             'content',
             array(
-                'data' => $builder->getData()
+                'data' => $builder->getData(),
+                'label' => 'content'
             )
         );
     }
@@ -32,7 +33,7 @@ class MailInscriptionType extends AbstractType
     {
         return 'platform_parameters_form';
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));

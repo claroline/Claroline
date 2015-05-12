@@ -26,10 +26,10 @@ class WidgetHomeTabConfigType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('visible', 'checkbox');
+        $builder->add('visible', 'checkbox', array('label' => 'visible'));
 
         if ($this->withLock) {
-            $builder->add('locked', 'checkbox');
+            $builder->add('locked', 'checkbox', array('label' => 'locked'));
         }
     }
 

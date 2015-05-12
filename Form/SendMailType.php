@@ -20,8 +20,8 @@ class SendMailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('object', 'text')
-            ->add('content', 'tinymce');
+            ->add('object', 'text', array('label' => 'object'))
+            ->add('content', 'tinymce', array('label' => 'message'));
     }
 
     public function getName()

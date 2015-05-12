@@ -57,14 +57,15 @@ class WorkspaceEditType extends AbstractType
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
-        $builder->add('name', 'text', array('required' => true));
-        $builder->add('code', 'text', array('required' => true));
+        $builder->add('name', 'text', array('required' => true, 'label' => 'name'));
+        $builder->add('code', 'text', array('required' => true, 'label' => 'code'));
         $builder->add(
                 'creationDate',
                 'text',
                 array(
                     'disabled' => 'disabled',
-                    'data' => $this->creationDate
+                    'data' => $this->creationDate,
+                    'label' => 'creation_date'
                 )
             );
         if ($this->expirationDate) {
@@ -73,24 +74,25 @@ class WorkspaceEditType extends AbstractType
                     'text',
                     array(
                         'disabled' => 'disabled',
-                        'data' => $this->expirationDate
+                        'data' => $this->expirationDate,
+                        'label' => 'expiration_date'
                     )
                 );
         }
-        $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username));
+        $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username, 'label' => 'creator'));
         if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
             $builder->add(
                 'description',
                 'textarea',
-                array('required' => false)
+                array('required' => false, 'label' => 'description')
             );
         } else {
-            $builder->add('description', 'tinymce', array('required' => false));
+            $builder->add('description', 'tinymce', array('required' => false, 'label' => 'description'));
         }
-        $builder->add('displayable', 'checkbox', array('required' => false));
-        $builder->add('selfRegistration', 'checkbox', array('required' => false));
-        $builder->add('registrationValidation', 'checkbox', array('required' => false));
-        $builder->add('selfUnregistration', 'checkbox', array('required' => false));
+        $builder->add('displayable', 'checkbox', array('required' => false, 'label' => 'displayable_in_workspace_list'));
+        $builder->add('selfRegistration', 'checkbox', array('required' => false, 'label' => 'public_registration'));
+        $builder->add('registrationValidation', 'checkbox', array('required' => false, 'label' => 'registration_validation'));
+        $builder->add('selfUnregistration', 'checkbox', array('required' => false, 'label' => 'public_unregistration'));
 
         if (!$this->isAdmin) {
             $builder->add('maxStorageSize', 'text', array('disabled' => 'disabled', 'label' => 'max_storage_size'));
@@ -114,7 +116,7 @@ class WorkspaceEditType extends AbstractType
             $builder->add('maxUsers', 'text', array('label' => 'workspace_max_users'));
         }
 
-        $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false));
+        $builder->add('number', 'text', array('disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount'));
 
     }
 

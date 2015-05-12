@@ -59,7 +59,7 @@ log_resource-create_filter: 'Création d''une ressource'
 log_resource-create_sentence: 'a créé %resource%'
 log_resource-create_shortname: Création
 log_resource-create_title: 'Création d''une ressource'
-log_resource-custom_action_filter: Action spéciale sur une ressource
+log_resource-custom_action_filter: 'Action spéciale sur une ressource'
 log_resource-delete_filter: 'Suppression d''une ressource'
 log_resource-delete_sentence: 'a supprimé %resource%'
 log_resource-delete_shortname: Suppression
@@ -90,8 +90,8 @@ log_resource-update_shortname: Modification
 log_resource-update_title: 'Mise à jour d''une ressource'
 log_resource_owner: 'Propriétaire de la ressource'
 log_role: 'Rôle cible de l''action'
-log_role-subscribe_group_filter: Attribution d'un rôle à un groupe
-log_role-subscribe_user_filter: Attribution d'un rôle à un utilisateur
+log_role-subscribe_group_filter: 'Attribution d''un rôle à un groupe'
+log_role-subscribe_user_filter: 'Attribution d''un rôle à un utilisateur'
 log_see_details: 'voir le détail'
 log_shortcut: Raccourci
 log_subscribe_group: 'Inscription groupe'

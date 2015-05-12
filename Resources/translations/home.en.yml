@@ -5,52 +5,52 @@
 '%count% second ago|%count% seconds ago': '%count% second ago|%count% seconds ago'
 '%count% week ago|%count% weeks ago': '%count% week ago|%count% weeks ago'
 '%count% year ago|%count% years ago': '%count% year ago|%count% years ago'
-A page of contents with this name already exist: 'A page of content with this name already exist'
-Add Pictures: 'Add Pictures'
-Add a link here: 'Add a link here'
-Add a link: 'Add a link'
-An error occurred: 'An error occurred'
-Are you sure you want to delete this content?: 'Are you sure you want to delete this content?'
+'A page of contents with this name already exist': 'A page of content with this name already exist'
+'Add Pictures': 'Add Pictures'
+'Add a link': 'Add a link'
+'Add a link here': 'Add a link here'
+'An error occurred': 'An error occurred'
+'Are you sure you want to delete this content?': 'Are you sure you want to delete this content?'
 Cancel: Cancel
 Collapse: Collapse
-Content Administration: 'Content Administration'
-Content pages: 'Content pages'
-Content regions: 'Content regions'
 Content: Content
-Create a content: 'Create a content'
+'Content Administration': 'Content Administration'
+'Content pages': 'Content pages'
+'Content regions': 'Content regions'
 Create: Create
+'Create a content': 'Create a content'
 Delete: Delete
-Edit in the page: Edit in the page
 Edit: Edit
+'Edit in the page': 'Edit in the page'
 Error: Error
 Footer: Footer
-For not logged users: For not logged users
+'For not logged users': 'For not logged users'
 Header: Header
 Left: Left
-Link address: 'Link address'
-Link title: 'Link title'
-Menu settings: Menu settings
-Menu title: 'Menu title'
-Move content: Move content
-New content page: 'New content page'
-Note that you can add a link simply by pasting it on the content body: 'Note that you can add a link simply by pasting it on the content body'
+'Link address': 'Link address'
+'Link title': 'Link title'
+'Menu settings': 'Menu settings'
+'Menu title': 'Menu title'
+'Move content': 'Move content'
+'New content page': 'New content page'
+'Note that you can add a link simply by pasting it on the content body': 'Note that you can add a link simply by pasting it on the content body'
 Ok: Ok
-Optional title: 'Optional title'
+'Optional title': 'Optional title'
 Pages: Pages
-Please try again later or check your internet connection: 'Please try again later or check your internet connection'
+'Please try again later or check your internet connection': 'Please try again later or check your internet connection'
 Preview: Preview
-Read more: Read more
+'Read more': 'Read more'
 Region: Region
 Right: Right
-Select a page: Select a page
-Set this menu as header menu in the home page: Set this menu as header menu in the home page
-Show the connection button at the footer of home page: Show the connection button at the footer of home page
-Show the language button in the header menu: Show the language button in the header menu
-Show the workspace menu at the footer of home page: Show the workspace menu at the footer of home page
-Size of content: 'Size of content'
+'Select a page': 'Select a page'
+'Set this menu as header menu in the home page': 'Set this menu as header menu in the home page'
+'Show the connection button at the footer of home page': 'Show the connection button at the footer of home page'
+'Show the language button in the header menu': 'Show the language button in the header menu'
+'Show the workspace menu at the footer of home page': 'Show the workspace menu at the footer of home page'
 Size: Size
-This action is irreversible: 'This action is irreversible'
-When header menu is available: When header menu is available
-You can add interactive content such as videos or presentations from websites like: 'You can add interactive content such as videos or presentations from websites like'
-unpublish_link: Click here in order to change the settings
-unpublish_page: This web page is unpublished!
+'Size of content': 'Size of content'
+'This action is irreversible': 'This action is irreversible'
+'When header menu is available': 'When header menu is available'
+'You can add interactive content such as videos or presentations from websites like': 'You can add interactive content such as videos or presentations from websites like'
+unpublish_link: 'Click here in order to change the settings'
+unpublish_page: 'This web page is unpublished!'
