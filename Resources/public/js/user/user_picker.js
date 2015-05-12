@@ -20,41 +20,66 @@
         var showMail = $(this).data('show-mail');
         var showCode = $(this).data('show-code');
         
+        pickerName = (pickerName === undefined) ?
+            'picker-name' :
+            pickerName;
+        pickerTitle = (pickerTitle === undefined) ?
+            Translator.trans('user_selector', {}, 'platform') :
+            pickerTitle; 
+        multiple = (multiple === undefined) ?
+            'multiple' :
+            multiple;
+        showAllUsers = (showAllUsers === undefined) ?
+            0 :
+            showAllUsers;
+        showFilters = (showFilters === undefined) ?
+            1 :
+            showFilters;
+        showUsername = (showUsername === undefined) ?
+            1 :
+            showUsername;
+        showMail = (showMail === undefined) ?
+            0 :
+            showMail;
+        showCode = (showCode === undefined) ?
+            0 :
+            showCode;
+        
         var userIdsTxt = '' + $(this).data('excluded-users');
         userIdsTxt = userIdsTxt.trim();
-        var userIds = userIdsTxt !== '' ?
-            userIdsTxt.split(';') :
-            [];
-        
+        var userIds = (userIdsTxt === 'undefined' || userIdsTxt === '') ?
+            [] :
+            userIdsTxt.split(';');
+
         var forcedUserIdsTxt = '' + $(this).data('forced-users');
         forcedUserIdsTxt = forcedUserIdsTxt.trim();
-        var forcedUserIds = forcedUserIdsTxt !== '' ?
-            forcedUserIdsTxt.split(';') :
-            [];
-        
+        var forcedUserIds = (forcedUserIdsTxt === 'undefined' || forcedUserIdsTxt === '') ?
+            [] :
+            forcedUserIdsTxt.split(';');
+
         var selectedUserIdsTxt = '' + $(this).data('selected-users');
         selectedUserIdsTxt = selectedUserIdsTxt.trim();
-        var selectedUserIds = selectedUserIdsTxt !== '' ?
-            selectedUserIdsTxt.split(';') :
-            [];
+        var selectedUserIds = (selectedUserIdsTxt === 'undefined' || selectedUserIdsTxt === '') ?
+            [] :
+            selectedUserIdsTxt.split(';');
     
         var groupIdsTxt = '' + $(this).data('forced-groups');
         groupIdsTxt = groupIdsTxt.trim();
-        var forcedGroupIds = groupIdsTxt !== '' ?
-            groupIdsTxt.split(';') :
-            [];
+        var forcedGroupIds = (groupIdsTxt === 'undefined' || groupIdsTxt === '') ?
+            [] :
+            groupIdsTxt.split(';');
     
         var roleIdsTxt = '' + $(this).data('forced-roles');
         roleIdsTxt = roleIdsTxt.trim();
-        var forcedRoleIds = roleIdsTxt !== '' ?
-            roleIdsTxt.split(';') :
-            [];
+        var forcedRoleIds = (roleIdsTxt === 'undefined' || roleIdsTxt === '') ?
+            [] :
+            roleIdsTxt.split(';');
     
         var workspaceIdsTxt = '' + $(this).data('forced-workspaces');
         workspaceIdsTxt = workspaceIdsTxt.trim();
-        var forcedWorkspaceIds = workspaceIdsTxt !== '' ?
-            workspaceIdsTxt.split(';') :
-            [];
+        var forcedWorkspaceIds = (workspaceIdsTxt === 'undefined' || workspaceIdsTxt === '') ?
+            [] :
+            workspaceIdsTxt.split(';');
     
         var parameters = {};
         parameters.excludedUserIds = userIds;
@@ -63,10 +88,7 @@
         parameters.forcedGroupIds = forcedGroupIds;
         parameters.forcedRoleIds = forcedRoleIds;
         parameters.forcedWorkspaceIds = forcedWorkspaceIds;
-        
-        if (multiple === undefined) {
-            multiple = 'multiple';
-        }
+
         var route = Routing.generate(
             'claro_user_picker',
             {
