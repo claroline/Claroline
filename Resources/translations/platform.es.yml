@@ -1,52 +1,31 @@
 6_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 6 elementos por línea.'
 7_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 7 elementos por línea.'
-'Action List': 'Lista de acciones'
-'Actions per day': 'Acciones por día'
-'Activate the terms of service in the platform': 'Activar las Condiciones del servicio de la plataforma'
-Active: Activar
-'Add a logo': 'Agregar un logo'
-'An error has occurred, please check if the file size does not exceeds the permitted size': 'Ha ocurrido un error, por favor, compruebe si el tamaño del archivo no supera el tamaño permitido'
-'Audience/user visits': 'Visitas del usuario'
-'Choose a logo': 'Escoger un logo'
-'Choose visible actions in the widget': 'Escoger una acción visible en el widget'
-'Choose workspaces displayed in the widget': 'Escoger un espacio de trabajo visible en el widget'
-'Create a new resource': 'Crear un nuevo recurso'
-'Draw an area on the graph to zoom, double-click to cancel': 'Dibuje un área en el gráfico para ampliar, haga doble clic para cancelar'
-'Filter actions': 'Acciones de filtrado'
-'First name': Nombre
-'Google HTML tag validation': 'Etiqueta HTML de validación de Google'
-'I accept the terms of service': 'Acepto los Condiciones del servicio'
-Indexing: Indexación
-Language: Idioma
-'Last action': '{1} ultima acción|[1,Inf] ultima %logAmount% acción'
-'Last name': Apellido
-None: Ninguno
-'Or choose an existing file from resource manager': 'O escoja un archivo existente en el administrador de recursos'
-'Overview of all recent activities in %workspaceName%': 'Resumen de todas las actividades recientes en %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Resumen de las actividades recientes en %workspaceName%'
-'Overview of recent activities of your workspaces': 'Resumen de todas las actividades recientes de su espacio e trabajo'
-'Paste here the meta tag provides by Google Webmaster': 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
-'Powered by': 'Desarrollado por'
-'See all': 'Ver totdos'
-'Select a Language': 'Seleccione un idioma'
-Show: Show
-'Show actions': 'Ver las acciones'
-'Show the name of the platform in the top bar': 'Mostrar el nombre de la plataforma en la barra superior'
-'Terms of service': 'Condiciones de servicio'
-'The form is not valid': 'El formulario no es valido'
-'This placeholder is optional and will be replaced by the author first name': 'Esta variable es opcional y será reemplazada por el nombre del autor'
-'This placeholder is optional and will be replaced by the author last name': 'Esta variable es opcional y será reemplazada por el apellido del autor'
-'This placeholder is optional and will be replaced by your platform name': 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
-'This placeholder is required and will be replaced by the actual mail content': 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
-'This variable is optional and will be replaced by your platform name': 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
-'This variable is required and will be replaced by the actual mail content': 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
-'Upload a file': 'Subir un archivo'
-'User name': 'Nombre de usuario'
-'You can redefine the content of the registration mail here': 'Usted puede definir el contenido del correo electrónico de inscripción aquí'
-'You can redefine the layout used when a mail is sent': 'Usted puede definir aquí el modelo usado cuando se envía un correo'
-'You can use the following variables in your form': 'Usted puede usar las siguientes variables en su formulario'
-'You can use the full screen version of the text editor to include HTML': 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
-'Your changes have been saved': 'Sus cambios han sido guardados'
+none: Ninguno
+choose_from_resource_manager: 'O escoja un archivo existente en el administrador de recursos'
+recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
+workspace_activity_overview: 'Resumen de las actividades recientes en %workspaceName%'
+your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
+meta_tag_paste: 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
+powered_by: 'Desarrollado por'
+see_all: 'Ver totdos'
+language_select: 'Seleccione un idioma'
+show: Show
+show_actions: 'Ver las acciones'
+show_name_in_top_bar: 'Mostrar el nombre de la plataforma en la barra superior'
+term_of_service: 'Condiciones de servicio'
+invalid_form: 'El formulario no es valido'
+placeholder_first_name_message: 'Esta variable es opcional y será reemplazada por el nombre del autor'
+placeholder_last_name_message: 'Esta variable es opcional y será reemplazada por el apellido del autor'
+placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
+placeholder_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
+placeholder_platform_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+upload_file: 'Subir un archivo'
+registration_mail_content_override: 'Usted puede definir el contenido del correo electrónico de inscripción aquí'
+mail_layout_message_override: 'Usted puede definir aquí el modelo usado cuando se envía un correo'
+variable_available_message: 'Usted puede usar las siguientes variables en su formulario'
+fullscreen_text_editor: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
+saved_changes: 'Sus cambios han sido guardados'
 accept: Aceptar
 accessible_from: 'Accesible desde'
 accessible_until: accessible_until
@@ -54,7 +33,9 @@ account_created: 'Cuenta creada.'
 account_duration_label: 'Duración de la vida de una cuentas (días)'
 account_general_statistics: 'Estadísticas generales de la cuenta'
 action: Acción
+action_list: 'Lista de acciones'
 actions: Acciones
+actions_per_day: 'Acciones por día'
 activate_account: activate_account
 activate_account_click: activate_account_click
 activate_maintenance_mode: activate_maintenance_mode
@@ -66,7 +47,6 @@ activity_already: 'Este recurso ya está en la actividad'
 activity_remove_primary_resource: 'Retirar el recurso principal'
 activity_resource_not_allowed: 'No puede agregar un recurso de este tipo'
 activity_resource_remove: '¿Está seguro que desea remover este recurso de la actividad?'
-activity_rule_action_none: Ninguno
 activity_rule_configuration_for_auto_evaluation: 'Configuración de la regla para la evaluación automática'
 activity_rule_form_action_explanation: 'La evaluación automática se basa en las acciones realizadas en el recurso asociado.'
 activity_rule_form_activeFrom: 'Realizada  entre el'
@@ -84,6 +64,7 @@ activity_who_collaborative: Colaboración
 activity_who_individual: Individual
 actualize: Actualizar
 add: Agregar
+add_a_logo: 'Agregar un logo'
 add_category: 'Agregar categoría'
 add_field_to_facet: 'Agregar un campo a una faceta'
 add_field_to_panel: add_field_to_panel
@@ -114,7 +95,6 @@ admin_logs: 'Registros de la plataforma'
 admin_third_party_application: 'Aplicaciones terceras'
 admin_workspace_tag_form_name: Nombre
 administration: Administración
-administrativeCode: administrativeCode
 administrative_code: 'Código administrativo'
 advanced: Avanzado
 advanced_parameters: advanced_parameters
@@ -181,6 +161,7 @@ category_explanations_2: 'Seleccione una categoría para la gestión de sus subc
 category_root: 'Categorías de la raíz'
 category_structure: 'Estructura de las categorías'
 change_view: 'Cambiar la visualización'
+choose_logo: 'Escoger un logo'
 choose_resource_form_type: 'Tipo de recurso'
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
@@ -223,6 +204,7 @@ create_new_tag: 'Crear una etiqueta'
 create_new_user_account: 'Nuevo usuario'
 create_only: 'Crear sólo'
 create_pane: create_pane
+create_resource: 'Crear un nuevo recurso'
 create_role: 'Crear un rol'
 create_security_token: 'Crear un token de seguridad '
 create_subcategory: 'Crear una subcategoría'
@@ -373,11 +355,12 @@ fb_client_secret: 'secret de la aplicación'
 file: Archivos
 files: Archivos
 filter: Filtro
+filter_actions: 'Acciones de filtrado'
 find_workspaces: 'Espacios de trabajo publicos'
 firstName: Nombre
 first_name: Apellido
 footer: 'Pie de página'
-'for period': 'para el período'
+for_period: 'para el período'
 forgot_password: '¿Ha olvidado su contraseña?'
 form_role: Rol
 from: De
@@ -392,9 +375,10 @@ generate_url: 'Dirección de subscripción publica'
 generate_url_subscription: 'Subscripción de un usuario a un espacio de trabajo'
 generate_url_subscription_anonyme: 'Subscripción de un anónimo a un espacio de trabajo'
 generate_url_subscription_fail: 'Usted debe marcar "activar primero la casilla de inscripción para generar la URL"'
-generate_url_subscription_sucsess: generate_url_subscription_sucsess
 get_mail_notifications: 'Me gustaría ser notificado por correo electrónico a %adress%.'
+google_tag_validation: 'Etiqueta HTML de validación de Google'
 grant_access: 'Conceder acceso'
+graph_draw_area: 'Dibuje un área en el gráfico para ampliar, haga doble clic para cancelar'
 group: Grupos
 group_configuration: 'Configuración de un grupo'
 group_creation: 'Creación de un grupo'
@@ -452,6 +436,7 @@ import_user_file_file: 'importar de un archivo CSV'
 import_users: 'Importar usuarios'
 in_workspace: in_workspace
 incomplete: Incompleto
+indexing: Indexación
 individual: Individual
 informations: Informaciones
 infos_sending_acceptance: 'Aceptación del envío de información '
@@ -480,8 +465,10 @@ is_already_in_use: is_already_in_use
 is_mail_displayed: is_mail_displayed
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
+language: Idioma
 lastName: Apellido
 last_30_days_activity: 'Actividad de los últimos 30 días'
+last_action: '{1} ultima acción|[1,Inf] ultima %logAmount% acción'
 last_attempt_date: 'Fecha del último intento'
 last_manager_error_message: 'No es posible eliminar todos los administradores.'
 last_name: Apellido
@@ -812,7 +799,6 @@ security_tokens_management: 'Gestión de tokens de seguridad'
 see: Ver
 see_more: 'Ver más'
 see_public_profile: see_public_profile
-'select all': 'Seleccionar todo'
 select_all: 'Seleccionar todo'
 select_category: 'Seleccionar una categoría'
 select_contacts_title: 'Seleccionar receptores'
@@ -884,7 +870,9 @@ tags_organization: 'Organización de las etiquetas'
 teacher: Profesor
 technical: Técnicos
 technical_data: 'URL, versión, idioma principal, IP y correo electrónico de soporte'
+term_of_service_activation_message: 'Activar las Condiciones del servicio de la plataforma'
 terms_enabled_but_empty: 'Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.'
+terms_of_service_acceptance: 'Acepto los Condiciones del servicio'
 text: Texto
 the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
 the_workspace: 'Espacio de trabajo'
@@ -945,7 +933,7 @@ unavailable_platform: 'La plataforma no está disponible.'
 unavailable_role: 'El rol %translationKey% no es utilizable'
 uncompress_file: 'Descomprimir el archivo si es posible'
 under_min_length: 'Este valor es muy corto'
-'unique connections': 'Nb único Cnx.'
+unique_connections: 'Nb único Cnx.'
 unknown: Desconocido
 unpublish: Despublicar
 unpublished: 'No publicado'
@@ -985,6 +973,7 @@ user_picker: user_picker
 user_profile: user_profile
 user_public_profile_not_visible: user_public_profile_not_visible
 user_removed: 'Usuario suprimido'
+user_visit: 'Visitas del usuario'
 username: 'Nombre de usuario'
 username_and_email_from_two_different_users: username_and_email_from_two_different_users
 username_found_at: 'El nombre de usuario %username% fue encontrado en la linea: %lines%'
@@ -1017,13 +1006,15 @@ widget_configuration: 'Configuración del Widget'
 widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
 widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
 widget_settings: 'Configuración del Widget'
+widget_visible_actions: 'Escoger una acción visible en el widget'
+widget_workspace_pick: 'Escoger un espacio de trabajo visible en el widget'
 widgets: Widgets
 widgets_configuration: 'Configuración del Widget'
-'will be replaced by your platform name': 'va a ser remplazado por el nombre de su plataforma'
-'will display the password': 'va a mostrar la contraseña'
-'will display the user first name': 'va a mostrar el nombre del usuario'
-'will display the user last name': 'va a mostrar el apellido del usuario'
-'will display the username': 'va a mostrar el nombre de usuario'
+replace_platform_name_display_message: 'va a ser remplazado por el nombre de su plataforma'
+replace_password_display: 'va a mostrar la contraseña'
+replace_first_name_display_message: 'va a mostrar el nombre del usuario'
+replace_last_name_display_message: 'va a mostrar el apellido del usuario'
+replace_username_display_message: 'va a mostrar el nombre de usuario'
 with_role: with_role
 with_tutor: Tutelado
 workspace: 'Espacio de trabajo'
@@ -1072,7 +1063,7 @@ workspaces_per_page: 'Espacios de trabajo por página'
 wrong_captcha: wrong_captcha
 ws_creator: 'Creador de espacios de trabajo'
 ws_most_viewed: 'Espacio de trabajo mas visto'
-'yes': Si
+yes: Si
 yesterday_activity: 'Actividades de ayer'
 your_current_url: your_current_url
 your_username: 'Su nombre de usuario es '

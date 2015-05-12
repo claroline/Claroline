@@ -101,18 +101,25 @@ class TranslationFillerCommand extends ContainerAwareCommand
         $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
 
         if ($input->getOption('fill')) $this->fill($mainFile, $filledFile);
-        $this->showUntranslated($filledFile, $output);
+        $this->showUntranslated($filledFile, $output, $locale);
     }
 
-    private function showUntranslated($filledFile,  OutputInterface $output)
+    private function showUntranslated($filledFile,  OutputInterface $output, $locale)
     {
-        $output->writeln('<comment> These lines may contain incorrect translations </comment>');
+        $displayWarning = true;
         $line = 1;
         $translations = Yaml::parse($filledFile);
+        $safe = $this->getSafeDubious();
 
         foreach ($translations as $key => $value) {
             if ($key === $value) {
-                $output->writeln(sprintf('line %s - %s', $line, $key));
+                if (!in_array($key, $safe[$locale])) {
+                    if ($displayWarning) {
+                        $output->writeln('<comment> These lines may contain incorrect translations </comment>');
+                        $displayWarning = false;
+                    }
+                    $output->writeln(sprintf('line %s - %s', $line, $key));
+                }
             }
 
             $line++;
@@ -137,8 +144,22 @@ class TranslationFillerCommand extends ContainerAwareCommand
         }
 
         ksort($translations);
-        var_dump(count($translations));
         $yaml = Yaml::dump($translations);
         file_put_contents($filledFile, $yaml);
+    }
+
+    private function getSafeDubious()
+    {
+        return array(
+            'en' => array(
+                'by', 'dsn'
+            ),
+            'fr' => array(
+                'dsn'
+            ),
+            'es' => array(
+                'dsn'
+            )
+        );
     }
 }

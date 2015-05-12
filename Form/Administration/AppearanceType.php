@@ -34,7 +34,7 @@ class AppearanceType extends AbstractType
                 'checkbox',
                 array(
                     'required' => false,
-                    'label' => 'Show the name of the platform in the top bar',
+                    'label' => 'show_name_in_top_bar',
                     'disabled' => isset($this->lockedParams['nameActive'])
                 )
             )

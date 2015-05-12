@@ -35,7 +35,7 @@ class ActivityRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ruleActions = $this->activityManager->getAllDistinctActivityRuleActions();
-        $actions = array('none' => 'activity_rule_action_none');
+        $actions = array('none' => 'none');
 
         foreach ($ruleActions as $ruleAction) {
             $actions[$ruleAction['action']] = $this->translator->trans(

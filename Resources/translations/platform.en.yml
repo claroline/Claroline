@@ -1,52 +1,31 @@
 6_parameters_min_msg: 'The csv file must contain 6 elements per line.'
 7_parameters_min_msg: 'The csv file must contain 7 elements per line.'
-'Action List': 'Action List'
-'Actions per day': 'Actions per day'
-'Activate the terms of service in the platform': 'Activate the terms of service in the platform'
-Active: Active
-'Add a logo': 'Add a logo'
-'An error has occurred, please check if the file size does not exceeds the permitted size': 'An error has occurred, please check if the file size does not exceeds the permitted size'
-'Audience/user visits': 'Audience/user visits'
-'Choose a logo': 'Choose a logo'
-'Choose visible actions in the widget': 'Choose visible actions in the widget'
-'Choose workspaces displayed in the widget': 'Choose workspaces displayed in the widget'
-'Create a new resource': 'Create a new resource'
-'Draw an area on the graph to zoom, double-click to cancel': 'Draw an area on the graph to zoom, double-click to cancel'
-'Filter actions': 'Filter actions'
-'First name': 'First name'
-'Google HTML tag validation': 'Google HTML tag validation'
-'I accept the terms of service': 'I accept the terms of service'
-Indexing: Indexing
-Language: Language
-'Last action': '{1} Last action|[1,Inf] Last %logAmount% actions'
-'Last name': 'Last name'
-None: None
-'Or choose an existing file from resource manager': 'Or choose an existing file from resource manager'
-'Overview of all recent activities in %workspaceName%': 'Overview of all recent activities in %workspaceName%'
-'Overview of recent activities in %workspaceName%': 'Overview of recent activities in %workspaceName%'
-'Overview of recent activities of your workspaces': 'Overview of recent activities of your workspaces'
-'Paste here the meta tag provides by Google Webmaster': 'Paste here the meta tag provides by Google Webmaster'
-'Powered by': 'Powered by'
-'See all': 'See all'
-'Select a Language': 'Select a language'
-Show: Show
-'Show actions': 'Show actions'
-'Show the name of the platform in the top bar': 'Show the name of the platform in the top bar'
-'Terms of service': 'Terms of service'
-'The form is not valid': 'The form is not valid'
-'This placeholder is optional and will be replaced by the author first name': 'This placeholder is optional and will be replaced by the author first name'
-'This placeholder is optional and will be replaced by the author last name': 'This placeholder is optional and will be replaced by the author last name'
-'This placeholder is optional and will be replaced by your platform name': 'This placeholder is optional and will be replaced by your platform name'
-'This placeholder is required and will be replaced by the actual mail content': 'This placeholder is required and will be replaced by the actual mail content'
-'This variable is optional and will be replaced by your platform name': 'This variable is optional and will be replaced by your platform name'
-'This variable is required and will be replaced by the actual mail content': 'This variable is required and will be replaced by the actual mail content'
-'Upload a file': 'Upload a file'
-'User name': 'User name'
-'You can redefine the content of the registration mail here': 'You can redefine the content of the registration mail here'
-'You can redefine the layout used when a mail is sent': 'You can redefine the layout used when a mail is sent'
-'You can use the following variables in your form': 'You can use the following variables in your form'
-'You can use the full screen version of the text editor to include HTML': 'You can use the full screen version of the text editor to include HTML'
-'Your changes have been saved': 'Your changes have been saved'
+none: None
+choose_from_resource_manager: 'Or choose an existing file from resource manager'
+recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
+workspace_activity_overview: 'Overview of recent activities in %workspaceName%'
+your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
+meta_tag_paste: 'Paste here the meta tag provides by Google Webmaster'
+powered_by: 'Powered by'
+see_all: 'See all'
+language_select: 'Select a language'
+show: Show
+show_actions: 'Show actions'
+show_name_in_top_bar: 'Show the name of the platform in the top bar'
+term_of_service: 'Terms of service'
+invalid_form: 'The form is not valid'
+placeholder_first_name_message: 'This placeholder is optional and will be replaced by the author first name'
+placeholder_last_name_message: 'This placeholder is optional and will be replaced by the author last name'
+placeholder_platform_name_message: 'This placeholder is optional and will be replaced by your platform name'
+placeholder_mail_content_message: 'This placeholder is required and will be replaced by the actual mail content'
+placeholder_platform_name_message: 'This variable is optional and will be replaced by your platform name'
+placeholder_platform_mail_content_message: 'This variable is required and will be replaced by the actual mail content'
+upload_file: 'Upload a file'
+registration_mail_content_override: 'You can redefine the content of the registration mail here'
+mail_layout_message_override: 'You can redefine the layout used when a mail is sent'
+variable_available_message: 'You can use the following variables in your form'
+fullscreen_text_editor: 'You can use the full screen version of the text editor to include HTML'
+saved_changes: 'Your changes have been saved'
 accept: Accept
 accessible_from: 'Accessible from'
 accessible_until: 'Accessible until'
@@ -54,7 +33,9 @@ account_created: 'Account created.'
 account_duration_label: 'Account lifetime (days)'
 account_general_statistics: 'Account general statistics'
 action: Action
+action_list: 'Action List'
 actions: Actions
+actions_per_day: 'Actions per day'
 activate_account: 'Activate your account'
 activate_account_click: 'Click here to activate your account'
 activate_maintenance_mode: 'You should activate the maintenance mode before going further.'
@@ -66,7 +47,6 @@ activity_already: 'This resource is already in the activity'
 activity_remove_primary_resource: 'Remove the primary resource'
 activity_resource_not_allowed: 'You cannot add a resource of this type'
 activity_resource_remove: 'Are you sure you want to remove this resource from the activity?'
-activity_rule_action_none: None
 activity_rule_configuration_for_auto_evaluation: 'Rule configuration for automatic evaluation'
 activity_rule_form_action_explanation: 'Automatic evaluation depends on actions performed on the associated resource.'
 activity_rule_form_activeFrom: 'Performed between'
@@ -84,6 +64,7 @@ activity_who_collaborative: Collaborative
 activity_who_individual: Individual
 actualize: Actualize
 add: Add
+add_a_logo: 'Add a logo'
 add_category: 'Add category'
 add_field_to_facet: 'Add field to facet'
 add_field_to_panel: 'Add a field'
@@ -114,7 +95,6 @@ admin_logs: 'Platform logs'
 admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
-administrativeCode: administrativeCode
 administrative_code: 'Administrative code'
 advanced: Advanced
 advanced_parameters: 'Advanced parameters'
@@ -181,6 +161,7 @@ category_explanations_2: 'Select a category to manage its subcategories.'
 category_root: 'Root categories'
 category_structure: 'Category structure'
 change_view: 'Change the display'
+choose_logo: 'Choose a logo'
 choose_resource_form_type: 'Resource type'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
@@ -223,6 +204,7 @@ create_new_tag: 'Create new tag'
 create_new_user_account: 'New user account for ClarolineConnect'
 create_only: 'Create only'
 create_pane: 'Create a pane'
+create_resource: 'Create a new resource'
 create_role: 'Create role'
 create_security_token: 'Create a security token'
 create_subcategory: 'Create a subcategory'
@@ -373,11 +355,12 @@ fb_client_secret: 'Application secret'
 file: File
 files: Files
 filter: Filter
+filter_actions: 'Filter actions'
 find_workspaces: 'All public workspaces'
 firstName: 'First name'
 first_name: 'First name'
 footer: Footer
-'for period': 'for period'
+for_period: 'for period'
 forgot_password: 'Forgot your password?'
 form_role: Role
 from: From
@@ -392,9 +375,10 @@ generate_url: 'Public URL Subscription '
 generate_url_subscription: 'Subscription to a workspace for a user'
 generate_url_subscription_anonyme: 'Subscription to a workspace for a anonymous'
 generate_url_subscription_fail: 'You must check "enable registration checkbow first to generate the url"'
-generate_url_subscription_sucsess: generate_url_subscription_sucsess
 get_mail_notifications: 'I want to be notified by email on %adress%.'
+google_tag_validation: 'Google HTML tag validation'
 grant_access: 'Grant access'
+graph_draw_area: 'Draw an area on the graph to zoom, double-click to cancel'
 group: Group
 group_configuration: 'Group configuration'
 group_creation: 'Group creation'
@@ -452,6 +436,7 @@ import_user_file_file: 'Import from a csv file'
 import_users: 'Import users'
 in_workspace: 'in workspace'
 incomplete: Incomplete
+indexing: Indexing
 individual: Individual
 informations: Informations
 infos_sending_acceptance: 'Informations sending acceptance'
@@ -480,8 +465,10 @@ is_already_in_use: 'is already in use'
 is_mail_displayed: 'Display email?'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
+language: Language
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
+last_action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 last_attempt_date: 'Last attempt'
 last_manager_error_message: 'You can''t remove every manager.'
 last_name: 'Last name'
@@ -623,7 +610,7 @@ not_blank_expected: 'This value should not be blank'
 note: Note
 notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
-notifications: notifications
+notifications: Notifications
 number: Number
 number_of_attempts: 'Number of attempts'
 number_of_attempts_explanation: 'The meaning of the number of attempts can vary depending on the activity. It is not necessarily the number of times the activity has been performed.'
@@ -674,7 +661,7 @@ picture: 'User picture'
 picture_profile: 'Picture profile'
 platform_appearance: 'Platform appearance'
 platform_expiration_date: 'Platform expiration date'
-platform_icon: platform_icon
+platform_icon: 'Platform icon'
 platform_init_date: 'Platform activation date'
 platform_parameters: 'Platform parameters'
 platform_plugins: 'Platform plugins'
@@ -746,12 +733,12 @@ remove_user_confirm_message: 'Are you sure you want to delete this user?'
 remove_user_from_model: 'Remove a user from the model'
 remove_user_from_model_confirm: 'Are you sure you want to remove the user %name%?'
 remove_user_s_confirm_message: 'Are you sure you want to delete these %count% users?'
-remove_workspace_confirm: remove_workspace_confirm
+remove_workspace_confirm: 'Are you sure you want to remove this workspace ?'
 remove_workspace_from_category_confirm_message: 'Are you sure you want to remove the workspace from this category?'
 remove_workspace_from_category_confirm_title: 'Remove workspace from category'
 remove_workspace_from_selection: 'Remove workspace from selection'
 remove_workspace_role_warning: 'Do you really want to remove this role ? If the role is still associated to users, these users will lose their permissions granted by this role.'
-remove_workspaces_confirm: remove_workspaces_confirm
+remove_workspaces_confirm: 'Are you sure you want to remove these %count% workspaces ?'
 rename: Rename
 rename_category: 'Rename category'
 rename_tool: 'Rename tool'
@@ -768,7 +755,7 @@ resource_action_denied_message: 'The action %action% couldn''t be done on ''%pat
 resource_creation_denied: 'You don''t have the permission to create in the directory ''%path'': access denied'
 resource_creation_wrong_type: 'You don''t have the permission to create a(n) %type% in the directory ''%path%'': access denied'
 resource_delete: 'Are you sure you want to delete this resource ?'
-resource_limit_exceeded: resource_limit_exceeded
+resource_limit_exceeded: 'The maximmum amount of resource (%max%) has been reached. You already have %current% resources.'
 resource_picker: 'Resource picker'
 resource_type: 'Resource type'
 resources: Resources
@@ -812,7 +799,6 @@ security_tokens_management: 'Security tokens management'
 see: See
 see_more: 'See more'
 see_public_profile: 'See my public profile'
-'select all': 'Select all'
 select_all: 'Select all'
 select_category: 'Select a category'
 select_contacts_title: 'Select receivers'
@@ -858,7 +844,7 @@ statistics: Statistics
 statistics_data: 'number of workspaces and users'
 status: Status
 steal_session: 'Steal the session'
-storage_limit_exceeded: storage_limit_exceeded
+storage_limit_exceeded: 'You don''t have enough storage left (%storageLeft%) on your workspace. Your file size is %fileSize%.'
 storage_type: 'Storage type'
 storage_used: 'Storage used'
 subcategories: Subcategories
@@ -884,7 +870,9 @@ tags_organization: 'Tags organization'
 teacher: Teacher
 technical: Technical
 technical_data: 'URL, Version, primary language, IP and email support'
+term_of_service_activation_message: 'Activate the terms of service in the platform'
 terms_enabled_but_empty: 'Terms of service can only be enabled if the text is provided in at least one language.'
+terms_of_service_acceptance: 'I accept the terms of service'
 text: Text
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
@@ -945,7 +933,7 @@ unavailable_platform: 'The platform is unavailable'
 unavailable_role: 'The role %translationKey% is not available'
 uncompress_file: 'Uncompress the file if possible'
 under_min_length: 'This value is too short'
-'unique connections': 'Nb unique Cnx.'
+unique_connections: 'Nb unique Cnx.'
 unknown: Unknown
 unpublish: Unpublish
 unpublished: Unpublished
@@ -965,7 +953,7 @@ update: Update
 update_available: 'Update available'
 updated_by: 'Last update: %modificationDate%'
 upgrade: Upgrade
-upload: upload
+upload: Upload
 upload_denied: 'Permission denied'
 upload_fail: 'Upload failed'
 url_invalid: 'the code is not correct, do no try to change the url'
@@ -985,6 +973,7 @@ user_picker: 'User picker'
 user_profile: 'User profile'
 user_public_profile_not_visible: 'Your public profile is visible to nobody. <br> You can make it visible for the <span class="shared_policy_link shared_policy_link_platform_users">platform users</span>, or to <span class="shared_policy_link shared_policy_link_everybody">everybody</span>.'
 user_removed: 'User removed'
+user_visit: 'Audience/user visits'
 username: Username
 username_and_email_from_two_different_users: 'Username %username% and email %email% are both in use and don''t refer to the same user.'
 username_found_at: 'The username %username% was found at lines: %lines%'
@@ -1017,13 +1006,15 @@ widget_configuration: 'Widget configuration'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
+widget_visible_actions: 'Choose visible actions in the widget'
+widget_workspace_pick: 'Choose workspaces displayed in the widget'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-'will be replaced by your platform name': 'will be replaced by your platform name'
-'will display the password': 'will display the password'
-'will display the user first name': 'will display the user first name'
-'will display the user last name': 'will display the user last name'
-'will display the username': 'will display the username'
+replace_platform_name_display_message: 'will be replaced by your platform name'
+replace_password_display: 'will display the password'
+replace_first_name_display_message: 'will display the user first name'
+replace_last_name_display_message: 'will display the user last name'
+replace_username_display_message: 'will display the username'
 with_role: 'with role'
 with_tutor: Tutored
 workspace: Workspace
@@ -1072,7 +1063,7 @@ workspaces_per_page: 'Workspace per page'
 wrong_captcha: 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
-'yes': 'Yes'
+yes: 'Yes'
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
