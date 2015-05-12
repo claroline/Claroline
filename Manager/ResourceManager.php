@@ -1709,4 +1709,17 @@ class ResourceManager
         }
         $this->om->endFlushSuite();
     }
+
+    public function getLastIndex(ResourceNode $parent)
+    {
+        try {
+            $lastIndex = $this->resourceNodeRepo->findLastIndex($parent);
+        } catch (\Doctrine\ORM\NonUniqueResultException $e) {
+            $lastIndex = 0;
+        } catch (\Doctrine\ORM\NoResultException $e) {
+            $lastIndex = 0;
+        }
+
+        return $lastIndex;
+    }
 }

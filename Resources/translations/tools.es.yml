@@ -1,8 +1,14 @@
-agenda: Agenda
-analytics: 'Tablero de control'
-desktop_and_home: 'Escritorio e inicio'
-desktop_tools: 'Herramientas del escritorio'
-home: Inicio
+analytics: Tablero de control
+home: 'Inicio'
+logs: 'Registros'
+parameters: 'Parámetros'
+resource_manager: 'Recursos'
+users: 'Usuarios'
+platform_parameters: Parámetros de la plataforma
+user_management: Gestión de usuarios
+workspace_management: Gestión de espacios de trabajo
+registration_to_workspace: Inscripción a un espacio de trabajo
+platform_plugins: Plugins de la plataforma
 home_tabs: Pestañas
 learning_profil: 'Perfil de aprendizaje'
 logs: Registros

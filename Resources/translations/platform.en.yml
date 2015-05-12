@@ -119,7 +119,6 @@ administrativeCode: administrativeCode
 administrative_code: 'Administrative code'
 advanced: Advanced
 advanced_parameters: 'Advanced parameters'
-agenda: Agenda
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
 all_available_workspaces: 'All available workspaces'
@@ -250,8 +249,6 @@ data_col: 'Database id column'
 database: Database
 database_connection_failed: 'Database connection failed.'
 date: Date
-date_agenda_display_format: MM-DD-YYYY
-date_agenda_display_format_for_calendar: m-d-Y
 date_agenda_display_format_for_form: MM-dd-yyyy
 date_form_datepicker_format: mm-dd-yyyy
 date_form_datepicker_php: m-d-Y
@@ -321,7 +318,6 @@ drop_file: 'Drop the file'
 dsn: dsn
 duration: Duration
 edit: Edit
-edit_event_success: 'The event was updated successfully.'
 edit_facet: 'Edit a facet'
 edit_field: 'Edit a field'
 edit_panel_facet: 'Edit a panel'
@@ -724,8 +720,6 @@ registered_users: 'Registered users'
 registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 remove: Remove
-remove_event: 'Remove an event'
-remove_event_confirm: 'Are you sure you want to remove this event ?'
 remove_facet: 'Remove a facet'
 remove_facet_confirm: 'Do you really want to remove the facet %name% ?'
 remove_field: 'Remove a field'
@@ -967,7 +961,6 @@ up: Up
 up_to_date: 'Up to date'
 update: Update
 update_available: 'Update available'
-update_event: 'Update an event'
 updated_by: 'Last update: %modificationDate%'
 upgrade: Upgrade
 upload: upload

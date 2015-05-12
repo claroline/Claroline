@@ -116,8 +116,7 @@ admin_workspace_tag_form_name: Nombre
 administration: Administración
 administrativeCode: administrativeCode
 administrative_code: 'Código administrativo'
-advanced: Avanzado
-agenda: Agenda
+advanced: 'Avanzado'
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: Todos
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'
@@ -236,9 +235,7 @@ dashboard: Dashboard
 data_col: 'Identificador de la columna en la base de datos'
 database: 'Base de datos'
 database_connection_failed: 'Error en la conexión a la base de datos.'
-date: Fecha
-date_agenda_display_format: MM-DD-YYYY
-date_agenda_display_format_for_calendar: m-d-Y
+date: 'Fecha'
 date_agenda_display_format_for_form: MM-dd-yyyy
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: m-d-Y
@@ -302,12 +299,10 @@ drag_file_here: 'Arrastre el archivo aquí'
 drop_file: 'Arrastre el archivo'
 dsn: dsn
 duration: Duración
-edit: Editar
-edit_event_success: 'Evento actualizado correctamente'
-edit_facet: 'Editar faceta'
-edit_field: 'Editar campo'
-edit_panel_facet: edit_panel_facet
-edit_rights_success: 'La modificación de los derechos de acceso a sido realizada con éxito'
+edit: 'Editar'
+edit_facet: Editar faceta
+edit_field: Editar campo
+edit_rights_success: La modificación de los derechos de acceso a sido realizada con éxito
 edit_security_token: 'Editar el token de seguridad'
 editable: Editable
 editable_facet_form_explanation: 'El campo "Editable" permite de especificar si el elemento debe ser visible o no por el usuario.'
@@ -633,12 +628,10 @@ registered_users: 'Usuarios inscritos'
 registration: Inscripción
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
 remove: Retirar
-remove_event: 'Eliminar un evento'
-remove_event_confirm: '¿Está seguro que desea eliminar este evento?'
-remove_facet: 'Eliminar una faceta'
-remove_facet_confirm: '¿Está seguro que desea suprimir la faceta %name%?'
-remove_field: 'Eliminar una campo'
-remove_field_confirm: '¿Está seguro que desea suprimir el campo %name%?'
+remove_facet: Eliminar una faceta
+remove_facet_confirm: ¿Está seguro que desea suprimir la faceta %name%?
+remove_field: Eliminar una campo
+remove_field_confirm: ¿Está seguro que desea suprimir el campo %name%?
 remove_group_confirm_message: '¿Está seguro que desea suprimir este grupo?'
 remove_group_s_confirm_message: '¿Está seguro que desea suprimir estos %count% grupos?'
 remove_message_confirm_message: '¿Está seguro que desea suprimir este mensaje?'
@@ -854,7 +847,6 @@ unwritable_file_exception: 'Nose puede escribir en el archivo %path%.'
 up: Arriva
 up_to_date: up_to_date
 update: update
-update_event: 'Actualizar un evento'
 updated_by: updated_by
 upgrade: Modernización
 upload: Subir

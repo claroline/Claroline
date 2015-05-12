@@ -116,7 +116,6 @@ administrativeCode: 'Code administratif'
 administrative_code: 'Code administratif'
 advanced: Avancé
 advanced_parameters: 'Paramètres avancés'
-agenda: Agenda
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
@@ -245,8 +244,6 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
-date_agenda_display_format: DD-MM-YYYY
-date_agenda_display_format_for_calendar: d-m-Y
 date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: d-m-Y
@@ -316,10 +313,8 @@ drop_file: 'Déposez le fichier'
 dsn: dsn
 duration: Durée
 edit: Modifier
-edit_event_success: 'Événement mis à jour avec succès.'
-edit_facet: 'Editer une facette'
-edit_field: 'Editer un champ'
-edit_panel_facet: 'Modifier un panel'
+edit_facet: Editer une facette
+edit_field: Editer un champ
 edit_password: 'Modifier le mot de passe'
 edit_password_error: 'Une erreur est survenue pendant la modification du mot de passe.'
 edit_password_error_current: 'Votre mot de passe actuel n''est pas correct.'
@@ -719,12 +714,10 @@ registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove: Enlever
-remove_event: 'Supprimer un événement'
-remove_event_confirm: 'Êtes-vous sûr de vouloir supprimer cet événement ?'
-remove_facet: 'Supprimer une facette'
-remove_facet_confirm: 'Etes-vous sur de vouloir supprimer la facette %name% ?'
-remove_field: 'Supprimer un champ'
-remove_field_confirm: 'Etes-vous sur de vouloir supprimer le champ %name% ?'
+remove_facet: Supprimer une facette
+remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
+remove_field: Supprimer une champ
+remove_field_confirm: Etes-vous sur de vouloir supprimer le champ %name% ?
 remove_group_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce groupe ?'
 remove_group_from_model: 'Retirer un groupe'
 remove_group_from_model_confirm: 'Êtes-vous sûr de vouloir retirer le groupe %groupe% ?'
@@ -968,7 +961,6 @@ up: Monter
 up_to_date: 'À jour'
 update: 'Mettre à jour'
 update_available: 'Mise à jour disponible'
-update_event: 'Mettre à jour un événement'
 updated_by: 'Dernière màj: %modificationDate%'
 upgrade: 'Mettre à jour'
 upload: Téléchargement
