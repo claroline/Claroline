@@ -12,7 +12,7 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
-    var canEditEvent;
+    var editableWorkspaces;
     var addUrl;
     var showUrl;
     var $calendarElement = $('#calendar');
@@ -21,15 +21,15 @@
     calendar.initialize = function (
         context,
         workspaceId,
-        canEdit
+        isWorkspacesEditable
     ) {
         context = context || 'desktop';
         workspaceId = workspaceId || null;
         //the creation is enabled by default
-        if (canEdit === undefined) {
-            canEditEvent = true;
+        if (isWorkspacesEditable === undefined) {
+            editableWorkspaces = true;
         } else {
-            canEditEvent = JSON.parse(canEdit);
+            editableWorkspaces = JSON.parse(isWorkspacesEditable);
         }
 
         // Initialize route & url depending on the context
@@ -109,7 +109,7 @@
      function onEventClick(event, jsEvent)
      {
          var workspaceId = event.workspace_id ? event.workspace_id : 0;
-         if (canEditEvent[workspaceId]) {
+         if (editableWorkspaces[workspaceId]) {
              // If the user can edit the event
              var $this = $(this);
              // If click on the check symbol of a task, mark this task as "to do"
@@ -165,7 +165,7 @@
         // Create the popover for the event or the task
         createPopover(event, $element);
         var workspaceId = event.workspace_id ? event.workspace_id : 0;
-        event.editable = canEditEvent[workspaceId];
+        event.editable = editableWorkspaces[workspaceId];
         if (event.editable) {
             $element.addClass('fc-draggable');
         }
@@ -194,9 +194,9 @@
 
     function renderAddEventForm(date)
     {
-        // Select the first id of the json canEditEvent
-        for(var key in canEditEvent) break;
-        if (canEditEvent[key] && !isFormShown) {
+        // Select the first id of the json editableWorkspaces
+        for(var key in editableWorkspaces) break;
+        if (editableWorkspaces[key] && !isFormShown) {
             var dateVal = moment(date).format(t('date_agenda_display_format'));
 
             var postRenderAddEventAction = function (html) {
