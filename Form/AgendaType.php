@@ -89,7 +89,7 @@ class AgendaType extends AbstractType
                     'label' => 'form.start',
                     'required'  => true,
                     'widget'    => 'single_text',
-                    'format'    => 'date_agenda_display_format_for_form',
+                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
                     'attr'      => $attr,
                     'autoclose' => true,
                     'constraints' => new Assert\Date()
@@ -127,7 +127,7 @@ class AgendaType extends AbstractType
                 'label' => 'form.end',
                 'required'  => true,
                 'widget'    => 'single_text',
-                'format'    => 'date_agenda_display_format_for_form',
+                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
                 'attr'      => $attr,
                 'autoclose' => true,
                 'constraints' => new Assert\Date()
@@ -201,7 +201,7 @@ class AgendaType extends AbstractType
             array(
                 'workspace' => new Workspace() ,
                 'user' => new User(),
-                'class' => 'Claroline\CoreBundle\Entity\Event',
+                'class' => 'Claroline\AgendaBundle\Entity\Event',
                 'translation_domain' => 'agenda'
             )
         );
