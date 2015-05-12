@@ -519,6 +519,6 @@ class NotificationManager
         }
         $notificationParameters = $this->notificationParametersManager->getParametersByUserId($viewerId);
 
-        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId, $notificationParameters)["total"]);
+        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId, $notificationParameters->getDisplayEnabledTypes())["total"]);
     }
 }
