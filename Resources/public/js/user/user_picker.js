@@ -31,6 +31,12 @@
         var forcedUserIds = forcedUserIdsTxt !== '' ?
             forcedUserIdsTxt.split(';') :
             [];
+        
+        var selectedUserIdsTxt = '' + $(this).data('selected-users');
+        selectedUserIdsTxt = selectedUserIdsTxt.trim();
+        var selectedUserIds = selectedUserIdsTxt !== '' ?
+            selectedUserIdsTxt.split(';') :
+            [];
     
         var groupIdsTxt = '' + $(this).data('forced-groups');
         groupIdsTxt = groupIdsTxt.trim();
@@ -53,6 +59,7 @@
         var parameters = {};
         parameters.excludedUserIds = userIds;
         parameters.forcedUserIds = forcedUserIds;
+        parameters.selectedUserIds = selectedUserIds;
         parameters.forcedGroupIds = forcedGroupIds;
         parameters.forcedRoleIds = forcedRoleIds;
         parameters.forcedWorkspaceIds = forcedWorkspaceIds;

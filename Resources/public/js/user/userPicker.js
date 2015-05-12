@@ -33,6 +33,18 @@
         forcedUserIdsTxt.split(';') :
         [];
     
+    var selectedUserNamesTxt = '' + $('#user-picker-main-datas-box').data('selected-users-names');
+    selectedUserNamesTxt = selectedUserNamesTxt.trim();
+    var selectedUserNames = selectedUserNamesTxt !== '' ?
+        selectedUserNamesTxt.split(';;;') :
+        [];
+
+    var selectedUserIdsTxt = '' + $('#user-picker-main-datas-box').data('selected-users');
+    selectedUserIdsTxt = selectedUserIdsTxt.trim();
+    var selectedUserIds = selectedUserIdsTxt !== '' ?
+        selectedUserIdsTxt.split(';') :
+        [];
+    
     var groupIdsTxt = '' + $('#user-picker-main-datas-box').data('forced-groups');
     groupIdsTxt = groupIdsTxt.trim();
     var forcedGroupIds = groupIdsTxt !== '' ?
@@ -466,6 +478,34 @@
         });
     }
     
+    function initializeSelectedUsers()
+    {
+        var idsValues = $('#user-picker-input-' + pickerName).val();
+        var namesValues = $('#user-picker-input-view-' + pickerName).val();
+        var ids = idsValues.split(',');
+        var names = namesValues.split(',');
+        var matched = (ids.length === names.length);
+        var matchedSelected = (selectedUserIds.length === selectedUserNames.length);
+        
+        for (var i = 0; i < ids.length; i++) {
+            
+            if (!isNaN(parseInt(ids[i]))) {
+                var name = matched ? names[i] : '???';
+                selectedUsers[ids[i]] = name;
+                addUserToSelectedUsersBox(ids[i], name);
+            }
+        }
+        
+        for (var i = 0; i < selectedUserIds.length; i++) {
+            var name = matchedSelected ? selectedUserNames[i] : '???';
+            selectedUsers[selectedUserIds[i]] = name;
+            addUserToSelectedUsersBox(selectedUserIds[i], name);
+        }
+        updateIdsArray('user');
+        updateSelectedUsersBadge();
+        checkSelectedUsers();
+    }
+    
     $('#user-picker-modal').on('click', 'a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
@@ -628,4 +668,6 @@
         updateIdsArray('user');
         updateSelectedUsersBadge();
     });
+    
+    initializeSelectedUsers();
 })();

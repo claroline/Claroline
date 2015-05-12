@@ -88,6 +88,11 @@ class UserController extends Controller
      *      options={"multipleIds" = true, "name" = "forcedUserIds"}
      * )
      * @EXT\ParamConverter(
+     *     "selectedUsers",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "selectedUserIds"}
+     * )
+     * @EXT\ParamConverter(
      *     "forcedGroups",
      *      class="ClarolineCoreBundle:Group",
      *      options={"multipleIds" = true, "name" = "forcedGroupIds"}
@@ -107,6 +112,7 @@ class UserController extends Controller
     public function userPickerAction(
         array $excludedUsers,
         array $forcedUsers,
+        array $selectedUsers,
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
@@ -157,6 +163,7 @@ class UserController extends Controller
             'showCode' => $showCode,
             'excludedUsersIds' => $excludedIds,
             'forcedUsersIds' => $forcedUsersIds,
+            'selectedUsers' => $selectedUsers,
             'forcedGroupsIds' => $forcedGroupsIds,
             'forcedRolesIds' => $forcedRolesIds,
             'forcedWorkspacesIds' => $forcedWorkspacesIds

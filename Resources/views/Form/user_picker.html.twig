@@ -10,14 +10,26 @@
                    name="{{ full_name }}"
                {% endif %}
 
-               {% if value is not empty %}value="{{ value['id'] }}"{% endif %}
+               {% if value is not empty %}
+                   {% if multiple %}
+                       value="{% for v in value %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endfor %}"
+                   {% else %}
+                       value="{{ value['id'] }}"
+                   {% endif %}
+               {% endif %}
                id="user-picker-input-{{ picker_name }}"
         >
         <div class="input-group">
             <input type="text"
                    class="form-control user-picker user-picker-input"
                        
-                   {% if value is not empty %}value="{{ value['name'] }}"{% endif %}
+                   {% if value is not empty %}
+                       {% if multiple %}
+                           value="{% for v in value %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endfor %}"
+                       {% else %}
+                           value="{{ value['name'] }}"
+                       {% endif %}
+                   {% endif %}
                    id="user-picker-input-view-{{ picker_name }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
                    data-picker-name="{{ picker_name }}"
@@ -30,6 +42,7 @@
                    data-show-code="{% if show_code %}1{% else %}0{% endif %}"
                    data-excluded-users="{% for user in blacklist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                    data-forced-users="{% for user in whitelist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
+                   data-selected-users="{% for user in selected_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                    data-forced-groups="{% for group in forced_groups %}{{ group.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                    data-forced-roles="{% for role in forced_roles %}{{ role.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                    data-forced-workspaces="{% for workspace in forced_workspaces %}{{ workspace.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
@@ -46,6 +59,7 @@
                         data-show-code="{% if show_code %}1{% else %}0{% endif %}"
                         data-excluded-users="{% for user in blacklist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                         data-forced-users="{% for user in whitelist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
+                        data-selected-users="{% for user in selected_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                         data-forced-groups="{% for group in forced_groups %}{{ group.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                         data-forced-roles="{% for role in forced_roles %}{{ role.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
                         data-forced-workspaces="{% for workspace in forced_workspaces %}{{ workspace.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"

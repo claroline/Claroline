@@ -166,6 +166,8 @@
      data-show-code="{{ showCode }}"
      data-excluded-users="{% for id in excludedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-users="{% for id in forcedUsersIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-selected-users="{% for u in selectedUsers %}{{ u.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
+     data-selected-users-names="{% for u in selectedUsers %}{{ u.getFirstName() }} {{ u.getLastName() }}{% if showUsername == 1 %} ({{ u.getUsername() }}){% endif %}{% if not loop.last %};;;{% endif %}{% endfor %}"
      data-forced-groups="{% for id in forcedGroupsIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-roles="{% for id in forcedRolesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"
      data-forced-workspaces="{% for id in forcedWorkspacesIds %}{{ id }}{% if not loop.last %};{% endif %}{% endfor %}"

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DataTransformer\UserPickerTransfromer;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -76,6 +77,7 @@ class UserPickerType extends AbstractType
         $view->vars['show_code'] = $options['show_code'];
         $view->vars['blacklist'] = $options['blacklist'];
         $view->vars['whitelist'] = $options['whitelist'];
+        $view->vars['selected_users'] = $options['selected_users'];
         $view->vars['forced_groups'] = $options['forced_groups'];
         $view->vars['forced_roles'] = $options['forced_roles'];
         $view->vars['forced_workspaces'] = $options['forced_workspaces'];
@@ -100,36 +102,11 @@ class UserPickerType extends AbstractType
                 'show_code' => false,
                 'blacklist' => array(),
                 'whitelist' => array(),
+                'selected_users' => array(),
                 'forced_groups' => array(),
                 'forced_roles' => array(),
                 'forced_workspaces' => array()
             )
         );
-    }
-
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::finishView($view, $form, $options);
-        $user = $this->getUser($form);
-
-        if ($user instanceof User) {
-            $view->vars['attr']['data-user-id'] = $user->getId();
-            $view->vars['attr']['data-username'] = $user->getUsername();
-            $view->vars['attr']['data-first-name'] = $user->getFirstName();
-            $view->vars['attr']['data-last-name'] = $user->getLastName();
-        }
-    }
-
-    private function getUser(FormInterface $form)
-    {
-        $data = $form->getData();
-
-        if ($data instanceof User) {
-
-            return $form->getData();
-        } elseif (!empty($data)) {
-
-            return $this->userManager->getUserById($data);
-        }
     }
 }
