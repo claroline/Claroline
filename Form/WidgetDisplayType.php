@@ -20,7 +20,7 @@ class WidgetDisplayType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('constraints' => new NotBlank()));
+        $builder->add('name', 'text', array('constraints' => new NotBlank(), 'label' => 'name'));
     }
 
     public function getName()

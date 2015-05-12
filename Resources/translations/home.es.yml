@@ -5,51 +5,51 @@
 '%count% second ago|%count% seconds ago': 'Hace %count% segundo|Hace %count% segundos'
 '%count% week ago|%count% weeks ago': 'Hace %count% semana|Hace %count% semanas'
 '%count% year ago|%count% years ago': 'Hace %count% año|Hace %count% años'
-A page of contents with this name already exist: 'Ya existe una página de contenido con este nombre'
-Add Pictures: 'Agregar fotos'
-Add a link here: 'Agregar un enlace aquí'
-Add a link: 'Agregar un enlace'
-An error occurred: 'Ha ocurrido un error'
-Are you sure you want to delete this content?: '¿Esta seguro que desea suprimir este contenido?'
-Cancel: 'Anular'
-Content Administration: 'Administración de contenidos'
-Content pages: 'Páginas de contenido'
-Content regions: 'Regiones de contenido'
-Content: 'Contenido'
-Create a content: 'Crear un contenido'
-Create: 'Crear'
-Delete: 'Suprimir'
-Edit in the page: Editar en la página
-Edit: 'Editar'
-Error: 'Error'
+'A page of contents with this name already exist': 'Ya existe una página de contenido con este nombre'
+'Add Pictures': 'Agregar fotos'
+'Add a link': 'Agregar un enlace'
+'Add a link here': 'Agregar un enlace aquí'
+'An error occurred': 'Ha ocurrido un error'
+'Are you sure you want to delete this content?': '¿Esta seguro que desea suprimir este contenido?'
+Cancel: Anular
+Content: Contenido
+'Content Administration': 'Administración de contenidos'
+'Content pages': 'Páginas de contenido'
+'Content regions': 'Regiones de contenido'
+Create: Crear
+'Create a content': 'Crear un contenido'
+Delete: Suprimir
+Edit: Editar
+'Edit in the page': 'Editar en la página'
+Error: Error
 Footer: 'Pie de página'
-For not logged users: Para los usuarios no conectados
-Header: 'Encabezado'
-Left: 'Izquierda'
-Link address: 'Dirección del enlace'
-Link title: 'Título del enlace'
-Menu settings: Configuración del menú
-Menu title: 'Título del menú'
-Move content: Mover el contenido
-New content page: 'Nueva página de contenido'
-Note that you can add a link simply by pasting it on the content body: 'Tenga en cuenta que puede añadir un enlace con solamente copiarlo y pegarlo en el editor'
+'For not logged users': 'Para los usuarios no conectados'
+Header: Encabezado
+Left: Izquierda
+'Link address': 'Dirección del enlace'
+'Link title': 'Título del enlace'
+'Menu settings': 'Configuración del menú'
+'Menu title': 'Título del menú'
+'Move content': 'Mover el contenido'
+'New content page': 'Nueva página de contenido'
+'Note that you can add a link simply by pasting it on the content body': 'Tenga en cuenta que puede añadir un enlace con solamente copiarlo y pegarlo en el editor'
 Ok: Ok
-Optional title: 'Título opcional'
-Pages: 'Páginas'
-Please try again later or check your internet connection: 'Por favor, inténtelo de nuevo más tarde o compruebe la conexión a Internet'
-Preview: Vista previa
-Read more: Más información
-Region: 'Región'
-Right: 'Derecha'
-Select a page: Seleccione una página
-Set this menu as header menu in the home page: Establezca este menú como menú del encabezado en la página de inicio
-Show the connection button at the footer of home page: Mostrar el botón de conexión en el pie de página de la página de inicio
-Show the language button in the header menu: Mostrar el botón de idioma en el menú de la cabecera
-Show the workspace menu at the footer of home page: Mostrar el menú del espacio de trabajo en el pie de página de la página de inicio
-Size of content: 'Tamaño del contenido'
-Size: 'Tamaño'
-This action is irreversible: 'Esta acción es irreversible'
-When header menu is available: Cuando el menú de cabecera está disponible
-You can add interactive content such as videos or presentations from websites like: 'Usted puede agregar contenidos interactivos como vídeos o presentaciones de los sitios web como'
-unpublish_link: Haga clic aquí para cambiar la configuración
-unpublish_page: Esta página web no está publicada!
+'Optional title': 'Título opcional'
+Pages: Páginas
+'Please try again later or check your internet connection': 'Por favor, inténtelo de nuevo más tarde o compruebe la conexión a Internet'
+Preview: 'Vista previa'
+'Read more': 'Más información'
+Region: Región
+Right: Derecha
+'Select a page': 'Seleccione una página'
+'Set this menu as header menu in the home page': 'Establezca este menú como menú del encabezado en la página de inicio'
+'Show the connection button at the footer of home page': 'Mostrar el botón de conexión en el pie de página de la página de inicio'
+'Show the language button in the header menu': 'Mostrar el botón de idioma en el menú de la cabecera'
+'Show the workspace menu at the footer of home page': 'Mostrar el menú del espacio de trabajo en el pie de página de la página de inicio'
+Size: Tamaño
+'Size of content': 'Tamaño del contenido'
+'This action is irreversible': 'Esta acción es irreversible'
+'When header menu is available': 'Cuando el menú de cabecera está disponible'
+'You can add interactive content such as videos or presentations from websites like': 'Usted puede agregar contenidos interactivos como vídeos o presentaciones de los sitios web como'
+unpublish_link: 'Haga clic aquí para cambiar la configuración'
+unpublish_page: 'Esta página web no está publicada!'

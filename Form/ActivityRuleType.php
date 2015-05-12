@@ -50,7 +50,8 @@ class ActivityRuleType extends AbstractType
             'choice',
             array(
                 'choices' => $actions,
-                'required' => true
+                'required' => true,
+                'label' => 'action'
             )
         );
         $builder->add(
@@ -58,7 +59,8 @@ class ActivityRuleType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 1),
-                'required' => true
+                'required' => true,
+                'label' => 'occurence'
             )
         );
         $builder->add(
@@ -66,7 +68,8 @@ class ActivityRuleType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 0),
-                'required' => false
+                'required' => false,
+                'label' => 'result'
             )
         );
         $builder->add(

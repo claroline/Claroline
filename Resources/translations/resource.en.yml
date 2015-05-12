@@ -1,6 +1,5 @@
 activity: Activity
-author: 'Author'
-update_file: Update file
+administrate: Administrate
 compose: 'Draw up'
 copy: Copy
 delete: Delete
@@ -9,29 +8,15 @@ download: Download
 edit: Edit
 edit-properties: 'Edit properties'
 edit-rights: 'Edit rights'
+empty: Empty
 export: Export
 file: File
-license: 'License'
+insert: Insert
 open: Open
 open-tracking: 'View tracking'
 rename: Rename
 resource_copy_warning: 'An error occured while copying resource <%resourceName%>'
-resource_name_form_name: 'Resource name'
-resource_properties_form_accessibleFrom: 'Accessible from'
-resource_properties_form_accessibleUntil: 'Accessible until'
-resource_properties_form_copiable: Copy
-resource_properties_form_creationDate: 'Creation Date'
-resource_properties_form_creator: Creator
-resource_properties_form_deletable: Delete
-resource_properties_form_editable: Edit
-resource_properties_form_exportable: Export
-resource_properties_form_name: Name
-resource_properties_form_newIcon: Icon
-resource_properties_form_published: Published
-resource_properties_form_resourceType: 'Resource type'
 resource_shortcut: Shortcut
 text: Text
+update_file: 'Update file'
 write: Write
-administrate: Administrate
-empty: Empty
-insert: Insert

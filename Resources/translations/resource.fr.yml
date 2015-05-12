@@ -1,6 +1,5 @@
 activity: Activité
-author: 'Auteur'
-update_file: Mettre à jour le fichier
+administrate: Administrer
 compose: Composer
 copy: Copier
 delete: Supprimer
@@ -9,31 +8,16 @@ download: Télécharger
 edit: Editer
 edit-properties: 'Editer les propriétés'
 edit-rights: 'Editer les droits'
+empty: Vide
 export: Exporter
 file: Fichier
-license: 'License'
+insert: Insérer
 open: Ouvrir
 open-tracking: 'Voir le suivi de l''objet'
 rename: Renommer
 resource_copy_warning: 'Une erreur est survenue lors de la copie de la ressource <%resourceName%>'
 resource_name_form_name: 'Nom de la ressource'
-resource_properties_form_accessibleFrom: 'Accessible à partir du'
-resource_properties_form_accessibleUntil: 'Accessible jusqu''au'
-resource_properties_form_copiable: Copier
-resource_properties_form_creationDate: 'Date de création'
-resource_properties_form_creator: Créateur
-resource_properties_form_deletable: Supprimer
-resource_properties_form_editable: Editer
-resource_properties_form_exportable: Exporter
-resource_properties_form_name: Nom
-resource_properties_form_published: Publié
-resource_properties_form_resourceType: 'Type de ressource'
-resource_properties_form_sharable: 'Partager cette ressource'
-resource_properties_form_shareType: Redistribution
-resource_properties_form_userIcon: Icône
 resource_shortcut: Raccourcis
 text: Texte
+update_file: 'Mettre à jour le fichier'
 write: Ecrire
-administrate: Administrer
-empty: Vide
-insert: Insérer
