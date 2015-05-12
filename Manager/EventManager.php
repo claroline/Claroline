@@ -254,10 +254,6 @@ class EventManager
                 }
             }
         }
-//        echo "<pre>";
-//        var_dump($sortedEvents);
-//        echo "</pre>" . PHP_EOL;
-//        die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
 
         return $sortedEvents;
     }
