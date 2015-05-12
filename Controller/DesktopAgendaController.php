@@ -11,23 +11,24 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Claroline\AgendaBundle\Form\ImportAgendaType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\AgendaBundle\Manager\AgendaManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\TranslatorInterface;
+use JMS\SecurityExtraBundle\Annotation as SEC;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Controller of the Agenda
+ * @DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("hasRole('ROLE_USER')")
  */
 class DesktopAgendaController extends Controller
 {
@@ -65,7 +66,7 @@ class DesktopAgendaController extends Controller
         $this->router = $router;
     }
     /**
-     * @Route(
+     * @EXT\Route(
      *     "/show",
      *     name="claro_desktop_agenda_show",
      *     options = {"expose"=true}
@@ -86,7 +87,6 @@ class DesktopAgendaController extends Controller
      * )
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
      *
-     * @param Workspace $workspace
      * @return array
      */
     public function addEventModalFormAction()
@@ -101,13 +101,9 @@ class DesktopAgendaController extends Controller
     }
 
     /**
-     * @Route(
-     *     "/add",
-     *     name="claro_desktop_agenda_add"
-     * )
-     *
+     * @EXT\Route("/add", name="claro_desktop_agenda_add")
      * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
-    */
+     */
     public function addEvent()
     {
         $formType = $this->get('claroline.form.agenda');
@@ -123,31 +119,12 @@ class DesktopAgendaController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'action' => $this->router->generate('claro_desktop_agenda_add_event_form', array())
+            'action' => $this->router->generate('claro_desktop_agenda_add', array())
         );
     }
 
     /**
-     * @EXT\Route(
-     *     "/tasks",
-     *     name="claro_desktop_agenda_tasks"
-     * )
-     *
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:tasks.html.twig")
-     */
-    public function tasksAction()
-    {
-        $usr = $this->tokenStorage->getToken()->getUser();
-        $events = $this->agendaManager->desktopEvents($usr, true);
-
-        return array('events' => $events);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/widget/{order}",
-     *     name="claro_desktop_agenda_widget"
-     * )
+     * @EXT\Route("/widget/{order}", name="claro_desktop_agenda_widget")
      * @EXT\Template("ClarolineAgendaBundle:Widget:agenda_widget.html.twig")
      */
     public function widgetAction($order = null)
@@ -167,7 +144,8 @@ class DesktopAgendaController extends Controller
      *     name="claro_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     *
      * @return array
      */
     public function importEventsModalForm()
@@ -178,13 +156,9 @@ class DesktopAgendaController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/import",
-     *     name="claro_agenda_import"
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool\desktop\agenda:importIcsModalForm.html.twig")
+     * @EXT\Route("/import", name="claro_agenda_import")
+     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
      *
-     * @param Workspace $workspace
      * @return array
      */
     public function importsEventsIcsAction()

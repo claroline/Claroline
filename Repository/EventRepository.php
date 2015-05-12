@@ -42,9 +42,33 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
+    /*
+     * Get all the events and the tasks of the user for all the workspace where is allowed to write
+     */
+    public function findEventsAndTasksOfWorkspaceForTheUser($user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            ORDER BY e.start DESC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+
+        return $query->getResult();
+    }
+
     /**
      * @param User $user
-     * @param boolean $allDay
+     * @param boolean $isTask
      * @return array
      */
     public function findDesktop(User $user, $isTask)
@@ -53,29 +77,28 @@ class EventRepository extends EntityRepository
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace is NULL
-            AND e.isTask = :isTask
             AND e.user =:userId
             ORDER BY e.start DESC
             ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('isTask', $isTask);
         $query->setParameter('userId', $user->getId());
 
         return $query->getResult();
     }
 
-    public function findByWorkspaceId($workspaceId, $isTask, $limit = null)
+    public function findByWorkspaceId($workspaceId, $isTask = null, $limit = null)
     {
+        $isTaskSql = $isTask !== null ? 'AND e.isTask = '. $isTask: '';
         $dql = "
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.workspace = :workspaceId
-            AND e.isTask = :isTask
+            " . $isTaskSql . "
             ORDER BY e.end DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
-        $query->setParameter('isTask', $isTask);
+
         if ($limit > 0) {
             $query->setMaxResults($limit);
         }
@@ -103,6 +126,53 @@ class EventRepository extends EntityRepository
         if ($limit > 0) {
             $query->setMaxResults($limit);
         }
+
+        return $query->getResult();
+    }
+
+    public function getFutureDesktopEvents(User $user, $limit = null)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            WHERE e.end > :dateEnd
+            AND e.user = :userId
+            AND e.isTask = false
+            AND e.workspace is null
+            ORDER BY e.start ASC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('dateEnd', time());
+        if ($limit) {
+            $query->setMaxResults($limit);
+        }
+
+        return $query->getResult();
+    }
+
+    public function getFutureWorkspaceEvents($user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            WHERE e.isTask = :isTask
+            AND e.end > :endDate
+            ORDER BY e.start ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('isTask', false);
+        $query->setParameter('endDate', time());
 
         return $query->getResult();
     }

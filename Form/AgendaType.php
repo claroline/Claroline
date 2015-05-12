@@ -18,6 +18,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @DI\Service("claroline.form.agenda")
@@ -58,13 +59,26 @@ class AgendaType extends AbstractType
         $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
         $attr['autocomplete'] = 'off';
         $builder
-            ->add('title', 'text', array('required' => true));
+            ->add('title', 'text', array(
+                'label' => 'form.title',
+                'required' => true
+            ));
 
         $builder->add(
             'isTask',
             'checkbox',
             array(
-                'label' => 'isTask'
+                'label' => 'form.task',
+                'required' => false
+            )
+        );
+
+        $builder->add(
+            'isAllDay',
+            'checkbox',
+            array(
+                'label' => 'form.all_day',
+                'required' => false
             )
         );
 
@@ -72,11 +86,13 @@ class AgendaType extends AbstractType
                 'start',
                 'datepicker',
                 array(
-                    'required'  => false,
+                    'label' => 'form.start',
+                    'required'  => true,
                     'widget'    => 'single_text',
-                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
                     'attr'      => $attr,
-                    'autoclose' => true
+                    'autoclose' => true,
+                    'constraints' => new Assert\Date()
                     )
                 );
         if (!$this->editMode) {
@@ -84,6 +100,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'time',
                 array(
+                    'label' => 'form.start_hours',
                     'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
@@ -95,6 +112,7 @@ class AgendaType extends AbstractType
                 'startHours',
                 'time',
                 array(
+                    'label' => 'form.start_hours',
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'
@@ -106,11 +124,13 @@ class AgendaType extends AbstractType
             'end',
             'datepicker',
             array(
-                'required'  => false,
+                'label' => 'form.end',
+                'required'  => true,
                 'widget'    => 'single_text',
-                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'platform'),
+                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
                 'attr'      => $attr,
-                'autoclose' => true
+                'autoclose' => true,
+                'constraints' => new Assert\Date()
             )
         );
 
@@ -119,6 +139,7 @@ class AgendaType extends AbstractType
                 'endHours',
                 'time',
                 array(
+                    'label' => 'form.end_hours',
                     'data' => $now->getTimestamp(),
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
@@ -130,6 +151,7 @@ class AgendaType extends AbstractType
                 'endHours',
                 'time',
                 array(
+                    'label' => 'form.end_hours',
                     'attr' => array('class' => 'hours'),
                     'input' => 'timestamp',
                     'widget' => 'single_text'
@@ -137,24 +159,34 @@ class AgendaType extends AbstractType
             );
         }
 
-        //$builder->add('allDay', 'checkbox');
-        $builder->add('description', 'tinymce')
-            ->add(
-                'priority',
-                'choice',
-                array(
-                    'choices' => array(
-                        '#FF0000' => 'high',
-                        '#01A9DB' => 'medium',
-                        '#848484' => 'low'
-                    )
+        $builder->add(
+            'description',
+            'tinymce',
+            array(
+                'label' => 'form.description'
+            )
+        );
+
+        $builder->add(
+            'priority',
+            'choice',
+            array(
+                'label' => 'form.priority',
+                'choices' => array(
+                    '#FF0000' => 'high',
+                    '#01A9DB' => 'medium',
+                    '#848484' => 'low'
                 )
-            );
+            )
+        );
 
         $builder->add(
             'recurring',
             'choice',
-            array('choices' => $recurring)
+            array(
+                'label' => 'form.recurring',
+                'choices' => $recurring
+            )
         );
     }
 
@@ -169,7 +201,7 @@ class AgendaType extends AbstractType
             array(
                 'workspace' => new Workspace() ,
                 'user' => new User(),
-                'class' => 'Claroline\CoreBundle\Entity\Event',
+                'class' => 'Claroline\AgendaBundle\Entity\Event',
                 'translation_domain' => 'agenda'
             )
         );

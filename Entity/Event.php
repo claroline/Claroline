@@ -23,7 +23,7 @@ use Claroline\AgendaBundle\Validator\Constraints\DateRange;
  * @ORM\Table(name="claro_event")
  * @DateRange()
  */
-class Event
+class Event implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -69,17 +69,21 @@ class Event
     private $user;
 
     /**
-     * @ORM\Column(name="allday", type="boolean")
+     * @ORM\Column(name="is_all_day", type="boolean")
      */
     private $allDay = false;
 
     /**
-     * @ORM\Column(name="istask", type="boolean")
+     * @ORM\Column(name="is_task", type="boolean")
      */
     private $isTask = false;
 
     /**
-     *
+     * @ORM\Column(name="is_task_done", type="boolean")
+     */
+    private $isTaskDone = false;
+
+    /**
      * @ORM\ManyToMany(
      *      targetEntity="Claroline\AgendaBundle\Entity\EventCategory",
      *      inversedBy="events"
@@ -98,7 +102,7 @@ class Event
     public $startHours;
     public $endHours;
 
-    private $daterange;
+    private $dateRange;
 
     public function __construct()
     {
@@ -203,14 +207,14 @@ class Event
         $this->user = $user;
     }
 
-    public function getAllDay()
+    public function isAllDay()
     {
         return $this->allDay;
     }
 
-    public function setAllDay($allDay)
+    public function setIsAllDay($isAllDay)
     {
-        $this->allDay = (bool) $allDay;
+        $this->allDay = (bool) $isAllDay;
     }
 
     /**
@@ -278,14 +282,14 @@ class Event
         $this->endHours = $endHours;
     }
 
-    public function setDateRange($daterage)
+    public function setDateRange($dateRange)
     {
-        $this->daterange = $daterange;
+        $this->dateRange = $dateRange;
     }
 
     public function getDateRange()
     {
-        return $this->daterange;
+        return $this->dateRange;
     }
 
     public function setIsTask($isTask)
@@ -301,5 +305,48 @@ class Event
     public function isTask()
     {
         return $this->isTask;
+    }
+
+    public function setIsTaskDone($isTaskDone)
+    {
+        $this->isTaskDone = $isTaskDone;
+
+        return $this;
+    }
+
+    public function isTaskDone()
+    {
+        return $this->isTaskDone;
+    }
+
+    public function jsonSerialize()
+    {
+        $start = is_null($this->getStart()) ? null : $this->getStart()->getTimestamp();
+        $end = is_null($this->getEnd()) ? null : $this->getEnd()->getTimestamp();
+        $startDate = new \DateTime();
+        $startDate->setTimeStamp($start);
+        $startIso = $startDate->format(\DateTime::ISO8601);
+        $endDate = new \DateTime();
+        $startDate->setTimeStamp($end);
+        $endIso = $startDate->format(\DateTime::ISO8601);
+
+        return [
+            'id' => $this->getId(),
+            'title' => $this->getTitle(),
+            'start' => $startIso,
+            'end' => $endIso,
+            'color' => $this->getPriority(),
+            'allDay' => $this->isAllDay(),
+            'isTask' => $this->isTask(),
+            'isTaskDone' => $this->isTaskDone(),
+            'owner' => $this->getUser()->getUsername(),
+            'description' => $this->getDescription(),
+            'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId(): null,
+            'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName(): null,
+            'endHours' => $this->getEndHours(),
+            'startHours' => $this->getStartHours(),
+            'className' => 'event_' . $this->getId(),
+            'durationEditable' => !$this->isTask() // If it's a task, disable resizing
+        ];
     }
 }

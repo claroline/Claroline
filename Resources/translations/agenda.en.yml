@@ -1,86 +1,111 @@
 add_event: 'Add new event'
 isTask: Task
-agenda_form_allDay: All day
-agenda_form_description: Description
-agenda_form_end: 'End date'
-agenda_form_endHours: 'End hour'
-agenda_form_priority: Priority
-agenda_form_priority_High: High
-agenda_form_recurring: Repeats
-agenda_form_start: 'Start date'
-agenda_form_startHours: 'Start hour'
-agenda_form_title: 'Title'
-agenda_form_author: 'Created by'
-apr: Apr
-april: April
-aug: Aug
-august: August
+all_day: the whole day
+at: at
 cancel: Cancel
 close: Close
 confirm: 'Confirm modification ?'
 date_invalid: 'An error occured. Please check that your event doesn''t end before it starts'
-day: day
-dec: Dec
-december: December
+day_: Day
+day:
+    mon: Mon
+    monday: Monday
+    tue: Tue
+    tuesday: Tuesday
+    wed: Wed
+    wednesday: Wednesday
+    thu: Thu
+    thursday: Thursday
+    fri: Fri
+    friday: Friday
+    sat: Sat
+    saturday: Saturday
+    sun: Sun
+    sunday: Sunday
+date_agenda_display_format: MM-DD-YYYY
+date_agenda_display_format_for_form: MM-dd-yyyy
 end: end
 end_date: 'End date'
 error: 'An unexpected error occurred, please try again'
 event: Event
-event_update: 'Event modified'
 export: 'Export events'
-feb: Feb
-february: February
 filter_user: Filter by user
+filter_tasks: Filter the tasks
 filter_ws: Filter by workspace
-fri: Fri
-friday: Friday
+form:
+    all_day: All day
+    description: Description
+    end: End date
+    end_hours: End hours
+    task: Task
+    priority: Priority
+    priority_hight: Hight
+    recurring: Recurring
+    start: Start date
+    start_hours: Start hours
+    title: Title
+    author: Author
 high: High
-import_agenda_file_file: 'Import'
-jan: Jan
-january: January
-jul: Jul
-july: July
-jun: Jun
-june: June
+hide_tasks: Hide all the tasks
+import_agenda_file: Import
+isAllDay: All day
+in_x_days: In %nbDays% days
 length: Length
+limit_date: Limit date
 low: Low
-mar: Mar
-march: March
-may: May
 medium: Medium
-modify: 'Modify an event'
-mon: Mon
-monday: Monday
-month: month
+midnight: midnight
+modify: Modify an event
+no_task_now: No task to do
+no-filter-tasks: No filter
+month_: Month
+month:
+    jan: Jan
+    january: January
+    feb: Feb
+    february: February
+    mar: Mar
+    march: March
+    apr: Apr
+    april: April
+    may: May
+    jun: Jun
+    june: June
+    jul: Jul
+    july: July
+    aug: Aug
+    august: August
+    sept: Sept
+    september: September
+    oct: Oct
+    october: October
+    nov: Nov
+    november: November
+    dec: Dec
+    december: December
 next: '>'
 nextYear: '>>'
 'no event found': 'no event found'
 no_description: 'No description'
 no_task_found: No task found
-nov: Nov
-november: November
-oct: Oct
-october: October
+noon: noon
+now: Now
 prev: '<'
 prevYear: '<<'
-sat: Sat
-saturday: Saturday
-sept: Sept
-september: September
+remove_event: Remove an event
+remove_event_confirm: Are you sure you want to remove this event ?
 start_date: 'Start date'
-sun: Sun
-sunday: Sunday
+show_task_only: Display only the tasks
 task: Task
+task_done: Task done !
+task_not_done: Task not done !
 tasks: Tasks
-thu: Thu
-thursday: Thursday
 title: 'Title can not be empty'
-today: today
-tue: Tue
-tuesday: Tuesday
+today: Today
+today_widget: Today
+tomorrow: Tomorrow
 type: Type
 update: modify
-wed: Wed
-wednesday: Wednesday
-week: week
+update_event: Update an event
+week: Week
 workspace: Workspace
