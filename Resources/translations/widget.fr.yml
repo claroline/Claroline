@@ -1,1 +1,6 @@
 agenda_: Prochains événements
+agenda_task: Mes tâches
+x_days_ago: Il y a %nbDays% jours
+yesterday: Hier
+mark-task-as-done: Marquer cette tâche comme finie
+cant-modify-task: Vous ne pouvez pas modifier cette tâche

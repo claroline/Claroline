@@ -1,0 +1,67 @@
+<div>
+    {% if event.isTask %}
+        {% set workspaceId = event.workspace is null ? 0 : event.workspace.id %}
+        {% if editableWorkspaces[workspaceId] %}
+            <span class="fa fa-square-o mark-task-as-done" style="cursor:pointer" title="{{ 'mark-task-as-done'|trans({}, 'widget') }}"></span>
+        {% else %}
+            <span class="fa fa-times" title="{{ 'cant-modify-task'|trans({}, 'widget') }}"></span>
+        {% endif %}
+    {% else %}
+        <span class="fa fa-calendar"></span>
+    {% endif %}
+
+    {% if event.start|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
+        {{ 'tomorrow'|trans({}, 'agenda') }},
+    {% elseif event.start|date('d/m/Y') == date('now')|date('d/m/Y') %}
+        {{ 'today_widget'|trans({}, 'agenda') }},
+    {% elseif event.start|date('U') - date('now')|date('U') <= 0 %}
+        {% if event.isTask %}
+            {% if  ((event.start|date('U') - date('now')|date('U'))/86400)|round|abs == 1 %}
+                {{ 'yesterday'|trans({}, 'widget') }},
+            {% else %}
+                {{ 'x_days_ago'|trans({
+                    '%nbDays%': ((event.start|date('U') - date('now')|date('U'))/86400)|round|abs
+                }, 'widget') }},
+            {% endif %}
+        {% else %}
+            {{ 'now'|trans({}, 'agenda') }},
+        {% endif %}
+    {% elseif event.start|date('U') - date('now')|date('U') < 518400 %}
+        {{ 'in_x_days'|trans({
+            '%nbDays%': ((event.start|date('U') - date('now')|date('U'))/86400)|round
+        }, 'agenda') }},
+    {% else %}
+        {{ ('day.' ~ event.start|date('l')|lower())|trans({}, 'agenda') }}
+        {{ event.start|date('d/m/Y') }},
+    {% endif %}
+    <div style="display: inline-block">
+        <a href="
+        {% if event.workspace is null %}
+            {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+        {% else %}
+            {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+        {% endif %}"
+           class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
+           tabindex="0"
+           role="button"
+           data-placement="top"
+           data-toggle="popover"
+           data-trigger="hover"
+           title="{{ event.title }}"
+           data-container="body"
+           data-content="{% include "ClarolineAgendaBundle:Widget:popover.html.twig" %}">
+            {{ event.title }}</a>,
+        {% if event.allDay %}
+            {{ 'all_day'|trans({}, 'agenda') }}.
+        {% else %}
+            {{ 'at'|trans({}, 'agenda') }}
+            {% if event.start|date('H\\hi') == '00h00' %}
+                {{ 'midnight'|trans({}, 'agenda') }}.
+            {% elseif event.start|date('H\\hi') == '12h00' %}
+                {{ 'noon'|trans({}, 'agenda') }}.
+            {% else %}
+                {{ event.start|date('H\\hi') }}.
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

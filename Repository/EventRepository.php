@@ -130,6 +130,51 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function getDesktopTaskNotDone(User $user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            WHERE e.user = :userId
+            AND e.isTask = :isTask
+            AND e.isTaskDone = :isTaskDone
+            AND e.workspace is null
+            ORDER BY e.start ASC
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('isTask', true);
+        $query->setParameter('isTaskDone', false);
+
+        return $query->getResult();
+    }
+
+    public function getWorkspaceTaskNotDone(User $user)
+    {
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            JOIN e.workspace ws
+            WITH ws in (
+                SELECT w
+                FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+                JOIN w.roles r
+                JOIN r.users u
+                WHERE u.id = :userId
+            )
+            WHERE e.isTask = :isTask
+            AND e.isTaskDone = :isTaskDone
+            ORDER BY e.start ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('isTask', true);
+        $query->setParameter('isTaskDone', false);
+
+        return $query->getResult();
+    }
+
     public function getFutureDesktopEvents(User $user, $limit = null)
     {
         $dql = "

@@ -87,12 +87,12 @@ class AgendaListener
         if ($event->getInstance()->isDesktop()) {
             $event->setContent($this->desktopWidgetAgenda());
         } else {
-            $event->setContent($this->workspaceWidgetAgenda($event->getInstance()->getWorkspace()->getId()));
+            $event->setContent($this->workspaceWidgetAgenda());
         }
         $event->stopPropagation();
     }
 
-    public function workspaceWidgetAgenda($id)
+    public function workspaceWidgetAgenda()
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $user = $this->tokenStorage->getToken()->getUser();
@@ -123,6 +123,50 @@ class AgendaListener
         );
     }
 
+    /**
+     * @DI\Observe("widget_agenda_task")
+     *
+     * @param DisplayWidgetEvent $event
+     */
+    public function onTaskDisplay(DisplayWidgetEvent $event)
+    {
+        if ($event->getInstance()->isDesktop()) {
+            $event->setContent($this->desktopWidgetTask());
+        } else {
+            $event->setContent($this->workspaceWidgetTask());
+        }
+        $event->stopPropagation();
+    }
+
+    public function desktopWidgetTask()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        $listDesktopTasks = $em->getRepository("ClarolineAgendaBundle:Event")->getDesktopTaskNotDone($user);
+        $listWorkspaceTasks = $em->getRepository("ClarolineAgendaBundle:Event")->getWorkspaceTaskNotDone($user);
+        $listTasksSort = $this->agendaManager->sortEvents(array_merge($listWorkspaceTasks, $listDesktopTasks));
+
+        $editableWorkspaces = array(0 => true);
+
+        foreach ($listWorkspaceTasks as $task) {
+            $workspaceId = $task->getWorkspace()->getId();
+            $editableWorkspaces[$workspaceId] = $this->authorization->isGranted(array('agenda_', 'edit'), $task->getWorkspace());
+        }
+
+        return $this->templating->render(
+            'ClarolineAgendaBundle:Widget:task_widget.html.twig',
+            array (
+                'listTasks' => $listTasksSort,
+                'editableWorkspaces' => $editableWorkspaces
+            )
+        );
+    }
+
+    public function workspaceWidgetTask()
+    {
+        return '';
+    }
 
     /**
      * @DI\Observe("open_tool_workspace_agenda_")

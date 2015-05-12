@@ -1,1 +1,6 @@
 agenda_: Upcoming events
+agenda_task: My tasks
+x_days_ago: %nbDays% days ago
+yesterday: Yesterday
+mark-task-as-done: Mark this task as done
+cant-modify-task: You cannot modify this task

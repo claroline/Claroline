@@ -1,0 +1,44 @@
+<div>
+    {{ 'form.start'|trans({}, 'agenda') }} :
+    {{ event.start|date('d/m/Y H\\hi') }}
+</div>
+<div>
+    {{ 'form.end'|trans({}, 'agenda') }} :
+    {{ event.end|date('d/m/Y H\\hi') }}
+</div>
+{% if event.description is not empty %}
+    <div>
+        {{ 'form.description'|trans({}, 'agenda') }} :
+        <div>{{ event.description |raw }}</div>
+    </div>
+{% endif %}
+<div>
+    {{ 'form.author'|trans({}, 'agenda') }} :
+    {{ event.user.username }}
+</div>
+<div>
+    {{ 'workspace'|trans({}, 'agenda') }} :
+    {% if event.getWorkspace() is not empty %}
+        {{ event.getWorkspace().getName() }}
+    {% else %}
+        {{ 'desktop'|trans({}, 'platform') }}
+    {% endif %}
+</div>
+<div>
+    {{ 'form.priority'|trans({}, 'agenda') }} :
+    {% if event.priority == '#848484' %}
+        <span style='color:{{ event.priority }}'>{{ 'low'|trans({}, 'agenda') }}</span>
+    {% elseif event.priority == '#FF0000' %}
+        <span style='color:{{ event.priority }}'>{{ 'high'|trans({}, 'agenda') }}</span>
+    {% else %}
+        <span style='color:#01A9DB'>{{ 'medium'|trans({}, 'agenda') }}</span>
+    {% endif %}
+</div>
+{% if event.isTask  %}
+    {% if event.isTaskDone %}
+        <div>{{ 'task_done'|trans({}, 'agenda') }}</div>
+        <div style='background-color: darkgreen; color: #f5f5f5; text-align: center; padding: 5px 0;'><span class='fa fa-check-circle'></span> {{ 'task_done'|trans({}, 'agenda') }}</div>
+    {% else %}
+        <div style='background-color: darkred; color: #f5f5f5; text-align: center; padding: 5px 0;'><span class='fa fa-exclamation-circle'></span> {{ 'task_not_done'|trans({}, 'agenda') }}</div>
+    {% endif %}
+{% endif %}

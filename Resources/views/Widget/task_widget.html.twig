@@ -1,0 +1,15 @@
+{% for event in listTasks %}
+        {% include 'ClarolineAgendaBundle:Widget:event_widget.html.twig' %}
+    {% else %}
+        <div><em>{{ 'no_task_now'|trans({}, 'agenda') }}</em></div>
+{% endfor %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function (){
+            $('.info-of-task').popover({
+                html: true
+            });
+        });
+    </script>
+{% endblock javascripts %}
