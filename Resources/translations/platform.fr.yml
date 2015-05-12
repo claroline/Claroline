@@ -141,7 +141,6 @@ administration: Administration
 administrative_code: 'Code administratif'
 advanced: Avancé
 advanced_parameters: 'Paramètres avancés'
-agenda: Agenda
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
@@ -262,8 +261,6 @@ data_col: 'Colonne des données'
 database: 'Base de données'
 database_connection_failed: 'La connexion à la base de données à échoué.'
 date: Date
-date_agenda_display_format: DD-MM-YYYY
-date_agenda_display_format_for_calendar: d-m-Y
 date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd-mm-yyyy
 date_form_datepicker_php: d-m-Y
@@ -332,7 +329,6 @@ drop_file: 'Déposez le fichier'
 dsn: dsn
 duration: Durée
 edit: Modifier
-edit_event_success: Événement mis à jour avec succès.
 edit_facet: Editer une facette
 edit_field: Editer un champ
 edit_password: 'Modifier le mot de passe'
@@ -735,8 +731,6 @@ registered_users: 'Utilisateurs enregistrés'
 registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 remove: Enlever
-remove_event: Supprimer un événement
-remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
 remove_facet: Supprimer une facette
 remove_facet_confirm: Etes-vous sur de vouloir supprimer la facette %name% ?
 remove_field: Supprimer une champ
@@ -990,7 +984,7 @@ unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
 up: Monter
 update_available: Mise à jour disponible
-update_event: Mettre à jour un événement
+
 upgrade: Mettre à jour
 upload: Téléchargement
 upload_denied: 'Vous n''avez pas la permission de créer une ressource à cet endroit'
