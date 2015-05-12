@@ -14,7 +14,7 @@ namespace Icap\NotificationBundle\Form;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class NotificationPluginConfigurationType
@@ -64,7 +64,7 @@ class NotificationPluginConfigurationType extends AbstractType
         return 'icap_notification_type_pluginConfiguration';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
