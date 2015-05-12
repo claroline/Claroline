@@ -68,24 +68,38 @@
 
                 /**
                  * Store current data in history
-                 * @param data
-                 * @returns {*}
+                 * @param   {object} data
+                 * @returns {boolean}
                  */
                 update: function (data) {
-                    // Increment history state
-                    this.incrementIndex();
+                    var updated = false;
 
-                    // Store a copy of data in history stack
-                    var dataCopy = angular.copy(data);
-                    history.push(dataCopy);
+                    // Get the last data stored in history to show if something has changed
+                    var lastHistoryData     = this.getFromHistory(historyIndex);
+                    var lastHistoryDataJson = angular.toJson(lastHistoryData); // Convert to JSON to compare to current data
 
-                    if (this.getIndex() !== 0) {
-                        // History is not empty => enable the undo function
-                        disabled.undo = false;
+                    // Create a clean copy of current data (e.g. without Angular JS custom properties)
+                    var dataCopy     = angular.copy(data);
+                    var dataCopyJson = angular.toJson(dataCopy); // Convert to JSON to compare to last history
+
+                    if (this.isEmpty() || lastHistoryDataJson != dataCopyJson) {
+                        // There are changes into data => add them to history
+                        // Increment history state
+                        this.incrementIndex();
+
+                        // Store a copy of data in history stack
+                        history.push(dataCopy);
+
+                        if (this.getIndex() !== 0) {
+                            // History is not empty => enable the undo function
+                            disabled.undo = false;
+                        }
+                        disabled.redo = true;
+
+                        updated = true;
                     }
-                    disabled.redo = true;
 
-                    return this;
+                    return updated;
                 },
 
                 /**
@@ -104,10 +118,7 @@
                         disabled.undo = true;
                     }
 
-                    // Returns a copy of the history
-                    angular.merge(currentData, data);
-
-                    return currentData;
+                    return this.restoreData(currentData, data);
                 },
 
                 /**
@@ -124,10 +135,7 @@
                         disabled.redo = true;
                     }
 
-                    // Returns a copy of the history
-                    angular.merge(currentData, data);
-
-                    return currentData;
+                    return this.restoreData(currentData, data);
                 },
 
                 /**
@@ -177,7 +185,26 @@
                  * @returns {object}
                  */
                 getFromHistory : function (index) {
-                    return history[index];
+                    var data = null;
+                    if (typeof history[index] !== 'undefined') {
+                        data = history[index];
+                    }
+
+                    return data;
+                },
+
+                restoreData: function (destination, source) {
+                    // Empty the destination object (we need to keep the reference to original object)
+                    for (var prop in destination) {
+                        if (destination.hasOwnProperty(prop)) {
+                            delete destination[prop];
+                        }
+                    }
+
+                    // Copy data into destination object
+                    angular.extend(destination, source);
+
+                    return destination;
                 }
             };
         }

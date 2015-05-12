@@ -28,13 +28,13 @@
 
                     // Update history each time a path is changed
                     scope.$watch('path', function (newValue) {
-                        console.log(newValue);
-                        if (!HistoryService.isEmpty()) {
+                        var empty   = HistoryService.isEmpty();
+                        var updated = HistoryService.update(newValue);
+
+                        if (!empty && updated) {
                             // Initialization is already done, so mark path as unsaved for each modification
                             pathFormCtrl.unsaved = true;
                         }
-
-                        HistoryService.update(newValue);
                     }, true);
                 }
             };

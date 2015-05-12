@@ -254,7 +254,12 @@ class Step implements \JsonSerializable
     {
         return $this->children;
     }
-    
+
+    public function hasChildren()
+    {
+        return !empty($this->children) && 0 < $this->children->count();
+    }
+
     /**
      * Add new child to the step
      * @param \Innova\PathBundle\Entity\Step $step
@@ -378,7 +383,7 @@ class Step implements \JsonSerializable
      */
     public function getDescription()
     {
-        if (!empty($this->activity)) {
+        if (!empty($this->activity) && ' ' != $this->activity->getDescription()) {
             return $this->activity->getDescription();
         }
         else {
@@ -386,6 +391,10 @@ class Step implements \JsonSerializable
         }
     }
 
+    /**
+     * Is current step the root of its own Path ?
+     * @return bool
+     */
     public function isRoot()
     {
         return null === $this->parent;
@@ -397,9 +406,9 @@ class Step implements \JsonSerializable
 
         // If current step is the Root of the Tree, there is no previous step
         if (!$this->isRoot()) {
-            $siblings = $this->parent->getChildren();
+            $siblings = array_values($this->parent->getChildren()->toArray());
 
-            $currentIndex = $siblings->indexOf($this);
+            $currentIndex = array_search($this, $siblings, true);
             if (false !== $currentIndex && !empty($siblings[$currentIndex - 1])) {
                 $previous = $siblings[$currentIndex - 1];
             } else {
@@ -420,13 +429,15 @@ class Step implements \JsonSerializable
             $next = $this->children->first();
         } else if (!$this->isRoot()) {
             // Ascend to parent to current step siblings
-            $siblings = $this->parent->getChildren();
+            $siblings = array_values($this->parent->getChildren()->toArray());
 
-            $currentIndex = $siblings->indexOf($this);
+            $currentIndex = array_search($this, $siblings, true);
             if (false !== $currentIndex && !empty($siblings[$currentIndex + 1])) {
                 $next = $siblings[$currentIndex + 1];
             } else {
                 // Next is empty so current step has no sibling after it
+
+                // TODO
             }
         }
 
@@ -496,14 +507,83 @@ class Step implements \JsonSerializable
         return $result;
     }
 
+    /**
+     * Get propagated resources of the Step and inherited from the specified level
+     * @param int $lvl
+     * @return array
+     */
+    public function getPropagatedResources($lvl = 0)
+    {
+        $propagated = array ();
+        foreach ($this->children as $child) {
+            if ($child->getLvl() > $lvl) {
+                // Loop over child inherited resources and grab inherited from `$lvl`
+                $inheritedResources = $child->getInheritedResources();
+                foreach ($inheritedResources as $inherited) {
+                    if ($inherited->getLvl() == $lvl) {
+                        // Resource is inherited from the searched level => get it
+                        $propagated[] = $inherited->getResource()->getId();
+                    }
+                }
+            }
+
+            // Jump to children
+            if ($child->hasChildren()) {
+                $childrenPropagated = $child->getPropagatedResources($lvl);
+                if (!empty($childrenPropagated)) {
+                    $propagated = array_merge($propagated, $childrenPropagated);
+                }
+            }
+        }
+
+        $propagated = array_unique($propagated);
+
+        return $propagated;
+    }
+
+    public function getParentsSecondaryResources()
+    {
+        $resources = array ();
+
+        if (!empty($this->parent)) {
+            if (!empty($this->parent->parameters)) {
+                $parameters = $this->parent->parameters;
+            } else if (!empty($this->parent->activity)) {
+                $parameters = $this->parent->activity->getParameters();
+            }
+
+            if (!empty($parameters)) {
+                $resources = $parameters->getSecondaryResources();
+            }
+
+            // Jump to parent
+            $parentResources = $this->parent->getParentsSecondaryResources();
+            if (!empty($parentResources)) {
+                $resources = array_merge($resources, $parentResources);
+            }
+        }
+
+        return $resources;
+    }
+
     public function jsonSerialize()
     {
+        // Initialize data array
         $jsonArray = array (
-            'id'          => $this->id,               // A local ID for the step in the path (reuse step ID)
-            'resourceId'  => $this->id,               // The real ID of the Step into the DB
-            'lvl'         => $this->lvl,              // The depth of the step in the path structure
-            'name'        => $this->getName(),        // The name of the linked Activity (used as Step name)
-            'description' => $this->getDescription(), // The description of the linked Activity (used as Step description)
+            'id'                => $this->id,               // A local ID for the step in the path (reuse step ID)
+            'resourceId'        => $this->id,               // The real ID of the Step into the DB
+            'activityId'        => null,
+            'lvl'               => $this->lvl,              // The depth of the step in the path structure
+            'name'              => $this->getName(),        // The name of the linked Activity (used as Step name)
+            'description'       => $this->getDescription(), // The description of the linked Activity (used as Step description)
+            'primaryResource'   => null,
+            'resources'         => array (),
+            'excludedResources' => array (),
+            'children'          => array (),
+            'withTutor'         => false,
+            'who'               => null,
+            'where'             => null,
+            'duration'          => null, // Duration in seconds
         );
 
         // Get activity properties
@@ -520,8 +600,6 @@ class Step implements \JsonSerializable
                     'name'       => $primaryResource->getName(),
                     'type'       => $primaryResource->getMimeType(),
                 );
-            } else {
-                $jsonArray['primaryResource'] = null;
             }
         }
 
@@ -536,17 +614,18 @@ class Step implements \JsonSerializable
 
         if (!empty($parameters)) {
             // Secondary resources
-            $jsonArray['resources'] = array();
-
             $secondaryResources = $parameters->getSecondaryResources();
             if (!empty($secondaryResources)) {
+                // Get propagated resources of the current step
+                $propagatedResources = $this->getPropagatedResources($this->lvl);
+
                 foreach ($secondaryResources as $secondaryResource) {
                     $jsonArray['resources'][] = array(
-                        'id'         => $secondaryResource->getId(),
-                        'resourceId' => $secondaryResource->getId(),
-                        'name'       => $secondaryResource->getName(),
-                        'type'       => $secondaryResource->getMimeType(),
-                        /*'propagateToChildren' => true,*/
+                        'id'                  => $secondaryResource->getId(),
+                        'resourceId'          => $secondaryResource->getId(),
+                        'name'                => $secondaryResource->getName(),
+                        'type'                => $secondaryResource->getMimeType(),
+                        'propagateToChildren' => in_array($secondaryResource->getId(), $propagatedResources),
                     );
                 }
             }
@@ -558,13 +637,27 @@ class Step implements \JsonSerializable
             $jsonArray['duration']  = $parameters->getMaxDuration(); // Duration in seconds
         }
 
-        // Get step children
-        $children = array ();
-        if (!empty($this->children)) {
-            $children = array_values($this->children->toArray());
+        // Excluded resources
+        $parentResources = $this->getParentsSecondaryResources();
+        foreach ($parentResources as $resource) {
+            $exist = false;
+            foreach ($this->inheritedResources as $inherited) {
+                if ($inherited->getResource()->getId() == $resource->getId()) {
+                    $exist = true;
+                    break;
+                }
+            }
+
+            // Parent resource not found in step
+            if (!$exist) {
+                $jsonArray['excludedResources'][] = $resource->getId();
+            }
         }
 
-        $jsonArray['children'] = $children;
+        // Get step children
+        if (!empty($this->children)) {
+            $jsonArray['children'] = array_values($this->children->toArray());
+        }
 
         return $jsonArray;
     }

@@ -1,6 +1,6 @@
 <div class="row path-structure">
     <!-- Path structure -->
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" data-ng-class="{ 'col-lg-offset-3 col-md-offset-3': pathStructureCtrl.structure.length === 0 }">
+    <div data-ng-show="false" class="col-lg-6 col-md-6 col-sm-12 col-xs-12" data-ng-class="{ 'col-lg-offset-3 col-md-offset-3': pathStructureCtrl.structure.length === 0 }">
         <!-- Block to display where there is no structure -->
         <div data-ng-if="pathStructureCtrl.structure.length === 0" class="text-center">
             <em>There is no structure for this path.</em>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Step form -->
-    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" data-ng-if="pathStructureCtrl.structure.length !== 0 && pathStructureCtrl.currentStep !== null">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" data-ng-if="pathStructureCtrl.structure.length !== 0 && pathStructureCtrl.currentStep !== null">
         <step-form data-step="pathStructureCtrl.currentStep" data-inherited-resources="pathStructureCtrl.currentStepInheritedResources"></step-form>
     </div>
 </div>

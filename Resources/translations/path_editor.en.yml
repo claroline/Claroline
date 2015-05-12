@@ -78,6 +78,7 @@ step_paste: Paste
 step_to_template: Save as template
 step_where: Learning place
 step_who: Working mode
+summary: Summary
 
 # t
 template_copy: Copy

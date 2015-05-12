@@ -1,42 +1,98 @@
-<div class="panel panel-default step-form panel-step">
-    <!-- Step level -->
-    <div class="lvl-indicator lvl-{{ stepFormCtrl.step.lvl }}"></div>
+<div class="panel-step">
+    <ul class="nav nav-tabs resource-tabs">
+        <li role="presentation"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages</a></li>
 
-    <div class="panel-body">
-        <div class="form-group">
-            <label class="control-label sr-only" for="step-name">Step name</label>
-            <!-- Edit step name -->
-            <div class="input-group col-md-12">
-                <input type="text" class="form-control" name="step-name" id="step-name" data-ng-model="stepFormCtrl.step.name" />
-                <div class="input-group-btn">
-                    <button data-ng-click="stepFormCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
-                        <span class="fa fa-eye"></span>
-                        <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor' }}</span>
-                    </button>
+        <li role="presentation" class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                Dropdown <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="">
+                        <span class="fa fa-eye-open"></span>
+                        test
+                    </a>
+                </li>
+                <li role="presentation" class="divider"></li>
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="">
+                        <span class="fa fa-trash"></span>
+                        Supprimer
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-                    <button class="btn btn-default" type="button" data-ui-resource-picker="stepFormCtrl.activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
-                        <span class="fa fa-folder-open"></span>
-                        <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor' }}</span>
-                    </button>
+        <!-- Add secondary resource button -->
+        <li role="presentation">
+            <a href="#">
+                <span class="fa fa-plus"></span> Ajouter
+            </a>
+        </li>
+    </ul>
 
-                    <button data-ng-click="stepFormCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
-                        <span class="fa fa-trash-o"></span>
-                        <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor' }}</span>
-                    </button>
+    <div class="panel panel-default">
+        <!-- Step level -->
+        <div class="lvl-indicator lvl-{{ stepFormCtrl.step.lvl }}"></div>
+
+        <div class="panel-body">
+            <div class="row">
+                <!-- Previous step -->
+                <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                    <a href="" class="btn btn-block btn-default">
+                        <span class="fa fa-arrow-left"></span>
+                        <span class="sr-only">previous</span>
+                    </a>
+                </div>
+
+                <div class="col-md-10 col-sm-8 col-xs-8">
+                    <div class="form-group">
+                        <label class="control-label sr-only" for="step-name">Step name</label>
+                        <!-- Edit step name -->
+                        <div class="input-group col-md-12">
+                            <input type="text" class="form-control text-center" name="step-name" id="step-name" data-ng-model="stepFormCtrl.step.name" />
+                            <div class="input-group-btn">
+                                <button data-ng-click="stepFormCtrl.showActivity()" class="btn btn-default" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'see_activity'|trans:{}:'path_editor' }}">
+                                    <span class="fa fa-eye"></span>
+                                    <span class="sr-only">{{ 'see_activity'|trans:{}:'path_editor' }}</span>
+                                </button>
+
+                                <button class="btn btn-default" type="button" data-ui-resource-picker="stepFormCtrl.activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_editor' }}">
+                                    <span class="fa fa-folder-open"></span>
+                                    <span class="sr-only">{{ 'select_activity'|trans:{}:'path_editor' }}</span>
+                                </button>
+
+                                <button data-ng-click="stepFormCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepFormCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_editor' }}">
+                                    <span class="fa fa-trash-o"></span>
+                                    <span class="sr-only">{{ 'delete_activity'|trans:{}:'path_editor' }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Next step button -->
+                <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                    <a href="" class="btn btn-block btn-default">
+                        <span class="sr-only">next</span>
+                        <span class="fa fa-arrow-right"></span>
+                    </a>
                 </div>
             </div>
+
+            <!-- Description -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-description.html'"></div>
+
+            <!-- Primary resource -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-primary.html'"></div>
+
+            <!-- Secondary resources -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-secondary.html'"></div>
+
+            <!-- Properties -->
+            <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-properties.html'"></div>
         </div>
-
-        <!-- Description -->
-        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-description.html'"></div>
-
-        <!-- Primary resource -->
-        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-primary.html'"></div>
-
-        <!-- Secondary resources -->
-        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-secondary.html'"></div>
-
-        <!-- Properties -->
-        <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-properties.html'"></div>
     </div>
 </div>

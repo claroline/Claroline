@@ -26,6 +26,7 @@
                 this.id                = IdentifierService.generateUUID();
                 this.lvl               = lvl;
                 this.name              = name;
+                this.description       = " ";
                 this.children          = [];
                 this.activityId        = null;
                 this.resourceId        = null;

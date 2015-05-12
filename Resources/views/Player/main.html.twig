@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="path-main-container" class="path-player">
+    <div class="path-player">
         {# Summary #}
         <div id="full-tree" class="modal fade">
             {% include 'InnovaPathBundle:Player:components/tree-browser.html.twig' with { 'path': path, 'currentStep': currentStep, 'autoDisplayEnabled': autoDisplayEnabled } %}
@@ -30,10 +30,6 @@
                     {# Tree view #}
                     <a class="tree-browser btn btn-default nav-button" href="#" data-toggle="modal" data-target="#full-tree" rel="tooltip" data-original-title="{{ 'full_tree' | trans({}, 'path_player') }}">
                         <span class="fa fa-list"></span>
-                    </a>
-
-                    <a class="btn btn-default nav-button" rel="tooltip" data-original-title="{{ 'back_to_home' | trans({}, 'innova_tools') }}" href="{{ path('claro_workspace_open_tool', { workspaceId: _resource.workspace.id, toolName: 'home' }) }}">
-                        <span class="fa fa-home"></span>
                     </a>
                 </div>
 
@@ -51,7 +47,7 @@
             </div>
 
             {# Step content #}
-            <div class="current-step col-md-12">
+            <div class="col-md-12">
                 {% include 'InnovaPathBundle:Player:components/current-step.html.twig' with { 'path': path, 'currentStep': currentStep } %}
             </div>
         </div>
@@ -64,12 +60,9 @@
     {# Adapt size for the IFrame which contains the primary resource #}
     {% if currentStep.activity.primaryResource %}
         <script type="text/javascript">
-            $(document).ready(function() {
+            /*$(document).ready(function() {
                 // Enable tooltip
                 $('*').tooltip({ placement: 'top' });
-
-                // Force all links of a step to be opened in a new tab
-                $('#current-step-text a').attr('target','_blank');
 
                 var $frame = $('iframe#{{ currentStep.activity.primaryResource.id }}');
 
@@ -102,29 +95,27 @@
             function resizeIframe(frame) {
                 var height = frame.contents().height();
                 frame.animate({ height: height }, 100, function() {});
-            }
+            }*/
         </script>
     {% endif %}
 
     <script type="text/javascript">
-        var pathId      = {{ path.id }};
-
-        $(document).ready(function() {
-            {% if autoDisplaySummary %}
+        /*$(document).ready(function() {
+            {#{% if autoDisplaySummary %}#}
             $('#full-tree').modal('show');
-            {% endif %}
+            {#{% endif %}#}
 
             $('#do-not-display-anymore').on('change', function () {
                 var isChecked = $(this).is(':checked');
 
                 $.ajax({
                     url: Routing.generate('innova_path_player_toggle_summary', {
-                        pathId      : pathId,
+                        pathId      : {{ _resource.id }},
                         disabled    : isChecked ? 1 : 0
                     }),
                     method: 'PUT'
                 });
             });
-        });
+        });*/
     </script>
 {% endblock %}

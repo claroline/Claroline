@@ -45,10 +45,12 @@
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
                             for (var nodeId in nodes) {
-                                // Load activity properties to populate step
-                                StepService.loadActivity(this.step, nodeId);
+                                if (nodes.hasOwnProperty(nodeId)) {
+                                    // Load activity properties to populate step
+                                    StepService.loadActivity(this.step, nodeId);
 
-                                break; // We need only one node, so only the last one will be kept
+                                    break; // We need only one node, so only the last one will be kept
+                                }
                             }
 
                             $scope.$apply();
@@ -74,12 +76,14 @@
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
                             for (var nodeId in nodes) {
-                                var node = nodes[nodeId];
+                                if (nodes.hasOwnProperty(nodeId)) {
+                                    var node = nodes[nodeId];
 
-                                // Link resource to step
-                                StepService.addPrimaryResource(this.step, node[2], nodeId, node[0]);
+                                    // Link resource to step
+                                    StepService.addPrimaryResource(this.step, node[2], nodeId, node[0]);
 
-                                break; // We need only one node, so only the first one will be kept
+                                    break; // We need only one node, so only the first one will be kept
+                                }
                             }
 
                             $scope.$apply();
@@ -99,12 +103,12 @@
                     callback: function (nodes) {
                         if (typeof nodes === 'object' && nodes.length !== 0) {
                             for (var nodeId in nodes) {
-                                var node = nodes[nodeId];
+                                if (nodes.hasOwnProperty(nodeId)) {
+                                    var node = nodes[nodeId];
 
-                                // Link resource to step
-                                StepService.addSecondaryResource(this.step, node[2], nodeId, node[0]);
-
-                                console.log(this.step);
+                                    // Link resource to step
+                                    StepService.addSecondaryResource(this.step, node[2], nodeId, node[0]);
+                                }
                             }
 
                             $scope.$apply();
@@ -124,7 +128,7 @@
                 language: EditorApp.locale,
                 browser_spellcheck : true,
                 entity_encoding : "numeric",
-                autoresize_min_height: 100,
+                autoresize_min_height: 150,
                 autoresize_max_height: 500,
                 plugins: [
                     'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',

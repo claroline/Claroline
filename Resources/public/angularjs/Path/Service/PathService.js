@@ -184,7 +184,7 @@
                                         for (var j = currentStep.resources.length - 1; j >= 0; j--) {
                                             if (currentStep.resources[j].propagateToChildren) {
                                                 // Current resource must be available for children
-                                                var resource = currentStep.resources[j];
+                                                var resource = angular.copy(currentStep.resources[j]);
                                                 resource.parentStep = {
                                                     id: currentStep.id,
                                                     lvl: currentStep.lvl,

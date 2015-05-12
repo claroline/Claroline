@@ -10,8 +10,6 @@
         function ($modalInstance, template) {
             this.template = template;
 
-            console.log(template);
-
             // Store symfony base partials route
             this.webDir = EditorApp.webDir;
 
