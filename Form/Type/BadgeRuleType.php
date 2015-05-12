@@ -68,8 +68,9 @@ class BadgeRuleType extends AbstractType
                 'twolevelselect',
                 array(
                     'translation_domain' => 'log',
-                    'attr'               => array('class' => 'input-sm'),
-                    'choices'            => $actionChoices
+                    'attr' => array('class' => 'input-sm'),
+                    'choices' => $actionChoices,
+                    'choices_as_values' => true
                 )
             )
             ->add('isUserReceiver', 'checkbox')
