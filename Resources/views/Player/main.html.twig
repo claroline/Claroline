@@ -34,9 +34,11 @@
                 </div>
 
                 {# Breadcrumb #}
+                {% if _resource.hasBreadcrumbs() %}
                 <div class="breadcrumbs">
                     {% include 'InnovaPathBundle:Player:components/breadcrumbs.html.twig' with { 'path': path, 'currentStep': currentStep, 'roadBack': roadBack } %}
                 </div>
+                {% endif %}
             </div>
         </div>
 

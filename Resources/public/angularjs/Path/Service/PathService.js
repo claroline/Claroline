@@ -21,6 +21,7 @@
                         innova_path: {
                             name:        path.name,
                             description: path.description,
+                            breadcrumbs: path.breadcrumbs,
                             structure:   angular.toJson(path)
                         }
                     };
