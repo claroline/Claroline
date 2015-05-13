@@ -12,7 +12,7 @@
 
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
-    var canEditEvent;
+    var workspacePermissions;
     var addUrl;
     var showUrl;
     var $calendarElement = $('#calendar');
@@ -21,16 +21,11 @@
     calendar.initialize = function (
         context,
         workspaceId,
-        canEdit
+        areWorkspacesEditable
     ) {
         context = context || 'desktop';
         workspaceId = workspaceId || null;
-        //the creation is enabled by default
-        if (canEdit === undefined) {
-            canEditEvent = true;
-        } else {
-            canEditEvent = JSON.parse(canEdit);
-        }
+        workspacePermissions = JSON.parse(areWorkspacesEditable);
 
         // Initialize route & url depending on the context
         if (context !== 'desktop') {
@@ -42,7 +37,9 @@
         }
 
         // Initialize the click event on the import button
-        onImport();
+        $('#import-ics-btn').on('click', function (event) {
+            onImport(event);
+        });
         // Initialize the click event on the document
         onBodyClick();
 
@@ -94,7 +91,8 @@
             eventMouseover: onEventMouseover,
             eventMouseout: onEventMouseout,
             eventRender: onEventRender,
-            eventResize: onEventResize
+            eventResize: onEventResize,
+            eventDragStop: onEventDragStop
         });
 
         // If a year is define in the Url, redirect the calendar to that year, month and day
@@ -109,11 +107,11 @@
      function onEventClick(event, jsEvent)
      {
          var workspaceId = event.workspace_id ? event.workspace_id : 0;
-         if (canEditEvent[workspaceId]) {
+         if (workspacePermissions[workspaceId]) {
              // If the user can edit the event
              var $this = $(this);
              // If click on the check symbol of a task, mark this task as "to do"
-             if ($(jsEvent.target).hasClass('fa-check')) {
+             if ($(jsEvent.target).hasClass('fa-check-square-o')) {
                  markTaskAsToDo(event, jsEvent, $this);
              }
              // If click on the checkbox of a task, mark this task as done
@@ -160,15 +158,23 @@
         resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
     }
 
+    function onEventDragStop()
+    {
+        // Remove all popovers shown
+        $('.popover.in').remove();
+    }
+
     function renderEvent(event, $element)
     {
         // Create the popover for the event or the task
         createPopover(event, $element);
+        // Check if the user is allowed to modify the agenda
         var workspaceId = event.workspace_id ? event.workspace_id : 0;
-        event.editable = canEditEvent[workspaceId];
+        event.editable = workspacePermissions[workspaceId];
         if (event.editable) {
             $element.addClass('fc-draggable');
         }
+        event.durationEditable = event.durationEditable && workspacePermissions[workspaceId];
 
         // If it's a task
         if (event.isTask) {
@@ -184,7 +190,7 @@
             // Add the checkbox if the task is not done or the check symbol if the task is done
             var checkbox = eventContent.find('.task');
             if (event.isTaskDone) {
-                checkbox.addClass('fa-check');
+                checkbox.addClass('fa-check-square-o');
                 checkbox.next().css('text-decoration', 'line-through');
             } else {
                 checkbox.addClass('fa-square-o');
@@ -194,9 +200,9 @@
 
     function renderAddEventForm(date)
     {
-        // Select the first id of the json canEditEvent
-        for(var key in canEditEvent) break;
-        if (canEditEvent[key] && !isFormShown) {
+        // Select the first id of the json workspacePermissions
+        for(var key in workspacePermissions) break;
+        if (workspacePermissions[key] && !isFormShown) {
             var dateVal = moment(date).format(t('date_agenda_display_format'));
 
             var postRenderAddEventAction = function (html) {
@@ -342,7 +348,7 @@
             type: 'GET',
             success: function() {
                 $(jsEvent.target)
-                    .removeClass('fa-check')
+                    .removeClass('fa-check-square-o')
                     .addClass('fa-square-o')
                     .next().css('text-decoration', 'none');
                 $element.popover('destroy');
@@ -360,7 +366,7 @@
             success: function() {
                 $(jsEvent.target)
                     .removeClass('fa-square-o')
-                    .addClass('fa-check')
+                    .addClass('fa-check-square-o')
                     .next().css('text-decoration', 'line-through');
                 $element.popover('destroy');
                 event.isTaskDone = true;
@@ -486,16 +492,14 @@
         ;
     }
 
-    function onImport()
+    function onImport(event)
     {
-        $('#import-ics-btn').on('click', function (event) {
-            event.preventDefault();
-            window.Claroline.Modal.displayForm(
-                $(event.target).attr('href'),
-                addItemsToCalendar,
-                function () {},
-                'ics-import-form'
-            );
-        });
+        event.preventDefault();
+        window.Claroline.Modal.displayForm(
+            $(event.target).attr('href'),
+            addItemsToCalendar,
+            function () {},
+            'ics-import-form'
+        );
     }
 }) ();

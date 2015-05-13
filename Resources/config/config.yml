@@ -8,3 +8,5 @@ plugin:
   widgets:
     - name: agenda_
       is_configurable: false
+    - name : agenda_task
+      is_configurable: false

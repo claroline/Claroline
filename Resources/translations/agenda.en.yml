@@ -57,7 +57,7 @@ medium: Medium
 midnight: midnight
 modify: Modify an event
 no_task_now: No task to do
-no-filter-tasks: No filter
+no_filter_tasks: No filter
 month_: Month
 month:
     jan: Jan
@@ -85,7 +85,7 @@ month:
     december: December
 next: '>'
 nextYear: '>>'
-'no event found': 'no event found'
+no_event_found: 'No event found'
 no_description: 'No description'
 no_task_found: No task found
 noon: noon

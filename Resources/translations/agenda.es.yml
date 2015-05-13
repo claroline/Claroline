@@ -72,7 +72,7 @@ month:
     december: 'Diciembre'
 next: '>'
 nextYear: '>>'
-no event found: 'Ningún evento encontrado'
+no_event_found: 'Ningún evento encontrado'
 no_description: 'Sin descripción'
 prev: '<'
 prevYear: '<<'
