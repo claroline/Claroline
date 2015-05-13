@@ -2,15 +2,15 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4>{{ "Delete" | trans({}, "theme") }}</h4>
+            <h4>{{ 'delete' | trans({}, "platform") }}</h4>
         </div>
         <div class="modal-body">
-            <p>{{ "Are you sure you want to delete this theme?" | trans({}, "theme") }}</p>
-            <p>{{ "This action is irreversible" | trans({}, "theme") }}.</p>
+            <p>{{ "delete_theme_confirm" | trans({}, "theme") }}</p>
+            <p>{{ "irreversible_action" | trans({}, "platform") }}.</p>
         </div>
         <div class="modal-footer">
-            <a class="btn btn-default" data-dismiss="modal" role="button">{{ "Cancel" | trans({}, "theme") }}</a>
-            <a class="btn delete btn-primary" data-dismiss="modal" role="button">{{ "Delete" | trans({}, "theme") }}</a>
+            <a class="btn btn-default" data-dismiss="modal" role="button">{{ "cancel" | trans({}, "platform") }}</a>
+            <a class="btn delete btn-primary" data-dismiss="modal" role="button">{{ 'delete' | trans({}, "platform") }}</a>
         </div>
     </div>
 </div>

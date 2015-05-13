@@ -41,7 +41,7 @@ class HomeContentType extends AbstractType
                 array(
                     'data' => $builder->getData(),
                     'theme_options' => array(
-                        'titlePlaceHolder' => 'Menu title',
+                        'titlePlaceHolder' => 'menu_title',
                         'contentText' => false,
                         'tinymce' => false
                     )
@@ -54,8 +54,8 @@ class HomeContentType extends AbstractType
                 array(
                     'data' => $builder->getData(),
                     'theme_options' => array(
-                        'titlePlaceHolder' => 'Link title',
-                        'textPlaceHolder' => 'Link address',
+                        'titlePlaceHolder' => 'link_title',
+                        'textPlaceHolder' => 'link_address',
                         'tinymce' => false
                     )
                 )

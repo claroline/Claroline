@@ -5,7 +5,7 @@
                 <div class="creator-collapse">
     {% else %}
         <a class="list-group-item" data-toggle="collapse" href=".collapse{{ father }}">
-            <i class="fa fa-plus"></i> {{ "Add a link here" | trans({}, 'home') }}
+            <i class="fa fa-plus"></i> {{ "add_link_here" | trans({}, 'home') }}
         </a>
         <div class="creator{{ father }}">
             <div class="collapse collapse{{ father }}">
@@ -18,11 +18,11 @@
                             <div class="navbar navbar-default navbar-static-top">
                                 <div class="navbar-form pull-right">
                                     {% if content is defined %}
-                                    <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
+                                    <a class="cancel-button btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
                                     <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
                                     {% else %}
-                                    <a data-toggle="collapse" href=".collapse{{ father }}" class="btn btn-default" role="button">{{ 'Cancel' | trans({}, 'home') }}</a>
-                                    <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
+                                    <a data-toggle="collapse" href=".collapse{{ father }}" class="btn btn-default" role="button">{{ 'cancel' | trans({}, 'platform') }}</a>
+                                    <a class="creator-button btn btn-primary">{{ 'create' | trans({}, 'platform') }}</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -40,10 +40,10 @@
                 <div class="navbar navbar-default navbar-static-top">
                     <div class="navbar-form pull-right">
                         {% if content is defined %}
-                        <a class="cancel-button btn btn-default">{{ 'Cancel' | trans({}, 'home') }}</a>
+                        <a class="cancel-button btn btn-default">{{ 'cancel' | trans({}, 'platform') }}</a>
                         <a class="edit-button btn btn-primary">{{ 'save' | trans({}, 'platform') }}</a>
                         {% else %}
-                        <a class="creator-button btn btn-primary">{{ 'Create' | trans({}, 'home') }}</a>
+                        <a class="creator-button btn btn-primary">{{ 'create' | trans({}, 'platform') }}</a>
                         {% endif %}
                     </div>
                 </div>

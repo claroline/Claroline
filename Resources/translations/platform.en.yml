@@ -1,3 +1,6 @@
+irreversible_action: 'This action cannot be undone'
+preview: Preview
+error_occured: 'An error occurred'
 6_parameters_min_msg: 'The csv file must contain 6 elements per line.'
 7_parameters_min_msg: 'The csv file must contain 7 elements per line.'
 none: None
@@ -843,6 +846,7 @@ start_maintenance: 'Start maintenance mode'
 statistics: Statistics
 statistics_data: 'number of workspaces and users'
 status: Status
+size: Size
 steal_session: 'Steal the session'
 storage_limit_exceeded: 'You don''t have enough storage left (%storageLeft%) on your workspace. Your file size is %fileSize%.'
 storage_type: 'Storage type'

@@ -101,7 +101,7 @@
                             } else {
                                 $('input', element).parent().addClass('has-error').append(
                                     common.createElement('div', 'help-block field-error').html(
-                                        translator.trans('A page of contents with this name already exist', {}, 'home')
+                                        translator.trans('page_already_exists', {}, 'home')
                                     )
                                 );
                             }
@@ -135,8 +135,8 @@
                     });
                 } else {
                     modal.simpleContainer(
-                        translator.trans('New content page', {}, 'home'),
-                        translator.trans('A page of contents with this name already exist', {}, 'home')
+                        translator.trans('new_content_page', {}, 'home'),
+                        translator.trans('page_already_exists', {}, 'home')
                     );
                 }
             });
