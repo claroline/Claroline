@@ -34,6 +34,14 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $structure;
 
     /**
+     * Display a breadcrumbs for navigation into the Path
+     * @var boolean
+     *
+     * @ORM\Column(name="breadcrumbs", type="boolean")
+     */
+    protected $breadcrumbs = false;
+
+    /**
      * Steps linked to the path
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
@@ -195,7 +203,28 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         
         return $this;
     }
-    
+
+    /**
+     * Set breadcrumbs
+     * @param  boolean $breadcrumbs
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
+     */
+    public function setBreadcrumbs($breadcrumbs)
+    {
+        $this->breadcrumbs = $breadcrumbs;
+
+        return $this;
+    }
+
+    /**
+     * Does Path have a breadcrumbs ?
+     * @return boolean
+     */
+    public function hasBreadcrumbs()
+    {
+        return $this->breadcrumbs;
+    }
+
     /**
      * Get root step of the path
      * @throws \Exception
@@ -227,6 +256,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         $structure = array (
             'name'        => $this->getName(),
             'description' => $this->getDescription(),
+            'breadcrumbs' => $this->breadcrumbs,
             'steps'       => array (),
         );
 
@@ -275,6 +305,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         return array (
             'name'        => $this->getResourceNode()->getName(),
             'description' => $this->description,
+            'breadcrumbs' => $this->breadcrumbs,
             'steps'       => $steps,
         );
     }

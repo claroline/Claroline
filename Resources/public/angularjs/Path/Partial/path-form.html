@@ -58,6 +58,7 @@
                 </nav>
 
                 <div class="panel-body">
+                    <!-- Name of the path -->
                     <div class="row form-group">
                         <label class="control-label col-md-3 required" for="innova_path_name">{{ 'path_name'|trans:{}:'path_editor' }}</label>
                         <div class="col-md-9">
@@ -65,10 +66,19 @@
                         </div>
                     </div>
 
+                    <!-- Description of the path -->
                     <div class="row form-group">
                         <label class="control-label col-md-3" for="innova_path_description">{{ 'path_description'|trans:{}:'path_editor' }}</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" id="innova_path_description" name="innova_path[description]" placeholder="{{ 'description_help'|trans:{}:'path_editor' }}" data-ng-model="pathFormCtrl.path.description" />
+                        </div>
+                    </div>
+
+                    <!-- Description of the path -->
+                    <div class="row form-group">
+                        <label class="control-label col-md-3" for="innova_path_breadcrumbs">{{ 'path_breadcrumbs'|trans:{}:'path_editor' }}</label>
+                        <div class="col-md-9">
+                            <input type="checkbox" id="innova_path_breadcrumbs" name="innova_path[breadcrumbs]" data-ng-model="pathFormCtrl.path.breadcrumbs" />
                         </div>
                     </div>
 

@@ -26,6 +26,7 @@ no_templates: There is not template available.
 open_templates: Open templates
 
 # p
+path_breadcrumbs: Show breadcrumbs ?
 path_description: Description
 path_name: Name
 path_status: Status
