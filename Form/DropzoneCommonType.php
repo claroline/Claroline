@@ -40,9 +40,10 @@ class DropzoneCommonType extends AbstractType
             ->add('peerReview', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    false => 'Standard evaluation',
-                    true => 'Peer review evaluation'
+                    'Standard evaluation' => false,
+                    'Peer review evaluation' => true
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
@@ -59,21 +60,23 @@ class DropzoneCommonType extends AbstractType
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    true => 'manualPlanning',
-                    false => 'sheduleByDate'
+                    'manualPlanning' => true,
+                    'sheduleByDate' => false
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
 
             ->add('manualState', 'choice', array(
                 'choices' => array(
-                    'notStarted' => 'notStartedManualState',
-                    'allowDrop' => 'allowDropManualState',
-                    'peerReview' => 'peerReviewManualState',
-                    'allowDropAndPeerReview' => 'allowDropAndPeerReviewManualState',
-                    'finished' => 'finishedManualState',
+                    'notStartedManualState' => 'notStarted',
+                    'allowDropManualState' => 'allowDrop',
+                    'peerReviewManualState' => 'peerReview',
+                    'allowDropAndPeerReviewManualState' => 'allowDropAndPeerReview',
+                    'finishedManualState' => 'finished',
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))

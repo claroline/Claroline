@@ -30,6 +30,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -50,7 +51,7 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropAction(Dropzone $dropzone, $user)
+    public function dropAction(Request $request, Dropzone $dropzone, $user)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
@@ -58,9 +59,9 @@ class DropController extends DropzoneBaseController
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
 
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'error',
-                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'icap_dropzone')
+                $this->get('translator')->trans('You ve already made your copy for this review', array(), 'icap_dropzone')
             );
 
             return $this->redirect(
@@ -99,8 +100,8 @@ class DropController extends DropzoneBaseController
         $form_text = $this->createForm(new DocumentType(), null, array('documentType' => 'text'));
         $drop = $notFinishedDrop;
 
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
 
             if (count($notFinishedDrop->getDocuments()) == 0) {
                 $form->addError(new FormError('Add at least one document'));
@@ -134,7 +135,7 @@ class DropController extends DropzoneBaseController
                 $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
                 $this->dispatch($event);
 
-                $this->getRequest()->getSession()->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'success',
                     $this->get('translator')->trans('Your copy has been saved', array(), 'icap_dropzone')
                 );
@@ -594,7 +595,7 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function dropsDeleteAction($dropzone, $drop, $tab, $page)
+    public function dropsDeleteAction(Request $request, $dropzone, $drop, $tab, $page)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -608,8 +609,8 @@ class DropController extends DropzoneBaseController
             $previousPath = 'icap_dropzone_drops_awaiting_paginated';
         }
 
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($drop);
@@ -629,7 +630,7 @@ class DropController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Drop:dropsDelete.html.twig';
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $view = 'IcapDropzoneBundle:Drop:dropsDeleteModal.html.twig';
         }
 
@@ -765,13 +766,13 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function unlockDropAction(Drop $drop, User $user)
+    public function unlockDropAction(Request $request, Drop $drop, User $user)
     {
         $em = $this->getDoctrine()->getManager();
         $drop->setUnlockedDrop(true);
         $em->flush();
 
-        $this->getRequest()
+        $request
             ->getSession()
             ->getFlashBag()
             ->add('success', $this->get('translator')->trans('Drop have been unlocked', array(), 'icap_dropzone')
@@ -804,7 +805,7 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function reportDropAction(Correction $correction, User $user)
+    public function reportDropAction(Request $request, Correction $correction, User $user)
     {
         $dropzone = $correction->getDropzone();
         $drop = $correction->getDrop();
@@ -822,8 +823,8 @@ class DropController extends DropzoneBaseController
         }
         $form = $this->createForm(new CorrectionReportType(), $correction);
 
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
                 $drop->setReported(true);
@@ -857,7 +858,7 @@ class DropController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Drop:reportDrop.html.twig';
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $view = 'IcapDropzoneBundle:Drop:reportDropModal.html.twig';
         }
 
@@ -936,13 +937,13 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function autoCloseDropsConfirmationAction($dropzone)
+    public function autoCloseDropsConfirmationAction(Request $request, $dropzone)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
         }
         return $this->render($view, array(

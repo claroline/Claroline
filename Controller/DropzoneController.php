@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -50,21 +51,21 @@ class DropzoneController extends DropzoneBaseController
      *
      * User is needed for Agenda Event
      */
-    public function editCommonAction(Dropzone $dropzone, $user)
+    public function editCommonAction(Request $request, Dropzone $dropzone, $user)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
 
-        if ($this->getRequest()->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             // see if manual plannification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
 
             $oldEndDropDate = $dropzone->getEndAllowDrop();
 
-            $form->handleRequest($this->getRequest());
+            $form->handleRequest($request);
 
             /** @var Dropzone $dropzone */
             $dropzone = $form->getData();
@@ -98,8 +99,7 @@ class DropzoneController extends DropzoneBaseController
 
             if (!$dropzone->getManualPlanning()) {
 
-                // var_dump($this->getRequest()->request->all());
-                $form_array = $this->getRequest()->request->get('icap_dropzone_common_form');
+                $form_array = $request->request->get('icap_dropzone_common_form');
 
                 if (is_array($form_array)) {
                     // reconstruction of datetimes.
@@ -311,13 +311,13 @@ class DropzoneController extends DropzoneBaseController
 
                     if ($stayHere == 1) {
                         if ($dropzone->hasCriteria() === false) {
-                            $this->getRequest()->getSession()->getFlashBag()->add(
+                            $request->getSession()->getFlashBag()->add(
                                 'warning',
                                 $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
                             );
                         }
 
-                        $this->getRequest()->getSession()->getFlashBag()->add(
+                        $request->getSession()->getFlashBag()->add(
                             'success',
                             $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
                         );
@@ -332,7 +332,7 @@ class DropzoneController extends DropzoneBaseController
                         );
                     }
                 } else {
-                    $this->getRequest()->getSession()->getFlashBag()->add(
+                    $request->getSession()->getFlashBag()->add(
                         'success',
                         $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
                     );
@@ -365,7 +365,7 @@ class DropzoneController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editCriteriaAction(Dropzone $dropzone, $page)
+    public function editCriteriaAction(Request $request, Dropzone $dropzone, $page)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -407,13 +407,13 @@ class DropzoneController extends DropzoneBaseController
 
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
         $add_criteria_after = false;
-        if ($this->getRequest()->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
 
-            $form->handleRequest($this->getRequest());
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
-                $add_criteria_after = $this->getRequest()->request->get('addCriteria') == 'add-criterion' ? true : false;
+                $add_criteria_after = $request->request->get('addCriteria') == 'add-criterion' ? true : false;
 
 
                 $dropzone = $form->getData();
@@ -432,7 +432,7 @@ class DropzoneController extends DropzoneBaseController
 
                 if ($form->get('recalculateGrades')->getData() == 1) {
                     $this->get('icap.manager.dropzone_manager')->recalculateScoreByDropzone($dropzone);
-                    $this->getRequest()->getSession()->getFlashBag()->add(
+                    $request->getSession()->getFlashBag()->add(
                         'success',
                         $this->get('translator')->trans('Grades were recalculated', array(), 'icap_dropzone')
                     );
@@ -443,7 +443,7 @@ class DropzoneController extends DropzoneBaseController
 
 
                 if ($dropzone->hasCriteria() === false) {
-                    $this->getRequest()->getSession()->getFlashBag()->add(
+                    $request->getSession()->getFlashBag()->add(
                         'warning',
                         $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
                     );
@@ -457,7 +457,7 @@ class DropzoneController extends DropzoneBaseController
 
                 $goBack = $form->get('goBack')->getData();
                 if ($goBack == 0) {
-                    $this->getRequest()->getSession()->getFlashBag()->add(
+                    $request->getSession()->getFlashBag()->add(
                         'success',
                         $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'icap_dropzone')
                     );
@@ -601,13 +601,13 @@ class DropzoneController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function downloadCopiesBetweenDatesAction(Dropzone $dropzone)
+    public function downloadCopiesBetweenDatesAction(Request $request, Dropzone $dropzone)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDates.html.twig';
-        if ($this->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
         }
 
@@ -640,13 +640,13 @@ class DropzoneController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function donwloadCopiesAction(Dropzone $dropzone, $beginDate = null, $endDate = null)
+    public function donwloadCopiesAction(Request $request, Dropzone $dropzone, $beginDate = null, $endDate = null)
     {
-        if ($this->getRequest()->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $date_format = $this->get('translator')->trans('date_form_datepicker_php', array(), 'platform');
             $date_format = str_replace('-', '/', $date_format);
             $date_format .= " H:i:s"; // adding hours in order to have full day possibility ( day1 0h00 to day1 23h59 )
-            $form_array = $this->getRequest()->request->get('icap_dropzone_date_download_between_date_form');
+            $form_array = $request->request->get('icap_dropzone_date_download_between_date_form');
             if (array_key_exists('drop_period_begin_date', $form_array)) {
                 $beginDate = DateTime::createFromFormat($date_format, $form_array['drop_period_begin_date'] . " 00:00:00");
                 // begin so day start at 00:00:00
@@ -666,7 +666,7 @@ class DropzoneController extends DropzoneBaseController
             if ($beginDate != null) {
                 $message = 'No drops to download in this period';
             }
-            $this->getRequest()->getSession()->getFlashBag()->add(
+            $request->getSession()->getFlashBag()->add(
                 'warning',
                 $this->get('translator')->trans($message, array(), 'icap_dropzone')
             );
