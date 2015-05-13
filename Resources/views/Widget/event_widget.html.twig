@@ -1,16 +1,18 @@
 <div data-event-id="{{ event.id }}" class="event-or-task">
-    {% if event.isTask %}
-        {% set workspaceId = event.workspace is null ? 0 : event.workspace.id %}
-        {% if  editableWorkspaces[workspaceId] %}
-            <span class="fa fa-square-o mark-task-as-done" style="cursor:pointer" title="{{ 'mark_task_as_done'|trans({}, 'widget') }}"></span>
+    <div style="width:17px; float: left">
+        {% if event.isTask %}
+            {% set workspaceId = event.workspace is null ? 0 : event.workspace.id %}
+            {% if  editableWorkspaces[workspaceId] %}
+                <span class="fa fa-square-o mark-task-as-done" style="cursor:pointer" title="{{ 'mark_task_as_done'|trans({}, 'widget') }}"></span>
+            {% else %}
+                <span class="fa fa-lock" title="{{ 'cant_modify_task'|trans({}, 'widget') }}"></span>
+            {% endif %}
         {% else %}
-            <span class="fa fa-lock" title="{{ 'cant_modify_task'|trans({}, 'widget') }}"></span>
+            <span class="fa fa-calendar"></span>
         {% endif %}
-    {% else %}
-        <span class="fa fa-calendar"></span>
-    {% endif %}
+    </div>
 
-    <span>
+    <div style="overflow: hidden">
         {% set dateRange = (event.start|date('U') - date('now')|date('U')) %}
         {% if event.start|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
             {{ 'tomorrow'|trans({}, 'agenda') }},
@@ -36,8 +38,7 @@
             {{ ('day.' ~ event.start|date('l')|lower())|trans({}, 'agenda') }}
             {{ event.start|date('d/m/Y') }},
         {% endif %}
-    </span>
-    <div style="display: inline-block">
+
         <a href="
         {% if event.workspace is null %}
             {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
@@ -56,20 +57,22 @@
             {{ event.title }}</a>,
 
         {% if event.allDay %}
-            {{ 'all_day'|trans({}, 'agenda') }}.
+            {% set time = 'all_day'|trans({}, 'agenda') %}
         {% else %}
-            {{ 'at'|trans({}, 'agenda') }}
+            {% set time = 'at'|trans({}, 'agenda') ~ ' '%}
             {% if event.start|date('H\\hi') == '00h00' %}
-                {{ 'midnight'|trans({}, 'agenda') }}.
+                {% set time = time ~ 'midnight'|trans({}, 'agenda') %}
             {% elseif event.start|date('H\\hi') == '12h00' %}
-                {{ 'noon'|trans({}, 'agenda') }}.
+                {% set time = time ~ 'noon'|trans({}, 'agenda') %}
             {% else %}
-                {{ event.start|date('H\\hi') }}.
+                {% set time = time ~ event.start|date('H\\hi') %}
             {% endif %}
         {% endif %}
 
         {% if isDesktop and event.workspace is not null %}
-            {{ 'in'|trans({}, 'widget') }} <a href="{{ path('claro_workspace_open', {'workspaceId': event.workspace.id}) }}">{{ event.workspace.name }}</a>.
+            {{ time }} (<a href="{{ path('claro_workspace_open', {'workspaceId': event.workspace.id}) }}">{{ event.workspace.name }}</a>).
+        {% else %}
+            {{ time }}.
         {% endif %}
     </div>
 </div>

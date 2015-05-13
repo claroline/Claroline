@@ -154,16 +154,14 @@ class EventRepository extends EntityRepository
             SELECT e
             FROM Claroline\AgendaBundle\Entity\Event e
             WHERE e.user = :userId
-            AND e.isTask = :isTask
-            AND e.isTaskDone = :isTaskDone
+            AND e.isTask = true
+            AND e.isTaskDone = false
             AND e.workspace is null
             ORDER BY e.start ASC
         ";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('isTask', true);
-        $query->setParameter('isTaskDone', false);
 
         return $query->getResult();
     }
@@ -181,14 +179,12 @@ class EventRepository extends EntityRepository
                 JOIN r.users u
                 WHERE u.id = :userId
             )
-            WHERE e.isTask = :isTask
-            AND e.isTaskDone = :isTaskDone
+            WHERE e.isTask = true
+            AND e.isTaskDone = false
             ORDER BY e.start ASC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('isTask', true);
-        $query->setParameter('isTaskDone', false);
 
         return $query->getResult();
     }
@@ -228,13 +224,12 @@ class EventRepository extends EntityRepository
                 JOIN r.users u
                 WHERE u.id = :userId
             )
-            WHERE e.isTask = :isTask
+            WHERE e.isTask = false
             AND e.end > :endDate
             ORDER BY e.start ASC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
-        $query->setParameter('isTask', false);
         $query->setParameter('endDate', time());
 
         return $query->getResult();

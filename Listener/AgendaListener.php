@@ -204,13 +204,13 @@ class AgendaListener
 
     public function workspaceAgenda(Workspace $workspace)
     {
-        $editableWorkspaces = $this->authorization->isGranted(array('agenda_', 'edit'), $workspace);
+        $editableWorkspace = $this->authorization->isGranted(array('agenda_', 'edit'), $workspace);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Tool:agenda.html.twig',
             array(
                 'workspace' => $workspace,
-                'editableWorkspaces' => array($workspace->getId() => $editableWorkspaces)
+                'editableWorkspaces' => array($workspace->getId() => $editableWorkspace)
             )
         );
     }

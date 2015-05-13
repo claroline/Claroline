@@ -13,56 +13,54 @@
                 });
 
                 $('body')
-                        .on('click', '.mark-task-as-done', function (){
-                            var $this = $(this);
-                            var $title = $this.next().next().children().first();
-                            var contentElements = $.parseHTML($title.attr('data-content'));
+                    .on('click', '.mark-task-as-done', function (){
+                        var $this = $(this);
+                        var $title = $this.parent().next().find('.info-of-task');
+                        var contentElements = $.parseHTML($title.attr('data-content'));
 
-                            $.ajax({
-                                url: window.Routing.generate(
-                                        'claro_agenda_set_task_as_done',
-                                        {event: $this.parents('.event-or-task').data('event-id')}
-                                ),
-                                type: 'get',
-                                success: function() {
-                                    $this
-                                            .removeClass('mark-task-as-done fa-square-o')
-                                            .addClass('mark-task-as-not-done fa-check-square-o')
-                                            .attr('title', '{{ 'mark_task_as_not_done'|trans({}, 'widget') }}')
-                                    ;
-                                    $this.next().css('text-decoration', 'line-through');
-                                    $this.next().next().css('text-decoration', 'line-through');
+                        $.ajax({
+                            url: window.Routing.generate(
+                                    'claro_agenda_set_task_as_done',
+                                    {event: $this.parents('.event-or-task').data('event-id')}
+                            ),
+                            type: 'get',
+                            success: function() {
+                                $this
+                                    .removeClass('mark-task-as-done fa-square-o')
+                                    .addClass('mark-task-as-not-done fa-check-square-o')
+                                    .attr('title', '{{ 'mark_task_as_not_done'|trans({}, 'widget') }}')
+                                ;
+                                $this.parent().next().css('text-decoration', 'line-through');
 
-                                    var content = setContent(contentElements, true);
-                                    $title.attr('data-content', content);
-                                }
-                            });
-                        })
-                        .on('click', '.mark-task-as-not-done', function (){
-                            var $this = $(this);
-                            var $title = $this.next().next().children().first();
-                            var contentElements = $.parseHTML($title.attr('data-content'));
+                                var content = setContent(contentElements, true);
+                                $title.attr('data-content', content);
+                            }
+                        });
+                    })
+                    .on('click', '.mark-task-as-not-done', function (){
+                        var $this = $(this);
+                        var $title = $this.parent().next().find('.info-of-task');
+                        var contentElements = $.parseHTML($title.attr('data-content'));
 
-                            $.ajax({
-                                url: window.Routing.generate(
-                                        'claro_agenda_set_task_as_not_done',
-                                        {event: $this.parents('.event-or-task').data('event-id')}
-                                ),
-                                type: 'get',
-                                success: function() {
-                                    $this
-                                            .addClass('mark-task-as-done fa-square-o')
-                                            .removeClass('mark-task-as-not-done fa-check-square-o')
-                                            .attr('title', '{{ 'mark_task_as_done'|trans({}, 'widget') }}')
-                                    ;
-                                    $this.next().css('text-decoration', 'none');
-                                    $this.next().next().css('text-decoration', 'none');
+                        $.ajax({
+                            url: window.Routing.generate(
+                                    'claro_agenda_set_task_as_not_done',
+                                    {event: $this.parents('.event-or-task').data('event-id')}
+                            ),
+                            type: 'get',
+                            success: function() {
+                                $this
+                                    .addClass('mark-task-as-done fa-square-o')
+                                    .removeClass('mark-task-as-not-done fa-check-square-o')
+                                    .attr('title', '{{ 'mark_task_as_done'|trans({}, 'widget') }}')
+                                ;
+                                $this.parent().next().css('text-decoration', 'none');
 
-                                    var content = setContent(contentElements, false);
-                                    $title.attr('data-content', content);
-                                }
-                            });
-                        })
+                                var content = setContent(contentElements, false);
+                                $title.attr('data-content', content);
+                            }
+                        });
+                    })
                 ;
             });
 
