@@ -87,20 +87,19 @@ class AgendaListener
         if ($event->getInstance()->isDesktop()) {
             $event->setContent($this->desktopWidgetAgenda());
         } else {
-            $event->setContent($this->workspaceWidgetAgenda());
+            $event->setContent($this->workspaceWidgetAgenda($event->getInstance()->getWorkspace()));
         }
         $event->stopPropagation();
     }
 
-    public function workspaceWidgetAgenda()
+    public function workspaceWidgetAgenda(Workspace $workspace)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
-        $user = $this->tokenStorage->getToken()->getUser();
-        $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->getFutureWorkspaceEvents($user);
+        $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findLastEventsOrTasksByWorkspaceId($workspace->getId(), false);
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => $listEvents)
+            array('listEvents' => $listEvents, 'isDesktop' => false)
         );
     }
 
@@ -119,7 +118,7 @@ class AgendaListener
 
         return $this->templating->render(
             'ClarolineAgendaBundle:Widget:agenda_widget.html.twig',
-            array('listEvents' => $listEvents)
+            array('listEvents' => $listEvents, 'isDesktop' => true)
         );
     }
 
@@ -133,7 +132,7 @@ class AgendaListener
         if ($event->getInstance()->isDesktop()) {
             $event->setContent($this->desktopWidgetTask());
         } else {
-            $event->setContent($this->workspaceWidgetTask());
+            $event->setContent($this->workspaceWidgetTask($event->getInstance()->getWorkspace()));
         }
         $event->stopPropagation();
     }
@@ -158,14 +157,29 @@ class AgendaListener
             'ClarolineAgendaBundle:Widget:task_widget.html.twig',
             array (
                 'listTasks' => $listTasksSort,
-                'editableWorkspaces' => $editableWorkspaces
+                'editableWorkspaces' => $editableWorkspaces,
+                'isDesktop' => true
             )
         );
     }
 
-    public function workspaceWidgetTask()
+    public function workspaceWidgetTask(Workspace $workspace)
     {
-        return '';
+        $em = $this->container->get('doctrine.orm.entity_manager');
+        $listWorkspaceTasks = $em->getRepository("ClarolineAgendaBundle:Event")->findLastEventsOrTasksByWorkspaceId($workspace->getId(), true);
+
+        $editableWorkspaces = array(
+            $workspace->getId() => $this->authorization->isGranted(array('agenda_', 'edit'), $workspace)
+        );
+
+        return $this->templating->render(
+            'ClarolineAgendaBundle:Widget:task_widget.html.twig',
+            array (
+                'listTasks' => $listWorkspaceTasks,
+                'editableWorkspaces' => $editableWorkspaces,
+                'isDesktop' => false
+            )
+        );
     }
 
     /**

@@ -1,7 +1,7 @@
 {% for event in listEvents %}
     {% include "ClarolineAgendaBundle:Widget:event_widget.html.twig" %}
 {% else %}
-    <em>{{ 'no event found'|trans({}, 'agenda') }}</em>
+    <em>{{ 'no_event_found'|trans({}, 'agenda') }}</em>
 {% endfor %}
 
 {% block javascripts %}

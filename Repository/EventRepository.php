@@ -106,6 +106,24 @@ class EventRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findLastEventsOrTasksByWorkspaceId($workspaceId, $isTask)
+    {
+        $lastEventSql = !$isTask ? 'AND e.end > '. time() : '';
+        $dql = "
+            SELECT e
+            FROM Claroline\AgendaBundle\Entity\Event e
+            WHERE e.workspace = :workspaceId
+            AND e.isTask = :isTask
+            " . $lastEventSql . "
+            ORDER BY e.start ASC
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceId', $workspaceId);
+        $query->setParameter('isTask', $isTask);
+
+        return $query->getResult();
+    }
+
     public function findByUserWithoutAllDay(User $user, $limit)
     {
         $dql = "
