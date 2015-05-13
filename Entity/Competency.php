@@ -188,6 +188,14 @@ class Competency implements \JsonSerializable
     /**
      * @return integer
      */
+    public function getLevel()
+    {
+        return $this->lvl;
+    }
+
+    /**
+     * @return integer
+     */
     public function getLeft()
     {
         return $this->lft;

@@ -3,6 +3,9 @@
 namespace HeVinci\CompetencyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
+use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
@@ -11,6 +14,7 @@ class ProgressManagerTest extends RepositoryTestCase
     private $manager;
     private $abilityProgressRepo;
     private $competencyProgressRepo;
+    private $competencyProgressLogRepo;
     private $user;
     private $framework;
 
@@ -20,19 +24,20 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->manager = $this->client->getContainer()->get('hevinci.competency.progress_manager');
         $this->abilityProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
         $this->competencyProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
+        $this->competencyProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgressLog');
         $this->user = $this->persistUser('jdoe');
         $this->framework = $this->persistFramework();
     }
 
-    public function testHandleEvaluationLogsAbilityProgress()
+    public function testHandleEvaluationTracksAbilityProgress()
     {
         $eval = $this->makeEvaluation('ac3', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $logs = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(1, count($logs));
-        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $logs[0]->getStatus());
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $summaries[0]->getStatus());
     }
 
     public function testHandleEvaluationSetsAbilityProgressToPendingIfUnderActivityCount()
@@ -41,12 +46,12 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $logs = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(1, count($logs));
-        $this->assertEquals(AbilityProgress::STATUS_PENDING, $logs[0]->getStatus());
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals(AbilityProgress::STATUS_PENDING, $summaries[0]->getStatus());
     }
 
-    public function testHandleEvaluationUpdatePendingLogIfAny()
+    public function testHandleEvaluationUpdatesPendingAbilityRecordIfAny()
     {
         $eval1 = $this->makeEvaluation('ac5', AbstractEvaluation::STATUS_PASSED);
         $eval2 = $this->makeEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
@@ -54,32 +59,110 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
-        $logs = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(1, count($logs));
-        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $logs[0]->getStatus());
+        $records = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $this->assertEquals(1, count($records));
+        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $records[0]->getStatus());
     }
 
-    public function testHandleEvaluationCreatesAnAbilityLogForEachAbility()
+    public function testHandleEvaluationCreatesAnAbilityRecordForEachAbility()
     {
         $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $logs = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(2, count($logs));
-        $this->assertEquals($this->framework['abilities']['a1'], $logs[0]->getAbility());
-        $this->assertEquals($this->framework['abilities']['a5'], $logs[1]->getAbility());
+        $records = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $this->assertEquals(2, count($records));
+        $this->assertEquals($this->framework['abilities']['a1'], $records[0]->getAbility());
+        $this->assertEquals($this->framework['abilities']['a5'], $records[1]->getAbility());
     }
 
-    public function testHandleEvaluationLogsDirectCompetencyProgress()
+    public function testHandleEvaluationTracksDirectCompetencyProgress()
     {
         $eval = $this->makeEvaluation('ac8', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $logs = $this->competencyProgressRepo->findBy(['user' => $this->user]);
+        $competency = $this->framework['competencies']['c6'];
+        $summaries = $this->competencyProgressRepo->findBy([
+            'user' => $this->user,
+            'competency' => $competency
+        ]);
+
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals($competency, $summaries[0]->getCompetency());
+        $this->assertEquals($this->framework['levels']['l1'], $summaries[0]->getLevel());
+        $this->assertEquals(100, $summaries[0]->getPercentage());
+    }
+
+    public function testHandleEvaluationKeepsCompetencyProgressHistoryLogs()
+    {
+        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval1);
+        $this->manager->handleEvaluation($eval2);
+
+        $competency = $this->framework['competencies']['c9'];
+        $summaries = $this->competencyProgressRepo->findBy([
+            'user' => $this->user,
+            'competency' => $competency]
+        );
+        $logs = $this->competencyProgressLogRepo->findBy([
+            'user' => $this->user,
+            'competency' => $competency
+        ]);
+
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals($this->framework['competencies']['c9'], $summaries[0]->getCompetency());
+        $this->assertEquals($this->framework['levels']['l2'], $summaries[0]->getLevel());
         $this->assertEquals(1, count($logs));
-        $this->assertEquals($this->framework['competencies']['c6'], $logs[0]->getCompetency());
+        $this->assertEquals($this->framework['competencies']['c9'], $logs[0]->getCompetency());
+        $this->assertEquals($this->framework['levels']['l1'], $logs[0]->getLevel());
+    }
+
+    public function testHandleEvaluationComputesParentCompetenciesProgress()
+    {
+        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval1);
+        $this->manager->handleEvaluation($eval2);
+
+        $summaries = $this->competencyProgressRepo->findBy(['user' => $this->user]);
+        $comps = $this->framework['competencies'];
+        $levels = $this->framework['levels'];
+
+        $this->assertEquals(8, count($summaries));
+        $this->assertHasProgressLog($summaries, $comps['c10'], 100, $levels['l3']);
+        $this->assertHasProgressLog($summaries, $comps['c9'], 100, $levels['l1']);
+        $this->assertHasProgressLog($summaries, $comps['c8'], 0, null);
+        $this->assertHasProgressLog($summaries, $comps['c7'], 0, null);
+        $this->assertHasProgressLog($summaries, $comps['c6'], 0, null);
+        $this->assertHasProgressLog($summaries, $comps['c3'], 40, $levels['l2']);
+        $this->assertHasProgressLog($summaries, $comps['c2'], 0, null);
+        $this->assertHasProgressLog($summaries, $comps['c1'], 20, $levels['l2']);
+    }
+
+    public function testHandleEvaluationKeepsParentCompetenciesHistory()
+    {
+        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval1);
+        $this->manager->handleEvaluation($eval2);
+
+        $summaries = $this->competencyProgressRepo->findBy([
+            'user' => $this->user,
+            'competency' => $this->framework['competencies']['c1']
+        ]);
+        $logs = $this->competencyProgressLogRepo->findBy([
+            'user' => $this->user,
+            'competency' => $this->framework['competencies']['c1']
+        ]);
+
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals($this->framework['levels']['l2'], $summaries[0]->getLevel());
+        $this->assertEquals(1, count($logs));
         $this->assertEquals($this->framework['levels']['l1'], $logs[0]->getLevel());
     }
 
@@ -127,6 +210,14 @@ class ProgressManagerTest extends RepositoryTestCase
         //        - ac10
         //      - a12 (l3)
         //        - ac11
+        //    - c9
+        //      - a13
+        //        - ac15 (l1)
+        //      - a14
+        //        - ac16 (l2)
+        //    - c10
+        //      - a15
+        //        - ac17 (l3)
 
         $c1 = $this->persistCompetency('c1');
         $c2 = $this->persistCompetency('c2', $c1);
@@ -136,6 +227,8 @@ class ProgressManagerTest extends RepositoryTestCase
         $c6 = $this->persistCompetency('c6', $c3);
         $c7 = $this->persistCompetency('c7', $c3);
         $c8 = $this->persistCompetency('c8', $c3);
+        $c9 = $this->persistCompetency('c9', $c3);
+        $c10 = $this->persistCompetency('c10', $c3);
 
         $a1 = $this->persistAbility('a1');
         $a2 = $this->persistAbility('a2');
@@ -149,6 +242,9 @@ class ProgressManagerTest extends RepositoryTestCase
         $a10 = $this->persistAbility('a10');
         $a11 = $this->persistAbility('a11');
         $a12 = $this->persistAbility('a12');
+        $a13 = $this->persistAbility('a13');
+        $a14 = $this->persistAbility('a14');
+        $a15 = $this->persistAbility('a15');
 
         $ac1 = $this->persistActivity('ac1');
         $ac2 = $this->persistActivity('ac2');
@@ -164,11 +260,16 @@ class ProgressManagerTest extends RepositoryTestCase
         $ac12 = $this->persistActivity('ac12');
         $ac13 = $this->persistActivity('ac13');
         $ac14 = $this->persistActivity('ac14');
+        $ac15 = $this->persistActivity('ac15');
+        $ac16 = $this->persistActivity('ac16');
+        $ac17 = $this->persistActivity('ac17');
 
         $s = $this->persistScale('s');
-        $l1 = $this->persistLevel('l1', $s);
-        $l2 = $this->persistLevel('l2', $s);
-        $l3 = $this->persistLevel('l3', $s);
+        $l1 = $this->persistLevel('l1', $s, 0);
+        $l2 = $this->persistLevel('l2', $s, 1);
+        $l3 = $this->persistLevel('l3', $s, 2);
+
+        $c1->setScale($s);
 
         $this->persistLink($c4, $a1, $l1);
         $this->persistLink($c4, $a2, $l2);
@@ -185,6 +286,9 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->persistLink($c8, $a10, $l1);
         $this->persistLink($c8, $a11, $l2);
         $this->persistLink($c8, $a12, $l3);
+        $this->persistLink($c9, $a13, $l1);
+        $this->persistLink($c9, $a14, $l2);
+        $this->persistLink($c10, $a15, $l3);
 
         $a1->linkActivity($ac1);
         $a1->linkActivity($ac2);
@@ -205,6 +309,9 @@ class ProgressManagerTest extends RepositoryTestCase
         $a10->linkActivity($ac9);
         $a11->linkActivity($ac10);
         $a12->linkActivity($ac11);
+        $a13->linkActivity($ac15);
+        $a14->linkActivity($ac16);
+        $a15->linkActivity($ac17);
 
         return [
             'competencies' => [
@@ -215,7 +322,9 @@ class ProgressManagerTest extends RepositoryTestCase
                 'c5' => $c5,
                 'c6' => $c6,
                 'c7' => $c7,
-                'c8' => $c8
+                'c8' => $c8,
+                'c9' => $c9,
+                'c10' => $c10
             ],
             'abilities' => [
                 'a1' => $a1,
@@ -229,7 +338,10 @@ class ProgressManagerTest extends RepositoryTestCase
                 'a9' => $a9,
                 'a10' => $a10,
                 'a11' => $a11,
-                'a12' => $a12
+                'a12' => $a12,
+                'a13' => $a13,
+                'a14' => $a14,
+                'a15' => $a15
             ],
             'activities' => [
                 'ac1' => $ac1,
@@ -245,7 +357,10 @@ class ProgressManagerTest extends RepositoryTestCase
                 'ac11' => $ac11,
                 'ac12' => $ac12,
                 'ac13' => $ac13,
-                'ac14' => $ac14
+                'ac14' => $ac14,
+                'ac15' => $ac15,
+                'ac16' => $ac16,
+                'ac17' => $ac17
             ],
             'levels' => [
                 'l1' => $l1,
@@ -255,12 +370,32 @@ class ProgressManagerTest extends RepositoryTestCase
         ];
     }
 
-    protected function makeEvaluation($activityName, $status)
+    private function makeEvaluation($activityName, $status, Evaluation $previous = null)
     {
         return $this->persistEvaluation(
             $this->framework['activities'][$activityName],
             $this->user,
-            $status
+            $status,
+            $previous
         );
+    }
+
+    private function assertHasProgressLog(array $logs, Competency $competency, $percentage, Level $level = null)
+    {
+        $targetLog = null;
+
+        foreach ($logs as $log) {
+            if ($log->getCompetency() === $competency && $log->getUser() === $this->user) {
+                $targetLog = $log;
+                break;
+            }
+        }
+
+        if (!$targetLog) {
+            $this->assertTrue(false); // make the assertion fail (hacky...)
+        }
+
+        $this->assertEquals($percentage, $targetLog->getPercentage());
+        $this->assertEquals($level, $targetLog->getLevel());
     }
 }

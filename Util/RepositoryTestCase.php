@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Util;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -71,6 +72,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $level->setName($name);
         $level->setValue($value);
         $level->setScale($scale);
+        $scale->addLevel($level);
         $this->om->persist($level);
 
         return $level;
@@ -141,12 +143,20 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         return $activity;
     }
 
-    protected function persistEvaluation(Activity $activity, User $user, $status)
+    protected function persistEvaluation(Activity $activity, User $user, $status, Evaluation $previous = null)
     {
-        $params = new ActivityParameters();
+        $params = $previous ? $previous->getActivityParameters() : new ActivityParameters();
         $params->setActivity($activity);
 
-        $eval = new Evaluation();
+        if ($previous) {
+            $pastEval = new PastEvaluation();
+            $pastEval->setActivityParameters($params);
+            $pastEval->setUser($user);
+            $pastEval->setStatus($previous->getStatus());
+            $this->om->persist($pastEval);
+        }
+
+        $eval = $previous ?: new Evaluation();
         $eval->setActivityParameters($params);
         $eval->setUser($user);
         $eval->setStatus($status);
