@@ -1,3 +1,6 @@
+irreversible_action: 'Cette action est irréversible'
+preview: Aperçu
+error_occured: 'Une erreur s''est produite'
 6_parameters_min_msg: 'Le fichier csv doit comprendre au minimum 6 éléments par ligne.'
 7_parameters_min_msg: 'Le fichier csv doit comprendre au minimum 7 éléments par ligne.'
 none: Aucun(e)
@@ -10,6 +13,7 @@ powered_by: 'Développé par'
 see_all: 'Voir tous'
 language_select: 'Sélectionnez une langue'
 show: Afficher
+size: Taille
 show_actions: 'Afficher les actions'
 show_name_in_top_bar: 'Afficher le nom de la plateforme dans la barre supérieure'
 term_of_service: 'Conditions d''utilisation'

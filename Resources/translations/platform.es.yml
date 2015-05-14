@@ -1,3 +1,6 @@
+irreversible_action: 'Esta acción es irreversible'
+preview: Prévisualizar
+error_occured: 'Ha ocurrido un error'
 6_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 6 elementos por línea.'
 7_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 7 elementos por línea.'
 none: Ninguno
@@ -98,6 +101,7 @@ administration: Administración
 administrative_code: 'Código administrativo'
 advanced: Avanzado
 advanced_parameters: advanced_parameters
+size: Tamaño
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: Todos
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'

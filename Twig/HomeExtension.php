@@ -115,7 +115,7 @@ class HomeExtension extends \Twig_Extension
         }
 
         return $this->container->get("translator")->transChoice(
-            "%count% second ago|%count% seconds ago",
+            "seconds_ago",
             1,
             array('%count%' => 1),
             "home"
