@@ -709,16 +709,10 @@ class WorkspaceModelManager
      */
     private function linkResourcesArray(array $resources)
     {
-        for ($i = 0; $i < count($resources); $i++) {
-
-            if (isset($resources[$i]) && isset($resources[$i + 1])) {
-                $node = $resources[$i]->getResourceNode();
-                $nextNode = $resources[$i + 1]->getResourceNode();
-                $node->setNext($nextNode);
-                $nextNode->setPrevious($node);
-                $this->om->persist($node);
-                $this->om->persist($nextNode);
-            }
+        for ($i = 1; $i < count($resources); $i++) {
+            $node = $resources[$i]->getResourceNode();
+            $node->setIndex($i);
+            $this->om->persist($node);
         }
     }
 

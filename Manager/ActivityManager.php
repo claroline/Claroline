@@ -745,6 +745,7 @@ class ActivityManager
     }
 
     /**
+     * What does it do ? I can't remember. It's annoying.
      * Initialize the resource permissions of an activity
      *
      * @param Activity $activity
@@ -794,6 +795,25 @@ class ActivityManager
         }
 
         $this->rightsManager->initializePermissions($nodesInitialized, $rolesInitialized);
+    }
+
+    public function addPermissionsToResource(Activity $activity, array $roles)
+    {
+        $primary = $activity->getPrimaryResource();
+        $secondaries = [];
+        $nodes = [];
+
+        if ($primary) {
+            $nodes[] = $primary;
+        }
+
+        foreach ($activity->getParameters()->getSecondaryResources() as $res) {
+            $secondaries[] = $res;
+        }
+
+        $nodes = array_merge($nodes, $secondaries);
+
+        $this->rightsManager->initializePermissions($nodes, $roles);
     }
 
     private function dispatchEvaluation(Evaluation $evaluation)

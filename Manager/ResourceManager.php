@@ -208,7 +208,23 @@ class ResourceManager
 
         //if it's an activity, initialize the permissions for its linked resources;
         if ($resourceType->getName() === 'activity') {
-            $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
+            //care if it's a shortcut
+            if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                $target = $resource->getTarget();
+                $roles = array();
+                $rights = $node->getRights();
+
+                foreach ($rights as $right) {
+                    $roles[] = $right->getRole();
+                }
+
+                $toInit = $this->getResourceFromNode($target);
+                $this->container->get('claroline.manager.activity_manager')->addPermissionsToResource($toInit, $roles);
+            } else {
+                $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
+            }
+
+
         }
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));
