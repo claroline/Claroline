@@ -845,7 +845,14 @@ class ResourceManager
         }
 
         if ($node->getResourceType()->getName() === 'file') {
-            $file = $this->getResourceFromNode($node);
+            if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                $shortcut = $this->getResourceFromNode($node);
+                $realNode = $shortcut->getTarget();
+            } else {
+                $realNode = $node;
+            }
+
+            $file = $this->getResourceFromNode($realNode);
             $resourceArray['size'] = $file->getFormattedSize();
         }
 
