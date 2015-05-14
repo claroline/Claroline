@@ -222,7 +222,11 @@
                             <span class="picker-user-select pointer-hand"
                                   data-user-id="{{ userId }}"
                             >
-                                {{ user.getMail() }}
+                                {% if profilePreferences['mail'] %}
+                                    {{ user.getMail() }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             </span>
                         </td>
                     {% endif %}

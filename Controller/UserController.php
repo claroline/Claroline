@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
+    private $facetManager;
     private $groupManager;
     private $roleManager;
     private $userManager;
@@ -31,6 +33,7 @@ class UserController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
      *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
@@ -38,12 +41,14 @@ class UserController extends Controller
      * })
      */
     public function __construct(
+        FacetManager $facetManager,
         GroupManager $groupManager,
         RoleManager $roleManager,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     )
     {
+        $this->facetManager = $facetManager;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -252,6 +257,7 @@ class UserController extends Controller
         $withUsername = intval($showUsername) === 1;
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
+        $profilePreferences = $this->facetManager->getVisiblePublicPreference();
 
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -285,7 +291,8 @@ class UserController extends Controller
             'showAllUsers' => $showAllUsers,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
-            'showCode' => $showCode
+            'showCode' => $showCode,
+            'profilePreferences' => $profilePreferences
         );
     }
 
