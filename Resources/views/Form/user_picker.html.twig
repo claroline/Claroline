@@ -25,7 +25,7 @@
         >
         <div class="input-group">
             <input type="text"
-                   class="form-control user-picker user-picker-input"
+                   class="form-control user-picker user-picker-input user-picker-{{ picker_name }}"
                        
                    {% if value is not empty %}
                        {% if multiple %}
@@ -36,42 +36,69 @@
                    {% endif %}
                    id="user-picker-input-view-{{ picker_name }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
-                   data-picker-name="{{ picker_name }}"
-                   data-picker-title="{{ picker_title }}"
-                   data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
-                   data-show-all-users="{% if show_all_users %}1{% else %}0{% endif %}"
-                   data-show-filters="{% if show_filters %}1{% else %}0{% endif %}"
-                   data-show-username="{% if show_username %}1{% else %}0{% endif %}"
-                   data-show-mail="{% if show_mail %}1{% else %}0{% endif %}"
-                   data-show-code="{% if show_code %}1{% else %}0{% endif %}"
-                   data-excluded-users="{% for user in blacklist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                   data-forced-users="{% for user in whitelist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                   data-selected-users="{% for user in selected_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                   data-forced-groups="{% for group in forced_groups %}{{ group.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                   data-forced-roles="{% for role in forced_roles %}{{ role.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                   data-forced-workspaces="{% for workspace in forced_workspaces %}{{ workspace.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
             >
             <span class="input-group-btn">
-                <span class="btn btn-default user-picker"
-                        data-picker-name="{{ picker_name }}"
-                        data-picker-title="{{ picker_title }}"
-                        data-multiple="{% if multiple %}multiple{% else %}single{% endif %}"
-                        data-show-all-users="{% if show_all_users %}1{% else %}0{% endif %}"
-                        data-show-filters="{% if show_filters %}1{% else %}0{% endif %}"
-                        data-show-username="{% if show_username %}1{% else %}0{% endif %}"
-                        data-show-mail="{% if show_mail %}1{% else %}0{% endif %}"
-                        data-show-code="{% if show_code %}1{% else %}0{% endif %}"
-                        data-excluded-users="{% for user in blacklist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        data-forced-users="{% for user in whitelist %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        data-selected-users="{% for user in selected_users %}{{ user.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        data-forced-groups="{% for group in forced_groups %}{{ group.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        data-forced-roles="{% for role in forced_roles %}{{ role.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        data-forced-workspaces="{% for workspace in forced_workspaces %}{{ workspace.getId() }}{% if not loop.last %};{% endif %}{% endfor %}"
-                        type="button"
+                <span class="btn btn-default user-picker user-picker-{{ picker_name }}"
+                      type="button"
                 >
                     <i class="fa fa-user"></i>
                 </span>
             </span>
         </div>
+        
+        <script type="text/javascript">
+            {% set excludedUserIds = [] %}
+            {% set forcedUserIds = [] %}
+            {% set selectedUserIds = [] %}
+            {% set forcedGroupIds = [] %}
+            {% set forcedRoleIds = [] %}
+            {% set forcedWorkspaceIds = [] %}
+
+            {% for user in blacklist %}
+                {% set excludedUserIds = excludedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for user in whitelist %}
+                {% set forcedUserIds = forcedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for user in selected_users %}
+                {% set selectedUserIds = selectedUserIds|merge([user.getId()]) %}
+            {% endfor %}
+
+            {% for group in forced_groups %}
+                {% set forcedGroupIds = forcedGroupIds|merge([group.getId()]) %}
+            {% endfor %}
+
+            {% for role in forced_roles %}
+                {% set forcedRoleIds = forcedRoleIds|merge([role.getId()]) %}
+            {% endfor %}
+
+            {% for workspace in forced_workspaces %}
+                {% set forcedWorkspaceIds = forcedWorkspaceIds|merge([workspace.getId()]) %}
+            {% endfor %}
+
+            $('body').on('click', '.user-picker-{{ picker_name }}', function () {
+                var userPicker = new UserPicker();
+                var settings = {
+                    picker_name: "{{ picker_name }}",
+                    picker_title: "{{ picker_title }}",
+                    multiple: "{% if multiple %}multiple{% else %}single{% endif %}",
+                    show_all_users: "{% if show_all_users %}1{% else %}0{% endif %}",
+                    show_filters: "{% if show_filters %}1{% else %}0{% endif %}",
+                    show_username: "{% if show_username %}1{% else %}0{% endif %}",
+                    show_mail: "{% if show_mail %}1{% else %}0{% endif %}",
+                    show_code: "{% if show_code %}1{% else %}0{% endif %}",
+                    blacklist: {{ excludedUserIds|json_encode }},
+                    whitelist: {{ forcedUserIds|json_encode }},
+                    selected_users: {{ selectedUserIds|json_encode }},
+                    forced_groups: {{ forcedGroupIds|json_encode }},
+                    forced_roles: {{ forcedRoleIds|json_encode }},
+                    forced_workspaces: {{ forcedWorkspaceIds|json_encode }}
+                };
+                userPicker.configure(settings, null);
+                userPicker.open();
+            });
+        </script>
     {% endspaceless %}
 {% endblock %}

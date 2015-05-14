@@ -52,22 +52,40 @@
         {% set newOrder = 'ASC' %}
     {% endif %}
 
-    {{
-        path(
-            'claro_users_list_for_user_picker',
-            {
-                'search': search,
-                'max': max,
-                'orderedBy': orderedBy,
-                'order': newOrder,
-                'mode': mode,
-                'showAllUsers': showAllUsers,
-                'showUsername': showUsername,
-                'showMail': showMail,
-                'showCode': showCode
-            }
-        )
-    }}
+    {% if search is empty %}
+        {{
+            path(
+                'claro_users_list_for_user_picker',
+                {
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': newOrder,
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode
+                }
+            )
+        }}
+    {% else %}
+        {{ 
+            path(
+                'claro_searched_users_list_for_user_picker',
+                {
+                    'search': search,
+                    'max': max,
+                    'orderedBy': orderedBy,
+                    'order': newOrder,
+                    'mode': mode,
+                    'showAllUsers': showAllUsers,
+                    'showUsername': showUsername,
+                    'showMail': showMail,
+                    'showCode': showCode
+                }
+            ) 
+        }}
+    {% endif %}
 {% endmacro %}
 
 {% from _self import renderPager %}
@@ -120,14 +138,14 @@
                     {% endif %}
                 </th>
                 <th>
-                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
+                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showUsername, showMail, showCode)|trim }}">
                         {{ 'name'|trans({}, 'platform') }}
                     </a>
                 </th>
                 
                 {% if showUsername == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showUsername, showMail, showCode)|trim }}">
                             {{ 'username'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -135,7 +153,7 @@
                 
                 {% if showMail == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showUsername, showMail, showCode)|trim }}">
                             {{ 'mail'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -143,7 +161,7 @@
                 
                 {% if showCode == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showUsername, showMail, showCode) }}">
+                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showUsername, showMail, showCode)|trim }}">
                             {{ 'code'|trans({}, 'platform') }}
                         </a>
                     </th>

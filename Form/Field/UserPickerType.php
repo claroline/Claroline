@@ -94,7 +94,7 @@ class UserPickerType extends AbstractType
                     array(),
                     'platform'
                 ),
-                'multiple' => true,
+                'multiple' => false,
                 'show_all_users' => false,
                 'show_filters' => true,
                 'show_username' => true,
