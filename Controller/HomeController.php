@@ -579,7 +579,7 @@ class HomeController
     }
 
     /**
-     * Menu settings
+     * menu_settings
      *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
      * @Secure(roles="ROLE_HOME_MANAGER")

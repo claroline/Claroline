@@ -38,7 +38,8 @@ class FileType extends AbstractType
                 'constraints' => array(
                     new NotBlank(),
                     new File()
-                )
+                ),
+                'label' => 'file'
            )
         );
         if ($this->uncompress) {
@@ -48,7 +49,7 @@ class FileType extends AbstractType
                 array(
                     'label' => 'uncompress_file',
                     'mapped' => false,
-                    'required' => false
+                    'required' => false,
                 )
             );
         }
@@ -58,7 +59,8 @@ class FileType extends AbstractType
             array(
                 'required' => true,
                 'mapped' => false,
-                'attr' => array('checked' => 'checked')
+                'attr' => array('checked' => 'checked'),
+                'label' => 'publish_resource'
            )
         );
     }

@@ -23,7 +23,7 @@
                     'href': path('claro_admin_parameters_appearance')
                 },
                 {
-                    'name': 'Theme Generator'|trans({}, 'theme'),
+                    'name': 'theme_generator'|trans({}, 'theme'),
                     'href': path('claroline_admin_theme_list')
                 },
                 {
@@ -31,7 +31,7 @@
                     'href': path('claroline_admin_theme_edit', {'id': theme.getId()})
                 },
                 {
-                    'name': 'Preview'|trans({}, 'theme'),
+                    'name': 'preview'|trans({}, 'platform'),
                     'href': ''
                 }
             ])
@@ -39,7 +39,7 @@
     {% endblock %}
     {% block section_content %}
         <div class="panel-heading">
-            <h3 class="panel-title">{{ 'Preview' | trans({}, 'theme') }} ({{ theme.getName() }})</h3>
+            <h3 class="panel-title">{{ 'preview' | trans({}, 'platform') }} ({{ theme.getName() }})</h3>
         </div>
         <div class="panel-body">
             <a class="btn btn-primary" href="{{ path('claroline_admin_theme_edit', {'id': theme.getId()}) }}">

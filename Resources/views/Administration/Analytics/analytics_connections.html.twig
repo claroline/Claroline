@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'Audience/user visits' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'user_visit' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -63,7 +63,7 @@
         <div class="margin clearfix">
             <form role="form" id="connections_criteria" action="{{ path('claro_admin_analytics_connections') }}" method="POST">
                 {{ form_widget(form_criteria) }}
-                <div class="form-group"> <input type="submit" value="{{ 'Show actions'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
+                <div class="form-group"> <input type="submit" value="{{ 'show_actions'|trans({}, 'platform') }}" class="btn btn-primary"/> </div>
             </form>
         </div>
 
@@ -71,7 +71,7 @@
             <h3>{{'users_visits'|trans({}, 'platform')}}</h3>
             <div id="connections-line-chart" class="line-chart"></div>
             <br/>
-            <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'Draw an area on the graph to zoom, double-click to cancel'|trans({}, 'platform') }}</em></div>
+            <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'graph_draw_area'|trans({}, 'platform') }}</em></div>
         </div>
     </div>
 {% endblock %}

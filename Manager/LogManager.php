@@ -148,7 +148,7 @@ class LogManager
             'logAmount' => $desktopConfig->getAmount(),
             'isDesktop' => true,
             'title' => $this->container->get('translator')->trans(
-                'Overview of recent activities of your workspaces',
+                'your_workspace_activity_overview',
                 array(),
                 'platform'
             )
@@ -204,7 +204,7 @@ class LogManager
 
         if ($config->hasAllRestriction(count($workspaceEvents))) {
             $title = $this->container->get('translator')->trans(
-                'Overview of all recent activities in %workspaceName%',
+                'recent_all_workspace_activities_overview',
                 array('%workspaceName%' => $workspace->getName()),
                 'platform'
             );

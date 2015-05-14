@@ -66,10 +66,14 @@ class ToolRepository extends EntityRepository
                 $dql = '
                     SELECT tool
                     FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                    WHERE tool.isDisplayableInWorkspace = true
+                    JOIN tool.orderedTools ot
+                    WHERE ot.workspace = :workspace
+                    AND tool.isDisplayableInWorkspace = true
+                    ORDER BY ot.order
                 ';
 
                 $query = $this->_em->createQuery($dql);
+                $query->setParameter('workspace', $workspace);
             }
 
             return $query->getResult();

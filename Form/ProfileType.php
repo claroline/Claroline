@@ -63,9 +63,9 @@ class ProfileType extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstName', 'text', array('label' => 'First name', 'read_only' => !$this->accesses['firstName'], 'disabled' => !$this->accesses['firstName']))
-            ->add('lastName', 'text', array('label' => 'Last name',  'read_only' => !$this->accesses['lastName'], 'disabled' => !$this->accesses['lastName']))
-            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'User name', 'read_only' => !$this->accesses['username'], 'disabled' => !$this->accesses['username']))
+            ->add('firstName', 'text', array('label' => 'first_name', 'read_only' => !$this->accesses['firstName'], 'disabled' => !$this->accesses['firstName']))
+            ->add('lastName', 'text', array('label' => 'last_name',  'read_only' => !$this->accesses['lastName'], 'disabled' => !$this->accesses['lastName']))
+            ->add('username', 'text', array('read_only' => true, 'disabled' => true, 'label' => 'username', 'read_only' => !$this->accesses['username'], 'disabled' => !$this->accesses['username']))
             ->add(
                 'administrativeCode',
                 'text',
@@ -73,7 +73,7 @@ class ProfileType extends AbstractType
             )
             ->add('mail', 'email', array('required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']))
             ->add('phone', 'text', array('required' => false, 'label' => 'phone', 'read_only' => !$this->accesses['phone'], 'disabled' => !$this->accesses['phone']))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
             ->add(
                 'pictureFile',
                 'file',
@@ -101,13 +101,13 @@ class ProfileType extends AbstractType
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
             $builder
-                ->add('firstName', 'text', array('label' => 'First name'))
-                ->add('lastName', 'text', array('label' => 'Last name'))
-                ->add('username', 'text', array('label' => 'User name'))
+                ->add('firstName', 'text', array('label' => 'first_name'))
+                ->add('lastName', 'text', array('label' => 'last_name'))
+                ->add('username', 'text', array('label' => 'username'))
                 ->add('administrativeCode', 'text', array('required' => false, 'label' => 'administrative_code'))
                 ->add('mail', 'email', array('required' => false, 'label' => 'email'))
                 ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+                ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
                 ->add(
                     'authentication',
                     'choice',

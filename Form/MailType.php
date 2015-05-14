@@ -26,11 +26,12 @@ class MailType extends AbstractType
                 'text',
                 array(
                     'required' => true,
-                    'constraints' => new Email()
+                    'constraints' => new Email(),
+                    'label' => 'receiver'
                 )
             )
-            ->add('object', 'text')
-            ->add('content', 'tinymce');
+            ->add('object', 'text', array('label' => 'object'))
+            ->add('content', 'tinymce', array('label' => 'content'));
     }
 
     public function getName()

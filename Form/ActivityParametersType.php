@@ -24,7 +24,8 @@ class ActivityParametersType extends AbstractType
             'choice',
             array(
                 'choices' => array (0 => 'no', 1 => 'yes'),
-                'required' => false
+                'required' => false,
+                'label' => 'with_tutor'
             )
         );
         $builder->add(
@@ -32,7 +33,8 @@ class ActivityParametersType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 1),
-                'required' => false
+                'required' => false,
+                'label' => 'max_second_duration'
             )
         );
 	$builder->add(
@@ -44,7 +46,8 @@ class ActivityParametersType extends AbstractType
                     'collaborative' => 'collaborative',
                     'mixed' => 'mixed'
                 ),
-                'required' => false
+                'required' => false,
+                'label' => 'method_of_work'
             )
         );
         $builder->add(
@@ -55,7 +58,8 @@ class ActivityParametersType extends AbstractType
                     'anywhere' => 'anywhere',
                     'classroom' => 'classroom'
                 ),
-                'required' => false
+                'required' => false,
+                'label' => 'learning_place'
             )
         );
         $builder->add(
@@ -63,7 +67,8 @@ class ActivityParametersType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 1),
-                'required' => false
+                'required' => false,
+                'label' => 'max_attempts'
             )
         );
         $builder->add(
@@ -74,7 +79,8 @@ class ActivityParametersType extends AbstractType
                     'manual' => 'evaluation-manual',
                     'automatic' => 'evaluation-automatic'
                 ),
-                'required' => true
+                'required' => true,
+                'label' => 'evaluation_type'
             )
         );
     }

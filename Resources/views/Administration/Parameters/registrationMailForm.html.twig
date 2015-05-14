@@ -35,19 +35,19 @@
         <div class="panel-body">
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ 'You can redefine the content of the registration mail here' | trans({}, 'platform') }}.<br>
+                {{ 'registration_mail_content_override' | trans({}, 'platform') }}.<br>
                 <br>
-                {{ 'You can use the following variables in your form' | trans({}, 'platform') }}:<br>
+                {{ 'variable_available_message' | trans({}, 'platform') }}:<br>
                 <br>
                 <ul>
-                    <li><strong>%platform_name%</strong> {{ 'will be replaced by your platform name' | trans({}, 'platform') }}.
-                    <li><strong>%username%</strong> {{ 'will display the username' | trans({}, 'platform') }}.
-                    <li><strong>%password%</strong> {{ 'will display the password' | trans({}, 'platform') }}.
-                    <li><strong>%first_name%</strong> {{ 'will display the user first name' | trans({}, 'platform') }}.
-                    <li><strong>%last_name%</strong> {{ 'will display the user last name' | trans({}, 'platform') }}.
+                    <li><strong>%platform_name%</strong> {{ 'replace_platform_name_display_message' | trans({}, 'platform') }}.
+                    <li><strong>%username%</strong> {{ 'replace_username_display_message' | trans({}, 'platform') }}.
+                    <li><strong>%password%</strong> {{ 'replace_password_display' | trans({}, 'platform') }}.
+                    <li><strong>%first_name%</strong> {{ 'replace_first_name_display_message' | trans({}, 'platform') }}.
+                    <li><strong>%last_name%</strong> {{ 'replace_last_name_display_message' | trans({}, 'platform') }}.
                 </ul>
                 <br>
-                {{ 'You can use the full screen version of the text editor to include HTML' | trans({}, 'platform') }}.
+                {{ 'fullscreen_text_editor' | trans({}, 'platform') }}.
             </div>
             {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
             {{ form_widget(form) }}

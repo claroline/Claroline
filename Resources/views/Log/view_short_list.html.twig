@@ -4,11 +4,11 @@
 {% endif %}
 <br/><br/>
 <legend>
-    {{ 'Last action'|transchoice(logAmount, {'%logAmount%': logAmount}, 'platform') }}
+    {{ 'last_action'|transchoice(logAmount, {'%logAmount%': logAmount}, 'platform') }}
 </legend>
 {% include 'ClarolineCoreBundle:Log:view_list.html.twig' with {'isDesktop': isDesktop} %}
 {% if workspace is defined and workspace != null %}
     <div class="text-center">
-        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'logs'}) }}"> {{ 'See all'|trans({}, 'platform') }} </a>
+        <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.id, 'toolName': 'logs'}) }}"> {{ 'see_all'|trans({}, 'platform') }} </a>
     </div>
 {% endif %}

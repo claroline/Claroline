@@ -19,7 +19,7 @@ class ResourceNameType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
+        $builder->add('name', 'text', array('label' => 'name'));
     }
 
     public function getName()
@@ -32,7 +32,7 @@ class ResourceNameType extends AbstractType
         $resolver
         ->setDefaults(
             array(
-                'translation_domain' => 'resource'
+                'translation_domain' => 'platform'
                 )
         );
     }

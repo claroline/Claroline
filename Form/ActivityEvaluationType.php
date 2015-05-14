@@ -33,7 +33,8 @@ class ActivityEvaluationType extends AbstractType
                 'passed' => 'passed',
                 'failed' => 'failed'
             ),
-            'required' => false
+            'required' => false,
+            'label' => 'status'
         );
 
         if ($evaluationType === 'automatic') {
@@ -51,7 +52,8 @@ class ActivityEvaluationType extends AbstractType
             'integer',
             array(
                 'read_only' => true,
-                'required' => false
+                'required' => false,
+                'label' => 'best_score'
             )
         );
         $builder->add(
@@ -61,7 +63,8 @@ class ActivityEvaluationType extends AbstractType
                 'read_only' => true,
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:m:s'
+                'format' => 'yyyy-MM-dd H:m:s',
+                'label' => 'last_attempt_date'
             )
         );
         $builder->add(
@@ -69,20 +72,25 @@ class ActivityEvaluationType extends AbstractType
             'integer',
             array(
                 'read_only' => true,
-                'required' => false
+                'required' => false,
+                'label' => 'max_attempts'
             )
         );
         $builder->add(
             'score',
             'text',
-            array('required' => false)
+            array(
+                'required' => false,
+                'label' => 'evaluation'
+            )
         );
         $builder->add(
             'comment',
             'textarea',
             array(
                 'attr' => array('rows' => 5),
-                'required' => false
+                'required' => false,
+                'label' => 'comment'
             )
         );
     }

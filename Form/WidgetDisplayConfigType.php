@@ -19,7 +19,7 @@ class WidgetDisplayConfigType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('color', 'text', array('required' => false));
+        $builder->add('color', 'text', array('required' => false, 'label' => 'color'));
     }
 
     public function getName()

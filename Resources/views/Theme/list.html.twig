@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle:Administration:layout.html.twig' %}
 
-{% block title %}{{ parent() ~ ' - ' ~ "Theme Generator" | trans({}, "theme") | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'theme_generator' | trans({}, "theme") | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -19,7 +19,7 @@
                 'href': path('claro_admin_parameters_appearance')
             },
             {
-                'name': 'Theme Generator'|trans({}, 'theme'),
+                'name': 'theme_generator'|trans({}, 'theme'),
                 'href': ''
             }
         ])
@@ -29,7 +29,7 @@
 {% block section_content %}
     <div id="homePath" class="hide">{{ path("claro_index") }}</div>
     <div class="panel-heading">
-        <h3 class="panel-title">{{ "Theme Generator" | trans({}, "theme") }}</h3>
+        <h3 class="panel-title">{{ 'theme_generator' | trans({}, "theme") }}</h3>
     </div>
     <div class="theme-generator panel-body">
         {% for theme in themes %}
@@ -48,7 +48,7 @@
             <div class="alert alert-info">
                 <strong>
                     <a class="alert-link" href="{{ path("claroline_admin_theme_edit") }}">
-                        <i class="fa fa-plus-circle"></i> {{ "Create New Theme" | trans({}, "theme") }}
+                        <i class="fa fa-plus-circle"></i> {{ "create_new_theme" | trans({}, "theme") }}
                     </a>
                 </strong>
             </div>
