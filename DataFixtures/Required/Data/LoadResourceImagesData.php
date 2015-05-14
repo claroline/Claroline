@@ -26,34 +26,7 @@ class LoadResourceImagesData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         $coreIconWebDirRelativePath = "bundles/clarolinecore/images/resources/icons/";
-        $resourceImages = array(
-            array('res_default.png', 'custom/default'),
-            array('res_activity.png', 'custom/activity'),
-            array('res_file.png', 'custom/file'),
-            array('res_folder.png', 'custom/directory'),
-            array('res_text.png', 'text/plain'),
-            array('res_text.png', 'custom/text'),
-            array('res_url.png', 'custom/url'),
-            array('res_exercice.png', 'custom/exercice'),
-            array('res_audio.png', 'audio'),
-            array('res_video.png', 'video'),
-            array('res_msexcel.png', 'application/excel'),
-            array('res_mspowerpoint.png', 'application/powerpoint'),
-            array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
-            array('res_msword.png', 'application/msword'),
-            array('res_msword.png', 'application/vnd.oasis.opendocument.text'),
-            array('res_msword.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
-            array('res_pdf.png', 'application/pdf'),
-            array('res_image.png', 'image'),
-            array('res_vector.png', 'application/postscript'),
-            array('res_vector.png', 'application/ai'),
-            array('res_vector.png', 'application/illustrator'),
-            array('res_vector.png', 'image/svg+xml'),
-            array('res_zip.png', 'application/zip'),
-            array('res_zip.png', 'application/x-rar-compressed'),
-            array('res_archive.png', 'application/x-gtar'),
-            array('res_archive.png', 'application/x-7z-compressed')
-        );
+        $resourceImages = $this->container->get('claroline.manager.icon_manager')->getDefaultIconMap();
 
         foreach ($resourceImages as $resourceImage) {
             $rimg = new ResourceIcon();
