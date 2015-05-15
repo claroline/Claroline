@@ -41,6 +41,8 @@ class IconManager
     private $ut;
     /** @var ObjectManager */
     private $om;
+    /** @var string */
+    private $basepath;
 
     /**
      * @DI\InjectParams({
@@ -50,6 +52,7 @@ class IconManager
      *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
      *     "ut"       = @DI\Inject("claroline.utilities.misc"),
      *     "om"       = @DI\Inject("claroline.persistence.object_manager"),
+     *     "basepath" = @DI\Inject("%claroline.param.relative_thumbnail_base_path%")
      * })
      */
     public function __construct(
@@ -58,7 +61,8 @@ class IconManager
         $thumbDir,
         $rootDir,
         ClaroUtilities $ut,
-        ObjectManager $om
+        ObjectManager $om,
+        $basepath
     )
     {
         $this->creator = $creator;
@@ -68,6 +72,7 @@ class IconManager
         $this->rootDir = $rootDir;
         $this->ut = $ut;
         $this->om = $om;
+        $this->basepath = $basepath;
     }
 
     /**
@@ -95,9 +100,9 @@ class IconManager
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
 
                 if (is_null($workspace)) {
-                    $relativeUrl = "thumbnails/{$thumbnailName}";
+                    $relativeUrl = $this->basepath . "/{$thumbnailName}";
                 } else {
-                    $relativeUrl = 'thumbnails' .
+                    $relativeUrl = $this->basepath .
                         $ds .
                         $workspace->getCode() .
                         $ds .
@@ -173,7 +178,7 @@ class IconManager
         if (strstr($shortcutLocation, "bundles")) {
             $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
         } else {
-            $tmpRelativeUrl = strstr($shortcutLocation, "thumbnails");
+            $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
         }
 
         $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
@@ -219,7 +224,7 @@ class IconManager
         $file->move($dest, $hashName);
         //entity creation
         $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $icon->setRelativeUrl("thumbnails/{$hashName}");
+        $icon->setRelativeUrl("$this->basepath/{$hashName}");
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
         $this->om->persist($icon);
