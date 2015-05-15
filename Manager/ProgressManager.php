@@ -7,8 +7,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
+use HeVinci\CompetencyBundle\Entity\Progress\ObjectiveProgress;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -20,9 +22,12 @@ class ProgressManager
     private $abilityRepo;
     private $competencyRepo;
     private $competencyAbilityRepo;
+    private $objectiveRepo;
     private $abilityProgressRepo;
     private $competencyProgressRepo;
+    private $objectiveProgressRepo;
     private $cachedProgresses = [];
+    private $cachedObjectiveProgresses = [];
 
     /**
      * @DI\InjectParams({
@@ -37,8 +42,10 @@ class ProgressManager
         $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
+        $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
         $this->abilityProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
         $this->competencyProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
+        $this->objectiveProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgress');
     }
 
     /**
@@ -49,6 +56,7 @@ class ProgressManager
     public function handleEvaluation(Evaluation $evaluation)
     {
         $this->cachedProgresses = [];
+        $this->cachedObjectiveProgresses = [];
 
         $activity = $evaluation->getActivityParameters()->getActivity();
         $abilities = $this->abilityRepo->findByActivity($activity);
@@ -68,8 +76,6 @@ class ProgressManager
 
                 $this->computeCompetencyProgress($ability, $user);
             }
-
-            // failures must be tracked here (without progress re-computation)
         }
 
         $this->om->flush();
@@ -103,6 +109,8 @@ class ProgressManager
             $progress->setPercentage(100);
 
             $relatedCompetencies = $this->competencyRepo->findForProgressComputing($competency);
+
+            $this->computeObjectives($progress);
             $this->computeParentCompetency($competency, $user, $relatedCompetencies);
         }
     }
@@ -160,6 +168,7 @@ class ProgressManager
             $parentProgress->setLevel($this->getLevel((int) ($levelSum / $levelTerms), $related));
         }
 
+        $this->computeObjectives($parentProgress);
         $this->computeParentCompetency($parentNode, $user, $related);
     }
 
@@ -208,5 +217,68 @@ class ProgressManager
         }
 
         throw new \Exception("Cannot find level with value {$value}");
+    }
+
+    private function computeObjectives(CompetencyProgress $progress)
+    {
+        // only a fully acquired competency can make the objectives progress vary
+        if ($progress->getPercentage() < 100) {
+            return;
+        }
+
+        $competency = $progress->getCompetency();
+        $user = $progress->getUser();
+
+        // find linked objectives
+        $objectives = $this->objectiveRepo->findByCompetencyAndUser($competency, $user);
+
+        // remove objectives for which the acquired competency level is insufficient
+        $objectives = array_filter($objectives, function ($objective) use ($progress, $competency) {
+            foreach ($objective->getObjectiveCompetencies() as $link) {
+                if ($link->getCompetency() === $competency
+                    && $link->getLevel()->getValue() > $progress->getLevel()->getValue()) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        // compute each objective percentage
+        foreach ($objectives as $objective) {
+            $objectiveProgress = $this->getObjectiveProgress($objective, $user);
+            $links = $objective->getObjectiveCompetencies();
+            $percentageSum = 0;
+
+            for ($i = 0, $count = count($links); $i < $count; ++$i) {
+                $competencyProgress = $this->getCompetencyProgress($links[$i]->getCompetency(), $user);
+                $percentageSum += $competencyProgress->getPercentage();
+            }
+
+            $objectiveProgress->setPercentage((int) ($percentageSum / $count));
+        }
+    }
+
+    private function getObjectiveProgress(Objective $objective, User $user)
+    {
+        if (!isset($this->cachedObjectiveProgresses[$objective->getId()])) {
+            $progress = $this->objectiveProgressRepo->findOneBy([
+                'objective' => $objective,
+                'user' => $user
+            ]);
+
+            if (!$progress) {
+                $progress = new ObjectiveProgress();
+                $progress->setObjective($objective);
+                $progress->setUser($user);
+                $this->om->persist($progress);
+            } else {
+                $this->om->persist($progress->makeLog());
+            }
+
+            $this->cachedProgresses[$objective->getId()] = $progress;
+        }
+
+        return $this->cachedProgresses[$objective->getId()];
     }
 }

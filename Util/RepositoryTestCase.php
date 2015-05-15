@@ -15,6 +15,8 @@ use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
+use HeVinci\CompetencyBundle\Entity\Objective;
+use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Entity\Scale;
 
 abstract class RepositoryTestCase extends TransactionalTestCase
@@ -165,5 +167,24 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $this->om->persist($eval);
 
         return $eval;
+    }
+
+    protected function persistObjective($name, array $competenciesData)
+    {
+        $objective = new Objective();
+        $objective->setName($name);
+
+        foreach ($competenciesData as $competencyData) {
+            $link = new ObjectiveCompetency();
+            $link->setCompetency($competencyData[0]);
+            $link->setFramework($competencyData[1]);
+            $link->setLevel($competencyData[2]);
+            $this->om->persist($link);
+            $objective->addObjectiveCompetency($link);
+        }
+
+        $this->om->persist($objective);
+
+        return $objective;
     }
 }

@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
+use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Objective;
 
 class ObjectiveRepository extends EntityRepository
@@ -61,6 +62,30 @@ class ObjectiveRepository extends EntityRepository
             ->setParameter(':group', $group)
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * Returns the objectives assigned to a user which includes a
+     * given competency.
+     *
+     * @param Competency    $competency
+     * @param User          $user
+     * @return array
+     */
+    public function findByCompetencyAndUser(Competency $competency, User $user)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o')
+            ->join('o.users', 'u')
+            ->join('o.objectiveCompetencies', 'oc')
+            ->where('u = :user')
+            ->andWhere('oc.competency = :competency')
+            ->setParameters([
+                'competency' => $competency,
+                'user' => $user
+            ])
+            ->getQuery()
+            ->getResult();
     }
 
     /**

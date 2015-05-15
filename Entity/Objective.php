@@ -88,6 +88,17 @@ class Objective implements \JsonSerializable
     }
 
     /**
+     * @param ObjectiveCompetency $link
+     */
+    public function addObjectiveCompetency(ObjectiveCompetency $link)
+    {
+        if (!$this->objectiveCompetencies->contains($link)) {
+            $this->objectiveCompetencies->add($link);
+            $link->setObjective($this);
+        }
+    }
+
+    /**
      * @param User $user
      * @return bool
      */

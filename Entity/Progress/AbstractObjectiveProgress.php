@@ -4,13 +4,12 @@ namespace HeVinci\CompetencyBundle\Entity\Progress;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use HeVinci\CompetencyBundle\Entity\Competency;
-use HeVinci\CompetencyBundle\Entity\Level;
+use HeVinci\CompetencyBundle\Entity\Objective;
 
 /**
  * @ORM\MappedSuperclass
  */
-abstract class AbstractCompetencyProgress
+abstract class AbstractObjectiveProgress
 {
     /**
      * @ORM\Id
@@ -20,22 +19,16 @@ abstract class AbstractCompetencyProgress
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="HeVinci\CompetencyBundle\Entity\Competency")
+     * @ORM\ManyToOne(targetEntity="HeVinci\CompetencyBundle\Entity\Objective")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    protected $competency;
+    protected $objective;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $user;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="HeVinci\CompetencyBundle\Entity\Level")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
-    protected $level;
 
     /**
      * @ORM\Column(type="integer")
@@ -54,35 +47,19 @@ abstract class AbstractCompetencyProgress
     }
 
     /**
-     * @return Competency
+     * @return Objective
      */
-    public function getCompetency()
+    public function getObjective()
     {
-        return $this->competency;
+        return $this->objective;
     }
 
     /**
-     * @param Competency $competency
+     * @param Objective $objective
      */
-    public function setCompetency(Competency $competency)
+    public function setObjective(Objective $objective)
     {
-        $this->competency = $competency;
-    }
-
-    /**
-     * @return Level
-     */
-    public function getLevel()
-    {
-        return $this->level;
-    }
-
-    /**
-     * @param Level $level
-     */
-    public function setLevel(Level $level)
-    {
-        $this->level = $level;
+        $this->objective = $objective;
     }
 
     /**

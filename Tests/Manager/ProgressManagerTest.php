@@ -15,6 +15,8 @@ class ProgressManagerTest extends RepositoryTestCase
     private $abilityProgressRepo;
     private $competencyProgressRepo;
     private $competencyProgressLogRepo;
+    private $objectiveProgressRepo;
+    private $objectiveProgressLogRepo;
     private $user;
     private $framework;
 
@@ -25,6 +27,8 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->abilityProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\AbilityProgress');
         $this->competencyProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
         $this->competencyProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgressLog');
+        $this->objectiveProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgress');
+        $this->objectiveProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgressLog');
         $this->user = $this->persistUser('jdoe');
         $this->framework = $this->persistFramework();
     }
@@ -166,8 +170,94 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->assertEquals($this->framework['levels']['l1'], $logs[0]->getLevel());
     }
 
+    public function testHandleEvaluationTracksObjectivesProgress()
+    {
+        $eval = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval);
+
+        $o1Summaries = $this->objectiveProgressRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o1']
+        ]);
+        $o2Summaries = $this->objectiveProgressRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o2']
+        ]);
+
+        $this->assertEquals(1, count($o1Summaries));
+        $this->assertEquals(100, $o1Summaries[0]->getPercentage());
+        $this->assertEquals(1, count($o2Summaries));
+        $this->assertEquals(50, $o2Summaries[0]->getPercentage());
+    }
+
+    public function testHandleEvaluationDoesNotComputeObjectivesForIncompleteCompetencies()
+    {
+        $eval = $this->makeEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval);
+
+        $competencySummaries = $this->competencyProgressRepo->findBy([
+            'user' => $this->user,
+            'competency' => $this->framework['competencies']['c2']
+        ]);
+        $objectiveSummaries = $this->objectiveProgressRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o3']
+        ]);
+
+        $this->assertEquals(1, count($competencySummaries));
+        $this->assertEquals(50, $competencySummaries[0]->getPercentage());
+        $this->assertEquals(0, count($objectiveSummaries));
+    }
+
+    public function testHandleEvaluationDoesNotComputeObjectivesForInsufficientCompetencies()
+    {
+        $eval = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval);
+
+        $competencySummaries = $this->competencyProgressRepo->findBy([
+            'user' => $this->user,
+            'competency' => $this->framework['competencies']['c9']
+        ]);
+        $objectiveSummaries = $this->objectiveProgressRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o2']
+        ]);
+
+        $this->assertEquals(1, count($competencySummaries));
+        $this->assertEquals($this->framework['levels']['l1'], $competencySummaries[0]->getLevel());
+        $this->assertEquals(0, count($objectiveSummaries));
+    }
+
+    public function testHandleEvaluationKeepsObjectivesProgressHistory()
+    {
+        $eval1 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval1);
+        $this->manager->handleEvaluation($eval2);
+
+        $summaries = $this->objectiveProgressRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o2']
+        ]);
+        $logs = $this->objectiveProgressLogRepo->findBy([
+            'user' => $this->user,
+            'objective' => $this->framework['objectives']['o2']
+        ]);
+
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals(100, $summaries[0]->getPercentage());
+        $this->assertEquals(1, count($logs));
+        $this->assertEquals(50, $logs[0]->getPercentage());
+    }
+
     private function persistFramework()
     {
+        // Framework:
+        //
         // c1
         //  - c2
         //    - c4
@@ -218,6 +308,16 @@ class ProgressManagerTest extends RepositoryTestCase
         //    - c10
         //      - a15
         //        - ac17 (l3)
+        //
+        // Objectives:
+        //
+        // - o1
+        //   - c10 (l3)
+        // - o2
+        //   - c9 (l2)
+        //   - c10 (l3)
+        // - o3
+        //   - c2 (l2)
 
         $c1 = $this->persistCompetency('c1');
         $c2 = $this->persistCompetency('c2', $c1);
@@ -313,6 +413,21 @@ class ProgressManagerTest extends RepositoryTestCase
         $a14->linkActivity($ac16);
         $a15->linkActivity($ac17);
 
+        $o1 = $this->persistObjective('o1', [
+            [$c10, $c1, $l3]
+        ]);
+        $o2 = $this->persistObjective('o2', [
+            [$c9, $c1, $l2],
+            [$c10, $c1, $l3]
+        ]);
+        $o3 = $this->persistObjective('o3', [
+            [$c2, $c1, $l2]
+        ]);
+
+        $o1->addUser($this->user);
+        $o2->addUser($this->user);
+        $o3->addUser($this->user);
+
         return [
             'competencies' => [
                 'c1' => $c1,
@@ -366,6 +481,11 @@ class ProgressManagerTest extends RepositoryTestCase
                 'l1' => $l1,
                 'l2' => $l2,
                 'l3' => $l3
+            ],
+            'objectives' => [
+                'o1' => $o1,
+                'o2' => $o2,
+                'o3' => $o3
             ]
         ];
     }
