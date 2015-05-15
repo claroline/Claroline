@@ -29,17 +29,29 @@ class ObjectiveRepository extends EntityRepository
 
     /**
      * Returns an array representation of the objectives assigned to a user.
+     * Objectives assigned to groups whose the user is a member of are
+     * also returned.
      *
      * @param User $user
      * @return array
      */
     public function findByUser(User $user)
     {
+        $groupQb = $this->_em->createQueryBuilder()
+            ->select('g')
+            ->from('Claroline\CoreBundle\Entity\Group', 'g')
+            ->join('g.users', 'gu')
+            ->where('gu = :user');
+
         return $this->createQueryBuilder('o')
             ->select('o.id', 'o.name', 'COUNT(oc) AS competencyCount')
-            ->join('o.users', 'u')
             ->leftJoin('o.objectiveCompetencies', 'oc')
-            ->where('u = :user')
+            ->leftJoin('o.users', 'ou')
+            ->leftJoin('o.groups', 'og')
+            ->andWhere($groupQb->expr()->orX(
+                'ou = :user',
+                $groupQb->expr()->in('og', $groupQb->getQuery()->getDQL())
+            ))
             ->groupBy('o.id')
             ->setParameter(':user', $user)
             ->getQuery()
@@ -66,7 +78,8 @@ class ObjectiveRepository extends EntityRepository
 
     /**
      * Returns the objectives assigned to a user which includes a
-     * given competency.
+     * given competency. Objectives assigned to groups whose the
+     * user is a member of are also returned.
      *
      * @param Competency    $competency
      * @param User          $user
@@ -74,16 +87,27 @@ class ObjectiveRepository extends EntityRepository
      */
     public function findByCompetencyAndUser(Competency $competency, User $user)
     {
+        $groupQb = $this->_em->createQueryBuilder()
+            ->select('g')
+            ->from('Claroline\CoreBundle\Entity\Group', 'g')
+            ->join('g.users', 'gu')
+            ->where('gu = :user');
+
         return $this->createQueryBuilder('o')
             ->select('o')
-            ->join('o.users', 'u')
-            ->join('o.objectiveCompetencies', 'oc')
-            ->where('u = :user')
-            ->andWhere('oc.competency = :competency')
+            ->leftJoin('o.objectiveCompetencies', 'oc')
+            ->leftJoin('o.users', 'ou')
+            ->leftJoin('o.groups', 'og')
+            ->where('oc.competency = :competency')
+            ->andWhere($groupQb->expr()->orX(
+                'ou = :user',
+                $groupQb->expr()->in('og', $groupQb->getQuery()->getDQL())
+            ))
             ->setParameters([
                 'competency' => $competency,
                 'user' => $user
             ])
+            ->distinct()
             ->getQuery()
             ->getResult();
     }

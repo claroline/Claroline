@@ -5,6 +5,7 @@ namespace HeVinci\CompetencyBundle\Util;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
 use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
@@ -102,6 +103,15 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $this->om->persist($user);
 
         return $user;
+    }
+
+    protected function persistGroup($name)
+    {
+        $group = new Group();
+        $group->setName($name);
+        $this->om->persist($group);
+
+        return $group;
     }
 
     protected function persistActivity($name)
