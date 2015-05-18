@@ -41,6 +41,8 @@ class IconManager
     private $ut;
     /** @var ObjectManager */
     private $om;
+    /** @var string */
+    private $basepath;
 
     /**
      * @DI\InjectParams({
@@ -50,6 +52,7 @@ class IconManager
      *     "rootDir"  = @DI\Inject("%kernel.root_dir%"),
      *     "ut"       = @DI\Inject("claroline.utilities.misc"),
      *     "om"       = @DI\Inject("claroline.persistence.object_manager"),
+     *     "basepath" = @DI\Inject("%claroline.param.relative_thumbnail_base_path%")
      * })
      */
     public function __construct(
@@ -58,7 +61,8 @@ class IconManager
         $thumbDir,
         $rootDir,
         ClaroUtilities $ut,
-        ObjectManager $om
+        ObjectManager $om,
+        $basepath
     )
     {
         $this->creator = $creator;
@@ -68,6 +72,7 @@ class IconManager
         $this->rootDir = $rootDir;
         $this->ut = $ut;
         $this->om = $om;
+        $this->basepath = $basepath;
     }
 
     /**
@@ -95,9 +100,9 @@ class IconManager
                 $thumbnailName = pathinfo($thumbnailPath, PATHINFO_BASENAME);
 
                 if (is_null($workspace)) {
-                    $relativeUrl = "thumbnails/{$thumbnailName}";
+                    $relativeUrl = $this->basepath . "/{$thumbnailName}";
                 } else {
-                    $relativeUrl = 'thumbnails' .
+                    $relativeUrl = $this->basepath .
                         $ds .
                         $workspace->getCode() .
                         $ds .
@@ -173,7 +178,7 @@ class IconManager
         if (strstr($shortcutLocation, "bundles")) {
             $tmpRelativeUrl = strstr($shortcutLocation, "bundles");
         } else {
-            $tmpRelativeUrl = strstr($shortcutLocation, "thumbnails");
+            $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
         }
 
         $relativeUrl = str_replace('\\', '/', $tmpRelativeUrl);
@@ -219,7 +224,7 @@ class IconManager
         $file->move($dest, $hashName);
         //entity creation
         $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $icon->setRelativeUrl("thumbnails/{$hashName}");
+        $icon->setRelativeUrl("$this->basepath/{$hashName}");
         $icon->setMimeType('custom');
         $icon->setShortcut(false);
         $this->om->persist($icon);
@@ -350,6 +355,39 @@ class IconManager
                 }
             }
         }
+    }
+
+    public function getDefaultIconMap()
+    {
+        return array(
+            array('res_default.png', 'custom/default'),
+            array('res_activity.png', 'custom/activity'),
+            array('res_file.png', 'custom/file'),
+            array('res_folder.png', 'custom/directory'),
+            array('res_text.png', 'text/plain'),
+            array('res_text.png', 'custom/text'),
+            array('res_url.png', 'custom/url'),
+            array('res_exercice.png', 'custom/exercice'),
+            array('res_audio.png', 'audio'),
+            array('res_video.png', 'video'),
+            array('res_msexcel.png', 'application/excel'),
+            array('res_msexcel.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            array('res_mspowerpoint.png', 'application/powerpoint'),
+            array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
+            array('res_msword.png', 'application/msword'),
+            array('res_msword.png', 'application/vnd.oasis.opendocument.text'),
+            array('res_msword.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+            array('res_pdf.png', 'application/pdf'),
+            array('res_image.png', 'image'),
+            array('res_vector.png', 'application/postscript'),
+            array('res_vector.png', 'application/ai'),
+            array('res_vector.png', 'application/illustrator'),
+            array('res_vector.png', 'image/svg+xml'),
+            array('res_zip.png', 'application/zip'),
+            array('res_zip.png', 'application/x-rar-compressed'),
+            array('res_archive.png', 'application/x-gtar'),
+            array('res_archive.png', 'application/x-7z-compressed')
+        );
     }
 
     private function isDirectoryEmpty($dirName)

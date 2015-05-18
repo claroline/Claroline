@@ -1050,4 +1050,19 @@ class WorkspaceManager
 
         return $data;
     }
+
+    public function getFirstOpenableTool(Workspace $workspace)
+    {
+        $token = $this->container->get('security.token_storage')->getToken();
+        $roles = $this->container->get('claroline.security.utilities')->getRoles($token);
+        $orderedTools = $this->container->get('claroline.manager.tool_manager')->getDisplayedByRolesAndWorkspace($roles, $workspace);
+        //loop through the tools till we can open one !
+        $authorization = $this->container->get('security.authorization_checker');
+
+        foreach ($orderedTools as $tool) {
+            if ($authorization->isGranted($tool->getName(), $workspace)) {
+                return $tool;
+            }
+        }
+    }
 }

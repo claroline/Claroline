@@ -776,19 +776,21 @@ class WorkspaceController extends Controller
     public function openAction(Workspace $workspace)
     {
         $roles = $this->utils->getRoles($this->tokenStorage->getToken());
-        $tools = $this->toolManager->getDisplayedByRolesAndWorkspace($roles, $workspace);
+        $tool = $this->workspaceManager->getFirstOpenableTool($workspace);
 
-        if (count($tools) > 0) {
+        if ($tool) {
             $route = $this->router->generate(
                 'claro_workspace_open_tool',
                 array(
                     'workspaceId' => $workspace->getId(),
-                    'toolName' => $tools[0]->getName()
+                    'toolName' => $tool->getName()
                 )
             );
 
             return new RedirectResponse($route);
         }
+
+        $this->throwWorkspaceDeniedException($workspace);
     }
 
     /**
