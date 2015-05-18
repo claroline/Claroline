@@ -58,29 +58,19 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
 };
 
 UserPicker.prototype.open = function () {
-    var pickerName = this.pickerName;
-    var pickerTitle = this.pickerTitle;
-    var mode = this.multiple;
-    var showAllUsers = this.showAllUsers;
-    var showFilters = this.showFilters;
-    var showUsername = this.showUsername;
-    var showMail = this.showMail;
-    var showCode = this.showCode;
-    var parameters = this.parameters;
-    var callBack = this.callBack;
-    
+    var userPicker = this;
     var modal = window.Claroline.Modal;
     var route = Routing.generate(
         'claro_user_picker',
         {
-            'pickerName': pickerName,
-            'pickerTitle': pickerTitle,
-            'mode': mode,
-            'showAllUsers': showAllUsers,
-            'showFilters': showFilters,
-            'showUsername': showUsername,
-            'showMail': showMail,
-            'showCode': showCode
+            'pickerName': userPicker.pickerName,
+            'pickerTitle': userPicker.pickerTitle,
+            'mode': userPicker.multiple,
+            'showAllUsers': userPicker.showAllUsers,
+            'showFilters': userPicker.showFilters,
+            'showUsername': userPicker.showUsername,
+            'showMail': userPicker.showMail,
+            'showCode': userPicker.showCode
         }
     );
     route += '?' + $.param(this.parameters);
@@ -90,7 +80,7 @@ UserPicker.prototype.open = function () {
         type: 'GET',
         success: function (modalContent) {
             var modalElement = modal.create(modalContent);
-            var modalId = '#user-picker-modal-' + pickerName;
+            var modalId = '#user-picker-modal-' + userPicker.pickerName;
             var currentSearch = $(modalId + ' #user-picker-datas-box').data('search');
             var currentMax = $(modalId + ' #user-picker-datas-box').data('max');
             var currentOrderedBy = $(modalId + ' #user-picker-datas-box').data('ordered-by');
@@ -245,7 +235,7 @@ UserPicker.prototype.open = function () {
                                 groupIds.push(parseInt(key));
                             }
                         }
-                        parameters.groupIds = groupIds;
+                        userPicker.parameters.groupIds = groupIds;
                         break;
 
                     case 'role':
@@ -257,7 +247,7 @@ UserPicker.prototype.open = function () {
                                 roleIds.push(parseInt(key));
                             }
                         }
-                        parameters.roleIds = roleIds;
+                        userPicker.parameters.roleIds = roleIds;
                         break;
 
                     case 'workspace':
@@ -269,7 +259,7 @@ UserPicker.prototype.open = function () {
                                 workspaceIds.push(parseInt(key));
                             }
                         }
-                        parameters.workspaceIds = workspaceIds;
+                        userPicker.parameters.workspaceIds = workspaceIds;
                         break;
 
                     case 'user':
@@ -472,11 +462,11 @@ UserPicker.prototype.open = function () {
                             'max': currentMax,
                             'orderedBy': currentOrderedBy,
                             'order': currentOrder,
-                            'mode': mode,
-                            'showAllUsers': showAllUsers,
-                            'showUsername': showUsername,
-                            'showMail': showMail,
-                            'showCode': showCode
+                            'mode': userPicker.multiple,
+                            'showAllUsers': userPicker.showAllUsers,
+                            'showUsername': userPicker.showUsername,
+                            'showMail': userPicker.showMail,
+                            'showCode': userPicker.showCode
                         }
                     ) :
                     Routing.generate(
@@ -486,14 +476,14 @@ UserPicker.prototype.open = function () {
                             'max': currentMax,
                             'orderedBy': currentOrderedBy,
                             'order': currentOrder,
-                            'mode': mode,
-                            'showAllUsers': showAllUsers,
-                            'showUsername': showUsername,
-                            'showMail': showMail,
-                            'showCode': showCode
+                            'mode': userPicker.multiple,
+                            'showAllUsers': userPicker.showAllUsers,
+                            'showUsername': userPicker.showUsername,
+                            'showMail': userPicker.showMail,
+                            'showCode': userPicker.showCode
                         }
                     );
-                route += '?' + $.param(parameters);
+                route += '?' + $.param(userPicker.parameters);
 
                 $.ajax({
                     url: route,
@@ -507,10 +497,10 @@ UserPicker.prototype.open = function () {
 
             function initializeSelectedUsers()
             {
-                var idsValues = $('#user-picker-input-' + pickerName).val();
-                var namesValues = (mode === 'multiple') ?
-                    $('#user-picker-input-' + pickerName).data('selected-users-names') :
-                    $('#user-picker-input-view-' + pickerName).val();
+                var idsValues = $('#user-picker-input-' + userPicker.pickerName).val();
+                var namesValues = (userPicker.multiple === 'multiple') ?
+                    $('#user-picker-input-' + userPicker.pickerName).data('selected-users-names') :
+                    $('#user-picker-input-view-' + userPicker.pickerName).val();
 
                 if (namesValues !== undefined &&
                     namesValues !== 'undefined' &&
@@ -530,12 +520,12 @@ UserPicker.prototype.open = function () {
                         }
                     }
                 }
-                var matchedSelected = (parameters['selectedUserIds'].length === selectedUserNames.length);
+                var matchedSelected = (userPicker.parameters['selectedUserIds'].length === selectedUserNames.length);
 
-                for (var i = 0; i < parameters['selectedUserIds'].length; i++) {
+                for (var i = 0; i < userPicker.parameters['selectedUserIds'].length; i++) {
                     var name = matchedSelected ? selectedUserNames[i] : '???';
-                    selectedUsers[parameters['selectedUserIds'][i]] = name;
-                    addUserToSelectedUsersBox(parameters['selectedUserIds'][i], name);
+                    selectedUsers[userPicker.parameters['selectedUserIds'][i]] = name;
+                    addUserToSelectedUsersBox(userPicker.parameters['selectedUserIds'][i], name);
                 }
                 updateIdsArray('user');
                 updateSelectedUsersBadge();
@@ -546,7 +536,7 @@ UserPicker.prototype.open = function () {
                 event.preventDefault();
                 var element = event.currentTarget;
                 var route = $(element).attr('href');
-                route += '?' + $.param(parameters);
+                route += '?' + $.param(userPicker.parameters);
                 
                 $.ajax({
                     url: route,
@@ -614,13 +604,13 @@ UserPicker.prototype.open = function () {
             modalElement.on('click', '.picker-user-chk', function () {
                 var userId = $(this).val();
 
-                if (mode === 'multiple') {
+                if (userPicker.multiple === 'multiple') {
 
                     if ($(this).prop('checked')) {
                         var firstName = $(this).data('user-first-name');
                         var lastName = $(this).data('user-last-name');
 
-                        if (parseInt(showUsername) === 1) {
+                        if (parseInt(userPicker.showUsername) === 1) {
                             var username = $(this).data('user-username');
                             selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
                         } else {
@@ -631,13 +621,13 @@ UserPicker.prototype.open = function () {
                         selectedUsers[userId] = null;
                         removeUserFromSelectedUsersBox(userId);
                     }
-                } else if (mode === 'single') {
+                } else if (userPicker.multiple === 'single') {
                     var firstName = $(this).data('user-first-name');
                     var lastName = $(this).data('user-last-name');
                     emptySelectedUsersBox();
                     selectedUsers = [];
 
-                    if (parseInt(showUsername) === 1) {
+                    if (parseInt(userPicker.showUsername) === 1) {
                         var username = $(this).data('user-username');
                         selectedUsers[userId] = firstName + ' ' + lastName + ' (' + username + ')';
                     } else {
@@ -688,7 +678,7 @@ UserPicker.prototype.open = function () {
 
             modalElement.on('click', '.submit', function () {
 
-                if (mode === 'multiple') {
+                if (userPicker.multiple === 'multiple') {
                     var ids = [];
                     var names = [];
 
@@ -696,22 +686,22 @@ UserPicker.prototype.open = function () {
                         ids[i] = parseInt(userIds[i]['id']);
                         names[i] = userIds[i]['name'];
                     }
-                    $('#user-picker-input-' + pickerName).val(ids);
-                    $('#user-picker-input-view-' + pickerName).val(names);
+                    $('#user-picker-input-' + userPicker.pickerName).val(ids);
+                    $('#user-picker-input-view-' + userPicker.pickerName).val(names);
                     
                     (ids.length > 0) ? 
-                        callBack(ids) :
-                        callBack(null);
-                } else if (mode === 'single') {
+                        userPicker.callBack(ids) :
+                        userPicker.callBack(null);
+                } else if (userPicker.multiple === 'single') {
                     
                     if (userIds.length > 0) {
-                        $('#user-picker-input-' + pickerName).val(parseInt(userIds[0]['id']));
-                        $('#user-picker-input-view-' + pickerName).val(userIds[0]['name']);
-                        callBack(userIds[0]['id']);
+                        $('#user-picker-input-' + userPicker.pickerName).val(parseInt(userIds[0]['id']));
+                        $('#user-picker-input-view-' + userPicker.pickerName).val(userIds[0]['name']);
+                        userPicker.callBack(userIds[0]['id']);
                     } else {
-                        $('#user-picker-input-' + pickerName).val(null);
-                        $('#user-picker-input-view-' + pickerName).val(null);
-                        callBack(null);
+                        $('#user-picker-input-' + userPicker.pickerName).val(null);
+                        $('#user-picker-input-view-' + userPicker.pickerName).val(null);
+                        userPicker.callBack(null);
                     }
                 }
                 modalElement.modal('hide');
