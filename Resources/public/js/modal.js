@@ -256,12 +256,12 @@
         myModal.on('click', '.btn-primary', function (event) {
             if (waitingHandler) waitingHandler(waitingParameters);
             $.ajax(url)
-            .success(function (data) {
-                successHandler(event, successParameter, data);
+            .success(function (data, status, jqXHR) {
+                successHandler(event, successParameter, data, jqXHR);
             })
-            .error(function () {
+            .error(function (data, status, jqXHR) {
                 if (errorHandler) {
-                    errorHandler(errorParameters)
+                    errorHandler(errorParameters, data, jqXHR)
                 } else {
                     modal.error();
                 }
