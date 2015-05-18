@@ -16,10 +16,16 @@ class BadgeUsageConfigType extends AbstractType
     {
         $builder
             ->add('number_last_awarded_badge', 'integer', array(
-                'theme_options' => array('control_width' => 'col-md-2')
+                'theme_options' => array(
+                    'label_width' => 'col-md-7',
+                    'control_width' => 'col-md-2'
+                )
             ))
             ->add('number_most_awarded_badge', 'integer', array(
-                'theme_options' => array('control_width' => 'col-md-2')
+                'theme_options' => array(
+                    'label_width' => 'col-md-7',
+                    'control_width' => 'col-md-2'
+                )
             ));
     }
 
