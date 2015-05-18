@@ -28,14 +28,14 @@ class InteractionHoleController extends Controller
         $interHole  = new InteractionHole();
         $form      = $this->createForm(
             new InteractionHoleType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.token_storage')->getToken()->getUser()
             ), $interHole
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
         
         //Get the lock category
-        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
         if (empty($Locker)) {
             $catLocker = "";
@@ -46,7 +46,7 @@ class InteractionHoleController extends Controller
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
             $this->get('translator') 
         );
 
@@ -117,7 +117,7 @@ class InteractionHoleController extends Controller
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
-        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $user  = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID = -1;
 
         $em = $this->getDoctrine()->getManager();
@@ -134,14 +134,14 @@ class InteractionHoleController extends Controller
 
         $editForm   = $this->createForm(
             new InteractionHoleType(
-                $this->container->get('security.context')->getToken()->getUser(),
+                $this->container->get('security.token_storage')->getToken()->getUser(),
                 $catID
             ), $interHole
         );
         $formHandler = new InteractionHoleHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
             $this->get('translator') 
         );
 

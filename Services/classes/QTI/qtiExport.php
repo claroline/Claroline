@@ -9,14 +9,14 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
 abstract class qtiExport
 {
 
     protected $doctrine;
-    protected $securityContext;
+    protected $tokenStorageInterface;
     protected $container;
     protected $qtiRepos;
     protected $node;
@@ -35,16 +35,16 @@ abstract class qtiExport
      * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
      * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
-    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, $container)
+    public function __construct(Registry $doctrine, TokenStorageInterface $tokenStorageInterface, $container)
     {
-        $this->doctrine        = $doctrine;
-        $this->securityContext = $securityContext;
-        $this->container       = $container;
-        $this->document = new \DOMDocument();
+        $this->doctrine              = $doctrine;
+        $this->tokenStorageInterface = $tokenStorageInterface;
+        $this->container             = $container;
+        $this->document              = new \DOMDocument();
         $this->document->preserveWhiteSpace = false;
         $this->document->formatOutput = true;
     }

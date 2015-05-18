@@ -7,14 +7,14 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class qtiRepository {
 
     private $user;
     private $userRootDir;
     private $userDir;
-    private $securityContext;
+    private $tokenStorageInterface;
     private $container;
     private $exercise = null;
 
@@ -23,15 +23,15 @@ class qtiRepository {
      *
      * @access public
      *
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
      * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
-    public function __construct(SecurityContextInterface $securityContext, $container)
+    public function __construct(TokenStorageInterface $tokenStorageInterface, $container)
     {
-        $this->securityContext = $securityContext;
+        $this->tokenStorageInterface = $tokenStorageInterface;
         $this->container = $container;
-        $this->user = $this->securityContext->getToken()->getUser();
+        $this->user = $this->tokenStorageInterface->getToken()->getUser();
     }
 
     /**

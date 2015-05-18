@@ -15,7 +15,8 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
@@ -24,7 +25,8 @@ use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 class exerciseServices
 {
     protected $doctrine;
-    protected $securityContext;
+    protected $tokenStorage;
+    protected $authorizationChecker;
 
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
     protected $eventDispatcher;
@@ -39,11 +41,12 @@ class exerciseServices
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
      *
      */
-    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, EventDispatcherInterface $eventDispatcher)
+    public function __construct(Registry $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, EventDispatcherInterface $eventDispatcher)
     {
-        $this->doctrine        = $doctrine;
-        $this->securityContext = $securityContext;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->doctrine             = $doctrine;
+        $this->tokenStorage         = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->eventDispatcher      = $eventDispatcher;
     }
 
     /**
@@ -1055,7 +1058,7 @@ class exerciseServices
     public function isExerciseAdmin($exercise)
     {
         $collection = new ResourceCollection(array($exercise->getResourceNode()));
-        if ($this->securityContext->isGranted('ADMINISTRATE', $collection)) {
+        if ($this->authorizationChecker->isGranted('ADMINISTRATE', $collection)) {
             return true;
         } else {
             return false;
@@ -1156,7 +1159,7 @@ class exerciseServices
      */
     public function controlUserSharedQuestion($questionID)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $questions = $this->doctrine
                           ->getManager()
@@ -1736,7 +1739,7 @@ class exerciseServices
      */
     public function controlUserQuestion($questionID, $container, $em)
     {
-        $user = $container->get('security.context')->getToken()->getUser();
+        $user = $container->get('security.token_storage')->getToken()->getUser();
 
         $question = $em
             ->getRepository('UJMExoBundle:Question')

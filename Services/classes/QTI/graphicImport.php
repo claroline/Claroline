@@ -97,7 +97,7 @@ class graphicImport extends qtiImport {
      */
     protected function createPicture($objectTag) {
 
-        $user    = $this->container->get('security.context')->getToken()->getUser();
+        $user    = $this->container->get('security.token_storage')->getToken()->getUser();
         $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 

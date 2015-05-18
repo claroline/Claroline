@@ -36,8 +36,8 @@ class WSRestController extends Controller
         // Login allow to link a doc and a user
         // check also login matches to the connected user
 
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.context')
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
+            $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.token_storage')
                 ->getToken()->getUser()->getUsername();
 
             if (!is_dir('./uploads/ujmexo/')) {
@@ -65,7 +65,7 @@ class WSRestController extends Controller
                 $document->setLabel(trim($_POST['label']));
                 $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
-                $document->setUser($this->container->get('security.context')->getToken()->getUser());
+                $document->setUser($this->container->get('security.token_storage')->getToken()->getUser());
 
                 if ($redirection == 1 || ($redirection == 0 && (
                         strtolower($document->getType()) == '.png' ||
@@ -88,7 +88,7 @@ class WSRestController extends Controller
             // Add document on manage documents
             } else if ($redirection == 1) {
 
-                $user = $this->container->get('security.context')->getToken()->getUser();
+                $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
                 $repository = $this->getDoctrine()
                     ->getManager()
@@ -141,7 +141,7 @@ class WSRestController extends Controller
     public function nameAlreadyExistAction()
     {
         $request = $this->container->get('request');
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $response = 'not yet';
 
         if ($request->isXmlHttpRequest()) {

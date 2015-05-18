@@ -26,7 +26,8 @@ class InteractionGraphicController extends Controller
     public function createAction()
     {
         $interGraph = new InteractionGraphic();
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
         $form = $this->createForm(new InteractionGraphicType($user), $interGraph);
 
         $exoID = $this->container->get('request')->request->get('exercise');
@@ -112,7 +113,8 @@ class InteractionGraphicController extends Controller
      */
     public function updateAction($id)
     {
-        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $user  = $this->container->get('security.token_storage')
+                                 ->getToken()->getUser();
         $exoID = $this->container->get('request')->request->get('exercise');
         $catID = -1;
         $docID = -1;
@@ -132,7 +134,8 @@ class InteractionGraphicController extends Controller
 
         $editForm = $this->createForm(
             new InteractionGraphicType(
-                $this->container->get('security.context')->getToken()->getUser(),
+                $this->container->get('security.token_storage')
+                                ->getToken()->getUser(),
                 $catID, $docID
             ), $entity
         );
@@ -140,7 +143,7 @@ class InteractionGraphicController extends Controller
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator')
         );
 

@@ -84,7 +84,7 @@ class QuestionController extends Controller
             $pagerShared = $page;
         }
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $uid = $user->getId();
 
         $interactions = $this->getDoctrine()
@@ -191,7 +191,7 @@ class QuestionController extends Controller
 
         $services = $this->container->get('ujm.exercise_services');
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $uid = $user->getId();
 
         $actionQ = array();
@@ -451,7 +451,7 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $question = $services->controlUserQuestion($id, $this->container, $em);
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
-        $user     = $this->container->get('security.context')->getToken()->getUser();
+        $user     = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID    = -1;
         
         if(count($share) > 0) {
@@ -490,7 +490,7 @@ class QuestionController extends Controller
                     if ($form == null) {
                         $editForm = $this->createForm(
                             new InteractionQCMType(
-                                $this->container->get('security.context')
+                                $this->container->get('security.token_storage')
                                     ->getToken()->getUser(), $catID
                             ), $interactionQCM[0]
                         );
@@ -533,7 +533,7 @@ class QuestionController extends Controller
 
                     $editForm = $this->createForm(
                         new InteractionGraphicType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser(), $catID, $docID
                         ), $interactionGraph[0]
                     );
@@ -561,7 +561,7 @@ class QuestionController extends Controller
 
                     $editForm = $this->createForm(
                         new InteractionHoleType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser(), $catID
                         ), $interactionHole[0]
                     );
@@ -586,7 +586,7 @@ class QuestionController extends Controller
 
                     $editForm = $this->createForm(
                         new InteractionOpenType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser(), $catID
                         ), $interactionOpen[0]
                     );
@@ -642,7 +642,7 @@ class QuestionController extends Controller
 
                     $editForm = $this->createForm(
                         new InteractionMatchingType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser(),$catID
                         ), $interactionMatching[0]
                     );
@@ -819,7 +819,7 @@ class QuestionController extends Controller
                     $entity = new InteractionHole();
                     $form   = $this->createForm(
                         new InteractionHoleType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser()
                         ), $entity
                     );
@@ -838,7 +838,7 @@ class QuestionController extends Controller
                     $entity = new InteractionQCM();
                     $form   = $this->createForm(
                         new InteractionQCMType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser()
                         ), $entity
                     );
@@ -860,7 +860,7 @@ class QuestionController extends Controller
                     $entity = new InteractionGraphic();
                     $form   = $this->createForm(
                         new InteractionGraphicType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser()
                         ), $entity
                     );
@@ -879,7 +879,7 @@ class QuestionController extends Controller
                     $entity = new InteractionOpen();
                     $form   = $this->createForm(
                         new InteractionOpenType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser()
                         ), $entity
                     );
@@ -900,7 +900,7 @@ class QuestionController extends Controller
                     $entity = new InteractionMatching();
                     $form   = $this->createForm(
                         new InteractionMatchingType(
-                            $this->container->get('security.context')
+                            $this->container->get('security.token_storage')
                                 ->getToken()->getUser()
                         ), $entity
                     );
@@ -1010,7 +1010,7 @@ class QuestionController extends Controller
     public function manageDocAction()
     {
         $allowToDel = array();
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
         $repository = $this->getDoctrine()
@@ -1092,7 +1092,7 @@ class QuestionController extends Controller
      */
     public function deletelinkedDocAction($label)
     {
-        $userId = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 
         $repositoryDoc = $this->getDoctrine()
             ->getManager()
@@ -1184,7 +1184,7 @@ class QuestionController extends Controller
     public function sortDocumentsAction()
     {
         $request = $this->container->get('request');
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $max = 10; // Max per page
 
@@ -1250,7 +1250,7 @@ class QuestionController extends Controller
      */
     public function searchDocAction()
     {
-        $userId = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $request = $this->get('request');
 
         $max = 10; // Max per page
@@ -1400,7 +1400,7 @@ class QuestionController extends Controller
      */
     public function searchQuestionTypeAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
         $listInteractions = array();
@@ -1988,7 +1988,7 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
         $services = $this->container->get('ujm.exercise_services');
@@ -2111,7 +2111,7 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionQCMHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
                         $this->get('translator') 
                     );
 
@@ -2127,7 +2127,7 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionGraphicHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
                         $this->get('translator') 
                     );
 
@@ -2143,7 +2143,7 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionHoleHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
                         $this->get('translator') 
                     );
 
@@ -2159,7 +2159,7 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionOpenHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
                         $this->get('translator') 
                     );
 
@@ -2174,7 +2174,7 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionMatchingHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.context')->getToken()->getUser(), $exoID,
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
                         $this->get('translator') 
                     );
 
@@ -2211,7 +2211,7 @@ class QuestionController extends Controller
      * @return the name of category locked
      */
     private function getLockCategory() {
-        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
         if (empty($Locker)) {
             $catLocker = "";

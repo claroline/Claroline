@@ -29,14 +29,14 @@ class InteractionQCMController extends Controller
         $interQCM  = new InteractionQCM();
         $form      = $this->createForm(
             new InteractionQCMType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.token_storage')->getToken()->getUser()
             ), $interQCM
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
         if (empty($Locker)) {
             $catLocker = "";
@@ -47,7 +47,7 @@ class InteractionQCMController extends Controller
         $formHandler = new InteractionQCMHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
             $this->get('translator') 
         );
 
@@ -112,7 +112,7 @@ class InteractionQCMController extends Controller
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
-        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $user  = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID = -1;
 
         $em = $this->getDoctrine()->getManager();
@@ -129,14 +129,14 @@ class InteractionQCMController extends Controller
 
         $editForm   = $this->createForm(
             new InteractionQCMType(
-                $this->container->get('security.context')->getToken()->getUser(),
+                $this->container->get('security.token_storage')->getToken()->getUser(),
                 $catID
             ), $interQCM
         );
         $formHandler = new InteractionQCMHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator') 
         );
 

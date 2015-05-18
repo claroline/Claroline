@@ -30,14 +30,14 @@ class InteractionOpenController extends Controller
         $interOpen  = new InteractionOpen();
         $form      = $this->createForm(
             new InteractionOpenType(
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.token_storage')->getToken()->getUser()
             ), $interOpen
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
         
         //Get the lock category
-        $user = $this->container->get('security.context')->getToken()->getUser()->getId();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
         if (empty($Locker)) {
             $catLocker = "";
@@ -48,7 +48,7 @@ class InteractionOpenController extends Controller
         $formHandler = new InteractionOpenHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(), $exoID,
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
             $this->get('translator')   
         );
         $openHandler = $formHandler->processAdd();
@@ -111,7 +111,7 @@ class InteractionOpenController extends Controller
      */
     public function updateAction($id)
     {
-        $user  = $this->container->get('security.context')->getToken()->getUser();
+        $user  = $this->container->get('security.token_storage')->getToken()->getUser();
         $exoID = $this->container->get('request')->request->get('exercise');
         $catID = -1;
 
@@ -129,7 +129,7 @@ class InteractionOpenController extends Controller
 
         $editForm = $this->createForm(
             new InteractionOpenType(
-                $this->container->get('security.context')->getToken()->getUser(),
+                $this->container->get('security.token_storage')->getToken()->getUser(),
                 $catID
             ), $interOpen
         );
@@ -137,7 +137,7 @@ class InteractionOpenController extends Controller
         $formHandler = new InteractionOpenHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.context')->getToken()->getUser(),
+            $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator') 
         );
 

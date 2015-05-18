@@ -42,7 +42,7 @@ class PaperController extends Controller
 
         $arrayMarkPapers = array();
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
@@ -156,7 +156,7 @@ class PaperController extends Controller
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
         $exercise = $paper->getExercise();
@@ -286,7 +286,7 @@ class PaperController extends Controller
      */
     public function searchUserPaperAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $papersOneUser   = array();
         $papersUser      = array();
@@ -420,7 +420,7 @@ class PaperController extends Controller
     {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
 
-        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

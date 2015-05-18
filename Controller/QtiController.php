@@ -190,7 +190,7 @@ class QtiController extends Controller {
        $zip = new \ZipArchive();
        $zip->open($tmpFileName, \ZipArchive::CREATE);
 
-       $userName = $this->container->get('security.context')->getToken()->getUser()->getUserName();
+       $userName = $this->container->get('security.token_storage')->getToken()->getUser()->getUserName();
 
        foreach ($qdirs as $dir) {
            $iterator = new \DirectoryIterator($dir);

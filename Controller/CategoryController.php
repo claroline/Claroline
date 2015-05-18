@@ -77,7 +77,8 @@ class CategoryController extends Controller
             $entity  = new Category();
             $entity->setValue($val);
             $entity->setLocker($lock);
-            $entity->setUser($this->container->get('security.context')->getToken()->getUser());
+            $entity->setUser($this->container->get('security.token_storage')
+                                             ->getToken()->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();

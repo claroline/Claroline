@@ -94,7 +94,7 @@ class ExerciseController extends Controller
 
         $formHandler = new ExerciseHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('security.context')->getToken()->getUser(), 'update'
+            $this->container->get('security.token_storage')->getToken()->getUser(), 'update'
         );
 
         if ($formHandler->process()) {
@@ -129,7 +129,8 @@ class ExerciseController extends Controller
     {
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
         if (is_object($user)) {
             $uid = $user->getId();
         } else {
@@ -312,7 +313,8 @@ class ExerciseController extends Controller
      */
     public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind, $displayAll)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
         $allowEdit = array();
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
@@ -457,7 +459,8 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
         $uid = $user->getId();
 
         $services = $this->container->get('ujm.exercise_services');
@@ -707,7 +710,8 @@ class ExerciseController extends Controller
     {
         $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
         if (!is_object($user)) {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
@@ -1331,7 +1335,7 @@ class ExerciseController extends Controller
     {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
 
-        if (!$this->get('security.context')->isGranted('OPEN', $collection)) {
+        if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }

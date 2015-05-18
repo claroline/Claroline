@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Question;
@@ -18,7 +18,7 @@ use UJM\ExoBundle\Entity\Question;
 abstract class qtiImport
 {
     protected $doctrine;
-    protected $securityContext;
+    protected $tokenStorageInterface;
     protected $container;
     protected $user;
     protected $qtiRepos;
@@ -34,16 +34,16 @@ abstract class qtiImport
      * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
      * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
-    public function __construct(Registry $doctrine, SecurityContextInterface $securityContext, $container)
+    public function __construct(Registry $doctrine, TokenStorageInterface $tokenStorageInterface, $container)
     {
-        $this->doctrine        = $doctrine;
-        $this->securityContext = $securityContext;
-        $this->container       = $container;
-        $this->user            = $this->securityContext->getToken()->getUser();
+        $this->doctrine              = $doctrine;
+        $this->tokenStorageInterface = $tokenStorageInterface;
+        $this->container             = $container;
+        $this->user                  = $this->tokenStorageInterface->getToken()->getUser();
     }
 
     /**

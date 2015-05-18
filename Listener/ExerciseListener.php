@@ -54,7 +54,7 @@ class ExerciseListener extends ContainerAware
 
         if ($form->isValid()) {
             $em = $this->container->get('doctrine.orm.entity_manager');
-            $user = $this->container->get('security.context')->getToken()->getUser();
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
             $exercise = $form->getData();
             $exercise->setName($exercise->getTitle());
@@ -203,7 +203,7 @@ class ExerciseListener extends ContainerAware
             $em->persist($exerciseQuestion);
         }
 
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $subscription = new Subscription($user, $newExercise);
         $subscription->setAdmin(true);
         $subscription->setCreator(true);
