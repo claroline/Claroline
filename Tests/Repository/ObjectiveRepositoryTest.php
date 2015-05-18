@@ -58,6 +58,63 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $this->assertContains($objectives['o2'], $u3Result);
     }
 
+    public function testGetUsersWithObjectiveQuery()
+    {
+        $objectives = $this->context['objectives'];
+        $users = $this->context['users'];
+
+        $result = $this->repo->getUsersWithObjectiveQuery()->getResult();
+        $this->assertEquals(3, count($result));
+
+        $result = $this->repo->getUsersWithObjectiveQuery($objectives['o1'])->getResult();
+        $this->assertEquals(2, count($result));
+        $this->assertEquals($users['u1']->getId(), $result[0]['id']);
+        $this->assertEquals($users['u2']->getId(), $result[1]['id']);
+
+        $result = $this->repo->getUsersWithObjectiveQuery($objectives['o2'])->getResult();
+        $this->assertEquals(2, count($result));
+        $this->assertEquals($users['u2']->getId(), $result[0]['id']);
+        $this->assertEquals($users['u3']->getId(), $result[1]['id']);
+    }
+
+    public function testGetUsersWithObjectiveCountQuery()
+    {
+        $objectives = $this->context['objectives'];
+
+        $result = $this->repo->getUsersWithObjectiveCountQuery()->getSingleScalarResult();
+        $this->assertEquals(3, $result);
+
+        $result = $this->repo->getUsersWithObjectiveCountQuery($objectives['o1'])->getSingleScalarResult();
+        $this->assertEquals(2, $result);
+
+        $result = $this->repo->getUsersWithObjectiveCountQuery($objectives['o2'])->getSingleScalarResult();
+        $this->assertEquals(2, $result);
+    }
+
+    public function testGetGroupsWithObjectiveQuery()
+    {
+        $objectives = $this->context['objectives'];
+        $groups = $this->context['groups'];
+
+        $result = $this->repo->getGroupsWithObjectiveQuery()->getResult();
+        $this->assertEquals(2, count($result));
+
+        $result = $this->repo->getGroupsWithObjectiveQuery($objectives['o2'])->getResult();
+        $this->assertEquals(1, count($result));
+        $this->assertEquals($groups['g1']->getId(), $result[0]['id']);
+    }
+
+    public function testGetGroupsWithObjectiveCountQuery()
+    {
+        $objectives = $this->context['objectives'];
+
+        $result = $this->repo->getGroupsWithObjectiveCountQuery()->getSingleScalarResult();
+        $this->assertEquals(2, $result);
+
+        $result = $this->repo->getGroupsWithObjectiveCountQuery($objectives['o2'])->getSingleScalarResult();
+        $this->assertEquals(1, $result);
+    }
+
     private function persistContext()
     {
         // Competencies:
@@ -81,12 +138,16 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         //   - g1 (o2)
         //     - u2
         //     - u3
+        //   - g2 (o1)
+        //   - g3
 
         $u1 = $this->persistUser('u1');
         $u2 = $this->persistUser('u2');
         $u3 = $this->persistUser('u3');
 
         $g1 = $this->persistGroup('g1');
+        $g2 = $this->persistGroup('g2');
+        $g3 = $this->persistGroup('g3');
         $g1->addUser($u2);
         $g1->addUser($u3);
 
@@ -107,6 +168,8 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
 
         $o1->addUser($u1);
         $o1->addUser($u2);
+        $o1->addGroup($g2);
+
         $o2->addUser($u2);
         $o2->addGroup($g1);
 
@@ -124,6 +187,11 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
                 'u1' => $u1,
                 'u2' => $u2,
                 'u3' => $u3
+            ],
+            'groups' => [
+                'g1' => $g1,
+                'g2' => $g2,
+                'g3' => $g3
             ]
         ];
     }
