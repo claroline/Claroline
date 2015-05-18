@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\DataTransformer\UserPickerTransfromer;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -76,6 +75,7 @@ class UserPickerType extends AbstractType
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
+        $view->vars['show_groups'] = $options['show_groups'];
         $view->vars['blacklist'] = $options['blacklist'];
         $view->vars['whitelist'] = $options['whitelist'];
         $view->vars['selected_users'] = $options['selected_users'];
@@ -102,6 +102,7 @@ class UserPickerType extends AbstractType
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,
+                'show_groups' => false,
                 'blacklist' => array(),
                 'whitelist' => array(),
                 'selected_users' => array(),

@@ -17,6 +17,7 @@ var UserPicker = function () {
     this.showUsername = 1;
     this.showMail = 0;
     this.showCode = 0;
+    this.showGroups = 0;
     this.userIds = [];
     this.forcedUserIds = [];
     this.selectedUserIds = [];
@@ -71,6 +72,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
         this.showCode = configurationDatas['show_code'] ? 1 : 0;
     }
     
+    if (configurationDatas['show_groups'] !== undefined) {
+        this.showGroups = configurationDatas['show_groups'] ? 1 : 0;
+    }
+    
     if (configurationDatas['blacklist'] !== undefined) {
         this.userIds = configurationDatas['blacklist'];
     }
@@ -118,7 +123,8 @@ UserPicker.prototype.open = function () {
             'showId': userPicker.showId,
             'showUsername': userPicker.showUsername,
             'showMail': userPicker.showMail,
-            'showCode': userPicker.showCode
+            'showCode': userPicker.showCode,
+            'showGroups': userPicker.showGroups
         }
     );
     route += '?' + $.param(this.parameters);
@@ -515,7 +521,8 @@ UserPicker.prototype.open = function () {
                             'showId': userPicker.showId,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
-                            'showCode': userPicker.showCode
+                            'showCode': userPicker.showCode,
+                            'showGroups': userPicker.showGroups
                         }
                     ) :
                     Routing.generate(
@@ -530,7 +537,8 @@ UserPicker.prototype.open = function () {
                             'showId': userPicker.showId,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
-                            'showCode': userPicker.showCode
+                            'showCode': userPicker.showCode,
+                            'showGroups': userPicker.showGroups
                         }
                     );
                 route += '?' + $.param(userPicker.parameters);

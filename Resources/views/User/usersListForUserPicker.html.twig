@@ -1,4 +1,4 @@
-{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode) %}
+{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups) %}
     {% if search is empty %}
         {{
             pagerfanta(
@@ -16,7 +16,8 @@
                         'showId': showId,
                         'showUsername': showUsername,
                         'showMail': showMail,
-                        'showCode': showCode
+                        'showCode': showCode,
+                        'showGroups': showGroups
                     }
                 }
             )
@@ -39,7 +40,8 @@
                         'showId': showId,
                         'showUsername': showUsername,
                         'showMail': showMail,
-                        'showCode': showCode
+                        'showCode': showCode,
+                        'showGroups': showGroups
                     }
                 }
             )
@@ -47,7 +49,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode) %}
+{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
     {% else %}
@@ -67,7 +69,8 @@
                     'showId': showId,
                     'showUsername': showUsername,
                     'showMail': showMail,
-                    'showCode': showCode
+                    'showCode': showCode,
+                    'showGroups': showGroups
                 }
             )
         }}
@@ -85,7 +88,8 @@
                     'showId': showId,
                     'showUsername': showUsername,
                     'showMail': showMail,
-                    'showCode': showCode
+                    'showCode': showCode,
+                    'showGroups': showGroups
                 }
             ) 
         }}
@@ -130,7 +134,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups) }}
 {% endif %}
 <div class="table-responsive">
     <table class="table">
@@ -144,20 +148,20 @@
                 
                 {% if showId == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'id', order, mode, showAllUsers, showId, showUsername, showMail, showCode)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'id', order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups)|trim }}">
                             {{ 'id'|trans({}, 'platform') }}
                         </a>
                     </th>
                 {% endif %}
                 <th>
-                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showUsername, showMail, showCode)|trim }}">
+                    <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups)|trim }}">
                         {{ 'name'|trans({}, 'platform') }}
                     </a>
                 </th>
                 
                 {% if showUsername == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showId, showUsername, showMail, showCode)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups)|trim }}">
                             {{ 'username'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -165,7 +169,7 @@
                 
                 {% if showMail == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showUsername, showMail, showCode)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups)|trim }}">
                             {{ 'mail'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -173,9 +177,15 @@
                 
                 {% if showCode == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showId, showUsername, showMail, showCode)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups)|trim }}">
                             {{ 'code'|trans({}, 'platform') }}
                         </a>
+                    </th>
+                {% endif %}
+                
+                {% if showGroups == '1' %}
+                    <th>
+                        {{ 'groups'|trans({}, 'platform') }}
                     </th>
                 {% endif %}
             </tr>
@@ -263,6 +273,21 @@
                             </span>
                         </td>
                     {% endif %}
+
+                    {% if showGroups == 1 %}
+                        <td>
+                            <span class="picker-user-select pointer-hand"
+                                  data-user-id="{{ userId }}"
+                            >
+                                {% set groups = user.getGroups() %}
+                                {% for group in groups %}
+                                    <span class="label label-info margin-right-sm">
+                                        {{ group.getName() }}
+                                    </span>
+                                {% endfor %}
+                            </span>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
@@ -270,7 +295,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showUsername, showMail, showCode, showGroups) }}
 {% endif %}
 
 <div id="user-picker-datas-box"
