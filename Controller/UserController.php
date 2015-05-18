@@ -22,12 +22,14 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class UserController extends Controller
 {
     private $facetManager;
     private $groupManager;
     private $roleManager;
+    private $translator;
     private $userManager;
     private $workspaceManager;
 
@@ -36,6 +38,7 @@ class UserController extends Controller
      *     "facetManager"     = @DI\Inject("claroline.manager.facet_manager"),
      *     "groupManager"     = @DI\Inject("claroline.manager.group_manager"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"       = @DI\Inject("translator"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
@@ -44,6 +47,7 @@ class UserController extends Controller
         FacetManager $facetManager,
         GroupManager $groupManager,
         RoleManager $roleManager,
+        TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager
     )
@@ -51,6 +55,7 @@ class UserController extends Controller
         $this->facetManager = $facetManager;
         $this->groupManager = $groupManager;
         $this->roleManager = $roleManager;
+        $this->translator = $translator;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
     }
@@ -342,7 +347,11 @@ class UserController extends Controller
 
                 foreach ($roles as $role) {
                     $id = $role->getId();
-                    $name = $role->getTranslationKey();
+                    $name = $this->translator->trans(
+                        $role->getTranslationKey(),
+                        array(),
+                        'platform'
+                    );
                     $datas[] = array('id' => $id, 'name' => $name);
                 }
                 break;
@@ -384,7 +393,14 @@ class UserController extends Controller
         $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
 
         foreach ($wsRoles as $role) {
-            $datas[] = array('id' => $role->getId(), 'name' => $role->getTranslationKey());
+            $datas[] = array(
+                'id' => $role->getId(),
+                'name' => $this->translator->trans(
+                    $role->getTranslationKey(),
+                    array(),
+                    'platform'
+                )
+            );
         }
 
         return new JsonResponse($datas, 200);
