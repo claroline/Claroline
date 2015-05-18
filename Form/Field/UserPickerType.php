@@ -72,6 +72,7 @@ class UserPickerType extends AbstractType
         $view->vars['multiple'] = $options['multiple'];
         $view->vars['show_all_users'] = $options['show_all_users'];
         $view->vars['show_filters'] = $options['show_filters'];
+        $view->vars['show_id'] = $options['show_id'];
         $view->vars['show_username'] = $options['show_username'];
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
@@ -97,6 +98,7 @@ class UserPickerType extends AbstractType
                 'multiple' => false,
                 'show_all_users' => false,
                 'show_filters' => true,
+                'show_id' => false,
                 'show_username' => true,
                 'show_mail' => false,
                 'show_code' => false,

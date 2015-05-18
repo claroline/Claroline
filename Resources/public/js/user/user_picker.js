@@ -13,6 +13,7 @@ var UserPicker = function () {
     this.multiple = 'single';
     this.showAllUsers = 0;
     this.showFilters = 1;
+    this.showId = 0;
     this.showUsername = 1;
     this.showMail = 0;
     this.showCode = 0;
@@ -33,20 +34,66 @@ var UserPicker = function () {
 };
 
 UserPicker.prototype.configure = function (configurationDatas, callBack) {
-    this.pickerName = configurationDatas['picker_name'] || this.pickerName;
-    this.pickerTitle = configurationDatas['picker_title'] || this.pickerTitle;
-    this.multiple = configurationDatas['multiple'] || this.multiple;
-    this.showAllUsers = configurationDatas['show_all_users'] || this.showAllUsers;
-    this.showFilters = configurationDatas['show_filters'] || this.showFilters;
-    this.showUsername = configurationDatas['show_username'] || this.showUsername;
-    this.showMail = configurationDatas['show_mail'] || this.showMail;
-    this.showCode = configurationDatas['show_code'] || this.showCode;
-    this.userIds = configurationDatas['blacklist'] || this.userIds;
-    this.forcedUserIds = configurationDatas['whitelist'] || this.forcedUserIds;
-    this.selectedUserIds = configurationDatas['selected_users'] || this.selectedUserIds;
-    this.forcedGroupIds = configurationDatas['forced_groups'] || this.forcedGroupIds;
-    this.forcedRoleIds = configurationDatas['forced_roles'] || this.forcedRoleIds;
-    this.forcedWorkspaceIds = configurationDatas['forced_workspaces'] || this.forcedWorkspaceIds;
+    
+    if (configurationDatas['picker_name'] !== undefined) {
+        this.pickerName = configurationDatas['picker_name'];
+    }
+    
+    if (configurationDatas['picker_title'] !== undefined) {
+        this.pickerTitle = configurationDatas['picker_title'];
+    }
+    
+    if (configurationDatas['multiple'] !== undefined) {
+        this.multiple = configurationDatas['multiple'] ? 'multiple' : 'single';
+    }
+    
+    if (configurationDatas['show_all_users'] !== undefined) {
+        this.showAllUsers = configurationDatas['show_all_users'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_filters'] !== undefined) {
+        this.showFilters = configurationDatas['show_filters'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_id'] !== undefined) {
+        this.showId = configurationDatas['show_id'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_username'] !== undefined) {
+        this.showUsername = configurationDatas['show_username'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_mail'] !== undefined) {
+        this.showMail = configurationDatas['show_mail'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_code'] !== undefined) {
+        this.showCode = configurationDatas['show_code'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['blacklist'] !== undefined) {
+        this.userIds = configurationDatas['blacklist'];
+    }
+    
+    if (configurationDatas['whitelist'] !== undefined) {
+        this.forcedUserIds = configurationDatas['whitelist'];
+    }
+    
+    if (configurationDatas['selected_users'] !== undefined) {
+        this.selectedUserIds = configurationDatas['selected_users'];
+    }
+    
+    if (configurationDatas['forced_groups'] !== undefined) {
+        this.forcedGroupIds = configurationDatas['forced_groups'];
+    }
+    
+    if (configurationDatas['forced_roles'] !== undefined) {
+        this.forcedRoleIds = configurationDatas['forced_roles'];
+    }
+    
+    if (configurationDatas['forced_workspaces'] !== undefined) {
+        this.forcedWorkspaceIds = configurationDatas['forced_workspaces'];
+    }
     this.parameters = {};
     this.parameters.excludedUserIds = this.userIds;
     this.parameters.forcedUserIds = this.forcedUserIds;
@@ -68,6 +115,7 @@ UserPicker.prototype.open = function () {
             'mode': userPicker.multiple,
             'showAllUsers': userPicker.showAllUsers,
             'showFilters': userPicker.showFilters,
+            'showId': userPicker.showId,
             'showUsername': userPicker.showUsername,
             'showMail': userPicker.showMail,
             'showCode': userPicker.showCode
@@ -464,6 +512,7 @@ UserPicker.prototype.open = function () {
                             'order': currentOrder,
                             'mode': userPicker.multiple,
                             'showAllUsers': userPicker.showAllUsers,
+                            'showId': userPicker.showId,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode
@@ -478,6 +527,7 @@ UserPicker.prototype.open = function () {
                             'order': currentOrder,
                             'mode': userPicker.multiple,
                             'showAllUsers': userPicker.showAllUsers,
+                            'showId': userPicker.showId,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode
