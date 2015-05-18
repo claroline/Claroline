@@ -115,8 +115,10 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
+        $search = array(' ', '/');
+        $exoTitle = str_replace($search, '_', $object->getTitle());
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $qtiRepos->createDirQTI($object->getTitle(), $this->new);
+        $qtiRepos->createDirQTI($exoTitle, $this->new);
         $this->new = FALSE;
         $qtiServ = $this->container->get('ujm.qti_services');
 
@@ -134,7 +136,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
             $iterator = new \DirectoryIterator($dir);
                 foreach ($iterator as $element) {
                     if (!$element->isDot() && $element->isFile()) {
-                        $localPath = 'qti/'.$object->getTitle().'/question_'.$i.'/'.$element->getFileName();
+                        $localPath = 'qti/'.$exoTitle.'/question_'.$i.'/'.$element->getFileName();
                         $files[$localPath] = $element->getPathName();
                     }
                 }
@@ -142,7 +144,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         }
 
         $version = '1';
-        $path = 'qti/'.$object->getTitle();
+        $path = 'qti/'.$exoTitle;
 
         $data = array(array('file' => array(
             'path' => $path,

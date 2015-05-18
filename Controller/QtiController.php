@@ -156,7 +156,8 @@ class QtiController extends Controller {
     public function exportQuestionsExerciseAction() {
        $request = $this->container->get('request');
        $exoID = $request->get('exoID');
-       $title  = $request->get('exoName');
+       $search = array(' ', '/');
+       $title = str_replace($search, '_', $request->get('exoName'));
        $qtiServ = $this->container->get('ujm.qti_services');
 
        $qtiRepos = $this->container->get('ujm.qti_repository');
@@ -188,7 +189,7 @@ class QtiController extends Controller {
 
        $zip = new \ZipArchive();
        $zip->open($tmpFileName, \ZipArchive::CREATE);
-       
+
        $userName = $this->container->get('security.context')->getToken()->getUser()->getUserName();
 
        foreach ($qdirs as $dir) {
@@ -214,7 +215,7 @@ class QtiController extends Controller {
 
        return $response;
     }
-    
+
     /**
      * Export an existing Question in QTI.
      *
