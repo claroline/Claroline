@@ -15,4 +15,15 @@ use Doctrine\ORM\EntityRepository;
 
 class ResourceIconRepository extends EntityRepository
 {
+
+    public function findCustomIcons()
+    {
+        $dql = 'SELECT i FROM Claroline\CoreBundle\Entity\Resource\ResourceIcon i
+            WHERE i.relativeUrl LIKE :search
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('search', "%thumbnails%");
+
+        return $query->getResult();
+    }
 }

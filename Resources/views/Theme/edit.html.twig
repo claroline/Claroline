@@ -5,10 +5,10 @@
     <link rel="stylesheet" href="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}" screen="media" />
 {% endblock %}
 
-{% set themeTitle = "New theme" | trans({}, "theme") %}
+{% set themeTitle = "new_theme" | trans({}, "theme") %}
 
 {% if theme is defined %}
-    {% set themeTitle = "Edit theme" | trans({}, "theme") %}
+    {% set themeTitle = "edit_theme" | trans({}, "theme") %}
 {% endif %}
 
 {% block title %}{{ parent() ~ ' - ' ~ themeTitle | striptags | raw }}{% if theme is defined %} ({{ theme.name  | striptags | raw }}){% endif %}{% endblock %}
@@ -30,7 +30,7 @@
                 'href': path('claro_admin_parameters_appearance')
             },
             {
-                'name': 'Theme Generator'|trans({}, 'theme'),
+                'name': 'theme_generator'|trans({}, 'theme'),
                 'href': path('claroline_admin_theme_list')
             },
             {
@@ -50,7 +50,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-md-2">
-                {{ "Theme name" | trans({}, "theme") }}:
+                {{ 'theme_name' | trans({}, "theme") }}:
             </div>
             <div class="col-md-4">
                 <input class="form-control" type="text" id="theme-name"{% if theme is defined %} value="{{ theme.getName() }}"{% endif %}>
@@ -58,11 +58,11 @@
         </div>
     </div>
     <div class="theme-generator panel-footer">
-        <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-check"></i> {{ "Save" | trans({}, "theme") }}</button>
-        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default" role="button"><i class="fa fa-reply"></i> {{ "Cancel" | trans({}, "theme") }}</a>
-        <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-eye"></i> {{ "Preview" | trans({}, "theme") }}</button>
+        <button class="btn save btn-primary"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-check"></i> {{ 'save' | trans({}, "platform") }}</button>
+        <a href="{{ path("claroline_admin_theme_list") }}" class="btn btn-default" role="button"><i class="fa fa-reply"></i> {{ "cancel" | trans({}, "platform") }}</a>
+        <button class="btn btn-default preview"{% if theme is defined %} data-id="{{ theme.getId() }}"{% endif %}><i class="fa fa-eye"></i> {{ 'preview' | trans({}, "platform") }}</button>
         {% if theme is defined %}
-            <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="fa fa-trash-o"></i> {{ "Delete" | trans({}, "theme") }}</button>
+            <button class="btn btn-default dele" data-id="{{ theme.getId() }}"><i class="fa fa-trash-o"></i> {{ 'delete' | trans({}, "platform") }}</button>
         {% endif %}
     </div>
 
@@ -70,14 +70,14 @@
     <div class="panel panel-default">
 
         <div class="theme-parameters panel-heading">
-            <h3 class="panel-title">{{ "Theme parameters" | trans({}, "theme") }}</h3>
         </div>
+            <h3 class="panel-title">{{ 'theme_parameters' | trans({}, "theme") }}</h3>
         <div class="panel-body">
             <div class="alert alert-info">
                 <a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>
-                {{ "Our themes were designed using Bootstrap" | trans({}, "theme") }},
-                {{ "if you have a doubt about the name of an element of the GUI" | trans({}, "theme") }},
-                <a class="alert-link" href="http://getbootstrap.com/" target="_blank">{{ "please read the documentation of Bootstrap 3" | trans({}, "theme") }}.</a>
+                {{ "bootstrap_designed" | trans({}, "theme") }},
+                {{ "if_doubt_on_gui_message" | trans({}, "theme") }},
+                <a class="alert-link" href="http://getbootstrap.com/" target="_blank">{{ "read_boostrap_doc" | trans({}, "theme") }}.</a>
             </div>
             {% if parameters is defined %}
                 <div class="panel-group" id="accordion">

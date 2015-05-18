@@ -39,7 +39,8 @@ class ActivityType extends AbstractType
                 array(
                     'required' => true,
                     'mapped' => false,
-                    'attr' => array('checked' => 'checked')
+                    'attr' => array('checked' => 'checked'),
+                    'label' => 'publish_resource'
                )
             );
     }

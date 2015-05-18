@@ -50,9 +50,9 @@ class ProfileCreationType extends AbstractType
         parent::buildForm($builder, $options);
         $isAdmin = $this->isAdmin;
 
-        $builder->add('firstName', 'text', array('label' => 'First name'))
-            ->add('lastName', 'text', array('label' => 'Last name'))
-            ->add('username', 'text', array('label' => 'User name'))
+        $builder->add('firstName', 'text', array('label' => 'first_name'))
+            ->add('lastName', 'text', array('label' => 'last_name'))
+            ->add('username', 'text', array('label' => 'username'))
             ->add(
                 'plainPassword',
                 'repeated',
@@ -71,7 +71,7 @@ class ProfileCreationType extends AbstractType
             )
             ->add('mail', 'email', array('required' => true, 'label' => 'email'))
             ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'))
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
             ->add(
                 'authentication',
                 'choice',
