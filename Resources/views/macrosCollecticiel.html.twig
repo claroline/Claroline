@@ -21,7 +21,9 @@
                     <tbody>
                         {% for index, document in drop.documents %}
                             <tr id="row_{{ document.id }}">
-                                <td>{{ document.id }}</td>
+                                {# Suppression de l'ID
+                                <td>{{ document.id }}</td> #}
+                                <td></td>
                                 <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
                                 <td>
                                     {% if document.url is not null %}
