@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/05/13 04:14:06
+ * Generation date: 2015/05/18 09:46:19
  */
-class Version20150513161405 extends AbstractMigration
+class Version20150518094618 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -49,6 +49,26 @@ class Version20150513161405 extends AbstractMigration
                 percentage INT NOT NULL, 
                 INDEX IDX_F125F34773484933 (objective_id), 
                 INDEX IDX_F125F347A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE hevinci_user_progress_log (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                date DATETIME NOT NULL, 
+                percentage INT NOT NULL, 
+                INDEX IDX_5125DF35A76ED395 (user_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE hevinci_user_progress (
+                id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
+                date DATETIME NOT NULL, 
+                percentage INT NOT NULL, 
+                INDEX IDX_53E81580A76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -95,6 +115,18 @@ class Version20150513161405 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE hevinci_user_progress_log 
+            ADD CONSTRAINT FK_5125DF35A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
+            ALTER TABLE hevinci_user_progress 
+            ADD CONSTRAINT FK_53E81580A76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
             ALTER TABLE hevinci_competency_progress 
             ADD percentage INT NOT NULL, 
             DROP type
@@ -111,6 +143,12 @@ class Version20150513161405 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE hevinci_objective_progress_log
+        ");
+        $this->addSql("
+            DROP TABLE hevinci_user_progress_log
+        ");
+        $this->addSql("
+            DROP TABLE hevinci_user_progress
         ");
         $this->addSql("
             ALTER TABLE hevinci_competency_progress 

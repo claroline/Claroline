@@ -28,14 +28,14 @@ class ObjectiveRepository extends EntityRepository
     }
 
     /**
-     * Returns an array representation of the objectives assigned to a user.
-     * Objectives assigned to groups whose the user is a member of are
-     * also returned.
+     * Returns the objectives assigned to a user. Objectives assigned to
+     * groups whose the user is a member of are also returned.
      *
-     * @param User $user
+     * @param User  $user
+     * @param bool  $asArray
      * @return array
      */
-    public function findByUser(User $user)
+    public function findByUser(User $user, $asArray = true)
     {
         $groupQb = $this->_em->createQueryBuilder()
             ->select('g')
@@ -43,8 +43,10 @@ class ObjectiveRepository extends EntityRepository
             ->join('g.users', 'gu')
             ->where('gu = :user');
 
-        return $this->createQueryBuilder('o')
-            ->select('o.id', 'o.name', 'COUNT(oc) AS competencyCount')
+        $select = $asArray ? 'o.id, o.name, COUNT(oc) AS competencyCount' : 'o';
+
+        $query = $this->createQueryBuilder('o')
+            ->select($select)
             ->leftJoin('o.objectiveCompetencies', 'oc')
             ->leftJoin('o.users', 'ou')
             ->leftJoin('o.groups', 'og')
@@ -54,8 +56,9 @@ class ObjectiveRepository extends EntityRepository
             ))
             ->groupBy('o.id')
             ->setParameter(':user', $user)
-            ->getQuery()
-            ->getArrayResult();
+            ->getQuery();
+
+        return $query->{$asArray ? 'getArrayResult' : 'getResult'}();
     }
 
     /**

@@ -17,6 +17,8 @@ class ProgressManagerTest extends RepositoryTestCase
     private $competencyProgressLogRepo;
     private $objectiveProgressRepo;
     private $objectiveProgressLogRepo;
+    private $userProgressRepo;
+    private $userProgressLogRepo;
     private $user;
     private $framework;
 
@@ -29,6 +31,8 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->competencyProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgressLog');
         $this->objectiveProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgress');
         $this->objectiveProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgressLog');
+        $this->userProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\UserProgress');
+        $this->userProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\UserProgressLog');
         $this->user = $this->persistUser('jdoe');
         $this->framework = $this->persistFramework();
     }
@@ -250,6 +254,23 @@ class ProgressManagerTest extends RepositoryTestCase
 
         $this->assertEquals(1, count($summaries));
         $this->assertEquals(100, $summaries[0]->getPercentage());
+        $this->assertEquals(1, count($logs));
+        $this->assertEquals(50, $logs[0]->getPercentage());
+    }
+
+    public function testHandleEvaluationTracksUserProgress()
+    {
+        $eval1 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->om->flush();
+        $this->manager->handleEvaluation($eval1);
+        $this->manager->handleEvaluation($eval2);
+
+        $summaries = $this->userProgressRepo->findBy(['user' => $this->user]);
+        $logs = $this->userProgressLogRepo->findBy(['user' => $this->user]);
+
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals(66, $summaries[0]->getPercentage());
         $this->assertEquals(1, count($logs));
         $this->assertEquals(50, $logs[0]->getPercentage());
     }
