@@ -53,6 +53,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $rootPath = $this->getRootPath();
 
         $rootNode
+            ->prototype('array')
             ->children()
                 ->arrayNode('file')
                     ->children()
@@ -71,6 +72,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
                             ->end()
                         ->end()
                     ->end()
+                ->end()
                 ->end()
             ->end();
     }
