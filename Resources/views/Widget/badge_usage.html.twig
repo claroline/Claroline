@@ -16,7 +16,11 @@
 
             <div class="media-body">
                 <h4 class="media-heading"><a href="{{ path('icap_badge_view_badge', {'slug': userBadge.badge.slug}) }}" title="{{ userBadge.badge.name }}">{{ userBadge.badge.name }}</a></h4>
+                {% if userBadge.issuer is null %}
+                <p>{{ 'badge_awarded_to_full_platform' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%systemName%': systemName}, 'icap_badge') | raw }}</p>
+                {% else %}
                 <p>{{ 'badge_awarded_to_full' | trans({'%userUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.user.publicUrl}), '%user%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName, '%issuerUrl%': path('claro_public_profile_view', {'publicUrl': userBadge.issuer.publicUrl}), '%issuer%': userBadge.user.lastName ~ ' ' ~ userBadge.user.firstName}, 'icap_badge') | raw }}</p>
+                {% endif %}
             </div>
         </li>
     {% else %}
