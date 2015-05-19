@@ -91,7 +91,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $exoTitle = $data['data'][0]['file']['title'];
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $newExercise = $this->createExo($exoTitle[1], $qtiRepos->getQtiUser());
+        $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
         if ($questions = opendir($rootPath.'/'.$exoPath)) {
             $questionFiles = array();
