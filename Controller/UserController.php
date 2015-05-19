@@ -81,9 +81,9 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}",
+     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_user_picker",
-     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0},
+     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -117,6 +117,11 @@ class UserController extends Controller
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "forcedWorkspaceIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "shownWorkspaces",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"multipleIds" = true, "name" = "shownWorkspaceIds"}
+     * )
      * @EXT\Template()
      */
     public function userPickerAction(
@@ -126,6 +131,7 @@ class UserController extends Controller
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
+        array $shownWorkspaces,
         $pickerName,
         $pickerTitle,
         $mode = 'single',
@@ -135,7 +141,8 @@ class UserController extends Controller
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0,
-        $showGroups = 0
+        $showGroups = 0,
+        $showPlatformRoles = 0
     )
     {
         $excludedIds = array();
@@ -143,6 +150,7 @@ class UserController extends Controller
         $forcedGroupsIds = array();
         $forcedRolesIds = array();
         $forcedWorkspacesIds = array();
+        $shownWorkspacesIds = array();
 
         foreach ($excludedUsers as $excludedUser) {
             $excludedIds[] = $excludedUser->getId();
@@ -164,6 +172,10 @@ class UserController extends Controller
             $forcedWorkspacesIds[] = $forcedWorkspace->getId();
         }
 
+        foreach ($shownWorkspaces as $shownWorkspace) {
+            $shownWorkspacesIds[] = $shownWorkspace->getId();
+        }
+
         return array(
             'pickerName' => $pickerName,
             'pickerTitle' => $pickerTitle,
@@ -175,26 +187,28 @@ class UserController extends Controller
             'showMail' => $showMail,
             'showCode' => $showCode,
             'showGroups' => $showGroups,
+            'showPlatformRoles' => $showPlatformRoles,
             'excludedUsersIds' => $excludedIds,
             'forcedUsersIds' => $forcedUsersIds,
             'selectedUsers' => $selectedUsers,
             'forcedGroupsIds' => $forcedGroupsIds,
             'forcedRolesIds' => $forcedRolesIds,
-            'forcedWorkspacesIds' => $forcedWorkspacesIds
+            'forcedWorkspacesIds' => $forcedWorkspacesIds,
+            'shownWorkspacesIds' => $shownWorkspacesIds
         );
     }
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_searched_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -238,6 +252,11 @@ class UserController extends Controller
      *      class="ClarolineCoreBundle:Workspace\Workspace",
      *      options={"multipleIds" = true, "name" = "forcedWorkspaceIds"}
      * )
+     * @EXT\ParamConverter(
+     *     "shownWorkspaces",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"multipleIds" = true, "name" = "shownWorkspaceIds"}
+     * )
      * @EXT\Template()
      */
     public function usersListForUserPickerAction(
@@ -250,6 +269,7 @@ class UserController extends Controller
         array $forcedGroups,
         array $forcedRoles,
         array $forcedWorkspaces,
+        array $shownWorkspaces,
         $search = '',
         $page = 1,
         $max = 50,
@@ -261,7 +281,8 @@ class UserController extends Controller
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0,
-        $showGroups = 0
+        $showGroups = 0,
+        $showPlatformRoles = 0
     )
     {
         $withAllUsers = intval($showAllUsers) === 1;
@@ -269,6 +290,7 @@ class UserController extends Controller
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
         $profilePreferences = $this->facetManager->getVisiblePublicPreference();
+        $shownWorkspaceIds = array();
 
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -291,6 +313,10 @@ class UserController extends Controller
             $forcedWorkspaces
         );
 
+        foreach ($shownWorkspaces as $ws) {
+            $shownWorkspaceIds[] = $ws->getId();
+        }
+
         return array(
             'users' => $users,
             'search' => $search,
@@ -305,7 +331,9 @@ class UserController extends Controller
             'showMail' => $showMail,
             'showCode' => $showCode,
             'showGroups' => $showGroups,
-            'profilePreferences' => $profilePreferences
+            'showPlatformRoles' => $showPlatformRoles,
+            'profilePreferences' => $profilePreferences,
+            'shownWorkspaceIds' => $shownWorkspaceIds
         );
     }
 

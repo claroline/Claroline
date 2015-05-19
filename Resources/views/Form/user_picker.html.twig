@@ -53,6 +53,7 @@
             {% set forcedGroupIds = [] %}
             {% set forcedRoleIds = [] %}
             {% set forcedWorkspaceIds = [] %}
+            {% set shownWorkspaceIds = [] %}
 
             {% for user in blacklist %}
                 {% set excludedUserIds = excludedUserIds|merge([user.getId()]) %}
@@ -78,6 +79,10 @@
                 {% set forcedWorkspaceIds = forcedWorkspaceIds|merge([workspace.getId()]) %}
             {% endfor %}
 
+            {% for workspace in shown_workspaces %}
+                {% set shownWorkspaceIds = shownWorkspaceIds|merge([workspace.getId()]) %}
+            {% endfor %}
+
             $('body').on('click', '.user-picker-{{ picker_name }}', function () {
                 var userPicker = new UserPicker();
                 var settings = {
@@ -91,12 +96,14 @@
                     show_mail: {% if show_mail %}true{% else %}false{% endif %},
                     show_code: {% if show_code %}true{% else %}false{% endif %},
                     show_groups: {% if show_groups %}true{% else %}false{% endif %},
+                    show_platform_roles: {% if show_platform_roles %}true{% else %}false{% endif %},
                     blacklist: {{ excludedUserIds|json_encode }},
                     whitelist: {{ forcedUserIds|json_encode }},
                     selected_users: {{ selectedUserIds|json_encode }},
                     forced_groups: {{ forcedGroupIds|json_encode }},
                     forced_roles: {{ forcedRoleIds|json_encode }},
-                    forced_workspaces: {{ forcedWorkspaceIds|json_encode }}
+                    forced_workspaces: {{ forcedWorkspaceIds|json_encode }},
+                    shown_workspaces: {{ shownWorkspaceIds|json_encode }}
                 };
                 userPicker.configure(settings, null);
                 userPicker.open();

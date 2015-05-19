@@ -18,12 +18,14 @@ var UserPicker = function () {
     this.showMail = 0;
     this.showCode = 0;
     this.showGroups = 0;
+    this.showPlatformRoles = 0;
     this.userIds = [];
     this.forcedUserIds = [];
     this.selectedUserIds = [];
     this.forcedGroupIds = [];
     this.forcedRoleIds = [];
     this.forcedWorkspaceIds = [];
+    this.shownWorkspaceIds = [];
     this.parameters = {};
     this.parameters.excludedUserIds = this.userIds;
     this.parameters.forcedUserIds = this.forcedUserIds;
@@ -31,6 +33,7 @@ var UserPicker = function () {
     this.parameters.forcedGroupIds = this.forcedGroupIds;
     this.parameters.forcedRoleIds = this.forcedRoleIds;
     this.parameters.forcedWorkspaceIds = this.forcedWorkspaceIds;
+    this.parameters.shownWorkspaceRoleIds = this.shownWorkspaceIds;
     this.callBack = function (results) {};
 };
 
@@ -76,6 +79,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
         this.showGroups = configurationDatas['show_groups'] ? 1 : 0;
     }
     
+    if (configurationDatas['show_platform_roles'] !== undefined) {
+        this.showPlatformRoles = configurationDatas['show_platform_roles'] ? 1 : 0;
+    }
+    
     if (configurationDatas['blacklist'] !== undefined) {
         this.userIds = configurationDatas['blacklist'];
     }
@@ -99,6 +106,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
     if (configurationDatas['forced_workspaces'] !== undefined) {
         this.forcedWorkspaceIds = configurationDatas['forced_workspaces'];
     }
+    
+    if (configurationDatas['shown_workspaces'] !== undefined) {
+        this.shownWorkspaceIds = configurationDatas['shown_workspaces'];
+    }
     this.parameters = {};
     this.parameters.excludedUserIds = this.userIds;
     this.parameters.forcedUserIds = this.forcedUserIds;
@@ -106,6 +117,7 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
     this.parameters.forcedGroupIds = this.forcedGroupIds;
     this.parameters.forcedRoleIds = this.forcedRoleIds;
     this.parameters.forcedWorkspaceIds = this.forcedWorkspaceIds;
+    this.parameters.shownWorkspaceIds = this.shownWorkspaceIds;
     this.callBack = callBack || this.callBack;
 };
 
@@ -124,7 +136,8 @@ UserPicker.prototype.open = function () {
             'showUsername': userPicker.showUsername,
             'showMail': userPicker.showMail,
             'showCode': userPicker.showCode,
-            'showGroups': userPicker.showGroups
+            'showGroups': userPicker.showGroups,
+            'showPlatformRoles': userPicker.showPlatformRoles
         }
     );
     route += '?' + $.param(this.parameters);
@@ -522,7 +535,8 @@ UserPicker.prototype.open = function () {
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
-                            'showGroups': userPicker.showGroups
+                            'showGroups': userPicker.showGroups,
+                            'showPlatformRoles': userPicker.showPlatformRoles
                         }
                     ) :
                     Routing.generate(
@@ -538,7 +552,8 @@ UserPicker.prototype.open = function () {
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
-                            'showGroups': userPicker.showGroups
+                            'showGroups': userPicker.showGroups,
+                            'showPlatformRoles': userPicker.showPlatformRoles
                         }
                     );
                 route += '?' + $.param(userPicker.parameters);

@@ -76,12 +76,14 @@ class UserPickerType extends AbstractType
         $view->vars['show_mail'] = $options['show_mail'];
         $view->vars['show_code'] = $options['show_code'];
         $view->vars['show_groups'] = $options['show_groups'];
+        $view->vars['show_platform_roles'] = $options['show_platform_roles'];
         $view->vars['blacklist'] = $options['blacklist'];
         $view->vars['whitelist'] = $options['whitelist'];
         $view->vars['selected_users'] = $options['selected_users'];
         $view->vars['forced_groups'] = $options['forced_groups'];
         $view->vars['forced_roles'] = $options['forced_roles'];
         $view->vars['forced_workspaces'] = $options['forced_workspaces'];
+        $view->vars['shown_workspaces'] = $options['shown_workspaces'];
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
@@ -103,12 +105,14 @@ class UserPickerType extends AbstractType
                 'show_mail' => false,
                 'show_code' => false,
                 'show_groups' => false,
+                'show_platform_roles' => false,
                 'blacklist' => array(),
                 'whitelist' => array(),
                 'selected_users' => array(),
                 'forced_groups' => array(),
                 'forced_roles' => array(),
-                'forced_workspaces' => array()
+                'forced_workspaces' => array(),
+                'shown_workspaces' => array()
             )
         );
     }
