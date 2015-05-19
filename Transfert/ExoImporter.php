@@ -63,15 +63,18 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $rootPath = $this->getRootPath();
 
         $rootNode
-            ->children()
-                ->arrayNode('file')
-                    ->children()
-                        ->scalarNode('path')->isRequired()->end()
-                        ->scalarNode('version')->end()
+            ->prototype('array')
+                ->children()
+                    ->arrayNode('file')
+                        ->children()
+                            ->scalarNode('path')->isRequired()->end()
+                            ->scalarNode('version')->end()
+                            ->scalarNode('title')->end()
+                        ->end()
                     ->end()
                 ->end()
-            ->end()
-        ->end();
+                ->end()
+            ->end();
     }
 
     public function validate(array $data)
@@ -85,10 +88,10 @@ class ExoImporter extends Importer implements ConfigurationInterface
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
         $exoPath = $data['data'][0]['file']['path'];
-        $tabExoPath = explode('/', $exoPath);
+        $exoTitle = $data['data'][0]['file']['title'];
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $newExercise = $this->createExo($tabExoPath[1], $qtiRepos->getQtiUser());
+        $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
         if ($questions = opendir($rootPath.'/'.$exoPath)) {
             $questionFiles = array();
