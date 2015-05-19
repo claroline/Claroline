@@ -2,6 +2,13 @@
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
+{# Commentaire ErvInnova #}
+{# pour gérer les menus, il faut se rendre dans le fichier edit.html.twig afin d'y ajouter le nouvel onglet #}
+{# puis il faut déclarer la vue dans le modèle de cette page #}
+{# puis il faut ajouter dans chaque vue de l'onglet les "reset" et "active" tab #}
+{# donc dans chaque vue au début, il faut avoir UNE déclaration "active" et TOUTES les autres en "reset" #}
+{# Fin commentaire ErvInnova #}
+
 {# reset the default active tab#}
 {% block collecticiel_edit_navTabs_criteria_element_class %}
 {% endblock %}
