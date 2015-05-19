@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyProgressRepository")
  * @ORM\Table(name="hevinci_competency_progress")
  */
 class CompetencyProgress extends AbstractCompetencyProgress

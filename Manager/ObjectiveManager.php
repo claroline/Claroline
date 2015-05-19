@@ -26,6 +26,7 @@ class ObjectiveManager
     private $objectiveRepo;
     private $competencyRepo;
     private $objectiveCompetencyRepo;
+    private $competencyProgressRepo;
 
     /**
      * @DI\InjectParams({
@@ -54,6 +55,7 @@ class ObjectiveManager
         $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
         $this->objectiveCompetencyRepo = $om->getRepository('HeVinciCompetencyBundle:ObjectiveCompetency');
+        $this->competencyProgressRepo = $om->getRepository('HeVinciCompetencyBundle:Progress\CompetencyProgress');
     }
 
     /**
@@ -88,18 +90,65 @@ class ObjectiveManager
      */
     public function loadObjectiveCompetencies(Objective $objective)
     {
-        $links = $objective->getObjectiveCompetencies();
-        $result = [];
+        return $this->doLoadObjectiveCompetencies($objective, true);
+    }
 
-        foreach ($links as $link) {
-            $loaded = $this->competencyManager->loadCompetency($link->getCompetency());
-            $loaded['id'] = $link->getId(); // link is treated as the competency itself on client-side
-            $loaded['framework'] = $link->getFramework()->getName();
-            $loaded['level'] = $link->getLevel()->getName();
-            $result[] = $loaded;
+    /**
+     * Returns an array representation of all the competencies associated
+     * with a user objective, including sub-competencies and progress data
+     * at each level.
+     *
+     * @param Objective $objective
+     * @param User      $user
+     * @return array
+     */
+    public function loadUserObjectiveCompetencies(Objective $objective, User $user)
+    {
+        $competencies = $this->doLoadObjectiveCompetencies($objective, false);
+        $competenciesWithProgress = [];
+        $competencyIds = [];
+
+        // extract the competency ids from the original nested array
+        $this->competencyManager->walkCollection($competencies, function ($competency) use (&$competencyIds) {
+            if (isset($competency['id'])) {
+                $competencyIds[] = isset($competency['originalId']) ?
+                    $competency['originalId'] :
+                    $competency['id'];
+            }
+
+            return $competency;
+        });
+
+        // fetch competency progress entities in one query and sort them by id
+        $competencyProgresses = $this->competencyProgressRepo->findByUserAndCompetencyIds($user, $competencyIds);
+        $competencyProgressesById = [];
+
+        foreach ($competencyProgresses as $competencyProgress) {
+            $competencyProgressesById[$competencyProgress->getCompetency()->getId()] = $competencyProgress;
         }
 
-        return $result;
+        // augment the original array with progress data
+        foreach ($competencies as $competency) {
+            $competenciesWithProgress[] = $this->competencyManager->walkCollection(
+                $competency,
+                function ($collection) use ($user, $competencyProgressesById) {
+                    if (isset($collection['id'])) {
+                        $id = isset($collection['originalId']) ? $collection['originalId'] : $collection['id'];
+
+                        if (isset($competencyProgressesById[$id])) {
+                            $progress = $competencyProgressesById[$id];
+                            $collection['userLevel'] = $progress->getLevel()->getName();
+                            $collection['userLevelValue'] = $progress->getLevel()->getValue();
+                            $collection['progress'] = $progress->getPercentage();
+                        }
+                    }
+
+                    return $collection;
+                }
+            );
+        }
+
+        return $competenciesWithProgress;
     }
 
     /**
@@ -255,7 +304,7 @@ class ObjectiveManager
     }
 
     /**
-     * Removes a user objective. If the objective is not specifically assigned
+     * Removes a user objective. If the objective is not specifically assigned to
      * the user (e.g. coming from a group), return false. Otherwise, returns the
      * re-computed percentage of user progression.
      *
@@ -273,6 +322,24 @@ class ObjectiveManager
         $this->om->flush();
 
         return $this->progressManager->recomputeUserProgress($user);
+    }
+
+    private function doLoadObjectiveCompetencies(Objective $objective, $loadAbilities)
+    {
+        $links = $objective->getObjectiveCompetencies();
+        $competencies = [];
+
+        foreach ($links as $link) {
+            $competency = $this->competencyManager->loadCompetency($link->getCompetency(), $loadAbilities);
+            $competency['originalId'] = $competency['id'];
+            $competency['id'] = $link->getId(); // link is treated as the competency itself on client-side
+            $competency['framework'] = $link->getFramework()->getName();
+            $competency['level'] = $link->getLevel()->getName();
+            $competency['levelValue'] = $link->getLevel()->getValue();
+            $competencies[] = $competency;
+        }
+
+        return $competencies;
     }
 
     private function getSubjectType($subject)

@@ -87,7 +87,7 @@ class ProgressManager
     }
 
     /**
-     * Recomputes the progression of a user or of a group of users.
+     * Recomputes the progression of a user or a group of users.
      * In case the subject is a user, returns the computed percentage,
      * otherwise returns null.
      *

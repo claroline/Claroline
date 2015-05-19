@@ -18,6 +18,7 @@ use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
+use HeVinci\CompetencyBundle\Entity\Progress\CompetencyProgress;
 use HeVinci\CompetencyBundle\Entity\Scale;
 
 abstract class RepositoryTestCase extends TransactionalTestCase
@@ -196,5 +197,15 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $this->om->persist($objective);
 
         return $objective;
+    }
+
+    protected function persistCompetencyProgress(User $user, Competency $competency)
+    {
+        $progress = new CompetencyProgress();
+        $progress->setUser($user);
+        $progress->setCompetency($competency);
+        $this->om->persist($progress);
+
+        return $progress;
     }
 }

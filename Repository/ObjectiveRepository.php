@@ -43,13 +43,19 @@ class ObjectiveRepository extends EntityRepository
             ->join('g.users', 'gu')
             ->where('gu = :user');
 
-        $select = $asArray ? 'o.id, o.name, COUNT(oc) AS competencyCount' : 'o';
+        $select = $asArray ? 'o.id, o.name, op.percentage AS progress, COUNT(oc) AS competencyCount' : 'o';
 
         $query = $this->createQueryBuilder('o')
             ->select($select)
             ->leftJoin('o.objectiveCompetencies', 'oc')
             ->leftJoin('o.users', 'ou')
             ->leftJoin('o.groups', 'og')
+            ->leftJoin(
+                'HeVinci\CompetencyBundle\Entity\Progress\ObjectiveProgress',
+                'op',
+                'WITH',
+                'op.user = :user AND op.objective = o'
+            )
             ->andWhere($groupQb->expr()->orX(
                 'ou = :user',
                 $groupQb->expr()->in('og', $groupQb->getQuery()->getDQL())

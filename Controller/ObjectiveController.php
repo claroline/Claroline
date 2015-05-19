@@ -194,6 +194,21 @@ class ObjectiveController
     }
 
     /**
+     * Returns the competencies associated to an objective assigned to a user, with progress data.
+     *
+     * @EXT\Route("/{id}/users/{userId}/competencies", name="hevinci_load_user_objective_competencies")
+     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     *
+     * @param Objective $objective
+     * @param User      $user
+     * @return JsonResponse
+     */
+    public function userObjectiveCompetenciesAction(Objective $objective, User $user)
+    {
+        return new JsonResponse($this->manager->loadUserObjectiveCompetencies($objective, $user));
+    }
+
+    /**
      * Displays the list of users who have at least one objective.
      *
      * @EXT\Route("/users", name="hevinci_objectives_users")

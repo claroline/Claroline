@@ -29,10 +29,10 @@
         {{ framework }}
     </td>
     <td class="x-large-cell">
-        {% if type != 'competency' or hasChildren %}
+        {% if hasChildren %}
             <div class="progress"
                  data-toggle="tooltip"
-                 data-placement="bottom"
+                 data-placement="top"
                  title="{{ progress }}%">
                 <div class="progress-bar"
                      role="progressbar"
@@ -43,7 +43,7 @@
                 </div>
             </div>
         {% else %}
-            -
+            {{ progress }}
         {% endif %}
     </td>
     <td class="large-cell">

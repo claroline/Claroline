@@ -30,8 +30,8 @@ class CompetencyManager
      *     "translator" = @DI\Inject("translator")
      * })
      *
-     * @param ObjectManager         $om
-     * @param TranslatorInterface   $translator
+     * @param ObjectManager $om
+     * @param TranslatorInterface $translator
      */
     public function __construct(ObjectManager $om, TranslatorInterface $translator)
     {
@@ -185,21 +185,7 @@ class CompetencyManager
             $abilitiesByCompetency[$ability['competencyId']][] = $ability;
         }
 
-        $augment = function ($collection, \Closure $callback) use (&$augment) {
-            if (is_array($collection)) {
-                $result = [];
-
-                foreach ($collection as $key => $item) {
-                    $result[$key] = $augment($item, $callback);
-                }
-
-                return $callback($result);
-            }
-
-            return $collection;
-        };
-
-        return $augment($competencies, function ($collection) use ($abilitiesByCompetency) {
+        return $this->walkCollection($competencies, function ($collection) use ($abilitiesByCompetency) {
             if (isset($collection['id']) && isset($abilitiesByCompetency[$collection['id']])) {
                 $collection['__abilities'] = $abilitiesByCompetency[$collection['id']];
             }
@@ -422,5 +408,32 @@ class CompetencyManager
     public function suggestGroups($search)
     {
         return $this->competencyRepo->findFirstGroupsByName($search);
+    }
+
+    /**
+     * Utility method. Walks a collection recursively, applying a callback on
+     * each element.
+     *
+     * Unlike array_walk_recursive :
+     * - the result is a *copy* of the original collection
+     * - all the nodes are visited, not only the leafs
+     *
+     * @param mixed     $collection
+     * @param callable  $callback
+     * @return mixed
+     */
+    public function walkCollection($collection, \Closure $callback)
+    {
+        if (is_array($collection)) {
+            $result = [];
+
+            foreach ($collection as $key => $item) {
+                $result[$key] = $this->walkCollection($item, $callback);
+            }
+
+            return $callback($result);
+        }
+
+        return $collection;
     }
 }
