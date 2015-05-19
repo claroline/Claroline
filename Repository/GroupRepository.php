@@ -518,4 +518,17 @@ class GroupRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findAllGroups($orderedBy = 'id', $order = 'ASC', $executeQuery = true)
+    {
+        $dql = "
+            SELECT g
+            FROM Claroline\CoreBundle\Entity\Group g
+            ORDER BY g.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

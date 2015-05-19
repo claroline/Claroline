@@ -508,4 +508,13 @@ class GroupManager
     {
         return $this->groupRepo->findGroupByName($name, $executeQuery);
     }
+
+    public function getAllGroupsWithoutPager(
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->groupRepo->findAllGroups($orderedBy, $order, $executeQuery);
+    }
 }

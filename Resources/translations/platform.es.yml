@@ -71,6 +71,7 @@ add_a_logo: 'Agregar un logo'
 add_category: 'Agregar categoría'
 add_field_to_facet: 'Agregar un campo a una faceta'
 add_field_to_panel: add_field_to_panel
+add_filter: 'Agregar un filtro'
 add_group: 'Agregar grupo'
 add_group_s_confirm_message: 'Grupos agregados'
 add_groups: 'Agregar grupos'
@@ -108,6 +109,7 @@ all_available_workspaces: 'Todos los espacios de trabajo disponibles'
 all_my_workspaces: 'Todos mis espacios de trabajo'
 all_public_personal_workspaces: 'Todos los espacios personales publicos'
 all_public_workspaces: 'Todos los espacios de trabajo públicos'
+all_roles: 'Todos los roles'
 all_workspaces: 'Todos los espacios de trabajo'
 already_existing_user: 'El usuario ya existe'
 already_exists: already_exists
@@ -360,6 +362,7 @@ file: Archivos
 files: Archivos
 filter: Filtro
 filter_actions: 'Acciones de filtrado'
+filters: 'Filtros'
 find_workspaces: 'Espacios de trabajo publicos'
 firstName: Nombre
 first_name: Apellido
@@ -594,7 +597,8 @@ no_action_found: 'No hay acciones.'
 no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
-no_group: 'No hay grupos'
+no_filter: 'No hay filtro'
+no_group: 'No hay grupo'
 no_home_tab: 'No hay pestañas'
 no_learning_outcomes: no_learning_outcomes
 no_message: 'No hay mensajes'
@@ -803,6 +807,10 @@ security_tokens_management: 'Gestión de tokens de seguridad'
 see: Ver
 see_more: 'Ver más'
 see_public_profile: see_public_profile
+select_a_filter_type: 'Seleccione un tipo de filtro'
+select_a_group: 'Seleccione un grupo'
+select_a_role: 'Seleccione un role'
+select_a_workspace: 'Seleccione un espacio de trabajo'
 select_all: 'Seleccionar todo'
 select_category: 'Seleccionar una categoría'
 select_contacts_title: 'Seleccionar receptores'
@@ -811,6 +819,7 @@ select_roles_to_assign: 'Seleccionar roles a asignar'
 select_users_for_registration_to_workspace: 'Seleccionar usuario a inscribir'
 select_workspace_to_link: 'Seleccione una espacio de trabajo a vincular'
 select_workspaces_for_registration: 'Seleccionar espacio de trabajo a inscribir'
+selected_users: 'Usuarios seleccionados'
 selected_workspaces_for_registration: 'Espacio de trabajo seleccionado para la inscripción'
 selected_workspaces_will_be_put_in_it: 'Los espacios de trabajo seleccionados serán puestos allí'
 self_registration: Auto-Inscripción
@@ -977,6 +986,7 @@ user_picker: user_picker
 user_profile: user_profile
 user_public_profile_not_visible: user_public_profile_not_visible
 user_removed: 'Usuario suprimido'
+user_selector: 'Selector de usuarios'
 user_visit: 'Visitas del usuario'
 username: 'Nombre de usuario'
 username_and_email_from_two_different_users: username_and_email_from_two_different_users
