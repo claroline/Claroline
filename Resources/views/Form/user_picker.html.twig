@@ -2,6 +2,7 @@
 
 {% block userpicker_widget %}
     {% spaceless %}
+        {% set timedPickerName = picker_name ~ '-' ~ 'now'|date('U') %}
         <input type="hidden"
 
                {% if multiple %}
@@ -17,7 +18,7 @@
                        value="{{ value['id'] }}"
                    {% endif %}
                {% endif %}
-               id="user-picker-input-{{ picker_name }}"
+               id="user-picker-input-{{ timedPickerName }}"
                
                {% if multiple and value is not empty %}
                    data-selected-users-names="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %};;;{% endif %}{% endif %}{% endfor %}"
@@ -25,7 +26,7 @@
         >
         <div class="input-group">
             <input type="text"
-                   class="form-control user-picker user-picker-input user-picker-{{ picker_name }}"
+                   class="form-control user-picker user-picker-input user-picker-{{ timedPickerName }}"
                        
                    {% if value is not empty %}
                        {% if multiple %}
@@ -34,11 +35,11 @@
                            value="{{ value['name'] }}"
                        {% endif %}
                    {% endif %}
-                   id="user-picker-input-view-{{ picker_name }}"
+                   id="user-picker-input-view-{{ timedPickerName }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
             >
             <span class="input-group-btn">
-                <span class="btn btn-default user-picker user-picker-{{ picker_name }}"
+                <span class="btn btn-default user-picker user-picker-{{ timedPickerName }}"
                       type="button"
                 >
                     <i class="fa fa-user"></i>
@@ -83,10 +84,10 @@
                 {% set shownWorkspaceIds = shownWorkspaceIds|merge([workspace.getId()]) %}
             {% endfor %}
 
-            $('body').on('click', '.user-picker-{{ picker_name }}', function () {
+            $('body').on('click', '.user-picker-{{ timedPickerName }}', function () {
                 var userPicker = new UserPicker();
                 var settings = {
-                    picker_name: "{{ picker_name }}",
+                    picker_name: "{{ timedPickerName }}",
                     picker_title: "{{ picker_title }}",
                     multiple: {% if multiple %}true{% else %}false{% endif %},
                     show_all_users: {% if show_all_users %}true{% else %}false{% endif %},
