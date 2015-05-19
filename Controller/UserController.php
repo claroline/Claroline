@@ -125,6 +125,7 @@ class UserController extends Controller
      * @EXT\Template()
      */
     public function userPickerAction(
+        User $authenticatedUser,
         array $excludedUsers,
         array $forcedUsers,
         array $selectedUsers,
@@ -145,6 +146,11 @@ class UserController extends Controller
         $showPlatformRoles = 0
     )
     {
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName(
+            $authenticatedUser,
+            'ROLE_ADMIN'
+        );
+        $isAdmin = !is_null($adminRole);
         $excludedIds = array();
         $forcedUsersIds = array();
         $forcedGroupsIds = array();
@@ -194,7 +200,8 @@ class UserController extends Controller
             'forcedGroupsIds' => $forcedGroupsIds,
             'forcedRolesIds' => $forcedRolesIds,
             'forcedWorkspacesIds' => $forcedWorkspacesIds,
-            'shownWorkspacesIds' => $shownWorkspacesIds
+            'shownWorkspacesIds' => $shownWorkspacesIds,
+            'isAdmin' => $isAdmin
         );
     }
 

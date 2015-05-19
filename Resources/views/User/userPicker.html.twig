@@ -54,9 +54,12 @@
                                             <option value="group">
                                                 {{ 'group'|trans({}, 'platform') }}
                                             </option>
-                                            <option value="role">
-                                                {{ 'role'|trans({}, 'platform') }}
-                                            </option>
+                                            
+                                            {% if isAdmin %}
+                                                <option value="role">
+                                                    {{ 'role'|trans({}, 'platform') }}
+                                                </option>
+                                            {% endif %}
                                             <option value="workspace">
                                                 {{ 'workspace'|trans({}, 'platform') }}
                                             </option>
