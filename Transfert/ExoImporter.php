@@ -69,7 +69,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
                         ->children()
                             ->scalarNode('path')->isRequired()->end()
                             ->scalarNode('version')->end()
-                            ->scalarNode('title')->end()
+                            //->scalarNode('title')->end()
                         ->end()
                     ->end()
                 ->end()
@@ -88,10 +88,11 @@ class ExoImporter extends Importer implements ConfigurationInterface
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
         $exoPath = $data['data'][0]['file']['path'];
-        $exoTitle = $data['data'][0]['file']['title'];
+        //$exoTitle = $data['data'][0]['file']['title'];
+        $exoTitle = explode('/', $exoPath);
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
-        $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
+        $newExercise = $this->createExo($exoTitle[1], $qtiRepos->getQtiUser());
 
         if ($questions = opendir($rootPath.'/'.$exoPath)) {
             $questionFiles = array();
