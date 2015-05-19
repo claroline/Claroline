@@ -6,7 +6,7 @@
 {% set indent = indent is defined ? indent : 0 %}
 {% set collapsed = collapsed is defined ? collapsed : false %}
 {% set framework = framework is defined ? framework : '-' %}
-{% set progress = progress is defined ? progress : 0 %}
+{% set progress = progress is defined and progress is not null ? progress : 0 %}
 {% set userLevel = userLevel is defined ? userLevel : '-' %}
 {% set level = level is defined ? level : '-' %}
 {% set hasObjectives = hasObjectives is defined ? hasObjectives : false %}
@@ -30,7 +30,10 @@
     </td>
     <td class="x-large-cell">
         {% if type != 'competency' or hasChildren %}
-            <div class="progress">
+            <div class="progress"
+                 data-toggle="tooltip"
+                 data-placement="bottom"
+                 title="{{ progress }}%">
                 <div class="progress-bar"
                      role="progressbar"
                      aria-valuemin="0"

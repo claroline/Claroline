@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
@@ -83,6 +84,38 @@ class ProgressManager
         }
 
         $this->om->flush();
+    }
+
+    /**
+     * Recomputes the progression of a user or of a group of users.
+     * In case the subject is a user, returns the computed percentage,
+     * otherwise returns null.
+     *
+     * Note: this method recomputes only the percentage of reached objectives.
+     *
+     * @param User|Group $subject
+     * @return null|int
+     */
+    public function recomputeUserProgress($subject)
+    {
+        $this->clearCache();
+        $percentage = null;
+
+        if ($subject instanceof User) {
+            $percentage = $this->computeUserProgress($subject);
+        } elseif ($subject instanceof Group) {
+            foreach ($subject->getUsers() as $user) {
+                $this->computeUserProgress($user);
+            }
+        } else {
+            throw new \InvalidArgumentException(
+                'Subject must be an instance of User or Group'
+            );
+        }
+
+        $this->om->flush();
+
+        return $percentage;
     }
 
     private function clearCache()
@@ -303,13 +336,15 @@ class ProgressManager
         $progress = $this->getUserProgress($user);
         $objectives = $this->getUserObjectives($user);
         $percentageSum = 0;
-
         for ($i = 0, $count = count($objectives); $i < $count; ++$i) {
             $objectiveProgress = $this->getObjectiveProgress($objectives[$i], $user);
             $percentageSum += $objectiveProgress->getPercentage();
         }
 
-        $progress->setPercentage((int) ($percentageSum / $count));
+        $percentage = (int) ($percentageSum / $count);
+        $progress->setPercentage($percentage);
+
+        return $percentage;
     }
 
     private function getUserObjectives(User $user)

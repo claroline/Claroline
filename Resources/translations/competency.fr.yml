@@ -79,6 +79,7 @@ message:
   objective_deleted: Objectif supprimé avec succès.
   objective_deletion_confirm: Voulez-vous vraiment supprimer cet objectif ? Cette action est irréversible.
   objective_edited: Objectif modifié avec succès.
+  objective_from_group_not_unassigned: Cet objectif ne peut être retiré directement car il a été assigné à l'un des groupes de l'utilisateur.
   objective_unassigned: Objectif retiré avec succès.
   objective_unassign_group_confirm: Voulez-vous vraiment retirer cet objectif à ce groupe ?
   objective_unassign_user_confirm: Voulez-vous vraiment retirer cet objectif à cet utilisateur ?

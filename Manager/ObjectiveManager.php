@@ -21,6 +21,7 @@ class ObjectiveManager
 {
     private $om;
     private $competencyManager;
+    private $progressManager;
     private $pagerFactory;
     private $objectiveRepo;
     private $competencyRepo;
@@ -28,23 +29,27 @@ class ObjectiveManager
 
     /**
      * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "manager"        = @DI\Inject("hevinci.competency.competency_manager"),
-     *     "pagerFactory"   = @DI\Inject("claroline.pager.pager_factory")
+     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
+     *     "competencyManager"  = @DI\Inject("hevinci.competency.competency_manager"),
+     *     "progressManager"    = @DI\Inject("hevinci.competency.progress_manager"),
+     *     "pagerFactory"       = @DI\Inject("claroline.pager.pager_factory"),
      * })
      *
      * @param ObjectManager     $om
-     * @param CompetencyManager $manager
+     * @param CompetencyManager $competencyManager
+     * @param ProgressManager   $progressManager
      * @param PagerFactory      $pagerFactory
      */
     public function __construct(
         ObjectManager $om,
-        CompetencyManager $manager,
+        CompetencyManager $competencyManager,
+        ProgressManager $progressManager,
         PagerFactory $pagerFactory
     )
     {
         $this->om = $om;
-        $this->competencyManager = $manager;
+        $this->competencyManager = $competencyManager;
+        $this->progressManager = $progressManager;
         $this->pagerFactory = $pagerFactory;
         $this->objectiveRepo = $om->getRepository('HeVinciCompetencyBundle:Objective');
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
@@ -215,6 +220,8 @@ class ObjectiveManager
         $objective->{$addMethod}($subject);
         $this->om->flush();
 
+        $this->progressManager->recomputeUserProgress($subject);
+
         return true;
     }
 
@@ -234,19 +241,38 @@ class ObjectiveManager
     }
 
     /**
-     * Unassigns a user or group objective.
+     * Removes a group objective.
      *
-     * @param Objective     $objective
-     * @param User|Group    $subject
+     * @param Objective $objective
+     * @param Group     $group
      * @return array
-     * @throws \Exception if the subject is not an instance of User or Group
      */
-    public function removeSubjectObjective(Objective $objective, $subject)
+    public function removeGroupObjective(Objective $objective, Group $group)
     {
-        $target = $this->getSubjectType($subject);
-        $entityMethod = "remove{$target}";
-        $objective->{$entityMethod}($subject);
+        $objective->removeGroup($group);
         $this->om->flush();
+        $this->progressManager->recomputeUserProgress($group);
+    }
+
+    /**
+     * Removes a user objective. If the objective is not specifically assigned
+     * the user (e.g. coming from a group), return false. Otherwise, returns the
+     * re-computed percentage of user progression.
+     *
+     * @param Objective $objective
+     * @param User $user
+     * @return bool|int
+     */
+    public function removeUserObjective(Objective $objective, User $user)
+    {
+        if (!$objective->hasUser($user)) {
+            return false;
+        }
+
+        $objective->removeUser($user);
+        $this->om->flush();
+
+        return $this->progressManager->recomputeUserProgress($user);
     }
 
     private function getSubjectType($subject)

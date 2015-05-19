@@ -319,7 +319,10 @@ class ObjectiveController
      */
     public function removeUserObjectiveAction(Objective $objective, User $user)
     {
-        return new JsonResponse($this->manager->removeSubjectObjective($objective, $user));
+        return new JsonResponse(
+            $result = $this->manager->removeUserObjective($objective, $user),
+            $result === false ? 204 : 200
+        );
     }
 
     /**
@@ -335,7 +338,7 @@ class ObjectiveController
      */
     public function removeGroupObjectiveAction(Objective $objective, Group $group)
     {
-        return new JsonResponse($this->manager->removeSubjectObjective($objective, $group));
+        return new JsonResponse($this->manager->removeGroupObjective($objective, $group));
     }
 
     /**

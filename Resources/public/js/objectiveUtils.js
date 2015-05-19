@@ -146,9 +146,23 @@
 
         Claroline.Modal.confirmRequest(
             Routing.generate(route, params),
-            function () {
-                self.removeRow(row);
-                self.setFlashMessage('message.objective_unassigned');
+            function (event, successParameter, data, jqXHR) {
+                if (jqXHR.status === 204 && target === 'user') {
+                    // no content, objective is assigned to a group
+                    self.setFlashMessage('message.objective_from_group_not_unassigned', 'warning');
+                } else {
+                    if (target === 'user') {
+                        // refresh user progress percentage
+                        var $userRow = $('tr[data-type=user][data-id=' + row.dataset.path + ']');
+                        var $progress = $userRow.find('div.progress');
+                        $progress.children('div.progress-bar').css('width', data + '%');
+                        $progress.prop('title', data + '%');
+                        $progress.tooltip('destroy').tooltip();
+                    }
+
+                    self.removeRow(row);
+                    self.setFlashMessage('message.objective_unassigned');
+                }
             },
             null,
             self.trans('message.objective_unassign_' + target + '_confirm'),

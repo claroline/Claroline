@@ -183,11 +183,12 @@ class ObjectiveRepository extends EntityRepository
             $groupsQb->where('o2 = :objective');
         }
 
-        $select = $countOnly ? 'COUNT(u.id)' : 'u.id, u.firstName, u.lastName';
+        $select = $countOnly ? 'COUNT(u.id)' : 'u.id, u.firstName, u.lastName, up.percentage AS progress';
 
         $qb = $this->_em->createQueryBuilder()
             ->select($select)
             ->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->leftJoin('HeVinci\CompetencyBundle\Entity\Progress\UserProgress', 'up', 'WITH', 'up.user = u')
             ->leftJoin('u.groups', 'ug')
             ->where((new Expr())->in('u.id', $usersQb->getDQL()))
             ->orWhere((new Expr())->in('ug.id', $groupsQb->getDQL()));
