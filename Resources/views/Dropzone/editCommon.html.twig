@@ -5,8 +5,17 @@
 {% block dropzone_edit_navTabs_param_link %}
     #
 {% endblock %}
+
+{# reset the default active tab#}
+{% block collecticiel_edit_navTabs_criteria_element_class %}
+{% endblock %}
+{# seting the correct active tab#}
+{% block dropzone_edit_navTabs_criteria_element_class %}
+    active
+{% endblock %}
+
+
 {% block drop_zone_content_edit %}
-    zozo
     {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
         {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
             {#<ul class="nav navbar-nav">#}

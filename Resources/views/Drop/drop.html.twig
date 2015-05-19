@@ -1,4 +1,4 @@
-{% extends "InnovaCollecticielBundle::layout.html.twig" %}
+{% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
@@ -10,7 +10,7 @@
     <li class="active"> {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}</li>
 {% endblock %}
 
-{% block dropzone_content %}
+{% block drop_zone_content_edit %}
     <style>
         .dropzone-form-control-reduced {
             width: 80%;
@@ -27,7 +27,7 @@
     </style>
     <div class="container">
         <h3>
-            aqaq{{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
+            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
         </h3>
 
         {{ macros.flashBox() }}
