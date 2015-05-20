@@ -233,11 +233,13 @@ class ObjectiveManager
      * objective are returned.
      *
      * @param Objective $objective
+     * @param Group     $group
+     * @param int       $page
      * @return Pagerfanta
      */
-    public function listUsersWithObjective(Objective $objective = null)
+    public function listUsersWithObjective(Objective $objective = null, Group $group = null, $page = 1)
     {
-        return $this->listSubjectsWithObjective('Users', $objective);
+        return $this->listSubjectsWithObjective('Users', $objective, $group, $page);
     }
 
     /**
@@ -246,11 +248,12 @@ class ObjectiveManager
      * objective are returned.
      *
      * @param Objective $objective
+     * @param int       $page
      * @return Pagerfanta
      */
-    public function listGroupsWithObjective(Objective $objective = null)
+    public function listGroupsWithObjective(Objective $objective = null, $page = 1)
     {
-        return $this->listSubjectsWithObjective('Groups', $objective);
+        return $this->listSubjectsWithObjective('Groups', $objective, null, $page);
     }
 
     /**
@@ -357,14 +360,14 @@ class ObjectiveManager
         return $subject instanceof User ? 'User' : 'Group';
     }
 
-    private function listSubjectsWithObjective($subjectType, Objective $objective = null)
+    private function listSubjectsWithObjective($subjectType, Objective $objective = null, Group $group = null, $page = 1)
     {
         $countMethod = "get{$subjectType}WithObjectiveCountQuery";
         $fetchMethod = "get{$subjectType}WithObjectiveQuery";
-        $countQuery = $this->objectiveRepo->{$countMethod}($objective);
-        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective);
+        $countQuery = $this->objectiveRepo->{$countMethod}($objective, $group);
+        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective, $group);
         $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
 
-        return $this->pagerFactory->createPagerWithAdapter($adapter, 1);
+        return $this->pagerFactory->createPagerWithAdapter($adapter, $page);
     }
 }

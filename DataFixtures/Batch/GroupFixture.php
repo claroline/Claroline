@@ -33,7 +33,6 @@ class GroupFixture extends DataFixture
         return $this->loadCsvData(__DIR__ . '/../files/groups.csv', ',');
     }
 
-
     private function buildGroup($name)
     {
         $group = new Group();
@@ -42,4 +41,4 @@ class GroupFixture extends DataFixture
 
         return $group;
     }
-} 
+}

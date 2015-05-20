@@ -152,7 +152,7 @@ class ObjectiveController
      * )
      * @EXT\Method("POST")
      * @EXT\ParamConverter("competency", options={"id"= "competencyId"})
-     * @EXT\ParamConverter("level", options={"id"= "levelId"})
+     * @EXT\ParamConverter("level", options={"id"="levelId"})
      *
      * @param Objective     $objective
      * @param Competency    $competency
@@ -214,11 +214,12 @@ class ObjectiveController
      * @EXT\Route("/users", name="hevinci_objectives_users")
      * @EXT\Template
      *
+     * @param Request $request
      * @return array
      */
-    public function usersAction()
+    public function usersAction(Request $request)
     {
-        return ['pager' => $this->manager->listUsersWithObjective()];
+        return ['pager' => $this->manager->listUsersWithObjective(null, null, $request->query->get('page', 1))];
     }
 
     /**
@@ -228,13 +229,35 @@ class ObjectiveController
      * @EXT\Template("HeVinciCompetencyBundle:Objective:users.html.twig")
      *
      * @param Objective $objective
+     * @param Request   $request
      * @return array
      */
-    public function objectiveUsersAction(Objective $objective)
+    public function objectiveUsersAction(Objective $objective, Request $request)
     {
         return [
-            'pager' => $this->manager->listUsersWithObjective($objective),
+            'pager' => $this->manager->listUsersWithObjective($objective, null, $request->query->get('page', 1)),
             'isFilteredByObjective' => true
+        ];
+    }
+
+    /**
+     * Displays the members of a group which have a particular objective.
+     *
+     * @EXT\Route("/{id}/groups/{groupId}/users", name="hevinci_objective_group_users")
+     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     * @EXT\Template("HeVinciCompetencyBundle:Objective:users.html.twig")
+     *
+     * @param Objective $objective
+     * @param Group     $group
+     * @param Request   $request
+     * @return array
+     */
+    public function objectiveGroupUsersAction(Objective $objective, Group $group, Request $request)
+    {
+        return [
+            'pager' => $this->manager->listUsersWithObjective($objective, $group, $request->query->get('page', 1)),
+            'isFilteredByObjective' => true,
+            'isFilteredByGroup' => true
         ];
     }
 
@@ -244,11 +267,12 @@ class ObjectiveController
      * @EXT\Route("/groups", name="hevinci_objectives_groups")
      * @EXT\Template
      *
+     * @param Request $request
      * @return array
      */
-    public function groupsAction()
+    public function groupsAction(Request $request)
     {
-        return ['pager' => $this->manager->listGroupsWithObjective()];
+        return ['pager' => $this->manager->listGroupsWithObjective(null, $request->query->get('page', 1))];
     }
 
     /**
@@ -273,8 +297,8 @@ class ObjectiveController
      *
      * @EXT\Route("/{objectiveId}/users/{userId}", name="hevinci_objectives_assign_to_user")
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
-     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     * @EXT\ParamConverter("objective", options={"id"="objectiveId"})
+     * @EXT\ParamConverter("user", options={"id"="userId"})
      *
      * @param Objective $objective
      * @param User $user
@@ -293,8 +317,8 @@ class ObjectiveController
      *
      * @EXT\Route("/{objectiveId}/groups/{groupId}", name="hevinci_objectives_assign_to_group")
      * @EXT\Method("POST")
-     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
-     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     * @EXT\ParamConverter("objective", options={"id"="objectiveId"})
+     * @EXT\ParamConverter("group", options={"id"="groupId"})
      *
      * @param Objective $objective
      * @param Group     $group
@@ -325,8 +349,8 @@ class ObjectiveController
      * Unassigns a user objective.
      *
      * @EXT\Route("/{objectiveId}/users/{userId}/remove", name="hevinci_remove_user_objective")
-     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
-     * @EXT\ParamConverter("user", options={"id"= "userId"})
+     * @EXT\ParamConverter("objective", options={"id"="objectiveId"})
+     * @EXT\ParamConverter("user", options={"id"="userId"})
      *
      * @param Objective $objective
      * @param User      $user
@@ -344,8 +368,8 @@ class ObjectiveController
      * Unassigns a user objective.
      *
      * @EXT\Route("/{objectiveId}/groups/{groupId}/remove", name="hevinci_remove_group_objective")
-     * @EXT\ParamConverter("objective", options={"id"= "objectiveId"})
-     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     * @EXT\ParamConverter("objective", options={"id"="objectiveId"})
+     * @EXT\ParamConverter("group", options={"id"="groupId"})
      *
      * @param Objective $objective
      * @param Group     $group

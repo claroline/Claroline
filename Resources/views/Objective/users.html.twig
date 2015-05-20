@@ -2,6 +2,7 @@
 
 {% set activeTab = 'users' %}
 {% set isFilteredByObjective = isFilteredByObjective is defined ? isFilteredByObjective : false %}
+{% set isFilteredByGroup = isFilteredByGroup is defined ? isFilteredByGroup : false %}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ 'users'|trans({}, 'platform') }}
@@ -18,12 +19,7 @@
 
 {% block tabContent %}
     {% if pager.getNbPages() > 1 %}
-        {{
-            pagerfanta(pager, 'twitter_bootstrap_translated', {
-                'proximity' : 1,
-                'routeName': 'hevinci_objectives_users'
-            })
-        }}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', { 'proximity': 1 }) }}
     {% endif %}
 
     <br>
@@ -59,7 +55,11 @@
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
             {% if isFilteredByObjective %}
-                {{ 'info.no_objective_users'|trans({}, 'competency') }}
+                {% if isFilteredByGroup %}
+                    {{ 'info.no_objective_group_users'|trans({}, 'competency') }}
+                {% else %}
+                    {{ 'info.no_objective_users'|trans({}, 'competency') }}
+                {% endif %}
             {% else %}
                 {{ 'info.no_user_objectives'|trans({}, 'competency') }}
             {% endif %}

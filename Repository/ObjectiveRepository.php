@@ -77,7 +77,7 @@ class ObjectiveRepository extends EntityRepository
     public function findByGroup(Group $group)
     {
         return $this->createQueryBuilder('o')
-            ->select('o.id', 'o.name')
+            ->select('o.id', 'o.name', 'g.id AS groupId')
             ->join('o.groups', 'g')
             ->where('g = :group')
             ->groupBy('o.id')

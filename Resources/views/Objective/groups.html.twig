@@ -18,12 +18,7 @@
 
 {% block tabContent %}
     {% if pager.getNbPages() > 1 %}
-        {{
-            pagerfanta(pager, 'twitter_bootstrap_translated', {
-                'proximity' : 1,
-                'routeName': 'hevinci_objectives_groups'
-            })
-        }}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', { 'proximity': 1 }) }}
     {% endif %}
 
     <br>
