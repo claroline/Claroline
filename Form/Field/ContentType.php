@@ -105,8 +105,8 @@ class ContentType extends AbstractType
         $themeOptions = array(
             'contentTitle' => true,
             'contentText' => true,
-            'titlePlaceHolder' => 'Optional title',
-            'textPlaceHolder' => 'Create a content'
+            'titlePlaceHolder' => 'optional_title',
+            'textPlaceHolder' => 'create_content'
         );
 
         foreach ($themeOptions as $option => $defaultValue) {

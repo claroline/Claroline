@@ -20,6 +20,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserOptions
 {
+    const READ_ONLY_MODE = 0;
+    const EDITION_MODE = 1;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -40,6 +43,11 @@ class UserOptions
      * @ORM\Column(name="desktop_background_color", nullable=true)
      */
     protected $desktopBackgroundColor;
+
+    /**
+     * @ORM\Column(name="desktop_mode", type="integer", options={"default":1})
+     */
+    protected $desktopMode = 1;
 
     public function getId()
     {
@@ -69,5 +77,15 @@ class UserOptions
     public function setDesktopBackgroundColor($desktopBackgroundColor)
     {
         $this->desktopBackgroundColor = $desktopBackgroundColor;
+    }
+
+    public function getDesktopMode()
+    {
+        return $this->desktopMode;
+    }
+
+    public function setDesktopMode($desktopMode)
+    {
+        $this->desktopMode = $desktopMode;
     }
 }

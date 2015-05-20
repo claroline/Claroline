@@ -18,7 +18,10 @@ use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AdministrationToolRepository")
- * @ORM\Table(name="claro_admin_tools")
+ * @ORM\Table(
+ *      name="claro_admin_tools",
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="admin_tool_plugin_unique",columns={"name", "plugin_id"})}
+ * )
  */
 class AdminTool
 {
@@ -30,7 +33,7 @@ class AdminTool
     protected $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      */
     protected $name;
 

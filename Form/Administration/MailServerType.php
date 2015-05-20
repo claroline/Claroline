@@ -62,7 +62,8 @@ class MailServerType extends AbstractType
                 'choice',
                 array(
                     'choices' => array('sendmail' => 'sendmail', 'smtp' => 'smtp', 'gmail' => 'gmail'),
-                    'disabled' => isset($this->lockedParams['mailer_transport'])
+                    'disabled' => isset($this->lockedParams['mailer_transport']),
+                    'label' => 'transport'
                 )
             )
             ->add(
@@ -71,7 +72,8 @@ class MailServerType extends AbstractType
                 array(
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['host']),
-                    'disabled' => isset($this->lockedParams['mailer_host'])
+                    'disabled' => isset($this->lockedParams['mailer_host']),
+                    'label' => 'host'
                 )
             )
             ->add(
@@ -80,7 +82,8 @@ class MailServerType extends AbstractType
                 array(
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['username']),
-                    'disabled' => isset($this->lockedParams['mailer_username'])
+                    'disabled' => isset($this->lockedParams['mailer_username']),
+                    'label' => 'username'
                 )
             )
             ->add(
@@ -89,7 +92,8 @@ class MailServerType extends AbstractType
                 array(
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['password']),
-                    'disabled' => isset($this->lockedParams['mailer_password'])
+                    'disabled' => isset($this->lockedParams['mailer_password']),
+                    'label' => 'password'
                 )
             )
             ->add(
@@ -99,7 +103,8 @@ class MailServerType extends AbstractType
                     'choices' => array(null => '', 'plain' => 'plain', 'login' => 'login', 'cram-md5' => 'cram-md5'),
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['auth_mode']),
-                    'disabled' => isset($this->lockedParams['mailer_auth_mode'])
+                    'disabled' => isset($this->lockedParams['mailer_auth_mode']),
+                    'label' => 'auth_mode'
                 )
             )
             ->add(
@@ -109,7 +114,8 @@ class MailServerType extends AbstractType
                     'choices' => array(null => '', 'tls' => 'tls', 'ssl' => 'ssl' ),
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['encryption']),
-                    'disabled' => isset($this->lockedParams['mailer_encryption'])
+                    'disabled' => isset($this->lockedParams['mailer_encryption']),
+                    'label' => 'encryption'
                 )
             )
             ->add(
@@ -118,7 +124,8 @@ class MailServerType extends AbstractType
                 array(
                     'required' => false,
                     'theme_options' => array('display_row' => $this->formDisplay[$this->transport]['port']),
-                    'disabled' => isset($this->lockedParams['mailer_port'])
+                    'disabled' => isset($this->lockedParams['mailer_port']),
+                    'label' => 'port'
                 )
             );
     }

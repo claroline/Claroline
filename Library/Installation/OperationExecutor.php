@@ -76,10 +76,21 @@ class OperationExecutor
         $this->operationFile = $this->operationFile ?
             $this->operationFile :
             $this->kernel->getRootDir() . '/config/operations.xml';
-        $opHandler = new OperationHandler($this->operationFile, $this->logger);
+        $operationsHandler = new OperationHandler($this->operationFile, $this->logger);
         $bundles = $this->getBundlesByFqcn();
+        $operations = $operationsHandler->getOperations();
 
-        foreach ($opHandler->getOperations() as $operation) {
+        /** @var \Claroline\BundleRecorder\Operation[] $orderedOperations */
+        $orderedOperations = [];
+        foreach ($operations as $operation) {
+            if ($operation->getBundleType() === Operation::BUNDLE_CORE) {
+                array_unshift($orderedOperations, $operation);
+            } else {
+                array_push($orderedOperations, $operation);
+            }
+        }
+
+        foreach ($orderedOperations as $operation) {
             $installer = $operation->getBundleType() === Operation::BUNDLE_CORE ?
                 $this->baseInstaller :
                 $this->pluginInstaller;

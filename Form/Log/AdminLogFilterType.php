@@ -56,7 +56,7 @@ class AdminLogFilterType extends AbstractType
                 'range',
                 'daterange',
                 array(
-                    'label'    => 'for period',
+                    'label'    => 'for_period',
                     'required' => false,
                     'attr'     => array('class' => 'input-sm'),
                     'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3')

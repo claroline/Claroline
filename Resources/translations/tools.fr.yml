@@ -1,21 +1,21 @@
 agenda: Agenda
-analytics: Tableau de bord
+analytics: 'Tableau de bord'
+desktop_and_home: 'Bureau et accueil'
+desktop_tools: 'Outils du bureau'
 home: Accueil
+home_tabs: 'Onglets de la page d''accueil'
+learning_outcomes: 'Référentiel de compétences'
+learning_profil: 'Profil d''apprentissage'
 logs: Suivi
 parameters: Paramètres
+platform_analytics: 'Statistiques de la plateforme'
+platform_logs: 'Suivi de la plateforme'
+platform_packages: 'Paquets de la plateforme'
+platform_parameters: 'Paramètres de la plateforme'
+platform_plugins: 'Plugins de la plateforme'
+registration_to_workspace: 'Inscription à des espaces d''activités'
 resource_manager: Ressources
+roles_management: 'Gestion des rôles'
+user_management: 'Gestion des utilisateurs'
 users: Utilisateurs
-platform_parameters: Paramètres de la plateforme
-user_management: Gestion des utilisateurs
-workspace_management: Gestion des espaces d'activités
-registration_to_workspace: Inscription à des espaces d'activités
-platform_plugins: Plugins de la plateforme
-home_tabs: Onglets de la page d'accueil
-desktop_tools: Outils du bureau
-platform_logs: Suivi de la plateforme
-platform_analytics: Statistiques de la plateforme
-roles_management: Gestion des rôles
-platform_packages: Paquets de la plateforme
-learning_outcomes: 'Référentiel de compétences'
-learning_profil: Profil d'apprentissage
-desktop_and_home: Bureau et accueil
+workspace_management: 'Gestion des espaces d''activités'

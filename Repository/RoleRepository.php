@@ -563,4 +563,46 @@ class RoleRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findRoleByUserAndRoleName(User $user, $roleName, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.users u
+            WHERE r.name = :roleName
+            AND u = :user
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('roleName', $roleName);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    /**
+     * Returns all workspace roles of an user.
+     *
+     * @param User $user The subject of the role
+     *
+     * @return Role[]
+     */
+    public function findWorkspaceRolesByUser(User $user, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.users u
+            WHERE u = :user
+            AND r.type = :type
+            AND r.workspace IS NOT NULL
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', Role::WS_ROLE);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

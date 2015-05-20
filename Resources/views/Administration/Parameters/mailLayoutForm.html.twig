@@ -35,18 +35,18 @@
         <div class="panel-body">
             <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                {{ 'You can redefine the layout used when a mail is sent' | trans({}, 'platform') }}.<br>
+                {{ 'mail_layout_message_override' | trans({}, 'platform') }}.<br>
                 <br>
-                {{ 'You can use the following variables in your form' | trans({}, 'platform') }}:<br>
+                {{ 'variable_available_message' | trans({}, 'platform') }}:<br>
                 <br>
                 <ul>
-                    <li><strong>%content%</strong> {{ 'This placeholder is required and will be replaced by the actual mail content' | trans({}, 'platform') }}.
-                    <li><strong>%platform_name%</strong> {{ 'This placeholder is optional and will be replaced by your platform name' | trans({}, 'platform') }}.
-                    <li><strong>%first_name%</strong> {{ 'This placeholder is optional and will be replaced by the author first name' | trans({}, 'platform') }}.
-                    <li><strong>%last_name%</strong> {{ 'This placeholder is optional and will be replaced by the author last name' | trans({}, 'platform') }}.
+                    <li><strong>%content%</strong> {{ 'placeholder_mail_content_message' | trans({}, 'platform') }}.
+                    <li><strong>%platform_name%</strong> {{ 'placeholder_platform_name_message' | trans({}, 'platform') }}.
+                    <li><strong>%first_name%</strong> {{ 'placeholder_first_name_message' | trans({}, 'platform') }}.
+                    <li><strong>%last_name%</strong> {{ 'placeholder_last_name_message' | trans({}, 'platform') }}.
                 </ul>
                 <br>
-                {{ 'You can use the full screen version of the text editor to include HTML' | trans({}, 'platform') }}.
+                {{ 'fullscreen_text_editor' | trans({}, 'platform') }}.
             </div>
             {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
             {{ form_widget(form) }}

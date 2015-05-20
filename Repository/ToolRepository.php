@@ -66,10 +66,14 @@ class ToolRepository extends EntityRepository
                 $dql = '
                     SELECT tool
                     FROM Claroline\CoreBundle\Entity\Tool\Tool tool
-                    WHERE tool.isDisplayableInWorkspace = true
+                    JOIN tool.orderedTools ot
+                    WHERE ot.workspace = :workspace
+                    AND tool.isDisplayableInWorkspace = true
+                    ORDER BY ot.order
                 ';
 
                 $query = $this->_em->createQuery($dql);
+                $query->setParameter('workspace', $workspace);
             }
 
             return $query->getResult();
@@ -282,5 +286,16 @@ class ToolRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
 
         return $query->getResult();
+    }
+
+    /**
+     * @return \Claroline\CoreBundle\Entity\Tool\Tool|]
+     */
+    public function findAllWithPlugin()
+    {
+        return $this->createQueryBuilder('tool')
+            ->leftJoin('tool.plugin', 'plugin')
+            ->getQuery()
+            ->getResult();
     }
 }

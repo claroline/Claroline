@@ -87,8 +87,8 @@
     {
         modal.hide();
         modal.simpleContainer(
-            translator.trans('An error occurred', {}, 'home'),
-            translator.trans('Please try again later or check your internet connection', {}, 'home')
+            translator.trans('error_occured', {}, 'platform'),
+            translator.trans('try_again_message', {}, 'home')
         );
     };
 
@@ -98,7 +98,7 @@
     modal.defaultFooter = function ()
     {
         return common.createElement('button', 'btn btn-primary')
-            .html(translator.trans('Ok', {}, 'home'))
+            .html(translator.trans('ok', {}, 'platform'))
             .attr('data-dismiss', 'modal');
     };
 
@@ -134,7 +134,7 @@
      */
     modal.confirmContainer = function (title, content, longModal)
     {
-        var btnSuccess = common.createElement('button', 'btn btn-primary btn-modal-confirm').html(translator.trans('Ok', {}, 'home'));
+        var btnSuccess = common.createElement('button', 'btn btn-primary btn-modal-confirm').html(translator.trans('ok', {}, 'platform'));
         if (!longModal) btnSuccess.attr('data-dismiss', 'modal');
 
         var footer = common.createElement('div').append(
@@ -256,12 +256,12 @@
         myModal.on('click', '.btn-primary', function (event) {
             if (waitingHandler) waitingHandler(waitingParameters);
             $.ajax(url)
-            .success(function (data) {
-                successHandler(event, successParameter, data);
+            .success(function (data, status, jqXHR) {
+                successHandler(event, successParameter, data, jqXHR);
             })
-            .error(function () {
+            .error(function (data, status, jqXHR) {
                 if (errorHandler) {
-                    errorHandler(errorParameters)
+                    errorHandler(errorParameters, data, jqXHR);
                 } else {
                     modal.error();
                 }

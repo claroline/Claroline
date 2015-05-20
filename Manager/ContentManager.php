@@ -186,7 +186,7 @@ class ContentManager
     }
 
     /**
-     * Create a content in another language not longer create this content in the default language,
+     * create_content in another language not longer create this content in the default language,
      * so this function is used for this purpose.
      *
      * @param $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))

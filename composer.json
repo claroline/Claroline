@@ -15,7 +15,7 @@
     "require": {
         "php": ">=5.4.1",
         "ext-mcrypt": "*",
-        "symfony/symfony": "2.7.0-BETA1",
+        "symfony/symfony": "2.7.x-dev",
         "doctrine/dbal": "~2.4",
         "symfony/assetic-bundle": "~2.4",
         "symfony/swiftmailer-bundle": "~2.3",
@@ -58,7 +58,8 @@
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
         "knplabs/knp-menu-bundle": "2.0.0",
-        "cocur/slugify": "~1.0"
+        "cocur/slugify": "~1.0",
+        "innova/angular-js-bundle": "~5.0"
     },
     "require-dev": {
         "mockery/mockery": "dev-master@dev",

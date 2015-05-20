@@ -59,7 +59,8 @@ class GeneralType extends AbstractType
                 'text',
                 array(
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['name'])
+                    'disabled' => isset($this->lockedParams['name']),
+                    'label' => 'name'
                 )
             )
             ->add(
@@ -69,7 +70,7 @@ class GeneralType extends AbstractType
                     'data' => $this->description,
                     'mapped' => false,
                     'required' => false,
-                    'label' => 'Description',
+                    'label' => 'description',
                     'theme_options' => array('contentTitle' => false, 'tinymce' => false)
                 )
             )
@@ -86,7 +87,8 @@ class GeneralType extends AbstractType
                 'checkbox',
                 array(
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['allow_self_registration'])
+                    'disabled' => isset($this->lockedParams['allow_self_registration']),
+                    'self_registration'
                 )
             )
             ->add(
@@ -105,7 +107,8 @@ class GeneralType extends AbstractType
                                 ->where("r.type = " . Role::PLATFORM_ROLE)
                                 ->andWhere("r.name != 'ROLE_ANONYMOUS'");
                     },
-                    'disabled' => isset($this->lockedParams['default_role'])
+                    'disabled' => isset($this->lockedParams['default_role']),
+                    'label' => 'default_role'
                 )
             )
             ->add(
@@ -113,7 +116,8 @@ class GeneralType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->langs,
-                    'disabled' => isset($this->lockedParams['locale_language'])
+                    'disabled' => isset($this->lockedParams['locale_language']);
+                    'label' => 'default_language'
                 )
             )
             ->add(

@@ -1,21 +1,12 @@
-'An error occurred': 'Une erreur s''est produite'
-'Are you sure you want to delete this theme?': 'Etes-vous sûr de vouloir supprimer ce thème?'
-Cancel: Annuler
-Colors: Couleurs
-'Create New Theme': 'Créer un nouveau thème'
-Delete: Supprimer
-'Edit theme': 'Modifier thème'
-Error: Erreur
-'More options': 'plus d''options'
-'New theme': 'Nouveau thème'
-Ok: OK
-'Our themes were designed using Bootstrap': 'Nos thèmes ont été conçus à l''aide Bootstrap'
-Preview: Aperçu
-Save: Sauvegarder
-'Theme Generator': 'Générateur de thèmes'
-'Theme name': 'Nom du thème'
-'Theme parameters': 'Paramètres du thème'
-'This action is irreversible': 'Cette action est irréversible'
-'You might not have permission to write in theme folder': 'Vous pourriez ne pas être autorisé à écrire dans le dossier des thèmes'
-'if you have a doubt about the name of an element of the GUI': 'si vous avez un doute sur le nom d''un élément de l''interface graphique'
-'please read the documentation of Bootstrap 3': 'veuillez lire la documentation de Bootstrap 3'
+delete_theme_confirm: 'Etes-vous sûr de vouloir supprimer ce thème?'
+create_new_theme: 'Créer un nouveau thème'
+edit_theme: 'Modifier thème'
+more_options: 'plus d''options'
+new_theme: 'Nouveau thème'
+bootstrap_designed: 'Nos thèmes ont été conçus à l''aide Bootstrap'
+theme_generator: 'Générateur de thèmes'
+theme_name: 'Nom du thème'
+theme_parameters: 'Paramètres du thème'
+theme_folder_permissions_warning: 'Vous pourriez ne pas être autorisé à écrire dans le dossier des thèmes'
+if_doubt_on_gui_message: 'si vous avez un doute sur le nom d''un élément de l''interface graphique'
+read_boostrap_doc: 'veuillez lire la documentation de Bootstrap 3'

@@ -110,6 +110,7 @@
     'bundles/clarolinecore/js/resourceinput.js'
     'bundles/clarolinecore/js/utilities.js'
     'bundles/clarolinecore/js/startup.js'
+    'bundles/clarolinecore/js/user/user_picker.js'
 %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
@@ -117,6 +118,9 @@
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script><!-- this is not duplicated file -->
 <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/tinymce.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker_button.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_picker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/tinymce/resource_upload_button.js') }}"></script>
 <script type="text/javascript">
     $('body').tooltip({
         selector: '[data-toggle=tooltip]'
