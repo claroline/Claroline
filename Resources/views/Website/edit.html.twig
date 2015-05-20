@@ -25,7 +25,7 @@
                 <div class="website-preview-inner" data-ng-style="vm.websitePreviewInnerStyle()">
                     <div class="banner resizeable-bottom" ng-style="vm.bannerStyle()" data-ng-show="vm.options.bannerEnabled">
                         <div data-ng-show="!vm.options.bannerEditorActive" data-ng-bind-html="vm.options.deliberatelyTrustSnippet('bannerText')"></div>
-                        <div data-ng-show="vm.options.bannerEditorActive" data-ng-style="{'height':vm.options.bannerHeight+'px'}"><textarea id="banner-text" data-ng-style="{'height':vm.options.footerHeight}" class="form-control" ui-tinymce data-ng-model="vm.options.bannerText"></textarea></div>
+                        <div data-ng-show="vm.options.bannerEditorActive" data-ng-style="{'height':vm.options.bannerHeight+'px'}"><textarea id="banner-text" data-ng-style="{'height':vm.options.footerHeight}" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.bannerText"></textarea></div>
                     </div>
                     <div class="horizontal-resizer" resizer-bottom resizer="vm.options.bannerHeight" resizer-max="200" resizer-min="0" data-ng-show="vm.options.bannerEnabled">
                         <div class="resizer-box-left"></div>
@@ -59,7 +59,7 @@
 
                     <div class="footer resizeable-bottom" data-ng-style="vm.footerStyle()" data-ng-show="vm.options.footerEnabled">
                         <div data-ng-show="!vm.options.footerEditorActive" data-ng-bind-html="vm.options.deliberatelyTrustSnippet('footerText')"></div>
-                        <div data-ng-show="vm.options.footerEditorActive" data-ng-style="{'height':vm.options.footerHeight+'px'}"><textarea id="footer-text" ng-style="{'height':vm.options.footerHeight}" class="form-control" ui-tinymce data-ng-model="vm.options.footerText"></textarea></div>
+                        <div data-ng-show="vm.options.footerEditorActive" data-ng-style="{'height':vm.options.footerHeight+'px'}"><textarea id="footer-text" ng-style="{'height':vm.options.footerHeight}" class="form-control" ui-tinymce="vm.tinymceConfig" data-ng-model="vm.options.footerText"></textarea></div>
                         <div class="copyright-text" data-ng-if="vm.options.copyrightEnabled&&!vm.options.footerEditorActive" data-ng-style="{'color':vm.options.menuFontColor}">© Copyright {{ '{{ vm.options.copyrightText }}' }}</div>
                     </div>
                     <div class="horizontal-resizer" resizer-bottom resizer="vm.options.footerHeight" resizer-max="200" resizer-min="0" data-ng-show="vm.options.footerEnabled">
