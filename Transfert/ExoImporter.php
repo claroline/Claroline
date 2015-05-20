@@ -118,7 +118,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        $search = array(' ', '/');
+        $search = array(' ', '/', '.');
         $exoTitle = str_replace($search, '_', $object->getTitle());
         $qtiRepos = $this->container->get('ujm.qti_repository');
         $qtiRepos->createDirQTI($exoTitle, $this->new);
