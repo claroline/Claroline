@@ -55,6 +55,9 @@ class NotificationManager
 
     private function getLoggedUser()
     {
+        //something will crash otherwise if we use the cli in order to create a user.
+        if (php_sapi_name() === 'cli') return null;
+
         $securityToken = $this->tokenStorage->getToken();
 
         if (null !== $securityToken) {
