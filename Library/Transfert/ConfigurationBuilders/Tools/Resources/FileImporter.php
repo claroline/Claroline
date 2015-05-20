@@ -107,10 +107,14 @@ class FileImporter extends Importer implements ConfigurationInterface
         $uid = uniqid() . '.' . pathinfo($hash, PATHINFO_EXTENSION);
         $files[$uid] = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
-        $data = array(array('file' => array(
-            'path' => $uid,
-            'mime_type' =>  $object->getResourceNode()->getMimeType()
-        )));
+        $data = array();
+
+        if (file_exists($files[$uid])) {
+            $data = array(array('file' => array(
+                'path' => $uid,
+                'mime_type' =>  $object->getResourceNode()->getMimeType()
+            )));
+        }
 
         return $data;
     }
@@ -126,4 +130,4 @@ class FileImporter extends Importer implements ConfigurationInterface
 
         return !file_exists($rootpath . $ds . $v);;
     }
-} 
+}

@@ -5,7 +5,7 @@
             <li class="dropdown">
                 <a class="dropdown-toggle{% if isCreateAllowed == false %} disabled{% endif %}" data-toggle="dropdown">
                     <i class="fa fa-pencil-square-o"></i>
-                    {{ 'create'|trans({}, 'platform') }}
+                    {{ 'add'|trans({}, 'platform') }}
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu create" role="menu">
@@ -15,12 +15,6 @@
                 </ul>
             </li>
         {% endif %}
-        <li>
-            <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
-               <i class="fa fa-plus"></i>
-               {{ 'add'|trans({}, 'platform') }}
-           </a>
-        </li>
         <li>
             <a class="cut disabled"  data-toggle="tooltip" data-placement="bottom" title="{{ 'cut'|trans({}, 'platform') }}">
                 <i class="fa fa-scissors"></i>
@@ -35,6 +29,11 @@
            <a class="paste{% if isPasteAllowed == false %} disabled{% endif %}" data-toggle="tooltip" data-placement="bottom" title="{{ 'paste'|trans({}, 'platform') }}">
                 <i class="fa fa-clipboard"></i>
             </a>
+        </li>
+        <li>
+            <a class="{% if isAddAllowed == false %}disabled{% else %}open-picker{% endif %}">
+               <i class="fa fa-folder-open"></i>
+           </a>
         </li>
         <li>
             <a class="delete disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'delete'|trans({}, 'platform') }}">
