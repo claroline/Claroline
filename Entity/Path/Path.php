@@ -34,6 +34,14 @@ class Path extends AbstractResource implements PathInterface
     protected $structure;
 
     /**
+     * Display a breadcrumbs for navigation into the Path
+     * @var boolean
+     *
+     * @ORM\Column(name="breadcrumbs", type="boolean")
+     */
+    protected $breadcrumbs = false;
+    
+    /**
      * Steps linked to the path
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
@@ -41,13 +49,6 @@ class Path extends AbstractResource implements PathInterface
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $steps;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    protected $published;
 
     /**
      * @var boolean
@@ -94,25 +95,19 @@ class Path extends AbstractResource implements PathInterface
         return $this->structure;
     }
 
-    /**
-     * Set published
-     * @param  boolean $published
-     * @return \Innova\PathBundle\Entity\Path\Path
-     */
-    public function setPublished($published)
-    {
-        $this->published = $published;
-
-        return $this;
-    }
-
-    /**
+        /**
      * Is path already published
      * @return boolean
      */
     public function isPublished()
     {
-        return $this->published;
+        return $this->resourceNode->isPublished();
+    }
+    
+    public function setPublished($published)
+    {
+        $this->resourceNode->setPublished($published);
+        return $this;
     }
 
     /**
@@ -190,6 +185,25 @@ class Path extends AbstractResource implements PathInterface
         $this->description = $description;
         
         return $this;
+    }
+    
+    /**
+     * Set breadcrumbs
+     * @param  boolean $breadcrumbs
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
+     */
+    public function setBreadcrumbs($breadcrumbs)
+    {
+        $this->breadcrumbs = $breadcrumbs;
+        return $this;
+    }
+    /**
+     * Does Path have a breadcrumbs ?
+     * @return boolean
+     */
+    public function hasBreadcrumbs()
+    {
+        return $this->breadcrumbs;
     }
     
     /**
