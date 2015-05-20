@@ -3,12 +3,11 @@
 namespace Innova\PathBundle\Installation;
 
 use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\InstallationBundle\Updater\Updater;
 
-class WidgetInstaller
+class WidgetInstaller extends Updater
 {
     private $container;
-
-    private $logger;
 
     public function __construct($container)
     {
@@ -19,22 +18,6 @@ class WidgetInstaller
     {
         $this->createWidget("innova_path_widget", false, true);
         $this->createWidget("innova_my_paths_widget", true, false);
-
-        return $this;
-    }
-
-    public function setLogger($logger)
-    {
-        $this->logger = $logger;
-
-        return $this;
-    }
-
-    private function log($message)
-    {
-        if ($log = $this->logger) {
-            $log('    ' . $message);
-        }
 
         return $this;
     }
