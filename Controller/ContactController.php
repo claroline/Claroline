@@ -59,13 +59,19 @@ class ContactController extends Controller
     public function myContactsToolIndexAction(User $authenticatedUser)
     {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
+        $categories = $this->contactManager->getCategoriesByUser(
+            $authenticatedUser,
+            'name',
+            'ASC'
+        );
         $contacts = $this->contactManager->getUserContacts($authenticatedUser);
-        $categories = $this->contactManager->getCategoriesByUser($authenticatedUser);
+        $users = array();
 
         return array(
             'options' => $options,
+            'categories' => $categories,
             'contacts' => $contacts,
-            'categories' => $categories
+            'users' => $users
         );
     }
 

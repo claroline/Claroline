@@ -170,9 +170,19 @@ class ContactManager
      * Access to CategoryRepository methods *
      ****************************************/
 
-    public function getCategoriesByUser(User $user, $executeQuery = true)
+    public function getCategoriesByUser(
+        User $user,
+        $orderedBy = 'order',
+        $order = 'ASC',
+        $executeQuery = true
+    )
     {
-        return $this->categoryRepo->findCategoriesByUser($user, $executeQuery);
+        return $this->categoryRepo->findCategoriesByUser(
+            $user,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
     }
 
     public function getCategoryByUserAndName(User $user, $name, $executeQuery = true)

@@ -43,10 +43,15 @@
             Translator.trans('delete_category_confirm_title', {}, 'platform')
         );
     });
-    
-    var refreshPage = function () {
-        window.location.reload();
-    };
+
+    $('#my-contacts-tool').on('click', '#add-contacts-btn', function () {
+        var userPicker = new UserPicker();
+        var settings = {
+            multiple: true
+        };
+        userPicker.configure(settings, addContacts);
+        userPicker.open();
+    });
     
     var addCategory = function (datas) {
         var id = datas['id'];
@@ -93,6 +98,9 @@
                 '</div>' +
                 '<div id="category-content-' + id + '" class="panel-collapse collapse">' +
                     '<div class="panel-body" id="category-content-body-' + id + '">' +
+                        '<div class="alert alert-warning" id="category-empty-alert-'+ id + '">' +
+                            Translator.trans('no_contact', {}, 'platform') +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -108,5 +116,9 @@
     
     var removeCategory = function (event, categoryId) {
         $('#category-box-' + categoryId).remove();
+    };
+    
+    var addContacts = function (userIds) {
+        console.log(userIds);
     };
 })();

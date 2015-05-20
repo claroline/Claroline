@@ -53,10 +53,23 @@
                         <span class="badge" id="all-my-contacts-badge">
                             {{ contacts|length }}
                         </span>
+                        <i class="fa fa-user-plus pointer-hand pull-right"
+                           id="add-contacts-btn"
+                           data-toggle="tooltip"
+                           data-placement="left"
+                           title="{{ 'add_contacts'|trans({}, 'platform') }}"
+                        ></i>
                     </h4>
                 </div>
                 <div id="all-my-contacts-content" class="panel-collapse collapse in">
                     <div class="panel-body" id="all-my-contacts-content-body">
+                        
+                        {% if contacts|length > 0 %}
+                        {% else %}
+                            <div class="alert alert-warning" id="all-my-contacts-empty-alert">
+                                {{ 'no_contact'|trans({}, 'platform') }}
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -114,6 +127,31 @@
                         </div>
                     </div>
                 {% endfor %}
+            </div>
+            <br>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" href="#all-visible-users-content">
+                            {{ 'all_visible_users'|trans({}, 'platform') }}
+                        </a>
+                        &nbsp;
+                        <span class="badge" id="all-visible-users-badge">
+                            {{ users|length }}
+                        </span>
+                    </h4>
+                </div>
+                <div id="all-visible-users-content" class="panel-collapse collapse">
+                    <div class="panel-body" id="all-visible-users-content-body">
+                        {% if users|length > 0 %}
+                        {% else %}
+                            <div class="alert alert-warning">
+                                {{ 'no_user'|trans({}, 'platform') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

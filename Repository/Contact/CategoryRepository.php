@@ -16,14 +16,19 @@ use Claroline\CoreBundle\Entity\User;
 
 class CategoryRepository extends EntityRepository
 {
-    public function findCategoriesByUser(User $user, $executeQuery = true)
+    public function findCategoriesByUser(
+        User $user,
+        $orderedBy = 'order',
+        $order = 'ASC',
+        $executeQuery = true
+    )
     {
-        $dql = '
+        $dql = "
             SELECT c
             FROM Claroline\CoreBundle\Entity\Contact\Category c
             WHERE c.user = :user
-            ORDER BY c.order ASC
-        ';
+            ORDER BY c.{$orderedBy} {$order}
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
 
