@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -111,7 +112,12 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      */
     public function isPublished()
     {
-        return $this->resourceNode->isPublished();
+        if ($this->resourceNode instanceof ResourceNode) {
+            return $this->resourceNode->isPublished();
+        } else {
+            return false;
+        }
+
     }
 
     public function setPublished($published)
