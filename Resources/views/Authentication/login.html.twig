@@ -46,9 +46,6 @@ same message when authentication has failed (no precise validation errors).
                 </div>
                 <div class="panel-footer">
                     <button type="submit" class="btn btn-primary" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
-                    {% if selfRegistrationAllowed == true %}
-                        <a href="{{ path('claro_registration_user_registration_form', {}) }}" class="btn btn-default" tabindex="3">{{ 'register'|trans({}, 'platform') }}</a>
-                    {% endif %}
                     {{ render(controller('ClarolineCoreBundle:Authentication:renderExternalAuthenticatonButton', {})) }}
                 </div>
             </form>

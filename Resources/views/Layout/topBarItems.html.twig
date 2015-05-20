@@ -41,11 +41,10 @@
 
     {% block login %}
         {% import _self as topbar %}
-        {% if register_target is empty %}
-            {{ topbar.item({'name':'login', 'href':login_target, 'icon':'user', 'route':'/login'}) }}
-        {% else %}
-            {{ topbar.item({'name':'login', 'icon':'user', 'route':'/login', 'dropdown':block('dropdowLogin')}) }}
+        {% if register_target is not empty %}
+            {{ topbar.item({'name':'register', 'href': register_target, 'icon':'user-plus'}) }}
         {% endif %}
+        {{ topbar.item({'name':'login', 'href': login_target, 'icon':'user'}) }}
     {% endblock login %}
 
     {% block logged %}
@@ -91,22 +90,6 @@
         {% endif %}
         </ul>
     {% endblock dropdownWorkspace %}
-
-    {% block dropdowLogin %}
-        <ul class="dropdown-menu" role="menu">
-            <li role="presentation">
-                <a role="menuitem" id="link-registration" href="{{ path(register_target) }}">
-                    {{ 'register'|trans({}, 'platform') }}
-                </a>
-            </li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation">
-                <a role="menuitem" href="{{ login_target }}" id="link-login">
-                    {{ 'login'|trans({}, 'platform') }}
-                </a>
-            </li>
-        </ul>
-    {% endblock dropdowLogin %}
 
     {% block dropdownLogged %}
         {{ knp_menu_render('ClarolineCoreBundle:Builder:topBarRightMenu', {}, 'top_bar_right') }}
