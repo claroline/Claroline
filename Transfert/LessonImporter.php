@@ -78,7 +78,7 @@ class LessonImporter extends Importer implements ConfigurationInterface{
     public function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, ['data' => $data]);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data)

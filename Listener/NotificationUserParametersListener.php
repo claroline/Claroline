@@ -16,7 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * Class NotificationUserParametersListener
- * @package Claroline\CoreBundle\Listener\Notification
+ * @package Icap\LessonBundle\Listener
  *
  * @DI\Service()
  */
