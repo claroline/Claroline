@@ -188,7 +188,7 @@ class PathListener extends ContainerAware
         // TODO : move into a manager
 
         // Get current User
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         // Get resource manager
         $manager = $this->container->get('claroline.manager.resource_manager');

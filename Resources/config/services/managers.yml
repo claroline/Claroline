@@ -4,7 +4,8 @@ services:
         class: %innova_path.manager.path.class%
         arguments:
             objectManager:   @doctrine.orm.entity_manager
-            securityContext: @security.context
+            securityAuth:    @security.authorization_checker
+            securityToken:   @security.token_storage
             resourceManager: @claroline.manager.resource_manager
             utils:           @claroline.security.utilities
 
@@ -13,7 +14,6 @@ services:
         class: %innova_path.manager.publishing.class%
         arguments:
             objectManager: @doctrine.orm.entity_manager
-            security:      @security.context
             stepManager:   @innova_path.manager.step
             rightsManager: @claroline.manager.rights_manager
 
@@ -28,7 +28,8 @@ services:
         class: %innova_path.manager.step.class%
         arguments: 
             om:              @doctrine.orm.entity_manager
-            securityContext: @security.context
+            securityAuth:    @security.authorization_checker
+            securityToken:   @security.token_storage
             resourceManager: @claroline.manager.resource_manager
             session:         @session
             translator:      @translator

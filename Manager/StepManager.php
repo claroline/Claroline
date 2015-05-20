@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -33,12 +32,6 @@ class StepManager
     protected $om;
 
     /**
-     * Security Context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $security;
-
-    /**
      * Resource Manager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
@@ -47,20 +40,17 @@ class StepManager
     /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager                 $om
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface  $security
      * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      */
     public function __construct(
         ObjectManager            $om,
-        SecurityContextInterface $security,
         ResourceManager          $resourceManager,
         SessionInterface         $session,
         TranslatorInterface      $translator)
     {
         $this->om              = $om;
-        $this->security        = $security;
         $this->resourceManager = $resourceManager;
         $this->session         = $session;
         $this->translator      = $translator;
