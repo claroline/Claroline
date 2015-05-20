@@ -4,6 +4,9 @@
 
 {% block section_content %}
     <div id="desktop-home-content" class="panel-body">
+        <i class="fa {% if editionMode %}fa-unlock-alt{% else %}fa-lock{% endif %} pull-right pointer-hand"
+           id="desktop-mode-btn"
+        ></i>
         <ul id="desktop-hometabs-list" class="nav nav-tabs margin-bottom-md">
             
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
@@ -17,11 +20,15 @@
                        class="hometab-link{% if not adminHomeTabConfig.isVisible() %} strike{% endif %}"
                    >
                         {{ adminHomeTab.getName() }}
-                        {% if adminHomeTabConfig.isLocked() %}
-                            <i class="fa fa-lock"></i>
-                        {% else %}
-                            &nbsp;
-                            <i class="fa fa-times hide-hometab-btn pointer-hand text-muted"></i>
+                        
+                        {% if editionMode %}
+                        
+                            {% if adminHomeTabConfig.isLocked() %}
+                                <i class="fa fa-lock"></i>
+                            {% else %}
+                                &nbsp;
+                                <i class="fa fa-times hide-hometab-btn pointer-hand text-muted"></i>
+                            {% endif %}
                         {% endif %}
                     </a>
                 </li>
@@ -40,11 +47,14 @@
                         <span id="hometab-name-{{ userHomeTab.getId() }}">
                             {{ userHomeTab.getName() }}
                         </span>
-                        &nbsp;
-                        {% if userHomeTab.getId() == tabId %}
-                            <i class="fa fa-cog edit-hometab-btn pointer-hand text-muted"></i>
+                        
+                        {% if editionMode %}
+                            &nbsp;
+                            {% if userHomeTab.getId() == tabId %}
+                                <i class="fa fa-cog edit-hometab-btn pointer-hand text-muted"></i>
+                            {% endif %}
+                            <i class="fa fa-times delete-hometab-btn pointer-hand text-muted"></i>
                         {% endif %}
-                        <i class="fa fa-times delete-hometab-btn pointer-hand text-muted"></i>
                     </a>
                 </li>
             {% endfor %}
@@ -61,20 +71,23 @@
                             {{ workspaceUserHomeTab.getName() }}
                         </span>
                         &nbsp;
-                        <i class="fa fa-bookmark delete-bookmark-hometab-btn pointer-hand text-muted"></i>
+                        <i class="fa fa-thumb-tack delete-bookmark-hometab-btn pointer-hand text-muted"></i>
                     </a>
                 </li>
             {% endfor %}
-            <li id="add-hometab-btn">
-                <a class="pointer-hand">
-                    <span class="text-muted">
-                        <i id="add-hometab-button" class="fa fa-plus"></i>
-                        {% if adminHomeTabConfigs|length == 0 and userHomeTabConfigs|length == 0 %}
-                            {{ 'create_new_home_tab' | trans({}, 'platform') }}
-                        {% endif %}
-                    </span>
-                </a>
-            </li>
+                
+            {% if editionMode %}
+                <li id="add-hometab-btn">
+                    <a class="pointer-hand">
+                        <span class="text-muted">
+                            <i id="add-hometab-button" class="fa fa-plus"></i>
+                            {% if adminHomeTabConfigs|length == 0 and userHomeTabConfigs|length == 0 %}
+                                {{ 'create_new_home_tab' | trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </a>
+                </li>
+            {% endif %}
         </ul>
         <br>
         
@@ -98,9 +111,28 @@
             type="text/javascript"
     >
     </script>
-    <script src='{{ asset('bundles/clarolinecore/js/tool/desktop/home/desktopHomeLayout.js') }}'
-            type="text/javascript"
-    >
+                
+    {% if editionMode %}
+        <script src='{{ asset('bundles/clarolinecore/js/tool/desktop/home/desktopHomeLayout.js') }}'
+                type="text/javascript"
+        >
+        </script>
+    {% endif %}
+    <script type="text/javascript">
+        $('.grid-stack').gridstack({
+            width: 12,
+            animate: true
+        });
+        
+        $('#desktop-home-content').on('click', '#desktop-mode-btn', function (e) {
+            $.ajax({
+                url: Routing.generate('claro_desktop_mode_switch'),
+                type: 'POST',
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        });
     </script>
 {% endblock %}
     

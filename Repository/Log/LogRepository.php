@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
-use Claroline\CoreBundle\Rule\Entity\Rule;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\Query;
@@ -518,13 +517,5 @@ class LogRepository extends EntityRepository
         }
 
         return $chartData;
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    public function defaultQueryBuilderForBadge()
-    {
-        return $this->createQueryBuilder('l')->orderBy('l.dateLog');
     }
 }

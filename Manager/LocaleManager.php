@@ -18,7 +18,7 @@ use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @Service("claroline.common.locale_manager")
@@ -29,21 +29,25 @@ class LocaleManager
     private $finder;
     private $locales;
     private $userManager;
-    private $context;
+    private $tokenStorage;
 
     /**
      * @InjectParams({
      *     "configHandler"  = @Inject("claroline.config.platform_config_handler"),
      *     "userManager"    = @Inject("claroline.manager.user_manager"),
-     *     "context"        = @Inject("security.context")
+     *     "tokenStorage"   = @Inject("security.token_storage")
      * })
      */
-    public function __construct(PlatformConfigurationHandler $configHandler, UserManager $userManager, SecurityContextInterface $context)
+    public function __construct(
+        PlatformConfigurationHandler $configHandler,
+        UserManager $userManager,
+        TokenStorageInterface $tokenStorage
+    )
     {
         $this->userManager = $userManager;
         $this->defaultLocale = $configHandler->getParameter('locale_language');
         $this->finder = new Finder();
-        $this->context = $context;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -130,7 +134,7 @@ class LocaleManager
      */
     private function getCurrentUser()
     {
-        if (is_object($token = $this->context->getToken()) and is_object($user = $token->getUser())) {
+        if (is_object($token = $this->tokenStorage->getToken()) and is_object($user = $token->getUser())) {
             return $user;
         }
     }

@@ -9,7 +9,7 @@
             $(document).ready(function () {
                 var choices = {{form.vars['choices']|json_encode()|raw}};
                 var choicesTree = {};
-                var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['value']}}");
+                var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['data']}}");
                 if (preselectedValuePath == null) {
                     preselectedValuePath = [choices[0]['label']];
                 }
@@ -23,17 +23,17 @@
             {
                 var preselectedValuePath = null;
                 for (var key in choices) {
-                    if (typeof choices[key].label != 'undefined') {
+                    if (!choices[key].choices) {
                         choicesTree[choices[key].label] = choices[key].value;
-                        if (preselectedValue == choices[key].value) {
+                        if (preselectedValue == choices[key].data) {
                             preselectedValuePath = pathToNode.slice();
                             preselectedValuePath.push(choices[key].label);
                         }
                     } else {
-                        choicesTree[key] = {};
+                        choicesTree[choices[key].label] = {};
                         var newPathToNode = pathToNode.slice();
                         newPathToNode.push(key);
-                        var tempPreselectedPath = buildChoicesTree(choices[key], choicesTree[key], newPathToNode, preselectedValue);
+                        var tempPreselectedPath = buildChoicesTree(choices[key].choices, choicesTree[choices[key].label], newPathToNode, preselectedValue);
                         if (tempPreselectedPath != null) {
                             preselectedValuePath = tempPreselectedPath;
                         }

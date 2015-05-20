@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Controller of the user profile.
@@ -48,7 +48,7 @@ class ProfileController extends Controller
     private $userManager;
     private $roleManager;
     private $eventDispatcher;
-    private $security;
+    private $tokenStorage;
     private $request;
     private $localeManager;
     private $encoderFactory;
@@ -63,7 +63,7 @@ class ProfileController extends Controller
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"               = @DI\Inject("security.context"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "request"                = @DI\Inject("request"),
      *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
      *     "encoderFactory"         = @DI\Inject("security.encoder_factory"),
@@ -78,7 +78,7 @@ class ProfileController extends Controller
         UserManager $userManager,
         RoleManager $roleManager,
         StrictDispatcher $eventDispatcher,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
         Request $request,
         LocaleManager $localeManager,
         EncoderFactory $encoderFactory,
@@ -92,7 +92,7 @@ class ProfileController extends Controller
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
         $this->request = $request;
         $this->localeManager = $localeManager;
         $this->encoderFactory = $encoderFactory;
@@ -148,7 +148,7 @@ class ProfileController extends Controller
     {
         $isAccessibleForAnon = $this->ch->getParameter('anonymous_public_profile');
 
-        if (!$isAccessibleForAnon && $this->security->getToken()->getUser() === 'anon.') {
+        if (!$isAccessibleForAnon && $this->tokenStorage->getToken()->getUser() === 'anon.') {
             throw new AccessDeniedException();
         }
 
@@ -162,10 +162,10 @@ class ProfileController extends Controller
             throw new NotFoundHttpException("Page not found");
         }
 
-        $facets = $this->facetManager->getVisibleFacets($this->security->getToken());
+        $facets = $this->facetManager->getVisibleFacets($this->tokenStorage->getToken());
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
         $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
-        $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->security->getToken());
+        $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->tokenStorage->getToken());
 
         $response = new Response(
             $this->renderView(
@@ -195,8 +195,8 @@ class ProfileController extends Controller
      */
     public function editProfileAction(User $loggedUser, User $user = null)
     {
-        $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        $isGrantedUserAdmin = $this->get('security.context')->isGranted(
+        $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+        $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
             'OPEN', $this->toolManager->getAdminToolByName('user_management')
         );
         $editYourself = false;
@@ -248,7 +248,7 @@ class ProfileController extends Controller
         if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
             $translator = $this->get('translator');
 
             $user = $form->getData();
@@ -331,8 +331,8 @@ class ProfileController extends Controller
      */
     public function editPasswordAction(User $user, User $loggedUser)
     {
-        $isAdmin = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        $isGrantedUserAdmin = $this->get('security.context')->isGranted(
+        $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
+        $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
             'OPEN', $this->toolManager->getAdminToolByName('user_management')
         );
         $selfEdit = $user->getId() === $loggedUser->getId() ? true: false;
@@ -348,7 +348,7 @@ class ProfileController extends Controller
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
             $translator = $this->get('translator');
             $continue = !$selfEdit;
 
@@ -400,7 +400,7 @@ class ProfileController extends Controller
         if ($form->isValid()) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
-            /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+            /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
             $translator = $this->get('translator');
 
             try {

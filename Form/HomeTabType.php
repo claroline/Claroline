@@ -31,7 +31,7 @@ class HomeTabType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('constraints' => new NotBlank()));
+        $builder->add('name', 'text', array('constraints' => new NotBlank(), 'label' => 'name'));
         $workspace = $this->workspace;
 
         if (!is_null($workspace)) {
@@ -41,6 +41,7 @@ class HomeTabType extends AbstractType
                 array(
                     'label' => 'roles',
                     'class' => 'ClarolineCoreBundle:Role',
+                    'choice_translation_domain' => true,
                     'query_builder' => function (EntityRepository $er) use ($workspace) {
 
                         return $er->createQueryBuilder('r')
@@ -61,8 +62,8 @@ class HomeTabType extends AbstractType
                 array(
                     'label' => 'roles',
                     'class' => 'ClarolineCoreBundle:Role',
+                    'choice_translation_domain' => true,
                     'query_builder' => function (EntityRepository $er) {
-
                         return $er->createQueryBuilder('r')
                             ->where('r.workspace IS NULL')
                             ->andWhere('r.type = 1')

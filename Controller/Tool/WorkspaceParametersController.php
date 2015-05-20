@@ -34,13 +34,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class WorkspaceParametersController extends Controller
 {
     private $workspaceManager;
     private $workspaceTagManager;
-    private $security;
+    private $tokenStorage;
+    private $authorization;
     private $eventDispatcher;
     private $formFactory;
     private $router;
@@ -56,7 +58,8 @@ class WorkspaceParametersController extends Controller
      * @DI\InjectParams({
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
      *     "workspaceTagManager" = @DI\Inject("claroline.manager.workspace_tag_manager"),
-     *     "security"            = @DI\Inject("security.context"),
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"         = @DI\Inject("claroline.form.factory"),
      *     "router"              = @DI\Inject("router"),
@@ -71,7 +74,8 @@ class WorkspaceParametersController extends Controller
     public function __construct(
         WorkspaceManager $workspaceManager,
         WorkspaceTagManager $workspaceTagManager,
-        SecurityContextInterface $security,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
@@ -86,7 +90,8 @@ class WorkspaceParametersController extends Controller
     {
         $this->workspaceManager = $workspaceManager;
         $this->workspaceTagManager = $workspaceTagManager;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->router = $router;
@@ -113,7 +118,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceEditFormAction(Workspace $workspace)
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $this->checkAccess($workspace);
         $username = is_null($workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername();
         $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
@@ -127,7 +132,7 @@ class WorkspaceParametersController extends Controller
         $storageUsed = $this->utilities->formatFileSize($storageUsed);
         $countResources = $this->workspaceManager->countResources($workspace);
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
-        $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+        $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
 
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_EDIT,
@@ -177,14 +182,14 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceEditAction(Workspace $workspace)
     {
-        if (!$this->security->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
 
         $wsRegisteredName = $workspace->getName();
         $wsRegisteredDisplayable = $workspace->isDisplayable();
         $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
-        $isAdmin = $this->security->isGranted('OPEN', $workspaceAdminTool);
+        $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
         $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
             $workspace->getEndDate()
         );
@@ -217,7 +222,7 @@ class WorkspaceParametersController extends Controller
             $workspace->setName($wsRegisteredName);
         }
 
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
@@ -274,7 +279,7 @@ class WorkspaceParametersController extends Controller
      */
     public function urlSubscriptionGenerateAction(Workspace $workspace)
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ( $user === 'anon.') {
             return $this->redirect(
@@ -384,7 +389,7 @@ class WorkspaceParametersController extends Controller
 
     private function checkAccess(Workspace $workspace)
     {
-        if (!$this->security->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
     }

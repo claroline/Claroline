@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @TODO doc
@@ -26,18 +26,18 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 class LocaleController
 {
     private $localeManager;
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @InjectParams({
-     *     "localeManager"      = @Inject("claroline.common.locale_manager"),
-     *     "securityContext"    = @Inject("security.context")
+     *     "localeManager"   = @Inject("claroline.common.locale_manager"),
+     *     "tokenStorage"    = @Inject("security.token_storage")
      * })
      */
-    public function __construct(LocaleManager $localeManager, SecurityContextInterface $securityContext)
+    public function __construct(LocaleManager $localeManager, TokenStorageInterface $tokenStorage)
     {
         $this->localeManager = $localeManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -65,7 +65,7 @@ class LocaleController
      */
     public function changeLocale(Request $request, $locale)
     {
-        if (($token = $this->securityContext->getToken()) && $token->getUser() !== 'anon.') {
+        if (($token = $this->tokenStorage->getToken()) && $token->getUser() !== 'anon.') {
             $this->localeManager->setUserLocale($locale);
         } else {
             $request->getSession()->set('_locale', $locale);

@@ -28,7 +28,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class WorkspaceAnalyticsController extends Controller
 {
@@ -36,7 +37,8 @@ class WorkspaceAnalyticsController extends Controller
     private $analyticsManager;
     private $resourceManager;
     private $roleManager;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $templating;
     private $userManager;
     private $utils;
@@ -47,7 +49,8 @@ class WorkspaceAnalyticsController extends Controller
      *     "analyticsManager" = @DI\Inject("claroline.manager.analytics_manager"),
      *     "resourceManager"  = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
-     *     "securityContext"  = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "templating"       = @DI\Inject("templating"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
      *     "utils"            = @DI\Inject("claroline.security.utilities")
@@ -58,7 +61,8 @@ class WorkspaceAnalyticsController extends Controller
         AnalyticsManager $analyticsManager,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         TwigEngine $templating,
         UserManager $userManager,
         Utilities $utils
@@ -68,7 +72,8 @@ class WorkspaceAnalyticsController extends Controller
         $this->analyticsManager = $analyticsManager;
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->templating = $templating;
         $this->userManager = $userManager;
         $this->utils = $utils;
@@ -94,7 +99,7 @@ class WorkspaceAnalyticsController extends Controller
      */
     public function showTrafficAction(Workspace $workspace)
     {
-        if (!$this->securityContext->isGranted('analytics', $workspace)) {
+        if (!$this->authorization->isGranted('analytics', $workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -166,7 +171,7 @@ class WorkspaceAnalyticsController extends Controller
         Workspace $workspace
     )
     {
-        if (!$this->securityContext->isGranted('analytics', $workspace)) {
+        if (!$this->authorization->isGranted('analytics', $workspace)) {
             throw new AccessDeniedException();
         }
 
@@ -194,7 +199,7 @@ class WorkspaceAnalyticsController extends Controller
                 )
             );
         } else {
-            $token = $this->securityContext->getToken();
+            $token = $this->tokenStorage->getToken();
             $userRoles = $this->utils->getRoles($token);
 
             $criteria = array();
@@ -332,7 +337,7 @@ class WorkspaceAnalyticsController extends Controller
         $displayType
     )
     {
-        if (!$this->securityContext->isGranted('analytics', $workspace)) {
+        if (!$this->authorization->isGranted('analytics', $workspace)) {
 
             throw new AccessDeniedException();
         }

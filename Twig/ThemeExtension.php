@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service

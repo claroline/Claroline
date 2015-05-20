@@ -47,8 +47,8 @@ class BaseProfileType extends AbstractType
         $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
         $attr['autocomplete'] = 'off';
 
-        $builder->add('firstName', 'text', array('label' => 'First name'))
-            ->add('lastName', 'text', array('label' => 'Last name'))
+        $builder->add('firstName', 'text', array('label' => 'first_name'))
+            ->add('lastName', 'text', array('label' => 'last_name'))
             ->add('username', 'text', array('label' => 'User name'))
             ->add(
                 'plainPassword',
@@ -70,11 +70,11 @@ class BaseProfileType extends AbstractType
                 'scroll',
                 'scroll',
                 array(
-                    'label' => 'Terms of service',
+                    'label' => 'term_of_service',
                     'data' => $content->getContent()
                 )
             )
-            ->add('accepted_terms', 'checkbox', array('label' => 'I accept the terms of service'));
+            ->add('accepted_terms', 'checkbox', array('label' => 'terms_of_service_acceptance'));
         }
 
         foreach ($this->facets as $facet) {

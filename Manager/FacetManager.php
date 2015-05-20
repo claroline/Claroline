@@ -23,8 +23,9 @@ use Claroline\CoreBundle\Entity\Facet\FieldFacetRole;
 use Claroline\CoreBundle\Entity\Facet\GeneralFacetPreference;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\Translator;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -36,26 +37,30 @@ class FacetManager
 {
     private $om;
     private $translator;
-    private $sc;
+    private $tokenStorage;
+    private $authorization;
     private $panelRepo;
     private $fieldRepo;
 
     /**
      * @InjectParams({
-     *     "om"         = @Inject("claroline.persistence.object_manager"),
-     *     "translator" = @Inject("translator"),
-     *     "sc"         = @Inject("security.context")
+     *     "om"              = @Inject("claroline.persistence.object_manager"),
+     *     "translator"      = @Inject("translator"),
+     *     "authorization"   = @Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @Inject("security.token_storage"),
      * })
      */
     public function __construct(
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ObjectManager $om,
-        Translator $translator,
-        SecurityContextInterface $sc
+        TranslatorInterface $translator
     )
     {
         $this->om = $om;
         $this->translator = $translator;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->panelRepo = $om->getRepository('ClarolineCoreBundle:Facet\PanelFacet');
         $this->fieldRepo = $om->getRepository('ClarolineCoreBundle:Facet\FieldFacet');
     }
@@ -242,7 +247,7 @@ class FacetManager
      */
     public function setFieldValue(User $user, FieldFacet $field, $value, $force = false)
     {
-        if (!$this->sc->isGranted('edit', $field) && !$force) {
+        if (!$this->authorization->isGranted('edit', $field) && !$force) {
             throw new AccessDeniedException();
         }
 
@@ -511,7 +516,7 @@ class FacetManager
 
     public function getVisibleFieldFacets()
     {
-        $token = $this->sc->getToken();
+        $token = $this->tokenStorage->getToken();
         $tokenRoles = $token->getRoles();
         $roles = array();
 
@@ -524,7 +529,7 @@ class FacetManager
 
     public function getVisibleFacets()
     {
-        $token = $this->sc->getToken();
+        $token = $this->tokenStorage->getToken();
         $data = [];
         $entities = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findVisibleFacets($token);
 
@@ -646,7 +651,7 @@ class FacetManager
         $data = [];
 
         foreach ($fields as $field) {
-            if ($this->sc->isGranted('ROLE_ADMIN')) {
+            if ($this->authorization->isGranted('ROLE_ADMIN')) {
                 $canOpen = true;
                 $canEdit = true;
             } else {
@@ -680,7 +685,7 @@ class FacetManager
 
     function getVisiblePublicPreference()
     {
-        $tokenRoles = $this->sc->getToken()->getRoles();
+        $tokenRoles = $this->tokenStorage->getToken()->getRoles();
         $roles = array();
 
         foreach ($tokenRoles as $tokenRole) {

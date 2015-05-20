@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Badge\Badge;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use \Serializable;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -189,16 +188,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     protected $initDate;
 
     /**
-     * @var UserMessage[]|ArrayCollection
-     *
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\UserMessage",
-     *     mappedBy="user"
-     * )
-     */
-    protected $userMessages;
-
-    /**
      * @var DesktopTool[]|ArrayCollection
      *
      * @ORM\OneToMany(
@@ -217,28 +206,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="hash_time", type="integer", nullable=true)
      */
     protected $hashTime;
-
-    /**
-     * @var UserBadge[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="user", cascade={"all"})
-     */
-    protected $userBadges;
-
-    /**
-     * @var UserBadge[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\UserBadge", mappedBy="issuer", cascade={"all"})
-     */
-    protected $issuedBadges;
-
-    /**
-     * @var BadgeClaim[]|ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Badge\BadgeClaim", mappedBy="user", cascade={"all"})
-     * @ORM\JoinColumn(name="badge_claim_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     */
-    protected $badgeClaims;
 
     /**
      * @ORM\Column(nullable=true)
@@ -342,15 +309,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function __construct()
     {
         parent::__construct();
-        $this->userMessages      = new ArrayCollection();
         $this->roles             = new ArrayCollection();
         $this->groups            = new ArrayCollection();
         $this->abstractResources = new ArrayCollection();
         $this->salt              = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
         $this->orderedTools      = new ArrayCollection();
-        $this->userBadges        = new ArrayCollection();
-        $this->issuedBadges      = new ArrayCollection();
-        $this->badgeClaims       = new ArrayCollection();
         $this->fieldsFacetValue  = new ArrayCollection();
         $this->models            = new ArrayCollection();
     }
@@ -814,89 +777,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->hashTime = $hashTime;
     }
 
-    /**
-     * @param \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection $badges
-     *
-     * @return User
-     */
-    public function setUserBadges($badges)
-    {
-        $this->userBadges = $badges;
-
-        return $this;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Badge\UserBadge[]|\Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getUserBadges()
-    {
-        return $this->userBadges;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Badge\Badge[]|\Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getBadges()
-    {
-        $badges = new ArrayCollection();
-
-        foreach ($this->getUserBadges() as $userBadge) {
-            $badges[] = $userBadge->getBadge();
-        }
-
-        return $badges;
-    }
-
-    /**
-     * @param Badge $badge
-     *
-     * @return bool
-     */
-    public function hasBadge(badge $badge)
-    {
-        foreach ($this->getBadges() as $userBadge) {
-            if ($userBadge->getId() === $badge->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection $badgeClaims
-     *
-     * @return User
-     */
-    public function setBadgeClaims($badgeClaims)
-    {
-        $this->badgeClaims = $badgeClaims;
-    }
-
-    /**
-     * @return \Claroline\CoreBundle\Entity\Badge\BadgeClaim[]|\Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getBadgeClaims()
-    {
-        return $this->badgeClaims;
-    }
-
-    /**
-     * @param Badge $badge
-     *
-     * @return bool
-     */
-    public function hasClaimedFor(Badge $badge)
-    {
-        foreach ($this->getBadgeClaims() as $claimedBadge) {
-            if ($badge->getId() === $claimedBadge->getBadge()->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     public function getPictureFile()
     {

@@ -45,7 +45,7 @@ class LogManager
 
     public function getDesktopWidgetList(WidgetInstance $instance)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $hiddenConfigs = $em
@@ -148,7 +148,7 @@ class LogManager
             'logAmount' => $desktopConfig->getAmount(),
             'isDesktop' => true,
             'title' => $this->container->get('translator')->trans(
-                'Overview of recent activities of your workspaces',
+                'your_workspace_activity_overview',
                 array(),
                 'platform'
             )
@@ -204,7 +204,7 @@ class LogManager
 
         if ($config->hasAllRestriction(count($workspaceEvents))) {
             $title = $this->container->get('translator')->trans(
-                'Overview of all recent activities in %workspaceName%',
+                'recent_all_workspace_activities_overview',
                 array('%workspaceName%' => $workspace->getName()),
                 'platform'
             );
@@ -424,7 +424,7 @@ class LogManager
 
     protected function isAllowedToViewLogs($workspace)
     {
-        $security = $this->container->get('security.context');
+        $security = $this->container->get('security.authorization_checker');
 
         return $security->isGranted('ROLE_WS_COLLABORATOR_' . $workspace->getGuid())
             || $security->isGranted('ROLE_WS_MANAGER_'.$workspace->getGuid());
@@ -481,7 +481,7 @@ class LogManager
     protected function getAdminOrCollaboratorWorkspaceIds()
     {
         $workspaceIds = array();
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         $workspaceIdsResult = $this
             ->container
             ->get('doctrine.orm.entity_manager')

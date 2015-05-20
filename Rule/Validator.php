@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Rule;
 
 use Claroline\CoreBundle\Rule\Constraints\ActionConstraint;
 use Claroline\CoreBundle\Rule\Constraints\BadgeConstraint;
+use Claroline\CoreBundle\Rule\Constraints\AbstractConstraint;
 use Claroline\CoreBundle\Rule\Constraints\DoerConstraint;
 use Claroline\CoreBundle\Rule\Constraints\OccurenceConstraint;
 use Claroline\CoreBundle\Rule\Constraints\ReceiverConstraint;
@@ -24,6 +25,7 @@ use Claroline\CoreBundle\Rule\Rulable;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -37,6 +39,11 @@ class Validator
     private $logRepository;
 
     /**
+     * @var AbstractConstraint[]
+     */
+    protected $constraints;
+
+    /**
      * @DI\InjectParams({
      *     "logRepository" = @DI\Inject("claroline.repository.log"),
      * })
@@ -44,6 +51,37 @@ class Validator
     public function __construct(LogRepository $logRepository)
     {
         $this->logRepository = $logRepository;
+        $this->constraints   = new ArrayCollection();
+    }
+
+    /**
+     * @return Constraints\AbstractConstraint[]
+     */
+    public function getConstraints()
+    {
+        return $this->constraints;
+    }
+
+    /**
+     * @param Constraints\AbstractConstraint[] $constraints
+     *
+     * @return Validator
+     */
+    public function setConstraints($constraints)
+    {
+        $this->constraints = $constraints;
+
+        return $this;
+    }
+
+    /**
+     * @param AbstractConstraint $constraint
+     *
+     * @return bool
+     */
+    public function addConstraint(AbstractConstraint $constraint)
+    {
+        return $this->constraints->add($constraint);
     }
 
     /**
@@ -95,17 +133,7 @@ class Validator
     {
         /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $usedConstraints */
         $usedConstraints    = array();
-        /** @var \Claroline\CoreBundle\Rule\Constraints\AbstractConstraint[] $existedConstraints */
-        $existedConstraints = array(
-            new OccurenceConstraint(),
-            new ResultConstraint(),
-            new ResourceConstraint(),
-            new DoerConstraint(),
-            new ReceiverConstraint(),
-            new ActionConstraint(),
-            new BadgeConstraint(),
-            new RuleActiveDateConstraint()
-        );
+        $existedConstraints = $this->getConstraints();
 
         foreach ($existedConstraints as $existedConstraint) {
             if ($existedConstraint->isApplicableTo($rule)) {
@@ -138,7 +166,8 @@ class Validator
     protected function buildQuery(array $constraints, array $restrictions = null)
     {
         /** @var \Doctrine\ORM\QueryBuilder $queryBuilder */
-        $queryBuilder = $this->logRepository->defaultQueryBuilderForBadge();
+        $queryBuilder = $this->logRepository
+            ->createQueryBuilder('l')->orderBy('l.dateLog');
 
         foreach ($restrictions as $key => $restriction) {
             $queryBuilder

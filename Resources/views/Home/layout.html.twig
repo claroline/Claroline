@@ -9,7 +9,7 @@
         </div>
     {% endif %}
     {% if region is not defined or (region is defined and region != 'header' and region != 'footer') %}
-        {% render controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father }) %}
+        {% render(controller("ClarolineCoreBundle:Home:creator", { 'type': type, 'id': null, 'content': null, 'father': father })) %}
     {% endif %}
 
     {% if father is empty %}

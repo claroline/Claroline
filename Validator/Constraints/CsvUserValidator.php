@@ -184,6 +184,8 @@ class CsvUserValidator extends ConstraintValidator
                         $existingUser,
                         array('registration', 'Default')
                     );
+                    $existingUser->setUsername($username);
+                    $existingUser->setMail($email);
                 } else {
                     $newUser = new User();
                     $newUser->setFirstName($firstName);

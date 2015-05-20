@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;

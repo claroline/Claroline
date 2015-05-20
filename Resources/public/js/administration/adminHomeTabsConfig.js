@@ -348,6 +348,8 @@
         var configurable = parseInt(datas['configurable']) === 1 ? true : false;
         var visible = parseInt(datas['visibility']) === 1 ? true : false;
         var locked = parseInt(datas['lock']) === 1 ? true : false;
+        var width = parseInt(datas['width']);
+        var height = parseInt(datas['height']);
         var widgetElement =
             '<div class="grid-stack-item"' +
                 ' id="widget-element-' + whtcId + '"' +
@@ -412,7 +414,7 @@
             '</div>';
             
         var grid = $('.grid-stack').data('gridstack');
-        grid.add_widget(widgetElement, 0, 0, 4, 3, true);
+        grid.add_widget(widgetElement, 0, 0, width, height, true);
         
         $.ajax({
             url: Routing.generate(

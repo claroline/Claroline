@@ -24,17 +24,17 @@ class SecurityTokenType extends AbstractType
         $builder->add(
             'clientName',
             'text',
-            array()
+            array('label' => 'client_name')
         );
         $builder->add(
             'clientIp',
             'text',
-            array()
+            array('label' => 'client_text')
         );
         $builder->add(
             'token',
             'text',
-            array()
+            array('label' => 'token')
         );
     }
 

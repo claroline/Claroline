@@ -38,7 +38,7 @@ class TermsOfServiceType extends AbstractType
                 'required' => false,
                 'data' => $builder->getData(),
                 'theme_options' => array('contentTitle' => false),
-                'label' => 'Terms of service'
+                'label' => 'term_of_service'
             )
         )
         ->add(
@@ -48,7 +48,7 @@ class TermsOfServiceType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $this->active,
-                'label' => 'Activate the terms of service in the platform',
+                'label' => 'term_of_service_activation_message',
                 'disabled' => isset($this->lockedParams['terms_of_service'])
             )
         );

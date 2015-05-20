@@ -15,8 +15,10 @@ use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Security\Utilities as SecurityUtilities;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
  * @DI\Service
@@ -27,27 +29,31 @@ class WorkspaceAccessExtension extends \Twig_Extension
     private $wm;
     private $em;
     private $ut;
-    private $sc;
+    private $tokenStorage;
+    private $authorization;
 
     /**
      * @DI\InjectParams({
-     *     "wm" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "em" = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "ut" = @DI\Inject("claroline.security.utilities"),
-     *     "sc" = @DI\Inject("security.context")
+     *     "authorization" = @DI\Inject("security.authorization_checker"),
+     *     "wm"            = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "em"            = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "ut"            = @DI\Inject("claroline.security.utilities"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
         WorkspaceManager $wm,
         EntityManager $em,
+        AuthorizationCheckerInterface $authorization,
         SecurityUtilities $ut,
-        SecurityContext $sc
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->wm = $wm;
         $this->em = $em;
         $this->ut = $ut;
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
     }
 
     /**
@@ -65,7 +71,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
 
     public function getAccesses(array $workspaces)
     {
-        return $this->wm->getAccesses($this->sc->getToken(), $workspaces);
+        return $this->wm->getAccesses($this->tokenStorage->getToken(), $workspaces);
     }
 
     public function hasRoleAccess($role, $workspaceId)
@@ -83,7 +89,7 @@ class WorkspaceAccessExtension extends \Twig_Extension
         $workspace = $this->em->getRepository('ClarolineCoreBundle:Workspace\Workspace')
             ->find($workspaceId);
 
-        return $this->sc->isGranted('OPEN', $workspace);
+        return $this->authorization->isGranted('OPEN', $workspace);
     }
 
     public function hasRoleInWorkspace($workspaceId, TokenInterface $token)

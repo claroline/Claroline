@@ -1,14 +1,3 @@
-hwi_oauth_login:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix:   /login/hwi
-
-hwi_oauth_redirect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
-    prefix:   /connect
-
-facebook_login:
-    pattern: /login/check_facebook
-
 claro_security_login_check:
     pattern: /login_check
     options: { expose: true }
@@ -98,11 +87,6 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/DesktopAgendaController.php"
-    prefix: desktop/tool/agenda
-    type: annotation
-
 claro_desktop_tool_home:
     resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
     prefix: tool/home
@@ -131,16 +115,6 @@ claro_workspace_tool_properties:
 claro_workspace_tool_tools_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
     prefix: workspaces/tool/properties
-    type: annotation
-
-claro_workspace_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/WorkspaceAgendaController.php"
-    prefix: workspaces/tool/agenda
-    type: annotation
-
-claro_tool_agenda:
-    resource: "@ClarolineCoreBundle/Controller/Tool/Agenda/AgendaController.php"
-    prefix: tool/agenda
     type: annotation
 
 claro_workspace_roles:
@@ -213,11 +187,6 @@ claro_mail:
     prefix: mail
     type: annotation
 
-claro_message:
-    resource: "@ClarolineCoreBundle/Controller/MessageController.php"
-    prefix: message
-    type: annotation
-
 claro_activity:
     resource: "@ClarolineCoreBundle/Controller/ActivityController.php"
     prefix: activity/
@@ -242,10 +211,6 @@ claro_user:
     resource: "@ClarolineCoreBundle/Controller/UserController.php"
     type: annotation
     prefix: user
-
-claro_admin_badge:
-    resource: "@ClarolineCoreBundle/Controller/Administration/BadgeController.php"
-    type: annotation
 
 claro_oauth:
     resource: "@ClarolineCoreBundle/Controller/Oauth"
@@ -300,9 +265,6 @@ claro_admin_facet:
     resource: "@ClarolineCoreBundle/Controller/Administration/FacetController.php"
     prefix: admin/facet
     type: annotation
-
-claro_badge:
-    resource: "@ClarolineCoreBundle/Controller/Badge"
 
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API"

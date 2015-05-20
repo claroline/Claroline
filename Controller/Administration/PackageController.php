@@ -22,7 +22,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -36,7 +35,6 @@ class PackageController extends Controller
     private $toolManager;
     private $eventDispatcher;
     private $adminToolPlugin;
-    private $sc;
     private $ipwlm;
     private $bundleManager;
     private $platformConfigHandler;
@@ -46,7 +44,6 @@ class PackageController extends Controller
      *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *      "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
      *      "dm"              = @DI\Inject("claroline.manager.dependency_manager"),
-     *      "sc"              = @DI\Inject("security.context"),
      *      "ipwlm"           = @DI\Inject("claroline.manager.ip_white_list_manager"),
      *      "bundleManager"   = @DI\Inject("claroline.manager.bundle_manager"),
      *      "configHandler"   = @DI\Inject("claroline.config.platform_config_handler")
@@ -55,7 +52,6 @@ class PackageController extends Controller
     public function __construct(
         StrictDispatcher             $eventDispatcher,
         ToolManager                  $toolManager,
-        SecurityContextInterface     $sc,
         DependencyManager            $dm,
         IPWhiteListManager           $ipwlm,
         BundleManager                $bundleManager,
@@ -66,7 +62,6 @@ class PackageController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->toolManager     = $toolManager;
         $this->adminToolPlugin = $toolManager->getAdminToolByName('platform_packages');
-        $this->sc              = $sc;
         $this->dm              = $dm;
         $this->ipwlm           = $ipwlm;
         $this->bundleManager   = $bundleManager;

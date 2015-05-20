@@ -93,7 +93,7 @@ class TransfertManager
 
     public function import(Configuration $configuration)
     {
-        $owner = $this->container->get('security.context')->getToken()->getUser();
+        $owner = $this->container->get('security.token_storage')->getToken()->getUser();
         $configuration->setOwner($owner);
         $this->setImporters($configuration, $data);
         $this->validate($data);
@@ -341,7 +341,7 @@ class TransfertManager
             if ($owner = $configuration->getOwner()) {
                 $importer->setOwner($owner);
             } else {
-                $importer->setOwner($this->container->get('security.context')->getToken()->getUser());
+                $importer->setOwner($this->container->get('security.token_storage')->getToken()->getUser());
             }
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);

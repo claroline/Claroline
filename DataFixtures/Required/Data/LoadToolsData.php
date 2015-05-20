@@ -27,13 +27,10 @@ class LoadToolsData implements RequiredFixture
             array('home', 'home', false, false, true, true, true, false, false, false, false),
             array('parameters', 'cogs', false, false, true, true, false, false, false, true, true),
             array('resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false),
-            array('agenda', 'calendar', false, false, true, true, false, false, false, false, false),
             array('logs', 'list', false, false, true, false, false, false, false, false, true),
             array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
-            array('users', 'user', true, false, true, false, false, false, false, false, true),
-            array('badges', 'trophy', false, false, true, false, false, false, false, false, true),
-            array('my_badges', 'trophy', false, false, true, false, false, false, false, false, true),
-            array('message', 'envelope', false, false, false, true, false, false, false, false, true)
+            array('users', 'user', true, false, true, false, false, false, false, false, true)
+            //array('learning_profil', 'graduation-cap', true, false, true, false, false, false, false, false, true),
         );
 
         foreach ($tools as $tool) {
@@ -54,7 +51,7 @@ class LoadToolsData implements RequiredFixture
             $this->createToolMaskDecoders($manager, $entity);
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
 
-            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager' || $tool[0] === 'message') {
+            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager') {
                 $this->createAdminOrderedTool($manager, $entity);
             }
         }

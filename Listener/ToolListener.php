@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Listener;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Claroline\CoreBundle\Manager\MessageManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -23,7 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -34,10 +33,9 @@ class ToolListener
     private $container;
     private $formFactory;
     private $httpKernel;
-    private $messageManager;
     private $rightsManager;
     private $router;
-    private $securityContext;
+    private $tokenStorage;
     private $templating;
     private $toolManager;
     private $translator;
@@ -50,10 +48,9 @@ class ToolListener
      *     "container"        = @DI\Inject("service_container"),
      *     "formFactory"      = @DI\Inject("claroline.form.factory"),
      *     "httpKernel"       = @DI\Inject("http_kernel"),
-     *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "router"           = @DI\Inject("router"),
-     *     "securityContext"  = @DI\Inject("security.context"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "templating"       = @DI\Inject("templating"),
      *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"       = @DI\Inject("translator"),
@@ -64,10 +61,9 @@ class ToolListener
         ContainerInterface $container,
         FormFactory $formFactory,
         $httpKernel,
-        MessageManager $messageManager,
         RightsManager $rightsManager,
         RouterInterface $router,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         $templating,
         ToolManager $toolManager,
         TranslatorInterface $translator,
@@ -77,10 +73,9 @@ class ToolListener
         $this->container = $container;
         $this->formFactory = $formFactory;
         $this->httpKernel = $httpKernel;
-        $this->messageManager = $messageManager;
         $this->rightsManager = $rightsManager;
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->templating = $templating;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
@@ -95,16 +90,6 @@ class ToolListener
     public function onDisplayWorkspaceParameters(DisplayToolEvent $event)
     {
          $event->setContent($this->workspaceParameters($event->getWorkspace()->getId()));
-    }
-
-    /**
-     * @DI\Observe("open_tool_workspace_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayWorkspaceAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->workspaceAgenda($event->getWorkspace()));
     }
 
     /**
@@ -138,16 +123,6 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("open_tool_desktop_agenda")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onDisplayDesktopAgenda(DisplayToolEvent $event)
-    {
-        $event->setContent($this->desktopAgenda());
-    }
-
-    /**
      * Renders the workspace properties page.
      *
      * @param integer $workspaceId
@@ -164,7 +139,7 @@ class ToolListener
         $canOpenResRights = true;
 
         if ($workspace->isPersonal() && !$this->rightsManager->canEditPwsPerm(
-            $this->container->get('security.context')->getToken()
+            $this->tokenStorage->getToken()
         )) {
             $canOpenResRights = false;
         }
@@ -215,23 +190,6 @@ class ToolListener
         return $response->getContent();
     }
 
-    public function workspaceAgenda(Workspace $workspace)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')
-            ->findByWorkspaceId($workspace->getId(), true);
-        $canCreate = $this->container->get('security.context')
-            ->isGranted(array('agenda', 'edit'), $workspace);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/workspace/agenda:agenda.html.twig',
-            array(
-                'workspace' => $workspace,
-                'canCreate' => $canCreate
-            )
-        );
-    }
-
     public function workspaceLogs($workspaceId)
     {
         /** @var \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace */
@@ -256,32 +214,6 @@ class ToolListener
         return $response->getContent();
     }
 
-    public function desktopAgenda()
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $usr = $this->container->get('security.context')->getToken()->getUser();
-        $listEventsDesktop = $em->getRepository('ClarolineCoreBundle:Event')->findDesktop($usr, true);
-        $listEvents = $em->getRepository('ClarolineCoreBundle:Event')->findByUser($usr, false);
-        $workspaces = array();
-        $filters = array();
-
-        foreach ($listEvents as $event) {
-            $filters[$event->getWorkspace()->getId()] = $event->getWorkspace()->getName();
-        }
-
-        if (count($listEventsDesktop) > 0) {
-            $filters[0] = $this->container->get('translator')->trans('desktop', array(), 'platform');
-        }
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool/desktop/agenda:agenda.html.twig',
-            array(
-                'listEvents' => $listEventsDesktop,
-                'filters' => $filters
-            )
-        );
-    }
-
     /**
      * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool")
      *
@@ -289,7 +221,7 @@ class ToolListener
      */
     public function onTopBarLeftMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.' && !is_null($tool)) {
@@ -318,7 +250,7 @@ class ToolListener
      */
     public function onTopBarRightMenuConfigureDesktopTool(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.' && !is_null($tool)) {
@@ -340,45 +272,13 @@ class ToolListener
     }
 
     /**
-     * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_message")
-     *
-     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
-     */
-    public function onTopBarLeftMenuConfigureMessage(ConfigureMenuEvent $event)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        $tool = $event->getTool();
-
-        if ($user !== 'anon.') {
-            $countUnreadMessages = $this->messageManager->getNbUnreadMessages($user);
-            $messageTitle = $this->translator->trans(
-                'new_message_alert',
-                array('%count%' => $countUnreadMessages),
-                'platform'
-            );
-            $menu = $event->getMenu();
-            $messageMenuLink = $menu->addChild(
-                $this->translator->trans('messages', array(), 'cursus'),
-                array('route' => 'claro_message_list_received')
-            )->setExtra('icon', 'fa fa-' . $tool->getClass())
-            ->setExtra('title', $messageTitle);
-
-            if ($countUnreadMessages > 0) {
-                $messageMenuLink->setExtra('badge', $countUnreadMessages);
-            }
-
-            return $menu;
-        }
-    }
-
-    /**
      * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool_parameters")
      *
      * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
      */
     public function onTopBarLeftMenuConfigureParameters(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
         if ($user !== 'anon.') {

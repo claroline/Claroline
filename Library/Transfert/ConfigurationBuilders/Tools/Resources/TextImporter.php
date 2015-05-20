@@ -54,25 +54,25 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
         $rootNode
             ->prototype('array')
-            ->children()
-                ->arrayNode('file')
-                    ->children()
-                        ->scalarNode('path')->isRequired()
-                            ->validate()
-                                ->ifTrue(
-                                    function ($v) use ($rootPath) {
-                                        return call_user_func_array(
-                                            __CLASS__ . '::fileNotExists',
-                                            array($v, $rootPath)
-                                        );
-                                    }
-                                )
-                                ->thenInvalid("The file %s doesn't exists")
+                ->children()
+                    ->arrayNode('file')
+                        ->children()
+                            ->scalarNode('path')->isRequired()
+                                ->validate()
+                                    ->ifTrue(
+                                        function ($v) use ($rootPath) {
+                                            return call_user_func_array(
+                                                __CLASS__ . '::fileNotExists',
+                                                array($v, $rootPath)
+                                            );
+                                        }
+                                    )
+                                    ->thenInvalid("The file %s doesn't exists")
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
-                ->end()
                 ->end()
             ->end();
     }
@@ -98,7 +98,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
             return $this->container->get('claroline.manager.text_manager')->create(
                 $content,
                 'title',
-                $this->container->get('security.context')->getToken()->getUser()
+                $this->container->get('security.token_storage')->getToken()->getUser()
             );
         }
     }

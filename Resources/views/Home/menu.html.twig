@@ -7,38 +7,38 @@
             {% if father is defined and father is not empty  %}
                 <li role="presentation">
                     <a role="menuitem" class="content-edit">
-                        <i class="fa fa-fw fa-pencil-square-o"></i> {{ "Edit" | trans({}, 'home') }}
+                        <i class="fa fa-fw fa-pencil-square-o"></i> {{ 'edit' | trans({}, 'platform') }}
                     </a>
                 </li>
                 <li role="presentation">
                     <a role="menuitem" class="content-delete">
-                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                        <i class="fa fa-fw fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
                     </a>
                 </li>
             {% else %}
                 {% if region is not defined or (region is defined and region is empty) and type is defined %}
                     <li>
                         <a class="content-size">
-                            <i class="fa fa-fw fa-arrows-h"></i> {{ "Size" | trans({}, 'home') }}
+                            <i class="fa fa-fw fa-arrows-h"></i> {{ 'size' | trans({}, 'platform') }}
                         </a>
                     </li>
                     <li>
                         <a class="content-edit">
-                            <i class="fa fa-fw fa-pencil"></i> {{ "Edit" | trans({}, 'home') }}
+                            <i class="fa fa-fw fa-pencil"></i> {{ 'edit' | trans({}, 'platform') }}
                         </a>
                     </li>
                 {% endif %}
                 {% if type != "home" %}
                     <li role="presentation">
                         <a role="menuitem" class="content-region">
-                            <i class="fa fa-fw fa-th-large"></i> {{ "Region" | trans({}, 'home') }}
+                            <i class="fa fa-fw fa-th-large"></i> {{ 'region' | trans({}, 'home') }}
                         </a>
                     </li>
                 {% endif %}
                 {% if region is not defined or (region is defined and region is empty) and type != "menu" %}
                     <li role="presentation">
                         <a role="menuitem" class="collapse-content">
-                            <i class="fa fa-fw fa-sort"></i> {{ "Collapse" | trans({}, 'home') }}
+                            <i class="fa fa-fw fa-sort"></i> {{ 'Collapse' | trans({}, 'home') }}
                             {% if collapse %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-fw fa-check"></i>{% endif %}
                         </a>
                     </li>
@@ -50,7 +50,7 @@
                 {% endif %}
                 <li role="presentation">
                     <a role="menuitem" class="content-delete">
-                        <i class="fa fa-fw fa-trash-o"></i> {{ "Delete" | trans({}, 'home') }}
+                        <i class="fa fa-fw fa-trash-o"></i> {{ 'delete' | trans({}, 'platform') }}
                     </a>
                 </li>
                 {% if region is not defined or (region is defined and region is empty) and type == "menu" %}
@@ -63,7 +63,7 @@
                 {% if region is defined and region is not empty and type is defined and type is not empty %}
                     <li role="presentation">
                         <a role="menuitem" href="{{ path('claro_get_content_by_type', {'type': type}) }}">
-                            <i class="fa fa-fw fa-pencil"></i> {{ 'Edit in the page' | trans({}, 'home') }}
+                            <i class="fa fa-fw fa-pencil"></i> {{ 'edit_in_page' | trans({}, 'home') }}
                         </a>
                     </li>
                 {% endif %}

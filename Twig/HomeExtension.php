@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -115,7 +115,7 @@ class HomeExtension extends \Twig_Extension
         }
 
         return $this->container->get("translator")->transChoice(
-            "%count% second ago|%count% seconds ago",
+            "seconds_ago",
             1,
             array('%count%' => 1),
             "home"

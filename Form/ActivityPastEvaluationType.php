@@ -31,7 +31,8 @@ class ActivityPastEvaluationType extends AbstractType
                     'passed' => 'passed',
                     'failed' => 'failed'
                 ),
-                'required' => false
+                'required' => false,
+                'label' => 'status'
             )
         );
         $builder->add(
@@ -39,7 +40,8 @@ class ActivityPastEvaluationType extends AbstractType
             'integer',
             array(
                 'read_only' => true,
-                'required' => false
+                'required' => false,
+                'label' => 'score'
             )
         );
         $builder->add(
@@ -49,20 +51,22 @@ class ActivityPastEvaluationType extends AbstractType
                 'read_only' => true,
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd H:m:s'
+                'format' => 'yyyy-MM-dd H:m:s',
+                'label' => 'date'
             )
         );
         $builder->add(
             'score',
             'text',
-            array('required' => false)
+            array('required' => false, 'label' => 'evaluation')
         );
         $builder->add(
             'comment',
             'textarea',
             array(
                 'attr' => array('rows' => 5),
-                'required' => false
+                'required' => false,
+                'label' => 'comment'
             )
         );
     }

@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ModelController extends Controller
 {
@@ -45,7 +45,7 @@ class ModelController extends Controller
     private $resourceManager;
     private $roleManager;
     private $router;
-    private $security;
+    private $authorization;
     private $userManager;
 
     /**
@@ -58,7 +58,7 @@ class ModelController extends Controller
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "router"          = @DI\Inject("router"),
-     *     "security"        = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
      * })
      */
@@ -71,7 +71,7 @@ class ModelController extends Controller
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         RouterInterface $router,
-        SecurityContextInterface $security,
+        AuthorizationCheckerInterface $authorization,
         UserManager $userManager
     )
     {
@@ -83,7 +83,7 @@ class ModelController extends Controller
         $this->resourceManager = $resourceManager;
         $this->roleManager     = $roleManager;
         $this->router          = $router;
-        $this->security        = $security;
+        $this->authorization   = $authorization;
         $this->userManager     = $userManager;
     }
 
@@ -635,8 +635,8 @@ class ModelController extends Controller
 
     private function checkAccess(Workspace $workspace)
     {
-        if (!$this->security->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
             throw new AccessDeniedException();
         }
     }
-} 
+}

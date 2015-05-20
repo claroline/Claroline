@@ -53,6 +53,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater = new Updater\Updater040800($this->container);
                 $updater->setLogger($this->logger);
                 $updater->preUpdate();
+            case version_compare($currentVersion, '5.0.0', '<'):
+                $updater = new Updater\Updater050000($this->container);
+                $updater->setLogger($this->logger);
+                $updater->preUpdate();
         }
     }
 
@@ -200,6 +204,10 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->postUpdate();
             case version_compare($currentVersion, '4.11.1', '<'):
                 $updater = new Updater\Updater041101($this->container);
+                $updater->setLogger($this->logger);
+                $updater->postUpdate();
+            case version_compare($currentVersion, '5.0.3', '<'):
+                $updater = new Updater\Updater050003($this->container);
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }

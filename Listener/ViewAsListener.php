@@ -14,7 +14,8 @@ namespace Claroline\CoreBundle\Listener;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
@@ -25,12 +26,14 @@ use Claroline\CoreBundle\Manager\RoleManager;
  */
 class ViewAsListener
 {
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $roleManager;
 
     /**
      * @DI\InjectParams({
-     *     "context"        = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "em"             = @DI\Inject("doctrine.orm.entity_manager"),
      *     "roleManager"    = @DI\Inject("claroline.manager.role_manager")
      * })
@@ -38,12 +41,14 @@ class ViewAsListener
      * @param SecurityContextInterface $context
      */
     public function __construct(
-        SecurityContextInterface $context,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         EntityManager $em,
         RoleManager $roleManager
     )
     {
-        $this->securityContext = $context;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->em = $em;
         $this->roleManager = $roleManager;
     }
@@ -57,18 +62,18 @@ class ViewAsListener
         $attributes = $request->query->all();
 
         if (array_key_exists('view_as', $attributes)) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $viewAs = $attributes['view_as'];
             if ($viewAs === 'exit') {
-                if ($this->securityContext->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
+                if ($this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE')) {
                     $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-                    $this->securityContext->setToken($token);
+                    $this->tokenStorage->setToken($token);
                 }
             } else {
                 $guid = substr($viewAs, strripos($viewAs, '_') + 1);
                 $baseRole = substr($viewAs, 0, strripos($viewAs, '_'));
 
-                if ($this->securityContext->isGranted('ROLE_WS_MANAGER_'.$guid)) {
+                if ($this->authorization->isGranted('ROLE_WS_MANAGER_'.$guid)) {
                     if ($baseRole === 'ROLE_ANONYMOUS') {
                         throw new \Exception('No implementation yet');
                     } else {
@@ -80,7 +85,7 @@ class ViewAsListener
 
                         $token = new ViewAsToken(array('ROLE_USER', $viewAs, 'ROLE_USURPATE_WORKSPACE_ROLE'));
                         $token->setUser($user);
-                        $this->securityContext->setToken($token);
+                        $this->tokenStorage->setToken($token);
                     }
                 } else {
                     throw new AccessDeniedException();

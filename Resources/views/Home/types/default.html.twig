@@ -4,7 +4,7 @@
 {% if content != null %}
     <div class="content-element  {{ size }}" data-id="{{ content.id }}" data-type="{{ type }}">
         <div class="panel panel-default relative">
-            {% render controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region, 'collapse': collapse }) %}
+            {% render(controller("ClarolineCoreBundle:Home:menu", { 'id': content.id, 'size': size, 'type': type, 'father': father, 'region': region, 'collapse': collapse })) %}
             {% if content.title != "" %}
                 <div class="panel-heading">
                     <h3 class="panel-title">{{ content.title }}</h3>
@@ -17,7 +17,7 @@
                         {% if collapse %}
                             <div class="text-gradient"></div>
                             <button class="show-more hide btn btn-primary btn-sm" type="button">
-                                <i class="fa fa-plus"></i> {{ 'Read more' | trans({}, 'home') }}
+                                <i class="fa fa-plus"></i> {{ 'read_more' | trans({}, 'home') }}
                             </button>
                         {% endif %}
                     {% endif %}

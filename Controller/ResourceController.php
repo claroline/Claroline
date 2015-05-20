@@ -13,14 +13,15 @@ namespace Claroline\CoreBundle\Controller;
 
 use \Exception;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
@@ -39,7 +40,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 class ResourceController
 {
-    private $sc;
+    private $tokenStorage;
+    private $authorization;
     private $resourceManager;
     private $rightsManager;
     private $roleManager;
@@ -53,7 +55,8 @@ class ResourceController
 
     /**
      * @DI\InjectParams({
-     *     "sc"              = @DI\Inject("security.context"),
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
@@ -68,11 +71,12 @@ class ResourceController
      */
     public function __construct
     (
-        SecurityContext $sc,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
-        Translator $translator,
+        TranslatorInterface $translator,
         Request $request,
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
@@ -81,7 +85,8 @@ class ResourceController
         FileManager $fileManager
     )
     {
-        $this->sc = $sc;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
         $this->translator = $translator;
         $this->rightsManager = $rightsManager;
@@ -148,7 +153,7 @@ class ResourceController
         $collection = new ResourceCollection(array($parent));
         $collection->setAttributes(array('type' => $resourceType));
 
-        if (!$this->sc->isGranted('CREATE', $collection)) {
+        if (!$this->authorization->isGranted('CREATE', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
@@ -182,11 +187,11 @@ class ResourceController
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(
-                        $createdResource->getResourceNode(), $this->sc->getToken()
+                        $createdResource->getResourceNode(), $this->tokenStorage->getToken()
                     );
                 } else {
                     $nodesArray[] = $this->resourceManager->toArray(
-                        $resource->getResourceNode(), $this->sc->getToken()
+                        $resource->getResourceNode(), $this->tokenStorage->getToken()
                     );
                 }
             }
@@ -295,7 +300,7 @@ class ResourceController
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $newParent);
 
-        if (!$this->sc->isGranted('MOVE', $collection)) {
+        if (!$this->authorization->isGranted('MOVE', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
@@ -311,7 +316,7 @@ class ResourceController
         foreach ($nodes as $node) {
             try {
                 $movedNode = $this->resourceManager->move($node, $newParent);
-                $movedNodes[] = $this->resourceManager->toArray($movedNode, $this->sc->getToken());
+                $movedNodes[] = $this->resourceManager->toArray($movedNode, $this->tokenStorage->getToken());
             } catch (ResourceMoveException $e) {
                 return new Response($this->translator->trans('invalid_move', array(), 'error'), 422);
             }
@@ -350,7 +355,7 @@ class ResourceController
 
         $collection = new ResourceCollection(array($node));
         if ($menuAction->getResourceType() === null) {
-            if (!$this->sc->isGranted('ROLE_USER')) {
+            if (!$this->authorization->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException('You must be log in to execute this action !');
             }
             $this->checkAccess('open', $collection);
@@ -494,10 +499,10 @@ class ResourceController
      */
     public function openDirectoryAction(ResourceNode $node = null)
     {
-        $user = $this->sc->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
         $path = array();
         $creatableTypes = array();
-        $currentRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
+        $currentRoles = $this->roleManager->getStringRolesFromToken($this->tokenStorage->getToken());
         $canChangePosition = false;
         $nodesWithCreatorPerms = array();
 
@@ -514,7 +519,7 @@ class ResourceController
             $this->checkAccess('OPEN', $collection);
 
             if ($user !== 'anon.') {
-                if ($user === $node->getCreator() || $this->sc->isGranted('ROLE_ADMIN')) {
+                if ($user === $node->getCreator() || $this->authorization->isGranted('ROLE_ADMIN')) {
                     $canChangePosition = true;
                 }
             }
@@ -525,9 +530,9 @@ class ResourceController
             //set "admin" mask if someone is the creator of a resource or the resource workspace owner.
             //if someone needs admin rights, the resource type list will go in this array
             $adminTypes = [];
-            $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->sc->getToken());
+            $isOwner = $this->resourceManager->isWorkspaceOwnerOf($node, $this->tokenStorage->getToken());
 
-            if ($isOwner || $this->sc->isGranted('ROLE_ADMIN')) {
+            if ($isOwner || $this->authorization->isGranted('ROLE_ADMIN')) {
                 $resourceTypes = $this->resourceManager->getAllResourceTypes();
 
                 foreach ($resourceTypes as $resourceType) {
@@ -538,7 +543,7 @@ class ResourceController
 
             $enableRightsEdition = true;
 
-            if ($isPws && !$this->rightsManager->canEditPwsPerm($this->sc->getToken())) {
+            if ($isPws && !$this->rightsManager->canEditPwsPerm($this->tokenStorage->getToken())) {
                 $enableRightsEdition = false;
             }
 
@@ -549,7 +554,7 @@ class ResourceController
                 $item = $el;
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
-                        && !$this->isUsurpatingWorkspaceRole($this->sc->getToken()) ) {
+                        && !$this->isUsurpatingWorkspaceRole($this->tokenStorage->getToken()) ) {
                         $item['mask'] = 1023;
                     }
                 }
@@ -638,7 +643,7 @@ class ResourceController
         $collection = new ResourceCollection($nodes);
         $collection->addAttribute('parent', $parent);
 
-        if (!$this->sc->isGranted('COPY', $collection)) {
+        if (!$this->authorization->isGranted('COPY', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',
@@ -657,7 +662,7 @@ class ResourceController
             foreach ($nodes as $node) {
                 $newNodes[] = $this->resourceManager->toArray(
                     $this->resourceManager->copy($node, $parent, $user, $i)->getResourceNode(),
-                    $this->sc->getToken()
+                    $this->tokenStorage->getToken()
                 );
                 $i++;
             }
@@ -700,7 +705,7 @@ class ResourceController
         $criteria = $this->resourceManager->buildSearchArray($this->request->query->all());
         $criteria['roots'] = $node ? array($node->getPath()) : array();
         $path = $node ? $this->resourceManager->getAncestors($node): array();
-        $userRoles = $this->roleManager->getStringRolesFromToken($this->sc->getToken());
+        $userRoles = $this->roleManager->getStringRolesFromToken($this->tokenStorage->getToken());
 
         //by criteria recursive => infinite loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles, true);
@@ -745,7 +750,7 @@ class ResourceController
         foreach ($nodes as $node) {
             $shortcut = $this->resourceManager
                 ->makeShortcut($node, $parent, $creator, new ResourceShortcut());
-            $links[] = $this->resourceManager->toArray($shortcut->getResourceNode(), $this->sc->getToken());
+            $links[] = $this->resourceManager->toArray($shortcut->getResourceNode(), $this->tokenStorage->getToken());
         }
 
         return new JsonResponse($links);
@@ -794,7 +799,7 @@ class ResourceController
      */
     public function insertAt(ResourceNode $node, User $user, $index)
     {
-        if ($user !== $node->getParent()->getCreator() && !$this->sc->isGranted('ROLE_ADMIN')) {
+        if ($user !== $node->getParent()->getCreator() && !$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -835,7 +840,7 @@ class ResourceController
      */
     public function checkAccess($permission, ResourceCollection $collection)
     {
-        if (!$this->sc->isGranted($permission, $collection)) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -850,7 +855,7 @@ class ResourceController
     public function managerParametersAction()
     {
         $response = new Response('', 401, array('Content-Type' => 'application/json'));
-        if ($this->sc->isGranted('ROLE_USER')) {
+        if ($this->authorization->isGranted('ROLE_USER')) {
             $json = $this->templating->render(
                 'ClarolineCoreBundle:Resource:managerParameters.json.twig',
                 array('resourceTypes' => $this->resourceManager->getAllResourceTypes())

@@ -11,9 +11,9 @@
         {% set valid = 0 %}
     {% endif %}
     <div class="welcome-home">
-        {% render controller(
+        {% render(controller(
             "ClarolineCoreBundle:Workspace:displayWorkspaceWidgets",
             {'workspace': workspace.getId(), 'homeTabId': tabId, 'valid': valid}
-        ) %}
+        )) %}
     </div>
 {% endblock %}

@@ -30,24 +30,24 @@ class HomeController
 {
     private $manager;
     private $request;
-    private $security;
+    private $authorization;
     private $templating;
     private $homeService;
 
     /**
      * @InjectParams({
      *     "manager"        = @Inject("claroline.manager.home_manager"),
-     *     "security"       = @Inject("security.context"),
+     *     "authorization"  = @Inject("security.authorization_checker"),
      *     "request"        = @Inject("request"),
      *     "templating"     = @Inject("templating"),
      *     "homeService"    = @Inject("claroline.common.home_service")
      * })
      */
-    public function __construct(HomeManager $manager, Request $request, $security, $templating, $homeService)
+    public function __construct(HomeManager $manager, Request $request, $authorization, $templating, $homeService)
     {
         $this->manager = $manager;
         $this->request = $request;
-        $this->security = $security;
+        $this->authorization = $authorization;
         $this->templating = $templating;
         $this->homeService = $homeService;
     }
@@ -579,7 +579,7 @@ class HomeController
     }
 
     /**
-     * Menu settings
+     * menu_settings
      *
      * @Route("/content/menu/settings/{content}", name="claroline_content_menu_settings")
      * @Secure(roles="ROLE_HOME_MANAGER")
@@ -688,7 +688,7 @@ class HomeController
 
     private function canEdit()
     {
-        return $this->security->isGranted('ROLE_ADMIN') ||
-            $this->security->isGranted('ROLE_HOME_MANAGER');
+        return $this->authorization->isGranted('ROLE_ADMIN') ||
+            $this->authorization->isGranted('ROLE_HOME_MANAGER');
     }
 }

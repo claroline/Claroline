@@ -34,7 +34,7 @@ class AppearanceType extends AbstractType
                 'checkbox',
                 array(
                     'required' => false,
-                    'label' => 'Show the name of the platform in the top bar',
+                    'label' => 'show_name_in_top_bar',
                     'disabled' => isset($this->lockedParams['nameActive'])
                 )
             )
@@ -43,7 +43,8 @@ class AppearanceType extends AbstractType
                 'text',
                 array(
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['footer'])
+                    'disabled' => isset($this->lockedParams['footer']),
+                    'label' => 'footer'
                 )
             )
             ->add(
@@ -51,7 +52,8 @@ class AppearanceType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->themes,
-                    'disabled' => isset($this->lockedParams['theme'])
+                    'disabled' => isset($this->lockedParams['theme']);
+                    'label' => 'theme'
                 )
             );
     }

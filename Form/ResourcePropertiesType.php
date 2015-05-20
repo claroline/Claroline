@@ -26,13 +26,14 @@ class ResourcePropertiesType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text');
+        $builder->add('name', 'text', array('label' => 'name'));
         $builder->add(
             'newIcon',
             'file',
             array(
                 'required' => false,
-                'mapped' => false
+                'mapped' => false,
+                'label' => 'icon'
             )
         );
         $builder->add(
@@ -41,13 +42,14 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'disabled' => true,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+                'label' => 'creation_date'
             )
         );
         $builder->add(
             'published',
             'checkbox',
-            array( 'required' => true)
+            array( 'required' => true, 'label' => 'published')
         );
         $builder->add(
             'accessibleFrom',
@@ -55,7 +57,8 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+                'label' => 'accessible_from'
             )
         );
         $builder->add(
@@ -64,7 +67,8 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'required' => false,
                 'widget' => 'single_text',
-                'format' => 'yyyy-MM-dd'
+                'format' => 'yyyy-MM-dd',
+                'label' => 'accessible_until'
             )
         );
         $builder->add(
@@ -72,10 +76,12 @@ class ResourcePropertiesType extends AbstractType
             'entity',
             array(
                 'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceType',
+                'choice_translation_domain' => true,
                 'expanded' => false,
                 'multiple' => false,
                 'property' => 'name',
-                'disabled' => true
+                'disabled' => true,
+                'label' => 'resource_type'
             )
         );
         $builder->add(
@@ -84,7 +90,8 @@ class ResourcePropertiesType extends AbstractType
             array(
                 'data' => $this->creator,
                 'mapped' => false,
-                'disabled' => true
+                'disabled' => true,
+                'label' => 'creator'
             )
         );
         $builder->add(
@@ -112,6 +119,6 @@ class ResourcePropertiesType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'resource'));
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

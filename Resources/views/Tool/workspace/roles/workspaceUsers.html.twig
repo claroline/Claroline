@@ -112,12 +112,11 @@
                                 <i class="fa fa-plus"></i>
                                 {{ 'add_users'|trans({}, 'platform') }}
                             </a>
-                            <a href="{{ path('claro_message_form_for_workspace', {'workspace': workspace.getId()}) }}" 
-                               class="btn btn-default dropdown-toggle" 
-                               role="button"
+                            <a href="{{ path('claro_workspace_users_tool_import_form', {'workspace': workspace.getId()}) }}"
+                               class="btn btn-default dropdown-toggle"
                             >
-                                <i class="fa fa-envelope"></i> 
-                                {{ 'send_message_to_workspace'|trans({}, 'platform') }}
+                                <i class="fa fa-sign-in"></i>
+                                {{ 'import_users'|trans({}, 'platform') }}
                             </a>
                         </div>
                     </div>
@@ -145,12 +144,6 @@
                 <div class="row">
                     <div class="col-md-8">
                         <div class="btn-group margin-bottom-md">
-                            <a href="{{ path('claro_workspace_users_tool_import_form', {'workspace': workspace.getId()}) }}"
-                               class="btn btn-default dropdown-toggle"
-                            >
-                                <i class="fa fa-sign-in"></i>
-                                {{ 'import_users'|trans({}, 'platform') }}
-                            </a>
                             <a class="btn btn-default action-button table-control"
                                 href="{{ path('claro_workspace_export_users', {'format': 'xls', 'workspace': workspace.getId()}) }}"
                             >
@@ -211,7 +204,6 @@
                             </th>
                         {% endif %}
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody id="user-table-body">
@@ -269,16 +261,6 @@
                                         {% endif %}
                                     {% endfor %}
                                 {% endfor %}
-
-                            </td>
-                            <td class="text-center">
-                                <i class="fa fa-envelope pointer-hand send-message-to-user-btn"
-                                   data-user-id="{{ user.getId() }}"
-                                   data-toggle="tooltip"
-                                   data-placement="left"
-                                   title="{{ 'send_message'|trans({}, 'platform') }}"
-                                >
-                                </i>
                             </td>
                         </tr>
                     {% endfor %}
@@ -327,16 +309,6 @@
                     );
                 }
             });
-        });
-        $('#user-table-body').on('click', '.send-message-to-user-btn', function () {
-            var params = {};
-            var userIds = [];
-            var userId = $(this).data('user-id');
-            userIds[0] = userId;
-            params.userIds = userIds;
-            var route = Routing.generate('claro_message_show');
-            route += '?' + $.param(params);
-            window.location.href = route;
         });
     </script>
 {% endblock %}

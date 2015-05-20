@@ -35,7 +35,7 @@ class ActivityRuleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ruleActions = $this->activityManager->getAllDistinctActivityRuleActions();
-        $actions = array('none' => 'activity_rule_action_none');
+        $actions = array('none' => 'none');
 
         foreach ($ruleActions as $ruleAction) {
             $actions[$ruleAction['action']] = $this->translator->trans(
@@ -50,7 +50,8 @@ class ActivityRuleType extends AbstractType
             'choice',
             array(
                 'choices' => $actions,
-                'required' => true
+                'required' => true,
+                'label' => 'action'
             )
         );
         $builder->add(
@@ -58,16 +59,8 @@ class ActivityRuleType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 1),
-                'required' => true
-            )
-        );
-        $builder->add(
-            'badge',
-            'entity',
-            array(
-                'class' => 'ClarolineCoreBundle:Badge\Badge',
-                'property' => 'translations[1].name',
-                'required' => false
+                'required' => true,
+                'label' => 'occurence'
             )
         );
         $builder->add(
@@ -75,7 +68,8 @@ class ActivityRuleType extends AbstractType
             'integer',
             array(
                 'attr' => array('min' => 0),
-                'required' => false
+                'required' => false,
+                'label' => 'result'
             )
         );
         $builder->add(

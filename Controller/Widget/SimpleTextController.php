@@ -31,7 +31,7 @@ class SimpleTextController extends Controller
      */
     public function updateSimpleTextWidgetConfig(WidgetInstance $widget, Request $request)
     {
-        if (!$this->get('security.context')->isGranted('edit', $widget)) {
+        if (!$this->get('security.authorization_checker')->isGranted('edit', $widget)) {
             throw new AccessDeniedException();
         }
 

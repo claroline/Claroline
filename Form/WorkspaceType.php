@@ -32,17 +32,17 @@ class WorkspaceType extends AbstractType
         $user = $this->user;
 
         $builder
-            ->add('name', 'text')
+            ->add('name', 'text', array('label' => 'name'))
             ->add(
                 'code',
                 'text',
-                array('constraints' => array(new WorkspaceUniqueCode()))
+                array('constraints' => array(new WorkspaceUniqueCode()), 'label' => 'code')
             )->add(
                 'description',
                 isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce'] ?
                     'textarea' :
                     'tinymce',
-                array('required' => false)
+                array('required' => false, 'label' => 'description')
             )
             ->add(
                 'model',
@@ -58,13 +58,14 @@ class WorkspaceType extends AbstractType
                             ->orderBy('wm.name', 'ASC');
                     },
                     'property' => 'name',
-                    'required' => false
+                    'required' => false,
+                    'label' => 'model'
                 )
             )
-            ->add('displayable', 'checkbox', array('required' => false))
-            ->add('selfRegistration', 'checkbox', array('required' => false))
-            ->add('registrationValidation', 'checkbox', array('required' => false))
-            ->add('selfUnregistration', 'checkbox', array('required' => false));
+            ->add('displayable', 'checkbox', array('required' => false, 'label' => 'displayable_in_workspace_list'))
+            ->add('selfRegistration', 'checkbox', array('required' => false, 'label' => 'public_registration'))
+            ->add('registrationValidation', 'checkbox', array('required' => false, 'label' => 'registration_validation'))
+            ->add('selfUnregistration', 'checkbox', array('required' => false, 'label' => 'public_unregistration'));
     }
 
     public function getName()

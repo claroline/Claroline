@@ -29,6 +29,7 @@ use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeTabManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -39,7 +40,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -55,8 +57,10 @@ class HomeController extends Controller
     private $request;
     private $roleManager;
     private $router;
-    private $securityContext;
+    private $tokenStorage;
+    private $authorization;
     private $toolManager;
+    private $userManager;
     private $utils;
     private $widgetManager;
 
@@ -69,8 +73,10 @@ class HomeController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "securityContext"    = @DI\Inject("security.context"),
+     *     "authorization"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
+     *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
      *     "utils"              = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"      = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -83,8 +89,10 @@ class HomeController extends Controller
         Request $request,
         RoleManager $roleManager,
         RouterInterface $router,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
+        UserManager $userManager,
         Utilities $utils,
         WidgetManager $widgetManager
     )
@@ -96,8 +104,10 @@ class HomeController extends Controller
         $this->request = $request;
         $this->roleManager = $roleManager;
         $this->router = $router;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
+        $this->userManager = $userManager;
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
     }
@@ -119,7 +129,7 @@ class HomeController extends Controller
      */
     public function displayDesktopHomeTabAction(User $user, $tabId)
     {
-        $roleNames = $this->utils->getRoles($this->securityContext->getToken());
+        $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
         $adminHomeTabConfigs = $this->homeTabManager
             ->generateAdminHomeTabConfigsByUser($user, $roleNames);
         $visibleAdminHomeTabConfigs = $this->homeTabManager
@@ -198,12 +208,15 @@ class HomeController extends Controller
                 );
             }
         }
+        $options = $this->userManager->getUserOptions($user);
+        $editionMode = $options->getDesktopMode() === 1;
 
         return array(
             'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
             'workspaceUserHTCs' => $workspaceUserHTCs,
-            'tabId' => $homeTabId
+            'tabId' => $homeTabId,
+            'editionMode' => $editionMode
         );
     }
 
@@ -384,7 +397,9 @@ class HomeController extends Controller
                     'widgetDisplayConfigId' => $widgetDisplayConfig->getId(),
                     'color' => $widgetDisplayConfig->getColor(),
                     'name' => $widgetInstance->getName(),
-                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0
+                    'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
+                    'width' => $widget->getDefaultWidth(),
+                    'height' => $widget->getDefaultHeight()
                 ),
                 200
             );
@@ -621,7 +636,9 @@ class HomeController extends Controller
                     'color' => $widgetDisplayConfig->getColor(),
                     'name' => $widgetInstance->getName(),
                     'configurable' => $widgetInstance->getWidget()->isConfigurable() ? 1 : 0,
-                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0
+                    'visibility' => $widgetHomeTabConfig->isVisible() ? 1 : 0,
+                    'width' => $widget->getDefaultWidth(),
+                    'height' => $widget->getDefaultHeight()
                 ),
                 200
             );
@@ -1522,6 +1539,21 @@ class HomeController extends Controller
         return new Response('success', 204);
     }
 
+    /**
+     * @EXT\Route(
+     *     "desktop/mode/switch",
+     *     name="claro_desktop_mode_switch",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function desktopSwitchModeAction(User $user)
+    {
+        $this->userManager->switchDesktopMode($user);
+
+        return new Response('success', 204);
+    }
+
     private function checkUserAccessForHomeTab(HomeTab $homeTab, User $user)
     {
         $homeTabUser = $homeTab->getUser();
@@ -1570,7 +1602,7 @@ class HomeController extends Controller
 
     private function hasWorkspaceHomeToolAccess(Workspace $workspace)
     {
-        return $this->securityContext->isGranted('home', $workspace);
+        return $this->authorization->isGranted('home', $workspace);
     }
 
     private function checkWorkspaceAccessForHomeTab(
@@ -1673,7 +1705,7 @@ class HomeController extends Controller
 
     private function checkWorkspaceEditionAccess(Workspace $workspace)
     {
-        if (!$this->securityContext->isGranted('parameters', $workspace)) {
+        if (!$this->authorization->isGranted('parameters', $workspace)) {
 
             throw new AccessDeniedException();
         }
