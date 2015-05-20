@@ -3,14 +3,8 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/player.css'
-        '@InnovaPathBundle/Resources/public/css/tree-view.css'
-        '@InnovaPathBundle/Resources/public/css/colors.css'
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/player2.css'
+    {# Path Player styles #}
+    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/player.css'
         '@InnovaPathBundle/Resources/public/less/Player/app.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
