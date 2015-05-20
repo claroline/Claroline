@@ -57,7 +57,7 @@
             <div id="facet-pane" class="tab-content">
                 <div class="tab-pane active" id="general-profile">
                     <div class="panel-body">
-                        {% include "ClarolineCoreBundle:Profile:privateProfileGeneralTab.html.twig" with {'user': user} %}
+                        {% include "ClarolineCoreBundle:Profile:privateProfileGeneralTab.html.twig" with {'user': user, 'profileLinks': links} %}
                     </div>
                 </div>
                 {% for facet in facets %}

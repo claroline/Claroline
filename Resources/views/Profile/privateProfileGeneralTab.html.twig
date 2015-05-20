@@ -19,6 +19,9 @@
         {% if user.getPhone() is not null %}
             <p><span class="fa fa-phone"></span> {{ user.getPhone() }}</p>
         {% endif %}
+        {% for link in links %}
+            <p><a href="{{ link.url }}">{{ link.name|trans({}, 'resource') }}</a></p>
+        {% endfor %}
         {% if '' != user.getDescription() %}
             <div class="description_block">
                 <p class="lead">Description de {{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</p>
