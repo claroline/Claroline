@@ -179,8 +179,9 @@ class EditorController
                 if (!empty($primaryResource)) {
                     $activity['primaryResource'] = array(
                         'resourceId' => $primaryResource->getId(),
-                        'name' => $primaryResource->getName(),
-                        'type' => $primaryResource->getMimeType(),
+                        'name'       => $primaryResource->getName(),
+                        'type'       => $primaryResource->getResourceType()->getName(),
+                        'mimeType'   => $primaryResource->getMimeType(),
                     );
                 }
 
@@ -194,9 +195,10 @@ class EditorController
                     if (!empty($secondaryResources)) {
                         foreach ($secondaryResources as $secondaryResource) {
                             $activity['resources'][] = array(
-                                'resourceId' => $secondaryResource->getId(),
-                                'name' => $secondaryResource->getName(),
-                                'type' => $secondaryResource->getMimeType(),
+                                'resourceId'          => $secondaryResource->getId(),
+                                'name'                => $secondaryResource->getName(),
+                                'type'                => $secondaryResource->getResourceType()->getName(),
+                                'mimeType'            => $secondaryResource->getMimeType(),
                                 'propagateToChildren' => true,
                             );
                         }

@@ -9,13 +9,41 @@
         '$q',
         'AlertService',
         function PathService($http, $q, AlertService) {
+            /**
+             * ID of the Path
+             * @type {Number}
+             */
+            var id = null;
+
+            /**
+             * Data of the Path
+             * @type {object}
+             */
+            var path = null;
+
             return {
+                getId: function () {
+                    return id;
+                },
+
+                setId: function (value) {
+                    id = value;
+                },
+
+                getPath: function () {
+                    return path;
+                },
+
+                setPath: function (value) {
+                    path = value;
+                },
+
                 /**
                  * Save modification to DB
                  * @param {number} id   - ID of the path
                  * @param {object} path - data of the path
                  */
-                save: function (id, path) {
+                save: function () {
                     // Transform data to make it acceptable by Symfony
                     var dataToSave = {
                         innova_path: {
@@ -63,7 +91,7 @@
                  * @param {number} id
                  * @param {object} path
                  */
-                publish: function (id, path) {
+                publish: function () {
                     var deferred = $q.defer();
 
                     $http
@@ -159,16 +187,42 @@
                     this.browseSteps(steps, function (parent, step) {
                         var deleted = false;
                         if (step === stepToDelete) {
-                            var pos = parent.children.indexOf(stepToDelete);
-                            if (-1 !== pos) {
-                                parent.children.splice(pos, 1);
+                            if (typeof parent !== 'undefined' && null !== parent) {
+                                var pos = parent.children.indexOf(stepToDelete);
+                                if (-1 !== pos) {
+                                    parent.children.splice(pos, 1);
 
-                                deleted = true;
+                                    deleted = true;
+                                }
+                            } else {
+                                // We are deleting the root step
+                                var pos = steps.indexOf(stepToDelete);
+                                if (-1 !== pos) {
+                                    steps.splice(pos, 1);
+
+                                    deleted = true;
+                                }
                             }
                         }
 
                         return deleted;
                     });
+                },
+
+                getStep: function (stepId) {
+                    var step = null;
+
+                    this.browseSteps(path.steps, function searchStep(parent, current) {
+                        if (current.id == stepId) {
+                            step = current;
+
+                            return true; // Kill the search
+                        }
+
+                        return false;
+                    });
+
+                    return step;
                 },
 
                 getStepInheritedResources: function (steps, step) {

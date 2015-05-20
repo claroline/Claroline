@@ -598,7 +598,8 @@ class Step implements \JsonSerializable
                     'id'         => $primaryResource->getId(),
                     'resourceId' => $primaryResource->getId(),
                     'name'       => $primaryResource->getName(),
-                    'type'       => $primaryResource->getMimeType(),
+                    'type'       => $primaryResource->getResourceType()->getName(),
+                    'mimeType'   => $primaryResource->getMimeType(),
                 );
             }
         }
@@ -624,7 +625,8 @@ class Step implements \JsonSerializable
                         'id'                  => $secondaryResource->getId(),
                         'resourceId'          => $secondaryResource->getId(),
                         'name'                => $secondaryResource->getName(),
-                        'type'                => $secondaryResource->getMimeType(),
+                        'type'                => $secondaryResource->getResourceType()->getName(),
+                        'mimeType'            => $secondaryResource->getMimeType(),
                         'propagateToChildren' => in_array($secondaryResource->getId(), $propagatedResources),
                     );
                 }

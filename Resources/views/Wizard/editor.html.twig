@@ -5,17 +5,8 @@
     {{ parent() }}
 
     {# Path Editor styles #}
-    {% stylesheets debug=false filter='cssmin'  output='vendor/innovapath/editor.css'
-        '@InnovaAngularUIPageslideBundle/Resources/public/css/*'
+    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/editor.css'
         '@InnovaAngularUITreeBundle/Resources/public/css/*'
-        '@InnovaPathBundle/Resources/public/css/Editor/*'
-        '@InnovaPathBundle/Resources/public/css/tree-view.css'
-        '@InnovaPathBundle/Resources/public/css/colors.css'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/editor2.css'
         '@InnovaPathBundle/Resources/public/less/Editor/app.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
@@ -34,9 +25,6 @@
 {% block content %}
     {# Angular UI #}
     <div data-ng-cloak="" data-ng-app="PathEditorApp" class="path-editor">
-        {# Templates Sidebar #}
-        <path-template-sidebar></path-template-sidebar>
-
         {# Path Form (we not directly alter the entity, but work with a JSON structure which stores info before publishing) #}
         <path-form data-id="{{ _resource.id }}" data-path="{{ _resource.structure | raw | escape }}" data-modified="{{ _resource.modified }}" data-published="{{ _resource.published }}"></path-form>
     </div>
@@ -53,6 +41,7 @@
     {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
+        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
     %}
@@ -101,8 +90,12 @@
 
         '@InnovaPathBundle/Resources/public/angularjs/Step/*'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Directive/*'
         '@InnovaPathBundle/Resources/public/angularjs/Step/Service/*'
+
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Directive/*'
+        '@InnovaPathBundle/Resources/public/angularjs/Resource/Service/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/Template/*'
         '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/*'
@@ -111,6 +104,7 @@
         '@InnovaPathBundle/Resources/public/angularjs/Template/Service/*'
 
         '@InnovaPathBundle/Resources/public/angularjs/PathEditor.app.js'
+        '@InnovaPathBundle/Resources/public/angularjs/PathEditor.routes.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

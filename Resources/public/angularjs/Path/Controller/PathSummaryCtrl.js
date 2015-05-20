@@ -1,19 +1,20 @@
 /**
- * Structure Controller
- * Manages the tree of steps into the Path
+ * Path summary
  */
 (function () {
     'use strict';
 
-    angular.module('PathModule').controller('PathStructureCtrl', [
+    angular.module('PathModule').controller('PathSummaryCtrl', [
         '$modal',
+        '$location',
+        '$routeParams',
         'IdentifierService',
         'HistoryService',
         'ClipboardService',
         'ConfirmService',
         'PathService',
         'StepService',
-        function PathStructureCtrl($modal, IdentifierService, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
+        function PathSummaryCtrl($modal, $location, $routeParams, IdentifierService, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
             this.webDir = EditorApp.webDir;
 
             this.structure = [];
@@ -21,11 +22,10 @@
             this.maxDepth = 8; // Do not allow adding children to steps at the max depth
 
             /**
-             * Step currently displayed into Step form
+             * Information about current view
              * @type {null}
              */
-            this.currentStep                   = null;
-            this.currentStepInheritedResources = [];
+            this.current = $routeParams;
 
             /**
              * Current state of the clipboard
@@ -57,6 +57,16 @@
             };
 
             /**
+             * Is the summary opened ?
+             * @type {boolean}
+             */
+            this.opened = false;
+
+            this.close = function () {
+                this.opened = false;
+            };
+
+            /**
              * Initialize an empty structure for path
              */
             this.createNew = function () {
@@ -66,7 +76,7 @@
                 this.structure.push(rootStep);
 
                 // Set root step as current step
-                this.setCurrentStep(rootStep);
+                this.goTo(rootStep);
             };
 
             /**
@@ -78,16 +88,12 @@
                 // Get the root of the template as current step
             };
 
-            /**
-             * Set the current step to edit
-             * @param step
-             */
-            this.setCurrentStep = function (step) {
-                // Set the current Step
-                this.currentStep                   = step;
-
-                // Get inherited resources for this step
-                this.currentStepInheritedResources = PathService.getStepInheritedResources(this.structure, this.currentStep);
+            this.goTo = function goTo(step) {
+                if (angular.isObject(step)) {
+                    $location.path('/' + step.id);
+                } else {
+                    $location.path('/');
+                }
             };
 
             /**
@@ -154,10 +160,10 @@
                         if (updatePreview) {
                             if (this.structure[0]) {
                                 // Display root step
-                                this.setCurrentStep(this.structure[0]);
+                                this.goTo(this.structure[0]);
                             } else {
                                 // There is no longer steps into the path => hide step form
-                                this.setCurrentStep(null);
+                                this.goTo(null);
                             }
                         }
                     }.bind(this)

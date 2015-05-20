@@ -5,8 +5,9 @@
     'use strict';
 
     angular.module('StepModule', [
+        'ui.resourcePicker',
         'UtilsModule',
         'FormModule',
-        'HistoryModule'
+        'ResourceModule'
     ]);
 })();

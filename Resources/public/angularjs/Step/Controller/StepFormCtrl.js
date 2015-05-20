@@ -7,7 +7,9 @@
     angular.module('StepModule').controller('StepFormCtrl', [
         '$scope',
         'StepService',
-        function StepFormCtrl($scope, StepService) {
+        'step',
+        'inheritedResources',
+        function StepFormCtrl($scope, StepService, step, inheritedResources) {
             /**
              * Path to public dir
              * @type {string}
@@ -18,20 +20,23 @@
              * Current edited Step
              * @type {object}
              */
-            this.step = null;
+            this.step = step;
 
-            this.inheritedResources = [];
+            /**
+             * Inherited resources from parents of the Step
+             * @type {*}
+             */
+            this.inheritedResources = inheritedResources || [];
 
             // Defines which panels of the form are collapsed or not
             this.collapsedPanels = {
                 description       : false,
                 resourcePrimary   : false,
-                resourceSecondary : true,
                 properties        : true
             };
 
             // Store resource icons
-            $scope.resourceIcons = EditorApp.resourceIcons;
+            this.resourceIcons = EditorApp.resourceIcons;
 
             // Activity resource picker config
             this.activityResourcePicker = {
@@ -95,7 +100,10 @@
                 }
             };
 
-            // Secondary resources picker config
+            /**
+             * @deprecated
+             * @type {{name: string, parameters: {isPickerMultiSelectAllowed: boolean, callback: (function(this:StepFormCtrl)|*)}}}
+             */
             this.secondaryResourcesPicker = {
                 name: 'picker-secondary-resources',
                 parameters: {
@@ -152,21 +160,31 @@
 
             /**
              * Delete selected resource from path
+             * @deprecated
              */
             this.removeResource = function (resource) {
                 StepService.removeResource(this.step, resource);
             };
 
+            /**
+             * @deprecated
+             * @param resource
+             */
             this.enableResourcePropagation = function (resource) {
                 resource.propagateToChildren = true;
             };
 
+            /**
+             * @deprecated
+             * @param resource
+             */
             this.disableResourcePropagation = function (resource) {
                 resource.propagateToChildren = false;
             };
 
             /**
              * Exclude a resource inherited from parents
+             * @deprecated
              */
             this.excludeParentResource = function (resource) {
                 resource.isExcluded = true;
@@ -175,6 +193,7 @@
 
             /**
              * Include a resource inherited from parents which has been excluded
+             * @deprecated
              */
             this.includeParentResource = function (resource) {
                 resource.isExcluded = false;

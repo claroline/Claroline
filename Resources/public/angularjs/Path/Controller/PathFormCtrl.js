@@ -26,11 +26,20 @@
             this.published = false;
             this.unsaved   = false;
 
+            this.summaryOpened = true;
+
             /**
              * Current state of the history stack
              * @type {object}
              */
             this.historyDisabled = HistoryService.getDisabled();
+
+            /**
+             * Open or close summary of the Path
+             */
+            this.toggleSummary = function () {
+                this.summaryOpened = !this.summaryOpened;
+            };
 
             /**
              * Undo last action
@@ -56,7 +65,7 @@
              * Save the path
              */
             this.save = function () {
-                PathService.save(this.id, this.path).then(function () {
+                PathService.save().then(function () {
                     // Mark path as modified
                     this.modified = true;
                     this.unsaved  = false;
@@ -67,7 +76,7 @@
              * Publish the path modifications
              */
             this.publish = function () {
-                PathService.publish(this.id, this.path).then(function () {
+                PathService.publish().then(function () {
                     this.modified  = false;
                     this.published = true;
                     this.unsaved   = false;

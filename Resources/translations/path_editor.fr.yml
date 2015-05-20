@@ -1,5 +1,6 @@
 # c
 cancel: Annuler
+close_summary: Fermer le sommaire
 copy: copie
 
 # d
@@ -20,9 +21,11 @@ name_help: Saisir le nom du parcours
 no: Non
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
 no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
+no_step_selected: Il n'y a aucune étape sélectionnée. Veuillez en sélectionner une dans le sommaire du Parcours.
 no_templates: Il n'y a aucun modèle disponible.
 
 # o
+open_summary: Ouvrir le sommaire
 open_templates: Ouvrir les modèles
 
 # p
@@ -47,12 +50,15 @@ published: Publié
 
 # r
 redo: Rétablir
-resource_delete: Supprimer
+resource_delete: Supprimer la ressource
+resource_delete_confirm: Êtes-vous sur de vouloir supprimer cette ressource ?
+resource_delete_title: <span class="trash-o"></span> Suppression de la ressource : <strong>&lt;%resourceName%&gt;</strong>
 resource_hide_parent: Masquer dans cette étape
-resource_show_parent: Afficher dans cette étape
 resource_propagate : Rendre disponible dans les étapes enfants
 resource_no_propagate : Rendre indisponible dans les étapes enfants
-resources_browse: Ajouter
+resource_show: Voir la ressource
+resource_show_parent: Afficher dans cette étape
+resources_browse: Ajouter une ressource
 resources_replace: Remplacer
 root_default_name: <sans nom>
 
@@ -65,7 +71,6 @@ select_activity: Sélectionner une activité existante
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
-step_delete_children: Supprimer les enfants
 step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
 step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
 step_description: Description
