@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Manager\ContactManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -22,24 +21,20 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class MyContactsListener
 {
-    private $contactManager;
     private $httpKernel;
     private $request;
 
     /**
      * @DI\InjectParams({
-     *     "contactManager" = @DI\Inject("claroline.manager.contact_manager"),
      *     "httpKernel"     = @DI\Inject("http_kernel"),
      *     "requestStack"   = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
-        ContactManager $contactManager,
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack
     )
     {
-        $this->contactManager = $contactManager;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
     }

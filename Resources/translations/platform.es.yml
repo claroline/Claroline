@@ -106,6 +106,7 @@ size: Tamaño
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: Todos
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'
+all_my_contacts: 'Todos mis contactos'
 all_my_workspaces: 'Todos mis espacios de trabajo'
 all_public_personal_workspaces: 'Todos los espacios personales publicos'
 all_public_workspaces: 'Todos los espacios de trabajo públicos'
@@ -162,6 +163,8 @@ captcha: captcha
 categories: categorías
 categories_organization: 'Organización de categorías'
 categorize: 'Clasificar por categorías'
+category_creation: 'Creación de una categoría'
+category_edition: 'Modificación de categoría'
 category_explanations_1: 'Cada categoría debe tener un nombre único.'
 category_explanations_2: 'Seleccione una categoría para la gestión de sus subcategorías.'
 category_root: 'Categorías de la raíz'

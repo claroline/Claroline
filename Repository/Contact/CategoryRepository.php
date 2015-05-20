@@ -44,4 +44,17 @@ class CategoryRepository extends EntityRepository
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
+
+    public function findOrderOfLastCategoryByUser(User $user)
+    {
+        $dql = '
+            SELECT MAX(c.order) AS order_max
+            FROM Claroline\CoreBundle\Entity\Contact\Category c
+            WHERE c.user = :user
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getSingleResult();
+    }
 }

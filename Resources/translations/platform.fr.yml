@@ -106,6 +106,7 @@ advanced_parameters: 'Paramètres avancés'
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
+all_my_contacts: 'Tous mes contacts'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_public_personal_workspaces: 'Tous les espaces personnels publics'
 all_public_workspaces: 'Tous les espaces d''activités publics'
@@ -162,6 +163,8 @@ captcha: Captcha
 categories: Catégories
 categories_organization: 'Organisation des catégories'
 categorize: 'Classer par catégorie'
+category_creation: 'Création d''une catégorie'
+category_edition: 'Modification de la catégorie'
 category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
 category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
 category_root: 'Catégories de base'

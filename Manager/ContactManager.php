@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Contact\Category;
+use Claroline\CoreBundle\Entity\Contact\Contact;
 use Claroline\CoreBundle\Entity\Contact\Options;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -94,6 +96,36 @@ class ContactManager
         return $options;
     }
 
+    public function persistContact(Contact $contact)
+    {
+        $this->om->persist($contact);
+        $this->om->flush();
+    }
+
+    public function deleteContact(Contact $contact)
+    {
+        $this->om->remove($contact);
+        $this->om->flush();
+    }
+
+    public function persistCategory(Category $category)
+    {
+        $this->om->persist($category);
+        $this->om->flush();
+    }
+
+    public function deleteCategory(Category $category)
+    {
+        $this->om->remove($category);
+        $this->om->flush();
+    }
+
+    public function persistOptions(Options $options)
+    {
+        $this->om->persist($options);
+        $this->om->flush();
+    }
+
     /***************************************
      * Access to ContactRepository methods *
      ***************************************/
@@ -146,6 +178,11 @@ class ContactManager
     public function getCategoryByUserAndName(User $user, $name, $executeQuery = true)
     {
         return $this->categoryRepo->findCategoryByUserAndName($user, $name, $executeQuery);
+    }
+
+    public function getOrderOfLastCategoryByUser(User $user)
+    {
+        return $this->categoryRepo->findOrderOfLastCategoryByUser($user);
     }
 
 
