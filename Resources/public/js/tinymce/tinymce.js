@@ -174,7 +174,7 @@
         var buttons = (buttonsDatas === undefined) ?
             [] :
             buttonsDatas.split(" ");
-        
+
         for (var i=0; i < buttons.length; i++) {
             var functionKey = buttons[i];
             var functBtn = tinymce.claroline.buttons[functionKey];
@@ -261,7 +261,7 @@
         'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
                     'resourcePicker fileUpload | fullscreen displayAllButtons',
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
-                    'image media link charmap | print preview code',
+                    'media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
         'paste_preprocess': tinymce.claroline.paste,
         'setup': tinymce.claroline.setup,
