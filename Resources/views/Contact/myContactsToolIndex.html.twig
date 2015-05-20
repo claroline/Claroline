@@ -46,64 +46,75 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#all-my-contacts-box">
+                        <a data-toggle="collapse" href="#all-my-contacts-content">
                             {{ 'all_my_contacts'|trans({}, 'platform') }}
                         </a>
+                        &nbsp;
+                        <span class="badge" id="all-my-contacts-badge">
+                            {{ contacts|length }}
+                        </span>
                     </h4>
                 </div>
-                <div id="all-my-contacts-box" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        Liste de tous mes contacts
+                <div id="all-my-contacts-content" class="panel-collapse collapse in">
+                    <div class="panel-body" id="all-my-contacts-content-body">
                     </div>
                 </div>
             </div>
             
-            {% for category in categories %}
-                {% set categoryId = category.getId() %}
-                <div class="panel panel-default" id="category-box-{{ categoryId }}">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse"
-                               href="#category-content-{{ categoryId }}"
-                               id="category-title-{{ categoryId }}"
-                            >
-                                {{ category.getName() }}
-                            </a>
-                            <span class="dropdown pull-right">
-                                <i class="fa fa-cogs pointer-hand"
-                                   data-toggle="dropdown"
+            <div class="panel-group" role="tablist" id="category-list-box">
+                {% for category in categories %}
+                    {% set categoryId = category.getId() %}
+                    <div class="panel panel-default category-element"
+                         id="category-box-{{ categoryId }}"
+                         style="overflow: visible"
+                    >
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse"
+                                   href="#category-content-{{ categoryId }}"
+                                   id="category-title-{{ categoryId }}"
                                 >
-                                </i>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="presentation"
-                                        class="category-edit-btn"
-                                        data-category-id="{{ categoryId }}"
+                                    {{ category.getName() }}
+                                </a>
+                                &nbsp;
+                                <span class="badge" id="category-badge-{{ categoryId }}">
+                                    0
+                                </span>
+                                <span class="dropdown pull-right">
+                                    <i class="fa fa-cogs pointer-hand"
+                                       data-toggle="dropdown"
                                     >
-                                        <a role="menuitem" tabindex="-1" href="#">
-                                            <i class="fa fa-edit"></i>
-                                            {{ 'rename'|trans({}, 'platform') }}
-                                        </a>
-                                    </li>
-                                    <li role="presentation"
-                                        class="category-delete-btn"
-                                        data-category-id="{{ categoryId }}"
-                                    >
-                                        <a role="menuitem" tabindex="-1" href="#">
-                                            <i class="fa fa-times-circle"></i>
-                                            {{ 'delete'|trans({}, 'platform') }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </span>
-                        </h4>
-                    </div>
-                    <div id="category-content-{{ categoryId }}" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            Liste des contacts de la catégorie
+                                    </i>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li role="presentation"
+                                            class="category-edit-btn"
+                                            data-category-id="{{ categoryId }}"
+                                        >
+                                            <a role="menuitem" tabindex="-1" href="#">
+                                                <i class="fa fa-edit"></i>
+                                                {{ 'rename'|trans({}, 'platform') }}
+                                            </a>
+                                        </li>
+                                        <li role="presentation"
+                                            class="category-delete-btn"
+                                            data-category-id="{{ categoryId }}"
+                                        >
+                                            <a role="menuitem" tabindex="-1" href="#">
+                                                <i class="fa fa-times-circle"></i>
+                                                {{ 'delete'|trans({}, 'platform') }}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </h4>
+                        </div>
+                        <div id="category-content-{{ categoryId }}" class="panel-collapse collapse">
+                            <div class="panel-body" id="category-content-body-{{ categoryId }}">
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}
