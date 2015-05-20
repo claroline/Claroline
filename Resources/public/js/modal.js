@@ -261,7 +261,7 @@
             })
             .error(function (data, status, jqXHR) {
                 if (errorHandler) {
-                    errorHandler(errorParameters, data, jqXHR)
+                    errorHandler(errorParameters, data, jqXHR);
                 } else {
                     modal.error();
                 }

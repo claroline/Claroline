@@ -1323,4 +1323,122 @@ class UserManager
         }
         $this->persistUserOptions($options);
     }
+
+    public function getUsersForUserPicker(
+        User $user,
+        $search = '',
+        $withAllUsers = false,
+        $withUsername = true,
+        $withMail = false,
+        $withCode = false,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC',
+        array $searchedWorkspaces = array(),
+        array $searchedRoles = array(),
+        array $searchedGroups = array(),
+        array $excludedUsers = array(),
+        array $forcedUsers = array(),
+        array $forcedGroups = array(),
+        array $forcedRoles = array(),
+        array $forcedWorkspaces = array()
+    )
+    {
+        if (count($searchedRoles) > 0 ||
+            count($searchedGroups) > 0 ||
+            count($searchedWorkspaces) > 0) {
+
+            $roles = $searchedRoles;
+            $groups = $searchedGroups;
+            $workspaces = $searchedWorkspaces;
+        } else {
+            $roles = $withAllUsers ?
+                array() :
+                $this->generateRoleRestrictions($user);
+            $groups = $withAllUsers ?
+                array() :
+                $this->generateGroupRestrictions($user);
+            $workspaces = $withAllUsers ?
+                array() :
+                $this->generateWorkspaceRestrictions($user);
+        }
+        $users = $this->userRepo->findUsersForUserPicker(
+            $search,
+            $withUsername,
+            $withMail,
+            $withCode,
+            $orderedBy,
+            $order,
+            $roles,
+            $groups,
+            $workspaces,
+            $excludedUsers,
+            $forcedUsers,
+            $forcedGroups,
+            $forcedRoles,
+            $forcedWorkspaces
+        );
+
+        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+    }
+
+    private function generateRoleRestrictions(User $user)
+    {
+        $restrictions = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
+
+        if (is_null($adminRole)) {
+            $wsRoles = $this->roleManager->getWorkspaceRolesByUser($user);
+
+            foreach ($wsRoles as $wsRole) {
+                $wsRoleId = $wsRole->getId();
+                $workspace = $wsRole->getWorkspace();
+                $guid = $workspace->getGuid();
+                $managerRoleName = 'ROLE_WS_MANAGER_' . $guid;
+
+                if ($wsRole->getName() === $managerRoleName) {
+                    $workspaceRoles = $this->roleManager->getWorkspaceRoles($workspace);
+
+                    foreach ($workspaceRoles as $workspaceRole) {
+                        $workspaceRoleId = $workspaceRole->getId();
+
+                        if (!isset($restrictions[$workspaceRoleId])) {
+                            $restrictions[$workspaceRoleId] = $workspaceRole;
+                        }
+                    }
+                } elseif (!isset($restrictions[$wsRoleId])) {
+                    $restrictions[$wsRoleId] = $wsRole;
+                }
+            }
+        }
+
+        return $restrictions;
+    }
+
+    private function generateGroupRestrictions(User $user)
+    {
+        $restrictions = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
+
+        if (is_null($adminRole)) {
+
+            $restrictions = $user->getGroups()->toArray();
+        }
+
+        return $restrictions;
+    }
+
+    private function generateWorkspaceRestrictions(User $user)
+    {
+        $restrictions = array();
+        $adminRole = $this->roleManager->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
+
+        if (is_null($adminRole)) {
+
+            $restrictions = $this->workspaceManager->getWorkspacesByUser($user);
+        }
+
+        return $restrictions;
+    }
 }
