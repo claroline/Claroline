@@ -29,8 +29,8 @@ class LoadToolsData implements RequiredFixture
             array('resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false),
             array('logs', 'list', false, false, true, false, false, false, false, false, true),
             array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
-            array('users', 'user', true, false, true, false, false, false, false, false, true)
-            //array('learning_profil', 'graduation-cap', true, false, true, false, false, false, false, false, true),
+            array('users', 'user', true, false, true, false, false, false, false, false, true),
+            array('my_contacts', 'users', false, false, false, true, false, false, false, false, true)
         );
 
         foreach ($tools as $tool) {
@@ -51,7 +51,7 @@ class LoadToolsData implements RequiredFixture
             $this->createToolMaskDecoders($manager, $entity);
             $this->createPersonalWorkspaceToolConfig($manager, $entity);
 
-            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager') {
+            if ($tool[0] === 'parameters' || $tool[0] === 'resource_manager' || $tool[0] === 'my_contacts') {
                 $this->createAdminOrderedTool($manager, $entity);
             }
         }

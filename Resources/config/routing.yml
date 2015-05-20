@@ -269,3 +269,8 @@ claro_admin_facet:
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API"
     type: annotation
+    
+claro_contact:
+    resource: "@ClarolineCoreBundle/Controller/ContactController.php"
+    prefix: contact
+    type: annotation
