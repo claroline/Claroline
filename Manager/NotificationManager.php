@@ -55,6 +55,8 @@ class NotificationManager
 
     private function getLoggedUser()
     {
+        $doer = null;
+
         $securityToken = $this->tokenStorage->getToken();
 
         if (null !== $securityToken) {
