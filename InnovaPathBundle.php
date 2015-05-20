@@ -28,7 +28,24 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
 
     public function suggestConfigurationFor(Bundle $bundle, $environment)
     {
-        
+        $bundleClass = get_class($bundle);
+        $config = new ConfigurationBuilder();
+
+        $emptyConfigs = array(
+            'Innova\AngularJSBundle\InnovaAngularJSBundle',
+            'Innova\AngularUIBootstrapBundle\InnovaAngularUIBootstrapBundle',
+            'Innova\AngularUITranslationBundle\InnovaAngularUITranslationBundle',
+            'Innova\AngularUIResourcePickerBundle\InnovaAngularUIResourcePickerBundle',
+            'Innova\AngularUITinyMCEBundle\InnovaAngularUITinyMCEBundle',
+            'Innova\AngularUITreeBundle\InnovaAngularUITreeBundle',
+            'Innova\AngularUIPageslideBundle\InnovaAngularUIPageslideBundle',
+        );
+
+        if (in_array($bundleClass, $emptyConfigs)) {
+            return $config;
+        }
+
+        return false;
     }
 
     public function getAdditionalInstaller()
