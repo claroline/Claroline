@@ -43,10 +43,10 @@ class FileListener implements ContainerAwareInterface
     private $resourceManager;
     private $workspaceManager;
     private $om;
-    private $sc;
     private $request;
     private $httpKernel;
     private $filesDir;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
@@ -61,7 +61,7 @@ class FileListener implements ContainerAwareInterface
         $this->resourceManager = $container->get('claroline.manager.resource_manager');
         $this->workspaceManager = $container->get('claroline.manager.workspace_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
-        $this->sc = $container->get('security.token_storage');
+        $this->tokenStorage = $container->get('security.token_storage');
         $this->request = $container->get('request_stack');
         $this->httpKernel = $container->get('httpKernel');
         $this->filesDir = $container->getParameter('claroline.param.files_directory');
@@ -394,24 +394,7 @@ class FileListener implements ContainerAwareInterface
 
         // set order manually as we are inside a flush suite
         for ($i = 0, $count = count($resources); $i < $count; ++$i) {
-            if ($i > 0) {
-                $resources[$i]->getResourceNode()
-                    ->setPrevious($resources[$i - 1]->getResourceNode());
-            }
-
-            if ($i < $count - 1) {
-                $resources[$i]->getResourceNode()
-                    ->setNext($resources[$i + 1]->getResourceNode());
-            }
-        }
-
-        if ($first) {
-            $previous = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $parent, 'next' => null));
-
-            if ($previous) {
-                $previous->setNext($resources[0]->getResourceNode());
-            }
+            $resources[$i]->getResourceNode()->setIndex($i + 1);
         }
 
         return $resources;
