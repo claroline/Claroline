@@ -22,6 +22,7 @@ class ObjectiveRepository extends EntityRepository
         return $this->createQueryBuilder('o')
             ->select('o.id', 'o.name', 'COUNT(oc) AS competencyCount')
             ->leftJoin('o.objectiveCompetencies', 'oc')
+            ->orderBy('o.name')
             ->groupBy('o.id')
             ->getQuery()
             ->getArrayResult();
@@ -122,6 +123,35 @@ class ObjectiveRepository extends EntityRepository
     }
 
     /**
+     * Returns all the users and group members who have a given objective.
+     *
+     * @param Objective $objective
+     * @return array
+     */
+    public function findUsersWithObjective(Objective $objective)
+    {
+        $usersQb = $this->createQueryBuilder('o1')
+            ->select('ou.id')
+            ->join('o1.users', 'ou')
+            ->where('o1 = :objective');
+        $groupsQb = $this->createQueryBuilder('o2')
+            ->select('og.id')
+            ->join('o2.groups', 'og')
+            ->where('o2 = :objective');
+
+        return $this->_em->createQueryBuilder()
+            ->select('u')
+            ->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->leftJoin('HeVinci\CompetencyBundle\Entity\Progress\UserProgress', 'up', 'WITH', 'up.user = u')
+            ->leftJoin('u.groups', 'ug')
+            ->where((new Expr())->in('u.id', $usersQb->getDQL()))
+            ->orWhere((new Expr())->in('ug.id', $groupsQb->getDQL()))
+            ->setParameter(':objective', $objective)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Returns the query object for counting all the users who have
      * -- or are member of a group which has -- at least one learning
      * objective. If a particular objective is given, only the users
@@ -197,7 +227,8 @@ class ObjectiveRepository extends EntityRepository
             ->leftJoin('HeVinci\CompetencyBundle\Entity\Progress\UserProgress', 'up', 'WITH', 'up.user = u')
             ->leftJoin('u.groups', 'ug')
             ->where((new Expr())->in('u.id', $usersQb->getDQL()))
-            ->orWhere((new Expr())->in('ug.id', $groupsQb->getDQL()));
+            ->orWhere((new Expr())->in('ug.id', $groupsQb->getDQL()))
+            ->orderBy('u.firstName, u.lastName', 'ASC');
 
         if ($objective) {
             $qb->setParameter(':objective', $objective);
@@ -221,7 +252,8 @@ class ObjectiveRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder()
             ->select($select)
             ->from('Claroline\CoreBundle\Entity\Group', 'g')
-            ->where((new Expr())->in('g.id', $groupsQb->getDQL()));
+            ->where((new Expr())->in('g.id', $groupsQb->getDQL()))
+            ->orderBy('g.name', 'ASC');
 
         if ($objective) {
             $qb->setParameter(':objective', $objective);

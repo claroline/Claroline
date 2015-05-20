@@ -46,8 +46,10 @@ info:
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 learners: Apprenants
 level:
-  obtained: Niveau obtenu
+  achieved: Niveau atteint
   expected: Niveau attendu
+  obtained: Niveau obtenu
+  not_achieved: Niveau non atteint
 level_: Niveau
 levels: Dégrés
 message:

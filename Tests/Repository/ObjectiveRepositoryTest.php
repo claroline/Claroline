@@ -115,6 +115,22 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, $result);
     }
 
+    public function testFindUsersWithObjective()
+    {
+        $objectives = $this->context['objectives'];
+        $users = $this->context['users'];
+
+        $result = $this->repo->findUsersWithObjective($objectives['o1']);
+        $this->assertEquals(2, count($result));
+        $this->assertContains($users['u1'], $result);
+        $this->assertContains($users['u2'], $result);
+
+        $result = $this->repo->findUsersWithObjective($objectives['o2']);
+        $this->assertEquals(2, count($result));
+        $this->assertContains($users['u2'], $result);
+        $this->assertContains($users['u3'], $result);
+    }
+
     private function persistContext()
     {
         // Competencies:

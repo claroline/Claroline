@@ -137,9 +137,12 @@ class ObjectiveManager
 
                         if (isset($competencyProgressesById[$id])) {
                             $progress = $competencyProgressesById[$id];
-                            $collection['userLevel'] = $progress->getLevel()->getName();
-                            $collection['userLevelValue'] = $progress->getLevel()->getValue();
                             $collection['progress'] = $progress->getPercentage();
+
+                            if ($level = $progress->getLevel()) {
+                                $collection['userLevel'] = $level->getName();
+                                $collection['userLevelValue'] = $level->getValue();
+                            }
                         }
                     }
 
@@ -202,6 +205,8 @@ class ObjectiveManager
         $this->om->persist($link);
         $this->om->flush();
 
+        $this->progressManager->recomputeObjectiveProgress($objective);
+
         $competency = $this->competencyManager->loadCompetency($competency);
         $competency['id'] = $link->getId(); // link is treated as the competency itself on client-side
         $competency['framework'] = $framework->getName();
@@ -219,6 +224,7 @@ class ObjectiveManager
     {
         $this->om->remove($link);
         $this->om->flush();
+        $this->progressManager->recomputeObjectiveProgress($link->getObjective());
     }
 
     /**

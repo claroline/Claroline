@@ -118,6 +118,27 @@ class ProgressManager
         return $percentage;
     }
 
+    /**
+     * Recomputes an objective progress for all the users and groups
+     * of users to which that objective is assigned.
+     *
+     * Note: this method doesn't compute competency progress.
+     *
+     * @param Objective $objective
+     */
+    public function recomputeObjectiveProgress(Objective $objective)
+    {
+        $this->clearCache();
+        $users = $this->objectiveRepo->findUsersWithObjective($objective);
+
+        foreach ($users as $user) {
+            $this->computeUserObjective($objective, $user);
+            $this->computeUserProgress($user);
+        }
+
+        $this->om->flush();
+    }
+
     private function clearCache()
     {
         $this->cachedCompetencyProgresses = [];
@@ -291,21 +312,29 @@ class ProgressManager
 
         // compute each objective percentage
         for ($i = 0, $objectiveCount = count($objectives); $i < $objectiveCount; ++$i) {
-            $objectiveProgress = $this->getObjectiveProgress($objectives[$i], $user);
-            $links = $objectives[$i]->getObjectiveCompetencies();
-            $percentageSum = 0;
-
-            for ($j = 0, $count = count($links); $j < $count; ++$j) {
-                $competencyProgress = $this->getCompetencyProgress($links[$j]->getCompetency(), $user);
-                $percentageSum += $competencyProgress->getPercentage();
-            }
-
-            $objectiveProgress->setPercentage((int) ($percentageSum / $count));
+            $this->computeUserObjective($objectives[$i], $user);
         }
 
         if ($objectiveCount > 0) {
             $this->computeUserProgress($user);
         }
+    }
+
+    private function computeUserObjective(Objective $objective, User $user)
+    {
+        $objectiveProgress = $this->getObjectiveProgress($objective, $user);
+        $links = $objective->getObjectiveCompetencies();
+        $percentageSum = 0;
+
+        for ($j = 0, $count = count($links); $j < $count; ++$j) {
+            $competencyProgress = $this->getCompetencyProgress($links[$j]->getCompetency(), $user);
+            $percentageSum += $competencyProgress->getPercentage();
+        }
+
+        $percentage = (int) ($percentageSum / $count);
+        $objectiveProgress->setPercentage($percentage);
+
+        return $percentage;
     }
 
     private function getObjectiveProgress(Objective $objective, User $user)
@@ -336,6 +365,7 @@ class ProgressManager
         $progress = $this->getUserProgress($user);
         $objectives = $this->getUserObjectives($user);
         $percentageSum = 0;
+
         for ($i = 0, $count = count($objectives); $i < $count; ++$i) {
             $objectiveProgress = $this->getObjectiveProgress($objectives[$i], $user);
             $percentageSum += $objectiveProgress->getPercentage();

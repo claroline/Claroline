@@ -7,8 +7,10 @@
 {% set collapsed = collapsed is defined ? collapsed : false %}
 {% set framework = framework is defined ? framework : '-' %}
 {% set progress = progress is defined and progress is not null ? progress : 0 %}
-{% set userLevel = userLevel is defined ? userLevel : '-' %}
 {% set level = level is defined ? level : '-' %}
+{% set userLevel = userLevel is defined ? userLevel : '-' %}
+{% set levelValue = levelValue is defined ? levelValue : -1 %}
+{% set userLevelValue = userLevelValue is defined ? userLevelValue : -1 %}
 {% set hasObjectives = hasObjectives is defined ? hasObjectives : false %}
 {% set hasCompetencies = competencyCount is defined ? competencyCount > 0 : __children is defined and __children|length > 0 %}
 {% set hasChildren = hasObjectives or hasCompetencies %}
@@ -28,7 +30,7 @@
     <td class="large-cell">
         {{ framework }}
     </td>
-    <td class="x-large-cell">
+    <td class="large-cell">
         {% if hasChildren %}
             <div class="progress"
                  data-toggle="tooltip"
@@ -42,11 +44,23 @@
                      style="width: {{ progress }}%;">
                 </div>
             </div>
+        {% elseif userLevelValue == -1 %}
+            -
+        {% elseif userLevelValue >= levelValue %}
+            <i class="fa fa-check"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'level.achieved'|trans({}, 'competency') }}">
+            </i>
         {% else %}
-            {{ progress }}
+           <i class="fa fa-frown-o"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'level.not_achieved'|trans({}, 'competency') }}">
+           </i>
         {% endif %}
     </td>
-    <td class="large-cell">
+    <td class="large-cell{{ userLevelValue > -1 ? userLevelValue >= levelValue ? ' success' : ' danger' : '' }}">
         {{ userLevel }}
     </td>
     <td class="large-cell">
