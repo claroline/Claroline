@@ -20,6 +20,19 @@ class IcapPortfolioBundle extends PluginBundle
         return $config;
     }
 
+    public function suggestConfigurationFor(Bundle $bundle, $environment)
+    {
+        $bundleClass = get_class($bundle);
+        $config = new ConfigurationBuilder();
+        $emptyConfigs = array(
+            'Innova\AngularJSBundle\InnovaAngularJSBundle',
+        );
+        if (in_array($bundleClass, $emptyConfigs)) {
+            return $config;
+        }
+        return false;
+    }
+
     public function getRequiredFixturesDirectory($environment)
     {
         return 'DataFixtures/Required';
