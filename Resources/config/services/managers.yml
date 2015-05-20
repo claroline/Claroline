@@ -28,8 +28,6 @@ services:
         class: %innova_path.manager.step.class%
         arguments: 
             om:              @doctrine.orm.entity_manager
-            securityAuth:    @security.authorization_checker
-            securityToken:   @security.token_storage
             resourceManager: @claroline.manager.resource_manager
             session:         @session
             translator:      @translator
