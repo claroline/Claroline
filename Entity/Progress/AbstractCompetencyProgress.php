@@ -46,6 +46,27 @@ abstract class AbstractCompetencyProgress
     protected $percentage = 0;
 
     /**
+     * @ORM\Column(name="competency_name")
+     *
+     * Note: this field retains the competency name in case it is deleted
+     */
+    protected $competencyName;
+
+    /**
+     * @ORM\Column(name="user_name")
+     *
+     * Note: this field retains the user name in case it is deleted
+     */
+    protected $userName;
+
+    /**
+     * @ORM\Column(name="level_name", nullable=true)
+     *
+     * Note: this field retains the level name in case it is deleted
+     */
+    protected $levelName;
+
+    /**
      * @return int
      */
     public function getId()
@@ -67,6 +88,7 @@ abstract class AbstractCompetencyProgress
     public function setCompetency(Competency $competency)
     {
         $this->competency = $competency;
+        $this->competencyName = $competency->getName();
     }
 
     /**
@@ -83,6 +105,7 @@ abstract class AbstractCompetencyProgress
     public function setLevel(Level $level)
     {
         $this->level = $level;
+        $this->levelName = $level->getName();
     }
 
     /**
@@ -99,6 +122,7 @@ abstract class AbstractCompetencyProgress
     public function setUser(User $user)
     {
         $this->user = $user;
+        $this->userName = $user->getFirstName() .  ' ' . $user->getLastName();
     }
 
     /**
@@ -115,5 +139,29 @@ abstract class AbstractCompetencyProgress
     public function setPercentage($percentage)
     {
         $this->percentage = $percentage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompetencyName()
+    {
+        return $this->competencyName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLevelName()
+    {
+        return $this->levelName;
     }
 }

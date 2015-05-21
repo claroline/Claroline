@@ -39,6 +39,20 @@ abstract class AbstractObjectiveProgress
     protected $percentage = 0;
 
     /**
+     * @ORM\Column(name="objective_name")
+     *
+     * Note: this field retains the objective name in case it is deleted
+     */
+    protected $objectiveName;
+
+    /**
+     * @ORM\Column(name="user_name")
+     *
+     * Note: this field retains the user name in case it is deleted
+     */
+    protected $userName;
+
+    /**
      * @return int
      */
     public function getId()
@@ -60,6 +74,7 @@ abstract class AbstractObjectiveProgress
     public function setObjective(Objective $objective)
     {
         $this->objective = $objective;
+        $this->objectiveName = $objective->getName();
     }
 
     /**
@@ -76,6 +91,7 @@ abstract class AbstractObjectiveProgress
     public function setUser(User $user)
     {
         $this->user = $user;
+        $this->userName = $user->getFirstName() . ' ' . $user->getLastName();
     }
 
     /**
@@ -92,5 +108,21 @@ abstract class AbstractObjectiveProgress
     public function setPercentage($percentage)
     {
         $this->percentage = $percentage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObjectiveName()
+    {
+        return $this->objectiveName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
     }
 }

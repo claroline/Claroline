@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/05/18 09:46:19
+ * Generation date: 2015/05/21 04:23:43
  */
-class Version20150518094618 extends AbstractMigration
+class Version20150521162342 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -21,6 +21,8 @@ class Version20150518094618 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 percentage INT NOT NULL, 
+                objective_name VARCHAR(255) NOT NULL, 
+                user_name VARCHAR(255) NOT NULL, 
                 INDEX IDX_CAC2DC3873484933 (objective_id), 
                 INDEX IDX_CAC2DC38A76ED395 (user_id), 
                 PRIMARY KEY(id)
@@ -34,6 +36,9 @@ class Version20150518094618 extends AbstractMigration
                 level_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 percentage INT NOT NULL, 
+                competency_name VARCHAR(255) NOT NULL, 
+                user_name VARCHAR(255) NOT NULL, 
+                level_name VARCHAR(255) DEFAULT NULL, 
                 INDEX IDX_8522FF2AFB9F58C (competency_id), 
                 INDEX IDX_8522FF2AA76ED395 (user_id), 
                 INDEX IDX_8522FF2A5FB14BA7 (level_id), 
@@ -47,6 +52,8 @@ class Version20150518094618 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 percentage INT NOT NULL, 
+                objective_name VARCHAR(255) NOT NULL, 
+                user_name VARCHAR(255) NOT NULL, 
                 INDEX IDX_F125F34773484933 (objective_id), 
                 INDEX IDX_F125F347A76ED395 (user_id), 
                 PRIMARY KEY(id)
@@ -58,6 +65,7 @@ class Version20150518094618 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 percentage INT NOT NULL, 
+                user_name VARCHAR(255) NOT NULL, 
                 INDEX IDX_5125DF35A76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
@@ -68,6 +76,7 @@ class Version20150518094618 extends AbstractMigration
                 user_id INT DEFAULT NULL, 
                 date DATETIME NOT NULL, 
                 percentage INT NOT NULL, 
+                user_name VARCHAR(255) NOT NULL, 
                 INDEX IDX_53E81580A76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
@@ -127,9 +136,16 @@ class Version20150518094618 extends AbstractMigration
             ON DELETE SET NULL
         ");
         $this->addSql("
+            ALTER TABLE hevinci_ability_progress 
+            ADD ability_name VARCHAR(255) NOT NULL, 
+            ADD user_name VARCHAR(255) NOT NULL
+        ");
+        $this->addSql("
             ALTER TABLE hevinci_competency_progress 
             ADD percentage INT NOT NULL, 
-            DROP type
+            ADD user_name VARCHAR(255) NOT NULL, 
+            ADD level_name VARCHAR(255) DEFAULT NULL, 
+            CHANGE type competency_name VARCHAR(255) NOT NULL
         ");
     }
 
@@ -151,9 +167,17 @@ class Version20150518094618 extends AbstractMigration
             DROP TABLE hevinci_user_progress
         ");
         $this->addSql("
+            ALTER TABLE hevinci_ability_progress 
+            DROP ability_name, 
+            DROP user_name
+        ");
+        $this->addSql("
             ALTER TABLE hevinci_competency_progress 
             ADD type VARCHAR(255) NOT NULL COLLATE utf8_unicode_ci, 
-            DROP percentage
+            DROP percentage, 
+            DROP competency_name, 
+            DROP user_name, 
+            DROP level_name
         ");
     }
 }

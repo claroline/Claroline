@@ -32,6 +32,13 @@ class AbstractUserProgress
     protected $percentage = 0;
 
     /**
+     * @ORM\Column(name="user_name")
+     *
+     * Note: this field retains the user name in case it is deleted
+     */
+    protected $userName;
+
+    /**
      * @return int
      */
     public function getId()
@@ -53,6 +60,7 @@ class AbstractUserProgress
     public function setUser(User $user)
     {
         $this->user = $user;
+        $this->userName = $user->getFirstName() . ' ' . $user->getLastName();
     }
 
     /**
@@ -69,5 +77,13 @@ class AbstractUserProgress
     public function setPercentage($percentage)
     {
         $this->percentage = $percentage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
     }
 }

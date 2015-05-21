@@ -52,6 +52,20 @@ class AbilityProgress
     private $status = self::STATUS_NOT_ATTEMPTED;
 
     /**
+     * @ORM\Column(name="ability_name")
+     *
+     * Note: this field retains the ability name in case it is deleted
+     */
+    private $abilityName;
+
+    /**
+     * @ORM\Column(name="user_name")
+     *
+     * Note: this field retains the user name in case it is deleted
+     */
+    private $userName;
+
+    /**
      * @return int
      */
     public function getId()
@@ -73,6 +87,7 @@ class AbilityProgress
     public function setAbility(Ability $ability)
     {
         $this->ability = $ability;
+        $this->abilityName = $ability->getName();
     }
 
     /**
@@ -141,5 +156,22 @@ class AbilityProgress
     public function setUser(User $user)
     {
         $this->user = $user;
+        $this->userName = $user->getFirstName() . ' ' . $user->getLastName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbilityName()
+    {
+        return $this->abilityName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName()
+    {
+        return $this->userName;
     }
 }
