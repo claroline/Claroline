@@ -5,6 +5,7 @@
     'use strict';
 
     angular.module('PathModule').controller('PathSummaryCtrl', [
+        '$timeout',
         '$modal',
         '$location',
         '$routeParams',
@@ -14,7 +15,7 @@
         'ConfirmService',
         'PathService',
         'StepService',
-        function PathSummaryCtrl($modal, $location, $routeParams, IdentifierService, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
+        function PathSummaryCtrl($timeout, $modal, $location, $routeParams, IdentifierService, HistoryService, ClipboardService, ConfirmService, PathService, StepService) {
             this.webDir = EditorApp.webDir;
 
             this.structure = [];
@@ -89,11 +90,15 @@
             };
 
             this.goTo = function goTo(step) {
-                if (angular.isObject(step)) {
-                    $location.path('/' + step.id);
-                } else {
-                    $location.path('/');
-                }
+                $timeout(function(){
+                    console.log('goTo');
+                    if (angular.isObject(step)) {
+                        $location.path('/' + step.id);
+                    } else {
+                        $location.path('/');
+                    }
+                },1);
+
             };
 
             /**
@@ -101,7 +106,11 @@
              */
             this.addStep = function (parentStep) {
                 if (parentStep.lvl < this.maxDepth) {
-                    StepService.new(parentStep);
+                    // Create a new step
+                    var step = StepService.new(parentStep);
+
+                    // Open created step
+                    this.goTo(step);
                 }
             };
 

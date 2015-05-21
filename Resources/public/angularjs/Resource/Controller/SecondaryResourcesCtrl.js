@@ -28,7 +28,13 @@
             this.excluded = [];
 
             /**
-             * Configuration of the Claroline Resource Picker
+             * Icons of the Resources
+             * @type {object}
+             */
+            this.resourceIcons = EditorApp.resourceIcons;
+
+            /**
+             * Configuration for the Claroline Resource Picker
              * @type {object}
              */
             this.secondaryResourcesPicker = {
@@ -58,12 +64,6 @@
                     }.bind(this)
                 }
             };
-
-            /**
-             * Icons of the Resources
-             * @type {object}
-             */
-            this.resourceIcons = EditorApp.resourceIcons;
 
             /**
              * Display resource in new window tab

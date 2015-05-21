@@ -6,7 +6,8 @@
 
     angular.module('StepModule').factory('StepService', [
         'IdentifierService',
-        function StepService(IdentifierService) {
+        'ResourceService',
+        function StepService(IdentifierService, ResourceService) {
             /**
              * Step object
              * @constructor
@@ -30,7 +31,7 @@
                 this.children          = [];
                 this.activityId        = null;
                 this.resourceId        = null;
-                this.primaryResource   = null;
+                this.primaryResource   = [];
                 this.resources         = [];
                 this.excludedResources = [];
                 this.withTutor         = false;
@@ -76,6 +77,11 @@
                     return newStep;
                 },
 
+                /**
+                 * Load Activity data from ID
+                 * @param {object} step
+                 * @param {number} activityId
+                 */
                 loadActivity: function (step, activityId) {
                     $http.get(Routing.generate('innova_path_load_activity', { nodeId: activityId }))
                         .success(function (data) {
@@ -94,16 +100,20 @@
                         step.activityId  = activity['id'];
                         step.name        = activity['name'];
                         step.description = activity['description'];
+                        step.primaryResource = [];
+                        step.resources = [];
 
-                        // Primary resources
-                        this.addPrimaryResource(step, activity['primaryResource']['type'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
+                        // Initialize a new Resource object (parameters : claro type, mime type, id, name)
+                        var primaryResource = ResourceService.new(activity['primaryResource']['type'], activity['primaryResource']['mimeType'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
+                        this.addResource(step.primaryResource, primaryResource);
 
                         // Secondary resources
                         if (null !== activity['resources']) {
                             for (var i = 0; i < activity['resources'].length; i++) {
                                 var current = activity['resources'][i];
 
-                                this.addSecondaryResource(step, current['type'], current['resourceId'], current['name']);
+                                var resource = ResourceService.new(current['type'], current['mimeType'], current['resourceId'], current['name']);
+                                this.addResource(step.resources, resource);
                             }
                         }
 
@@ -115,15 +125,11 @@
                     }
                 },
 
-                /**
-                 * Set the primary resource of the Step
-                 * @param {object} step
-                 * @param {string} type
-                 * @param {number} id
-                 * @param {string} name
-                 */
-                addPrimaryResource: function (step, type, id, name) {
-                    step.primaryResource = new StepResource(type, id, name);
+                addResource: function (resourcesList, resource) {
+                    if (!ResourceService.exists(resourcesList, resource)) {
+                        // Resource is not in the list => add it
+                        resourcesList.push(resource);
+                    }
                 }
             };
         }

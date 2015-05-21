@@ -149,14 +149,14 @@ class StepManager
         $activity->setDescription($description);
 
         // Link resource if needed
-        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource->resourceId)) {
-            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource->resourceId);
+        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource[0]) && !empty($stepStructure->primaryResource[0]->resourceId)) {
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource[0]->resourceId);
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             } else {
-                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource->resourceId, 'resourceName' => $stepStructure->primaryResource->name), "innova_tools");
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name), "innova_tools");
                 $this->session->getFlashBag()->add('warning', $warning);
-                $stepStructure->primaryResource = null;
+                $stepStructure->primaryResource = array ();
             }
         } elseif ($activity->getPrimaryResource()) {
             // Step had a resource which has been deleted

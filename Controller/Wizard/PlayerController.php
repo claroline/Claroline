@@ -58,7 +58,10 @@ class PlayerController
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Innova\PathBundle\Manager\StepManager                     $stepManager
      */
-    public function __construct(RouterInterface $router, SessionInterface $session, StepManager $stepManager)
+    public function __construct(
+        RouterInterface  $router,
+        SessionInterface $session,
+        StepManager      $stepManager)
     {
         $this->router      = $router;
         $this->session     = $session;

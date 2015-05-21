@@ -17,19 +17,28 @@
                     inherited : '=', // Inherited resources of the step
                     excluded  : '='  // Inherited resources which are not available in the Step
                 },
+                /*bindToController: true,*/
                 link: function (scope, element, attrs, secondaryResourcesCtrl) {
+                    console.log(scope.resources);
+
                     scope.$watch('resources', function (newValue) {
                         secondaryResourcesCtrl.resources = newValue;
-                    }, true);
+                    });
 
                     scope.$watch('inherited', function (newValue) {
                         secondaryResourcesCtrl.inherited = newValue;
-                    }, true);
+                    });
 
                     scope.$watch('excluded', function (newValue) {
                         secondaryResourcesCtrl.excluded  = newValue;
-                    }, true);
+                    });
 
+                    /*scope.$on('$destroy', function() {
+                        console.log('destroy directive');
+                        secondaryResourcesCtrl.excluded  = [];
+                        secondaryResourcesCtrl.inherited = [];
+                        secondaryResourcesCtrl.resources = [];
+                    });*/
                 }
             };
         }

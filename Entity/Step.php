@@ -576,7 +576,7 @@ class Step implements \JsonSerializable
             'lvl'               => $this->lvl,              // The depth of the step in the path structure
             'name'              => $this->getName(),        // The name of the linked Activity (used as Step name)
             'description'       => $this->getDescription(), // The description of the linked Activity (used as Step description)
-            'primaryResource'   => null,
+            'primaryResource'   => array (),
             'resources'         => array (),
             'excludedResources' => array (),
             'children'          => array (),
@@ -595,11 +595,13 @@ class Step implements \JsonSerializable
             $primaryResource = $this->activity->getPrimaryResource();
             if (!empty($primaryResource)) {
                 $jsonArray['primaryResource'] = array (
-                    'id'         => $primaryResource->getId(),
-                    'resourceId' => $primaryResource->getId(),
-                    'name'       => $primaryResource->getName(),
-                    'type'       => $primaryResource->getResourceType()->getName(),
-                    'mimeType'   => $primaryResource->getMimeType(),
+                    array (
+                        'id'         => $primaryResource->getId(),
+                        'resourceId' => $primaryResource->getId(),
+                        'name'       => $primaryResource->getName(),
+                        'type'       => $primaryResource->getResourceType()->getName(),
+                        'mimeType'   => $primaryResource->getMimeType(),
+                    )
                 );
             }
         }

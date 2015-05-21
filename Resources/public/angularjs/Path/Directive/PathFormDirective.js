@@ -41,7 +41,7 @@
                         }
 
                         // Store path
-                        console.log('path update');
+                        console.log('update path');
                         PathService.setPath(newValue);
                     }, true);
                 }

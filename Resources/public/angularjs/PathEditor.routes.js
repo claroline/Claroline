@@ -8,45 +8,59 @@
     angular.module('PathEditorApp')
         .config([
             '$routeProvider',
+            '$locationProvider',
             function PathEditorConfig($routeProvider) {
-                $routeProvider.when('/:stepId?', {
-                    templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-form.html',
-                    controller: 'StepFormCtrl',
-                    controllerAs: 'stepFormCtrl',
-                    resolve: {
-                        step: function ($route, PathService) {
-                            var step = null;
+                $routeProvider
+                    .when('/:stepId?', {
+                        templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-form.html',
+                        controller: 'StepFormCtrl',
+                        controllerAs: 'stepFormCtrl',
+                        resolve: {
+                            step: [
+                                '$route',
+                                'PathService',
+                                function ($route, PathService) {
+                                    var step = null;
+                                    // Retrieve the step from route ID
+                                    if ($route.current.params && $route.current.params.stepId) {
+                                        step = PathService.getStep($route.current.params.stepId);
+                                    }
 
-                            // Retrieve the step from route ID
-                            if ($route.current.params && $route.current.params.stepId) {
-                                step = PathService.getStep($route.current.params.stepId);
-                            }
+                                    return step;
+                                }
+                            ],
+                            inheritedResources: [
+                                '$route',
+                                'PathService',
+                                function ($route, PathService) {
+                                    var inherited = [];
 
-                            return step;
-                        },
-                        inheritedResources: function ($route, PathService) {
-                            var inherited = [];
+                                    var step = PathService.getStep($route.current.params.stepId);
+                                    if (angular.isDefined(step) && angular.isObject(step)) {
+                                        var path = PathService.getPath();
 
-                            var step = PathService.getStep($route.current.params.stepId);
-                            if (angular.isDefined(step) && angular.isObject(step)) {
-                                var path = PathService.getPath();
+                                        // Grab inherited resources
+                                        inherited = PathService.getStepInheritedResources(path.steps, step);
+                                    }
 
-                                // Grab inherited resources
-                                inherited = PathService.getStepInheritedResources(path.steps, step);
-                            }
-
-                            return inherited;
+                                    return inherited;
+                                }
+                            ]
                         }
-                    }
-                });
+                    })
+                    .otherwise({
+                        redirectTo: '/:stepId?'
+                    });
             }
         ])
         .run([
             '$rootScope',
+            '$timeout',
             '$location',
             'PathService',
-            function PathEditorRun($rootScope, $location, PathService) {
-                $rootScope.$on('$routeChangeStart', function (event, next, current) {
+            function PathEditorRun($rootScope, $timeout, $location, PathService) {
+                /*$rootScope.$on('$routeChangeStart', function (event, next, current) {
+                    console.log('route change start');
                     var getRoot = false;
 
                     // Check if we need to redirect to the Root step
@@ -67,7 +81,7 @@
                             $location.path('/' + path.steps[0].id);
                         }
                     }
-                });
+                });*/
             }
         ]);
 })();

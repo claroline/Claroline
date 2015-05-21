@@ -65,10 +65,7 @@
                 <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-description.html'"></div>
 
                 <!-- Primary resource -->
-                <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-primary.html'"></div>
-
-                <!-- Secondary resources -->
-                <!--<div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-resources-secondary.html'"></div>-->
+                <primary-resources data-resources="stepFormCtrl.step.primaryResource"></primary-resources>
 
                 <!-- Properties -->
                 <div class="panel panel-default" data-ng-include="stepFormCtrl.webDir + 'bundles/innovapath/angularjs/Step/Partial/step-properties.html'"></div>

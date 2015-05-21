@@ -24,19 +24,15 @@
 
             /**
              * Inherited resources from parents of the Step
-             * @type {*}
+             * @type {array}
              */
             this.inheritedResources = inheritedResources || [];
 
             // Defines which panels of the form are collapsed or not
             this.collapsedPanels = {
                 description       : false,
-                resourcePrimary   : false,
                 properties        : true
             };
-
-            // Store resource icons
-            this.resourceIcons = EditorApp.resourceIcons;
 
             // Activity resource picker config
             this.activityResourcePicker = {
@@ -66,68 +62,6 @@
                     }.bind(this)
                 }
             };
-
-            // Primary resource picker config
-            this.primaryResourcePicker = {
-                name: 'picker-primary-resource',
-                parameters: {
-                    // A step can allow be linked to one primary Resource, so disable multi-select
-                    isPickerMultiSelectAllowed: false,
-
-                    // Do not allow Path and Activities as primary resource to avoid Inception
-                    typeBlackList: [ 'innova_path', 'activity' ],
-
-                    // On select, set the primary resource of the step
-                    callback: function (nodes) {
-                        if (typeof nodes === 'object' && nodes.length !== 0) {
-                            for (var nodeId in nodes) {
-                                if (nodes.hasOwnProperty(nodeId)) {
-                                    var node = nodes[nodeId];
-
-                                    // Link resource to step
-                                    StepService.addPrimaryResource(this.step, node[2], nodeId, node[0]);
-
-                                    break; // We need only one node, so only the first one will be kept
-                                }
-                            }
-
-                            $scope.$apply();
-
-                            // Remove checked nodes for next time
-                            nodes = {};
-                        }
-                    }.bind(this)
-                }
-            };
-
-            /**
-             * @deprecated
-             * @type {{name: string, parameters: {isPickerMultiSelectAllowed: boolean, callback: (function(this:StepFormCtrl)|*)}}}
-             */
-            this.secondaryResourcesPicker = {
-                name: 'picker-secondary-resources',
-                parameters: {
-                    isPickerMultiSelectAllowed: true,
-                    callback: function (nodes) {
-                        if (typeof nodes === 'object' && nodes.length !== 0) {
-                            for (var nodeId in nodes) {
-                                if (nodes.hasOwnProperty(nodeId)) {
-                                    var node = nodes[nodeId];
-
-                                    // Link resource to step
-                                    StepService.addSecondaryResource(this.step, node[2], nodeId, node[0]);
-                                }
-                            }
-
-                            $scope.$apply();
-
-                            // Remove checked nodes for next time
-                            nodes = {};
-                        }
-                    }.bind(this)
-                }
-            };
-
 
             // Tiny MCE options
             this.tinymceOptions = {
@@ -159,58 +93,8 @@
             };
 
             /**
-             * Delete selected resource from path
-             * @deprecated
+             * Display activity linked to the Step
              */
-            this.removeResource = function (resource) {
-                StepService.removeResource(this.step, resource);
-            };
-
-            /**
-             * @deprecated
-             * @param resource
-             */
-            this.enableResourcePropagation = function (resource) {
-                resource.propagateToChildren = true;
-            };
-
-            /**
-             * @deprecated
-             * @param resource
-             */
-            this.disableResourcePropagation = function (resource) {
-                resource.propagateToChildren = false;
-            };
-
-            /**
-             * Exclude a resource inherited from parents
-             * @deprecated
-             */
-            this.excludeParentResource = function (resource) {
-                resource.isExcluded = true;
-                this.step.excludedResources.push(resource.id);
-            };
-
-            /**
-             * Include a resource inherited from parents which has been excluded
-             * @deprecated
-             */
-            this.includeParentResource = function (resource) {
-                resource.isExcluded = false;
-
-                if (typeof this.step.excludedResources !== 'undefined' && null !== this.step.excludedResources) {
-                    for (var i = 0; i < this.step.excludedResources.length; i++) {
-                        if (resource.id == this.step.excludedResources[i]) {
-                            this.step.excludedResources.splice(i, 1);
-                        }
-                    }
-                }
-            };
-
-            this.removePrimaryResource = function () {
-                this.step.primaryResource = null;
-            };
-
             this.showActivity = function () {
                 var activityRoute = Routing.generate('innova_path_show_activity', {
                     activityId: this.step.activityId
@@ -219,6 +103,9 @@
                 window.open(activityRoute, '_blank');
             };
 
+            /**
+             * Delete the link between the Activity and the Step (Step's data are kept)
+             */
             this.deleteActivity = function () {
                 this.step.activityId = null;
             };
