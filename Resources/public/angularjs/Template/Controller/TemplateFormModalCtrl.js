@@ -11,9 +11,7 @@
             this.template = template;
 
             // Store symfony base partials route
-            this.webDir = EditorApp.webDir;
-
-            console.log(this.webDir);
+            this.webDir = AngularApp.webDir;
 
             /**
              * Close template edit

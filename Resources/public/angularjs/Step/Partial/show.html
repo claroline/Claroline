@@ -1,0 +1,40 @@
+<div class="panel-step">
+    <secondary-resources data-resources="stepShowCtrl.step.resources" data-inherited="stepShowCtrl.inheritedResources" data-excluded="stepFormCtrl.step.excludedResources"></secondary-resources>
+
+    <div class="panel panel-default">
+        <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }}">&nbsp;</div>
+
+        <div class="panel-body">
+            <div class="row">
+                <!-- Previous step button -->
+                <div class="col-md-1 col-sm-2 col-xs-2 text-left">
+                    <a href="" class="btn btn-block btn-default">
+                        <span class="fa fa-arrow-left"></span>
+                        <span class="sr-only">previous</span>
+                    </a>
+                </div>
+
+                <!-- Step title -->
+                <div class="col-md-10 col-sm-8 col-xs-8 text-center">
+                    <h4 class="panel-step-title">{{ stepShowCtrl.step.name }}</h4>
+                </div>
+
+                <!-- Next step button -->
+                <div class="col-md-1 col-sm-2 col-xs-2 text-right">
+                    <a href="" class="btn btn-block btn-default">
+                        <span class="sr-only">next</span>
+                        <span class="fa fa-arrow-right"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Description of the Step -->
+            <div class="panel-body" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
+
+            <!-- Primary resource of the Step -->
+            <div data-ng-if="stepShowCtrl.step.primaryResource" id="resource{{ stepShowCtrl.step.primaryResource.id }}" class="resource-tab">
+                <iframe style="border:none; padding:0;" id="{{ stepShowCtrl.step.primaryResource.id }}" seamless width="100%" class="resource-frame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+</div>

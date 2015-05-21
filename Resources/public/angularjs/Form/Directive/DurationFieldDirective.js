@@ -12,7 +12,7 @@
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Form/Partial/duration-field.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Form/Partial/duration-field.html',
                 scope: {
                     model: '='
                 },

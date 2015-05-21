@@ -54,17 +54,17 @@
                                 formTemplate.id = data;
                                 TemplateService.replaceTemplate(formTemplate);
 
-                                AlertService.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_editor'));
+                                AlertService.addAlert('success', Translator.trans('path_template_save_success', {}, 'path_wizards'));
                             }
                             else {
                                 // Server error while saving
-                                AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                                AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_wizards'));
                             }
 
                             $modalInstance.close();
                         })
                         .error(function (data, status) {
-                            AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_editor'));
+                            AlertService.addAlert('error', Translator.trans('path_template_save_error', {}, 'path_wizards'));
                         });
                 },
 

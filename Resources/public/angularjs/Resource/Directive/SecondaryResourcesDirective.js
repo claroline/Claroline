@@ -11,7 +11,7 @@
                 replace: true,
                 controller: 'SecondaryResourcesCtrl',
                 controllerAs: 'secondaryResourcesCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/secondary-resources.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/secondary-resources.html',
                 scope: {
                     resources : '=', // Resources of the Step
                     inherited : '=', // Inherited resources of the step
@@ -19,8 +19,6 @@
                 },
                 /*bindToController: true,*/
                 link: function (scope, element, attrs, secondaryResourcesCtrl) {
-                    console.log(scope.resources);
-
                     scope.$watch('resources', function (newValue) {
                         secondaryResourcesCtrl.resources = newValue;
                     });
@@ -32,13 +30,6 @@
                     scope.$watch('excluded', function (newValue) {
                         secondaryResourcesCtrl.excluded  = newValue;
                     });
-
-                    /*scope.$on('$destroy', function() {
-                        console.log('destroy directive');
-                        secondaryResourcesCtrl.excluded  = [];
-                        secondaryResourcesCtrl.inherited = [];
-                        secondaryResourcesCtrl.resources = [];
-                    });*/
                 }
             };
         }

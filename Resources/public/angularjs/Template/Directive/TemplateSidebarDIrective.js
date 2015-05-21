@@ -9,7 +9,7 @@
                 replace: true,
                 controller: 'TemplateSidebarCtrl',
                 controllerAs: 'templateSidebarCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/sidebar.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/sidebar.html',
                 scope: {},
                 link: function (scope, element, attrs, templateListCtrl) {
                     // Load templates

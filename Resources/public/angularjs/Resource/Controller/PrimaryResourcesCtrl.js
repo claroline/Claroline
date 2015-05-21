@@ -25,7 +25,7 @@
              * Icons of the Resources
              * @type {object}
              */
-            this.resourceIcons = EditorApp.resourceIcons;
+            this.resourceIcons = AngularApp.resourceIcons;
 
             /**
              * Configuration for the Claroline Resource Picker
@@ -76,9 +76,9 @@
                 ConfirmService.open(
                     // Confirm options
                     {
-                        title:         Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_editor'),
-                        message:       Translator.trans('resource_delete_confirm', {}                             , 'path_editor'),
-                        confirmButton: Translator.trans('resource_delete',         {}                             , 'path_editor')
+                        title:         Translator.trans('resource_delete_title',   { resourceName: resource.name }, 'path_wizards'),
+                        message:       Translator.trans('resource_delete_confirm', {}                             , 'path_wizards'),
+                        confirmButton: Translator.trans('resource_delete',         {}                             , 'path_wizards')
                     },
 
                     // Confirm success callback

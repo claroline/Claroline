@@ -26,7 +26,7 @@
              */
             this.edit = function (template) {
                 var modalInstance = $modal.open({
-                    templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/modal-form.html',
+                    templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Template/Partial/modal-form.html',
                     controller: 'TemplateFormModalCtrl as templateFormModalCtrl',
                     resolve: {
                         template: function () {

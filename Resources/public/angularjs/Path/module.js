@@ -5,6 +5,8 @@
     'use strict';
 
     angular.module('PathModule', [
+        'HistoryModule',
+        'ClipboardModule',
         'StepModule',
         'TemplateModule'
     ]);

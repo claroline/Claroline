@@ -10,7 +10,7 @@
             return {
                 restrict: 'E',
                 replace: true,
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Alert/Partial/alert-box.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Alert/Partial/alert-box.html',
                 scope: {},
                 link: function (scope) {
                     scope.alerts = AlertService.getAlerts();

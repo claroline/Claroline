@@ -20,11 +20,7 @@ services:
     innova_path.controller.path_player:
         class: %innova_path.controller.path_player.class%
         arguments:
-            router:      @router
-            session:     @session
-            stepManager: @innova_path.manager.step
-        calls:
-          - [setRequest, [@request]]
+            objectManager:   @doctrine.orm.entity_manager
         scope: request
           
     # Editor controller

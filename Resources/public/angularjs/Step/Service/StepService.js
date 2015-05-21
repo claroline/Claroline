@@ -20,7 +20,7 @@
                     name = 'Step ' + lvl + '.' + (parent.children.length + 1);
                 } else {
                     lvl = 0;
-                    name = Translator.trans('root_default_name', {}, 'path_editor');
+                    name = Translator.trans('root_default_name', {}, 'path_wizards');
                 }
 
                 // Initialize step properties

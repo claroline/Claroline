@@ -1,18 +1,18 @@
 <div id="sidebar-left">
     <a href="#" id="sidebar-left-close" class="ps-close pull-right">
         <span class="fa fa-times"></span>
-        <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_editor' }}</span>
+        <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
     </a>
 
     <div class="template-list">
         <!--List title -->
         <h2>
             <span class="fa fa-sitemap"></span>
-            {{ 'summary'|trans:{}:'path_editor' }}
+            {{ 'summary'|trans:{}:'path_wizards' }}
         </h2>
 
         <!-- No templates message -->
-        <em data-ng-if="templateSidebarCtrl.templates.length === 0">{{ 'no_templates'|trans:{}:'path_editor' }}</em>
+        <em data-ng-if="templateSidebarCtrl.templates.length === 0">{{ 'no_templates'|trans:{}:'path_wizards' }}</em>
 
         <!-- List of templates -->
         <div>
@@ -22,7 +22,7 @@
                     <td class="text-right">
                         <button class="btn btn-sm btn-default" ng-click="templateSidebarCtrl.copy(template.structure)">
                             <span class="fa fa-files-o"></span>
-                            <span class="sr-only">{{ 'template_copy'|trans:{}:'path_editor' }}</span>
+                            <span class="sr-only">{{ 'template_copy'|trans:{}:'path_wizards' }}</span>
                         </button>
                     </td>
                 </tr>

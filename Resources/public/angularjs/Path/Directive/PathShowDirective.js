@@ -1,0 +1,23 @@
+/**
+ * Manages Path form
+ */
+(function () {
+    'use strict';
+
+    angular.module('PathModule').directive('pathShow', [
+        function PathShowDirective() {
+            return {
+                restrict: 'E',
+                replace: true,
+                controller: PathShowCtrl,
+                controllerAs: 'pathShowCtrl',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Path/Partial/show.html',
+                scope: {
+                    id   : '@', // ID of the path
+                    path : '=' // Data of the path
+                },
+                bindToController: true
+            };
+        }
+    ]);
+})();

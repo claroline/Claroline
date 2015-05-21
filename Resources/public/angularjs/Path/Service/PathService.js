@@ -7,8 +7,11 @@
     angular.module('PathModule').factory('PathService', [
         '$http',
         '$q',
+        '$timeout',
+        '$location',
         'AlertService',
-        function PathService($http, $q, AlertService) {
+        'StepService',
+        function PathService($http, $q, $timeout, $location, AlertService, StepService) {
             /**
              * ID of the Path
              * @type {Number}
@@ -20,6 +23,9 @@
              * @type {object}
              */
             var path = null;
+
+            // Do not allow adding children to steps at the max depth
+            var maxDepth = 8;
 
             return {
                 getId: function () {
@@ -39,9 +45,27 @@
                 },
 
                 /**
+                 * Initialize a new Path structure
+                 */
+                initialize: function () {
+                    // Create a generic root step
+                    var rootStep = StepService.new();
+
+                    path.structure.push(rootStep);
+
+                    // Set root step as current step
+                    this.goTo(rootStep);
+                },
+
+                /**
+                 * Initialize a new Path structure from a Template
+                 */
+                initializeFromTemplate: function () {
+
+                },
+
+                /**
                  * Save modification to DB
-                 * @param {number} id   - ID of the path
-                 * @param {object} path - data of the path
                  */
                 save: function () {
                     // Transform data to make it acceptable by Symfony
@@ -71,14 +95,14 @@
                                 angular.copy(response.data, path);
 
                                 // Display confirm message
-                                AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_editor'));
+                                AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_wizards'));
 
                                 deferred.resolve(response);
                             }
                         })
 
                         .error(function (response) {
-                            AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_editor'));
+                            AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_wizards'));
 
                             deferred.reject(response);
                         });
@@ -88,8 +112,6 @@
 
                 /**
                  * Publish path modifications
-                 * @param {number} id
-                 * @param {object} path
                  */
                 publish: function () {
                     var deferred = $q.defer();
@@ -109,19 +131,30 @@
                                 angular.copy(response.data, path);
 
                                 // Display confirm message
-                                AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_editor'));
+                                AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_wizards'));
 
                                 deferred.resolve(response);
                             }
                         })
 
                         .error(function (response) {
-                            AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_editor'));
+                            AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_wizards'));
 
                             deferred.reject(response);
                         });
 
                     return deferred.promise;
+                },
+
+                goTo: function goTo(step) {
+                    // Ugly as fuck, but can't make it work without timeout
+                    $timeout(function(){
+                        if (angular.isObject(step)) {
+                            $location.path('/' + step.id);
+                        } else {
+                            $location.path('/');
+                        }
+                    }, 1);
                 },
 
                 /**
@@ -178,6 +211,18 @@
                     });
                 },
 
+                addStep: function (parent, displayNew) {
+                    if (parent.lvl < maxDepth) {
+                        // Create a new step
+                        var step = StepService.new(parent);
+
+                        if (displayNew) {
+                            // Open created step
+                            this.goTo(step);
+                        }
+                    }
+                },
+
                 /**
                  * Remove a step from the path's tree
                  * @param {array}  steps        - an array of steps to browse
@@ -212,15 +257,17 @@
                 getStep: function (stepId) {
                     var step = null;
 
-                    this.browseSteps(path.steps, function searchStep(parent, current) {
-                        if (current.id == stepId) {
-                            step = current;
+                    if (path) {
+                        this.browseSteps(path.steps, function searchStep(parent, current) {
+                            if (current.id == stepId) {
+                                step = current;
 
-                            return true; // Kill the search
-                        }
+                                return true; // Kill the search
+                            }
 
-                        return false;
-                    });
+                            return false;
+                        });
+                    }
 
                     return step;
                 },

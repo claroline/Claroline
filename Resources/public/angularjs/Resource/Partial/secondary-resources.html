@@ -20,7 +20,7 @@
             <li role="presentation">
                 <a href="" role="menuitem" tabindex="-1" data-ng-click="secondaryResourcesCtrl.showResource(resource)">
                     <span class="fa fa-fw fa-sign-out"></span>
-                    {{ 'resource_show'|trans:{}:'path_editor' }}
+                    {{ 'resource_show'|trans:{}:'path_wizards' }}
                 </a>
             </li>
 
@@ -28,10 +28,10 @@
             <li role="presentation">
                 <a href="" role="menuitem" tabindex="-1" data-ng-click="secondaryResourcesCtrl.toggleExcluded(resource)">
                     <span data-ng-if="resource.isExcluded">
-                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_show_parent'|trans:{}:'path_editor' }}
+                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_show_parent'|trans:{}:'path_wizards' }}
                     </span>
                     <span data-ng-if="!resource.isExcluded">
-                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_hide_parent'|trans:{}:'path_editor' }}
+                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_hide_parent'|trans:{}:'path_wizards' }}
                     </span>
                 </a>
             </li>
@@ -58,7 +58,7 @@
             <!-- Go to resource -->
             <li role="presentation">
                 <a href="" role="menuitem" tabindex="-1" data-ng-click="secondaryResourcesCtrl.showResource(resource)">
-                    <span class="fa fa-fw fa-sign-out"></span> {{ 'resource_show'|trans:{}:'path_editor' }}
+                    <span class="fa fa-fw fa-sign-out"></span> {{ 'resource_show'|trans:{}:'path_wizards' }}
                 </a>
             </li>
 
@@ -66,10 +66,10 @@
             <li role="presentation">
                 <a href="" role="menuitem" tabindex="-1" data-ng-click="secondaryResourcesCtrl.togglePropagation(resource)">
                     <span data-ng-if="!resource.propagateToChildren">
-                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_propagate'|trans:{}:'path_editor' }}
+                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_propagate'|trans:{}:'path_wizards' }}
                     </span>
                     <span data-ng-if="resource.propagateToChildren">
-                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_no_propagate'|trans:{}:'path_editor' }}
+                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_no_propagate'|trans:{}:'path_wizards' }}
                     </span>
                 </a>
             </li>
@@ -78,7 +78,7 @@
             <li role="presentation" class="divider"></li>
             <li role="presentation">
                 <a href="" role="menuitem" tabindex="-1" data-ng-click="secondaryResourcesCtrl.removeResource(resource)">
-                    <span class="fa fa-fw fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_editor' }}
+                    <span class="fa fa-fw fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_wizards' }}
                 </a>
             </li>
         </ul>
@@ -87,7 +87,7 @@
     <!-- Add secondary resource button -->
     <li role="presentation">
         <a href="" data-ui-resource-picker="secondaryResourcesCtrl.secondaryResourcesPicker">
-            <span class="fa fa-plus"></span> {{ 'resources_browse'|trans:{}:'path_editor' }}
+            <span class="fa fa-plus"></span> {{ 'resources_browse'|trans:{}:'path_wizards' }}
         </a>
     </li>
 </ul>

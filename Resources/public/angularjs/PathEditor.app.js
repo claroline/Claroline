@@ -18,6 +18,7 @@
         'ClipboardModule',
         'ConfirmModule',
         'HistoryModule',
+        'PathSummaryModule',
         'PathModule',
         'StepModule',
         'TemplateModule'

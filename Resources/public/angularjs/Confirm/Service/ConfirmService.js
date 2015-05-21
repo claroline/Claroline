@@ -4,7 +4,7 @@
     angular.module('ConfirmModule').factory('ConfirmService', [
         '$modal',
         function ConfirmService($modal) {
-            var webDir = EditorApp.webDir;
+            var webDir = AngularApp.webDir;
 
             return {
                 open: function (options, callback) {

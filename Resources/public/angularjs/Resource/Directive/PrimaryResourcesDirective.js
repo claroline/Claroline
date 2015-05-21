@@ -11,7 +11,7 @@
                 replace: true,
                 controller: 'PrimaryResourcesCtrl',
                 controllerAs: 'primaryResourcesCtrl',
-                templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/primary-resources.html',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/angularjs/Resource/Partial/primary-resources.html',
                 scope: {
                     resources : '=' // Resources of the Step
                 },

@@ -6,19 +6,19 @@
 
             <span class="badge">{{ primaryResourcesCtrl.resources ? primaryResourcesCtrl.resources.length : 0 }}</span>
 
-            <span>{{ 'primary_resource'|trans:{}:'path_editor' }}</span>
+            <span>{{ 'primary_resource'|trans:{}:'path_wizards' }}</span>
         </h4>
 
         <button type="button" role="button" data-ui-resource-picker="primaryResourcesCtrl.primaryResourcePicker" class="btn btn-sm btn-primary">
             <span class="fa fa-plus"></span>
-            <span data-ng-show="!primaryResourcesCtrl.resources || primaryResourcesCtrl.resources.length == 0">{{ 'resources_browse'|trans:{}:'path_editor' }}</span>
-            <span data-ng-show="primaryResourcesCtrl.resources && primaryResourcesCtrl.resources.length != 0">{{ 'resources_replace'|trans:{}:'path_editor' }}</span>
+            <span data-ng-show="!primaryResourcesCtrl.resources || primaryResourcesCtrl.resources.length == 0">{{ 'resources_browse'|trans:{}:'path_wizards' }}</span>
+            <span data-ng-show="primaryResourcesCtrl.resources && primaryResourcesCtrl.resources.length != 0">{{ 'resources_replace'|trans:{}:'path_wizards' }}</span>
         </button>
     </div>
 
     <div class="panel-body" data-ng-show="!primaryResourcesCtrl.collapsed">
         <!-- No resource message -->
-        <em data-ng-show="!primaryResourcesCtrl.resources || primaryResourcesCtrl.resources.length == 0">{{ 'no_primary_resource'|trans:{}:'path_editor' }}</em>
+        <em data-ng-show="!primaryResourcesCtrl.resources || primaryResourcesCtrl.resources.length == 0">{{ 'no_primary_resource'|trans:{}:'path_wizards' }}</em>
 
         <!-- Resource -->
         <div data-ng-show="primaryResourcesCtrl.resources && primaryResourcesCtrl.resources.length != 0">
@@ -28,7 +28,7 @@
             <div style="display:inline-block; vertical-align: middle;">
                 <p class="h4">{{ primaryResourcesCtrl.resources[0].name }}</p>
                 <button type="button" role="button" class="btn btn-xs btn-danger" data-ng-click="primaryResourcesCtrl.removeResource(primaryResourcesCtrl.resources[0])">
-                    <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_editor' }}
+                    <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_wizards' }}
                 </button>
             </div>
         </div>
