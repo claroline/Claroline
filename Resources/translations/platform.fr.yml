@@ -496,7 +496,7 @@ link_workspace: 'Lier un espace d''activités'
 links: Liens
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
-list_view: 'Vue en liste (beta)'
+list_view: 'Vue en liste'
 list_workspaces: 'Tous les espaces d''activités'
 lock: Verrouiller
 locked: Verrouillé

@@ -495,7 +495,7 @@ link_workspace: 'Link workspace'
 links: Links
 list_groups: 'List groups'
 list_users: 'List users'
-list_view: 'List view (beta)'
+list_view: 'List view'
 list_workspaces: 'List workspaces'
 lock: Lock
 locked: Locked

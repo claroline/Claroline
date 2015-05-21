@@ -81,6 +81,9 @@
 
     // Required for variables translations (the language can't be known at the compile time)
     Twig.setFilter('trans', function (name, parameters, domain) {
+        console.debug(name);
+        console.debug(parameters);
+        console.debug(domain);
         return translator.trans(name, parameters, domain);
     });
 
