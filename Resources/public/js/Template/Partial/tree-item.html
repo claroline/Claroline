@@ -1,0 +1,7 @@
+<div class="tree-item">
+    <div class="lvl lvl-{{ step.lvl }}"></div>
+    <div class="step">{{ step.name }}</div>
+</div>
+<ul class="children">
+    <li ng-repeat="step in step.children" data-ng-include="templateFormModalCtrl.webDir + 'bundles/innovapath/js/Template/Partial/tree-item.html'"></li>
+</ul>

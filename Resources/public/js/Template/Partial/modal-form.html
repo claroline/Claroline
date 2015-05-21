@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span class="fa fa-pencil"></span>
+        {{ 'template_edit_title' | trans:{}:'path_wizards' }} : <strong>&lt;{{ templateFormModalCtrl.template.name }}&gt;</strong>
+    </h4>
+</div>
+
+<div class="modal-body">
+    <form name="templateForm" role="form">
+        <fieldset class="row">
+            <div class="form-group col-md-12">
+                <label class="control-label" for="template_name">{{ 'template_name' | trans:{}:'path_wizards' }}</label>
+                <input type="text" name="template_name" id="template_name" data-ng-model="templateFormModalCtrl.template.name" class="form-control" />
+            </div>
+        </fieldset>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="tree">
+                    <li data-ng-include="templateFormModalCtrl.webDir + 'bundles/innovapath/js/Template/Partial/tree-item.html'" onload="step = templateFormModalCtrl.template.structure"></li>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-primary" ng-click="templateFormModalCtrl.save()" data-ng-disabled="!templateForm.$valid">{{ 'template_save' | trans:{}:'path_wizards' }}</button>
+    <button class="btn btn-default cancel" ng-click="templateFormModalCtrl.close()">{{ 'cancel' | trans:{}:'path_wizards' }}</button>
+</div>
