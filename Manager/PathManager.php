@@ -4,7 +4,8 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -32,26 +33,35 @@ class PathManager
     protected $resourceManager;
 
     /**
-     * Current security context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface $security
+     * Security Authorization
+     * @var \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $securityAuth
      */
-    protected $security;
+    protected $securityAuth;
+
+    /**
+     * Security Token
+     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
+     */
+    protected $securityToken;
 
     /**
      * Class constructor - Inject required services
-     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext
-     * @param \Claroline\CoreBundle\Manager\ResourceManager             $resourceManager
-     * @param \Claroline\CoreBundle\Library\Security\Utilities          $utils
+     * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface        $securityAuth
+     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
+     * @param \Claroline\CoreBundle\Manager\ResourceManager                                       $resourceManager
+     * @param \Claroline\CoreBundle\Library\Security\Utilities                                    $utils
      */
     public function __construct(
-        ObjectManager            $objectManager,
-        SecurityContextInterface $securityContext,
-        ResourceManager          $resourceManager,
-        Utilities                $utils)
+        ObjectManager                 $objectManager,
+        AuthorizationCheckerInterface $securityAuth,
+        TokenStorageInterface         $securityToken,
+        ResourceManager               $resourceManager,
+        Utilities                     $utils)
     {
         $this->om              = $objectManager;
-        $this->security        = $securityContext;
+        $this->securityAuth    = $securityAuth;
+        $this->securityToken   = $securityToken;
         $this->resourceManager = $resourceManager;
         $this->utils           = $utils;
     }
@@ -83,27 +93,19 @@ class PathManager
             $toolRepo = $this->om->getRepository('ClarolineCoreBundle:Role');
             $managerRole = $toolRepo->findManagerRole($workspace);
 
-            return $this->security->isGranted($managerRole->getName());
+            return $this->securityAuth->isGranted($managerRole->getName());
         }
 
         $collection = new ResourceCollection(array ($path->getResourceNode()));
 
-        return $this->security->isGranted($actionName, $collection);
-    }
-
-    /**
-     * Get path resource type entity
-     * @return \Claroline\CoreBundle\Entity\Resource\ResourceType
-     */
-    public function getResourceType()
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
+        return $this->securityAuth->isGranted($actionName, $collection);
     }
 
     /**
      * Get a workspace from id
      * @param  integer $workspaceId
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @deprecated used in PathHandler when creating a new path. But now the only to create a new path is the claroline way. S
      */
     public function getWorkspace($workspaceId)
     {
@@ -142,7 +144,7 @@ class PathManager
             $roots[] = $root->getPath();
         }
 
-        $token = $this->security->getToken();
+        $token = $this->securityToken->getToken();
         $userRoles = $this->utils->getRoles($token);
 
         $entities = $this->om->getRepository('InnovaPathBundle:Path\Path')->findAccessibleByUser($roots, $userRoles);
@@ -180,8 +182,9 @@ class PathManager
         $this->om->flush();
 
         // Create a new resource node
-        $parent = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
-        $path = $this->resourceManager->create($path, $this->getResourceType(), $this->security->getToken()->getUser(), $workspace, $parent, null);
+        $parent =       $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
+        $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('innova_path');
+        $path = $this->resourceManager->create($path, $resourceType, $this->securityToken->getToken()->getUser(), $workspace, $parent, null);
 
         return $path;
     }

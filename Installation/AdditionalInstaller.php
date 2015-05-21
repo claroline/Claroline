@@ -9,6 +9,16 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller
  */
 class AdditionalInstaller extends BaseInstaller
 {
+    protected $logger;
+
+    public function __construct()
+    {
+        $self = $this;
+        $this->logger = function ($message) use ($self) {
+            $self->log($message);
+        };
+    }
+    
     /**
      * Action to perform after Bundle installation
      * Load default allowed types for the non digital resources
@@ -16,6 +26,7 @@ class AdditionalInstaller extends BaseInstaller
      */
     public function postInstall()
     {
+
         return $this;
     }
     

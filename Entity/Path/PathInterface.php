@@ -45,4 +45,17 @@ interface PathInterface
      * @param string $structure
      */
     public function setStructure($structure);
+
+    /**
+     * Set breadcrumbs
+     * @param  boolean $breadcrumbs
+     * @return \Innova\PathBundle\Entity\Path\AbstractPath
+     */
+    public function setBreadcrumbs($breadcrumbs);
+
+    /**
+     * Does Path have a breadcrumbs ?
+     * @return boolean
+     */
+    public function hasBreadcrumbs();
 }

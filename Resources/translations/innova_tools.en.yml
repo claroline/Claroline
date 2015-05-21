@@ -19,13 +19,9 @@ close: Close
 choose_model: Choose a model
 
 # D
-publish_success: Path has been published
-publish_error: The path has not been published due to a technical problem. Please try again.
 description: Description
 duration: Duration
 delete: Delete
-publish: Publish
-draft: Not published
 
 # E
 edit: Edit
@@ -49,7 +45,6 @@ library: In a library
 
 # M
 my_paths : My paths
-modified: with pending changes
 
 
 # N
@@ -69,7 +64,6 @@ path_delete_error: Le parcours has not been deleted due to technical problem. Pl
 play: Execute
 paths_list: Paths list
 progression: Progression
-published: Published
 path_open_not_published_error: The path you wanted to open has not been published yet by its owner.
 paths_template_list: Template paths list
 

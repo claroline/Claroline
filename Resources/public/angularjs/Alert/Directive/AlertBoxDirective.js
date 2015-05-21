@@ -5,18 +5,18 @@
     'use strict';
 
     angular.module('AlertModule').directive('alertBox', [
-        'AlertFactory',
-        function (AlertFactory) {
+        'AlertService',
+        function (AlertService) {
             return {
                 restrict: 'E',
                 replace: true,
                 templateUrl: EditorApp.webDir + 'bundles/innovapath/angularjs/Alert/Partial/alert-box.html',
                 scope: {},
                 link: function (scope) {
-                    scope.alerts = AlertFactory.getAlerts();
+                    scope.alerts = AlertService.getAlerts();
 
                     scope.closeAlert  = function (alert) {
-                        AlertFactory.closeAlert(alert);
+                        AlertService.closeAlert(alert);
                     };
                 }
             }

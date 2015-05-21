@@ -20,15 +20,15 @@ class AbstractPath
      * @Assert\NotBlank
      */
     protected $name;
-    
+
     /**
-     * Description of the path
-     * @var string
+     * Display a breadcrumbs for navigation into the Path
+     * @var boolean
      *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(name="breadcrumbs", type="boolean")
      */
-    protected $description;
-    
+    protected $breadcrumbs = false;
+
     /**
      * JSON structure of the path
      * @var string
@@ -57,28 +57,28 @@ class AbstractPath
     {
         return $this->name;
     }
-    
+
     /**
-     * Set description
-     * @param  string $description
+     * Set breadcrumbs
+     * @param  boolean $breadcrumbs
      * @return \Innova\PathBundle\Entity\Path\AbstractPath
      */
-    public function setDescription($description)
+    public function setBreadcrumbs($breadcrumbs)
     {
-        $this->description = $description;
-    
+        $this->breadcrumbs = $breadcrumbs;
+
         return $this;
     }
-    
+
     /**
-     * Get description
-     * @return string
+     * Does Path have a breadcrumbs ?
+     * @return boolean
      */
-    public function getDescription()
+    public function hasBreadcrumbs()
     {
-        return $this->description;
+        return $this->breadcrumbs;
     }
-    
+
     /**
      * Set structure
      * @param  string $structure
@@ -87,10 +87,10 @@ class AbstractPath
     public function setStructure($structure)
     {
         $this->structure = $structure;
-    
+
         return $this;
     }
-    
+
     /**
      * Get structure
      * @return string

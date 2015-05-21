@@ -7,7 +7,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 /**
  * Manage Publishing of the paths
@@ -19,12 +18,6 @@ class PublishingManager
      * @var \Doctrine\Common\Persistence\ObjectManager $om
      */
     protected $om;
-
-    /**
-     * Security Context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $security;
 
     /**
      * Resource Manager
@@ -63,19 +56,16 @@ class PublishingManager
 
     /**
      * Class constructor
-     * @param \Doctrine\Common\Persistence\ObjectManager                $objectManager
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
-     * @param \Innova\PathBundle\Manager\StepManager                    $stepManager
-     * @param \Claroline\CoreBundle\Manager\RightsManager               $rightsManager
+     * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
+     * @param \Innova\PathBundle\Manager\StepManager                                              $stepManager
+     * @param \Claroline\CoreBundle\Manager\RightsManager                                         $rightsManager
      */
     public function __construct(
-        ObjectManager            $objectManager,
-        SecurityContextInterface $security,
-        StepManager              $stepManager,
-        RightsManager            $rightsManager)
+        ObjectManager                 $objectManager,
+        StepManager                   $stepManager,
+        RightsManager                 $rightsManager)
     {
         $this->om            = $objectManager;
-        $this->security      = $security;
         $this->stepManager   = $stepManager;
         $this->rightsManager = $rightsManager;
     }
@@ -126,6 +116,8 @@ class PublishingManager
      */
     public function publish(Path $path)
     {
+        // TODO : publish all linked resources if needed
+
         // Start Publishing
         $this->start($path);
 
@@ -217,7 +209,7 @@ class PublishingManager
                 $currentPropagatedResources = array();
                 if (!empty($stepStructure->resources)) {
                     foreach ($stepStructure->resources as $resource) {
-                        if ($resource->propagateToChildren) {
+                        if (!empty($resource->propagateToChildren) && $resource->propagateToChildren) {
                             // Resource is propagated
                             $currentPropagatedResources[] = array(
                                 'id'         => $resource->id,

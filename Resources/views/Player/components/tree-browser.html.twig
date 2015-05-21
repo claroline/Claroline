@@ -21,7 +21,7 @@
                 <div class="col-md-12">
                     <ul class="tree">
                         {% set parents = currentStep.getParents() %}
-                        {{ macros.displayTreeItem(path.getRootStep(), currentStep, path, workspace) }}
+                        {{ macros.displayTreeItem(path.getRootStep(), currentStep, path) }}
                     </ul>
                 </div>
             </div>
@@ -33,19 +33,19 @@
 </div>
 
 {# Macros #}
-{% macro displayTreeItem(item, currentStep, path, workspace) %}
+{% macro displayTreeItem(item, currentStep, path) %}
     {% import _self as macros %}
 
     <li>
         <div class="tree-item{% if item == currentStep %} active-step{% endif %}">
             <div class="lvl lvl-{{ item.lvl }}"></div>
-            <a class="step" href="{{ path('innova_path_player_index', { workspaceId: workspace.id, pathId: path.id, stepId: item.id }) }}">{{ item.name }}</a>
+            <a class="step" href="{{ path('innova_path_player_wizard', { id: path.id, stepId: item.id }) }}">{{ item.name }}</a>
         </div>
 
         {% if item.children is not empty %}
             <ul>
                 {% for child in item.children %}
-                    {{ macros.displayTreeItem(child, currentStep, path, workspace) }}
+                    {{ macros.displayTreeItem(child, currentStep, path) }}
                 {% endfor %}
             </ul>
         {% endif %}

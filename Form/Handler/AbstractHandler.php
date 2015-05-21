@@ -101,4 +101,23 @@ abstract class AbstractHandler
      * @return boolean
      */
     abstract protected function edit();
+
+    /**
+     * @return array
+     */
+    public function getFormErrors()
+    {
+        $errors = array();
+        foreach ($this->form->getErrors() as $key => $error) {
+            $errors[$key] = $error->getMessage();
+        }
+
+        // Get errors from children
+        foreach ($this->form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getFormErrors($child);
+            }
+        }
+        return $errors;
+    }
 }

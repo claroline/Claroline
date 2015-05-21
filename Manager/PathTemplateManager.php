@@ -33,21 +33,7 @@ class PathTemplateManager
      */
     public function findAll()
     {
-        $results = $this->om->getRepository('InnovaPathBundle:Path\PathTemplate')->findAll();
-        
-        $templates = array();
-        foreach ($results as $result) {
-            $template = new \stdClass();
-            
-            $template->id          = $result->getId();
-            $template->name        = $result->getName();
-            $template->description = $result->getDescription();
-            $template->structure   = json_decode($result->getStructure());
-        
-            $templates[] = $template;
-        }
-        
-        return $templates;
+        return $this->om->getRepository('InnovaPathBundle:Path\PathTemplate')->findAll();
     }
     
     public function create(PathTemplate $pathTemplate)

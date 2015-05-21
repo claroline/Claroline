@@ -7,12 +7,10 @@
     angular.module('ConfirmModule').controller('ConfirmModalCtrl', [
         '$scope',
         '$modalInstance',
-        'StepFactory',
         'title',
         'message',
         'confirmButton',
-        function ($scope, $modalInstance, StepFactory, title, message, confirmButton) {
-            $scope.step          = StepFactory.getStep();
+        function ConfirmModalCtrl($scope, $modalInstance, title, message, confirmButton) {
             $scope.title         = title;
             $scope.message       = message;
             $scope.confirmButton = confirmButton;

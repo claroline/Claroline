@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="innova_pathtemplate")
  * @ORM\Entity
  */
-class PathTemplate extends AbstractPath
+class PathTemplate extends AbstractPath implements \JsonSerializable
 {
     /**
      * Unique identifier of the template
@@ -29,5 +29,14 @@ class PathTemplate extends AbstractPath
     public function getId()
     {
         return $this->id;
+    }
+
+    public function jsonSerialize()
+    {
+        return array (
+            'id'        => $this->id,
+            'name'      => $this->name,
+            'structure' => json_decode($this->structure),
+        );
     }
 }

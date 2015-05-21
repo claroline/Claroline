@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -33,12 +32,6 @@ class StepManager
     protected $om;
 
     /**
-     * Security Context
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $security;
-
-    /**
      * Resource Manager
      * @var \Claroline\CoreBundle\Manager\ResourceManager
      */
@@ -47,20 +40,17 @@ class StepManager
     /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager                 $om
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface  $security
      * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param \Symfony\Component\Translation\TranslatorInterface         $translator
      */
     public function __construct(
         ObjectManager            $om,
-        SecurityContextInterface $security,
         ResourceManager          $resourceManager,
         SessionInterface         $session,
         TranslatorInterface      $translator)
     {
         $this->om              = $om;
-        $this->security        = $security;
         $this->resourceManager = $resourceManager;
         $this->session         = $session;
         $this->translator      = $translator;
@@ -155,18 +145,18 @@ class StepManager
         $activity->setName($name);
         $activity->setTitle($name);
 
-        $description = $stepStructure->description ?: ' ';
+        $description = !empty($stepStructure->description) ? $stepStructure->description : ' ';
         $activity->setDescription($description);
 
         // Link resource if needed
-        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource->resourceId)) {
-            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource->resourceId);
+        if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource[0]) && !empty($stepStructure->primaryResource[0]->resourceId)) {
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource[0]->resourceId);
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             } else {
-                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource->resourceId, 'resourceName' => $stepStructure->primaryResource->name), "innova_tools");
+                $warning = $this->translator->trans('warning_primary_resource_deleted', array('resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name), "innova_tools");
                 $this->session->getFlashBag()->add('warning', $warning);
-                $stepStructure->primaryResource = null;
+                $stepStructure->primaryResource = array ();
             }
         } elseif ($activity->getPrimaryResource()) {
             // Step had a resource which has been deleted
@@ -211,13 +201,11 @@ class StepManager
         }
 
         // Update parameters properties
+        $duration = !empty($stepStructure->duration) ? $stepStructure->duration : null;
+        $parameters->setMaxDuration($duration);
+
         $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
         $parameters->setWithTutor($withTutor);
-
-        $durationHours = !empty($stepStructure->durationHours) ? intval($stepStructure->durationHours) : 0;
-        $durationMinutes = !empty($stepStructure->durationMinutes) ? intval($stepStructure->durationMinutes) : 0;
-        $seconds = $durationHours * 3600 + $durationMinutes * 60;
-        $parameters->setMaxDuration($seconds);
 
         $who = !empty($stepStructure->who) ? $stepStructure->who : null;
         $parameters->setWho($who);
@@ -269,33 +257,5 @@ class StepManager
         }
 
         return $this;
-    }
-
-    public function contextualUpdate($step)
-    {
-        $path = $step->getPath();
-        $json = json_decode($path->getStructure());
-        $json_root_steps = $json->steps;
-
-        $this->findAndUpdateJsonStep($json_root_steps, $step);
-
-        $json = json_encode($json);
-        $path->setStructure($json);
-
-        $this->om->persist($path);
-        $this->om->persist($step);
-        $this->om->flush();
-    }
-
-    public function findAndUpdateJsonStep($jsonSteps, $step)
-    {
-        foreach ($jsonSteps as $jsonStep) {
-            echo $jsonStep->resourceId;
-            if ($jsonStep->resourceId == $step->getId()) {
-                $jsonStep->description = $step->getDescription();
-            } elseif (!empty($jsonStep->children)) {
-                $this->findAndUpdateJsonStep($jsonStep->children, $step);
-            }
-        }
     }
 }

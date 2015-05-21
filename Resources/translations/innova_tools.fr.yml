@@ -21,11 +21,7 @@ choose_model: Choisir un modèle
 # D
 description: Description
 duration: Durée
-publish_success: Le parcours a été publié.
-publish: Publier
-publish_error: Le parcours n'a pas pu être publié. Veuillez réessayer.
 delete: Supprimer
-draft: Non publié
 
 # E
 edit: Editer
@@ -46,7 +42,6 @@ local: Locales
 
 # M
 my_paths: Mes parcours
-modified: avec des modifications en attente
 
 # N
 next: Suivant
@@ -65,7 +60,6 @@ path_not_found: Le parcours n'a pas été trouvé
 play: Exécuter
 path_delete_success: Le parcours a été supprimé
 path_delete_error: Le parcours n'a pas pu être supprimé. Veuillez réessayer
-published: Publié
 path_open_not_published_error: Le parcours que vous vouliez ouvrir n'a pas encore été publié par son propriétaire. 
 paths_template_list: Liste des modèles de parcours
 

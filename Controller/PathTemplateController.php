@@ -1,39 +1,5 @@
 <?php
 
-/**
- * MIT License
- * ===========
- *
- * Copyright (c) 2013 Innovalangues
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @category   Entity
- * @package    InnovaPathBundle
- * @subpackage PathBundle
- * @author     Innovalangues <contact@innovalangues.net>
- * @copyright  2013 Innovalangues
- * @license    http://www.opensource.org/licenses/mit-license.php  MIT License
- * @version    0.1
- * @link       http://innovalangues.net
- */
 namespace Innova\PathBundle\Controller;
 
 use Symfony\Component\Form\FormFactoryInterface;
@@ -61,7 +27,7 @@ use Innova\PathBundle\Form\Handler\PathTemplateHandler;
  * @link       http://innovalangues.net
  * 
  * @Route(
- *      "/templates",
+ *      "/template",
  *      name    = "innova_path_template",
  *      service = "innova_path.controller.path_template"
  * )
@@ -104,7 +70,7 @@ class PathTemplateController
      * @Route(
      *     "",
      *     name    = "innova_path_template_list",
-     *     options = {"expose"=true}
+     *     options = { "expose" = true }
      * )
      * @Method("GET")
      */
@@ -120,9 +86,9 @@ class PathTemplateController
      * @return \Symfony\Component\HttpFoundation\Response
      * 
      * @Route(
-     *     "/add",
-     *     name    = "innova_path_template_add",
-     *     options = {"expose"=true}
+     *     "/",
+     *     name    = "innova_path_template_create",
+     *     options = { "expose" = true }
      * )
      * @Method("POST")
      */
@@ -154,9 +120,9 @@ class PathTemplateController
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route(
-     *     "/edit/{id}",
-     *     name    = "innova_path_template_edit",
-     *     options = {"expose"=true}
+     *     "/{id}",
+     *     name    = "innova_path_template_update",
+     *     options = { "expose" = true }
      * )
      * @Method("PUT")
      */
@@ -189,7 +155,7 @@ class PathTemplateController
      * @Route(
      *     "/delete/{id}",
      *     name    = "innova_path_template_delete",
-     *     options = {"expose"=true}
+     *     options = { "expose" = true }
      * )
      * @Method("DELETE")
      */
