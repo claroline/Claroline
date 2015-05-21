@@ -1,0 +1,4 @@
+{{ 'commented'|trans({}, 'icap_socialmedia') }}
+<a href="{{ path("icap_socialmedia_comments_view", {"resourceId":item.comment.resource.id}) }}">{{ item.comment.resource.name }}</a>
+<br/>
+<span>"{{ item.comment.text }}"</span>

@@ -27,15 +27,13 @@
                 <div>{{ "no_like"|trans({}, 'icap_socialmedia') }}</div>
                 {% endif %}
             </div>
-
-
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
         </div>
     </form>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapsocialmedia/css/like.css')}}'>
-    <script>
+    <script type="text/javascript">
         $.getScript("{{ asset('bundles/icapsocialmedia/js/jquery.jscroll.min.js') }}", initializeJscroll);
         function initializeJscroll()
         {

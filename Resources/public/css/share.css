@@ -6,8 +6,8 @@ div.socialmedia-network-list a{
     min-width: 40px;
 }
 div.socialmedia-network-list a .socialmedia-network-logo{
-    font-size: 1.9rem;
-    line-height: 1.9rem;
+    font-size: 2rem;
+    line-height: 2rem;
 }
 div.socialmedia-network-list a:hover,
 div.socialmedia-network-list a:active,
@@ -16,4 +16,9 @@ div.socialmedia-network-list a:focus{
 }
 div.socialmedia-network-list::after{
     clear: both;
+}
+
+div.socialmedia-share-info {
+    margin-top: 20px;
+    color: #999999;
 }

@@ -11,6 +11,7 @@
 
 namespace Icap\SocialmediaBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Icap\SocialmediaBundle\Controller\LikeActionController;
 use Icap\SocialmediaBundle\Entity\ActionBase;
@@ -31,7 +32,7 @@ class WallItemManager
     protected $em;
 
     /**
-     * @var \Doctrine\ORM\EntityRepository
+     * @var \Icap\SocialmediaBundle\Repository\WallItemRepository;
      */
     protected $wallItemRepository;
 
@@ -45,6 +46,21 @@ class WallItemManager
     {
         $this->em = $em;
         $this->wallItemRepository = $em->getRepository('IcapSocialmediaBundle:WallItem');
+    }
+
+    public function getWallItemsForPagination($userId, $isOwner)
+    {
+        return $this->wallItemRepository->findItemsForPagination($userId, $isOwner);
+    }
+
+    public function removeItem($itemId, User $user)
+    {
+        $wallItem = $this->wallItemRepository->findOneBy(array("id" => $itemId, "user" => $user));
+
+        if ($wallItem !== null) {
+            $this->em->remove($wallItem);
+            $this->em->flush();
+        }
     }
 
     public function createWallItem(ActionBase $action)

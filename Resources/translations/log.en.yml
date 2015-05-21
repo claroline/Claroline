@@ -1,0 +1,15 @@
+log_resource-icap_socialmedia-like_action_shortname: "Like"
+log_resource-icap_socialmedia-like_action_title:     "Like"
+log_resource-icap_socialmedia-like_action_filter:    "Like"
+
+log_resource-icap_socialmedia-share_action_shortname: "Share"
+log_resource-icap_socialmedia-share_action_title:     "Share"
+log_resource-icap_socialmedia-share_action_filter:    "Share"
+
+log_resource-icap_socialmedia-comment_action_shortname: "Comment"
+log_resource-icap_socialmedia-comment_action_title:     "Comment"
+log_resource-icap_socialmedia-comment_action_filter:    "Comment"
+
+log.socialmedia.like_action: "liked %resource%"
+log.socialmedia.share_action: "shared %resource% on %network%"
+log.socialmedia.comment_action: "commented on %resource%"

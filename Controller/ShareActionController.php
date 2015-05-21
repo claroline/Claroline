@@ -19,14 +19,13 @@ use Icap\SocialmediaBundle\Library\SocialShare\SocialShare;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ShareActionController extends Controller
 {
     /**
-     * @Route("/form/{resourceId}", name="icap_socialmedia_share_form", )
+     * @Route("/share/form/{resourceId}", name="icap_socialmedia_share_form", )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"id" = "resourceId"})
      * @Template()
@@ -39,7 +38,7 @@ class ShareActionController extends Controller
         $shareManager = $this->getShareActionManager();
         $sharesCount = $shareManager->countShares(null, array("resource"=>$resourceNode->getId()));
         $socialShare = new SocialShare();
-        $resourceUrl = "http://stackoverflow.com";//$this->generateUrl("claro_resource_open_short", array("node" => $resourceNode->getId()), true);
+        $resourceUrl = $this->generateUrl("claro_resource_open_short", array("node" => $resourceNode->getId()), true);
 
         return array(
             "resourceNode" => $resourceNode,
@@ -63,6 +62,8 @@ class ShareActionController extends Controller
         $share->setUser($user);
         $network = $request->get("network");
         $options = $this->getShareActionManager()->createShare($request, $share);
+        $this->dispatchShareEvent($share);
+
         $response = array();
         if ($network !== null) {
             $socialShare = new SocialShare();

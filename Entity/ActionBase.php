@@ -115,7 +115,7 @@ class ActionBase
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
      */
     public function getResource()
     {

@@ -1,0 +1,10 @@
+{% set network = item.share.network %}
+{% if network is null %}
+{% set network = 'claroline' %}
+{% endif %}
+{{ 'shared_on'|trans({"%network%": network}, 'icap_socialmedia') }}
+{% if item.share.url is defined and item.share.url is not null %}
+    <a href="{{ item.share.url }}">{{ item.share.url }}</a>
+{% elseif item.share.resource is defined and item.share.resource is not null %}
+    <a href="{{ path("claro_resource_open_short", {"node":item.share.resource.id}) }}">{{ item.share.resource.name }}</a>
+{% endif %}

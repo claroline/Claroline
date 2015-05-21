@@ -3,7 +3,7 @@ div.social-media-like-list{
 }
 
 div.social-media-like-list div.jscroll-like-list{
-    max-height: 300;
+    max-height: 300px;
     overflow: auto;
 }
 

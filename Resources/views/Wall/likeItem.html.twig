@@ -1,0 +1,6 @@
+{{ 'liked'|trans({}, 'icap_socialmedia') }}
+{% if item.like.url is defined and item.like.url is not null %}
+    <a href="{{ item.like.url }}">{{ item.like.url }}</a>
+{% elseif item.like.resource is defined and item.like.resource is not null %}
+    <a href="{{ path("claro_resource_open_short", {"node":item.like.resource.id}) }}">{{ item.like.resource.name }}</a>
+{% endif %}

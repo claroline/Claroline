@@ -13,6 +13,7 @@ namespace Icap\SocialmediaBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\SocialmediaBundle\Entity\LikeAction;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -22,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LikeActionController extends Controller
 {
     /**
-     * @Route("/form/{resourceId}", name="icap_socialmedia_like_form", )
+     * @Route("/like/form/{resourceId}", name = "icap_socialmedia_like_form")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Template()
      * @param int $resourceId
@@ -42,6 +43,7 @@ class LikeActionController extends Controller
 
     /**
      * @Route("/like", name="icap_socialmedia_like")
+     * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param User $user
@@ -51,7 +53,8 @@ class LikeActionController extends Controller
     {
         $like = new LikeAction();
         $like->setUser($user);
-        $this->getLikeActionManager()->createLike($request, $like);
+        $like = $this->getLikeActionManager()->createLike($request, $like);
+        $this->dispatchLikeEvent($like);
         $jsonResponse = new JsonResponse(true);
 
         return $jsonResponse;
@@ -78,6 +81,7 @@ class LikeActionController extends Controller
 
     /**
      * @Route("/like/list/{page}", name="icap_socialmedia_likelist", defaults={"page" = "1"})
+     * @Method({"GET"})
      * @param Request $request
      * @Template()
      * @param $page

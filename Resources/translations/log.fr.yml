@@ -1,0 +1,15 @@
+log_resource-icap_socialmedia-like_action_shortname: "Aime"
+log_resource-icap_socialmedia-like_action_title:     "Aime"
+log_resource-icap_socialmedia-like_action_filter:    "Aime"
+
+log_resource-icap_socialmedia-share_action_shortname: "Partage"
+log_resource-icap_socialmedia-share_action_title:     "Partage"
+log_resource-icap_socialmedia-share_action_filter:    "Partage"
+
+log_resource-icap_socialmedia-comment_action_shortname: "Commentaire"
+log_resource-icap_socialmedia-comment_action_title:     "Commentaire"
+log_resource-icap_socialmedia-comment_action_filter:    "Commentaire"
+
+log.socialmedia.like_action: "a aimé %resource%"
+log.socialmedia.share_action: "a partagé %resource% sur %network%"
+log.socialmedia.comment_action: "a commenté la ressource %resource%"

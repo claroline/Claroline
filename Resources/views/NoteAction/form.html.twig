@@ -1,0 +1,67 @@
+<div class="modal-dialog">
+    <form role="form" action="{{ path("icap_socialmedia_note", {"resourceId":resourceId}) }}"
+          method="get" class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">{{ "note_action"|trans({}, 'resource') }}</h4>
+        </div>
+        <div class="modal-body">
+            <div class="social-media-note-list">
+                {% if pager.nbResults > 0 %}
+                    <h4>{{ 'your_notes'|trans({}, 'icap_socialmedia') }} <small>[{{ pager.nbResults }}]</small> <br/> <small>*{{ "notes_are_private"|trans({}, "icap_socialmedia") }}</small></h4>
+                    <div class="jscroll-note-list-container">
+                        <div class="jscroll-note-list list-group">
+                            {% include "IcapSocialmediaBundle:NoteAction:noteList.html.twig" with {'pager':pager, 'resourceId':resourceId} %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="social-media-empty-list">{{ "no_note"|trans({}, 'icap_socialmedia') }}</div>
+                {% endif %}
+            </div>
+            <div class="social-media-textarea">
+                <textarea class="social-media-note-text" name="social_media_note_text"></textarea>
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary">{{ 'submit_note'|trans({}, 'icap_socialmedia') }}</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|trans({}, 'platform') }}</button>
+        </div>
+    </form>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/icapsocialmedia/css/comment_note.css')}}'>
+    <script type="text/javascript">
+        $.getScript("{{ asset('bundles/icapsocialmedia/js/jquery.jscroll.min.js') }}", initializeJscroll);
+        function initializeJscroll()
+        {
+            $('.jscroll-note-list').jscroll({
+                loadingHtml: '<div class="list-group-item list-group-item-loading"><i class="fa fa-spinner fa-pulse"></i></div>',
+                nextSelector: 'a.jscroll-note-list-next',
+                contentSelector: 'div',
+                autoTrigger: false,
+                callback: removeParentClass
+            });
+        }
+        function removeParentClass()
+        {
+            $('div.jscroll-note-list').find('.jscroll-added').each(function(){
+                var contents = $(this).contents();
+                $(this).replaceWith(contents);
+            });
+        }
+        $(document).ready(function(){
+            var deleteUrl = "{{ path("icap_socialmedia_note_delete", {"id":"000"}) }}";
+            $('.remove-sociamedia-note-item').on("click", function(){
+                var itemId = $(this).attr("data-item-id");
+                $.ajax({
+                    url: deleteUrl.replace("000", itemId),
+                    method: "DELETE"
+                }).done(function(){
+                    $("#socialmedia-note-item-"+itemId).remove();
+                }).fail(function(){
+                    alert("{{ "error_deleting"|trans({}, "icap_socialmedia") }}");
+                });
+            });
+        });
+    </script>
+</div>

@@ -35,23 +35,18 @@ class ResourceActionsListener
      */
     private $httpKernel;
 
-    private $securityContext;
-
     /**
      * @DI\InjectParams({
      *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "httpKernel"         = @DI\Inject("http_kernel"),
-     *     "securityContext"    = @DI\Inject("security.context")
+     *     "httpKernel"         = @DI\Inject("http_kernel")
      * })
      */
     public function __construct(
         RequestStack $requestStack,
-        HttpKernelInterface $httpKernel,
-        SecurityContextInterface $securityContext
+        HttpKernelInterface $httpKernel
     ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
-        $this->securityContext = $securityContext;
     }
 
     /**
@@ -62,8 +57,7 @@ class ResourceActionsListener
         $this->redirect(
             [
                 '_controller'   => 'IcapSocialmediaBundle:LikeAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
-                'user'          => $this->securityContext->getToken()->getUser()
+                'resourceId'    => $event->getResource()->getResourceNode()->getId()
             ],
             $event
         );
@@ -77,8 +71,7 @@ class ResourceActionsListener
         $this->redirect(
             [
                 '_controller'   => 'IcapSocialmediaBundle:ShareAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
-                'user'          => $this->securityContext->getToken()->getUser()
+                'resourceId'    => $event->getResource()->getResourceNode()->getId()
             ],
             $event
         );
@@ -92,8 +85,7 @@ class ResourceActionsListener
         $this->redirect(
             [
                 '_controller'   => 'IcapSocialmediaBundle:CommentAction:form',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
-                'user'          => $this->securityContext->getToken()->getUser()
+                'resourceId'    => $event->getResource()->getResourceNode()->getId()
             ],
             $event
         );
@@ -106,9 +98,8 @@ class ResourceActionsListener
     {
         $this->redirect(
             [
-                '_controller'   => 'IcapSocialmediaBundle:NoteAction:noteForm',
-                'resourceId'    => $event->getResource()->getResourceNode()->getId(),
-                'user'          => $this->securityContext->getToken()->getUser()
+                '_controller'   => 'IcapSocialmediaBundle:NoteAction:form',
+                'resourceId'    => $event->getResource()->getResourceNode()->getId()
             ],
             $event
         );

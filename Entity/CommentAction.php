@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="icap__socialmedia_comment")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\CommentActionRepository")
  * Class CommentAction
  * @package Icap\SocialmediaBundle\Entity
  */

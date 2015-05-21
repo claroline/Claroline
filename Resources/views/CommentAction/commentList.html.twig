@@ -1,0 +1,23 @@
+{% if pager.hasNextPage %}
+    <div class="list-group-item list-load-previous"><a class="jscroll-comment-list-previous" type="button" href="{{ path("icap_socialmedia_commentlist", {"resourceId":resourceId, "page":pager.nextPage}) }}"><i class="fa fa-comments-o"></i> {{ "load_previous_comments"|trans({}, 'icap_socialmedia') }}</a></div>
+{% endif %}
+{% for comment in pager.currentPageResults|reverse %}
+    <div id="socialmedia-comment-item-{{ comment.id }}" class="list-group-item">
+        <p class="socialmedia-comment-avatar-container">
+            {% if comment.user.picture is not null and comment.user.picture is not empty %}
+            <img class="socialmedia-avatar" src="{{ asset('uploads/pictures/') ~ comment.user.picture }}"/>
+            {% else %}
+            <i class="fa fa-user"></i>
+            {% endif %}
+        </p>
+        <p class="socialmedia-comment-text-container">
+            {% if comment.user.id == app.user.id %}
+            <button type="button" data-item-id="{{ comment.id }}" class="close remove-sociamedia-comment-item"><span aria-hidden="true">&times;</span></button>
+            {% endif %}
+            <a href="{{ path("claro_public_profile_view", {"publicUrl":comment.user.publicUrl}) }}">{{ comment.user.firstName~" "~comment.user.lastName }}</a>
+            <span><small class="small">{{ comment.creationDate|date("date_format"|trans({}, "icap_socialmedia")) }}</small></span><br/>
+            <span class="socialmedia-comment-text">{{ comment.text }}</span>
+        </p>
+        <p class="clearfix"></p>
+    </div>
+{% endfor %}

@@ -16,7 +16,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Table(name="icap__socialmedia_wall_item")
- * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\WallActionRepository")
+ * @ORM\Entity(repositoryClass="Icap\SocialmediaBundle\Repository\WallItemRepository")
  */
 class WallItem
 {
@@ -69,6 +69,11 @@ class WallItem
      */
     protected $user;
 
+    /**
+     * @var bool $visible
+     *
+     * @ORM\Column(type="boolean", name="visible")
+     */
     protected $visible = true;
 
     /**
