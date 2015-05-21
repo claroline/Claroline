@@ -11,7 +11,11 @@
     'use strict';
 
     $('#my-contacts-tool').on('click', '#contacts-configure-btn', function () {
-        console.log('configure');
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_contact_options_configure_form'),
+            refreshPage,
+            function() {}
+        );
     });
 
     $('#my-contacts-tool').on('click', '#category-create-btn', function () {
@@ -52,6 +56,10 @@
         userPicker.configure(settings, addContacts);
         userPicker.open();
     });
+    
+    var refreshPage = function () {
+        window.location.reload();
+    };
     
     var addCategory = function (datas) {
         var id = datas['id'];

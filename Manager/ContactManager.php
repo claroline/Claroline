@@ -88,7 +88,15 @@ class ContactManager
         if (is_null($options)) {
             $options = new Options();
             $options->setUser($user);
-            $options->setOptions(array());
+            $defaultValues = array(
+                'show_all_my_contacts' => true,
+                'show_all_visible_users' => true,
+                'show_username' => true,
+                'show_mail' => false,
+                'show_phone' => false,
+                'show_picture' => true
+            );
+            $options->setOptions($defaultValues);
             $this->om->persist($options);
             $this->om->flush();
         }

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\ContactCategoryType;
+use Claroline\CoreBundle\Form\ContactOptionsType;
 use Claroline\CoreBundle\Manager\ContactManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -77,16 +78,64 @@ class ContactController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/options/configure/form",
+     *     name="claro_contact_options_configure_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Contact:optionsConfigureModalForm.html.twig")
+     */
+    public function optionsConfigureFormAction(User $authenticatedUser)
+    {
+        $options = $this->contactManager->getUserOptions($authenticatedUser);
+        $form = $this->formFactory->create(new ContactOptionsType($options));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/options/configure",
+     *     name="claro_contact_options_configure",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Contact:optionsConfigureModalForm.html.twig")
+     */
+    public function optionsConfigureAction(User $authenticatedUser)
+    {
+        $options = $this->contactManager->getUserOptions($authenticatedUser);
+        $form = $this->formFactory->create(new ContactOptionsType($options));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $values = array(
+                'show_all_my_contacts' => $form['showAllMyContacts']->getData(),
+                'show_all_visible_users' => $form['showAllVisibleUsers']->getData(),
+                'show_username' => $form['showUsername']->getData(),
+                'show_mail' => $form['showMail']->getData(),
+                'show_phone' => $form['showPhone']->getData(),
+                'show_picture' => $form['showPicture']->getData()
+            );
+            $options->setOptions($values);
+            $this->contactManager->persistOptions($options);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView());
+        }
+    }
+
+    /**
+     * @EXT\Route(
      *     "/category/create/form",
      *     name="claro_contact_category_create_form",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryCreateModalForm.html.twig")
-     *
-     * Displays the homeTab form.
-     *
-     * @return Response
      */
     public function categoryCreateFormAction()
     {
@@ -104,10 +153,6 @@ class ContactController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryCreateModalForm.html.twig")
-     *
-     * Create a new homeTab.
-     *
-     * @return Response
      */
     public function categoryCreateAction(User $authenticatedUser)
     {
@@ -145,10 +190,6 @@ class ContactController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
-     *
-     * Displays the homeTab form.
-     *
-     * @return Response
      */
     public function categoryEditFormAction(Category $category)
     {
@@ -166,10 +207,6 @@ class ContactController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
-     *
-     * Create a new homeTab.
-     *
-     * @return Response
      */
     public function categoryEditAction(Category $category)
     {
@@ -197,10 +234,6 @@ class ContactController extends Controller
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
-     *
-     * Create a new homeTab.
-     *
-     * @return Response
      */
     public function categoryDeleteAction(User $authenticatedUser, Category $category)
     {

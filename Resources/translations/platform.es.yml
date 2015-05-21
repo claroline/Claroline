@@ -165,6 +165,7 @@ captcha: captcha
 categories: categorías
 categories_organization: 'Organización de categorías'
 categorize: 'Clasificar por categorías'
+category: Categoría
 category_creation: 'Creación de una categoría'
 category_edition: 'Modificación de categoría'
 category_explanations_1: 'Cada categoría debe tener un nombre único.'
@@ -194,6 +195,7 @@ configuration: Configuración
 configure: Configurar
 confirm_send_data: 'Sugerimos confirmar su acuerdo para enviar datos:'
 connections: Conexiones
+contact: Contacto
 content: Contenido
 cookie_lifetime: 'Duración de la cookie'
 copiable: Copiable
@@ -851,11 +853,17 @@ settings: Configuración
 sharable: Compartible
 share: Compartir
 show: Mostrar
+show_all_my_contacts: 'Mostrar "Todos mis contactos"'
+show_all_visible_users: 'Mostrar "Todos los usuarios visibles"'
 show_as: 'Mostrar como'
 show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
+show_mail: 'Mostrar la dirección de correo electrónico'
+show_phone: 'Mostrar el núnero de teléfono '
+show_picture: 'Mostrar la foto'
 show_profile: 'Mostrar perfil'
 show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_username: 'Mostrar el nombre de usuario'
 simple: Simple
 start_date: 'Fecha de inicio'
 start_maintenance: 'Lanzar el modo de mantenimiento'

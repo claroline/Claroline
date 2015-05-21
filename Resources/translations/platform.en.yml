@@ -164,6 +164,7 @@ captcha: Captcha
 categories: Categories
 categories_organization: 'Categories organization'
 categorize: Categorize
+category: Category
 category_creation: 'Category creation'
 category_edition: 'Category edition'
 category_explanations_1: 'Each category must have an unique name.'
@@ -193,6 +194,7 @@ configuration: Configuration
 configure: Configure
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
+contact: Contact
 content: Content
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
@@ -850,11 +852,17 @@ settings: Settings
 sharable: Sharable
 share: Share
 show: Show
+show_all_my_contacts: 'Show "All my contacts"'
+show_all_visible_users: 'Show "All visible users"'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+show_mail: 'Show mail'
+show_phone: 'Show phone'
+show_picture: 'Show picture'
 show_profile: 'Show profile'
 show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_username: 'Show username'
 simple: Simple
 start_date: 'Start date'
 start_maintenance: 'Start maintenance mode'
