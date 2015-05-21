@@ -31,7 +31,8 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'typeopenquestion', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
-                    'label' => 'TypeOpenQuestion.value'
+                    'label' => 'TypeOpenQuestion.value',
+                    'choice_translation_domain' => true
                 )
             );
         $builder

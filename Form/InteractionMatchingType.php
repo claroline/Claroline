@@ -38,7 +38,8 @@ class InteractionMatchingType extends AbstractType
             ->add(
                 'typeMatching', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeMatching',
-                    'label' => 'TypeMatching.value'
+                    'label' => 'TypeMatching.value',
+                    'choice_translation_domain' => true
                 )
             );
         $builder
