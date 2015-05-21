@@ -112,7 +112,9 @@ class Objective implements \JsonSerializable
      */
     public function addUser(User $user)
     {
-        $this->users->add($user);
+        if (!$this->hasUser($user)) {
+            $this->users->add($user);
+        }
     }
 
     /**
@@ -139,7 +141,9 @@ class Objective implements \JsonSerializable
      */
     public function addGroup(Group $group)
     {
-        $this->groups->add($group);
+        if (!$this->hasGroup($group)) {
+            $this->groups->add($group);
+        }
     }
 
     /**

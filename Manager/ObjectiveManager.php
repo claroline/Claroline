@@ -233,13 +233,12 @@ class ObjectiveManager
      * objective are returned.
      *
      * @param Objective $objective
-     * @param Group     $group
      * @param int       $page
      * @return Pagerfanta
      */
-    public function listUsersWithObjective(Objective $objective = null, Group $group = null, $page = 1)
+    public function listUsersWithObjective(Objective $objective = null, $page = 1)
     {
-        return $this->listSubjectsWithObjective('Users', $objective, $group, $page);
+        return $this->listSubjectsWithObjective('Users', $objective, $page);
     }
 
     /**
@@ -253,7 +252,23 @@ class ObjectiveManager
      */
     public function listGroupsWithObjective(Objective $objective = null, $page = 1)
     {
-        return $this->listSubjectsWithObjective('Groups', $objective, null, $page);
+        return $this->listSubjectsWithObjective('Groups', $objective, $page);
+    }
+
+    /**
+     * Returns a pager for all the members of a group, including progress data.
+     *
+     * @param Group $group
+     * @param int   $page
+     * @return Pagerfanta
+     */
+    public function listGroupUsers(Group $group, $page = 1)
+    {
+        $countQuery = $this->objectiveRepo->getGroupUsersCountQuery($group);
+        $resultQuery = $this->objectiveRepo->getGroupUsersQuery($group);
+        $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
+
+        return $this->pagerFactory->createPagerWithAdapter($adapter, $page);
     }
 
     /**
@@ -360,12 +375,12 @@ class ObjectiveManager
         return $subject instanceof User ? 'User' : 'Group';
     }
 
-    private function listSubjectsWithObjective($subjectType, Objective $objective = null, Group $group = null, $page = 1)
+    private function listSubjectsWithObjective($subjectType, Objective $objective = null, $page = 1)
     {
         $countMethod = "get{$subjectType}WithObjectiveCountQuery";
         $fetchMethod = "get{$subjectType}WithObjectiveQuery";
-        $countQuery = $this->objectiveRepo->{$countMethod}($objective, $group);
-        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective, $group);
+        $countQuery = $this->objectiveRepo->{$countMethod}($objective);
+        $resultQuery = $this->objectiveRepo->{$fetchMethod}($objective);
         $adapter = new OrmArrayAdapter($countQuery, $resultQuery);
 
         return $this->pagerFactory->createPagerWithAdapter($adapter, $page);

@@ -24,14 +24,14 @@
     </td>
     <td class="x-small-cell">
         {% if type == 'objective' %}
-            <a href="{{ path('hevinci_objective_group_users', { id: id, groupId: groupId }) }}"
+            -
+        {% else %}
+            <a href="{{ path('hevinci_objective_group_users', { id: id }) }}"
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'users'|trans({}, 'platform') }}">
                 <i class="fa fa-user"></i>
             </a>
-        {% else %}
-            -
         {% endif %}
     </td>
     <td class="x-small-cell">

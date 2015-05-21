@@ -77,7 +77,7 @@ class ObjectiveRepository extends EntityRepository
     public function findByGroup(Group $group)
     {
         return $this->createQueryBuilder('o')
-            ->select('o.id', 'o.name', 'g.id AS groupId')
+            ->select('o.id', 'o.name')
             ->join('o.groups', 'g')
             ->where('g = :group')
             ->groupBy('o.id')
@@ -160,7 +160,7 @@ class ObjectiveRepository extends EntityRepository
      * @param Objective $objective
      * @return \Doctrine\ORM\Query
      */
-    public function getUsersWithObjectiveCountQuery(Objective $objective = null)
+    public function getUsersWithObjectiveCountQuery(Objective $objective = null, Group $group = null)
     {
         return $this->doGetUsersWithObjectiveQuery($objective, true);
     }
@@ -205,6 +205,29 @@ class ObjectiveRepository extends EntityRepository
         return $this->doGetGroupsWithObjectiveQuery($objective, false);
     }
 
+    /**
+     * Returns the query object for counting all the members of a group.
+     *
+     * @param Group $group
+     * @return \Doctrine\ORM\Query
+     */
+    public function getGroupUsersQuery(Group $group)
+    {
+        return $this->doGetGroupUsersQuery($group, false);
+    }
+
+    /**
+     * Returns the query object for fetching all the members of a group,
+     * including progress data.
+     *
+     * @param Group $group
+     * @return \Doctrine\ORM\Query
+     */
+    public function getGroupUsersCountQuery(Group $group)
+    {
+        return $this->doGetGroupUsersQuery($group, true);
+    }
+
     private function doGetUsersWithObjectiveQuery(Objective $objective = null, $countOnly)
     {
         $usersQb = $this->createQueryBuilder('o1')
@@ -219,7 +242,7 @@ class ObjectiveRepository extends EntityRepository
             $groupsQb->where('o2 = :objective');
         }
 
-        $select = $countOnly ? 'COUNT(u.id)' : 'u.id, u.firstName, u.lastName, up.percentage AS progress';
+        $select = $countOnly ? 'COUNT(DISTINCT u.id)' : 'DISTINCT u.id, u.firstName, u.lastName, up.percentage AS progress';
 
         $qb = $this->_em->createQueryBuilder()
             ->select($select)
@@ -235,6 +258,21 @@ class ObjectiveRepository extends EntityRepository
         }
 
         return $qb->getQuery();
+    }
+
+    public function doGetGroupUsersQuery(Group $group, $countOnly)
+    {
+        $select = $countOnly ? 'COUNT(u.id)' : 'u.id, u.firstName, u.lastName, up.percentage AS progress';
+
+        return $this->_em->createQueryBuilder()
+            ->select($select)
+            ->from('Claroline\CoreBundle\Entity\User', 'u')
+            ->join('u.groups', 'g')
+            ->leftJoin('HeVinci\CompetencyBundle\Entity\Progress\UserProgress', 'up', 'WITH', 'up.user = u')
+            ->where('g = :group')
+            ->orderBy('u.firstName, u.lastName', 'ASC')
+            ->setParameter(':group', $group)
+            ->getQuery();
     }
 
     private function doGetGroupsWithObjectiveQuery(Objective $objective = null, $countOnly)

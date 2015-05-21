@@ -97,11 +97,12 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $groups = $this->context['groups'];
 
         $result = $this->repo->getGroupsWithObjectiveQuery()->getResult();
-        $this->assertEquals(2, count($result));
+        $this->assertEquals(3, count($result));
 
         $result = $this->repo->getGroupsWithObjectiveQuery($objectives['o2'])->getResult();
-        $this->assertEquals(1, count($result));
+        $this->assertEquals(2, count($result));
         $this->assertEquals($groups['g1']->getId(), $result[0]['id']);
+        $this->assertEquals($groups['g3']->getId(), $result[1]['id']);
     }
 
     public function testGetGroupsWithObjectiveCountQuery()
@@ -109,10 +110,10 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $objectives = $this->context['objectives'];
 
         $result = $this->repo->getGroupsWithObjectiveCountQuery()->getSingleScalarResult();
-        $this->assertEquals(2, $result);
+        $this->assertEquals(3, $result);
 
         $result = $this->repo->getGroupsWithObjectiveCountQuery($objectives['o2'])->getSingleScalarResult();
-        $this->assertEquals(1, $result);
+        $this->assertEquals(2, $result);
     }
 
     public function testFindUsersWithObjective()
@@ -129,6 +130,32 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $this->assertEquals(2, count($result));
         $this->assertContains($users['u2'], $result);
         $this->assertContains($users['u3'], $result);
+    }
+
+    public function testGetGroupUsersQuery()
+    {
+        $groups = $this->context['groups'];
+        $users = $this->context['users'];
+
+        $result = $this->repo->getGroupUsersQuery($groups['g2'])->getResult();
+        $this->assertEquals(0, count($result));
+
+        $result = $this->repo->getGroupUsersQuery($groups['g1'])->getResult();
+        $this->assertEquals(2, count($result));
+        $this->assertEquals($users['u2']->getId(), $result[0]['id']);
+        $this->assertEquals($users['u3']->getId(), $result[1]['id']);
+    }
+
+    public function testGetGroupUsersCountQuery()
+    {
+        $groups = $this->context['groups'];
+
+        $result = $this->repo->getGroupUsersCountQuery($groups['g1'])->getSingleScalarResult();
+        $this->assertEquals(2, $result);
+        $result = $this->repo->getGroupUsersCountQuery($groups['g2'])->getSingleScalarResult();
+        $this->assertEquals(0, $result);
+        $result = $this->repo->getGroupUsersCountQuery($groups['g3'])->getSingleScalarResult();
+        $this->assertEquals(1, $result);
     }
 
     private function persistContext()
@@ -155,7 +182,8 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         //     - u2
         //     - u3
         //   - g2 (o1)
-        //   - g3
+        //   - g3 (o2)
+        //     - u2
 
         $u1 = $this->persistUser('u1');
         $u2 = $this->persistUser('u2');
@@ -166,6 +194,7 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         $g3 = $this->persistGroup('g3');
         $g1->addUser($u2);
         $g1->addUser($u3);
+        $g3->addUser($u2);
 
         $c1 = $this->persistCompetency('c1');
         $c2 = $this->persistCompetency('c2', $c1);
@@ -188,6 +217,7 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
 
         $o2->addUser($u2);
         $o2->addGroup($g1);
+        $o2->addGroup($g3);
 
         return [
             'competencies' => [

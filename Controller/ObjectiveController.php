@@ -219,7 +219,7 @@ class ObjectiveController
      */
     public function usersAction(Request $request)
     {
-        return ['pager' => $this->manager->listUsersWithObjective(null, null, $request->query->get('page', 1))];
+        return ['pager' => $this->manager->listUsersWithObjective(null, $request->query->get('page', 1))];
     }
 
     /**
@@ -235,27 +235,25 @@ class ObjectiveController
     public function objectiveUsersAction(Objective $objective, Request $request)
     {
         return [
-            'pager' => $this->manager->listUsersWithObjective($objective, null, $request->query->get('page', 1)),
+            'pager' => $this->manager->listUsersWithObjective($objective, $request->query->get('page', 1)),
             'isFilteredByObjective' => true
         ];
     }
 
     /**
-     * Displays the members of a group which have a particular objective.
+     * Displays the members of a group with their objectives.
      *
-     * @EXT\Route("/{id}/groups/{groupId}/users", name="hevinci_objective_group_users")
-     * @EXT\ParamConverter("group", options={"id"= "groupId"})
+     * @EXT\Route("/groups/{id}/users", name="hevinci_objective_group_users")
      * @EXT\Template("HeVinciCompetencyBundle:Objective:users.html.twig")
      *
-     * @param Objective $objective
      * @param Group     $group
      * @param Request   $request
      * @return array
      */
-    public function objectiveGroupUsersAction(Objective $objective, Group $group, Request $request)
+    public function groupUsersAction(Group $group, Request $request)
     {
         return [
-            'pager' => $this->manager->listUsersWithObjective($objective, $group, $request->query->get('page', 1)),
+            'pager' => $this->manager->listGroupUsers($group, $request->query->get('page', 1)),
             'isFilteredByObjective' => true,
             'isFilteredByGroup' => true
         ];
