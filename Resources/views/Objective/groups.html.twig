@@ -1,7 +1,9 @@
 {% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
 
+{% trans_default_domain 'competency' %}
+
 {% set activeTab = 'groups' %}
-{% set isFilteredByObjective = isFilteredByObjective is defined ? isFilteredByObjective : false %}
+{% set filterObjective = filterObjective is defined ? filterObjective : false %}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ 'groups'|trans({}, 'platform') }}
@@ -17,6 +19,16 @@
 {% endblock %}
 
 {% block tabContent %}
+    {% if filterObjective %}
+        <br>
+        <h4>
+            {{ 'objective.groups_with'|trans({'%objective%': filterObjective.getName()})|raw }}
+            <span class="clear-filter">
+                <a href="{{ path('hevinci_objectives_groups') }}">({{ 'objective.see_all_groups'|trans }})</a>
+            </span>
+        </h4>
+    {% endif %}
+
     {% if pager.getNbPages() > 1 %}
         {{ pagerfanta(pager, 'twitter_bootstrap_translated', { 'proximity': 1 }) }}
     {% endif %}
@@ -28,7 +40,7 @@
             <thead>
                 <tr>
                     <th>{{ 'group'|trans({}, 'platform') }}</th>
-                    <th>{{ 'framework_'|trans({}, 'competency') }}</th>
+                    <th>{{ 'framework_'|trans }}</th>
                     <th colspan="3">{{ 'actions'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
@@ -41,10 +53,10 @@
     {% else %}
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
-            {% if isFilteredByObjective %}
-                {{ 'info.no_objective_groups'|trans({}, 'competency') }}
+            {% if filterObjective %}
+                {{ 'info.no_objective_groups'|trans }}
             {% else %}
-                {{ 'info.no_group_objectives'|trans({}, 'competency') }}
+                {{ 'info.no_group_objectives'|trans }}
             {% endif %}
         </div>
     {% endif %}

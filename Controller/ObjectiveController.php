@@ -236,7 +236,7 @@ class ObjectiveController
     {
         return [
             'pager' => $this->manager->listUsersWithObjective($objective, $request->query->get('page', 1)),
-            'isFilteredByObjective' => true
+            'filterObjective' => $objective
         ];
     }
 
@@ -254,8 +254,7 @@ class ObjectiveController
     {
         return [
             'pager' => $this->manager->listGroupUsers($group, $request->query->get('page', 1)),
-            'isFilteredByObjective' => true,
-            'isFilteredByGroup' => true
+            'filterGroup' => $group
         ];
     }
 
@@ -286,7 +285,7 @@ class ObjectiveController
     {
         return [
             'pager' => $this->manager->listGroupsWithObjective($objective),
-            'isFilteredByObjective' => true
+            'filterObjective' => $objective
         ];
     }
 

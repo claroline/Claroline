@@ -1,8 +1,10 @@
 {% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
 
+{% trans_default_domain 'competency' %}
+
 {% set activeTab = 'users' %}
-{% set isFilteredByObjective = isFilteredByObjective is defined ? isFilteredByObjective : false %}
-{% set isFilteredByGroup = isFilteredByGroup is defined ? isFilteredByGroup : false %}
+{% set filterObjective = filterObjective is defined ? filterObjective : false %}
+{% set filterGroup = filterGroup is defined ? filterGroup : false %}
 
 {% block title %}
     {{ parent() ~ ' - ' ~ 'users'|trans({}, 'platform') }}
@@ -18,6 +20,20 @@
 {% endblock %}
 
 {% block tabContent %}
+    {% if filterObjective or filterGroup %}
+        <br>
+        <h4>
+            {{
+                filterObjective ?
+                    'objective.users_with'|trans({'%objective%': filterObjective.getName()})|raw :
+                    'objective.users_from_group'|trans({'%group%': filterGroup.getName()})|raw
+            }}
+            <span class="clear-filter">
+                <a href="{{ path('hevinci_objectives_users') }}">({{ 'objective.see_all_users'|trans }})</a>
+            </span>
+        </h4>
+    {% endif %}
+
     {% if pager.getNbPages() > 1 %}
         {{ pagerfanta(pager, 'twitter_bootstrap_translated', { 'proximity': 1 }) }}
     {% endif %}
@@ -29,10 +45,10 @@
             <thead>
                 <tr>
                     <th>{{ 'user'|trans({}, 'platform') }}</th>
-                    <th>{{ 'framework_'|trans({}, 'competency') }}</th>
-                    <th>{{ 'progress'|trans({}, 'competency') }}</th>
-                    <th>{{ 'level.obtained'|trans({}, 'competency') }}</th>
-                    <th>{{ 'level.expected'|trans({}, 'competency') }}</th>
+                    <th>{{ 'framework_'|trans }}</th>
+                    <th>{{ 'progress'|trans }}</th>
+                    <th>{{ 'level.obtained'|trans }}</th>
+                    <th>{{ 'level.expected'|trans }}</th>
                     <th colspan="3">{{ 'actions'|trans({}, 'platform') }}</th>
                 </tr>
             </thead>
@@ -54,14 +70,14 @@
     {% else %}
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
-            {% if isFilteredByObjective %}
-                {% if isFilteredByGroup %}
-                    {{ 'info.no_objective_group_users'|trans({}, 'competency') }}
+            {% if filterObjective %}
+                {% if filterGroup %}
+                    {{ 'info.no_objective_group_users'|trans }}
                 {% else %}
-                    {{ 'info.no_objective_users'|trans({}, 'competency') }}
+                    {{ 'info.no_objective_users'|trans }}
                 {% endif %}
             {% else %}
-                {{ 'info.no_user_objectives'|trans({}, 'competency') }}
+                {{ 'info.no_user_objectives'|trans }}
             {% endif %}
         </div>
     {% endif %}

@@ -179,3 +179,7 @@ td.competency-path ul {
 table div.progress {
     margin-bottom: inherit;
 }
+
+span.clear-filter {
+    font-size: 80%;
+}
