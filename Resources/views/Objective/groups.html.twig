@@ -22,7 +22,7 @@
     {% if filterObjective %}
         <br>
         <h4>
-            {{ 'objective.groups_with'|trans({'%objective%': filterObjective.getName()})|raw }}
+            {{ 'objective.groups_with'|trans({ '%objective%': filterObjective.getName()|em })|raw }}
             <span class="clear-filter">
                 <a href="{{ path('hevinci_objectives_groups') }}">({{ 'objective.see_all_groups'|trans }})</a>
             </span>

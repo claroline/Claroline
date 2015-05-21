@@ -1,0 +1,37 @@
+{% extends 'HeVinciCompetencyBundle:Objective:layout.html.twig' %}
+
+{% trans_default_domain 'competency' %}
+
+{% set activeTab = 'users' %}
+{% set name = user.getFirstName() ~ ' ' ~ user.getLastName() %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'objective.user_history'|trans ~ ' - ' ~ name ~ ' - ' ~ objective.getName() }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs(objectiveBreadcrumbs|merge([
+            {
+                name: 'users'|trans({}, 'platform'),
+                href: path('hevinci_objectives_users')
+            },
+            {
+                name: name ~ ' (' ~ 'objective.user_history'|trans ~ ')'
+            }
+        ]))
+    }}
+{% endblock %}
+
+{% block tabContent %}
+    <br>
+    <h4>
+        {{
+            'objective.user_objective_history'|trans({
+                '%user%': name|em,
+                '%objective%': objective.getName()|em
+            })|raw
+        }}
+    </h4>
+
+{% endblock %}

@@ -389,4 +389,20 @@ class ObjectiveController
     {
         return new JsonResponse($this->manager->loadSubjectObjectives($group));
     }
+
+    /**
+     * Displays the progress history of a user for a given objective.
+     *
+     * @EXT\Route("/{id}/users/{userId}/history", name="hevinci_user_objective_history")
+     * @EXT\ParamConverter("user", options={"id"="userId"})
+     * @EXT\Template
+     *
+     * @param Objective $objective
+     * @param User $user
+     * @return array
+     */
+    public function userObjectiveHistoryAction(Objective $objective, User $user)
+    {
+        return ['objective' => $objective, 'user' => $user];
+    }
 }

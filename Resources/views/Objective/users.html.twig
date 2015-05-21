@@ -25,8 +25,8 @@
         <h4>
             {{
                 filterObjective ?
-                    'objective.users_with'|trans({'%objective%': filterObjective.getName()})|raw :
-                    'objective.users_from_group'|trans({'%group%': filterGroup.getName()})|raw
+                    'objective.users_with'|trans({ '%objective%': filterObjective.getName()|em })|raw :
+                    'objective.users_from_group'|trans({ '%group%': filterGroup.getName()|em })|raw
             }}
             <span class="clear-filter">
                 <a href="{{ path('hevinci_objectives_users') }}">({{ 'objective.see_all_users'|trans }})</a>
@@ -71,11 +71,9 @@
         <div class="alert alert-info" role="alert">
             <i class="fa fa-info-circle"></i>
             {% if filterObjective %}
-                {% if filterGroup %}
-                    {{ 'info.no_objective_group_users'|trans }}
-                {% else %}
-                    {{ 'info.no_objective_users'|trans }}
-                {% endif %}
+                {{ 'info.no_objective_users'|trans }}
+            {% elseif filterGroup %}
+                {{ 'info.no_objective_group_users'|trans }}
             {% else %}
                 {{ 'info.no_user_objectives'|trans }}
             {% endif %}

@@ -15,20 +15,29 @@
             utils.toggleChildRows(this, false);
         } else {
             // defaults to type === 'user'
-            var route = 'hevinci_user_objectives';
+            var url = Routing.generate('hevinci_user_objectives', { id: id });
             var childType = 'objective';
             var indent = 1;
-            var userId = 0; // complementary data for objective type
+            var userId = id; // complementary data only needed for objectives
 
             if (type === 'objective') {
-                route = 'hevinci_load_user_objective_competencies';
+                userId = $('tr[data-type=user][data-id=' + row.dataset.path + ']').data('id');
+                url = Routing.generate('hevinci_load_user_objective_competencies', { id: id, userId: userId });
                 childType = 'competency';
                 indent = 2;
-                userId = $('tr[data-type=user][data-id=' + row.dataset.path + ']').data('id');
             }
 
-            $.get(Routing.generate(route, { id: id, userId: userId }))
+            $.get(url)
                 .done(function (data) {
+                    if (type === 'user') {
+                        // add the user id to the objectives data (needed for history route generation)
+                        data.map(function (objective) {
+                            objective.userId = userId;
+
+                            return objective;
+                        });
+                    }
+
                     utils.insertChildRows(row, data, childType, indent);
                     utils.toggleExpandLink(link, true);
                     row.dataset.isLoaded = true;

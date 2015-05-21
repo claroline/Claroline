@@ -72,12 +72,16 @@
         </a>
     </td>
     <td class="x-small-cell">
-        <a href="#"
-           data-toggle="tooltip"
-           data-placement="left"
-           title="{{ 'stats'|trans({}, 'competency') }}">
-            <i class="fa fa-bar-chart"></i>
-        </a>
+        {% if type == 'objective' %}
+            <a href="{{ path('hevinci_user_objective_history', { id: id, userId: userId }) }}"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'objective.user_history'|trans({}, 'competency') }}">
+                <i class="fa fa-bar-chart"></i>
+            </a>
+        {% else %}
+            -
+        {% endif %}
     </td>
     <td class="x-small-cell">
         {% if type == 'objective' %}
