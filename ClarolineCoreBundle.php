@@ -71,7 +71,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
             'JMS\SerializerBundle\JMSSerializerBundle',
-            'Innova\AngularJSBundle\InnovaAngularJSBundle',
         );
         // simple container configuration, same for every environment
         $simpleConfigs = array(
