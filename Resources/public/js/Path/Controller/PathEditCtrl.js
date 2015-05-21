@@ -12,17 +12,20 @@ var PathEditCtrl = function PathEditCtrl($route, PathService, HistoryService, Cl
 
     this.historyDisabled = HistoryService.getDisabled();
 
-    // listen to path changes to update history
-    $scope.$watch('path', function (newValue) {
-        console.log('test');
-        var empty   = this.historyService.isEmpty();
-        var updated = this.historyService.update(newValue);
+    $scope.$watch(
+        function () {
+            return this.path;
+        }.bind(this),
+        function (newValue) {
+            var empty   = this.historyService.isEmpty();
+            var updated = this.historyService.update(newValue);
 
-        if (!empty && updated) {
-            // Initialization is already done, so mark path as unsaved for each modification
-            this.unsaved = true;
-        }
-    }.bind(this), true);
+            if (!empty && updated) {
+                // Initialization is already done, so mark path as unsaved for each modification
+                this.unsaved = true;
+            }
+        }.bind(this)
+    , true);
 
     return this;
 };
