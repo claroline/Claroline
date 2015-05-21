@@ -88,7 +88,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['allow_self_registration']),
-                    'self_registration'
+                    'label' => 'self_registration'
                 )
             )
             ->add(
@@ -116,7 +116,7 @@ class GeneralType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->langs,
-                    'disabled' => isset($this->lockedParams['locale_language']);
+                    'disabled' => isset($this->lockedParams['locale_language']),
                     'label' => 'default_language'
                 )
             )
