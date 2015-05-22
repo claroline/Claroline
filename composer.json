@@ -1,7 +1,7 @@
 {
     "name": "icap/lesson-bundle",
-    "description": "Claroline wiki plugin from ICAP",
-    "keywords": ["Claroline", "Plugin", "Wiki", "ICAP"],
+    "description": "Claroline lesson plugin from ICAP",
+    "keywords": ["Claroline", "Plugin", "Lesson", "ICAP"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "",
@@ -13,7 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "claroline/core-bundle": "~4.0"
+        "claroline/core-bundle": "~5.0",
+        "icap/notification-bundle": "dev-dev-5.0"
     },
     "autoload": {
         "psr-0": { "Icap\\LessonBundle": "" }
