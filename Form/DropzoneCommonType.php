@@ -105,9 +105,10 @@ class DropzoneCommonType extends AbstractType
     {
         $resolver->setDefaults(
             array(
+                'data_class' => 'Icap\DropzoneBundle\Entity\Dropzone',
                 'language' => 'en',
                 'translation_domain' => 'icap_dropzone',
-                'date_format'     => DateType::HTML5_FORMAT,
+                'date_format' => DateType::HTML5_FORMAT,
             )
         );
     }
