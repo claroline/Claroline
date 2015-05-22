@@ -8,6 +8,9 @@
         'ui.resourcePicker',
         'UtilsModule',
         'FormModule',
-        'ResourceModule'
+        'PathModule',
+        'ResourceModule',
+        'ResourcePrimaryModule',
+        'ResourceSecondaryModule'
     ]);
 })();

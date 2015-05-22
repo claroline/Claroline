@@ -13,3 +13,20 @@ var PathShowCtrl = function PathShowCtrl($route, PathService) {
 // Extends the base controller
 PathShowCtrl.prototype = PathBaseCtrl.prototype;
 PathShowCtrl.prototype.constructor = PathShowCtrl;
+
+/**
+ * Is current User allowed to Edit the Path
+ * @type {boolean}
+ */
+PathShowCtrl.prototype.editEnabled = false;
+
+/**
+ * Open Path editor
+ */
+PathShowCtrl.prototype.edit = function () {
+    var url = Routing.generate('innova_path_editor_wizard', {
+        id: this.id
+    });
+
+    window.open(url, '_blank');
+};

@@ -49,7 +49,7 @@
                             </li>
 
                             <!-- Publish button -->
-                            <li data-ng-class="{ 'disabled': pathEditCtrl.published && !pathFormCtrl.modified }">
+                            <li data-ng-class="{ 'disabled': pathEditCtrl.published && !pathEditCtrl.modified }">
                                 <a href="" data-ng-click="pathEditCtrl.publish()">
                                     <span class="fa fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
                                 </a>

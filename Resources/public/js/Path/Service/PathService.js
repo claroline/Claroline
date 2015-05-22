@@ -28,18 +28,34 @@
             var maxDepth = 8;
 
             return {
+                /**
+                 * Get ID of the current Path
+                 * @returns {Number}
+                 */
                 getId: function () {
                     return id;
                 },
 
+                /**
+                 * Set ID of the current Path
+                 * @param value
+                 */
                 setId: function (value) {
                     id = value;
                 },
 
+                /**
+                 * Get current Path
+                 * @returns {Object}
+                 */
                 getPath: function () {
                     return path;
                 },
 
+                /**
+                 * Set current Path
+                 * @param value
+                 */
                 setPath: function (value) {
                     path = value;
                 },
@@ -146,6 +162,10 @@
                     return deferred.promise;
                 },
 
+                /**
+                 * Display the step
+                 * @param step
+                 */
                 goTo: function goTo(step) {
                     // Ugly as fuck, but can't make it work without timeout
                     $timeout(function(){
@@ -155,6 +175,28 @@
                             $location.path('/');
                         }
                     }, 1);
+                },
+
+                /**
+                 * Get the previous step
+                 * @param step
+                 * @returns {Object|Step}
+                 */
+                getPrevious: function (step) {
+                    var previous = null;
+
+                    return previous;
+                },
+
+                /**
+                 * Get the next step
+                 * @param step
+                 * @returns {Object|Step}
+                 */
+                getNext: function getNext(step) {
+                    var next = null;
+
+                    return next;
                 },
 
                 /**

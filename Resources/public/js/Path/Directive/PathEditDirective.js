@@ -14,10 +14,10 @@
                 controllerAs: 'pathEditCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Path/Partial/edit.html',
                 scope: {
-                    id          : '@', // ID of the path
-                    path        : '=', // Data of the path
-                    modified    : '@', // Is Path have pending modifications ?
-                    published   : '@'  // Is path published ?
+                    id        : '@', // ID of the path
+                    path      : '=', // Data of the path
+                    modified  : '@', // Is Path have pending modifications ?
+                    published : '@'  // Is path published ?
                 },
                 bindToController: true
             };

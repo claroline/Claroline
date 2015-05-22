@@ -12,6 +12,7 @@ var PathEditCtrl = function PathEditCtrl($route, PathService, HistoryService, Cl
 
     this.historyDisabled = HistoryService.getDisabled();
 
+    // listen to path changes to update history
     $scope.$watch(
         function () {
             return this.path;
@@ -106,7 +107,6 @@ PathEditCtrl.prototype.publish = function () {
 PathEditCtrl.prototype.preview = function () {
     if (this.published) {
         // Path needs to be published at least once to be previewed
-
         var url = Routing.generate('innova_path_player_wizard', {
             id: this.id
         });

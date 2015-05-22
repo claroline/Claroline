@@ -11,6 +11,7 @@ discard_changes: Discard changes
 draft: Not published
 
 # e
+edit: Edit path
 editor: Path editor
 
 # m
@@ -18,6 +19,7 @@ modified: with pending changes
 
 # n
 name_help: Enter the name of the path
+next_step: Next step
 no: Non
 no_primary_resource: There is no primary resource on this step.
 no_secondary_resources: There is no secondary resources on this step.
@@ -41,6 +43,7 @@ preview: Preview
 preview_with_pending_changes_button: Preview the last published version
 preview_with_pending_changes_message: Path has changes which are not published or not saved.<br/><br/> If you display it without saving/publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
 preview_with_pending_changes_title: Pending modifications
+previous_step: Previous step
 primary_resource: Primary resource
 properties: Properties
 publish: Publish

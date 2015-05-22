@@ -70,8 +70,9 @@ class PlayerController
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
-            '_resource' => $path,
+            '_resource'     => $path,
             'resourceIcons' => $resourceIcons,
+            'editEnabled'   => $this->pathManager->isAllow('EDIT', $path),
         );
     }
 }

@@ -11,6 +11,7 @@ discard_changes: Annuler les modifications
 draft: Non publié
 
 # e
+edit: Modifier le Parcours
 editor: Editeur de Parcours
 
 # m
@@ -18,6 +19,7 @@ modified: avec des modifications en attente
 
 # n
 name_help: Saisir le nom du parcours
+next_step: Etape suivante
 no: Non
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
 no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
@@ -41,6 +43,7 @@ preview: Prévisualiser
 preview_with_pending_changes_button: Prévisualiser la dernière version publiée
 preview_with_pending_changes_message: Le Parcours a des modifications non sauvegardées ou non publiées.<br/><br/> Si vous le visualisez sans sauvegarde/publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
 preview_with_pending_changes_title: Modifications non publiées/sauvegardées
+previous_step: Etape précédente
 primary_resource: Ressource principale
 properties: Propriétés
 publish: Publier

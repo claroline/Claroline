@@ -3,7 +3,7 @@
  * @returns {StepShowCtrl}
  * @constructor
  */
-var StepShowCtrl = function StepShowCtrl(step, inheritedResources) {
+var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService) {
     StepBaseCtrl.apply(this, arguments);
 
     return this;

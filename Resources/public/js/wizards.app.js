@@ -19,6 +19,7 @@
         'ConfirmModule',
         'HistoryModule',
         'PathSummaryModule',
+        'PathBreadcrumbsModule',
         'PathModule',
         'StepModule',
         'TemplateModule'

@@ -13,6 +13,6 @@
         {{ step.name | truncate }}
     </div>
 </div>
-<ol class="step-children border-lvl-{{ step.lvl }}"data-ng-hide="collapsed">
+<ol class="step-children lvl lvl-{{ step.lvl }}-border"data-ng-hide="collapsed">
     <li data-ng-repeat="step in step.children" data-ng-include="pathSummaryShowCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/show-item.html'"></li>
 </ol>

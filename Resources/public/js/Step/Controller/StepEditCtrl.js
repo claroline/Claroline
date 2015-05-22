@@ -3,7 +3,7 @@
  * @returns {StepEditCtrl}
  * @constructor
  */
-var StepEditCtrl = function StepEditCtrl(step, inheritedResources, $scope, StepService) {
+var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, $scope, StepService) {
     StepBaseCtrl.apply(this, arguments);
 
     this.scope       = $scope;
