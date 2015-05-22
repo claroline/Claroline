@@ -57,6 +57,32 @@
         userPicker.open();
     });
     
+    $('#all-visible-users-content-body').on('click', 'a', function (event) {
+        event.preventDefault();
+        var element = event.currentTarget;
+        var route = $(element).attr('href');
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                $('#all-visible-users-content-body').html(datas);
+            }
+        });
+    });
+
+    $('#all-visible-users-content-body').on('change', '#max-select', function() {
+        var max = $(this).val();
+
+        $.ajax({
+            url: Routing.generate('claro_contact_show_all_visible_users', {'max': max}),
+            type: 'GET',
+            success: function (datas) {
+                $('#all-visible-users-content-body').html(datas);
+            }
+        });
+    });
+    
     var refreshPage = function () {
         window.location.reload();
     };

@@ -59,6 +59,15 @@ class ContactOptionsType extends AbstractType
             )
         );
         $builder->add(
+            'showPicture',
+            'checkbox',
+            array(
+                'mapped' => false,
+                'label' => 'show_picture',
+                'data' => $showPicture
+            )
+        );
+        $builder->add(
             'showUsername',
             'checkbox',
             array(
@@ -83,15 +92,6 @@ class ContactOptionsType extends AbstractType
                 'mapped' => false,
                 'label' => 'show_phone',
                 'data' => $showPhone
-            )
-        );
-        $builder->add(
-            'showPicture',
-            'checkbox',
-            array(
-                'mapped' => false,
-                'label' => 'show_picture',
-                'data' => $showPicture
             )
         );
     }

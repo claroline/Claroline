@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Form\ContactCategoryType;
 use Claroline\CoreBundle\Form\ContactOptionsType;
 use Claroline\CoreBundle\Manager\ContactManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,23 +30,27 @@ class ContactController extends Controller
     private $contactManager;
     private $formFactory;
     private $request;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
      *     "contactManager" = @DI\Inject("claroline.manager.contact_manager"),
      *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "requestStack"   = @DI\Inject("request_stack")
+     *     "requestStack"   = @DI\Inject("request_stack"),
+     *     "userManager"    = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
         ContactManager $contactManager,
         FormFactory $formFactory,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        UserManager $userManager
     )
     {
         $this->contactManager = $contactManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
+        $this->userManager = $userManager;
     }
 
     /**
@@ -66,14 +71,18 @@ class ContactController extends Controller
             'ASC'
         );
         $contacts = $this->contactManager->getUserContacts($authenticatedUser);
-        $users = array();
-
-        return array(
+        $params = array(
             'options' => $options,
             'categories' => $categories,
-            'contacts' => $contacts,
-            'users' => $users
+            'contacts' => $contacts
         );
+
+        if (!isset($options['show_all_visible_users']) || $options['show_all_visible_users']) {
+            $users = $this->userManager->getUsersForUserPicker($authenticatedUser);
+            $params['users'] = $users;
+        }
+
+        return $params;
     }
 
     /**
@@ -241,6 +250,47 @@ class ContactController extends Controller
         $this->contactManager->deleteCategory($category);
 
         return new JsonResponse('success', 200);
+    }
+
+
+    /**
+     * @EXT\Route(
+     *     "/show/all/visible/users/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
+     *     name="claro_contact_show_all_visible_users",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function showAllVisibleUsersAction(
+        User $authenticatedUser,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
+        $users = $this->userManager->getUsersForUserPicker(
+            $authenticatedUser,
+            '',
+            false,
+            true,
+            false,
+            false,
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
+
+        return array(
+            'options' => $options,
+            'users' => $users,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
     }
 
     private function checkUserAccessForCategory(Category $category, User $user)
