@@ -1,5 +1,47 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
+{% macro renderAllVisibleUsersPager(pager, max, orderedBy, order) %}
+{{
+    pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+            'proximity' : 1,
+            'routeName': 'claro_contact_show_all_visible_users',
+            'routeParams': {
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': order
+            }
+        }
+    )
+}}
+{% endmacro %}
+
+{% macro sortAllVisibleUsersUrl(max, orderedBy, order) %}
+{% if order == 'ASC' %}
+    {% set newOrder = 'DESC' %}
+{% else %}
+    {% set newOrder = 'ASC' %}
+{% endif %}
+
+{{
+    path(
+        'claro_contact_show_all_visible_users',
+        {
+            'max': max,
+            'orderedBy': orderedBy,
+            'order': newOrder
+        }
+    )
+}}
+{% endmacro %}
+
+{% from _self import renderAllVisibleUsersPager %}
+{% from _self import sortAllVisibleUsersUrl %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+
+
 {% block title %}
     {{ 'my_contacts' | trans({}, 'tools') | striptags | raw }}
 {% endblock %}
@@ -149,14 +191,101 @@
                         </div>
                         <div id="all-visible-users-content" class="panel-collapse collapse">
                             <div class="panel-body" id="all-visible-users-content-body">
-                                {{ 
-                                    render(
-                                        controller(
-                                            'ClarolineCoreBundle:Contact:showAllVisibleUsers',
-                                            {}
-                                        )
-                                    ) 
-                                }}
+                                
+                                {% if users|length > 0 %}
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group margin-bottom-md pull-left">
+                                                {% if users.getNbPages() > 1 %}
+                                                    {{ renderAllVisibleUsersPager(users, max, orderedBy, order) }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group pull-right" style="margin: 20px 0">
+                                                {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'users_per_page') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                    <th>{{ 'picture'|trans({}, 'platform') }}</th>
+                                                {% endif %}
+                                                <th>
+                                                    <a href="{{ sortAllVisibleUsersUrl(max, 'firstName', order)|trim }}">
+                                                        {{ 'firstName'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="{{ sortAllVisibleUsersUrl(max, 'lastName', order)|trim }}">
+                                                        {{ 'lastName'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+
+                                                {% if options['show_username'] is not defined or options['show_username'] %}
+                                                    <th>
+                                                        <a href="{{ sortAllVisibleUsersUrl(max, 'username', order)|trim }}">
+                                                            {{ 'username'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+
+                                                {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                    <th>
+                                                        <a href="{{ sortAllVisibleUsersUrl(max, 'mail', order)|trim }}">
+                                                            {{ 'mail'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+
+                                                {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                    <th>
+                                                        <a href="{{ sortAllVisibleUsersUrl(max, 'phone', order)|trim }}">
+                                                            {{ 'phone'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+                                            </tr>
+
+                                            {% for user in users %}
+                                                <tr>
+                                                    {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                        <td>
+
+                                                        </td>
+                                                    {% endif %}
+                                                    <td>{{ user.getFirstName() }}</td>
+                                                    <td>{{ user.getLastName() }}</td>
+
+                                                    {% if options['show_username'] is not defined or options['show_username'] %}
+                                                        <td>{{ user.getUsername() }}</td>
+                                                    {% endif %}
+
+                                                    {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                        <td>{{ user.getMail() }}</td>
+                                                    {% endif %}
+
+                                                    {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                        <td>{{ user.getPhone() }}</td>
+                                                    {% endif %}
+
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+
+                                    {% if users.getNbPages() > 1 %}
+                                        {{ renderAllVisibleUsersPager(users, max, orderedBy, order) }}
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-warning">
+                                        {{ 'no_user'|trans({}, 'platform') }}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

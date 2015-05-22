@@ -74,7 +74,10 @@ class ContactController extends Controller
         $params = array(
             'options' => $options,
             'categories' => $categories,
-            'contacts' => $contacts
+            'contacts' => $contacts,
+            'max' => 50,
+            'orderedBy' => 'lastName',
+            'order' => 'ASC'
         );
 
         if (!isset($options['show_all_visible_users']) || $options['show_all_visible_users']) {
