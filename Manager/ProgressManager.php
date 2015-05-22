@@ -139,6 +139,18 @@ class ProgressManager
         $this->om->flush();
     }
 
+    /**
+     * Returns user evaluation data for a given leaf competency.
+     *
+     * @param Competency $competency
+     * @param User $user
+     * @return mixed
+     */
+    public function listLeafCompetencyLogs(Competency $competency, User $user)
+    {
+        return $this->abilityRepo->findEvaluationsByCompetency($competency, $user);
+    }
+
     private function clearCache()
     {
         $this->cachedCompetencyProgresses = [];

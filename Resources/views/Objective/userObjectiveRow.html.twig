@@ -1,5 +1,6 @@
 {% twig_js name = 'UserObjectiveRow' %}
 
+{% set originalId = originalId is defined ? originalId : id %}
 {% set type = type is defined ? type : 'user' %}
 {% set path = path is defined ? path : '' %}
 {% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
@@ -72,8 +73,11 @@
         </a>
     </td>
     <td class="x-small-cell">
-        {% if type == 'objective' %}
-            <a href="{{ path('hevinci_user_objective_history', { id: id, userId: userId }) }}"
+        {% if type == 'competency' and not hasCompetencies %}
+            <a href="#"
+               class="history"
+               data-competency-id="{{ originalId }}"
+               data-user-id="{{ userId }}"
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'objective.user_history'|trans({}, 'competency') }}">
@@ -111,6 +115,7 @@
                 type: 'competency',
                 indent: indent + 1,
                 collapsed: true,
+                originalId: competency.originalId is defined ? competency.originalId : competency.id,
                 hasCompetencies: competency.__children is defined and competency.__children|length > 0,
                 __children: competency.__children is defined ? competency.__children : [],
                 __abilities: competency.__abilities is defined ? competency.__abilities : []

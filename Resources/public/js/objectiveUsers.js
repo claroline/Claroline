@@ -10,31 +10,34 @@
         var row = link.parentNode.parentNode;
         var id = row.dataset.id;
         var type = row.dataset.type;
+        var childType, indent, url, userId;
 
         if (row.dataset.isLoaded || type === 'competency' || type === 'ability') {
             utils.toggleChildRows(this, false);
         } else {
-            // defaults to type === 'user'
-            var url = Routing.generate('hevinci_user_objectives', { id: id });
-            var childType = 'objective';
-            var indent = 1;
-            var userId = id; // complementary data only needed for objectives
-
-            if (type === 'objective') {
-                userId = $('tr[data-type=user][data-id=' + row.dataset.path + ']').data('id');
-                url = Routing.generate('hevinci_load_user_objective_competencies', { id: id, userId: userId });
+            if (type === 'user') {
+                childType = 'objective';
+                indent = 1;
+                userId = id; // not really needed for this type
+                url = Routing.generate('hevinci_user_objectives', { id: id });
+            } else if (type === 'objective') {
                 childType = 'competency';
                 indent = 2;
+                userId = row.dataset.path.match(/^(\d+).*$/)[1];
+                url = Routing.generate('hevinci_load_user_objective_competencies', {
+                    id: id,
+                    userId: userId
+                });
             }
 
             $.get(url)
                 .done(function (data) {
-                    if (type === 'user') {
-                        // add the user id to the objectives data (needed for history route generation)
-                        data.map(function (objective) {
-                            objective.userId = userId;
+                    if (type === 'objective') {
+                        // add the user id to the competencies data (needed for history route generation)
+                        data.map(function (competency) {
+                            competency.userId = userId;
 
-                            return objective;
+                            return competency;
                         });
                     }
 
@@ -63,5 +66,14 @@
     $(document).on('click', 'table.user-objectives a.remove', function (event) {
         event.preventDefault();
         utils.removeSubjectObjectiveRow(this, 'user');
+    });
+
+    // see user history
+    $(document).on('click', 'table.user-objectives a.history:not(.disabled)', function (event) {
+        event.preventDefault();
+        Claroline.Modal.fromUrl(Routing.generate('hevinci_competency_user_history', {
+            id: this.dataset.competencyId,
+            userId: this.dataset.userId
+        }));
     });
 })();

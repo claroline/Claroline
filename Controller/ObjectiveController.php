@@ -10,6 +10,7 @@ use HeVinci\CompetencyBundle\Entity\Objective;
 use HeVinci\CompetencyBundle\Entity\ObjectiveCompetency;
 use HeVinci\CompetencyBundle\Form\Handler\FormHandler;
 use HeVinci\CompetencyBundle\Manager\ObjectiveManager;
+use HeVinci\CompetencyBundle\Manager\ProgressManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -19,27 +20,39 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('learning-objectives')")
- * @EXT\Route("/objectives", requirements={"id"="\d+"}, options={"expose"=true})
+ * @EXT\Route(
+ *     "/objectives",
+ *     requirements={"id"="\d+", "userId"="\d+", "groupId"="\d+"},
+ *     options={"expose"=true}
+ * )
  * @EXT\Method("GET")
  */
 class ObjectiveController
 {
     private $formHandler;
-    private $manager;
+    private $objectiveManager;
+    private $progressManager;
 
     /**
      * @DI\InjectParams({
-     *     "handler" = @DI\Inject("hevinci.form.handler"),
-     *     "manager" = @DI\Inject("hevinci.competency.objective_manager"),
+     *     "handler"            = @DI\Inject("hevinci.form.handler"),
+     *     "objectiveManager"   = @DI\Inject("hevinci.competency.objective_manager"),
+     *     "progressManager"    = @DI\Inject("hevinci.competency.progress_manager"),
      * })
      *
      * @param FormHandler       $handler
-     * @param ObjectiveManager  $manager
+     * @param ObjectiveManager  $objectiveManager
+     * @param ProgressManager   $progressManager
      */
-    public function __construct(FormHandler $handler, ObjectiveManager $manager)
+    public function __construct(
+        FormHandler $handler,
+        ObjectiveManager $objectiveManager,
+        ProgressManager $progressManager
+    )
     {
         $this->formHandler = $handler;
-        $this->manager = $manager;
+        $this->objectiveManager = $objectiveManager;
+        $this->progressManager = $progressManager;
     }
 
     /**
@@ -53,7 +66,7 @@ class ObjectiveController
      */
     public function objectivesAction()
     {
-        return ['objectives' => $this->manager->listObjectives()];
+        return ['objectives' => $this->objectiveManager->listObjectives()];
     }
 
     /**
@@ -83,7 +96,7 @@ class ObjectiveController
     {
         if ($this->formHandler->isValid('hevinci_form_objective', $request)) {
             return new JsonResponse(
-                $this->manager->persistObjective($this->formHandler->getData())
+                $this->objectiveManager->persistObjective($this->formHandler->getData())
             );
         }
 
@@ -100,7 +113,7 @@ class ObjectiveController
      */
     public function deleteObjectiveAction(Objective $objective)
     {
-        return new JsonResponse($this->manager->deleteObjective($objective));
+        return new JsonResponse($this->objectiveManager->deleteObjective($objective));
     }
 
     /**
@@ -135,7 +148,7 @@ class ObjectiveController
     {
         if ($this->formHandler->isValid('hevinci_form_objective', $request, $objective)) {
             return new JsonResponse(
-                $this->manager->persistObjective($this->formHandler->getData())
+                $this->objectiveManager->persistObjective($this->formHandler->getData())
             );
         }
 
@@ -162,7 +175,7 @@ class ObjectiveController
     public function linkCompetencyAction(Objective $objective, Competency $competency, Level $level)
     {
         return new JsonResponse(
-            $result = $this->manager->linkCompetency($objective, $competency, $level),
+            $result = $this->objectiveManager->linkCompetency($objective, $competency, $level),
             $result ? 200 : 204
         );
     }
@@ -177,7 +190,7 @@ class ObjectiveController
      */
     public function deleteCompetencyLinkAction(ObjectiveCompetency $link)
     {
-        return new JsonResponse($this->manager->deleteCompetencyLink($link));
+        return new JsonResponse($this->objectiveManager->deleteCompetencyLink($link));
     }
 
     /**
@@ -190,7 +203,7 @@ class ObjectiveController
      */
     public function objectiveCompetenciesAction(Objective $objective)
     {
-        return new JsonResponse($this->manager->loadObjectiveCompetencies($objective));
+        return new JsonResponse($this->objectiveManager->loadObjectiveCompetencies($objective));
     }
 
     /**
@@ -205,7 +218,7 @@ class ObjectiveController
      */
     public function userObjectiveCompetenciesAction(Objective $objective, User $user)
     {
-        return new JsonResponse($this->manager->loadUserObjectiveCompetencies($objective, $user));
+        return new JsonResponse($this->objectiveManager->loadUserObjectiveCompetencies($objective, $user));
     }
 
     /**
@@ -219,7 +232,7 @@ class ObjectiveController
      */
     public function usersAction(Request $request)
     {
-        return ['pager' => $this->manager->listUsersWithObjective(null, $request->query->get('page', 1))];
+        return ['pager' => $this->objectiveManager->listUsersWithObjective(null, $request->query->get('page', 1))];
     }
 
     /**
@@ -235,7 +248,7 @@ class ObjectiveController
     public function objectiveUsersAction(Objective $objective, Request $request)
     {
         return [
-            'pager' => $this->manager->listUsersWithObjective($objective, $request->query->get('page', 1)),
+            'pager' => $this->objectiveManager->listUsersWithObjective($objective, $request->query->get('page', 1)),
             'filterObjective' => $objective
         ];
     }
@@ -253,7 +266,7 @@ class ObjectiveController
     public function groupUsersAction(Group $group, Request $request)
     {
         return [
-            'pager' => $this->manager->listGroupUsers($group, $request->query->get('page', 1)),
+            'pager' => $this->objectiveManager->listGroupUsers($group, $request->query->get('page', 1)),
             'filterGroup' => $group
         ];
     }
@@ -269,7 +282,7 @@ class ObjectiveController
      */
     public function groupsAction(Request $request)
     {
-        return ['pager' => $this->manager->listGroupsWithObjective(null, $request->query->get('page', 1))];
+        return ['pager' => $this->objectiveManager->listGroupsWithObjective(null, $request->query->get('page', 1))];
     }
 
     /**
@@ -284,7 +297,7 @@ class ObjectiveController
     public function objectiveGroupsAction(Objective $objective)
     {
         return [
-            'pager' => $this->manager->listGroupsWithObjective($objective),
+            'pager' => $this->objectiveManager->listGroupsWithObjective($objective),
             'filterObjective' => $objective
         ];
     }
@@ -304,7 +317,7 @@ class ObjectiveController
     public function assignObjectiveToUserAction(Objective $objective, User $user)
     {
         return new JsonResponse(
-            $isAssigned = $this->manager->assignObjective($objective, $user),
+            $isAssigned = $this->objectiveManager->assignObjective($objective, $user),
             $isAssigned ? 200 : 204
         );
     }
@@ -324,7 +337,7 @@ class ObjectiveController
     public function assignObjectiveToGroupAction(Objective $objective, Group $group)
     {
         return new JsonResponse(
-            $isAssigned = $this->manager->assignObjective($objective, $group),
+            $isAssigned = $this->objectiveManager->assignObjective($objective, $group),
             $isAssigned ? 200 : 204
         );
     }
@@ -339,7 +352,7 @@ class ObjectiveController
      */
     public function loadUserObjectivesAction(User $user)
     {
-        return new JsonResponse($this->manager->loadSubjectObjectives($user));
+        return new JsonResponse($this->objectiveManager->loadSubjectObjectives($user));
     }
 
     /**
@@ -356,7 +369,7 @@ class ObjectiveController
     public function removeUserObjectiveAction(Objective $objective, User $user)
     {
         return new JsonResponse(
-            $result = $this->manager->removeUserObjective($objective, $user),
+            $result = $this->objectiveManager->removeUserObjective($objective, $user),
             $result === false ? 204 : 200
         );
     }
@@ -374,7 +387,7 @@ class ObjectiveController
      */
     public function removeGroupObjectiveAction(Objective $objective, Group $group)
     {
-        return new JsonResponse($this->manager->removeGroupObjective($objective, $group));
+        return new JsonResponse($this->objectiveManager->removeGroupObjective($objective, $group));
     }
 
     /**
@@ -387,22 +400,30 @@ class ObjectiveController
      */
     public function loadGroupObjectivesAction(Group $group)
     {
-        return new JsonResponse($this->manager->loadSubjectObjectives($group));
+        return new JsonResponse($this->objectiveManager->loadSubjectObjectives($group));
     }
 
     /**
-     * Displays the progress history of a user for a given objective.
+     * Displays the progress history of a user for a given competency.
      *
-     * @EXT\Route("/{id}/users/{userId}/history", name="hevinci_user_objective_history")
+     * Note: this method belongs to this controller (and not the competency
+     *       controller) because it is called from the learning objective tool
+     *       and must follow its security policy.
+     *
+     * @EXT\Route("/users/{userId}/competencies/{id}/history", name="hevinci_competency_user_history")
      * @EXT\ParamConverter("user", options={"id"="userId"})
      * @EXT\Template
      *
-     * @param Objective $objective
-     * @param User $user
+     * @param Competency    $competency
+     * @param User          $user
      * @return array
      */
-    public function userObjectiveHistoryAction(Objective $objective, User $user)
+    public function competencyUserHistoryAction(Competency $competency, User $user)
     {
-        return ['objective' => $objective, 'user' => $user];
+        return [
+            'competency' => $competency,
+            'user' => $user,
+            'logs' => $this->progressManager->listLeafCompetencyLogs($competency, $user)
+        ];
     }
 }

@@ -156,9 +156,22 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         return $activity;
     }
 
-    protected function persistEvaluation(Activity $activity, User $user, $status, Evaluation $previous = null)
+    protected function persistEvaluation(
+        Activity $activity,
+        User $user,
+        $status,
+        Evaluation $previous = null,
+        ActivityParameters $parameters = null
+    )
     {
-        $params = $previous ? $previous->getActivityParameters() : new ActivityParameters();
+        $params = $parameters ?
+            $parameters :
+            (
+                $previous ?
+                    $previous->getActivityParameters() :
+                    new ActivityParameters()
+            );
+
         $params->setActivity($activity);
 
         if ($previous) {

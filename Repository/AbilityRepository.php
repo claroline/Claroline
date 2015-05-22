@@ -3,6 +3,7 @@
 namespace HeVinci\CompetencyBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use HeVinci\CompetencyBundle\Entity\Competency;
 
@@ -116,5 +117,67 @@ class AbilityRepository extends EntityRepository
             ->setParameter(':activity', $activity)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Returns an array representation of activity evaluation data for
+     * a given user and a given competency, including information about
+     * the activity and the related abilities.
+     *
+     * @param Competency    $competency
+     * @param User          $user
+     * @return array
+     * @throws \Exception
+     */
+    public function findEvaluationsByCompetency(Competency $competency, User $user)
+    {
+        if ($competency->getRight() - $competency->getLeft() > 1) {
+            throw new \Exception('Expected leaf competency ' .  $competency->getName()  . ' ' . $competency->getLeft() . ' ' . $competency->getRight());
+        }
+
+        $activityQb = $this->createQueryBuilder('a1')
+            ->select('ac1.id')
+            ->join('a1.activities', 'ac1')
+            ->join('a1.competencyAbilities', 'ca')
+            ->where('ca.competency = :competency');
+
+        return $this->_em->createQueryBuilder()
+            ->select(
+                'e.id AS evaluationId',
+                'e.status',
+                'e.date',
+                'ac.id AS activityId',
+                'n.name AS activityName',
+                'a.id AS abilityId',
+                'a.name AS abilityName',
+                'l.name AS levelName'
+            )
+            ->from('Claroline\CoreBundle\Entity\Activity\Evaluation', 'e')
+            ->join('e.user', 'u')
+            ->join('e.activityParameters', 'ap')
+            ->join('ap.activity', 'ac')
+            ->join('ac.resourceNode', 'n')
+            ->join(
+                'HeVinci\CompetencyBundle\Entity\Ability',
+                'a',
+                'WITH',
+                'ac IN (SELECT ac2 FROM HeVinci\CompetencyBundle\Entity\Ability a2 JOIN a2.activities ac2 WHERE a2 = a)'
+            )
+            ->join('a.competencyAbilities', 'ca2')
+            ->join('ca2.level', 'l')
+            ->join('ca2.competency', 'c2')
+            ->where('c2 = :competency')
+            ->where($activityQb->expr()->in(
+                'ac',
+                $activityQb->getQuery()->getDQL()
+            ))
+            ->andWhere('u = :user')
+            ->orderBy('e.date', 'ASC')
+            ->setParameters([
+                ':competency' => $competency,
+                ':user' => $user
+            ])
+            ->getQuery()
+            ->getArrayResult();
     }
 }
