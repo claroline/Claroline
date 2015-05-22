@@ -1,0 +1,12 @@
+{% extends 'ClarolineCoreBundle::form_theme.html.twig' %}
+
+{% block resourcePicker_widget %}
+    {% spaceless %}
+        {{ block('form_widget') }}
+        {% javascripts debug=false filter='jsmin' output='js/claroline/resourceinput.js'
+            'bundles/clarolinecore/js/resourceinput.js'
+        %}
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endspaceless %}
+{% endblock %}
