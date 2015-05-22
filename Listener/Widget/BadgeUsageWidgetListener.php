@@ -4,11 +4,11 @@ namespace Icap\BadgeBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\BadgeBundle\Manager\BadgeManager;
 use Icap\BadgeBundle\Manager\BadgeWidgetManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -37,19 +37,30 @@ class BadgeUsageWidgetListener
     private $badgeWidgetManager;
 
     /**
+     * @var string
+     */
+    private $platformName;
+
+    /**
      * @DI\InjectParams({
      *     "templating"         = @DI\Inject("templating"),
      *     "badgeUsageForm"     = @DI\Inject("icap_badge.widget.form.badge_usage"),
      *     "badgeManager"       = @DI\Inject("icap_badge.manager.badge"),
-     *     "badgeWidgetManager" = @DI\Inject("icap_badge.manager.badge_widget")
+     *     "badgeWidgetManager" = @DI\Inject("icap_badge.manager.badge_widget"),
+     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
      * })
      */
-    public function __construct(TwigEngine $templating, FormInterface $badgeUsageForm, BadgeManager $badgeManager, BadgeWidgetManager $badgeWidgetManager)
+    public function __construct(TwigEngine $templating, FormInterface $badgeUsageForm, BadgeManager $badgeManager,
+        BadgeWidgetManager $badgeWidgetManager, PlatformConfigurationHandler $configHandler)
     {
         $this->templating         = $templating;
         $this->badgeUsageForm     = $badgeUsageForm;
         $this->badgeManager       = $badgeManager;
         $this->badgeWidgetManager = $badgeWidgetManager;
+        $this->platformName = $configHandler->getParameter("name");
+        if ($this->platformName === null || empty($this->platformName)) {
+            $this->platformName = "Claroline";
+        }
     }
 
     /**
@@ -68,7 +79,8 @@ class BadgeUsageWidgetListener
             'IcapBadgeBundle:Widget:badge_usage.html.twig',
             array(
                 'lastAwardedBadges' => $lastAwardedBadges,
-                'mostAwardedBadges' => $mostAwardedBadges
+                'mostAwardedBadges' => $mostAwardedBadges,
+                'systemName' => $this->platformName
             )
         );
         $event->setContent($content);

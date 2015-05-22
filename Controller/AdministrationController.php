@@ -84,7 +84,7 @@ class AdministrationController extends Controller
         /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
         $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         try {
@@ -127,7 +127,7 @@ class AdministrationController extends Controller
         /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
         $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         try {
@@ -163,7 +163,7 @@ class AdministrationController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
         try {
             /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
@@ -204,7 +204,7 @@ class AdministrationController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
                 $translator = $this->get('translator');
                 try {
                     $doctrine = $this->getDoctrine();
@@ -278,7 +278,7 @@ class AdministrationController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
         try {
             $doctrine = $this->getDoctrine();
@@ -324,7 +324,7 @@ class AdministrationController extends Controller
             throw $this->createNotFoundException("No badge found.");
         }
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator     = $this->get('translator');
         $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'icap_badge');
         $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
@@ -371,7 +371,7 @@ class AdministrationController extends Controller
         $badgeAdminTool = $this->container->get('claroline.manager.tool_manager')
             ->getAdminToolByName('badges_management');
 
-        if ($this->container->get('security.context')->isGranted('OPEN', $badgeAdminTool)) {
+        if ($this->container->get('security.authorization_checker')->isGranted('OPEN', $badgeAdminTool)) {
             return true;
         }
 

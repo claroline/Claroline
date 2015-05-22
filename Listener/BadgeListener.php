@@ -14,7 +14,7 @@ use Icap\BadgeBundle\Manager\BadgeManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service
@@ -47,9 +47,9 @@ class BadgeListener
     private $pagerFactory;
 
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContext
+     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
      */
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @var Registry
@@ -58,12 +58,12 @@ class BadgeListener
 
     /**
      * @DI\InjectParams({
-     *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "badgeManager"      = @DI\Inject("icap_badge.manager.badge"),
-     *     "templatingEngine"  = @DI\Inject("templating"),
-     *     "ruleValidator"     = @DI\Inject("claroline.rule.validator"),
-     *     "pagerFactory"      = @DI\Inject("claroline.pager.pager_factory"),
-     *     "securityContext"   = @DI\Inject("security.context"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "badgeManager" = @DI\Inject("icap_badge.manager.badge"),
+     *     "templatingEngine" = @DI\Inject("templating"),
+     *     "ruleValidator" = @DI\Inject("claroline.rule.validator"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage"),
      *     "doctrine" = @DI\Inject("doctrine"),
      * })
      */
@@ -73,16 +73,16 @@ class BadgeListener
         TwigEngine $templatingEngine,
         Validator $ruleValidator,
         PagerFactory $pagerFactory,
-        SecurityContext $securityContext,
+        TokenStorageInterface $tokenStorage,
         Registry $doctrine
     )
     {
-        $this->entityManager     = $entityManager;
-        $this->badgeManager      = $badgeManager;
+        $this->entityManager = $entityManager;
+        $this->badgeManager = $badgeManager;
         $this->templateingEngine = $templatingEngine;
-        $this->ruleValidator     = $ruleValidator;
-        $this->pagerFactory      = $pagerFactory;
-        $this->securityContext   = $securityContext;
+        $this->ruleValidator = $ruleValidator;
+        $this->pagerFactory = $pagerFactory;
+        $this->tokenStorage = $tokenStorage;
         $this->doctrine = $doctrine;
     }
 
@@ -209,7 +209,7 @@ class BadgeListener
      */
     private function myWorkspaceBadges(Workspace $workspace)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         return $this->templateingEngine->render(
             'IcapBadgeBundle:Tool:MyWorkspace\toolList.html.twig',
@@ -225,7 +225,7 @@ class BadgeListener
      */
     private function myBadges()
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $this->doctrine->getManager()->getFilters()->disable('softdeleteable');
         $userBadges = $this->doctrine->getRepository('IcapBadgeBundle:UserBadge')->findByUser($user);

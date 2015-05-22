@@ -321,7 +321,10 @@ class BadgeManager
         $badges = [];
 
         foreach ($userBadgeResults as $userBadgeResult) {
-            $badges[$userBadgeResult->getUser()->getId()][] = $userBadgeResult->getBadge();
+            $badge = $userBadgeResult->getBadge();
+            if ($badge->getWorkspace() === $workspace) {
+                $badges[$userBadgeResult->getUser()->getId()][] = $badge;
+            }
         }
 
         return $badges;

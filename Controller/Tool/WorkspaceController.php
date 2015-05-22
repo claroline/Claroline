@@ -95,7 +95,7 @@ class WorkspaceController extends Controller
         /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
         $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         try {
@@ -148,7 +148,7 @@ class WorkspaceController extends Controller
         /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
         $sessionFlashBag = $this->get('session')->getFlashBag();
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         try {
@@ -189,7 +189,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
         try {
             /** @var \Doctrine\Common\Persistence\ObjectManager $entityManager */
@@ -236,7 +236,7 @@ class WorkspaceController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+                /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
                 $translator = $this->get('translator');
                 try {
                     $doctrine = $this->getDoctrine();
@@ -319,7 +319,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator = $this->get('translator');
         try {
             $doctrine = $this->getDoctrine();
@@ -374,7 +374,7 @@ class WorkspaceController extends Controller
 
         $this->checkUserIsAllowed($workspace);
 
-        /** @var \Symfony\Bundle\FrameworkBundle\Translation\Translator $translator */
+        /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
         $translator     = $this->get('translator');
         $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'icap_badge');
         $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
@@ -445,7 +445,7 @@ class WorkspaceController extends Controller
 
     private function checkUserIsAllowed(Workspace $workspace)
     {
-        if (!$this->get('security.context')->isGranted('badges', $workspace)) {
+        if (!$this->get('security.authorization_checker')->isGranted('badges', $workspace)) {
             throw new AccessDeniedException();
         }
     }
