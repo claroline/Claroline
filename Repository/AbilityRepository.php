@@ -132,7 +132,7 @@ class AbilityRepository extends EntityRepository
     public function findEvaluationsByCompetency(Competency $competency, User $user)
     {
         if ($competency->getRight() - $competency->getLeft() > 1) {
-            throw new \Exception('Expected leaf competency ' .  $competency->getName()  . ' ' . $competency->getLeft() . ' ' . $competency->getRight());
+            throw new \Exception('Expected leaf competency');
         }
 
         $activityQb = $this->createQueryBuilder('a1')
