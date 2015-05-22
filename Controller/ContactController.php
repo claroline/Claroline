@@ -206,6 +206,28 @@ class ContactController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/contact/{contact}/delete",
+     *     name="claro_contact_delete",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function contactDeleteAction(User $authenticatedUser, User $contact)
+    {
+        $userContact = $this->contactManager->getContactByUserAndContact(
+            $authenticatedUser,
+            $contact
+        );
+
+        if (!is_null($userContact)) {
+            $this->contactManager->deleteContact($userContact);
+        }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/options/configure/form",
      *     name="claro_contact_options_configure_form",
      *     options = {"expose"=true}

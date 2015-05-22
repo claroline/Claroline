@@ -285,8 +285,10 @@ default_role: 'Default role'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
-delete_category_confirm_message: 'Do you really want to delete this category?'
+delete_category_confirm_message: 'Do you really want to delete this category ?'
 delete_category_confirm_title: 'Category deletion'
+delete_contact: 'Delete contact'
+delete_contact_confirm_message: 'Do you really want to delete this contact ?'
 delete_home_tab: 'Delete tab'
 delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'

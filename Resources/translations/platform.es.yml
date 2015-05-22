@@ -288,6 +288,8 @@ delete: Suprimir
 delete_category: 'Suprimir categoría'
 delete_category_confirm_message: '¿Realmente deseas eliminar esta categoría?'
 delete_category_confirm_title: 'Supresión de categoría'
+delete_contact: 'Suprimir el contacto'
+delete_contact_confirm_message: '¿Está seguro que desea suprimir este contacto?'
 delete_home_tab: 'Suprimir pestaña'
 delete_learning_outcomes: delete_learning_outcomes
 delete_learning_outcomes_confirm_message: delete_learning_outcomes_confirm_message

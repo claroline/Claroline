@@ -288,9 +288,11 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_contact: 'Supprimer le contact'
+delete_contact_confirm_message: 'Voulez-vous vraiment supprimer ce contact ?'
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
-delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
+delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences ?'
 description: Description
 desktop: Bureau
 desktop_and_home: 'Bureau et accueil'

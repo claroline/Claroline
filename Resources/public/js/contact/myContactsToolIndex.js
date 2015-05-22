@@ -96,6 +96,18 @@
         });
     });
     
+    $('#all-my-contacts-content-body').on('click', '.delete-contact', function () {
+        var contactId = $(this).data('contact-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate('claro_contact_delete', {'contact': contactId}),
+            removeContact,
+            contactId,
+            Translator.trans('delete_contact_confirm_message', {}, 'platform'),
+            Translator.trans('delete_contact', {}, 'platform')
+        );
+    });
+    
     $('#all-visible-users-content-body').on('click', 'a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
@@ -204,5 +216,17 @@
                 window.location.reload();
             }
         });
+    };
+    
+    var removeContact = function (event, contactId) {
+        var index = allContactIds.indexOf('' + contactId);
+        var nbContacts = parseInt($('#all-my-contacts-badge').html());
+        nbContacts--;
+        $('#all-my-contacts-badge').html(nbContacts);
+        
+        if (index > -1) {
+            allContactIds.splice(index, 1);
+        }
+        $('.contact-row-' + contactId).remove();
     };
 })();

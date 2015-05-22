@@ -96,30 +96,42 @@
                         </a>
                     </th>
                 {% endif %}
+                <th>
+                    {{ 'actions'|trans({}, 'platform') }}
+                </th>
             </tr>
 
-            {% for user in contacts %}
-                <tr>
+            {% for contact in contacts %}
+                <tr class="contact-row-{{ contact.getId() }}">
                     {% if options['show_picture'] is not defined or options['show_picture'] %}
                         <td>
 
                         </td>
                     {% endif %}
-                    <td>{{ user.getFirstName() }}</td>
-                    <td>{{ user.getLastName() }}</td>
+                    <td>{{ contact.getFirstName() }}</td>
+                    <td>{{ contact.getLastName() }}</td>
 
                     {% if options['show_username'] is not defined or options['show_username'] %}
-                        <td>{{ user.getUsername() }}</td>
+                        <td>{{ contact.getUsername() }}</td>
                     {% endif %}
 
                     {% if options['show_mail'] is not defined or options['show_mail'] %}
-                        <td>{{ user.getMail() }}</td>
+                        <td>{{ contact.getMail() }}</td>
                     {% endif %}
 
                     {% if options['show_phone'] is not defined or options['show_phone'] %}
-                        <td>{{ user.getPhone() }}</td>
+                        <td>{{ contact.getPhone() }}</td>
                     {% endif %}
-
+                    <td>
+                        <span class="btn btn-danger delete-contact"
+                              data-contact-id="{{ contact.getId() }}"
+                              data-toggle="tooltip"
+                              data-placement="left"
+                              title="{{ 'delete_contact'|trans({}, 'platform') }}"
+                        >
+                            <i class="fa fa-times-circle"></i>
+                        </span>
+                    </td>
                 </tr>
             {% endfor %}
         </table>
