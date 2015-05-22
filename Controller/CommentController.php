@@ -128,7 +128,7 @@ class CommentController extends Controller
      */
     public function editAction(Request $request, Blog $blog, Post $post, Comment $comment)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
         $translator = $this->get('translator');
         if($user!=null && $user->getId()==$comment->getAuthor()->getId()){
             $messages   = array(

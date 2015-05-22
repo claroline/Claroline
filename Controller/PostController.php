@@ -28,10 +28,9 @@ class PostController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $securityContext = $this->get('security.context');
-        $user            = $securityContext->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if (!$securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $user = null;
         }
 
@@ -113,11 +112,11 @@ class PostController extends Controller
     {
         $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $postStatus = Comment::STATUS_UNPUBLISHED;
+        $postStatus = Post::STATUS_UNPUBLISHED;
         if ($blog->isAutoPublishPost()) {
-            $postStatus = Comment::STATUS_PUBLISHED;
+            $postStatus = Post::STATUS_PUBLISHED;
         }
         $post = new Post();
         $post
@@ -125,6 +124,10 @@ class PostController extends Controller
             ->setAuthor($this->getUser())
             ->setStatus($postStatus)
         ;
+
+        if ($postStatus === Post::STATUS_PUBLISHED) {
+            $post->setPublicationDate(new \DateTime());
+        }
 
         $translator = $this->get('translator');
 
@@ -147,7 +150,7 @@ class PostController extends Controller
     {
         $this->checkAccess(array("EDIT", "POST"), $blog, "OR");
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $translator = $this->get('translator');
 
@@ -177,7 +180,7 @@ class PostController extends Controller
                     $unitOfWork->computeChangeSets();
                     $changeSet = $unitOfWork->getEntityChangeSet($post);
 
-                    if('update' === $action && !$this->get('security.context')->isGranted('EDIT', $blog)) {
+                    if('update' === $action && !$this->get('security.authorization_checker')->isGranted('EDIT', $blog)) {
                         $post->unpublish();
                     }
 

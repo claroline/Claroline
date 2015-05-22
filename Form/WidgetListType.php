@@ -5,7 +5,7 @@ namespace Icap\BlogBundle\Form;
 use Icap\BlogBundle\Form\DataTransformer\IntToBlogTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Zenstruck\Bundle\FormBundle\Form\DataTransformer\AjaxEntityTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -31,7 +31,7 @@ class WidgetListType extends AbstractType
         return 'blog_widget_list_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

@@ -36,13 +36,13 @@ class BlogController extends Controller
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @Template()
      */
-    public function viewAction(Blog $blog, $page, $filter = null)
+    public function viewAction(Request $request, Blog $blog, $page, $filter = null)
     {
         $this->checkAccess("OPEN", $blog);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        $search = $this->getRequest()->get('search');
+        $search = $request->get('search');
         if (null !== $search && '' !== $search) {
             return $this->redirect($this->generateUrl('icap_blog_view_search', array('blogId' => $blog->getId(), 'search' => $search)));
         }
@@ -119,7 +119,7 @@ class BlogController extends Controller
     {
         $this->checkAccess("OPEN", $blog);
 
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');
