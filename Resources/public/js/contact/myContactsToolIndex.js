@@ -9,6 +9,12 @@
 
 (function () {
     'use strict';
+    
+    var allContactIdsTxt = '' + $('#all-my-contacts-datas-box').data('contacts-id');
+    allContactIdsTxt = allContactIdsTxt.trim();
+    var allContactIds = allContactIdsTxt !== '' ?
+        allContactIdsTxt.split(',') :
+        [];
 
     $('#my-contacts-tool').on('click', '#contacts-configure-btn', function () {
         window.Claroline.Modal.displayForm(
@@ -57,7 +63,8 @@
                 'select_users_to_add_to_your_contacts',
                 {},
                 'platform'
-            )
+            ),
+            blacklist: allContactIds
         };
         userPicker.configure(settings, addContacts);
         userPicker.open();

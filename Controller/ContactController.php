@@ -78,6 +78,7 @@ class ContactController extends Controller
             'name',
             'ASC'
         );
+        $allContacts = $this->contactManager->getUserContacts($authenticatedUser);
         $contacts = $this->contactManager->getUserContactsWithPager(
             $authenticatedUser,
             '',
@@ -89,6 +90,7 @@ class ContactController extends Controller
         $params = array(
             'options' => $options,
             'categories' => $categories,
+            'allContacts' => $allContacts,
             'contacts' => $contacts,
             'search' => $search,
             'max' => $max,
