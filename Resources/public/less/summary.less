@@ -205,15 +205,13 @@
 }
 
 // Add a margin to the sidebar when the left menu is displayed
-@media (min-width: @screen-sm) {
+.left-bar-push {
     .path-summary-container {
         margin-left: 40px + floor(@grid-gutter-width / 2);
     }
 }
 
 // No margin on the sidebar when the left bar is not displayed
-@media (max-width: (@screen-sm - 1)) {
-    .path-summary-container {
-        margin-left: floor(@grid-gutter-width / 2);
-    }
+.path-summary-container {
+    margin-left: floor(@grid-gutter-width / 2);
 }
