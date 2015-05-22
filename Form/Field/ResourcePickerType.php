@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -60,16 +60,13 @@ class ResourcePickerType extends TextType
         $builder->addModelTransformer($this->transformer);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('label' => 'resource', 'attr' => $this->defaultAttributes));
-        $resolver->setNormalizers(
-            array(
-                'attr' => function (Options $options, $value) {
-                    return array_merge($this->defaultAttributes, $value);
-                }
-            )
-        );
+        $resolver
+            ->setNormalizer('attr', function (Options $options, $value) {
+                return array_merge($this->defaultAttributes, $value);
+            });
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
