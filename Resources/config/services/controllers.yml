@@ -20,7 +20,8 @@ services:
     innova_path.controller.path_player:
         class: %innova_path.controller.path_player.class%
         arguments:
-            objectManager:   @doctrine.orm.entity_manager
+            objectManager: @doctrine.orm.entity_manager
+            pathManager:   @innova_path.manager.path
         scope: request
           
     # Editor controller

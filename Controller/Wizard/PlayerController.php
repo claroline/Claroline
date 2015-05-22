@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
+use Innova\PathBundle\Manager\PathManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -29,12 +30,22 @@ class PlayerController
     protected $om;
 
     /**
+     * Path manager
+     * @var \Innova\PathBundle\Manager\PathManager
+     */
+    protected $pathManager;
+
+    /**
      * Class constructor
      * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Innova\PathBundle\Manager\PathManager     $pathManager
      */
-    public function __construct(ObjectManager $objectManager)
+    public function __construct(
+        ObjectManager $objectManager,
+        PathManager   $pathManager)
     {
         $this->om = $objectManager;
+        $this->pathManager = $pathManager;
     }
 
     /**
@@ -53,6 +64,9 @@ class PlayerController
      */
     public function displayAction(Path $path)
     {
+        // Check User credentials
+        $this->pathManager->checkAccess('OPEN', $path);
+
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
