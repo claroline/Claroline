@@ -76,9 +76,9 @@ class WikiController extends Controller{
     public function configureAction(Request $request, Wiki $wiki, $user, $page)
     {
         $this->checkAccess("EDIT", $wiki);
-        
+
         return $this->persistWikiOptions($request, $wiki, $user, $page);
-    } 
+    }
 
     private function persistWikiOptions (Request $request, Wiki $wiki, User $user, $page) {
         $form = $this->createForm(new WikiOptionsType(), $wiki);
@@ -86,7 +86,7 @@ class WikiController extends Controller{
         $query = $sectionRepository->findDeletedSectionsQuery($wiki);
         $adapter = new DoctrineORMAdapter($query);
         $pager   = new PagerFanta($adapter);
-        $pager->setMaxPerPage(20);        
+        $pager->setMaxPerPage(20);
         try {
             $pager->setCurrentPage($page);
         } catch (NotValidCurrentPageException $exception) {
@@ -111,7 +111,7 @@ class WikiController extends Controller{
                     $flashBag->add('success', $translator->trans('icap_wiki_options_save_success', array(), 'icap_wiki'));
                 } catch (\Exception $exception) {
                     $flashBag->add('error', $translator->trans('icap_wiki_options_save_error', array(), 'icap_wiki'));
-                }                
+                }
 
                 return $this->redirect(
                     $this->generateUrl(
@@ -130,5 +130,5 @@ class WikiController extends Controller{
             'pager' => $pager,
             'form' => $form->createView()
         );
-    }   
+    }
 }
