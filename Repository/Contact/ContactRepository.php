@@ -82,4 +82,23 @@ class ContactRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findContactByUserAndContact(
+        User $user,
+        User $contact,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\CoreBundle\Entity\Contact\Contact c
+            WHERE c.user = :user
+            AND c.contact = :contact
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('contact', $contact);
+
+        return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
 }

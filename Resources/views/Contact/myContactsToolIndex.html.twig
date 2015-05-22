@@ -1,5 +1,23 @@
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
+{% macro renderAllMyContactsPager(pager, max, orderedBy, order) %}
+{{
+    pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+            'proximity' : 1,
+            'routeName': 'claro_contact_show_all_visible_users',
+            'routeParams': {
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': order
+            }
+        }
+    )
+}}
+{% endmacro %}
+
 {% macro renderAllVisibleUsersPager(pager, max, orderedBy, order) %}
 {{
     pagerfanta(
@@ -18,26 +36,47 @@
 }}
 {% endmacro %}
 
-{% macro sortAllVisibleUsersUrl(max, orderedBy, order) %}
-{% if order == 'ASC' %}
-    {% set newOrder = 'DESC' %}
-{% else %}
-    {% set newOrder = 'ASC' %}
-{% endif %}
+{% macro sortAllMyContactsUrl(max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
 
-{{
-    path(
-        'claro_contact_show_all_visible_users',
-        {
-            'max': max,
-            'orderedBy': orderedBy,
-            'order': newOrder
-        }
-    )
-}}
+    {{
+        path(
+            'claro_contact_show_all_my_contacts',
+            {
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
 {% endmacro %}
 
+{% macro sortAllVisibleUsersUrl(max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_contact_show_all_visible_users',
+            {
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderAllMyContactsPager %}
 {% from _self import renderAllVisibleUsersPager %}
+{% from _self import sortAllMyContactsUrl %}
 {% from _self import sortAllVisibleUsersUrl %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
@@ -107,11 +146,99 @@
                     </div>
                     <div id="all-my-contacts-content" class="panel-collapse collapse in">
                         <div class="panel-body" id="all-my-contacts-content-body">
-
+                                
                             {% if contacts|length > 0 %}
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="input-group margin-bottom-md pull-left">
+                                            {% if contacts.getNbPages() > 1 %}
+                                                {{ renderAllMyContactsPager(contacts, max, orderedBy, order) }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="input-group pull-right" style="margin: 20px 0">
+                                            {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'contacts_per_page') }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <tr>
+                                            {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                <th>{{ 'picture'|trans({}, 'platform') }}</th>
+                                            {% endif %}
+                                            <th>
+                                                <a href="{{ sortAllMyContactsUrl(max, 'firstName', order)|trim }}">
+                                                    {{ 'firstName'|trans({}, 'platform') }}
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="{{ sortAllMyContactsUrl(max, 'lastName', order)|trim }}">
+                                                    {{ 'lastName'|trans({}, 'platform') }}
+                                                </a>
+                                            </th>
+
+                                            {% if options['show_username'] is not defined or options['show_username'] %}
+                                                <th>
+                                                    <a href="{{ sortAllMyContactsUrl(max, 'username', order)|trim }}">
+                                                        {{ 'username'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+                                            {% endif %}
+
+                                            {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                <th>
+                                                    <a href="{{ sortAllMyContactsUrl(max, 'mail', order)|trim }}">
+                                                        {{ 'mail'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+                                            {% endif %}
+
+                                            {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                <th>
+                                                    <a href="{{ sortAllMyContactsUrl(max, 'phone', order)|trim }}">
+                                                        {{ 'phone'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+                                            {% endif %}
+                                        </tr>
+
+                                        {% for user in contacts %}
+                                            <tr>
+                                                {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                    <td>
+
+                                                    </td>
+                                                {% endif %}
+                                                <td>{{ user.getFirstName() }}</td>
+                                                <td>{{ user.getLastName() }}</td>
+
+                                                {% if options['show_username'] is not defined or options['show_username'] %}
+                                                    <td>{{ user.getUsername() }}</td>
+                                                {% endif %}
+
+                                                {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                    <td>{{ user.getMail() }}</td>
+                                                {% endif %}
+
+                                                {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                    <td>{{ user.getPhone() }}</td>
+                                                {% endif %}
+
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
+
+                                {% if contacts.getNbPages() > 1 %}
+                                    {{ renderAllMyContactsPager(contacts, max, orderedBy, order) }}
+                                {% endif %}
                             {% else %}
-                                <div class="alert alert-warning" id="all-my-contacts-empty-alert">
-                                    {{ 'no_contact'|trans({}, 'platform') }}
+                                <div class="alert alert-warning">
+                                    {{ 'no_user'|trans({}, 'platform') }}
                                 </div>
                             {% endif %}
                         </div>

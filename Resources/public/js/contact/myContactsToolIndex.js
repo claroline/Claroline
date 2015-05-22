@@ -51,10 +51,42 @@
     $('#my-contacts-tool').on('click', '#add-contacts-btn', function () {
         var userPicker = new UserPicker();
         var settings = {
-            multiple: true
+            multiple: true,
+            picker_name: 'contacts_picker',
+            picker_title: Translator.trans(
+                'select_users_to_add_to_your_contacts',
+                {},
+                'platform'
+            )
         };
         userPicker.configure(settings, addContacts);
         userPicker.open();
+    });
+    
+    $('#all-my-contacts-content-body').on('click', 'a', function (event) {
+        event.preventDefault();
+        var element = event.currentTarget;
+        var route = $(element).attr('href');
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                $('#all-my-contacts-content-body').html(datas);
+            }
+        });
+    });
+
+    $('#all-my-contacts-content-body').on('change', '#max-select', function() {
+        var max = $(this).val();
+
+        $.ajax({
+            url: Routing.generate('claro_contact_show_all_my_contacts', {'max': max}),
+            type: 'GET',
+            success: function (datas) {
+                $('#all-my-contacts-content-body').html(datas);
+            }
+        });
     });
     
     $('#all-visible-users-content-body').on('click', 'a', function (event) {
@@ -153,6 +185,17 @@
     };
     
     var addContacts = function (userIds) {
-        console.log(userIds);
+        var parameters = {};
+        parameters.userIds = userIds;
+        var route = Routing.generate('claro_contacts_add');
+        route += '?' + $.param(parameters);
+        
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                window.location.reload();
+            }
+        });
     };
 })();

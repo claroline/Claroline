@@ -55,14 +55,22 @@ class ContactController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/my/contacts/tool/index",
+     *     "/my/contacts/tool/index/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
      *     name="claro_my_contacts_tool_index",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"=""},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function myContactsToolIndexAction(User $authenticatedUser)
+    public function myContactsToolIndexAction(
+        User $authenticatedUser,
+        $search = "",
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
     {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
         $categories = $this->contactManager->getCategoriesByUser(
@@ -70,14 +78,22 @@ class ContactController extends Controller
             'name',
             'ASC'
         );
-        $contacts = $this->contactManager->getUserContacts($authenticatedUser);
+        $contacts = $this->contactManager->getUserContactsWithPager(
+            $authenticatedUser,
+            '',
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
         $params = array(
             'options' => $options,
             'categories' => $categories,
             'contacts' => $contacts,
-            'max' => 50,
-            'orderedBy' => 'lastName',
-            'order' => 'ASC'
+            'search' => $search,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
         );
 
         if (!isset($options['show_all_visible_users']) || $options['show_all_visible_users']) {
@@ -86,6 +102,104 @@ class ContactController extends Controller
         }
 
         return $params;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/show/all/my/contacts/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
+     *     name="claro_contact_show_all_my_contacts",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function showAllMyContactsAction(
+        User $authenticatedUser,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
+        $contacts = $this->contactManager->getUserContactsWithPager(
+            $authenticatedUser,
+            '',
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
+
+        return array(
+            'options' => $options,
+            'contacts' => $contacts,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/show/all/visible/users/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
+     *     name="claro_contact_show_all_visible_users",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function showAllVisibleUsersAction(
+        User $authenticatedUser,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
+        $users = $this->userManager->getUsersForUserPicker(
+            $authenticatedUser,
+            '',
+            false,
+            true,
+            false,
+            false,
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
+
+        return array(
+            'options' => $options,
+            'users' => $users,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contacts/add",
+     *     name="claro_contacts_add",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     */
+    public function contactsAddAction(User $authenticatedUser, array $users)
+    {
+        $this->contactManager->addContactsToUser($authenticatedUser, $users);
+
+        return new JsonResponse('success', 200);
     }
 
     /**
@@ -253,47 +367,6 @@ class ContactController extends Controller
         $this->contactManager->deleteCategory($category);
 
         return new JsonResponse('success', 200);
-    }
-
-
-    /**
-     * @EXT\Route(
-     *     "/show/all/visible/users/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
-     *     name="claro_contact_show_all_visible_users",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     */
-    public function showAllVisibleUsersAction(
-        User $authenticatedUser,
-        $page = 1,
-        $max = 50,
-        $orderedBy = 'lastName',
-        $order = 'ASC'
-    )
-    {
-        $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
-        $users = $this->userManager->getUsersForUserPicker(
-            $authenticatedUser,
-            '',
-            false,
-            true,
-            false,
-            false,
-            $page,
-            $max,
-            $orderedBy,
-            $order
-        );
-
-        return array(
-            'options' => $options,
-            'users' => $users,
-            'max' => $max,
-            'orderedBy' => $orderedBy,
-            'order' => $order
-        );
     }
 
     private function checkUserAccessForCategory(Category $category, User $user)

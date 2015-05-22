@@ -196,6 +196,7 @@ configure: Configurar
 confirm_send_data: 'Sugerimos confirmar su acuerdo para enviar datos:'
 connections: Conexiones
 contact: Contacto
+contacts_per_page: 'Contactos por página'
 content: Contenido
 cookie_lifetime: 'Duración de la cookie'
 copiable: Copiable
@@ -825,6 +826,7 @@ select_contacts_title: 'Seleccionar receptores'
 select_groups_for_registration_to_workspace: 'Seleccionar grupos a inscribir'
 select_roles_to_assign: 'Seleccionar roles a asignar'
 select_users_for_registration_to_workspace: 'Seleccionar usuario a inscribir'
+select_users_to_add_to_your_contacts: 'Seleccione los usuarios que desea agregar a sus contactos'
 select_workspace_to_link: 'Seleccione una espacio de trabajo a vincular'
 select_workspaces_for_registration: 'Seleccionar espacio de trabajo a inscribir'
 selected_users: 'Usuarios seleccionados'

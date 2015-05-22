@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\Contact\Contact;
 use Claroline\CoreBundle\Entity\Contact\Options;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -27,15 +28,18 @@ class ContactManager
     private $categoryRepo;
     private $contactRepo;
     private $optionsRepo;
+    private $pagerFactory;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
     {
         $this->om = $om;
+        $this->pagerFactory = $pagerFactory;
         $this->categoryRepo = $om->getRepository('ClarolineCoreBundle:Contact\Category');
         $this->contactRepo = $om->getRepository('ClarolineCoreBundle:Contact\Contact');
         $this->optionsRepo = $om->getRepository('ClarolineCoreBundle:Contact\Options');
@@ -72,6 +76,20 @@ class ContactManager
         }
 
         return $users;
+    }
+
+    public function getUserContactsWithPager(
+        User $user,
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $contacts = $this->getUserContacts($user, $search, $orderedBy, $order);
+
+        return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
     }
 
     public function getUserOptionsValues(User $user)
@@ -134,6 +152,23 @@ class ContactManager
         $this->om->flush();
     }
 
+    public function addContactsToUser(User $user, array $contacts)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($contacts as $contact) {
+            $existingContact = $this->getContactByUserAndContact($user, $contact);
+
+            if (is_null($existingContact)) {
+                $existingContact = new Contact();
+                $existingContact->setUser($user);
+                $existingContact->setContact($contact);
+                $this->om->persist($existingContact);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     /***************************************
      * Access to ContactRepository methods *
      ***************************************/
@@ -170,6 +205,19 @@ class ContactManager
             $withMail,
             $orderedBy,
             $order,
+            $executeQuery
+        );
+    }
+
+    public function getContactByUserAndContact(
+        User $user,
+        User $contact,
+        $executeQuery = true
+    )
+    {
+        return $this->contactRepo->findContactByUserAndContact(
+            $user,
+            $contact,
             $executeQuery
         );
     }
