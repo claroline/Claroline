@@ -38,10 +38,10 @@
                                         <span class="sr-only">{{ 'see_activity'|trans:{}:'path_wizards' }}</span>
                                     </button>
 
-                                    <button class="btn btn-default" type="button" data-ui-resource-picker="stepEditCtrl.activityResourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_wizards' }}">
+                                    <btn-resource-picker class="btn btn-default" data-parameters="stepEditCtrl.resourcePicker" data-toggle="tooltip" data-container="body" title="{{ 'select_activity'|trans:{}:'path_wizards' }}">
                                         <span class="fa fa-folder-open"></span>
                                         <span class="sr-only">{{ 'select_activity'|trans:{}:'path_wizards' }}</span>
-                                    </button>
+                                    </btn-resource-picker>
 
                                     <button data-ng-click="stepEditCtrl.deleteActivity()" class="btn btn-danger" type="button" data-ng-if="stepEditCtrl.step.activityId" data-toggle="tooltip" data-container="body" title="{{ 'delete_activity'|trans:{}:'path_wizards' }}">
                                         <span class="fa fa-trash-o"></span>

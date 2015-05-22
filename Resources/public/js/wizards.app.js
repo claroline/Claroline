@@ -59,6 +59,37 @@
         ]
     };
 
+    // Get the Root step and its resources
+    var resolveRootFunctions = {
+        step: [
+            'PathService',
+            function (PathService) {
+                var step = null;
+
+                var path = PathService.getPath();
+                if (angular.isObject(path) && angular.isObject(path.steps) && angular.isObject(path.steps[0])) {
+                    step = path.steps[0];
+                }
+
+                return step;
+            }
+        ],
+        inheritedResources: [
+            'PathService',
+            function (PathService) {
+                var inherited = [];
+
+                var path = PathService.getPath();
+                if (angular.isObject(path) && angular.isObject(path.steps) && angular.isObject(path.steps[0])) {
+                    // Grab inherited resources
+                    inherited = PathService.getStepInheritedResources(path.steps, path.steps[0]);
+                }
+
+                return inherited;
+            }
+        ]
+    };
+
     angular
         // Path Editor application
         .module('PathEditorApp', dependencies)
@@ -68,6 +99,12 @@
             '$routeProvider',
             function PathEditorConfig($routeProvider) {
                 $routeProvider
+                    .when('/', {
+                        templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
+                        controller: StepEditCtrl,
+                        controllerAs: 'stepEditCtrl',
+                        resolve: resolveRootFunctions
+                    })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/edit.html',
                         controller: StepEditCtrl,
@@ -91,6 +128,12 @@
             function PathPlayerConfig($routeProvider) {
                 // Declare route to navigate between steps
                 $routeProvider
+                    .when('/', {
+                        templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
+                        controller: StepShowCtrl,
+                        controllerAs: 'stepShowCtrl',
+                        resolve: resolveRootFunctions
+                    })
                     .when('/:stepId?', {
                         templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Step/Partial/show.html',
                         controller: StepShowCtrl,

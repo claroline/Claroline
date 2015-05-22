@@ -4,15 +4,22 @@
  * @constructor
  */
 var ResourcesSecondaryBaseCtrl = function ResourcesSecondaryBaseCtrl() {
-    // Call parent constructor
-    ResourcesBaseCtrl.apply(this, arguments);
+    this.resourceIcons  = AngularApp.resourceIcons;
 
     return this;
 };
 
-// Extends the base controller
-ResourcesSecondaryBaseCtrl.prototype = ResourcesBaseCtrl.prototype;
-ResourcesSecondaryBaseCtrl.prototype.constructor = ResourcesSecondaryBaseCtrl;
+/**
+ * Icons of the Resources
+ * @type {object}
+ */
+ResourcesSecondaryBaseCtrl.prototype.resourceIcons = {};
+
+/**
+ * Resources owned by the Step
+ * @type {Array}
+ */
+ResourcesSecondaryBaseCtrl.prototype.resources = [];
 
 /**
  * Resources inherited from the parents

@@ -9,11 +9,11 @@
             <span>{{ 'primary_resource'|trans:{}:'path_wizards' }}</span>
         </h4>
 
-        <button type="button" role="button" data-ui-resource-picker="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
+        <btn-resource-picker data-parameters="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
             <span class="fa fa-plus"></span>
             <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resources_browse'|trans:{}:'path_wizards' }}</span>
             <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{ 'resources_replace'|trans:{}:'path_wizards' }}</span>
-        </button>
+        </btn-resource-picker>
     </div>
 
     <div class="panel-body" data-ng-show="!resourcesPrimaryEditCtrl.collapsed">

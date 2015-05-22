@@ -12,29 +12,11 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
     // Set TinyMCE language
     this.tinymceOptions.language = AngularApp.locale;
 
-    return this;
-};
-
-// Extends the base controller
-StepEditCtrl.prototype = StepBaseCtrl.prototype;
-StepEditCtrl.prototype.constructor = StepEditCtrl;
-
-/**
- * Defines which panels of the form are collapsed or not
- * @type {object}
- */
-StepEditCtrl.prototype.collapsedPanels = {
-    description       : false,
-    properties        : true
-};
-
-/**
- * Activity resource picker config
- * @type {object}
- */
-StepEditCtrl.prototype.activityResourcePicker = {
-    name: 'picker-activity',
-    parameters: {
+    /**
+     * Activity resource picker config
+     * @type {object}
+     */
+    this.resourcePicker = {
         // A step can allow be linked to one Activity, so disable multi-select
         isPickerMultiSelectAllowed: false,
 
@@ -57,7 +39,22 @@ StepEditCtrl.prototype.activityResourcePicker = {
                 nodes = {};
             }
         }.bind(this)
-    }
+    };
+
+    return this;
+};
+
+// Extends the base controller
+StepEditCtrl.prototype = StepBaseCtrl.prototype;
+StepEditCtrl.prototype.constructor = StepEditCtrl;
+
+/**
+ * Defines which panels of the form are collapsed or not
+ * @type {object}
+ */
+StepEditCtrl.prototype.collapsedPanels = {
+    description       : false,
+    properties        : true
 };
 
 /**

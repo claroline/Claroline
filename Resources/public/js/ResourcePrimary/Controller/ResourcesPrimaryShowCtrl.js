@@ -5,7 +5,7 @@
  */
 var ResourcesPrimaryShowCtrl = function ResourcesPrimaryShowCtrl() {
     // Call parent constructor
-    ResourcesBaseCtrl.apply(this, arguments);
+    ResourcesPrimaryBaseCtrl.apply(this, arguments);
 
     // Get resource URL to populate IFrame
 
@@ -13,5 +13,5 @@ var ResourcesPrimaryShowCtrl = function ResourcesPrimaryShowCtrl() {
 };
 
 // Extends the base controller
-ResourcesPrimaryShowCtrl.prototype = ResourcesBaseCtrl.prototype;
+ResourcesPrimaryShowCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
 ResourcesPrimaryShowCtrl.prototype.constructor = ResourcesPrimaryShowCtrl;

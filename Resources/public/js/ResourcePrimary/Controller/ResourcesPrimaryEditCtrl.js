@@ -8,28 +8,17 @@
  */
 var ResourcesPrimaryEditCtrl = function ResourcesPrimaryEditCtrl($scope, ConfirmService, ResourceService) {
     // Call parent constructor
-    ResourcesEditCtrl.apply(this, arguments);
+    ResourcesPrimaryBaseCtrl.apply(this, arguments);
 
-    return this;
-};
+    this.scope           = $scope;
+    this.confirmService  = ConfirmService;
+    this.resourceService = ResourceService;
 
-// Extends the base controller
-ResourcesPrimaryEditCtrl.prototype = ResourcesEditCtrl.prototype;
-ResourcesPrimaryEditCtrl.prototype.constructor = ResourcesPrimaryEditCtrl;
-
-/**
- * Show or Hide the primary resources panel
- * @type {boolean}
- */
-ResourcesPrimaryEditCtrl.prototype.collapsed = false;
-
-/**
- * Configuration for the Claroline Resource Picker
- * @type {object}
- */
-ResourcesPrimaryEditCtrl.prototype.resourcePicker = {
-    name: 'picker-primary-resource',
-    parameters: {
+    /**
+     * Configuration for the Claroline Resource Picker
+     * @type {object}
+     */
+    this.resourcePicker = {
         // A step can allow be linked to one primary Resource, so disable multi-select
         isPickerMultiSelectAllowed: false,
 
@@ -37,8 +26,8 @@ ResourcesPrimaryEditCtrl.prototype.resourcePicker = {
         typeBlackList: [ 'innova_path', 'activity' ],
 
         // On select, set the primary resource of the step
-        callback: function (nodes) {
-            if (typeof nodes === 'object' && nodes.length !== 0) {
+        callback: function selectPrimaryResources(nodes) {
+            if (angular.isObject(nodes)) {
                 for (var nodeId in nodes) {
                     if (nodes.hasOwnProperty(nodeId)) {
                         var node = nodes[nodeId];
@@ -47,6 +36,8 @@ ResourcesPrimaryEditCtrl.prototype.resourcePicker = {
                         var resource = this.resourceService.new(node[1], node[2], nodeId, node[0]);
                         if (!this.resourceService.exists(this.resources, resource)) {
                             // While only one resource is authorized, empty the resources array
+                            this.resources.splice(0, this.resources.length);
+
                             // Resource is not in the list => add it
                             this.resources.push(resource);
                         }
@@ -61,8 +52,20 @@ ResourcesPrimaryEditCtrl.prototype.resourcePicker = {
                 nodes = {};
             }
         }.bind(this)
-    }
+    };
+
+    return this;
 };
+
+// Extends the base controller
+ResourcesPrimaryEditCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
+ResourcesPrimaryEditCtrl.prototype.constructor = ResourcesPrimaryEditCtrl;
+
+/**
+ * Show or Hide the primary resources panel
+ * @type {boolean}
+ */
+ResourcesPrimaryEditCtrl.prototype.collapsed = false;
 
 /**
  * Delete resource

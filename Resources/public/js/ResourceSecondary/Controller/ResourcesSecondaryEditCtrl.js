@@ -14,6 +14,22 @@ var ResourcesSecondaryEditCtrl = function ResourcesSecondaryEditCtrl($scope, Con
     this.confirmService  = ConfirmService;
     this.resourceService = ResourceService;
 
+    var $this = this;
+
+    /**
+     * Configuration for the Claroline Resource Picker
+     * @type {object}
+     */
+    this.resourcePicker = {
+        isPickerMultiSelectAllowed: true,
+        callback: function selectSecondaryResources(nodes) {
+            $this.addResources(nodes);
+
+            // Remove checked nodes for next time
+            nodes = {};
+        }
+    };
+
     return this;
 };
 
@@ -21,35 +37,24 @@ var ResourcesSecondaryEditCtrl = function ResourcesSecondaryEditCtrl($scope, Con
 ResourcesSecondaryEditCtrl.prototype = ResourcesSecondaryBaseCtrl.prototype;
 ResourcesSecondaryEditCtrl.prototype.constructor = ResourcesSecondaryEditCtrl;
 
-/**
- * Configuration for the Claroline Resource Picker
- * @type {object}
- */
-ResourcesSecondaryEditCtrl.prototype.resourcePicker = {
-    name: 'picker-secondary-resources',
-    parameters: {
-        isPickerMultiSelectAllowed: true,
-        callback: function (nodes) {
-            if (angular.isObject(nodes)) {
-                for (var nodeId in nodes) {
-                    if (nodes.hasOwnProperty(nodeId)) {
-                        var node = nodes[nodeId];
+ResourcesSecondaryEditCtrl.prototype.resourceSecondaryPicker = {};
 
-                        // Initialize a new Resource object (parameters : claro type, mime type, id, name)
-                        var resource = this.resourceService.new(node[1], node[2], nodeId, node[0]);
-                        if (!this.resourceService.exists(this.resources, resource)) {
-                            // Resource is not in the list => add it
-                            this.resources.push(resource);
-                        }
-                    }
+ResourcesSecondaryEditCtrl.prototype.addResources = function (resources) {
+    if (angular.isObject(resources)) {
+        for (var nodeId in resources) {
+            if (resources.hasOwnProperty(nodeId)) {
+                var node = resources[nodeId];
+
+                // Initialize a new Resource object (parameters : claro type, mime type, id, name)
+                var resource = this.resourceService.new(node[1], node[2], nodeId, node[0]);
+                if (!this.resourceService.exists(this.resources, resource)) {
+                    // Resource is not in the list => add it
+                    this.resources.push(resource);
                 }
-
-                this.scope.$apply();
-
-                // Remove checked nodes for next time
-                nodes = {};
             }
-        }.bind(this)
+        }
+
+        this.scope.$apply();
     }
 };
 
