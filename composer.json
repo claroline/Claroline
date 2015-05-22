@@ -14,7 +14,7 @@
         "php": ">=5.4.1",
         "claroline/core-bundle": "~5.0",
         "claroline/team-bundle": "~5.0",
-        "icap/badge-bundle": "dev-dev-5.0",
+        "icap/badge-bundle": "~5.0",
         "innova/angular-js-bundle": "~5.0"
     },
     "autoload": {
