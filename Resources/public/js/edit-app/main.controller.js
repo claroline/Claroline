@@ -11,7 +11,7 @@
         var vm = this;
         vm.options = websiteOptions;
         vm.menu = websiteTree;
-
+        vm.tinymceConfig = tinymce.claroline.configuration;
         vm.uploadImage = function($files, imageStr) {
             vm.options.proceedImageUpload($files, imageStr);
         }

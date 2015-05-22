@@ -62,7 +62,6 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
 
     public function addWebsiteDescription($rootNode)
     {
-        $rootPath = $this->getRootPath();
         $rootNode
             ->children()
                 ->arrayNode('options')
@@ -130,7 +129,7 @@ class WebsiteImporter extends Importer implements ConfigurationInterface{
     function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, ['data' => $data]);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data)
