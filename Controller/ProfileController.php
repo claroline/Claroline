@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
@@ -123,17 +124,24 @@ class ProfileController extends Controller
      * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function viewAction(User $loggedUser)
+    public function viewAction(Request $request, User $loggedUser)
     {
         $facets = $this->facetManager->getPrivateVisibleFacets();
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($loggedUser);
         $fieldFacets = $this->facetManager->getPrivateVisibleFields();
+        $profileLinksEvent = new ProfileLinksEvent($loggedUser, $request->getLocale());
+        $this->get("event_dispatcher")->dispatch(
+            'profile_link_event',
+            $profileLinksEvent
+        );
 
+        $links = $profileLinksEvent->getLinks();
         return array(
             'user'  => $loggedUser,
             'facets' => $facets,
             'fieldFacetValues' => $fieldFacetValues,
-            'fieldFacets' => $fieldFacets
+            'fieldFacets' => $fieldFacets,
+            'links' => $links
         );
     }
 
@@ -143,17 +151,15 @@ class ProfileController extends Controller
      *      name="claro_public_profile_view",
      *      options={"expose"=true}
      * )
+     * @EXT\Template()
      */
-    public function publicProfileAction($publicUrl)
+    public function publicProfileAction(Request $request, $publicUrl)
     {
         $isAccessibleForAnon = $this->ch->getParameter('anonymous_public_profile');
 
         if (!$isAccessibleForAnon && $this->tokenStorage->getToken()->getUser() === 'anon.') {
             throw new AccessDeniedException();
         }
-
-        /** @var \Claroline\CoreBundle\Entity\User $user */
-        $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
 
         try {
             /** @var \Claroline\CoreBundle\Entity\User $user */
@@ -166,21 +172,22 @@ class ProfileController extends Controller
         $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
         $publicProfilePreferences = $this->facetManager->getVisiblePublicPreference();
         $fieldFacets = $this->facetManager->getVisibleFieldFacets($this->tokenStorage->getToken());
-
-        $response = new Response(
-            $this->renderView(
-                'ClarolineCoreBundle:Profile:publicProfile.html.twig',
-                array(
-                    'user' => $user,
-                    'publicProfilePreferences' => $publicProfilePreferences,
-                    'facets' => $facets,
-                    'fieldFacetValues' => $fieldFacetValues,
-                    'fieldFacets' => $fieldFacets
-                )
-            )
+        $profileLinksEvent = new ProfileLinksEvent($user, $request->getLocale());
+        $this->get("event_dispatcher")->dispatch(
+            'profile_link_event',
+            $profileLinksEvent
         );
 
-        return $response;
+        $links = $profileLinksEvent->getLinks();
+
+        return array(
+            'user' => $user,
+            'publicProfilePreferences' => $publicProfilePreferences,
+            'facets' => $facets,
+            'fieldFacetValues' => $fieldFacetValues,
+            'fieldFacets' => $fieldFacets,
+            'links' => $links
+        );
     }
 
     /**
