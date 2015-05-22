@@ -18,7 +18,7 @@
         <h2>
             {{ 'List of corrections made by %user%'|trans({'%user%':user.firstName|capitalize ~' '~ user.lastName|upper}, 'innova_collecticiel') }}
             <a class=" btn btn-default pull-right" href="{{ path('innova_collecticiel_edit', {'resourceId': dropzone.id}) }}"><span
-                        class="fa fa-pencil-square-o"></span> {{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}</a>
+                        class="fa fa-pencil-square-o"></span>{{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}</a>
         </h2>
 
         <div class="row">

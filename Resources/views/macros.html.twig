@@ -13,9 +13,11 @@
                     <thead>
                         <tr class="text-left">
 {#                            <th></th> #}
-                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Commented document'|trans({}, 'innova_collecticiel') }}<th>
+                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -23,7 +25,6 @@
                         {% for index, document in drop.documents %}
                             <tr id="row_{{ document.id }}">
 {#                                <td>{{ document.id }}</td> #}
-                                <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
                                 <td>
                                     {% if document.url is not null %}
                                         <a target="_blank"
@@ -33,6 +34,12 @@
                                            href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
                                     {% endif %}
                                 </td>
+                                <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
+
+                                <td>
+                                    ----
+                                </td>
+
 
                                 <td>
                                     {# Si la document a été demandé en évaluation alors je ne peux plus le faire #}
@@ -44,6 +51,11 @@
                                     {% endif %}
                                 </td>
 
+                                <td>
+                                    ----
+                                </td>
+
+
                                 {% if mode == 'complete' %}
                                     <td>
                                     {# Si la document a été validé alors je ne peux pas le supprimer #}
@@ -53,6 +65,9 @@
                                             <span class="fa fa-trash-o"></span>
                                             {{ 'Delete'|trans({}, 'innova_collecticiel') }}
                                         </a>
+                                    {% else %}
+                                <td>
+                                    ----
 
                                     {% endif %}
                                     </td>

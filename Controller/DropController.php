@@ -143,6 +143,13 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
+        $adminInnova = false;
+        echo $this->get('security.context')->isGranted('ROLE_ADMIN');
+        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)
+        && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
+            $adminInnova = true;
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -156,6 +163,7 @@ class DropController extends DropzoneBaseController
             'allowedTypes' => $allowedTypes,
             'resourceTypes' => $resourceTypes,
             'dropzoneProgress' => $dropzoneProgress,
+            'adminInnova' => $adminInnova,
         );
     }
 

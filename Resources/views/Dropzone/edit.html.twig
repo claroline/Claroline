@@ -7,7 +7,7 @@
     <div class="container container-dropzone">
 
         <h2>
-            {{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}
+            {{ adminInnova }} {{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}
             <div class="btn-group pull-right">
                 <!-- Suivre cette ressource -->
                 {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %}

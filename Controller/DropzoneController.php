@@ -280,12 +280,9 @@ class DropzoneController extends DropzoneBaseController
                 // check if manual state has changed
                 if ($manualStateChanged) {
                     // send notification.
-
                     $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
                     $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
                     $this->get('event_dispatcher')->dispatch('log', $event);
-
-
                 }
                 $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
                 $this->dispatch($event);
@@ -325,11 +322,18 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
+        $adminInnova = false;
+        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)
+        && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
+            $adminInnova = true;
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
             'dropzone' => $dropzone,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'adminInnova' => $adminInnova,
         );
     }
 
