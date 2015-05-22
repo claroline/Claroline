@@ -71,6 +71,10 @@ class PortfolioController extends Controller
                 return $this->redirect($this->generateUrl('icap_portfolio_list'));
             }
         } catch (\Exception $exception) {
+            echo "<pre>";
+            var_dump($exception->getMessage());
+            echo "</pre>" . PHP_EOL;
+            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
 
             return $this->redirect($this->generateUrl('icap_portfolio_list'));
@@ -337,7 +341,7 @@ class PortfolioController extends Controller
             throw $this->createNotFoundException("Unknown portfolio.");
         }
 
-        $openingMode = $this->getPortfolioManager()->getOpeningMode($portfolio, $user, $this->get('security.context')->isgranted('ROLE_ADMIN'));
+        $openingMode = $this->getPortfolioManager()->getOpeningMode($portfolio, $user, $this->get('security.authorization_checker')->isgranted('ROLE_ADMIN'));
 
         if (null === $openingMode) {
             $portfolioVisibility = $portfolio->getVisibility();

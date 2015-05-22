@@ -6,7 +6,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
 use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("icap_portfolio.factory.widget")
@@ -19,7 +19,7 @@ class WidgetFactory
     /** @var WidgetTypeManager  */
     protected $widgetTypeManager;
 
-    /** @var Translator  */
+    /** @var TranslatorInterface  */
     protected $translator;
 
     /**
@@ -31,7 +31,7 @@ class WidgetFactory
      *     "translator"               = @DI\Inject("translator")
      * })
      */
-    public function __construct(AbstractWidgetRepository $abstractWidgetRepository, WidgetTypeManager $widgetTypeManager, Translator $translator)
+    public function __construct(AbstractWidgetRepository $abstractWidgetRepository, WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator)
     {
         $this->abstractWidgetRepository = $abstractWidgetRepository;
         $this->widgetTypeManager        = $widgetTypeManager;

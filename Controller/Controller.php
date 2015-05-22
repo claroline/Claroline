@@ -5,11 +5,12 @@ namespace Icap\PortfolioBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class Controller extends BaseController
 {
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\Translation\Translator
+     * @return TranslatorInterface
      */
     public function getTranslator()
     {
@@ -17,7 +18,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return \Symfony\Bundle\FrameworkBundle\Translation\Translator
+     * @return \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface
      */
     public function getSessionFlashbag()
     {
