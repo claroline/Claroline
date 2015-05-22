@@ -20,9 +20,6 @@ class LogDropGradeAvailableEvent extends AbstractLogResourceEvent implements Not
     /**
      * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
      * @param \Icap\DropzoneBundle\Entity\Drop $drop
-     * @internal param \Icap\DropzoneBundle\Event\Log\Wiki $wiki
-     * @internal param \Icap\DropzoneBundle\Event\Log\Section $section
-     * @internal param \Icap\DropzoneBundle\Event\Log\Contribution $contribution
      */
     public function __construct(Dropzone $dropzone, Drop $drop)
     {

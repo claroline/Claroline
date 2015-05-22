@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 
 class CriterionController extends DropzoneBaseController
 {
@@ -33,7 +34,7 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template()
      */
-    public function editAddCriterionAction($dropzone, $page, $criterionId)
+    public function editAddCriterionAction(Request $request, $dropzone, $page, $criterionId)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -51,7 +52,7 @@ class CriterionController extends DropzoneBaseController
 
         $form = $this->createForm(new CriterionType(), $criterion);
 
-        if ($this->getRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
 
             return $this->render(
                 'IcapDropzoneBundle:Criterion:editAddCriterionModal.html.twig',
@@ -86,7 +87,7 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @Template("IcapDropzoneBundle:Dropzone:editAddCriteria.html.twig")
      */
-    public function editCreateCriterionAction($dropzone, $page, $criterionId)
+    public function editCreateCriterionAction(Request $request, $dropzone, $page, $criterionId)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -106,7 +107,7 @@ class CriterionController extends DropzoneBaseController
         }
 
         $form = $this->createForm(new CriterionType(), $criterion);
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $criterion = $form->getData();
@@ -165,7 +166,7 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
      * @Template()
      */
-    public function editDeleteCriterionAction(Dropzone $dropzone, $page, $criterion, $number)
+    public function editDeleteCriterionAction(Request $request, Dropzone $dropzone, $page, $criterion, $number)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -178,7 +179,7 @@ class CriterionController extends DropzoneBaseController
             ->getRepository('IcapDropzoneBundle:Correction')
             ->countByDropzone($dropzone->getId());
 
-        if ($this->getRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
 
             return $this->render(
                 'IcapDropzoneBundle:Criterion:editDeleteCriterionModal.html.twig',
@@ -217,13 +218,13 @@ class CriterionController extends DropzoneBaseController
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
      * @Template("IcapDropzoneBundle:Dropzone:editDeleteCriterion.html.twig")
      */
-    public function editRemoveCriterionAction(Dropzone $dropzone, $page, Criterion $criterion)
+    public function editRemoveCriterionAction(Request $request, Dropzone $dropzone, $page, Criterion $criterion)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $form = $this->createForm(new CriterionDeleteType(), $criterion);
-        $form->handleRequest($this->getRequest());
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
             $criterion = $form->getData();
@@ -237,7 +238,7 @@ class CriterionController extends DropzoneBaseController
             $this->dispatch($event);
 
             if ($dropzone->hasCriteria() === false) {
-                $this->getRequest()->getSession()->getFlashBag()->add(
+                $request->getSession()->getFlashBag()->add(
                     'warning',
                     $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'icap_dropzone')
                 );

@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Cocur\Slugify\Slugify;
 
@@ -227,7 +228,7 @@ class DocumentController extends DropzoneBaseController
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function documentAction($dropzone, $documentType, $drop)
+    public function documentAction(Request $request, $dropzone, $documentType, $drop)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
@@ -251,8 +252,8 @@ class DocumentController extends DropzoneBaseController
         }
         $form = $this->createForm(new DocumentType(), null, array('documentType' => $documentType));
 
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->createDocument($dropzone, $drop, $form, $documentType);
@@ -269,7 +270,7 @@ class DocumentController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Document:document.html.twig';
-        if ($this->getRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
             $view = 'IcapDropzoneBundle:Document:documentInline.html.twig';
         }
 
@@ -298,7 +299,7 @@ class DocumentController extends DropzoneBaseController
      * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
      * @Template()
      */
-    public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
+    public function deleteDocumentAction(Request $request, Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
@@ -312,8 +313,8 @@ class DocumentController extends DropzoneBaseController
 
         $form = $this->createForm(new DocumentDeleteType(), $document);
 
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
 
@@ -335,7 +336,7 @@ class DocumentController extends DropzoneBaseController
         }
 
         $view = 'IcapDropzoneBundle:Document:deleteDocument.html.twig';
-        if ($this->getRequest()->isXMLHttpRequest()) {
+        if ($request->isXMLHttpRequest()) {
             $view = 'IcapDropzoneBundle:Document:deleteDocumentModal.html.twig';
         }
 

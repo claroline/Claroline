@@ -5,7 +5,7 @@ namespace Icap\DropzoneBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DropzoneCommonType extends AbstractType
 {
@@ -40,9 +40,10 @@ class DropzoneCommonType extends AbstractType
             ->add('peerReview', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    false => 'Standard evaluation',
-                    true => 'Peer review evaluation'
+                    'Standard evaluation' => false,
+                    'Peer review evaluation' => true
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
@@ -59,21 +60,23 @@ class DropzoneCommonType extends AbstractType
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    true => 'manualPlanning',
-                    false => 'sheduleByDate'
+                    'manualPlanning' => true,
+                    'sheduleByDate' => false
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
 
             ->add('manualState', 'choice', array(
                 'choices' => array(
-                    'notStarted' => 'notStartedManualState',
-                    'allowDrop' => 'allowDropManualState',
-                    'peerReview' => 'peerReviewManualState',
-                    'allowDropAndPeerReview' => 'allowDropAndPeerReviewManualState',
-                    'finished' => 'finishedManualState',
+                    'notStartedManualState' => 'notStarted',
+                    'allowDropManualState' => 'allowDrop',
+                    'peerReviewManualState' => 'peerReview',
+                    'allowDropAndPeerReviewManualState' => 'allowDropAndPeerReview',
+                    'finishedManualState' => 'finished',
                 ),
+                'choices_as_values' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
@@ -98,13 +101,14 @@ class DropzoneCommonType extends AbstractType
         return 'icap_dropzone_common_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
+                'data_class' => 'Icap\DropzoneBundle\Entity\Dropzone',
                 'language' => 'en',
                 'translation_domain' => 'icap_dropzone',
-                'date_format'     => DateType::HTML5_FORMAT,
+                'date_format' => DateType::HTML5_FORMAT,
             )
         );
     }
