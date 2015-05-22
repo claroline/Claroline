@@ -82,7 +82,7 @@
         }
 
         field.addClass('resource-picker-done').addClass('hide');
-        checkView($('.input-group', field));
+        checkView(element);
     };
 
     function processCustomParameters(datas) {
