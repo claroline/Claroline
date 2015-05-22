@@ -4,10 +4,10 @@ namespace Icap\NotificationBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Icap\NotificationBundle\Manager\NotificationManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * @DI\Service()
@@ -17,26 +17,26 @@ class ConfigureMenuListener
     private $translator;
     private $notificationManager;
     private $templating;
-    private $securityContext;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *     "translator"          = @DI\Inject("translator"),
      *     "notificationManager" = @DI\Inject("icap.notification.manager"),
      *     "templating"          = @DI\Inject("templating"),
-     *     "securityContext"     = @DI\Inject("security.context")
+     *     "tokenStorage"     = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
-        Translator $translator,
+        TranslatorInterface $translator,
         NotificationManager $notificationManager,
         TwigEngine $templating,
-        SecurityContext $securityContext
+        TokenStorageInterface $tokenStorage
     ) {
         $this->translator = $translator;
         $this->notificationManager = $notificationManager;
         $this->templating = $templating;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -47,7 +47,7 @@ class ConfigureMenuListener
      */
     public function onTopBarLeftMenuConfigure(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user !== 'anon.') {
             $countUnviewedNotifications = $this->notificationManager->countUnviewedNotifications($user->getId());
@@ -84,7 +84,7 @@ class ConfigureMenuListener
      */
     public function onDesktopParametersMenuConfigure(ConfigureMenuEvent $event)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user !== 'anon.') {
             $menu = $event->getMenu();
