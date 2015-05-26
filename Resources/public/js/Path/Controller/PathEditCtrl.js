@@ -3,12 +3,12 @@
  * @returns {PathEditCtrl}
  * @constructor
  */
-var PathEditCtrl = function PathEditCtrl($route, PathService, HistoryService, ClipboardService, $scope) {
+var PathEditCtrl = function PathEditCtrl($route, PathService, HistoryService, ConfirmService, $scope) {
     // Call parent constructor
     PathBaseCtrl.apply(this, arguments);
 
-    this.historyService   = HistoryService;
-    this.clipboardService = ClipboardService;
+    this.historyService = HistoryService;
+    this.confirmService = ConfirmService;
 
     this.historyDisabled = HistoryService.getDisabled();
 
