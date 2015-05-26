@@ -45,7 +45,7 @@ class ThemeCompileCommand extends ContainerAwareCommand
 
             $output->writeln(str_pad($name, 50)." <comment>".$list[$name]."</comment>");
             if ($list[$name] === 'less-generated') {
-                $name = $themeService->findTheme(array('name' => $name));
+                $name = $themeService->getThemeBy(array('name' => $name));
             } else {
                 $name = $list[$name];
             }

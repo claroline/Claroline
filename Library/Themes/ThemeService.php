@@ -105,26 +105,9 @@ class ThemeService
      *                      (example: array('id' => 3, 'name' => 'Claroline'))
      * @return Theme|null
      */
-    public function findTheme(array $filter)
+    public function getThemeBy(array $filter)
     {
-        $search = null;
-
-        foreach ($this->retrieveThemes() as $theme) {
-            $compare = 0;
-
-            foreach ($filter as $key => $value) {
-                if ($theme->get($key) === $value) {
-                    $compare++;
-                }
-            }
-
-            if ($compare === count($filter)) {
-                $search = $theme;
-                break;
-            }
-        }
-
-        return $search;
+        return $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')->findOneBy($filter);
     }
 
     public function editTheme($variables, $name = null, $id = null, $themeLess)
