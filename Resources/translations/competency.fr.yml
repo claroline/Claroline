@@ -39,6 +39,7 @@ info:
   no_frame_no_scale: Il n'y a pas encore de référentiels ni d'échelles. Si vous choisissez de créer un référentiel maintenant, celui-ci se verra assigner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.
   no_frame_to_select: Aucun référentiel de compétences n'a encore été défini.
   no_group_objectives: Aucun objectif n'a encore été assigné à un groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
+  no_my_objectives: Aucun objectif d'apprentissage ne vous est actuellement assigné.
   no_scale: Il n'y a pas encore d'échelles. Vous pouvez créer une nouvelle échelle à l'aide du bouton ci-dessous.
   no_objective_group_users: Ce groupe ne comprend actuellement aucun utilisateur.
   no_objective_groups: Cet objectif n'a encore été assigné à un aucun groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".

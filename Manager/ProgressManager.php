@@ -343,7 +343,7 @@ class ProgressManager
             $percentageSum += $competencyProgress->getPercentage();
         }
 
-        $percentage = (int) ($percentageSum / $count);
+        $percentage = $count > 0 ? (int) ($percentageSum / $count) : 0;
         $objectiveProgress->setPercentage($percentage);
 
         return $percentage;
@@ -383,7 +383,7 @@ class ProgressManager
             $percentageSum += $objectiveProgress->getPercentage();
         }
 
-        $percentage = (int) ($percentageSum / $count);
+        $percentage = $count > 0 ? (int) ($percentageSum / $count) : 0;
         $progress->setPercentage($percentage);
 
         return $percentage;

@@ -1,1 +1,29 @@
-TODO
+{% if objectives|length > 0 %}
+    <table class="table table-condensed table-bordered">
+        <tbody>
+            {% for objective in objectives %}
+                <tr>
+                    <td style="vertical-align: middle">
+                        {{ objective.name }}
+                    </td>
+                    <td style="width: 200px; vertical-align: middle">
+                        <div class="progress"
+                             title="{{ objective.progress }}%"
+                             style="margin: inherit">
+                            <div class="progress-bar"
+                                 role="progressbar"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 aria-valuenow="{{ objective.progress }}"
+                                 style="width: {{ objective.progress }}%">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <i class="fa fa-info-circle"></i>
+    <em>{{ 'info.no_my_objectives'|trans({}, 'competency') }}</em>
+{% endif %}
