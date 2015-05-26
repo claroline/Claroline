@@ -29,13 +29,6 @@
         </div>
         {% endif %}
 
-        {% javascripts debug=false filter='jsmin' output='js/claroline/resourceinput.js'
-            'bundles/fosjsrouting/js/router.js'
-            'bundles/clarolinecore/js/resource/manager/manager.js'
-            'bundles/clarolinecore/js/resourceinput.js'
-        %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-        {% endjavascripts %}
         <script type="text/javascript">
             (function($) {
                 "use strict";
