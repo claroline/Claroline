@@ -167,7 +167,7 @@
         <div class="panel-body">
             
             {% if options['show_all_my_contacts'] is not defined or options['show_all_my_contacts'] %}
-                <div class="panel panel-default">
+                <div class="panel panel-success">
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#all-my-contacts-content">
@@ -313,7 +313,7 @@
             <div class="panel-group" role="tablist" id="category-list-box">
                 {% for category in categories %}
                     {% set categoryId = category.getId() %}
-                    <div class="panel panel-default category-element"
+                    <div class="panel panel-info category-element"
                          id="category-box-{{ categoryId }}"
                          style="overflow: visible"
                     >
@@ -485,7 +485,7 @@
             
             {% if options['show_all_visible_users'] is not defined or options['show_all_visible_users'] %}
                 <div id="all-visible-users-box">
-                    <div class="panel panel-default">
+                    <div class="panel panel-danger">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 <a data-toggle="collapse" href="#all-visible-users-content">
