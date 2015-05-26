@@ -21,6 +21,6 @@ class DoctrineDebug extends ContainerAware
     {
         //uncomment this line for doctrine insert optimization !
         //reduce the amount of flushes to increase performances
-        echo('flush !');
+//        echo('flush !');
     }
 }

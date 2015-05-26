@@ -206,8 +206,10 @@ class ContactManager
     }
 
     public function sortContactsByCategories(
-        array $allContacts,
+        User $user,
         array $categories,
+        $orderedBy = 'firstName',
+        $order = 'ASC',
         $page = 1,
         $max = 50
     )
@@ -219,22 +221,24 @@ class ContactManager
             $contacts[$category->getId()] = array();
         }
 
-        foreach ($allContacts as $contact) {
-            $user = $contact->getContact();
-            $contacts['all_my_contacts'][] = $user;
-            $cats = $contact->getCategories();
+        $contacts['all_my_contacts'] = $this->getUserContactsWithPager(
+            $user,
+            '',
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
 
-            foreach ($cats as $cat) {
-                $catId = $cat->getId();
-
-                if (isset($contacts[$catId])) {
-                    $contacts[$catId][] = $user;
-                }
-            }
-        }
-
-        foreach ($contacts as $key => $value) {
-            $contacts[$key] = $this->pagerFactory->createPagerFromArray($value, $page, $max);
+        foreach ($categories as $category) {
+            $contacts[$category->getId()] = $this->getUserContactsByCategoryWithPager(
+                $user,
+                $category,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            );
         }
 
         return $contacts;

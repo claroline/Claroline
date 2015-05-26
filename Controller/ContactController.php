@@ -85,8 +85,10 @@ class ContactController extends Controller
             $order
         );
         $contacts = $this->contactManager->sortContactsByCategories(
-            $allContacts,
+            $authenticatedUser,
             $categories,
+            $orderedBy,
+            $order,
             $page,
             $max
         );

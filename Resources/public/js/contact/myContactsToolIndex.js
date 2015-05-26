@@ -19,7 +19,7 @@
     $('#my-contacts-tool').on('click', '#contacts-configure-btn', function () {
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_contact_options_configure_form'),
-            refreshPage,
+            reloadIndexPage,
             function() {}
         );
     });
@@ -193,6 +193,10 @@
         );
     });
     
+    var reloadIndexPage = function () {
+        window.location = Routing.generate('claro_my_contacts_tool_index');
+    };
+    
     var refreshPage = function () {
         window.location.reload();
     };
@@ -202,7 +206,7 @@
         var name = datas['name'];
       
         var categoryElement =
-            '<div class="panel panel-default category-element" id="category-box-' +
+            '<div class="panel panel-info category-element" id="category-box-' +
                 id + '" style="overflow: visible">' +
                 
                 '<div class="panel-heading">' +
