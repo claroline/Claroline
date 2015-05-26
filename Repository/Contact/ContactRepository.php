@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository\Contact;
 
 use Doctrine\ORM\EntityRepository;
+use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\User;
 
 class ContactRepository extends EntityRepository
@@ -100,5 +101,28 @@ class ContactRepository extends EntityRepository
         $query->setParameter('contact', $contact);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
+    }
+
+    public function findContactsByUserAndCategory(
+        User $user,
+        Category $category,
+        $orderedBy = 'lastName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CoreBundle\Entity\Contact\Contact c
+            JOIN c.contact cc
+            JOIN c.categories cat WITH (cat = :category)
+            WHERE c.user = :user
+            ORDER BY cc.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('category', $category);
+
+        return $executeQuery ? $query->getResult() : $query;
     }
 }

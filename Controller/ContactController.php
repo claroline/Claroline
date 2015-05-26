@@ -13,8 +13,9 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Form\ContactCategoryType;
-use Claroline\CoreBundle\Form\ContactOptionsType;
+use Claroline\CoreBundle\Form\Contact\CategoriesTransferType;
+use Claroline\CoreBundle\Form\Contact\CategoryType;
+use Claroline\CoreBundle\Form\Contact\OptionsType;
 use Claroline\CoreBundle\Manager\ContactManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -78,14 +79,16 @@ class ContactController extends Controller
             'name',
             'ASC'
         );
-        $allContacts = $this->contactManager->getUserContacts($authenticatedUser);
-        $contacts = $this->contactManager->getUserContactsWithPager(
+        $allContacts = $this->contactManager->getContactsByUser(
             $authenticatedUser,
-            '',
-            $page,
-            $max,
             $orderedBy,
             $order
+        );
+        $contacts = $this->contactManager->sortContactsByCategories(
+            $allContacts,
+            $categories,
+            $page,
+            $max
         );
         $params = array(
             'options' => $options,
@@ -135,6 +138,45 @@ class ContactController extends Controller
         );
 
         return array(
+            'options' => $options,
+            'contacts' => $contacts,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/show/category/{category}/contacts/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}",
+     *     name="claro_contact_show_contacts_by_category",
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC"},
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function showCategoryContactsAction(
+        User $authenticatedUser,
+        Category $category,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
+        $contacts = $this->contactManager->getUserContactsByCategoryWithPager(
+            $authenticatedUser,
+            $category,
+            $page,
+            $max,
+            $orderedBy,
+            $order
+        );
+
+        return array(
+            'category' => $category,
             'options' => $options,
             'contacts' => $contacts,
             'max' => $max,
@@ -238,7 +280,7 @@ class ContactController extends Controller
     public function optionsConfigureFormAction(User $authenticatedUser)
     {
         $options = $this->contactManager->getUserOptions($authenticatedUser);
-        $form = $this->formFactory->create(new ContactOptionsType($options));
+        $form = $this->formFactory->create(new OptionsType($options));
 
         return array('form' => $form->createView());
     }
@@ -256,7 +298,7 @@ class ContactController extends Controller
     public function optionsConfigureAction(User $authenticatedUser)
     {
         $options = $this->contactManager->getUserOptions($authenticatedUser);
-        $form = $this->formFactory->create(new ContactOptionsType($options));
+        $form = $this->formFactory->create(new OptionsType($options));
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -289,7 +331,7 @@ class ContactController extends Controller
      */
     public function categoryCreateFormAction()
     {
-        $form = $this->formFactory->create(new ContactCategoryType(), new Category());
+        $form = $this->formFactory->create(new CategoryType(), new Category());
 
         return array('form' => $form->createView());
     }
@@ -308,7 +350,7 @@ class ContactController extends Controller
     {
         $category = new Category();
         $category->setUser($authenticatedUser);
-        $form = $this->formFactory->create(new ContactCategoryType(), $category);
+        $form = $this->formFactory->create(new CategoryType(), $category);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -341,9 +383,10 @@ class ContactController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
      */
-    public function categoryEditFormAction(Category $category)
+    public function categoryEditFormAction(User $authenticatedUser, Category $category)
     {
-        $form = $this->formFactory->create(new ContactCategoryType(), $category);
+        $this->checkUserAccessForCategory($category, $authenticatedUser);
+        $form = $this->formFactory->create(new CategoryType(), $category);
 
         return array('form' => $form->createView(), 'category' => $category);
     }
@@ -358,9 +401,10 @@ class ContactController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
      */
-    public function categoryEditAction(Category $category)
+    public function categoryEditAction(User $authenticatedUser, Category $category)
     {
-        $form = $this->formFactory->create(new ContactCategoryType(), $category);
+        $this->checkUserAccessForCategory($category, $authenticatedUser);
+        $form = $this->formFactory->create(new CategoryType(), $category);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -383,12 +427,83 @@ class ContactController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Contact:categoryEditModalForm.html.twig")
      */
     public function categoryDeleteAction(User $authenticatedUser, Category $category)
     {
         $this->checkUserAccessForCategory($category, $authenticatedUser);
         $this->contactManager->deleteCategory($category);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contact/{user}/categories/transfer/form",
+     *     name="claro_contact_categories_transfer_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Contact:categoriesTransferModalForm.html.twig")
+     */
+    public function categoriesTransferFormAction(User $authenticatedUser, User $user)
+    {
+        $contact = $this->contactManager->getContactByUserAndContact($authenticatedUser, $user);
+        $form = $this->formFactory->create(new CategoriesTransferType($authenticatedUser), $contact);
+
+        return array('form' => $form->createView(), 'contact' => $user);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contact/{user}/categories/transfer",
+     *     name="claro_contact_categories_transfer",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Contact:categoriesTransferModalForm.html.twig")
+     */
+    public function categoriesTransferAction(User $authenticatedUser, User $user)
+    {
+        $contact = $this->contactManager->getContactByUserAndContact($authenticatedUser, $user);
+        $form = $this->formFactory->create(new CategoriesTransferType($authenticatedUser), $contact);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+
+            if (!is_null($contact)) {
+                $this->contactManager->persistContact($contact);
+            }
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'contact' => $user);
+        }
+
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contact/{user}/category/{category}/remove",
+     *     name="claro_contact_category_remove",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function contactCategoryRemoveAction(
+        User $authenticatedUser,
+        User $user,
+        Category $category
+    )
+    {
+        $contact = $this->contactManager->getContactByUserAndContact(
+            $authenticatedUser,
+            $user
+        );
+
+        if (!is_null($contact)) {
+            $this->contactManager->removeContactFromCategory($contact, $category);
+        }
 
         return new JsonResponse('success', 200);
     }

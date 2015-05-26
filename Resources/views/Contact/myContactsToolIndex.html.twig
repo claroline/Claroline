@@ -18,6 +18,25 @@
 }}
 {% endmacro %}
 
+{% macro renderCategoryContactsPager(pager, categoryId, max, orderedBy, order) %}
+{{
+    pagerfanta(
+        pager,
+        'twitter_bootstrap_translated',
+        {
+            'proximity' : 1,
+            'routeName': 'claro_contact_show_contacts_by_category',
+            'routeParams': {
+                'category': categoryId,
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': order
+            }
+        }
+    )
+}}
+{% endmacro %}
+
 {% macro renderAllVisibleUsersPager(pager, max, orderedBy, order) %}
 {{
     pagerfanta(
@@ -55,6 +74,26 @@
     }}
 {% endmacro %}
 
+{% macro sortCategoryContactsUrl(categoryId, max, orderedBy, order) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{
+        path(
+            'claro_contact_show_contacts_by_category',
+            {
+                'category': categoryId,
+                'max': max,
+                'orderedBy': orderedBy,
+                'order': newOrder
+            }
+        )
+    }}
+{% endmacro %}
+
 {% macro sortAllVisibleUsersUrl(max, orderedBy, order) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
@@ -75,8 +114,10 @@
 {% endmacro %}
 
 {% from _self import renderAllMyContactsPager %}
+{% from _self import renderCategoryContactsPager %}
 {% from _self import renderAllVisibleUsersPager %}
 {% from _self import sortAllMyContactsUrl %}
+{% from _self import sortCategoryContactsUrl %}
 {% from _self import sortAllVisibleUsersUrl %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
@@ -134,7 +175,7 @@
                             </a>
                             &nbsp;
                             <span class="badge" id="all-my-contacts-badge">
-                                {{ contacts|length }}
+                                {{ contacts['all_my_contacts']|length }}
                             </span>
                             <i class="fa fa-user-plus pointer-hand pull-right"
                                id="add-contacts-btn"
@@ -151,13 +192,13 @@
                             >
                             </div>
                                 
-                            {% if contacts|length > 0 %}
+                            {% if contacts['all_my_contacts']|length > 0 %}
 
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="input-group margin-bottom-md pull-left">
-                                            {% if contacts.getNbPages() > 1 %}
-                                                {{ renderAllMyContactsPager(contacts, max, orderedBy, order) }}
+                                            {% if contacts['all_my_contacts'].getNbPages() > 1 %}
+                                                {{ renderAllMyContactsPager(contacts['all_my_contacts'], max, orderedBy, order) }}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -213,7 +254,7 @@
                                             </th>
                                         </tr>
 
-                                        {% for contact in contacts %}
+                                        {% for contact in contacts['all_my_contacts'] %}
                                             <tr class="contact-row-{{ contact.getId() }}">
                                                 {% if options['show_picture'] is not defined or options['show_picture'] %}
                                                     <td>
@@ -234,6 +275,14 @@
                                                     <td>{{ contact.getPhone() }}</td>
                                                 {% endif %}
                                                 <td>
+                                                    <span class="btn btn-default add-contact-to-category"
+                                                          data-contact-id="{{ contact.getId() }}"
+                                                          data-toggle="tooltip"
+                                                          data-placement="left"
+                                                          title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
+                                                    >
+                                                        <i class="fa fa-bars"></i>
+                                                    </span>
                                                     <span class="btn btn-danger delete-contact"
                                                           data-contact-id="{{ contact.getId() }}"
                                                           data-toggle="tooltip"
@@ -248,12 +297,12 @@
                                     </table>
                                 </div>
 
-                                {% if contacts.getNbPages() > 1 %}
-                                    {{ renderAllMyContactsPager(contacts, max, orderedBy, order) }}
+                                {% if contacts['all_my_contacts'].getNbPages() > 1 %}
+                                    {{ renderAllMyContactsPager(contacts['all_my_contacts'], max, orderedBy, order) }}
                                 {% endif %}
                             {% else %}
                                 <div class="alert alert-warning">
-                                    {{ 'no_user'|trans({}, 'platform') }}
+                                    {{ 'no_contact'|trans({}, 'platform') }}
                                 </div>
                             {% endif %}
                         </div>
@@ -278,7 +327,12 @@
                                 </a>
                                 &nbsp;
                                 <span class="badge" id="category-badge-{{ categoryId }}">
-                                    0
+                                    
+                                    {% if contacts[categoryId] is defined %}
+                                        {{ contacts[categoryId]|length }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
                                 </span>
                                 <span class="dropdown pull-right">
                                     <i class="fa fa-cogs pointer-hand"
@@ -309,7 +363,119 @@
                             </h4>
                         </div>
                         <div id="category-content-{{ categoryId }}" class="panel-collapse collapse">
-                            <div class="panel-body" id="category-content-body-{{ categoryId }}">
+                            <div class="panel-body category-content-body"
+                                 id="category-content-body-{{ categoryId }}"
+                                 data-category-id="{{ categoryId }}"
+                            >   
+                                {% if contacts[categoryId]|length > 0 %}
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-group margin-bottom-md pull-left">
+                                                
+                                                {% if contacts[categoryId].getNbPages() > 1 %}
+                                                    {{ renderCategoryContactsPager(contacts[categoryId], categoryId, max, orderedBy, order) }}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group pull-right" style="margin: 20px 0">
+                                                {{ maxResultsSelectBox(max, "$('#max-results-button').trigger('click');", 'contacts_per_page') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tr>
+                                                {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                    <th>{{ 'picture'|trans({}, 'platform') }}</th>
+                                                {% endif %}
+                                                <th>
+                                                    <a href="{{ sortCategoryContactsUrl(categoryId, max, 'firstName', order)|trim }}">
+                                                        {{ 'firstName'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="{{ sortCategoryContactsUrl(categoryId, max, 'lastName', order)|trim }}">
+                                                        {{ 'lastName'|trans({}, 'platform') }}
+                                                    </a>
+                                                </th>
+
+                                                {% if options['show_username'] is not defined or options['show_username'] %}
+                                                    <th>
+                                                        <a href="{{ sortCategoryContactsUrl(categoryId, max, 'username', order)|trim }}">
+                                                            {{ 'username'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+
+                                                {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                    <th>
+                                                        <a href="{{ sortCategoryContactsUrl(categoryId, max, 'mail', order)|trim }}">
+                                                            {{ 'mail'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+
+                                                {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                    <th>
+                                                        <a href="{{ sortCategoryContactsUrl(categoryId, max, 'phone', order)|trim }}">
+                                                            {{ 'phone'|trans({}, 'platform') }}
+                                                        </a>
+                                                    </th>
+                                                {% endif %}
+                                                <th>
+                                                    {{ 'actions'|trans({}, 'platform') }}
+                                                </th>
+                                            </tr>
+
+                                            {% for contact in contacts[categoryId] %}
+                                                <tr class="contact-row-{{ contact.getId() }} contact-row-{{ categoryId }}-{{ contact.getId() }}"
+                                                    data-category-id="{{ categoryId }}"
+                                                >
+                                                    {% if options['show_picture'] is not defined or options['show_picture'] %}
+                                                        <td>
+                                                        </td>
+                                                    {% endif %}
+                                                    <td>{{ contact.getFirstName() }}</td>
+                                                    <td>{{ contact.getLastName() }}</td>
+
+                                                    {% if options['show_username'] is not defined or options['show_username'] %}
+                                                        <td>{{ contact.getUsername() }}</td>
+                                                    {% endif %}
+
+                                                    {% if options['show_mail'] is not defined or options['show_mail'] %}
+                                                        <td>{{ contact.getMail() }}</td>
+                                                    {% endif %}
+
+                                                    {% if options['show_phone'] is not defined or options['show_phone'] %}
+                                                        <td>{{ contact.getPhone() }}</td>
+                                                    {% endif %}
+                                                    <td>
+                                                        <span class="btn btn-danger remove-contact"
+                                                              data-contact-id="{{ contact.getId() }}"
+                                                              data-category-id="{{ categoryId }}"
+                                                              data-toggle="tooltip"
+                                                              data-placement="left"
+                                                              title="{{ 'remove_contact_from_category'|trans({}, 'platform') }}"
+                                                        >
+                                                            <i class="fa fa-times-circle"></i>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+
+                                    {% if contacts[categoryId].getNbPages() > 1 %}
+                                        {{ renderCategoryContactsPager(contacts[categoryId], categoryId, max, orderedBy, order) }}
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-warning">
+                                        {{ 'no_contact'|trans({}, 'platform') }}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

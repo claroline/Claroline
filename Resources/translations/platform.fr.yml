@@ -70,6 +70,7 @@ actualize: Actualiser
 add: Ajouter
 add_a_logo: 'Ajouter un logo'
 add_category: 'Ajouter une catégorie'
+add_contact_to_category: 'Ajouter le contact à une catégorie'
 add_contacts: 'Ajouter des contacts'
 add_field_to_facet: 'Ajouter un champ à une facette'
 add_field_to_panel: 'Ajouter un champ'
@@ -731,6 +732,8 @@ registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 registration_validation: 'Validation de l''inscription'
 remove: Enlever
+remove_contact_from_category: 'Retirer le contact de la catégorie'
+remove_contact_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer ce contact de cette catégorie ?'
 remove_facet: 'Supprimer une facette'
 remove_facet_confirm: 'Etes-vous sur de vouloir supprimer la facette %name% ?'
 remove_field: 'Supprimer une champ'

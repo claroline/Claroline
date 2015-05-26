@@ -108,6 +108,16 @@
         );
     });
     
+    $('#all-my-contacts-content-body').on('click', '.add-contact-to-category', function () {
+        var contactId = $(this).data('contact-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_contact_categories_transfer_form', {'user': contactId}),
+            refreshPage,
+            function() {}
+        );
+    });
+    
     $('#all-visible-users-content-body').on('click', 'a', function (event) {
         event.preventDefault();
         var element = event.currentTarget;
@@ -132,6 +142,55 @@
                 $('#all-visible-users-content-body').html(datas);
             }
         });
+    });
+    
+    $('.category-content-body').on('click', 'a', function (event) {
+        event.preventDefault();
+        var element = event.currentTarget;
+        var route = $(element).attr('href');
+        var categoryElement = $(element).parents('.category-content-body');
+        var categoryId = categoryElement.data('category-id');
+
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                $('#category-content-body-' + categoryId).html(datas);
+            }
+        });
+    });
+    
+    $('.category-content-body').on('change', '#max-select', function () {
+        var max = $(this).val();
+        var categoryElement = $(this).parents('.category-content-body');
+        var categoryId = categoryElement.data('category-id');
+
+        $.ajax({
+            url: Routing.generate(
+                'claro_contact_show_contacts_by_category',
+                {'category': categoryId, 'max': max}
+            ),
+            type: 'GET',
+            success: function (datas) {
+                $('#category-content-body-' + categoryId).html(datas);
+            }
+        });
+    });
+    
+    $('.category-content-body').on('click', '.remove-contact', function () {
+        var contactId = $(this).data('contact-id');
+        var categoryId = $(this).data('category-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_contact_category_remove',
+                {'user': contactId, 'category': categoryId}
+            ),
+            removeContactFromCategory,
+            {'contact': contactId, 'category': categoryId},
+            Translator.trans('remove_contact_from_category_confirm_message', {}, 'platform'),
+            Translator.trans('remove_contact_from_category', {}, 'platform')
+        );
     });
     
     var refreshPage = function () {
@@ -227,6 +286,24 @@
         if (index > -1) {
             allContactIds.splice(index, 1);
         }
-        $('.contact-row-' + contactId).remove();
+        $('.contact-row-' + contactId).each(function () {
+            var categoryId = $(this).data('category-id');
+            $(this).remove();
+            
+            if (categoryId !== undefined) {
+                var nbContacts = parseInt($('#category-badge-' + categoryId).html());
+                nbContacts--;
+                $('#category-badge-' + categoryId).html(nbContacts);
+            }
+        });
+    };
+    
+    var removeContactFromCategory = function (event, datas) {
+        var contactId = datas['contact'];
+        var categoryId = datas['category'];
+        var nbContacts = parseInt($('#category-badge-' + categoryId).html());
+        nbContacts--;
+        $('#category-badge-' + categoryId).html(nbContacts);
+        $('.contact-row-' + categoryId + '-' + contactId).remove();
     };
 })();

@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Contact;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ContactCategoryType extends AbstractType
+class CategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

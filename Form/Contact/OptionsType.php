@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Contact;
 
 use Claroline\CoreBundle\Entity\Contact\Options;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class ContactOptionsType extends AbstractType
+class OptionsType extends AbstractType
 {
     private $options;
 

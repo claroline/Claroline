@@ -69,6 +69,7 @@ actualize: Actualize
 add: Add
 add_a_logo: 'Add a logo'
 add_category: 'Add category'
+add_contact_to_category: 'Add contact to a category'
 add_contacts: 'Add contacts'
 add_field_to_facet: 'Add field to facet'
 add_field_to_panel: 'Add a field'
@@ -730,6 +731,8 @@ registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 registration_validation: 'Registration validation'
 remove: Remove
+remove_contact_from_category: 'Remove contact_from_category'
+remove_contact_from_category_confirm_message: 'Are you sure you want to remove this contact from this category ?'
 remove_facet: 'Remove a facet'
 remove_facet_confirm: 'Do you really want to remove the facet %name% ?'
 remove_field: 'Remove a field'

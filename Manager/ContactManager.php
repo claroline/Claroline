@@ -92,6 +92,42 @@ class ContactManager
         return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
     }
 
+    public function getUserContactsByCategory(
+        User $user,
+        Category $category,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $users = array();
+        $contacts = $this->getContactsByUserAndCategory(
+            $user,
+            $category,
+            $orderedBy,
+            $order
+        );
+
+        foreach ($contacts as $contact) {
+            $users[] = $contact->getContact();
+        }
+
+        return $users;
+    }
+
+    public function getUserContactsByCategoryWithPager(
+        User $user,
+        Category $category,
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'lastName',
+        $order = 'ASC'
+    )
+    {
+        $contacts = $this->getUserContactsByCategory($user, $category, $orderedBy, $order);
+
+        return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
+    }
+
     public function getUserOptionsValues(User $user)
     {
         $options = $this->getUserOptions($user);
@@ -169,6 +205,47 @@ class ContactManager
         $this->om->endFlushSuite();
     }
 
+    public function sortContactsByCategories(
+        array $allContacts,
+        array $categories,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $contacts = array();
+        $contacts['all_my_contacts'] = array();
+
+        foreach ($categories as $category) {
+            $contacts[$category->getId()] = array();
+        }
+
+        foreach ($allContacts as $contact) {
+            $user = $contact->getContact();
+            $contacts['all_my_contacts'][] = $user;
+            $cats = $contact->getCategories();
+
+            foreach ($cats as $cat) {
+                $catId = $cat->getId();
+
+                if (isset($contacts[$catId])) {
+                    $contacts[$catId][] = $user;
+                }
+            }
+        }
+
+        foreach ($contacts as $key => $value) {
+            $contacts[$key] = $this->pagerFactory->createPagerFromArray($value, $page, $max);
+        }
+
+        return $contacts;
+    }
+
+    public function removeContactFromCategory(Contact $contact, Category $category)
+    {
+        $contact->removeCategory($category);
+        $this->persistContact($contact);
+    }
+
     /***************************************
      * Access to ContactRepository methods *
      ***************************************/
@@ -218,6 +295,23 @@ class ContactManager
         return $this->contactRepo->findContactByUserAndContact(
             $user,
             $contact,
+            $executeQuery
+        );
+    }
+
+    public function getContactsByUserAndCategory(
+        User $user,
+        Category $category,
+        $orderedBy = 'lastName',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        return $this->contactRepo->findContactsByUserAndCategory(
+            $user,
+            $category,
+            $orderedBy,
+            $order,
             $executeQuery
         );
     }
