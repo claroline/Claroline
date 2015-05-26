@@ -36,7 +36,7 @@
             <div class="media comment ng-cloak" data-ng-repeat="comment in comments | orderBy:['+date']"
                  data-ng-show="selectedPortfolioId && comments.$resolved">
                 {% verbatim %}
-                <img class="pull-left media-object avatar" alt="{{ comment.sender.lastName }} {{ comment.sender.firstName }}"
+                <img class="pull-left media-object avatar" alt="{{ comment.sender.firstName }} {{ comment.sender.lastName }}"
                      data-ng-src="{{ assetPath + comment.sender.avatar }}" data-ng-if="comment.sender.avatar">
                 <span class="fa pull-left avatar empty-avatar" data-ng-if="!comment.sender.avatar" data-ng-class="{'loading': !comment.date, 'fa-user': comment.date}"></span>
                 <div class="media-body">
@@ -45,7 +45,7 @@
                         {{ comment.date|date : ('comment_date_format'|trans) }}
                     </small>
                     <small class="pull-right loading" data-ng-show="!comment.date"></small>
-                    <h5 class="media-heading">{{ comment.sender.lastName }} {{ comment.sender.firstName }}</h5>
+                    <h5 class="media-heading">{{ comment.sender.firstName }} {{ comment.sender.lastName }}</h5>
                     <p class="col-lg-10" data-ng-bind-html="comment.message"></p>
                 </div>
                 {% endverbatim %}
