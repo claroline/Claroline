@@ -10,6 +10,10 @@
 (function () {
     'use strict';
     
+    var currentSearch = $('#contacts-datas-box').data('search');
+    var currentMax = $('#contacts-datas-box').data('max');
+    var currentOrderedBy = $('#contacts-datas-box').data('ordered-by');
+    var currentOrder = $('#contacts-datas-box').data('order');
     var allContactIdsTxt = '' + $('#all-my-contacts-datas-box').data('contacts-id');
     allContactIdsTxt = allContactIdsTxt.trim();
     var allContactIds = allContactIdsTxt !== '' ?
@@ -19,7 +23,7 @@
     $('#my-contacts-tool').on('click', '#contacts-configure-btn', function () {
         window.Claroline.Modal.displayForm(
             Routing.generate('claro_contact_options_configure_form'),
-            reloadIndexPage,
+            refreshPage,
             function() {}
         );
     });
@@ -193,9 +197,70 @@
         );
     });
     
-    var reloadIndexPage = function () {
-        window.location = Routing.generate('claro_my_contacts_tool_index');
-    };
+    $('#my-contacts-tool').on('click', '#search-contact-btn', function () {
+        var search = $('#search-contact-input').val();
+        window.location = Routing.generate(
+            'claro_my_contacts_tool_index',
+            {
+                'search': search,
+                'max': currentMax,
+                'orderedBy': currentOrderedBy,
+                'order': currentOrder
+            }
+        );
+    });
+
+    $('#my-contacts-tool').on('keypress', '#search-contact-input', function(e) {
+
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            var search = $(this).val();
+            window.location = Routing.generate(
+                'claro_my_contacts_tool_index',
+                {
+                    'search': search,
+                    'max': currentMax,
+                    'orderedBy': currentOrderedBy,
+                    'order': currentOrder
+                }
+            );
+        }
+    });
+
+    $('#searched-contacts').on('change', '#max-select', function() {
+        var max = $(this).val();
+        window.location = Routing.generate(
+            'claro_my_contacts_tool_index',
+            {
+                'search': currentSearch,
+                'max': max,
+                'orderedBy': currentOrderedBy,
+                'order': currentOrder
+            }
+        );
+    });
+    
+    $('#searched-contacts').on('click', '.delete-contact', function () {
+        var contactId = $(this).data('contact-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate('claro_contact_delete', {'contact': contactId}),
+            removeContact,
+            contactId,
+            Translator.trans('delete_contact_confirm_message', {}, 'platform'),
+            Translator.trans('delete_contact', {}, 'platform')
+        );
+    });
+    
+    $('#searched-contacts').on('click', '.add-contact-to-category', function () {
+        var contactId = $(this).data('contact-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_contact_categories_transfer_form', {'user': contactId}),
+            refreshPage,
+            function() {}
+        );
+    });
     
     var refreshPage = function () {
         window.location.reload();

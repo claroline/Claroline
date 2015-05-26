@@ -66,7 +66,7 @@ class ContactController extends Controller
      */
     public function myContactsToolIndexAction(
         User $authenticatedUser,
-        $search = "",
+        $search = '',
         $page = 1,
         $max = 50,
         $orderedBy = 'lastName',
@@ -74,39 +74,57 @@ class ContactController extends Controller
     )
     {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
-        $categories = $this->contactManager->getCategoriesByUser(
-            $authenticatedUser,
-            'name',
-            'ASC'
-        );
         $allContacts = $this->contactManager->getContactsByUser(
             $authenticatedUser,
             $orderedBy,
             $order
         );
-        $contacts = $this->contactManager->sortContactsByCategories(
-            $authenticatedUser,
-            $categories,
-            $orderedBy,
-            $order,
-            $page,
-            $max
-        );
-        $params = array(
-            'options' => $options,
-            'categories' => $categories,
-            'allContacts' => $allContacts,
-            'contacts' => $contacts,
-            'search' => $search,
-            'max' => $max,
-            'orderedBy' => $orderedBy,
-            'order' => $order
-        );
 
-        if (!isset($options['show_all_visible_users']) || $options['show_all_visible_users']) {
-            $users = $this->userManager->getUsersForUserPicker($authenticatedUser);
-            $params['users'] = $users;
+        if (empty($search)) {
+            $categories = $this->contactManager->getCategoriesByUser(
+                $authenticatedUser,
+                'name',
+                'ASC'
+            );
+            $contacts = $this->contactManager->sortContactsByCategories(
+                $authenticatedUser,
+                $categories,
+                $orderedBy,
+                $order,
+                $page,
+                $max
+            );
+            $params = array(
+                'options' => $options,
+                'categories' => $categories,
+                'allContacts' => $allContacts,
+                'contacts' => $contacts,
+                'search' => $search,
+                'max' => $max,
+                'orderedBy' => $orderedBy,
+                'order' => $order
+            );
+        } else {
+            $contacts = $this->contactManager->getUserContactsWithPager(
+                $authenticatedUser,
+                $search,
+                $page,
+                $max,
+                $orderedBy,
+                $order
+            );
+            $params = array(
+                'options' => $options,
+                'allContacts' => $allContacts,
+                'contacts' => $contacts,
+                'search' => $search,
+                'max' => $max,
+                'orderedBy' => $orderedBy,
+                'order' => $order
+            );
         }
+        $users = $this->userManager->getUsersForUserPicker($authenticatedUser);
+        $params['users'] = $users;
 
         return $params;
     }
