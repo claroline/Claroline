@@ -44,7 +44,7 @@ info:
   no_objective_group_users: Ce groupe ne comprend actuellement aucun utilisateur.
   no_objective_groups: Cet objectif n'a encore été assigné à un aucun groupe. Vous pouvez assigner des objectifs à des groupes dans l'onglet "Objectifs".
   no_objective_users: Cet objectif n'a encore été assigné à un aucun utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
-  no_user_competency_history: Aucune activité associée à cette compétence n'a encore été réalisée par cet utilisateur.
+  no_user_competency_history: Aucune activité associée à cette compétence n'a encore été réalisée.
   no_user_objectives: Aucun objectif n'a encore été assigné à un utilisateur. Vous pouvez assigner des objectifs à des utilisateurs dans l'onglet "Objectifs".
   scale_levels: "Les degrés doivent être séparés par des retours à la ligne. Exemple :\n\nFacile\nMoyen\nDifficile"
 learners: Apprenants

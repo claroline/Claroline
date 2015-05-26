@@ -7,31 +7,31 @@
     /**
      * Initializes the helper for a given context. Supported contexts are:
      *
-     *  - "objectives"  Admin management page of objectives
-     *  - "users"       Admin management page of user objectives
-     *  - "groups"      Admin management page of group objectives
+     *  - "objectives"      Admin management page of objectives
+     *  - "myObjectives"    User objectives page
+     *  - "users"           Admin management page of user objectives
+     *  - "groups"          Admin management page of group objectives
      *
      * @param {String} context
      * @constructor
      */
     function Utils(context) {
-        var availableContexts = {
-            objectives: {
-                rowTemplate: ObjectiveRow
-            },
-            users: {
-                rowTemplate: UserObjectiveRow
-            },
-            groups: {
-                rowTemplate: GroupObjectiveRow
-            }
+        var rowTemplates = {
+            objectives: 'ObjectiveRow',
+            myObjectives: 'MyObjectiveRow',
+            users: 'UserObjectiveRow',
+            groups: 'GroupObjectiveRow'
         };
 
-        if (!context in availableContexts) {
+        if (!(context in rowTemplates)) {
             throw new Error('Unknown context "' + context + '"');
         }
 
-        this.context = availableContexts[context];
+        if (typeof window[rowTemplates[context]] === 'undefined') {
+            throw new Error(rowTemplates[context] + ' template is undefined');
+        }
+
+        this.rowTemplate = window[rowTemplates[context]];
         this.flasher = new HeVinci.Flasher({ element: $('.panel-body')[0], animate: false });
     }
 
@@ -52,7 +52,7 @@
                 (parentRow.dataset.path + '-' + parentRow.dataset.id) :
                 parentRow.dataset.id;
 
-            return previousHtml + Twig.render(self.context.rowTemplate, item);
+            return previousHtml + Twig.render(self.rowTemplate, item);
         }, '');
 
         $(html).insertAfter(parentRow);

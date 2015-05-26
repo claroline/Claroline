@@ -110,6 +110,7 @@ table.user-objectives > tbody > tr > td.user-name {
 table.framework-activities td.level-0,
 table.objectives tr[data-type=objective] td:first-of-type,
 table.user-objectives td.user-name,
+table.user-objectives.personal td.objective-name,
 table.group-objectives td.group-name {
     font-weight: bold;
 }

@@ -1,20 +1,18 @@
-{% twig_js name = 'UserObjectiveRow' %}
+{% twig_js name = 'MyObjectiveRow' %}
 
 {% set originalId = originalId is defined ? originalId : id %}
-{% set type = type is defined ? type : 'user' %}
+{% set type = type is defined ? type : 'objective' %}
 {% set path = path is defined ? path : '' %}
 {% set childrenPath = path == '' ? id : path ~ '-' ~ id %}
 {% set indent = indent is defined ? indent : 0 %}
 {% set collapsed = collapsed is defined ? collapsed : false %}
-{% set framework = framework is defined ? framework : '-' %}
 {% set progress = progress is defined and progress is not null ? progress : 0 %}
 {% set level = level is defined ? level : '-' %}
 {% set userLevel = userLevel is defined ? userLevel : '-' %}
 {% set levelValue = levelValue is defined ? levelValue : -1 %}
 {% set userLevelValue = userLevelValue is defined ? userLevelValue : -1 %}
-{% set hasObjectives = hasObjectives is defined ? hasObjectives : false %}
 {% set hasCompetencies = competencyCount is defined ? competencyCount > 0 : __children is defined and __children|length > 0 %}
-{% set hasChildren = hasObjectives or hasCompetencies %}
+{% set hasChildren = hasCompetencies %}
 
 <tr data-id="{{ id }}"
     data-type="{{ type }}"
@@ -22,17 +20,10 @@
     {% if hasChildren %}data-has-children{% endif %}
     {% if collapsed %} style="display: none;"{% endif %}>
     <td class="{{ type }}-name level-{{ indent }}">
-        {% if type == 'user' %}
-            {{ firstName ~ ' ' ~ lastName }}
-        {% else %}
-            {{ name }}
-        {% endif %}
+        {{ name }}
     </td>
     <td class="large-cell">
-        {{ framework }}
-    </td>
-    <td class="large-cell">
-        {% if hasChildren %}
+        {% if type == 'objective' or type == 'competency' and hasChildren %}
             <div class="progress"
                  data-toggle="tooltip"
                  data-placement="top"
@@ -87,30 +78,16 @@
             -
         {% endif %}
     </td>
-    <td class="x-small-cell">
-        {% if type == 'objective' %}
-            <a href="#"
-               class="remove"
-               data-toggle="tooltip"
-               data-placement="left"
-               title="{{ 'delete'|trans({}, 'platform') }}">
-                <i class="fa fa-remove"></i>
-            </a>
-        {% else %}
-            -
-        {% endif %}
-    </td>
 </tr>
 
 {% if hasCompetencies and __children is defined %}
     {% for competency in __children %}
         {% include
-            'HeVinciCompetencyBundle:Objective:userObjectiveRow.html.twig'
+            'HeVinciCompetencyBundle:MyObjective:row.html.twig'
             with {
                 id: competency.id,
                 name: competency.name,
                 path: childrenPath,
-                framework: '-',
                 level: competency.level is defined ? competency.level : '-',
                 levelValue: competency.levelValue is defined ? competency.levelValue : -1,
                 userLevel: competency.userLevel is defined ? competency.userLevel : '-',

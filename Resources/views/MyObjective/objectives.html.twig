@@ -1,5 +1,7 @@
 {% extends 'ClarolineCoreBundle::Desktop/layout.html.twig' %}
 
+{% trans_default_domain 'competency' %}
+
 {% block title %}
     {{ parent() ~ ' - ' ~ 'my-learning-objectives'|trans({}, 'tools')|striptags|raw }}
 {% endblock %}
@@ -25,6 +27,58 @@
         <div class="panel-title">{{ 'my-learning-objectives'|trans({}, 'tools') }}</div>
     </div>
     <div class="panel-body">
-        TODO
+        {% if objectives|length > 0 %}
+            <table class="user-objectives personal table table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>{{ 'objective_'|trans }}</th>
+                        <th>{{ 'progress'|trans }}</th>
+                        <th>{{ 'level.obtained'|trans }}</th>
+                        <th>{{ 'level.expected'|trans }}</th>
+                        <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for objective in objectives %}
+                        {%
+                            include 'HeVinciCompetencyBundle:MyObjective:row.html.twig'
+                            with {
+                                id: objective.id,
+                                name: objective.name,
+                                progress: objective.progress,
+                                competencyCount: objective.competencyCount,
+                                path: user.getId(),
+                            }
+                        %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                <i class="fa fa-info-circle"></i>
+                {{ 'info.no_my_objectives'|trans }}
+            </div>
+        {% endif %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/MyObjective/row.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUtils.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUsers.js') }}"></script>
+    <script type="text/javascript">
+        HeVinci.initUserObjectiveUtils('myObjectives');
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
 {% endblock %}

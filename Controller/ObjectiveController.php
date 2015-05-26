@@ -412,7 +412,7 @@ class ObjectiveController
      *
      * @EXT\Route("/users/{userId}/competencies/{id}/history", name="hevinci_competency_user_history")
      * @EXT\ParamConverter("user", options={"id"="userId"})
-     * @EXT\Template
+     * @EXT\Template("HeVinciCompetencyBundle::competencyHistory.html.twig")
      *
      * @param Competency    $competency
      * @param User          $user
