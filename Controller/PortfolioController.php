@@ -26,12 +26,12 @@ use Symfony\Component\HttpFoundation\Response;
 class PortfolioController extends Controller
 {
     /**
-     * @Route("/{page}/{guidedPage}", name="icap_portfolio_list", requirements={"page" = "\d+", "guidedPage" = "\d+"}, defaults={"page" = 1, "guidedPage" = 1})
+     * @Route("/{page}/{guidedPage}/{portfolioSlug}", name="icap_portfolio_index", requirements={"page" = "\d+", "guidedPage" = "\d+"}, defaults={"page" = 1, "guidedPage" = 1, "portfolioSlug" = null})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function indexAction(User $loggedUser, $page, $guidedPage)
+    public function indexAction(User $loggedUser, $page, $guidedPage, $portfolioSlug)
     {
         $this->checkPortfolioToolAccess();
 
@@ -44,10 +44,24 @@ class PortfolioController extends Controller
         $importManager          = $this->getImportManager();
         $availableImportFormats = $importManager->getAvailableFormats();
 
+        $portfolioId = 0;
+
+        if (null !== $portfolioSlug) {
+            /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
+            $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+
+            if (null === $titleWidget) {
+                throw $this->createNotFoundException();
+            }
+
+            $portfolioId = $titleWidget->getPortfolio()->getId();
+        }
+
         return array(
-            'portfoliosPager'        => $portfoliosPager,
-            'guidedPortfoliosPager'  => $guidedPortfoliosPager,
-            'availableImportFormats' => $availableImportFormats
+            'portfoliosPager' => $portfoliosPager,
+            'guidedPortfoliosPager' => $guidedPortfoliosPager,
+            'availableImportFormats' => $availableImportFormats,
+            'portfolioId' => $portfolioId
         );
     }
 
@@ -68,16 +82,12 @@ class PortfolioController extends Controller
             if ($this->getPortfolioFormHandler()->handleAdd($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_add_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
         } catch (\Exception $exception) {
-            echo "<pre>";
-            var_dump($exception->getMessage());
-            echo "</pre>" . PHP_EOL;
-            die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
 
-            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
 
         return array(
@@ -100,12 +110,12 @@ class PortfolioController extends Controller
             if ($this->getPortfolioFormHandler()->handleRename($titleWidget)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
         } catch (\Exception $exception) {
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_rename_error_message', array(), 'icap_portfolio'));
 
-            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
 
         return array(
@@ -136,7 +146,7 @@ class PortfolioController extends Controller
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_delete_error_message', array(), 'icap_portfolio'));
         }
 
-        return $this->redirect($this->generateUrl('icap_portfolio_list'));
+        return $this->redirect($this->generateUrl('icap_portfolio_index'));
     }
 
     /**
@@ -153,12 +163,12 @@ class PortfolioController extends Controller
             if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_visibility_update_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
         } catch (\Exception $exception) {
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_visibility_update_error_message', array(), 'icap_portfolio'));
 
-            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
 
         return array(
@@ -179,12 +189,12 @@ class PortfolioController extends Controller
             if ($this->getPortfolioFormHandler()->handleGuides($portfolio)) {
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_guides_update_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
         } catch (\Exception $exception) {
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_guides_update_error_message', array(), 'icap_portfolio'));
 
-            return $this->redirect($this->generateUrl('icap_portfolio_list'));
+            return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
 
         return array(
@@ -306,7 +316,7 @@ class PortfolioController extends Controller
                 }
                 $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_import_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_list'));
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
             } catch(\Exception $exception){
                 $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_import_error_message', array(), 'icap_portfolio'));
 

@@ -97,7 +97,7 @@
                             </ul>
                         </div>
                         {% set countUnreadComments = portfolio.countUnreadComments %}
-                        <a href="{{ path('icap_portfolio_comments_list', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                        <a href="{{ path('icap_portfolio_index', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
                            title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
                            class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
                            data-toggle="tooltip" data-container="body" data-placement="left">
@@ -127,7 +127,7 @@
             'twitter_bootstrap_translated',
             {
                 'proximity' : 1,
-                'routeName': 'icap_portfolio_list'
+                'routeName': 'icap_portfolio_index'
             }
         )
     }}

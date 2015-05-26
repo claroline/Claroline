@@ -57,7 +57,7 @@ class ConfigureTopMenuListener
 
     protected function addPortfolioLink(ItemInterface $menu)
     {
-        $menuItemConfig = ['route' => 'icap_portfolio_list'];
+        $menuItemConfig = ['route' => 'icap_portfolio_index'];
 
         if ($this->platformConfigHandler->getParameter('portfolio_url')) {
             $menuItemConfig = ['uri' => $this->platformConfigHandler->getParameter('portfolio_url')];
