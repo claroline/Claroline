@@ -14,7 +14,7 @@
     </div>  
 </div>
 {#{ form_row(form.holes) }#}
-<div id="holeError" class="form-group">
+<div id="holeError" class="form-group {% if not form.holes.vars.valid %} has-error{% endif %}">
     {{ form_errors(form.holes) }}
 </div>
 <div id="tableHoles" class="form-group" >

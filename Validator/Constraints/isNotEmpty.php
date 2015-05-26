@@ -10,5 +10,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class isNotEmpty extends Constraint
 {
-    public $message = 'Vous devez remplir le champs';
+    public $message = 'is_not_empty';
 }

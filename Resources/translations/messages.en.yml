@@ -442,6 +442,7 @@ Choice.feedback: Feedback if this answer is checked (optional)
 Choice.label: Proposed answer
 Choice.positionForce: Forced position
 Choice.rightResponse: Correct answer
+Choice.falseResponse : Points for wrong answer
 Choice.weight: Points for this answer
 
 Coords.color: Color

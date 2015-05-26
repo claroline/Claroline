@@ -30,7 +30,8 @@ class InteractionHoleType extends AbstractType
             ->add('html','tinymce', array(
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Inter_Hole.html',
-                    'attr' => array('data-before-unload' => 'off')
+                    'attr' => array('data-before-unload' => 'off'),
+                    'required' => false
                 )
             )
             ->add('holes', 'collection', array('type' => new HoleType,

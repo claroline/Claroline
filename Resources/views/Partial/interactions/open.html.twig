@@ -4,7 +4,7 @@
     <div id="qOpenScoreMaxLongResp">
         <div class="form-group row">
             {{ form_label(form.scoreMaxLongResp) }}
-            <div class="col-md-9">
+            <div class="col-md-9 {% if not form.scoreMaxLongResp.vars.valid %} has-error{% endif %}">
                 {{ form_widget(form.scoreMaxLongResp) }}
                 {{ form_errors(form.scoreMaxLongResp) }}
             </div>

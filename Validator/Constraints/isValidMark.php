@@ -9,5 +9,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class isValidMark extends Constraint
 {
-    public $message = 'La note "%string%" n\'est pas une note valide';
+    public $message = 'is_valid_qcm_mark';
 }

@@ -41,7 +41,7 @@ class InteractionQCMType extends AbstractType
                 'scoreRightResponse', 'text', array(
                     'required' => false,
                     'label' => 'Inter_QCM.ScoreRightResponse',
-                    'attr'  => array( 'placeholder' => 'Points')
+                    'attr'  => array( 'placeholder' => 'Coords.score')
                 )
             );
         $builder
@@ -49,7 +49,7 @@ class InteractionQCMType extends AbstractType
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
                     'label' => 'Inter_QCM.ScoreFalseResponse',
-                    'attr'  => array( 'placeholder' => 'Points','class'=>'col-md-2')
+                    'attr'  => array( 'placeholder' => 'Points','class'=>'col-md-2'),
                 )
             );
         $builder

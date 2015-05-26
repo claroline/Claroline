@@ -441,7 +441,8 @@ Category.value: Catégorie
 Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)
 Choice.label: Réponse proposée
 Choice.positionForce: Forcer cette position
-Choice.rightResponse: Réponse attendue
+Choice.rightResponse: Points pour la bonne réponse
+Choice.falseResponse : Points pour la mauvaise réponse
 Choice.weight: Points pour cette réponse
 
 Coords.color: Couleur
@@ -474,7 +475,7 @@ From: A partir du
 Groupes.name: Nom du groupe
 
 Hole.orthography: Autoriser les fautes d'orthographe
-Hole.score: Point pour une bonne réponse
+Hole.score: Points pour une bonne réponse
 Hole.selector: Proposer une liste
 Hole.size: Taille du blanc
 
@@ -557,5 +558,5 @@ ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
 
 WordResonse.caseSensitive: Respecter la casse
-WordResponse.score: Points attribués à cette réponse
+WordResponse.score: Points pour cette réponse
 WordResponse.response_value: Mot

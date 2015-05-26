@@ -22,7 +22,7 @@
        </div>
        <a id="buttonEdition" class="btn btn-primary" title="{{'advanced edition' | trans }}" onClick="advancedEdition('interaction_question_description','buttonEdition',event);"><i class="fa fa-font"></i></a>
    </div> 
-   <div class="form-group row">     
+   <div class="form-group row {% if not form.interaction.invite.vars.valid %} has-error{% endif %}">     
        <label class="control-label col-md-1">{{ 'Interaction.invite' | trans }}</label>
        <div class="control-label col-md-7">
            {{ form_widget(form.interaction.invite) }}
@@ -30,7 +30,7 @@
        </div>   
        <div id="divHint" >
            <div id="hintError"></div>
-           <div id="tableHint" class="control-label col-md-4"></div>
+           <div id="tableHint" class="control-label col-md-4 {% if not form.interaction.hints.vars.valid %} has-error{% endif %}"></div>
            {{ form_widget(form.interaction.hints) }}
            {{ form_errors(form.interaction.hints) }}                     
        </div>
