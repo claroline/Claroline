@@ -7,7 +7,15 @@
     <div class="container container-dropzone">
 
         <h2>
-            {{ adminInnova }} {{ 'Edit evaluation'|trans({}, 'innova_collecticiel') }}
+            <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
+            <!-- suivant si on est ADMIN ou pas -->
+            {% if adminInnova %}
+                {{ 'Edit evaluation admin'|trans({}, 'innova_collecticiel') }}
+            {% else %}
+                {{ 'Edit evaluation user'|trans({}, 'innova_collecticiel') }}
+            {% endif %}
+
+
             <div class="btn-group pull-right">
                 <!-- Suivre cette ressource -->
                 {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %}

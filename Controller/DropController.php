@@ -46,7 +46,7 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropAction(Dropzone $dropzone, $user)
+    public function dropAction(Dropzone $dropzone,User $user)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
@@ -143,8 +143,9 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
+//        $adminInnova = $this->get('innova.manager.collecticiel_manager')->adminOrNot($user);
+
         $adminInnova = false;
-        echo $this->get('security.context')->isGranted('ROLE_ADMIN');
         if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)
         && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
