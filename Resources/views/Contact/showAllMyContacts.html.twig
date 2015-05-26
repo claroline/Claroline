@@ -105,7 +105,17 @@
                 <tr class="contact-row-{{ contact.getId() }}">
                     {% if options['show_picture'] is not defined or options['show_picture'] %}
                         <td>
-
+                            {% if contact.getPicture() != '' %}
+                                <img src="{{ asset('uploads/pictures/') ~  contact.getPicture() }}"
+                                     class="profile_picture"
+                                     alt="{{ contact.getLastName() ~ ' ' ~ contact.getFirstName() }}"
+                                     width="50px"
+                                >
+                            {% else %}
+                                <h1 class="profile_picture_placeholder">
+                                    <i class="fa fa-user"></i>
+                                </h1>
+                            {% endif %}
                         </td>
                     {% endif %}
                     <td>{{ contact.getFirstName() }}</td>
