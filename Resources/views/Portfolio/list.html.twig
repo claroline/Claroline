@@ -7,13 +7,13 @@
         </a>
     </div>
     <div class="btn-group btn-group-sm" role="group">
-        <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary" data-toggle="tooltip"
-           data-container="body" title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}" data-placement="top"
-           data-original-title="{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}"><span class="fa fa-download"></span></a>
+        <a href="{{ path('icap_portfolio_import') }}" class="btn btn-primary">
+            {{ 'import'|trans({}, 'icap_portfolio') }}
+        </a>
         <button id="importButtonDropdown" type="button" class="btn btn-default dropdown-toggle import-dropdown" aria-expanded="false"
                 data-toggle="dropdown">
             <span class="caret"></span>
-            <span class="sr-only">{{ 'import_portfolio'|trans({}, 'icap_portfolio') }}</span>
+            <span class="sr-only">{{ 'import'|trans({}, 'icap_portfolio') }}</span>
         </button>
         <ul class="dropdown-menu" role="menu" aria-labelledby="importButtonDropdown">
             {% for availableImportFormatKey, availableImportFormat in availableImportFormats %}
@@ -107,7 +107,7 @@
                         <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
                            download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
                            data-toggle="tooltip" data-container="body" data-placement="left" class="btn btn-xs btn-default">
-                            <span class="fa fa-upload"></span>
+                            <span class="fa fa-download"></span>
                         </a>
                     </td>
                 </tr>
