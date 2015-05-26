@@ -1,5 +1,5 @@
 <!-- Item row -->
-<div class="tree-item" data-ng-class="{ 'active-step': pathSummaryShowCtrl.current.stepId == step.id }">
+<div class="tree-item" data-ng-class="{ 'active-step': pathSummaryShowCtrl.current.stepId == step.id || (!pathSummaryShowCtrl.current.stepId && 0 == step.lvl) }">
     <!-- Level indicator -->
     <div class="lvl-indicator lvl lvl-{{ step.lvl }}"></div>
 

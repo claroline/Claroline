@@ -1,5 +1,5 @@
 <!-- Item row -->
-<div data-ui-tree-handle="" class="tree-item" data-ng-class="{ 'active-step': pathSummaryEditCtrl.current.stepId == step.id }"
+<div data-ui-tree-handle="" class="tree-item" data-ng-class="{ 'active-step': pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl) }"
      data-ng-mouseenter="showButtons = step.id"
      data-ng-mouseleave="showButtons = null">
 
@@ -23,7 +23,7 @@
     </div>
 
     <!-- Actions available -->
-    <span data-ng-show="showButtons == step.id || pathSummaryEditCtrl.current.stepId == step.id" class="step-actions btn-group" data-nodrag="">
+    <span data-ng-show="showButtons == step.id || pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl)" class="step-actions btn-group" data-nodrag="">
         <!-- Add child -->
         <a href="#" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.addStep(step)" data-ng-disabled="step.lvl >= pathSummaryEditCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_wizards' }}">
             <span class="fa fa-plus"></span>
