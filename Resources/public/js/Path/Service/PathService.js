@@ -32,7 +32,7 @@
                  * Get ID of the current Path
                  * @returns {Number}
                  */
-                getId: function () {
+                getId: function getId() {
                     return id;
                 },
 
@@ -40,7 +40,7 @@
                  * Set ID of the current Path
                  * @param value
                  */
-                setId: function (value) {
+                setId: function setId(value) {
                     id = value;
                 },
 
@@ -48,7 +48,7 @@
                  * Get current Path
                  * @returns {Object}
                  */
-                getPath: function () {
+                getPath: function getPath() {
                     return path;
                 },
 
@@ -56,14 +56,14 @@
                  * Set current Path
                  * @param value
                  */
-                setPath: function (value) {
+                setPath: function setPath(value) {
                     path = value;
                 },
 
                 /**
                  * Initialize a new Path structure
                  */
-                initialize: function () {
+                initialize: function initialize() {
                     // Create a generic root step
                     var rootStep = StepService.new();
 
@@ -76,14 +76,14 @@
                 /**
                  * Initialize a new Path structure from a Template
                  */
-                initializeFromTemplate: function () {
+                initializeFromTemplate: function initializeFromTemplate() {
 
                 },
 
                 /**
                  * Save modification to DB
                  */
-                save: function () {
+                save: function save() {
                     // Transform data to make it acceptable by Symfony
                     var dataToSave = {
                         innova_path: {
@@ -129,7 +129,7 @@
                 /**
                  * Publish path modifications
                  */
-                publish: function () {
+                publish: function publish() {
                     var deferred = $q.defer();
 
                     $http
@@ -182,10 +182,58 @@
                  * @param step
                  * @returns {Object|Step}
                  */
-                getPrevious: function (step) {
+                getPrevious: function getPrevious(step) {
                     var previous = null;
 
+                    // If step is the root of the tree it has no previous element
+                    if (angular.isDefined(step) && angular.isObject(step) && 0 !== step.lvl) {
+                        var parent = this.getParent(step);
+                        if (angular.isObject(parent) && angular.isObject(parent.children)) {
+                            // Get position of the current element
+                            var position = parent.children.indexOf(step);
+                            if (-1 !== position && angular.isObject(parent.children[position - 1])) {
+                                // Previous sibling found
+                                var previousSibling = parent.children[position - 1];
+
+                                // Get down to the last child of the sibling
+                                var lastChild = this.getLastChild(previousSibling);
+                                if (angular.isObject(lastChild)) {
+                                    previous = lastChild;
+                                } else {
+                                    // Get the sibling
+                                    previous = previousSibling;
+                                }
+                            } else {
+                                // Get the parent as previous element
+                                previous = parent;
+                            }
+                        }
+                    }
+
                     return previous;
+                },
+
+                /**
+                 * Get the last child of a step
+                 * @param step
+                 * @returns {Object|Step}
+                 */
+                getLastChild: function getLastChild(step) {
+                    var lastChild = null;
+
+                    if (angular.isDefined(step) && angular.isObject(step) && angular.isObject(step.children) && angular.isObject(step.children[step.children.length - 1])) {
+                        // Get the element in children collection (children are ordered)
+                        var child = step.children[step.children.length - 1];
+                        if (!angular.isObject(child.children) || 0 >= child.children.length) {
+                            // It is the last child
+                            lastChild = child;
+                        } else {
+                            // Go deeper to search for the last child
+                            lastChild = this.getLastChild(child);
+                        }
+                    }
+
+                    return lastChild;
                 },
 
                 /**
@@ -196,7 +244,95 @@
                 getNext: function getNext(step) {
                     var next = null;
 
+                    if (angular.isDefined(step) && angular.isObject(step)) {
+                        if (angular.isObject(step.children) && angular.isObject(step.children[0])) {
+                            // Get the first child
+                            next = step.children[0];
+                        } else if (0 !== step.lvl) {
+                            // Get the next sibling
+                            next = this.getNextSibling(step);
+                        }
+                    }
+
                     return next;
+                },
+
+                /**
+                 * Retrieve the next sibling of an element
+                 * @param step
+                 * @returns {Object|Step}
+                 */
+                getNextSibling: function getNextSibling(step) {
+                    var sibling = null;
+
+                    if (0 !== step.lvl) {
+                        var parent = this.getParent(step);
+                        if (angular.isObject(parent.children)) {
+                            // Get position of the current element
+                            var position = parent.children.indexOf(step);
+                            if (-1 !== position && angular.isObject(parent.children[position + 1])) {
+                                // Next sibling found
+                                sibling = parent.children[position + 1];
+                            }
+                        }
+
+                        if (null == sibling) {
+                            // Sibling not found => try to ascend one level
+                            sibling = this.getNextSibling(parent);
+                        }
+                    }
+
+                    return sibling;
+                },
+
+                /**
+                 * Get all parents of a Step
+                 * @param step
+                 */
+                getParents: function getParents(step) {
+                    var parents = [];
+
+                    var parent = this.getParent(step);
+                    if (parent) {
+                        // Add parent to the list
+                        parents.push(parent);
+
+                        // Get other parents
+                        parents.concat(this.getParents(parents));
+
+                        // Reorder parent array
+                        parents.sort(function (a, b) {
+                            if (a.lvl < b.lvl) {
+                                return -1;
+                            } else if (a.lvl > b.lvl) {
+                                return 1;
+                            }
+
+                            return 0;
+                        });
+                    }
+
+                    return parents;
+                },
+
+                /**
+                 * Get the parent of a step
+                 * @param step
+                 */
+                getParent: function getParent(step) {
+                    var parentStep = null;
+
+                    this.browseSteps(path.steps, function (parent, current) {
+                        if (step.id == current.id) {
+                            parentStep = parent;
+
+                            return true;
+                        }
+
+                        return false
+                    });
+
+                    return parentStep;
                 },
 
                 /**
@@ -205,7 +341,7 @@
                  * @param {array}    steps    - an array of steps to browse
                  * @param {function} callback - a callback to execute on each step (called with args `parentStep`, `currentStep`)
                  */
-                browseSteps: function (steps, callback) {
+                browseSteps: function browseSteps(steps, callback) {
                     /**
                      * Recursively loop through the steps to execute callback on each step
                      * @param   {object} parentStep
@@ -243,7 +379,7 @@
                  * Recalculate steps level in tree
                  * @param {array} steps - an array of steps to reorder
                  */
-                reorderSteps: function (steps) {
+                reorderSteps: function reorderSteps(steps) {
                     this.browseSteps(steps, function (parent, step) {
                         if (null !== parent) {
                             step.lvl = parent.lvl + 1;
@@ -253,7 +389,7 @@
                     });
                 },
 
-                addStep: function (parent, displayNew) {
+                addStep: function addStep(parent, displayNew) {
                     if (parent.lvl < maxDepth) {
                         // Create a new step
                         var step = StepService.new(parent);
@@ -270,7 +406,7 @@
                  * @param {array}  steps        - an array of steps to browse
                  * @param {object} stepToDelete - the step to delete
                  */
-                removeStep: function (steps, stepToDelete) {
+                removeStep: function removeStep(steps, stepToDelete) {
                     this.browseSteps(steps, function (parent, step) {
                         var deleted = false;
                         if (step === stepToDelete) {
@@ -296,7 +432,7 @@
                     });
                 },
 
-                getStep: function (stepId) {
+                getStep: function getStep(stepId) {
                     var step = null;
 
                     if (path) {
@@ -314,7 +450,7 @@
                     return step;
                 },
 
-                getStepInheritedResources: function (steps, step) {
+                getStepInheritedResources: function getStepInheritedResources(steps, step) {
                     function retrieveInheritedResources(stepToFind, currentStep, inheritedResources) {
                         var stepFound = false;
 
