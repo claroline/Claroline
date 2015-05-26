@@ -588,6 +588,11 @@ class DropController extends DropzoneBaseController
             }
         }
 
+        $adminInnova = false;
+        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+            $adminInnova = true;
+        }
+
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -595,7 +600,8 @@ class DropController extends DropzoneBaseController
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
             'nbCommentNotRead' => $userToCommentCount,
-            'userNbTextToRead' => $userNbTextToRead
+            'userNbTextToRead' => $userNbTextToRead,
+            'adminInnova' => $adminInnova,
         ));
 
         return $dataToView;

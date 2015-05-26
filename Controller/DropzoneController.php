@@ -363,7 +363,6 @@ class DropzoneController extends DropzoneBaseController
     public function editCriteriaAction(Dropzone $dropzone, $page)
     {
 
-
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -396,7 +395,6 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
-
         $nbCorrection = $this
             ->getDoctrine()
             ->getManager()
@@ -406,7 +404,6 @@ class DropzoneController extends DropzoneBaseController
         $form = $this->createForm(new DropzoneCriteriaType(), $dropzone);
         $add_criteria_after = false;
         if ($this->getRequest()->isMethod('POST')) {
-        echo "POST";
 
             $form->handleRequest($this->getRequest());
 
@@ -468,6 +465,12 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
+
+        $adminInnova = false;
+        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+            $adminInnova = true;
+        }
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -475,7 +478,8 @@ class DropzoneController extends DropzoneBaseController
             'pager' => $pager,
             'form' => $form->createView(),
             'nbCorrection' => $nbCorrection,
-            'add_criteria_after' => $add_criteria_after
+            'add_criteria_after' => $add_criteria_after,
+            'adminInnova' => $adminInnova,
         );
     }
 
