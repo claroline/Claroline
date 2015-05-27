@@ -421,6 +421,7 @@ has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activi
 has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+help_url: 'URL de l''aide'
 hide: Cacher
 history: Historique
 home: Accueil
@@ -865,6 +866,7 @@ show_all_visible_users: 'Montrer "Tous les utilisateurs visibles"'
 show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+show_help_button: 'Montrer le bouton d''aide'
 show_mail: 'Montrer l''adresse mail'
 show_phone: 'Montrer le numéro de téléphone'
 show_picture: 'Montrer la photo'

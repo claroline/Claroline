@@ -420,6 +420,7 @@ has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
+help_url: 'Help URL'
 hide: Hide
 history: History
 home: Home
@@ -864,6 +865,7 @@ show_all_visible_users: 'Show "All visible users"'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+show_help_button: 'Show help button'
 show_mail: 'Show mail'
 show_phone: 'Show phone'
 show_picture: 'Show picture'

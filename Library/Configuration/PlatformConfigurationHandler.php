@@ -77,7 +77,9 @@ class PlatformConfigurationHandler
         'repository_api' => 'http://packages.claroline.net/api.php',
         'auto_logging_after_registration' => false,
         'registration_mail_validation' => false,
-        'resource_soft_delete' => false
+        'resource_soft_delete' => false,
+        'show_help_button' => false,
+        'help_url' => 'http://claroline.net/workspaces/125/open/tool/home'
     );
     private $lockedParameters;
 
@@ -183,6 +185,8 @@ class PlatformConfigurationHandler
         $config->setWorkspaceMaxUsers($this->parameters['max_workspace_users']);
         $config->setAutoLogginAfterRegistration($this->parameters['auto_logging_after_registration']);
         $config->setRegistrationMailValidation($this->parameters['registration_mail_validation']);
+        $config->setShowHelpButton($this->parameters['show_help_button']);
+        $config->setHelpUrl($this->parameters['help_url']);
 
         return $config;
     }

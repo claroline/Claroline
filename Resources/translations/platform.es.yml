@@ -421,6 +421,7 @@ has_been_unregistered_from_workspace: has_been_unregistered_from_workspace
 has_been_updated: 'ha sido actualizado'
 has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
+help_url: 'URL de ayuda'
 hide: Ocultar
 history: Historial
 home: Inicio
@@ -865,6 +866,7 @@ show_all_visible_users: 'Mostrar "Todos los usuarios visibles"'
 show_as: 'Mostrar como'
 show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
+show_help_button: 'Mostrar el botón de ayuda'
 show_mail: 'Mostrar la dirección de correo electrónico'
 show_phone: 'Mostrar el núnero de teléfono '
 show_picture: 'Mostrar la foto'
