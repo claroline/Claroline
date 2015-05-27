@@ -27,10 +27,10 @@ class WidgetTagListBlogType extends AbstractType
                     'data-restrict-for-owner'             => 1,
                     'data-is-picker-multi-select-allowed' => 0,
                     'data-is-directory-selection-allowed' => 0,
-                    'data-type-white-list'                => 'icap_blog',
-                    'data-display-download-button'        => 0,
-                    'data-display-browse-button'          => 0
-                )
+                    'data-type-white-list' => 'icap_blog',
+                ),
+                'display_browse_button' => false,
+                'display_download_button' => false
             ))
             ->add('tag_cloud', 'choice', array(
                 'choices'       => array("0" => "classic", "1" => "3D", "2" => "advanced"),
