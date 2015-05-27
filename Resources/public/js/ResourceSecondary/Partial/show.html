@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs resource-tabs">
     <!-- Inherited resources -->
-    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited" data-ng-class="{ excluded: resource.isExcluded }">
+    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited | filter:{isExcluded: false}">
         <a href="" role="button" data-ng-click="resourcesSecondaryShowCtrl.showResource(resource)">
             <!-- Resource lvl -->
             <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }}"></div>
