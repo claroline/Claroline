@@ -64,14 +64,7 @@
         step: [
             'PathService',
             function (PathService) {
-                var step = null;
-
-                var path = PathService.getPath();
-                if (angular.isObject(path) && angular.isObject(path.steps) && angular.isObject(path.steps[0])) {
-                    step = path.steps[0];
-                }
-
-                return step;
+                return PathService.getRoot();
             }
         ],
         inheritedResources: [

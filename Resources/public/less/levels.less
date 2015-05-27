@@ -43,4 +43,16 @@
     &.lvl-@{lvl}-border {
         border-color: @borderColor !important;
     }
+
+    &.lvl-@{lvl}-zindex {
+        z-index: @lvl;
+    }
+
+    &.lvl-@{lvl}-zindex-reverse {
+        z-index: 9 - @lvl;
+    }
+
+    &.lvl-@{lvl}-hover:hover {
+        box-shadow: 1px 0 3px 1px fadeout(@bgColor, 0.75);
+    }
 }
