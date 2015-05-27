@@ -29,7 +29,9 @@
         "icap/portfolio-bundle": "~5.0",
         "icap/website-bundle": "~5.0",
         "icap/dropzone-bundle": "~5.0",
-        "icap/badge-bundle": "~5.0"
+        "icap/badge-bundle": "~5.0",
+        "icap/socialmedia-bundle": "~5.0",
+        "inwicast/claroline-plugin-bundle": "~5.0"
     },
     "scripts": {
         "pre-install-cmd": [
