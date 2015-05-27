@@ -148,6 +148,8 @@ class LayoutController extends Controller
         $workspaces = null;
         $personalWs = null;
         $homeMenu = $this->configHandler->getParameter('home_menu');
+        $showHelpButton = $this->configHandler->getParameter('show_help_button');
+        $helpUrl = $this->configHandler->getParameter('help_url');
 
         if (is_numeric($homeMenu)) {
             $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
@@ -202,7 +204,9 @@ class LayoutController extends Controller
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
             'homeMenu' => $homeMenu,
-            'adminTools' => $adminTools
+            'adminTools' => $adminTools,
+            'showHelpButton' => $showHelpButton,
+            'helpUrl' => $helpUrl
         );
     }
 

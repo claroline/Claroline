@@ -201,6 +201,24 @@ class GeneralType extends AbstractType
                     'label' => 'workspace_max_users',
                     'disabled' => isset($this->lockedParams['max_workspace_users'])
                 )
+            )
+            ->add(
+                'showHelpButton',
+                'checkbox',
+                array(
+                    'label' => 'show_help_button',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['show_help_button'])
+                )
+            )
+            ->add(
+                'helpUrl',
+                'text',
+                array(
+                    'label' => 'help_url',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['help_url'])
+                )
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
