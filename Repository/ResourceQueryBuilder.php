@@ -395,7 +395,7 @@ class ResourceQueryBuilder
      *
      * @return ResourceQueryBuilder
      */
-    public function whereIsAccessible(User $user)
+    public function whereIsAccessible($user)
     {
         $currentDate = new \DateTime();
         $clause = '(
@@ -407,7 +407,7 @@ class ResourceQueryBuilder
             )
         )';
         $this->addWhereClause($clause);
-        $this->parameters[':creatorId'] = $user->getId();
+        $this->parameters[':creatorId'] = ($user === 'anon.') ? -1 : $user->getId();
         $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
 
         return $this;

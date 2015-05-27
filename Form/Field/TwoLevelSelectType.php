@@ -9,17 +9,17 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Field;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.form.buttongroupselect")
- * @DI\FormType(alias = "buttongroupselect")
+ * @DI\Service("claroline.form.twolevelselect")
+ * @DI\FormType(alias = "twolevelselect")
  */
-class ButtonGroupSelectType extends AbstractType
+class TwoLevelSelectType extends AbstractType
 {
     public function getParent()
     {
@@ -28,10 +28,10 @@ class ButtonGroupSelectType extends AbstractType
 
     public function getName()
     {
-        return 'buttongroupselect';
+        return 'twolevelselect';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
         ->setDefaults(
