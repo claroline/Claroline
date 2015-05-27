@@ -1,0 +1,135 @@
+ability:
+  add: Add an ability
+  create: Create an ability
+  delete: Delete an ability
+  edit: Delete an ability
+  linked_activity_count: Linked activities
+  min_activity_count: Number of activities to pass
+  required_activity_count: Required
+ability_: Ability
+associated_competencies: Associated competencies
+collapse_all: Collapse all
+competency:
+  activities: Associated activities
+  associate: Associate a competency
+  create: Create a competency
+  create_sub: Create a sub-competency
+  do_select: Select a competency
+  delete: Delete a competency
+  delete_association: Delete an association
+  edit: Edit a competency
+competency_: Competency
+expand_all: Expand all
+framework:
+  create: Create a framework
+  delete: Delete a framework
+  do_select: Select a framework
+  edit: Éditer un référentiel
+framework_: Framework
+info:
+  ability_search: Enter here the description of the ability.
+  add_competency_association: Click the button below to select a competency.
+  create_learning_objective: Click the button below to create a new objective.
+  no_ability_activities: No activity is associated with this ability.
+  no_learning_objectives: There are no learning objectives yet.
+  no_competency_activities: No activity is associated with this competency.
+  no_competency_association: There are no associatied competencies yet.
+  no_frame: There are no frameworks yet. You can create a new framework or manage the scales of difficulty using the buttons below.
+  no_frame_no_scale: There are no frameworks and no scales yet. If you choose to create a framework now, it will be assigned a default scale of one level. Alternatively, you can create a scale and then associate it directly with your framework.
+  no_frame_to_select: No competency framework has been defined yet.
+  no_group_objectives: No objective has been assigned to a group yet. You can assign objectives to groups in the "Objectives" tab.
+  no_my_objectives: No learning objective is currently assigned to you.
+  no_scale: There are no scales yet. You can create a new scale using the button below.
+  no_objective_group_users: This group has currently no members.
+  no_objective_groups: This objective has not yet been assigned to a group. You can assign objectives to groups in the "Objectives" tab.
+  no_objective_users: This objective has not yet been assigned to a user. You can assign objectives to users in the "Objectives" tab.
+  no_user_competency_history: No activity associated with this competency has been made yet.
+  no_user_objectives: No objective has been assigned to a user yet. You can assign objectives to users in the "Objectives" tab.
+  scale_levels: "The levels must be separated by line breaks. Example:\n\nEasy\nMedium\nHard"
+learners: Learners
+level:
+  achieved: Achieved level
+  expected: Expected level
+  obtained: Obtained level
+  not_achieved: Level not achieved
+level_: Level
+levels: Levels
+message:
+  ability_added: Ability successfully added.
+  ability_association_deletion_confirm: Are you sure you want to delete the association with this ability ?
+  ability_created: Ability successfully created.
+  ability_deleted: Ability successfully deleted.
+  ability_deletion_confirm: Are you sure you want to delete this ability ?
+  ability_edited: Ability successfully edited.
+  competency_already_associated: This competency is already associated with the activity.
+  competency_associated: Competency successfully associated.
+  competency_association_deletion_confirm: Are you sure you want to delete the association with this competency ?
+  competency_association_removed: Association successfully deleted.
+  competency_edited: Competency successfully edited.
+  competency_deleted: Competency successfully deleted.
+  competency_deletion_confirm: Are you sure you want to delete this competency ? This action is irreversible.
+  framework_created: New framework successfully created.
+  framework_deleted: Framework successfully deleted.
+  framework_deletion_confirm: Are you sure you want to delete this framework ? This action is irreversible.
+  framework_edited: Framework successfully edited.
+  objective_already_assigned_to_group: This objective has already been assigned to this group.
+  objective_already_assigned_to_user: This objective has already been assigned to this user.
+  objective_assigned: Objective successfully assigned.
+  objective_association_deleted: Competency successfully removed.
+  objective_association_deletion_confirm: Are you sure you want to remove this competency from the objective ?
+  objective_competency_already_associated: This competency is already associated with the objective.
+  objective_competency_associated: Competency successfully associated.
+  objective_created: New objective successfully created.
+  objective_deleted: Objective successfully removed.
+  objective_deletion_confirm: Are you sure you want to delete this objective ? This action is irreversible.
+  objective_edited: Objective successfully edited.
+  objective_from_group_not_unassigned: This objective cannot be removed directly because it was assigned to one of the user groups.
+  objective_unassigned: Objective successfully removed.
+  objective_unassign_group_confirm: Are you sure you want to take away this objective from this group ?
+  objective_unassign_user_confirm: Are you sure you want to take away this objective from this user ?
+  scale_created: New scale successfully created.
+  scale_deleted: Scale successfully deleted.
+  scale_deletion_confirm: Are you sure you want to delete this scale ?
+  scale_edited: Scale successfully edited.
+  sub_competency_created: Sub-competency successfully created.
+objective:
+  assign: Assign an objective
+  assign_this: Assign this objective
+  create: Create a learning objective
+  create_short: Create an objective
+  delete: Delete an objective
+  edit: Edit an objective
+  groups_with: Groups with the objective %objective%
+  pick_level: 'Select the competency level to achieve '
+  see_all_groups: View all groups
+  see_all_users: View all users
+  unassign_group: Take away an objective from a group
+  unassign_user: Take away an objective from a user
+  user_history: Progress history
+  users_with: Users with the objective %objective%
+  users_from_group: Members of the group %group%
+objective_: Objective
+objectives: Objectives
+origin: Origin
+tooltip:
+  # cannot use pluralization techniques because transchoice filter is missing in twigjs
+  undeletable_scale: This scale cannot be deleted because it is associated with a framework.
+  undeletable_scale_plural: This scale cannot be deleted because it is associated with %count% frameworks.
+  uneditable_scale: This scale cannot be edited because it is associated with an ability.
+  uneditable_scale_plural: TThis scale cannot be edited because it is associated with %count% abilities.
+manage_scales: Manage scales
+progress: Progress
+scale:
+  create: Create a scale
+  delete: Delete a scale
+  default_level_name: Level 1
+  default_name: Default scale
+  edit: Edit a scale
+  view: Scale details
+scale_: Scale
+scales: Scales
+user_picker:
+  select_target: Choose the selection target
+  enter_user_search: Enter a first name, last name or username and select a suggestion in the list
+  enter_group_search: Enter a group name and select a suggestion in the list
+user_picker_: User(s) selection

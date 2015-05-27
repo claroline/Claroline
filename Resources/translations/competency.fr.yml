@@ -20,7 +20,6 @@ competency:
   edit: Modifier une compétence
 competency_: Compétence
 expand_all: Tout développer
-expected_level: Niveau attendu
 framework:
   create: Créer un référentiel
   delete: Supprimer un référentiel
@@ -129,7 +128,6 @@ scale:
   view: Détails de l'échelle
 scale_: Échelle
 scales: Échelles
-stats: Historique et statistiques
 user_picker:
   select_target: 'Choisissez l''objet de la sélection '
   enter_user_search: 'Entrez un nom, prénom ou nom d''utilisateur et sélectionnez une proposition dans la liste '
