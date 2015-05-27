@@ -60,6 +60,10 @@
                     path = value;
                 },
 
+                getMaxDepth: function getMaxDepth() {
+                    return maxDepth;
+                },
+
                 /**
                  * Initialize a new Path structure
                  */
@@ -286,10 +290,11 @@
                 },
 
                 /**
-                 * Get all parents of a Step
+                 * Get all parents of a Step (from the Root to the nearest step parent)
                  * @param step
+                 * @param [reverse] - sort parents from the nearest parent to the Root
                  */
-                getParents: function getParents(step) {
+                getParents: function getParents(step, reverse) {
                     var parents = [];
 
                     var parent = this.getParent(step);
@@ -298,7 +303,7 @@
                         parents.push(parent);
 
                         // Get other parents
-                        parents.concat(this.getParents(parents));
+                        parents = parents.concat(this.getParents(parent));
 
                         // Reorder parent array
                         parents.sort(function (a, b) {
@@ -310,6 +315,10 @@
 
                             return 0;
                         });
+
+                        if (reverse) {
+                            parents.reverse();
+                        }
                     }
 
                     return parents;
@@ -432,10 +441,29 @@
                     });
                 },
 
+                /**
+                 * Get the Root of the Path
+                 * @returns {Object}
+                 */
+                getRoot: function getRoot() {
+                    var root = null;
+
+                    if (angular.isDefined(path) && angular.isObject(path) && angular.isObject(path.steps) && angular.isObject(path.steps[0])) {
+                        root = path.steps[0];
+                    }
+
+                    return root;
+                },
+
+                /**
+                 * Find a Step in the Path by its ID
+                 * @param   {number} stepId
+                 * @returns {object}
+                 */
                 getStep: function getStep(stepId) {
                     var step = null;
 
-                    if (path) {
+                    if (angular.isDefined(path) && angular.isObject(path)) {
                         this.browseSteps(path.steps, function searchStep(parent, current) {
                             if (current.id == stepId) {
                                 step = current;

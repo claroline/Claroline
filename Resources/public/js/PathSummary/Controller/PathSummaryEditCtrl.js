@@ -13,6 +13,7 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
 
     // Initialize some value
     this.clipboardDisabled = this.clipboardService.getDisabled();
+    this.maxDepth = this.pathService.getMaxDepth();
 
     return this;
 };
@@ -29,6 +30,12 @@ PathSummaryEditCtrl.prototype.clipboardDisabled = null;
 
 // Show action buttons for a step in the tree (contains the ID of the step)
 PathSummaryEditCtrl.prototype.showButtons = null;
+
+/**
+ * Maximum depth of the Path
+ * @type {number}
+ */
+PathSummaryEditCtrl.prototype.maxDepth = null;
 
 /**
  * Summary sortable options
