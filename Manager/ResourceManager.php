@@ -829,7 +829,7 @@ class ResourceManager
             }
         }
 
-        if ($isAdmin || $node->getCreator()->getUsername() === $token->getUser()->getUsername()) {
+        if ($isAdmin ||($token->getUser() !== 'anon.' && $node->getCreator()->getUsername() === $token->getUser()->getUsername())) {
             $resourceArray['mask'] = 1023;
         } else {
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
@@ -1248,7 +1248,7 @@ class ResourceManager
     public function getChildren(
         ResourceNode $node,
         array $roles,
-        User $user,
+        $user,
         $withLastOpenDate = false
     )
     {

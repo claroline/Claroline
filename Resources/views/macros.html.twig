@@ -75,19 +75,35 @@
 {% macro workspaceBreadcrumbs(workspace, elements) %}
     {% import _self as self %}
 
-    {% set workspaceElements =
-        [
-            {
-                'icon': 'fa fa-book',
-                'name': 'my_workspaces'|trans({}, 'platform'),
-                'href': path('claro_workspace_by_user')
-            },
-            {
-                'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
-                'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
-            }
-        ]
-    %}
+    {% if has_role('ROLE_ANONYMOUS') %}
+        {% set workspaceElements =
+            [
+                {
+                    'icon': 'fa fa-book',
+                    'name': 'workspaces'|trans({}, 'platform'),
+                    'href': path('claro_workspace_list')
+                },
+                {
+                    'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
+                    'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+                }
+            ]
+        %}
+    {% else %}
+        {% set workspaceElements =
+            [
+                {
+                    'icon': 'fa fa-book',
+                    'name': 'my_workspaces'|trans({}, 'platform'),
+                    'href': path('claro_workspace_by_user')
+                },
+                {
+                    'name': workspace.getName() ~ ' (' ~  workspace.getCode() ~ ') ',
+                    'href': path('claro_workspace_open', {'workspaceId': workspace.getId(), 'toolName': 'home'})
+                }
+            ]
+        %}
+    {% endif %}
     {% set finalElements = workspaceElements|merge(elements) %}
 
     {{ self.breadcrumbs(finalElements) }}
