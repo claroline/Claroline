@@ -87,7 +87,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(ResourceNode $parent, array $roles, User $user, $withLastOpenDate = false)
+    public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false)
     {
         if (count($roles) === 0) {
             throw new \RuntimeException('Roles cannot be empty');
@@ -148,7 +148,7 @@ class ResourceNodeRepository extends MaterializedPathRepository
         //now we get the last open date for nodes.
         //We can't do one request because of the left join + max combination
 
-        if ($withLastOpenDate) {
+        if ($withLastOpenDate && $user !== 'anon.') {
             $builder->selectAsArray(false, true)
                 ->whereParentIs($parent)
                 ->addLastOpenDate($user)
