@@ -99,6 +99,10 @@
                         $('#portfolio_space_tabs a[href="#exchange_space"]').tab('show');
                     });
                 });
+                var locationhash = window.location.hash;
+                if (locationhash.substr(0,2) == "#!") {
+                    $("#portfolio_space_tabs a[href='#" + locationhash.substr(2) + "']").tab("show");
+                }
             });
         })();
     </script>
