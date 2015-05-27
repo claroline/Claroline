@@ -75,7 +75,7 @@
             $('input#everyone', simpleRights.getTable(element)).prop('checked', false);
         }
 
-        if (simpleRights.getValue($('input#anonymous', simpleRights.getTable(element))) &&
+        if (
             simpleRights.getValue($('input#workspace', simpleRights.getTable(element))) &&
             simpleRights.getValue($('input#platform', simpleRights.getTable(element)))
         ) {
