@@ -1,0 +1,15 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4>{% block content_title %}{% endblock %}</h4>
+        </div>
+        <div class="modal-body">
+            {% block content_body %}{% endblock %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ "cancel" | trans({}, "platform")}}</button>
+            <button type="submit" class="btn btn-primary">{{ "ok" | trans({}, "platform")}}</button>
+        </div>
+    </div>
+</div>

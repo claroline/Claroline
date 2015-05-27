@@ -22,5 +22,17 @@
         if (locationhash.substr(0,2) == "#!") {
             $("#portfolio_space_tabs a[href='#" + locationhash.substr(2) + "']").tab("show");
         }
+
+        var modal = window.Claroline.Modal;
+
+        $("a.modal_action").click(function (event) {
+            event.preventDefault();
+            modal.displayForm(
+                event.delegateTarget.href,
+                function(data, textStatus, jqXHR) {
+                },
+                function(data) {
+                });
+        });
     });
 })();

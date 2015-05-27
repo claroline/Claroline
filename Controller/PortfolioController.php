@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use JMS\DiExtraBundle\Annotation\Inject;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -71,7 +72,7 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function addAction(User $loggedUser)
+    public function addAction(Request $request, User $loggedUser)
     {
         $this->checkPortfolioToolAccess();
 
@@ -80,14 +81,26 @@ class PortfolioController extends Controller
 
         try {
             if ($this->getPortfolioFormHandler()->handleAdd($portfolio)) {
-                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_add_success_message', array(), 'icap_portfolio'));
+                if ($request->isXmlHttpRequest()) {
+                    return new JsonResponse($portfolio);
+                }
+                else {
+                    $this->getSessionFlashbag()
+                        ->add('success', $this->getTranslator()
+                            ->trans('portfolio_add_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                    return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                }
             }
         } catch (\Exception $exception) {
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
 
-            return $this->redirect($this->generateUrl('icap_portfolio_index'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse('Erreur', 500);
+            }
+            else {
+                return $this->redirect($this->generateUrl('icap_portfolio_index'));
+            }
         }
 
         return array(
