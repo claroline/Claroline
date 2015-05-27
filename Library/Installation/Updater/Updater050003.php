@@ -10,10 +10,12 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
-use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 class Updater050003 extends Updater
 {
@@ -30,6 +32,7 @@ class Updater050003 extends Updater
         $this->removeOldTemplateDir();
         $this->moveThumbnailsDir();
         $this->addingResourceIcons();
+        $this->addMyContactsTool();
     }
 
     public function moveThumbnailsDir()
@@ -111,6 +114,40 @@ class Updater050003 extends Updater
                 $this->container->get('claroline.manager.icon_manager')
                     ->createShortcutIcon($rimg);
             }
+        }
+    }
+
+    private function addMyContactsTool()
+    {
+        $this->log('Installing my_contacts tool...');
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $toolManager = $this->container->get('claroline.manager.tool_manager');
+        $myContactsTool = $toolManager->getOneToolByName('my_contacts');
+
+        if (is_null($myContactsTool)) {
+            $myContactsTool = new Tool();
+            $myContactsTool->setName('my_contacts');
+            $myContactsTool->setClass('users');
+            $myContactsTool->setIsWorkspaceRequired(false);
+            $myContactsTool->setIsDesktopRequired(false);
+            $myContactsTool->setDisplayableInWorkspace(false);
+            $myContactsTool->setDisplayableInDesktop(true);
+            $myContactsTool->setExportable(false);
+            $myContactsTool->setIsConfigurableInWorkspace(false);
+            $myContactsTool->setIsConfigurableInDesktop(false);
+            $myContactsTool->setIsLockedForAdmin(false);
+            $myContactsTool->setIsAnonymousExcluded(true);
+            $toolManager->create($myContactsTool);
+
+            $myContactsOt = new OrderedTool();
+            $myContactsOt->setTool($myContactsTool);
+            $myContactsOt->setType(0);
+            $myContactsOt->setOrder(10);
+            $myContactsOt->setLocked(false);
+            $myContactsOt->setName($myContactsTool->getName());
+            $myContactsOt->setVisibleInDesktop(true);
+            $om->persist($myContactsOt);
+            $om->flush();
         }
     }
 }

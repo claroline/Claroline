@@ -69,6 +69,8 @@ actualize: Actualize
 add: Add
 add_a_logo: 'Add a logo'
 add_category: 'Add category'
+add_contact_to_category: 'Add contact to a category'
+add_contacts: 'Add contacts'
 add_field_to_facet: 'Add field to facet'
 add_field_to_panel: 'Add a field'
 add_filter: 'Add filter'
@@ -105,10 +107,12 @@ advanced_parameters: 'Advanced parameters'
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
 all: All
 all_available_workspaces: 'All available workspaces'
+all_my_contacts: 'All my contacts'
 all_my_workspaces: 'All my workspaces'
 all_public_personal_workspaces: 'All public personal workspaces'
 all_public_workspaces: 'All public workspaces'
 all_roles: 'All roles'
+all_visible_users: 'All visible users'
 all_workspaces: 'All workspaces'
 already_existing_user: 'The user already exists'
 already_exists: 'already exists'
@@ -161,6 +165,9 @@ captcha: Captcha
 categories: Categories
 categories_organization: 'Categories organization'
 categorize: Categorize
+category: Category
+category_creation: 'Category creation'
+category_edition: 'Category edition'
 category_explanations_1: 'Each category must have an unique name.'
 category_explanations_2: 'Select a category to manage its subcategories.'
 category_root: 'Root categories'
@@ -188,6 +195,8 @@ configuration: Configuration
 configure: Configure
 confirm_send_data: 'We suggest to confirm your agreement to send data:'
 connections: Connections
+contact: Contact
+contacts_per_page: 'Contacts per page'
 content: Content
 cookie_lifetime: 'Cookie lifetime'
 copiable: Copiable
@@ -277,8 +286,10 @@ default_role: 'Default role'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'
-delete_category_confirm_message: 'Do you really want to delete this category?'
+delete_category_confirm_message: 'Do you really want to delete this category ?'
 delete_category_confirm_title: 'Category deletion'
+delete_contact: 'Delete contact'
+delete_contact_confirm_message: 'Do you really want to delete this contact ?'
 delete_home_tab: 'Delete tab'
 delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
@@ -591,10 +602,11 @@ new_message_alert: 'You have %count% new message(s)'
 new_password: 'New password'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
-'no': 'No'
+no: 'No'
 no_action_found: 'No action found.'
 no_activity_in_workspace: 'There are currently no activities in this workspace.'
 no_category: 'There is no category'
+no_contact: 'No contact'
 no_email: 'No email found, check the spelling'
 no_filter: 'No filter'
 no_group: 'No group'
@@ -719,6 +731,8 @@ registration: Registration
 registration_to_workspaces: 'Registration to workspaces'
 registration_validation: 'Registration validation'
 remove: Remove
+remove_contact_from_category: 'Remove contact_from_category'
+remove_contact_from_category_confirm_message: 'Are you sure you want to remove this contact from this category ?'
 remove_facet: 'Remove a facet'
 remove_facet_confirm: 'Do you really want to remove the facet %name% ?'
 remove_field: 'Remove a field'
@@ -816,6 +830,7 @@ select_contacts_title: 'Select receivers'
 select_groups_for_registration_to_workspace: 'Select groups to register'
 select_roles_to_assign: 'Select roles to assign'
 select_users_for_registration_to_workspace: 'Select users to register'
+select_users_to_add_to_your_contacts: 'Select users to add to your contacts'
 select_workspace_to_link: 'Select workspace to link'
 select_workspaces_for_registration: 'Select workspaces for registration'
 selected_users: 'Selected users'
@@ -844,11 +859,17 @@ settings: Settings
 sharable: Sharable
 share: Share
 show: Show
+show_all_my_contacts: 'Show "All my contacts"'
+show_all_visible_users: 'Show "All visible users"'
 show_as: 'Show as'
 show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
+show_mail: 'Show mail'
+show_phone: 'Show phone'
+show_picture: 'Show picture'
 show_profile: 'Show profile'
 show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_username: 'Show username'
 simple: Simple
 start_date: 'Start date'
 start_maintenance: 'Start maintenance mode'

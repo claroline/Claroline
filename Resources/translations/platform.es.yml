@@ -69,6 +69,8 @@ actualize: Actualizar
 add: Agregar
 add_a_logo: 'Agregar un logo'
 add_category: 'Agregar categoría'
+add_contact_to_category: 'Añadir el contacto a una categoría'
+add_contacts: 'Agregar contactos'
 add_field_to_facet: 'Agregar un campo a una faceta'
 add_field_to_panel: add_field_to_panel
 add_filter: 'Agregar un filtro'
@@ -106,10 +108,12 @@ size: Tamaño
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: Todos
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'
+all_my_contacts: 'Todos mis contactos'
 all_my_workspaces: 'Todos mis espacios de trabajo'
 all_public_personal_workspaces: 'Todos los espacios personales publicos'
 all_public_workspaces: 'Todos los espacios de trabajo públicos'
 all_roles: 'Todos los roles'
+all_visible_users: 'Todos los usuarios visibles'
 all_workspaces: 'Todos los espacios de trabajo'
 already_existing_user: 'El usuario ya existe'
 already_exists: already_exists
@@ -162,6 +166,9 @@ captcha: captcha
 categories: categorías
 categories_organization: 'Organización de categorías'
 categorize: 'Clasificar por categorías'
+category: Categoría
+category_creation: 'Creación de una categoría'
+category_edition: 'Modificación de categoría'
 category_explanations_1: 'Cada categoría debe tener un nombre único.'
 category_explanations_2: 'Seleccione una categoría para la gestión de sus subcategorías.'
 category_root: 'Categorías de la raíz'
@@ -189,6 +196,8 @@ configuration: Configuración
 configure: Configurar
 confirm_send_data: 'Sugerimos confirmar su acuerdo para enviar datos:'
 connections: Conexiones
+contact: Contacto
+contacts_per_page: 'Contactos por página'
 content: Contenido
 cookie_lifetime: 'Duración de la cookie'
 copiable: Copiable
@@ -280,6 +289,8 @@ delete: Suprimir
 delete_category: 'Suprimir categoría'
 delete_category_confirm_message: '¿Realmente deseas eliminar esta categoría?'
 delete_category_confirm_title: 'Supresión de categoría'
+delete_contact: 'Suprimir el contacto'
+delete_contact_confirm_message: '¿Está seguro que desea suprimir este contacto?'
 delete_home_tab: 'Suprimir pestaña'
 delete_learning_outcomes: delete_learning_outcomes
 delete_learning_outcomes_confirm_message: delete_learning_outcomes_confirm_message
@@ -592,10 +603,11 @@ new_message_alert: 'Usted tiene %count% nuevo(s) mensaje(s)'
 new_password: 'Nueva contraseña'
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
-'no': 'No'
+no: 'No'
 no_action_found: 'No hay acciones.'
 no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
+no_contact: 'No hay contacto'
 no_email: 'No se ha encontrado el correo electrónico, comprube la ortografía'
 no_filter: 'No hay filtro'
 no_group: 'No hay grupo'
@@ -720,6 +732,8 @@ registration: Inscripción
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
 registration_validation: registration_validation
 remove: Retirar
+remove_contact_from_category: 'Retirar el contacto de la categoría'
+remove_contact_from_category_confirm_message: '¿Está seguro de querer eliminar este contacto de esta categoría?'
 remove_facet: 'Eliminar una faceta'
 remove_facet_confirm: '¿Está seguro que desea suprimir la faceta %name%?'
 remove_field: 'Eliminar una campo'
@@ -817,6 +831,7 @@ select_contacts_title: 'Seleccionar receptores'
 select_groups_for_registration_to_workspace: 'Seleccionar grupos a inscribir'
 select_roles_to_assign: 'Seleccionar roles a asignar'
 select_users_for_registration_to_workspace: 'Seleccionar usuario a inscribir'
+select_users_to_add_to_your_contacts: 'Seleccione los usuarios que desea agregar a sus contactos'
 select_workspace_to_link: 'Seleccione una espacio de trabajo a vincular'
 select_workspaces_for_registration: 'Seleccionar espacio de trabajo a inscribir'
 selected_users: 'Usuarios seleccionados'
@@ -845,11 +860,17 @@ settings: Configuración
 sharable: Compartible
 share: Compartir
 show: Mostrar
+show_all_my_contacts: 'Mostrar "Todos mis contactos"'
+show_all_visible_users: 'Mostrar "Todos los usuarios visibles"'
 show_as: 'Mostrar como'
 show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
+show_mail: 'Mostrar la dirección de correo electrónico'
+show_phone: 'Mostrar el núnero de teléfono '
+show_picture: 'Mostrar la foto'
 show_profile: 'Mostrar perfil'
 show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_username: 'Mostrar el nombre de usuario'
 simple: Simple
 start_date: 'Fecha de inicio'
 start_maintenance: 'Lanzar el modo de mantenimiento'
