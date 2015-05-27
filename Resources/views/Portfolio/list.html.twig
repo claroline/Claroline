@@ -97,13 +97,13 @@
                             </ul>
                         </div>
                         {% set countUnreadComments = portfolio.countUnreadComments %}
-                        <a href="{{ path('icap_portfolio_index', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                        <button type="button" value="{{ portfolio.id }}"
                            title="{{ 'guide_exchange'|trans({}, 'icap_portfolio') }}"
                            class="btn btn-xs btn-default exchange_link{% if 0 < countUnreadComments %} highlight{% endif %}"
                            data-toggle="tooltip" data-container="body" data-placement="left">
                             <span class="fa fa-comment-o"></span>
                             {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
-                        </a>
+                        </button>
                         <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
                            download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
                            data-toggle="tooltip" data-container="body" data-placement="left" class="btn btn-xs btn-default">
@@ -132,20 +132,3 @@
         )
     }}
 {%  endif %}
-
-{% block javascripts %}
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-    <script type="text/javascript">
-        (function($) {
-            $(function() {
-                $('.delete').confirmModal();
-                $('.import-dropdown').dropdown();
-                $('.import-dropdown').tooltip({
-                    container: "body",
-                    placement: "top",
-                    title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
-                });
-            });
-        })(jQuery);
-    </script>
-{% endblock %}

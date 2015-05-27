@@ -2,8 +2,8 @@
 
 {% block content_body %}
     <div class="portfolio-tabpanel" role="tabpanel">
-        <ul class="nav nav-tabs" role="tablist">
-            <li class="presentation-options active">
+        <ul class="nav nav-tabs" role="tablist" id="portfolio_space_tabs">
+            <li class="presentation-tab active">
                 <a href="#presentation" aria-controls="presentation" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
                     <span class="option-text">
@@ -12,7 +12,7 @@
                     </span>
                 </a>
             </li>
-            <li class="list-options">
+            <li class="list-tab">
                 <a href="#list" aria-controls="list" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
                     <span class="option-text">
@@ -21,7 +21,7 @@
                     </span>
                 </a>
             </li>
-            <li class="guide-options">
+            <li class="exchange-space-tab">
                 <a href="#exchange_space" aria-controls="exchange_space" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
                     <span class="option-text">
@@ -79,9 +79,31 @@
         (function() {
             window.currentPortfolioId = {{ portfolioId }};
             window.assetPath = "{{ asset('') }}";
+
+            $(function() {
+                $('.delete').confirmModal();
+                $('.import-dropdown').dropdown();
+                $('.import-dropdown').tooltip({
+                    container: "body",
+                    placement: "top",
+                    title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
+                });
+                $('.exchange_link').click(function(event) {
+                    var scope = angular.element($("#exchange_space_container")).scope();
+                    scope.$apply(function(){
+                        var portfolioId = $(event.delegateTarget).val();
+                        if (portfolioId !== scope.selectedPortfolioId) {
+
+                            scope.clickOnPortolio(portfolioId);
+                        }
+                        $('#portfolio_space_tabs a[href="#exchange_space"]').tab('show');
+                    });
+                });
+            });
         })();
     </script>
 
+    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
     {% javascripts debug=true filter='jsmin' output='js/portfolio/comments/vendor.js'

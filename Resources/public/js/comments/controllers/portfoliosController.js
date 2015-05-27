@@ -4,8 +4,8 @@ commentsApp
     .controller("portfoliosController", ["$scope", "portfolioManager", "commentsManager", "$filter",
         function($scope, portfolioManager, commentsManager, $filter) {
         $scope.selectedPortfolioId = 0;
-        $scope.selectedPortfolio   = null;
-        $scope.portfolios          = portfolioManager.getPortfolios();
+        $scope.selectedPortfolio = null;
+        $scope.portfolios = portfolioManager.getPortfolios();
         $scope.portfolios.then(
             function(data) {
                 $scope.portfolios = data;
