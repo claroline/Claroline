@@ -14,11 +14,12 @@
     var currentMax = $('#contacts-datas-box').data('max');
     var currentOrderedBy = $('#contacts-datas-box').data('ordered-by');
     var currentOrder = $('#contacts-datas-box').data('order');
-    var allContactIdsTxt = '' + $('#all-my-contacts-datas-box').data('contacts-id');
+    var allContactIdsTxt = '' + $('#contacts-datas-box').data('contacts-id');
     allContactIdsTxt = allContactIdsTxt.trim();
     var allContactIds = allContactIdsTxt !== '' ?
         allContactIdsTxt.split(',') :
         [];
+    var currentCategoryId;
 
     $('#my-contacts-tool').on('click', '#contacts-configure-btn', function () {
         window.Claroline.Modal.displayForm(
@@ -71,6 +72,24 @@
             blacklist: allContactIds
         };
         userPicker.configure(settings, addContacts);
+        userPicker.open();
+    });
+
+    $('#my-contacts-tool').on('click', '.add-user-to-category-btn', function () {
+        currentCategoryId = $(this).data('category-id');
+        
+        var userPicker = new UserPicker();
+        var settings = {
+            multiple: true,
+            picker_name: 'contacts_picker_' + currentCategoryId,
+            picker_title: Translator.trans(
+                'select_users_to_add_to_your_contacts',
+                {},
+                'platform'
+            ),
+            blacklist: allContactIds
+        };
+        userPicker.configure(settings, addContactsToCategory);
         userPicker.open();
     });
     
@@ -289,6 +308,14 @@
                             '<i class="fa fa-cogs pointer-hand" data-toggle="dropdown">' +
                             '</i>' +
                             '<ul class="dropdown-menu" role="menu">' +
+                                '<li role="presentation" class="add-user-to-category-btn" data-category-id="' +
+                                    id + '">' +
+                                    
+                                    '<a role="menuitem" tabindex="-1" href="#">' +
+                                        '<i class="fa fa-user-plus"></i>&nbsp;' +
+                                        Translator.trans('add_contacts', {}, 'platform') +
+                                    '</a>' +
+                                '</li>' +
                                 '<li role="presentation" class="category-edit-btn" data-category-id="' +
                                     id + '">' +
                                     
@@ -332,18 +359,72 @@
     };
     
     var addContacts = function (userIds) {
-        var parameters = {};
-        parameters.userIds = userIds;
-        var route = Routing.generate('claro_contacts_add');
-        route += '?' + $.param(parameters);
         
-        $.ajax({
-            url: route,
-            type: 'GET',
-            success: function (datas) {
-                window.location.reload();
-            }
-        });
+        if (userIds !== null) {
+            var parameters = {};
+            parameters.userIds = userIds;
+            var route = Routing.generate('claro_contacts_add');
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function () {
+                    window.location.reload();
+                }
+            });
+        }
+    };
+    
+    var addContactsToCategory = function (userIds) {
+        
+        if (userIds !== null) {
+            var parameters = {};
+            parameters.userIds = userIds;
+            var route = Routing.generate(
+                'claro_contacts_add_to_category',
+                {'category': currentCategoryId}
+            );
+            route += '?' + $.param(parameters);
+
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function () {
+                    
+                    for (var i = 0; i < userIds.length; i++) {
+                        
+                        if (allContactIds.indexOf(userIds[i]) === -1) {
+                            allContactIds.push(userIds[i]);
+                        }
+                    }
+                    var nbAllContacts = parseInt($('#all-my-contacts-badge').html());
+                    nbAllContacts += userIds.length;
+                    $('#all-my-contacts-badge').html(nbAllContacts);
+                    var nbCategoryContacts = parseInt($('#category-badge-' + currentCategoryId).html());
+                    nbCategoryContacts += userIds.length;
+                    $('#category-badge-' + currentCategoryId).html(nbCategoryContacts);
+                    
+                    $.ajax({
+                        url: Routing.generate('claro_contact_show_all_my_contacts'),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#all-my-contacts-content-body').html(datas);
+                        }
+                    });
+                    $.ajax({
+                        url: Routing.generate(
+                            'claro_contact_show_contacts_by_category',
+                            {'category': currentCategoryId}
+                        ),
+                        type: 'GET',
+                        success: function (datas) {
+                            $('#category-content-body-' + currentCategoryId).html(datas);
+                        }
+                    });
+                }
+            });
+        }
     };
     
     var removeContact = function (event, contactId) {

@@ -205,6 +205,28 @@ class ContactManager
         $this->om->endFlushSuite();
     }
 
+    public function addContactsToUserAndCategory(
+        User $user,
+        Category $category,
+        array $contacts
+    )
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($contacts as $contact) {
+            $existingContact = $this->getContactByUserAndContact($user, $contact);
+
+            if (is_null($existingContact)) {
+                $existingContact = new Contact();
+                $existingContact->setUser($user);
+                $existingContact->setContact($contact);
+                $existingContact->addCategory($category);
+                $this->om->persist($existingContact);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function sortContactsByCategories(
         User $user,
         array $categories,

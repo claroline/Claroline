@@ -258,10 +258,6 @@
                         </div>
                         <div id="all-my-contacts-content" class="panel-collapse collapse in">
                             <div class="panel-body" id="all-my-contacts-content-body">
-                                <div id="all-my-contacts-datas-box"
-                                     data-contacts-id="{% for u in allContacts %}{{ u.getId() }}{% if not loop.last %},{% endif %}{% endfor %}"
-                                >
-                                </div>
 
                                 {% if contacts['all_my_contacts']|length > 0 %}
 
@@ -422,6 +418,15 @@
                                         >
                                         </i>
                                         <ul class="dropdown-menu" role="menu">
+                                            <li role="presentation"
+                                                class="add-user-to-category-btn"
+                                                data-category-id="{{ categoryId }}"
+                                            >
+                                                <a role="menuitem" tabindex="-1" href="#">
+                                                    <i class="fa fa-user-plus"></i>
+                                                    {{ 'add_contacts'|trans({}, 'platform') }}
+                                                </a>
+                                            </li>
                                             <li role="presentation"
                                                 class="category-edit-btn"
                                                 data-category-id="{{ categoryId }}"
@@ -838,6 +843,7 @@
          data-max="{{ max }}"
          data-ordered-by="{{ orderedBy }}"
          data-order="{{ order }}"
+         data-contacts-id="{% for u in allContacts %}{{ u.getId() }}{% if not loop.last %},{% endif %}{% endfor %}"
     >
     </div>
 {% endblock %}

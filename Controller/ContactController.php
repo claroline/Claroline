@@ -74,8 +74,9 @@ class ContactController extends Controller
     )
     {
         $options = $this->contactManager->getUserOptionsValues($authenticatedUser);
-        $allContacts = $this->contactManager->getContactsByUser(
+        $allContacts = $this->contactManager->getUserContacts(
             $authenticatedUser,
+            '',
             $orderedBy,
             $order
         );
@@ -284,6 +285,34 @@ class ContactController extends Controller
         if (!is_null($userContact)) {
             $this->contactManager->deleteContact($userContact);
         }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/contacts/add/to/category/{category}",
+     *     name="claro_contacts_add_to_category",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     */
+    public function contactsAddToCategoryAction(
+        User $authenticatedUser,
+        Category $category,
+        array $users
+    )
+    {
+        $this->contactManager->addContactsToUserAndCategory(
+            $authenticatedUser,
+            $category,
+            $users
+        );
 
         return new JsonResponse('success', 200);
     }
