@@ -15,7 +15,7 @@
 
                 {% if not footerMessage is empty %}{{ footerMessage|raw }}{% endif %}
                 <span{% if ((footerLogin or footerWorkspaces) and not is_granted('ROLE_USER')) or not footerMessage is empty %} class="pull-right"{% endif %}>
-                    {{ 'powered_by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline BETA</a> (v{{ coreVersion }})
+                    {{ 'powered_by' | trans({}, 'platform') }} <a href="http://www.claroline.net">Claroline</a> (v{{ coreVersion }})
                 </span>
             </p>
         </div>

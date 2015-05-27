@@ -70,7 +70,7 @@
     </div>
 
     <div class="col-md-5">
-        {{ 'created_by'|trans({'creator': node.creator_username, 'creationDate':  node.modification_date}, 'platform')}}
+        {{ 'created_by'|trans({'creator': node.creator_username, 'creationDate':  node.creation_date}, 'platform')}}
     </div>
     <div class="col-md1-1">
         {% if node.size %} {{ node.size }} {% endif %}

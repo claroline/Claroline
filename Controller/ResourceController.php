@@ -518,9 +518,18 @@ class ResourceController
         $nodesWithCreatorPerms = array();
 
         if ($node === null) {
-            $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
+            $nodes = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
+
+            foreach ($nodes as $el) {
+                $item = $el;
+                $dateModification = $el['modification_date'];
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $dateCreation = $el['creation_date'];
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $nodesWithCreatorPerms[] = $item;
+            }
         } else {
             $isRoot = false;
             $workspaceId = $node->getWorkspace()->getId();

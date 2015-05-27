@@ -60,11 +60,23 @@
             </ul>
         </li>
         <li>
-            <a><input type="checkbox" class="list-view" data-view="{{ viewName }}" {% if listViewActivated == true %} checked {% endif %}></input> {{ 'list_view'|trans({}, 'platform') }}</a>
+            <a>
+                <input type="checkbox" class="list-view" id="list-view-chk" data-view="{{ viewName }}" {% if listViewActivated == true %} checked {% endif %}>
+                </input>
+                <label for="list-view-chk" class="pointer-hand" style="font-weight: normal !important">
+                    {{ 'list_view'|trans({}, 'platform') }}
+                </label>
+            </a>
         </li>
         {% if isMultiSelectAllowed %}
             <li>
-                <a><input type="checkbox" class="select-all-nodes" data-view="{{ viewName }}"></input> {{ 'select_all'|trans({}, 'platform') }}</a>
+                <a>
+                    <input type="checkbox" class="select-all-nodes" id="select-all-nodes-chk" data-view="{{ viewName }}">
+                    </input>
+                    <label for="select-all-nodes-chk" class="pointer-hand" style="font-weight: normal !important">
+                        {{ 'select_all'|trans({}, 'platform') }}
+                    </label>
+                </a>
             </li>
         {% endif %}
     </ul>
