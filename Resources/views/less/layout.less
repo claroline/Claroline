@@ -1553,14 +1553,25 @@ body.mce-fullscreen .modal.fullscreen {
     white-space: nowrap;
 }
 
+.login_form_container {
+    h2 {
+        margin-bottom: 30px;
+    }
+    form {
+        padding-bottom: 20px;
+        .external_authentication {
+            hr {
+                border-top-color: #cccccc;
+            }
+        }
+    }
+}
+
 /**********************/
 /**    Facebook      **/
 /**********************/
 
 .facebook-connect {
-    margin-left: 5px;
-    overflow: hidden;
-    position: absolute;
     .fb-login-button {
         opacity: 0;
         position: absolute;
