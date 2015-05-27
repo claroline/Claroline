@@ -61,7 +61,7 @@ class TemplateLocator extends baseTemplateLocator
         }
 
         $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
-        $theme = $this->themeService->findTheme(array('name' => $name));
+        $theme = $this->themeService->getThemeBy(array('name' => $name));
         $bundle = $this->getBundle($theme);
         $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
         $key = $this->getCacheKey($template);
