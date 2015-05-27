@@ -10,6 +10,7 @@
 (function () {
     'use strict';
 
+    window.Claroline.ResourcePicker = {};
     var manager = window.Claroline.ResourceManager;
     var common = window.Claroline.Common;
     var modal = window.Claroline.Modal;
@@ -30,41 +31,58 @@
     };
 
 
-    $(document).ready(function () {
-        initialize();
-        $('body').bind({
-            'ajaxComplete': function () {
-                initialize();
-            },
-            'DOMSubtreeModified': function () {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(initialize, 10);
-            }
-        });
-    });
-
     /**
      * Initializes every resource input on the page.
      */
-    function initialize() {
-        $('input.resource-picker:not(.resource-picker-done)').each(function () {
-            var pickerName = 'formResourcePicker';
-            var customParameters = processCustomParameters($(this).data());
+    window.Claroline.ResourcePicker.initialize = function (id) {
+        var pickerName = 'formResourcePicker';
+        var field = $('#' + id);
+        var element = field.next('.input-group');
 
-            var element = createInput(this.parentNode, pickerName, customParameters);
-            var name = $(this).data('name');
+        $('input.form-control', element)
+            .on('focus', function () {
+                activePicker = this.parentNode;
+                openPicker(pickerName, customParameters);
+            });
 
-            if (name) {
-                $('.input-group input', element).val(name);
-            }
+        var inputGroupButton = $('.input-group-btn', element);
 
-            if ($(this).next().hasClass('help-block')) {
-                $(this).next().appendTo(element);
-            }
+        $('button.resource-browse', inputGroupButton)
+            .on('click', function () {
+                activePicker = this.parentNode.parentNode;
+                openPicker(pickerName, customParameters);
+            });
 
-            $(this).addClass('resource-picker-done').addClass('hide');
-            checkView($('.input-group', element));
-        });
+        $('button.resource-download', inputGroupButton)
+            .on('click', function () {
+                activePicker = this.parentNode.parentNode;
+                modal.fromRoute('claro_upload_modal', null, function (element) {
+                    element.on('click', '.resourcePicker', function () {
+                        openPicker(pickerName, customParameters);
+                    })
+                        .on('click', '.filePicker', function () {
+                            $('#file_form_file').click();
+                        })
+                        .on('change', '#file_form_file', function () {
+                            common.uploadfile(this, element, defaultCallback);
+                        });
+                });
+            });
+
+        var customParameters = processCustomParameters(field.data());
+
+        var name = field.data('name');
+
+        if (name) {
+            $('input', element).val(name);
+        }
+
+        if (field.next().hasClass('help-block')) {
+            field.next().appendTo(element);
+        }
+
+        field.addClass('resource-picker-done').addClass('hide');
+        checkView(element);
     };
 
     function processCustomParameters(datas) {
@@ -74,9 +92,6 @@
             'restrictForOwner',
             'isPickerMultiSelectAllowed',
             'isDirectorySelectionAllowed',
-            'displayViewButton',
-            'displayBrowseButton',
-            'displayDownloadButton'
         ];
         var arrayParameterList = [
             'typeBlackList',
@@ -100,81 +115,6 @@
         }
 
         return customParameters;
-    }
-
-    /**
-     * Creates a resource input as child of a dom element
-     */
-    function createInput(parentElement, pickerName, customParameters) {
-        var displayViewButton     = (customParameters && undefined !== customParameters['displayViewButton']) ? customParameters['displayViewButton'] : true;
-        var displayBrowseButton   = (customParameters && undefined !== customParameters['displayBrowseButton']) ? customParameters['displayBrowseButton'] : true;
-        var displayDownloadButton = (customParameters && undefined !== customParameters['displayDownloadButton']) ? customParameters['displayDownloadButton'] : true;
-
-        var buttonBar = common.createElement('span', 'input-group-btn');
-
-        if (displayViewButton) {
-            buttonBar.append(
-                common.createElement('a', 'btn btn-default disabled resource-view')
-                    .append(common.createElement('i', 'fa fa-eye'))
-                    .attr('title', translator.trans('see', {}, 'platform'))
-                    .attr('data-toggle', 'tooltip')
-                    .attr('target', '_blank')
-                    .css('margin', '0')
-            );
-        }
-
-        if (displayBrowseButton) {
-            buttonBar.append(
-                common.createElement('a', 'btn btn-default')
-                    .append(common.createElement('i', 'fa fa-folder-open'))
-                    .attr('title', translator.trans('resources', {}, 'platform'))
-                    .attr('data-toggle', 'tooltip')
-                    .css('margin', '0')
-                    .on('click', function () {
-                        activePicker = this.parentNode.parentNode;
-                        openPicker(pickerName, customParameters);
-                    })
-            );
-        }
-
-        if (displayDownloadButton) {
-            buttonBar.append(
-                common.createElement('a', 'btn btn-default')
-                    .append(common.createElement('i', 'fa fa-file'))
-                    .attr('title', translator.trans('upload', {}, 'platform'))
-                    .attr('data-toggle', 'tooltip')
-                    .css('margin', '0')
-                    .on('click', function () {
-                        activePicker = this.parentNode.parentNode;
-                        modal.fromRoute('claro_upload_modal', null, function (element) {
-                            element.on('click', '.resourcePicker', function () {
-                                openPicker(pickerName, customParameters);
-                            })
-                                .on('click', '.filePicker', function () {
-                                    $('#file_form_file').click();
-                                })
-                                .on('change', '#file_form_file', function () {
-                                    common.uploadfile(this, element, defaultCallback);
-                                });
-                        });
-                    })
-            );
-        }
-
-        return $(parentElement).append(
-            common.createElement('div', 'input-group')
-                .append(
-                    common.createElement('input', 'form-control')
-                        .css('cursor', 'pointer')
-                        .attr('type', 'text')
-                        .attr('placeholder', translator.trans('add_resource', {}, 'platform'))
-                        .on('focus', function () {
-                            activePicker = this.parentNode;
-                            openPicker(pickerName, customParameters);
-                        })
-                )
-                .append(buttonBar)
-        );
     }
 
     /**
