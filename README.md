@@ -69,10 +69,10 @@ Project setup
     - *web/uploads*
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
-    - `$ composer require claroline/bundle-recorder "~4.0"`
+    - `$ composer require claroline/bundle-recorder "~5.0"`
     - `$ cp composer.json.min composer.json`
     - `$ composer update --prefer-source` <sub>(1)</sub> 
-    - `$ php app/console claroline:update`
+    - `$ php app/console claroline:install`
 
 <sub> (1) At this point, you can ignore the following error: *Class 
     Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler is not 
