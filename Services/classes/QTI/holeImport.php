@@ -37,11 +37,11 @@ class holeImport extends qtiImport
 
         $this->createInteraction();
         $this->interaction->setType('InteractionHole');
-        $this->doctrine->getManager()->persist($this->interaction);
+        $this->om->persist($this->interaction);
 
         $this->createInteractionHole();
 
-        $this->doctrine->getManager()->flush();
+        $this->om->flush();
 
         $this->addOptionValue();
 
@@ -63,7 +63,7 @@ class holeImport extends qtiImport
         $this->getHtml();
         $this->getHtmlWithoutValue();
 
-        $this->doctrine->getManager()->persist($this->interactionHole);
+        $this->om->persist($this->interactionHole);
     }
 
     /**
@@ -195,8 +195,8 @@ class holeImport extends qtiImport
             $htmlWithoutValue = str_replace($select, $newSelect,  $htmlWithoutValue);
         }
         $this->interactionHole->setHtmlWithoutValue($htmlWithoutValue);
-        $this->doctrine->getManager()->persist($this->interactionHole);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionHole);
+        $this->om->flush();
     }
 
     /**
@@ -218,7 +218,7 @@ class holeImport extends qtiImport
         $hole->setPosition($position);
         $hole->setInteractionHole($this->interactionHole);
 
-        $this->doctrine->getManager()->persist($hole);
+        $this->om->persist($hole);
 
         $this->createWordResponse($qtiId, $hole);
     }
@@ -268,7 +268,7 @@ class holeImport extends qtiImport
             } else {
                 $keyWord->setCaseSensitive(false);
             }
-            $this->doctrine->getManager()->persist($keyWord);
+            $this->om->persist($keyWord);
         }
     }
 
@@ -312,7 +312,7 @@ class holeImport extends qtiImport
                     }
                     $keyWord->setScore($score);
                     $keyWord->setHole($hole);
-                    $this->doctrine->getManager()->persist($keyWord);
+                    $this->om->persist($keyWord);
                     $this->tabWrOpt[] = $keyWord;
                 }
             }

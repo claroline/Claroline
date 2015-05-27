@@ -33,8 +33,8 @@ class graphicImport extends qtiImport {
 
         $this->createInteraction();
         $this->interaction->setType('InteractionGraphic');
-        $this->doctrine->getManager()->persist($this->interaction);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interaction);
+        $this->om->flush();
 
         $this->createInteractionGraphic();
 
@@ -56,8 +56,8 @@ class graphicImport extends qtiImport {
         $this->interactionGraph->setHeight($ob->getAttribute('height'));
         $this->interactionGraph->setWidth($ob->getAttribute('width'));
 
-        $this->doctrine->getManager()->persist($this->interactionGraph);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionGraph);
+        $this->om->flush();
 
         $this->createCoords();
         $this->createPicture($ob);
@@ -83,8 +83,8 @@ class graphicImport extends qtiImport {
             $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
             $coords->setColor('white');
             $coords->setInteractionGraphic($this->interactionGraph);
-            $this->doctrine->getManager()->persist($coords);
-            $this->doctrine->getManager()->flush();
+            $this->om->persist($coords);
+            $this->om->flush();
         }
     }
 
@@ -107,12 +107,12 @@ class graphicImport extends qtiImport {
         $document->setUrl($userDir.'/images/'.$picName);
         $document->setUser($user);
 
-        $this->doctrine->getManager()->persist($document);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($document);
+        $this->om->flush();
 
         $this->interactionGraph->setDocument($document);
-        $this->doctrine->getManager()->persist($this->interactionGraph);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionGraph);
+        $this->om->flush();
 
     }
 

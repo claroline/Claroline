@@ -32,8 +32,8 @@ class qcmImport extends qtiImport {
 
         $this->createInteraction();
         $this->interaction->setType('InteractionQCM');
-        $this->doctrine->getManager()->persist($this->interaction);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interaction);
+        $this->om->flush();
 
         $this->createInteractionQCM();
 
@@ -82,8 +82,8 @@ class qcmImport extends qtiImport {
         } else {
             $this->interactionQCM->setWeightResponse(true);
         }
-        $this->doctrine->getManager()->persist($this->interactionQCM);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionQCM);
+        $this->om->flush();
         $this->createChoices();
     }
 
@@ -112,17 +112,15 @@ class qcmImport extends qtiImport {
     protected function getQCMType() {
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'multiple') {
-            $type = $this->doctrine
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:TypeQCM')
-                    ->findOneBy(array('code' => 1));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeQCM')
+                         ->findOneBy(array('code' => 1));
 
             $this->interactionQCM->setTypeQCM($type);
         } else {
-            $type = $this->doctrine
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:TypeQCM')
-                    ->findOneBy(array('code' => 2));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeQCM')
+                         ->findOneBy(array('code' => 2));
 
             $this->interactionQCM->setTypeQCM($type);
         }
@@ -154,8 +152,8 @@ class qcmImport extends qtiImport {
             $choice->setWeight($this->getWeightChoice($simpleChoice->getAttribute("identifier")));
             $choice->setRightResponse($this->getRightResponse($simpleChoice->getAttribute("identifier")));
             $choice->setInteractionQCM($this->interactionQCM);
-            $this->doctrine->getManager()->persist($choice);
-            $this->doctrine->getManager()->flush();
+            $this->om->persist($choice);
+            $this->om->flush();
             $order ++;
         }
     }

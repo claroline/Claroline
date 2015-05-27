@@ -31,8 +31,8 @@ class openImport extends qtiImport
 
         $this->createInteraction();
         $this->interaction->setType('InteractionOpen');
-        $this->doctrine->getManager()->persist($this->interaction);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interaction);
+        $this->om->flush();
 
         $this->createInteractionOpen();
     }
@@ -55,8 +55,8 @@ class openImport extends qtiImport
         $this->interactionOpen->setTypeOpenQuestion($codeTypeOpen);
         $this->interactionOpen->setScoreMaxLongResp($val->nodeValue);
 
-        $this->doctrine->getManager()->persist($this->interactionOpen);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionOpen);
+        $this->om->flush();
 
     }
 
@@ -69,7 +69,7 @@ class openImport extends qtiImport
      *
      */
     protected function getCodeTypeOpen() {
-        $type = $this->doctrine->getManager()
+        $type = $this->om
                      ->getRepository('UJMExoBundle:TypeOpenQuestion')
                      ->findOneByCode($this->codeType);
 

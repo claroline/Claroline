@@ -11,7 +11,7 @@ use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
  * InteractionHole controller.
- * 
+ *
  */
 class InteractionHoleController extends Controller
 {
@@ -33,7 +33,7 @@ class InteractionHoleController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
-        
+
         //Get the lock category
         $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
@@ -43,11 +43,12 @@ class InteractionHoleController extends Controller
             $catLocker = $Locker[0];
         }
 
+        $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionHoleHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-            $this->get('translator') 
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+            $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));
@@ -79,7 +80,7 @@ class InteractionHoleController extends Controller
                         ));
             } else {
                 $form->addError(new FormError($holeHandler));
-                
+
             }
         }
 
@@ -89,7 +90,7 @@ class InteractionHoleController extends Controller
             'form'   => $form->createView(),
             'error'  => true,
             'exoID'  => $exoID
-              
+
             )
         );
 
@@ -142,7 +143,7 @@ class InteractionHoleController extends Controller
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
             $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-            $this->get('translator') 
+            $this->get('translator')
         );
 
         $formHandler->setValidator($this->get('validator'));

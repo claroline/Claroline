@@ -38,7 +38,7 @@ services:
     ujm.qti_qcm_import:
         class: UJM\ExoBundle\Services\classes\QTI\qcmImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_graphic_export:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
@@ -48,7 +48,7 @@ services:
     ujm.qti_graphic_import:
         class: UJM\ExoBundle\Services\classes\QTI\graphicImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_hole_export:
         class: UJM\ExoBundle\Services\classes\QTI\holeExport
@@ -58,7 +58,7 @@ services:
     ujm.qti_hole_import:
         class: UJM\ExoBundle\Services\classes\QTI\holeImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_open_long_export:
         class: UJM\ExoBundle\Services\classes\QTI\openLongExport
@@ -68,7 +68,7 @@ services:
     ujm.qti_open_long_import:
         class: UJM\ExoBundle\Services\classes\QTI\openLongImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_open_one_word_export:
         class: UJM\ExoBundle\Services\classes\QTI\openOneWordExport
@@ -78,8 +78,8 @@ services:
     ujm.qti_open_one_word_import:
         class: UJM\ExoBundle\Services\classes\QTI\openOneWordImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
-        
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
+
     ujm.qti_open_short_export:
         class: UJM\ExoBundle\Services\classes\QTI\openShortExport
         scope: prototype
@@ -88,7 +88,7 @@ services:
     ujm.qti_open_short_import:
         class: UJM\ExoBundle\Services\classes\QTI\openShortImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_matching_export:
         class: UJM\ExoBundle\Services\classes\QTI\matchingExport
@@ -98,7 +98,7 @@ services:
     ujm.qti_matching_import:
         class: UJM\ExoBundle\Services\classes\QTI\matchingImport
         scope: prototype
-        arguments: [@doctrine, @security.token_storage, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_repository:
         class: UJM\ExoBundle\Services\classes\QTI\qtiRepository

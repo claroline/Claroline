@@ -32,7 +32,7 @@ abstract class InteractionHandler
      * @param Doctrine EntityManager $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
      * @param \Claroline\CoreBundle\Entity\User $user
-     * @param integer $exercise $exercise id Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
      * @param Translation $translator
      *
      */

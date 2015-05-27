@@ -31,8 +31,8 @@ class matchingImport extends qtiImport {
         $this->createQuestion();
         $this->createInteraction();
         $this->interaction->setType('InteractionMatching');
-        $this->doctrine->getManager()->persist($this->interaction);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interaction);
+        $this->om->flush();
         $this->createInteractionMatching();
 
         return $this->interactionMatching;
@@ -73,8 +73,8 @@ class matchingImport extends qtiImport {
         //for recording the type of the question
         $this->matchingType();
         $this->getShuffle();
-        $this->doctrine->getManager()->persist($this->interactionMatching);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionMatching);
+        $this->om->flush();
         $this->createLabels();
         $this->createProposals();
     }
@@ -93,8 +93,8 @@ class matchingImport extends qtiImport {
         } else {
             $this->interactionMatching->setShuffle(false);
         }
-        $this->doctrine->getManager()->persist($this->interactionMatching);
-        $this->doctrine->getManager()->flush();
+        $this->om->persist($this->interactionMatching);
+        $this->om->flush();
     }
 
     /**
@@ -124,8 +124,8 @@ class matchingImport extends qtiImport {
             }
             
             //recording in the DBB
-            $this->doctrine->getManager()->persist($label);
-            $this->doctrine->getManager()->flush();
+            $this->om->persist($label);
+            $this->om->flush();
             $this->associatedLabels[$identifiant] = $label;
             $ordre++;
         }
@@ -158,8 +158,8 @@ class matchingImport extends qtiImport {
             
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
-            $this->doctrine->getManager()->persist($proposal);
-            $this->doctrine->getManager()->flush();
+            $this->om->persist($proposal);
+            $this->om->flush();
             $rightLabel = 0;
             //compare all relations to the proposal selected
             foreach ($allRelations as $relation) {
@@ -174,8 +174,8 @@ class matchingImport extends qtiImport {
                 if ($key == $rightLabel) {
                     $proposal->addAssociatedLabel($label);
                     $proposal->setInteractionMatching($this->interactionMatching);
-                    $this->doctrine->getManager()->persist($proposal);
-                    $this->doctrine->getManager()->flush();
+                    $this->om->persist($proposal);
+                    $this->om->flush();
                 }
             }
             $ordre++;

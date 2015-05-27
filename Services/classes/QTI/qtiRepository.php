@@ -55,14 +55,14 @@ class qtiRepository {
      */
     public function createDirQTI($directory = 'default', $clear = TRUE)
     {
-        $this->userRootDir = './uploads/ujmexo/qti/'.$this->user->getUsername().'/';
+        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory') . '/qti/'.$this->user->getUsername().'/';
         $this->userDir = $this->userRootDir.$directory.'/';
 
-        if (!is_dir('./uploads/ujmexo/')) {
-            mkdir('./uploads/ujmexo/');
+        if (!is_dir($this->container->getParameter('ujm.param.exo_directory'))) {
+            mkdir($this->container->getParameter('ujm.param.exo_directory'));
         }
-        if (!is_dir('./uploads/ujmexo/qti/')) {
-            mkdir('./uploads/ujmexo/qti/');
+        if (!is_dir($this->container->getParameter('ujm.param.exo_directory') . '/qti/')) {
+            mkdir($this->container->getParameter('ujm.param.exo_directory') . '/qti/');
         }
         if (!is_dir($this->userRootDir)) {
             mkdir($this->userRootDir);
@@ -336,12 +336,6 @@ class qtiRepository {
     private function addQuestionInExercise($interX)
     {
         $exoServ = $this->container->get('ujm.exercise_services');
-
-        // for differenciate import one question in an exercice or if import a workspace
-        if (is_numeric($this->exercise)) {
-            $exoServ->setExerciseQuestion($this->exercise, $interX);
-        } else {
-            $exoServ->setExerciseQuestion($this->exercise->getId(), $interX);
-        }
+        $exoServ->setExerciseQuestion($this->exercise, $interX);
     }
 }

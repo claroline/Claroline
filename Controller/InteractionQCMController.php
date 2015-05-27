@@ -43,12 +43,13 @@ class InteractionQCMController extends Controller
         } else {
             $catLocker = $Locker[0];
         }
-        
+
+        $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionQCMHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
-            $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-            $this->get('translator') 
+            $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+            $this->get('translator')
         );
 
         $qcmHandler = $formHandler->processAdd();
@@ -137,7 +138,7 @@ class InteractionQCMController extends Controller
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
             $this->container->get('ujm.exercise_services'),
             $this->container->get('security.token_storage')->getToken()->getUser(),
-            $this->get('translator') 
+            $this->get('translator')
         );
 
         if ($formHandler->processUpdate($interQCM)) {
