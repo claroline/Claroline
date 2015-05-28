@@ -82,7 +82,23 @@ class PortfolioController extends Controller
         try {
             if ($this->getPortfolioFormHandler()->handleAdd($portfolio)) {
                 if ($request->isXmlHttpRequest()) {
-                    return new JsonResponse($portfolio);
+                    $ownedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgetsAndComments($loggedUser, false);
+                    /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfoliosPager */
+                    $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, 1, 10);
+
+                    $data = [];
+                    foreach ($portfoliosPager as $portfolio) {
+                        $titleWidget = $portfolio->getTitleWidget();
+                        $data[] = [
+                            'id' => $portfolio->getId(),
+                            'url' => $this->generateUrl('icap_portfolio_view', ['portfolioSlug' => $titleWidget->getSlug()]),
+                            'title' => $titleWidget->getTitle(),
+                            'slug' => $titleWidget->getSlug(),
+                            'countUnreadComments' => $portfolio->getCountUnreadComments()
+                        ];
+                    }
+
+                    return new JsonResponse($data);
                 }
                 else {
                     $this->getSessionFlashbag()
@@ -93,18 +109,18 @@ class PortfolioController extends Controller
                 }
             }
         } catch (\Exception $exception) {
-            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
-
             if ($request->isXmlHttpRequest()) {
                 return new JsonResponse('Erreur', 500);
             }
             else {
+                $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
+
                 return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
         }
 
         return array(
-            'form'      => $this->getPortfolioFormHandler()->getAddForm()->createView(),
+            'form' => $this->getPortfolioFormHandler()->getAddForm()->createView(),
             'portfolio' => $portfolio
         );
     }
