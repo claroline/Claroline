@@ -51,6 +51,7 @@ class QtiController extends Controller {
         if ($exoID == -1) {
             return $this->forward('UJMExoBundle:Question:index', array());
         } else {
+            $qtiRepos->assocExerciseQuestion(false);
             return $this->redirect($this->generateUrl( 'ujm_exercise_questions', array( 'id' => $exoID, )));
         }
     }
