@@ -16,9 +16,8 @@ services:
 
     # doctrine repositories
     claroline.repository.log:
-        class:           Claroline\CoreBundle\Repository\Log\LogRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: Claroline\CoreBundle\Repository\Log\LogRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - Claroline\CoreBundle\Entity\Log\Log
 
@@ -26,9 +25,7 @@ services:
     # (see Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass
     claroline.session.storage_options:
         class: stdClass
-        factory_service: claroline.session.storage_options_factory
-        factory_method: getOptions
-
+        factory: ["@claroline.session.storage_options_factory", getOptions]
 
     #notification listeners
     claroline.listener.core.notification_listener:

@@ -139,11 +139,13 @@ class ModelController extends Controller
     public function createModelAction(Workspace $workspace)
     {
         $this->checkAccess($workspace);
-        $form = $this->formFactory->create(new ModelType(), new WorkspaceModel());
+        $model = new WorkspaceModel();
+        $model->setWorkspace($workspace);
+        $form = $this->formFactory->create(new ModelType(), $model);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $model = $this->modelManager->create($form->get('name')->getData(), $workspace);
+            $model = $this->modelManager->create($model->getName(), $workspace);
 
             return new JsonResponse(
                 array(
