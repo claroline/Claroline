@@ -45,7 +45,6 @@ add_a_new_picture: Ajouter une nouvelle image
 add_choice: Ajouter un choix
 add_label: Ajouter un label
 add_proposal: Ajouter une proposition
-add_hint: Ajouter un indice
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
 after_the_last_attempt: Après le dernier essai
@@ -173,6 +172,8 @@ from: A partir du
 
 # G
 graphic: Graphique
+graphic_creation: Création d'une question graphique
+graphic_edition: Edition d'une question graphique
 group: Groupe
 
 # H
@@ -185,8 +186,8 @@ histoMarks: Histogramme des notes
 histoMeasureOfDifficulty: Histogramme de l'indice de difficulté
 histoSuccess: Histogramme de réussite
 hole: Blancs
-hole creation: Création d'une question à trous
-hole edition: Edition d'une question à trous
+hole_creation: Création d'une question à trous
+hole_edition: Edition d'une question à trous
 home exercise: Accueil de l'exercice
 
 # I
@@ -207,9 +208,6 @@ import questions: Importer des questions
 infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
 instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
 instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
-interactionGraphic creation: Création d'une question Graphique
-interactionGraphic Edition: Edition d'une question Graphique
-interactionOpen creation: Création d'une question Ouverte
 inValidMark: Note invalide
 
 # I Intraction type (data in the DB)
@@ -245,7 +243,8 @@ mark: Score
 mark this question: Noter cette question
 markTooBigest: La note doit être inférieure ou égale à
 matching: Association
-matching creation: Création d'une question associative
+matching_creation: Création d'une question associative
+matching_edition: Edition d'une question associative
 maximum number of tries: Nombre d'essai maximum
 meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
@@ -304,7 +303,8 @@ onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
 only owner category: Seul le propriétaire peut changer la catégorie
 only owner graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
-open edition: Edition d'une question de type Ouverte
+open_creation: Création d'une question ouverte
+open_edition: Edition d'une question ouverte
 order: Ordre
 orders: Consignes
 
@@ -333,8 +333,8 @@ publish: Publier
 
 # Q
 qcm: QCM
-qcm creation: Création d'une question de type QCM
-qcm edition: Edition d'une question de type QCM
+qcm_creation: Création d'une question QCM
+qcm_edition: Edition d'une question QCM
 qti can't open zip: Impossible d'ouvrir l'archive
 qti format warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"

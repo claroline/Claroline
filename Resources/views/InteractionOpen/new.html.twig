@@ -3,7 +3,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'interactionOpen creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'open_creation' | trans }}</h3>
     </div>
     <form onsubmit="return CheckForm();" action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
 
@@ -28,12 +28,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add_hint' | trans }}', '{{ 'delete' | trans }}');
+       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
         insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add_hint' | trans }}', '{{ 'delete' | trans }}');
+        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'open edition' | trans,
+                    'name': 'open_edition' | trans,
                     'href': ''
                 }
             ])
@@ -32,7 +32,7 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">{{'open edition'|trans}}</h3>
+            <h3 class="panel-title">{{'open_edition'|trans}}</h3>
         </div>
 
         {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
@@ -76,7 +76,7 @@
         $(document).ready(function() {
             insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
             openEdit({{ nbResponses }});
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add_hint' | trans }}', '{{ 'delete' | trans }}');
+            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>
 {% endblock %}

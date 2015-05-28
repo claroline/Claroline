@@ -45,7 +45,6 @@ add_a_new_picture: Add a new picture
 add_choice: Add a choice
 add_label: Add a label
 add_proposal: Add a proposal
-add_hint: Add hint
 add_zone_answer: Add answer zone
 advanced_edition: Advenced edition
 after_the_last_attempt: After the last attempt
@@ -173,6 +172,8 @@ from: From
 
 # G
 graphic: Graphic
+graphic_creation: Graphic creation
+graphic_edition: Graphic edition
 group: Group
 
 # H
@@ -185,8 +186,8 @@ histoMarks: Marks' histogram
 histoMeasureOfDifficulty: Histogram of the measure of the difficulty
 histoSuccess: Success' histogram
 hole: Hole
-hole creation: Creation of a question with holes
-hole edition: Edition of a question with holes
+hole_creation: Hole creation
+hole_edition: Hole edition
 home exercise: Home exercise
 
 # I
@@ -207,9 +208,6 @@ import questions: Import questions
 infoSearchType: If you want to do a search by type, you must used the following key words
 instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
 instruction matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
-interactionGraphic creation: InteractionGraphic creation
-interactionGraphic Edition: InteractionGraphic Edition
-interactionOpen creation: interactionOpen creation
 inValidMark: Invalid score
 
 # I Intraction type (data in the DB)
@@ -245,7 +243,8 @@ mark: Mark
 mark this question: Marked this question
 markTooBigest: The mark must be less than or equal to
 matching: Association
-matching creation: Creation of a question of type association
+matching_creation: Association creation
+matching_edition: Association edition
 maximum number of tries: Maximum number of tries
 meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model
@@ -304,7 +303,8 @@ onlyOnce: => The rights answers count only once.
 only owner category: Only the owner can change the category
 only owner graphic: Only the owner can change the picture
 open: Open
-open edition: Edition of a question of type open
+open_creation: Open creation
+open_edition: Open Edition
 order: Order
 orders: Instructions
 
@@ -333,8 +333,8 @@ publish: Publish
 
 # Q
 qcm: QCM
-qcm creation: Creation of a question of type QCM
-qcm edition: Edition of a question of type QCM
+qcm_creation: QCM creation
+qcm_edition: QCM edition
 qti can't open zip: Unable to open archive
 qti format warning: You must import a zip archive with an IMS_QTI file
 qti_import_title: No title attribut in the element assessmentItem
