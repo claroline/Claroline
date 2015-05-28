@@ -31,9 +31,7 @@
         "icap/dropzone-bundle": "~5.0",
         "icap/badge-bundle": "~5.0",
         "icap/socialmedia-bundle": "~5.0",
-        "inwicast/claroline-plugin-bundle": "~5.0",
-        "ujm/exo-bundle": "~5.0",
-        "innova/path-bundle": "~5.0"
+        "ujm/exo-bundle": "~5.0"
     },
     "scripts": {
         "pre-install-cmd": [
