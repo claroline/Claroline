@@ -69,8 +69,8 @@ class openShortImport extends openImport
             } else {
                 $keyWord->setCaseSensitive(false);
             }
-            $this->doctrine->getManager()->persist($keyWord);
+            $this->om->persist($keyWord);
         }
-        $this->doctrine->getManager()->flush();
+        $this->om->flush();
     }
 }

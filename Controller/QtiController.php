@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 class QtiController extends Controller {
 
@@ -26,6 +27,7 @@ class QtiController extends Controller {
         }
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->razValues();
         if ($this->extractFiles($qtiRepos) === false) {
 
             return $this->importError('qti can\'t open zip', $exoID);
@@ -35,7 +37,9 @@ class QtiController extends Controller {
             $scanFile = $qtiRepos->scanFiles();
 
         } else {
-            $scanFile = $qtiRepos->scanFilesToImport($exoID);
+            $em = $this->getDoctrine()->getManager();
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+            $scanFile = $qtiRepos->scanFilesToImport($exercise);
 
         }
 
@@ -107,12 +111,18 @@ class QtiController extends Controller {
         }
 
         $zip->close();
+        $fs = new FileSystem();
 
+        //if the xml is in subdirectory and not in the root
         foreach ($root as  $infoFichier){
             if (count($infoFichier) > 1) {
                 unset($infoFichier[count($infoFichier) - 1]);
                 $comma_separated = implode('/', $infoFichier);
+                //please use $fs->move() instead
+                //@see http://symfony.com/doc/current/components/filesystem/introduction.html
                 exec('mv '.$qtiRepos->getUserDir().$comma_separated.'/* '.$qtiRepos->getUserDir());
+                //$sf = new FileSystem();
+                //$sf->copyDir($qtiRepos->getUserDir().$comma_separated, $qtiRepos->getUserDir());die();
             }
         }
 
@@ -197,13 +207,13 @@ class QtiController extends Controller {
                foreach ($iterator as $element) {
                    if (!$element->isDot() && $element->isFile() && $element->getExtension() != "xml") {
                        $path = $element->getPath();
-                       $partDirectory = str_replace('./uploads/ujmexo/qti/'.$userName.'/'.$title.'/questions/questionDoc_','', $path);
+                       $partDirectory = str_replace($this->container->getParameter('ujm.param.exo_directory') . '/qti/'.$userName.'/'.$title.'/questions/questionDoc_','', $path);
 
                        $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/'.$element->getFilename());
                    }
                    if (!$element->isDot() && $element->isFile() && $element->getExtension() == "xml") {
                        $path = $element->getPath();
-                       $partDirectory = str_replace('./uploads/ujmexo/qti/'.$userName.'/'.$title.'/questions/question_','', $path);
+                       $partDirectory = str_replace($this->container->getParameter('ujm.param.exo_directory') . '/qti/'.$userName.'/'.$title.'/questions/question_','', $path);
                        $zip->addFile($element->getPathname(), $title.'/question_'.$partDirectory.'/question_'.$partDirectory.'.'.$element->getExtension());
                    }
                }

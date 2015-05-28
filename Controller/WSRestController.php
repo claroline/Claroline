@@ -27,7 +27,7 @@ class WSRestController extends Controller
      * @param integer $pageToGo for the pagination
      * @param integer $maxPage for the pagination
      * @param integer $nbItem for the pagination
-     * 
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postDocumentAddAction($redirection, $pageToGo, $maxPage, $nbItem)
@@ -37,14 +37,14 @@ class WSRestController extends Controller
         // check also login matches to the connected user
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.token_storage')
+            $userDir = $this->container->getParameter('ujm.param.exo_directory') . '/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
 
-            if (!is_dir('./uploads/ujmexo/')) {
-                mkdir('./uploads/ujmexo/');
+            if (!is_dir($this->container->getParameter('ujm.param.exo_directory'))) {
+                mkdir($this->container->getParameter('ujm.param.exo_directory'));
             }
-            if (!is_dir('./uploads/ujmexo/users_documents/')) {
-                mkdir('./uploads/ujmexo/users_documents/');
+            if (!is_dir($this->container->getParameter('ujm.param.exo_directory') . '/users_documents/')) {
+                mkdir($this->container->getParameter('ujm.param.exo_directory') . '/users_documents/');
             }
 
             if (!is_dir($userDir)) {

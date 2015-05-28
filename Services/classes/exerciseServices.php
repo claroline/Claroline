@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Entity\BadgeClaim;
 use Icap\BadgeBundle\Entity\BadgeCollection;
@@ -24,29 +25,39 @@ use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 
 class exerciseServices
 {
-    protected $doctrine;
+    protected $om;
     protected $tokenStorage;
     protected $authorizationChecker;
 
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
     protected $eventDispatcher;
+    protected $doctrine;
 
     /**
      * Constructor
      *
      * @access public
      *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $securityContext Dependency Injection
+     * @param \Claroline\CoreBundle\Persistence\ObjectManager $om Dependency Injection
+     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Dependency Injection
+     * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Dependency Injection
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
      *
      */
-    public function __construct(Registry $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        ObjectManager $om,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker,
+        EventDispatcherInterface $eventDispatcher,
+        Registry $doctrine
+    )
     {
-        $this->doctrine             = $doctrine;
+        $this->om = $om;
         $this->tokenStorage         = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher      = $eventDispatcher;
+        $this->doctrine             = $doctrine;
     }
 
     /**
@@ -86,7 +97,7 @@ class exerciseServices
         $interactionQCMID = $request->request->get('interactionQCMToValidated');
         $response = array();
 
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
         if ($interQCM->getTypeQCM()->getCode() == 2) {
@@ -213,8 +224,7 @@ class exerciseServices
      */
     public function getNbPaper($uid, $exoID, $finished = false)
     {
-        $papers = $this->doctrine
-                       ->getManager()
+        $papers = $this->om
                        ->getRepository('UJMExoBundle:Paper')
                        ->getExerciseUserPapers($uid, $exoID, $finished);
 
@@ -237,7 +247,7 @@ class exerciseServices
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
 
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
@@ -346,7 +356,7 @@ class exerciseServices
         $penalty = 0;
         $session = $request->getSession();
 
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
         $response = $request->request->get('interOpen');
@@ -410,7 +420,7 @@ class exerciseServices
      */
     public function responseHole($request, $paperID = 0)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $res = array();
         $interactionHoleID = $request->request->get('interactionHoleToValidated');
         $tabResp = array();
@@ -418,7 +428,6 @@ class exerciseServices
         $penalty = 0;
         $session = $request->getSession();
 
-        $em = $this->doctrine->getManager();
         $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
 
         // Not assessment
@@ -484,7 +493,7 @@ class exerciseServices
      */
     public function holeMark($interHole, $request, $penalty)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $score = 0;
 
         foreach($interHole->getHoles() as $hole) {
@@ -555,7 +564,7 @@ class exerciseServices
         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
         $response = $request->request->get('jsonResponse');
 
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
 
         $penalty = 0;
@@ -702,15 +711,13 @@ class exerciseServices
         foreach ($tabRightResponse as $labelId => $value) {
             if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
                     && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
-                $label = $this->doctrine
-                              ->getManager()
+                $label = $this->om
                               ->getRepository('UJMExoBundle:Label')
                               ->find($labelId);
                 $scoretmp += $label->getScoreRightResponse();
             }
             if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
-                $label = $this->doctrine
-                              ->getManager()
+                $label = $this->om
                               ->getRepository('UJMExoBundle:Label')
                               ->find($labelId);
                 $scoretmp += $label->getScoreRightResponse();
@@ -768,49 +775,41 @@ class exerciseServices
     {
         $exoTotalScore = 0;
 
-        $eqs = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:ExerciseQuestion')
-            ->findBy(array('exercise' => $exoID));
+        $eqs = $this->om
+                    ->getRepository('UJMExoBundle:ExerciseQuestion')
+                    ->findBy(array('exercise' => $exoID));
 
         foreach ($eqs as $eq) {
-            $interaction = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getInteraction($eq->getQuestion()->getId());//echo $interaction[0]->getInvite();
-
+            $interaction = $this->om
+                                ->getRepository('UJMExoBundle:Interaction')
+                                ->getInteraction($eq->getQuestion()->getId());
             switch ($interaction->getType()){
                 case 'InteractionQCM':
-                    $interQCM = $this->doctrine
-                                     ->getManager()
+                    $interQCM = $this->om
                                      ->getRepository('UJMExoBundle:InteractionQCM')
                                      ->getInteractionQCM($interaction->getId());
                     $scoreMax = $this->qcmMaxScore($interQCM[0]);
                     break;
                 case 'InteractionGraphic':
-                    $interGraphic = $this->doctrine
-                                         ->getManager()
+                    $interGraphic = $this->om
                                          ->getRepository('UJMExoBundle:InteractionGraphic')
                                          ->getInteractionGraphic($interaction->getId());
                     $scoreMax = $this->graphicMaxScore($interGraphic[0]);
                     break;
                 case 'InteractionOpen':
-                    $interOpen = $this->doctrine
-                                      ->getManager()
+                    $interOpen = $this->om
                                       ->getRepository('UJMExoBundle:InteractionOpen')
                                       ->getInteractionOpen($interaction->getId());
                     $scoreMax = $this->openMaxScore($interOpen[0]);
                     break;
                 case 'InteractionHole':
-                    $interHole = $this->doctrine
-                                      ->getManager()
+                    $interHole = $this->om
                                       ->getRepository('UJMExoBundle:InteractionHole')
                                       ->getInteractionHole($interaction->getId());
                     $scoreMax = $this->holeMaxScore($interHole[0]);
                     break;
                 case 'InteractionMatching':
-                    $interMatching = $this->doctrine
-                                      ->getManager()
+                    $interMatching = $this->om
                                       ->getRepository('UJMExoBundle:InteractionMatching')
                                       ->getInteractionMatching($interaction->getId());
                     $scoreMax = $this->matchingMaxScore($interMatching[0]);
@@ -835,8 +834,7 @@ class exerciseServices
     public function getExercisePaperTotalScore($paperID)
     {
         $exercisePaperTotalScore = 0;
-        $paper = $interaction = $this->doctrine
-                                     ->getManager()
+        $paper = $interaction = $this->om
                                      ->getRepository('UJMExoBundle:Paper')
                                      ->find($paperID);
 
@@ -845,45 +843,40 @@ class exerciseServices
         $interQuestionsTab = explode(";", $interQuestions);
 
         foreach ($interQuestionsTab as $interQuestion) {
-            $interaction = $this->doctrine->getManager()->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
+            $interaction = $this->om->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
             switch ( $interaction->getType()) {
                 case "InteractionQCM":
-                    $interQCM = $this->doctrine
-                                     ->getManager()
+                    $interQCM = $this->om
                                      ->getRepository('UJMExoBundle:InteractionQCM')
                                      ->getInteractionQCM($interaction->getId());
                     $exercisePaperTotalScore += $this->qcmMaxScore($interQCM[0]);
                     break;
 
                 case "InteractionGraphic":
-                    $interGraphic = $this->doctrine
-                                         ->getManager()
+                    $interGraphic = $this->om
                                          ->getRepository('UJMExoBundle:InteractionGraphic')
                                          ->getInteractionGraphic($interaction->getId());
                     $exercisePaperTotalScore += $this->graphicMaxScore($interGraphic[0]);
                     break;
 
                 case "InteractionHole":
-                    $interHole = $this->doctrine
-                                         ->getManager()
-                                         ->getRepository('UJMExoBundle:InteractionHole')
-                                         ->getInteractionHole($interaction->getId());
+                    $interHole = $this->om
+                                      ->getRepository('UJMExoBundle:InteractionHole')
+                                      ->getInteractionHole($interaction->getId());
                     $exercisePaperTotalScore += $this->holeMaxScore($interHole[0]);
                     break;
 
                 case "InteractionOpen":
-                    $interOpen = $this->doctrine
-                                      ->getManager()
+                    $interOpen = $this->om
                                       ->getRepository('UJMExoBundle:InteractionOpen')
                                       ->getInteractionOpen($interaction->getId());
                     $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
                     break;
 
                 case "InteractionMatching":
-                    $interMatching = $this->doctrine
-                                      ->getManager()
-                                      ->getRepository('UJMExoBundle:InteractionMatching')
-                                      ->getInteractionMatching($interaction->getId());
+                    $interMatching = $this->om
+                                          ->getRepository('UJMExoBundle:InteractionMatching')
+                                          ->getInteractionMatching($interaction->getId());
                     $exercisePaperTotalScore += $this->matchingMaxScore($interMatching[0]);
                     break;
             }
@@ -904,11 +897,6 @@ class exerciseServices
     public function qcmMaxScore($interQCM)
     {
         $scoreMax = 0;
-
-        /*$interQCM = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:InteractionQCM')
-            ->getInteractionQCM($interaction->getId());*/
 
         if (!$interQCM->getWeightResponse()) {
             $scoreMax = $interQCM->getScoreRightResponse();
@@ -936,15 +924,9 @@ class exerciseServices
     {
         $scoreMax = 0;
 
-        /*$interGraphic = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:InteractionGraphic')
-            ->getInteractionGraphic($interaction->getId());*/
-
-        $rightCoords = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $interGraphic->getId()));
+        $rightCoords = $this->om
+                            ->getRepository('UJMExoBundle:Coords')
+                            ->findBy(array('interactionGraphic' => $interGraphic->getId()));
 
         foreach ($rightCoords as $score) {
             $scoreMax += $score->getScoreCoords(); // Score max
@@ -966,21 +948,14 @@ class exerciseServices
     {
         $scoreMax = 0;
 
-        /*$interOpen = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:InteractionOpen')
-            ->getInteractionOpen($interaction->getId());*/
-
         if ($interOpen->getTypeOpenQuestion() == 'long') {
             $scoreMax = $interOpen->getScoreMaxLongResp();
         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            $scoreMax = $this->doctrine
-                             ->getManager()
+            $scoreMax = $this->om
                              ->getRepository('UJMExoBundle:WordResponse')
                              ->getScoreMaxOneWord($interOpen->getId());
         } else if ($interOpen->getTypeOpenQuestion() == 'short') {
-            $scoreMax = $this->doctrine
-                             ->getManager()
+            $scoreMax = $this->om
                              ->getRepository('UJMExoBundle:WordResponse')
                              ->getScoreMaxShort($interOpen->getId());
         }
@@ -1012,24 +987,27 @@ class exerciseServices
      *
      * @access public
      *
-     * @param integer $exercise id Exercise
+     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param InteractionQCM or InteractionGraphic or ... $interX
      *
      */
-    public function setExerciseQuestion($exercise, $interX)
+    public function setExerciseQuestion($exercise, $interX, $order = -1)
     {
-        $exo = $this->doctrine->getManager()->getRepository('UJMExoBundle:Exercise')->find($exercise);
-        $eq = new ExerciseQuestion($exo, $interX->getInteraction()->getQuestion());
+        $eq = new ExerciseQuestion($exercise, $interX->getInteraction()->getQuestion());
 
-        $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-              . 'WHERE eq.exercise='.$exercise;
-        $query = $this->doctrine->getManager()->createQuery($dql);
-        $maxOrdre = $query->getResult();
+        if ($order == -1) {
+            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                  . 'WHERE eq.exercise='.$exercise->getId();
+            $query = $this->doctrine->getManager()->createQuery($dql);
+            $maxOrdre = $query->getResult();
 
-        $eq->setOrdre((int) $maxOrdre[0][1] + 1);
-        $this->doctrine->getManager()->persist($eq);
+            $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+        } else {
+            $eq->setOrdre($order);
+        }
+        $this->om->persist($eq);
 
-        $this->doctrine->getManager()->flush();
+        $this->om->flush();
     }
 
     /**
@@ -1051,7 +1029,7 @@ class exerciseServices
      *
      * @access public
      *
-     * @param \UJM\ExoBundle\Entity\Paper\Exercise $exercise
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise
      *
      * @return boolean
      */
@@ -1080,21 +1058,19 @@ class exerciseServices
         $scorePaper = 0;
         $scoreTemp = false;
 
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
 
-        $interactions = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:Interaction')
-            ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
+        $interactions = $this->om
+                             ->getRepository('UJMExoBundle:Interaction')
+                             ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
 
         $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
 
         $infosPaper['interactions'] = $interactions;
 
-        $responses = $this->doctrine
-            ->getManager()
-            ->getRepository('UJMExoBundle:Response')
-            ->getPaperResponses($paper->getUser()->getId(), $paper->getId());
+        $responses = $this->om
+                          ->getRepository('UJMExoBundle:Response')
+                          ->getPaperResponses($paper->getUser()->getId(), $paper->getId());
 
         $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
 
@@ -1131,8 +1107,7 @@ class exerciseServices
         $tabScoresUser = array();
         $i = 0;
 
-        $papers = $this->doctrine
-                       ->getManager()
+        $papers = $this->om
                        ->getRepository('UJMExoBundle:Paper')
                        ->getExerciseUserPapers($userId, $exoId);
 
@@ -1161,8 +1136,7 @@ class exerciseServices
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $questions = $this->doctrine
-                          ->getManager()
+        $questions = $this->om
                           ->getRepository('UJMExoBundle:Share')
                           ->getControlSharedQuestion($user->getId(), $questionID);
 
@@ -1197,13 +1171,11 @@ class exerciseServices
     public function getLinkedCategories()
     {
         $linkedCategory = array();
-        $repositoryCategory = $this->doctrine
-                   ->getManager()
-                   ->getRepository('UJMExoBundle:Category');
+        $repositoryCategory = $this->om
+                                   ->getRepository('UJMExoBundle:Category');
 
-        $repositoryQuestion = $this->doctrine
-                   ->getManager()
-                   ->getRepository('UJMExoBundle:Question');
+        $repositoryQuestion = $this->om
+                                   ->getRepository('UJMExoBundle:Question');
 
         $categoryList = $repositoryCategory->findAll();
 
@@ -1280,7 +1252,7 @@ class exerciseServices
     public function getBadgeLinked($resourceId)
     {
         $badges = array();
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $badgesRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
                           ->findBy(array('resource' => $resourceId));
 
@@ -1309,7 +1281,7 @@ class exerciseServices
      */
     public function badgesInfoUser($userId, $resourceId, $locale)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
         $badgesInfoUser = array();
         $i = 0;
 
@@ -1478,7 +1450,7 @@ class exerciseServices
      */
     public function getTypeQCM()
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
 
         $typeQCM = array();
         $types = $em->getRepository('UJMExoBundle:TypeQCM')
@@ -1500,7 +1472,7 @@ class exerciseServices
      */
     public function getTypeOpen()
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
 
         $typeOpen = array();
         $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
@@ -1522,7 +1494,7 @@ class exerciseServices
      */
     public function getTypeMatching()
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->om;
 
         $typeMatching = array();
         $types = $em->getRepository('UJMExoBundle:TypeMatching')
@@ -1548,13 +1520,11 @@ class exerciseServices
     private function getPenalty($interaction, $paperID)
     {
         $penalty = 0;
-        $em = $this->doctrine->getManager();
 
         $hints = $interaction->getHints();
 
         foreach ($hints as $hint) {
-            $lhp = $this->doctrine
-                        ->getManager()
+            $lhp = $this->om
                         ->getRepository('UJMExoBundle:LinkHintPaper')
                         ->getLHP($hint->getId(), $paperID);
             if (count($lhp) > 0) {
@@ -1715,15 +1685,13 @@ class exerciseServices
      * @access public
      *
      * @param type $inter
-     * @param type $exerciceID
+     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param Doctrine EntityManager $em
      */
-    public function addQuestionInExercise($inter, $exerciceID, $em) {
-        if ($exerciceID != -1) {
-            $exercise = $em->find($exerciceID);
-
+    public function addQuestionInExercise($inter, $exercise, $em) {
+        if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
-                $this->setExerciseQuestion($exerciceID, $inter);
+                $this->setExerciseQuestion($exercise, $inter);
             }
         }
     }

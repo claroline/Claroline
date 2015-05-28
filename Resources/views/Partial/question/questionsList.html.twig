@@ -212,7 +212,7 @@
                     </a>
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfExercise'] %}
-                    <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}"
+                    <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}" data-toggle="tooltip"
                        href="{{ path('ujm_exercise_question_delete', {
                             'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,

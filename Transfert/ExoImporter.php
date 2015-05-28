@@ -85,12 +85,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function import(array $data)
     {
+        $this->om->startFlushSuite();
         //this is the root of the unzipped archive
         $rootPath = $this->getRootPath();
         $exoPath = $data['data'][0]['file']['path'];
         $exoTitle = $data['data'][0]['file']['title'];
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->razValues();
         $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
         if ($questions = opendir($rootPath.'/'.$exoPath)) {
@@ -112,6 +114,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
                $qtiRepos->scanFilesToImport($newExercise);
            }
         }
+        $this->om->endFlushSuite();
+        $this->om->forceFlush();
+        $qtiRepos->assocExerciseQuestion(true);
 
         return $newExercise;
     }
