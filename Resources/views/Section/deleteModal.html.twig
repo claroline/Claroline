@@ -11,8 +11,8 @@
                 {% include "IcapWikiBundle:Section:deleteForm.html.twig"%}
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
-                <button id="deleteSectionModal-submit-{{ section.id }}" class="btn btn-primary">{% trans %}Confirm{% endtrans %}</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{% trans %}Cancel{% endtrans %}</button>
+                <button type="submit" id="deleteSectionModal-submit-{{ section.id }}" class="btn btn-primary">{% trans %}Confirm{% endtrans %}</button>
             </div>
         </div>
     </div>
