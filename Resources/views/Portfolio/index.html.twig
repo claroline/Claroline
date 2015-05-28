@@ -79,6 +79,11 @@
         (function() {
             window.currentPortfolioId = {{ portfolioId }};
             window.assetPath = "{{ asset('') }}";
+            $('.import-dropdown').tooltip({
+                container: "body",
+                placement: "top",
+                title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
+            });
         })();
     </script>
 

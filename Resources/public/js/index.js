@@ -2,11 +2,6 @@
     $(function() {
         $('.delete').confirmModal();
         $('.import-dropdown').dropdown();
-        $('.import-dropdown').tooltip({
-            container: "body",
-            placement: "top",
-            title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
-        });
         $('.exchange_link').click(function(event) {
             var scope = angular.element($("#exchange_space_container")).scope();
             scope.$apply(function(){
@@ -25,13 +20,16 @@
 
         var modal = window.Claroline.Modal;
 
-        $("a.modal_action").click(function (event) {
+        $("a.modal_action, #no_portfolio a").click(function (event) {
             event.preventDefault();
             modal.displayForm(
                 event.delegateTarget.href,
                 function(data, textStatus, jqXHR) {
+                    console.log($("#list_content"));
+                    //$("#list_content").html(data);
                 },
                 function(data) {
+                    console.log('pouet');
                 });
         });
     });
