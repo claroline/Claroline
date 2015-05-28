@@ -142,7 +142,7 @@
             <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
             {% if not subject.isClosed() %}
-                <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
+                <textarea class="forum-answer claroline-tiny-mce hide" data-custom-buttons='resource_picker upload_file'></textarea>
                 {{ form_widget(form._token) }}
             {% endif %}
             </div>
