@@ -81,7 +81,7 @@
             {% set icon = course.getIcon() %}
 
             {% if icon is empty %}
-                {% set iconPath = asset('files/cursusbundle/icons/no_icon.png') %}
+                {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
             {% else %}
                 {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
             {% endif %}
