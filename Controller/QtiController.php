@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 class QtiController extends Controller {
 
@@ -26,6 +27,7 @@ class QtiController extends Controller {
         }
 
         $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos->razValues();
         if ($this->extractFiles($qtiRepos) === false) {
 
             return $this->importError('qti can\'t open zip', $exoID);
@@ -109,12 +111,18 @@ class QtiController extends Controller {
         }
 
         $zip->close();
+        $fs = new FileSystem();
 
+        //if the xml is in subdirectory and not in the root
         foreach ($root as  $infoFichier){
             if (count($infoFichier) > 1) {
                 unset($infoFichier[count($infoFichier) - 1]);
                 $comma_separated = implode('/', $infoFichier);
+                //please use $fs->move() instead
+                //@see http://symfony.com/doc/current/components/filesystem/introduction.html
                 exec('mv '.$qtiRepos->getUserDir().$comma_separated.'/* '.$qtiRepos->getUserDir());
+                //$sf = new FileSystem();
+                //$sf->copyDir($qtiRepos->getUserDir().$comma_separated, $qtiRepos->getUserDir());die();
             }
         }
 

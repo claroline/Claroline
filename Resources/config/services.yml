@@ -28,7 +28,7 @@ services:
 
     ujm.exercise_services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
-        arguments: [@doctrine, @security.token_storage, @security.authorization_checker, @event_dispatcher]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine]
 
     ujm.qti_qcm_export:
         class: UJM\ExoBundle\Services\classes\QTI\qcmExport
