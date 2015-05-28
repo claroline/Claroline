@@ -9,8 +9,8 @@
                 {% include "IcapLessonBundle:Lesson:deleteChapterForm.html.twig"%}
             </div>
             <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button>
-                <button id="deleteSubmit" class="btn btn-primary">{{ 'confirm'|trans({}, 'icap_lesson') }}</button>
+                <button type="button" class="btn" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_lesson') }}</button>
+                <button type="submit" id="deleteSubmit" class="btn btn-primary">{{ 'confirm'|trans({}, 'icap_lesson') }}</button>
             </div>
         </div>
     </div>
@@ -18,7 +18,8 @@
         $(document).ready(function () {
             $('form[id="deleteChapterForm"] > input[type="submit"]').hide();
             $('form[id="deleteChapterForm"] > a.cancel-btn').hide();
-            $('#deleteSubmit').on('click', function () {
+            $('#deleteSubmit').on('click', function (event) {
+                event.preventDefault();
                 //we keep the "click" on submit button for keep html5 warning
                 $('form[id="deleteChapterForm"] > input[type="submit"]').trigger('click');
             });
