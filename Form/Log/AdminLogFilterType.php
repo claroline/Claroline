@@ -47,6 +47,7 @@ class AdminLogFilterType extends AbstractType
                     'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
+                    'choices_as_values'  => true,
                     'empty_value'        => 'all',
                     'empty_data'         => null,
                     'theme_options' => array('label_width' => 'col-md-3')
