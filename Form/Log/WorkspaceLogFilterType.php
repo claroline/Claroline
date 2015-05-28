@@ -47,6 +47,7 @@ class WorkspaceLogFilterType extends AbstractType
                     'translation_domain' => 'log',
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
+                    'choices_as_values'  => true,
                     'empty_value'        => 'all',
                     'empty_data'         => null
                 )
