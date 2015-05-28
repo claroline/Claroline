@@ -67,26 +67,32 @@ class UserPickerTransfromer implements DataTransformerInterface
             return null;
         } elseif (is_array($userId)) {
             $idsTxt = $userId[0];
-            $ids = explode(',', $idsTxt);
-            $users = array();
 
-            foreach ($ids as $id) {
-                $user = $this->userManager->getUserById(intval($id));
+            if (trim($idsTxt) === '') {
 
-                if (is_null($user)) {
-
-                    throw new TransformationFailedException();
-                } else {
-                    $users[] = $user;
-                }
-            }
-
-            if (count($users) === 0) {
-
-                return null;
+                return array();
             } else {
+                $ids = explode(',', $idsTxt);
+                $users = array();
 
-                return $users;
+                foreach ($ids as $id) {
+                    $user = $this->userManager->getUserById(intval($id));
+
+                    if (is_null($user)) {
+
+                        throw new TransformationFailedException();
+                    } else {
+                        $users[] = $user;
+                    }
+                }
+
+                if (count($users) === 0) {
+
+                    return null;
+                } else {
+
+                    return $users;
+                }
             }
         } else {
             $user = $this->userManager->getUserById($userId);
