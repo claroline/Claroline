@@ -1,6 +1,11 @@
 <div id="courses-registration-widget">
     <div id="courses-list">
-        {{ render(controller('ClarolineCursusBundle:Cursus:coursesListForRegistrationWidget')) }}
+        {{
+            render(controller(
+                'ClarolineCursusBundle:Cursus:coursesListForRegistrationWidget',
+                {'widgetInstance': widgetInstance.getId()}
+            ))
+        }}
     </div>
 </div>
 

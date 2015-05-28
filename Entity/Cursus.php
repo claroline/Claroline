@@ -296,4 +296,15 @@ class Cursus
     {
         $this->rgt = $rgt;
     }
+
+    public function getTitleAndCode()
+    {
+        $result = $this->title;
+
+        if (!is_null($this->code)) {
+            $result .= ' [' . $this->code . ']';
+        }
+
+        return $result;
+    }
 }

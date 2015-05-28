@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Listener;
 
+use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -49,10 +50,13 @@ class CursusWidgetListener
     public function onDisplay(DisplayWidgetEvent $event)
     {
         if (!$this->request) {
+
             throw new NoHttpRequestException();
         }
+        $widgetInstance = $event->getInstance();
         $params = array();
         $params['_controller'] = 'ClarolineCursusBundle:Cursus:coursesRegistrationWidget';
+        $params['widgetInstance'] = $widgetInstance->getId();
         $subRequest = $this->request->duplicate(
             array(),
             null,
@@ -61,5 +65,30 @@ class CursusWidgetListener
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("widget_claroline_cursus_courses_registration_widget_configuration")
+     *
+     * @param ConfigureWidgetEvent $event
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
+     */
+    public function onConfigure(ConfigureWidgetEvent $event)
+    {
+        if (!$this->request) {
+
+            throw new NoHttpRequestException();
+        }
+        $widgetInstance = $event->getInstance();
+        $params = array();
+        $params['_controller'] = 'ClarolineCursusBundle:Cursus:coursesRegistrationWidgetConfigureForm';
+        $params['widgetInstance'] = $widgetInstance->getId();
+        $subRequest = $this->request->duplicate(
+            array(),
+            null,
+            $params
+        );
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
     }
 }

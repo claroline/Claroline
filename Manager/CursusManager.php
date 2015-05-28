@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
@@ -26,6 +27,7 @@ use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
+use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusGroup;
 use Claroline\CursusBundle\Entity\CursusUser;
@@ -59,6 +61,7 @@ class CursusManager
     private $courseRepo;
     private $courseQueueRepo;
     private $courseSessionRepo;
+    private $coursesWidgetConfigRepo;
     private $cursusRepo;
     private $cursusGroupRepo;
     private $cursusUserRepo;
@@ -109,6 +112,8 @@ class CursusManager
             $om->getRepository('ClarolineCursusBundle:CourseRegistrationQueue');
         $this->courseSessionRepo =
             $om->getRepository('ClarolineCursusBundle:CourseSession');
+        $this->coursesWidgetConfigRepo =
+            $om->getRepository('ClarolineCursusBundle:CoursesWidgetConfig');
         $this->cursusRepo =
             $om->getRepository('ClarolineCursusBundle:Cursus');
         $this->cursusGroupRepo =
@@ -1175,6 +1180,27 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function getCoursesWidgetConfiguration(WidgetInstance $widgetInstance)
+    {
+        $config = $this->coursesWidgetConfigRepo->findOneBy(
+            array('widgetInstance' => $widgetInstance->getId())
+        );
+
+        if (is_null($config)) {
+            $config = new CoursesWidgetConfig();
+            $config->setWidgetInstance($widgetInstance);
+            $this->persistCoursesWidgetConfiguration($config);
+        }
+
+        return $config;
+    }
+
+    public function persistCoursesWidgetConfiguration(CoursesWidgetConfig $config)
+    {
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
@@ -1387,6 +1413,50 @@ class CursusManager
     )
     {
         $courses = $this->courseRepo->findUnmappedSearchedCoursesByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
+    }
+
+    public function getDescendantCoursesByCursus(
+        Cursus $cursus,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findDescendantCoursesByCursus(
+            $cursus,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
+
+        return $executeQuery ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $this->pagerFactory->createPager($courses, $page, $max);
+    }
+
+    public function getDescendantSearchedCoursesByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $page = 1,
+        $max = 50,
+        $executeQuery = true
+    )
+    {
+        $courses = $this->courseRepo->findDescendantSearchedCoursesByCursus(
             $cursus,
             $search,
             $orderedBy,
