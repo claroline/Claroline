@@ -51,6 +51,14 @@
                         {% else %}
                             {{ block('login') }}
                         {% endif %}
+                        
+                        {% if showHelpButton %}
+                            <li>
+                                <a href="{{ helpUrl }}">
+                                    <i class="fa fa-question-circle"></i>
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 {% endif %}
             </div>

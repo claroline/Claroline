@@ -82,9 +82,13 @@ class LogListener
                     $doer = $token->getUser();
                     $doerType = Log::doerTypeUser;
                 }
-                $request = $this->container->get('request');
-                $doerSessionId = $request->getSession()->getId();
-                $doerIp = $request->getClientIp();
+                if ($this->container->isScopeActive('request')) {
+                    $request = $this->container->get('request');
+                    $doerSessionId = $request->getSession()->getId();
+                    $doerIp = $request->getClientIp();
+                } else {
+                    $doerIp = 'CLI';
+                }
             }
         } elseif (LogGenericEvent::PLATFORM_EVENT_TYPE === $event->getDoer()) {
             $doer = null;

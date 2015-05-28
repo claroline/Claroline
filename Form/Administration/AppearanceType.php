@@ -52,7 +52,7 @@ class AppearanceType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->themes,
-                    'disabled' => isset($this->lockedParams['theme']);
+                    'disabled' => isset($this->lockedParams['theme']),
                     'label' => 'theme'
                 )
             );

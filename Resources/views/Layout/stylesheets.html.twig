@@ -4,6 +4,7 @@
 
 {% if config.getParameter('theme') != 'claroline' %}
     {# from theme #}
+    {# please use asset_exists to be sure the theme is here #}
     <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
 {% endif %}
 

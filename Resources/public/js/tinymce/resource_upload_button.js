@@ -66,7 +66,7 @@
                     })
                     .on('change', '#file_form_destination', function(event) {
                         if ($('#file_form_destination').val() === 'others') {
-                            tinymce.claroline.buttons.resourcePickerCallBack
+                            directoryPickerOpen();
                         }
                     })
                     .on('change', '#file_form_file', function () {

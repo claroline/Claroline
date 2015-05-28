@@ -88,7 +88,7 @@ class GeneralType extends AbstractType
                 array(
                     'required' => false,
                     'disabled' => isset($this->lockedParams['allow_self_registration']),
-                    'self_registration'
+                    'label' => 'self_registration'
                 )
             )
             ->add(
@@ -116,7 +116,7 @@ class GeneralType extends AbstractType
                 'choice',
                 array(
                     'choices' => $this->langs,
-                    'disabled' => isset($this->lockedParams['locale_language']);
+                    'disabled' => isset($this->lockedParams['locale_language']),
                     'label' => 'default_language'
                 )
             )
@@ -200,6 +200,24 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'label' => 'workspace_max_users',
                     'disabled' => isset($this->lockedParams['max_workspace_users'])
+                )
+            )
+            ->add(
+                'showHelpButton',
+                'checkbox',
+                array(
+                    'label' => 'show_help_button',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['show_help_button'])
+                )
+            )
+            ->add(
+                'helpUrl',
+                'text',
+                array(
+                    'label' => 'help_url',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['help_url'])
                 )
             );
 

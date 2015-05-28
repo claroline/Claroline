@@ -5,17 +5,19 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {{
-        macros.workspaceBreadcrumbs(
-            workspace,
-            [
-                {
-                    'name': 'home'|trans({}, 'tools'),
-                    'href': ''
-                }
-            ]
-        )
-    }}
+    {% if not has_role('ROLE_ANONYMOUS') %}
+        {{
+            macros.workspaceBreadcrumbs(
+                workspace,
+                [
+                    {
+                        'name': 'home'|trans({}, 'tools'),
+                        'href': ''
+                    }
+                ]
+            )
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block section_content %}

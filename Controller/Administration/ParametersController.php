@@ -191,7 +191,9 @@ class ParametersController extends Controller
                             'is_notification_active' => $form['isNotificationActive']->getData(),
                             'max_storage_size' => $form['maxStorageSize']->getData(),
                             'max_upload_resources' => $form['maxUploadResources']->getData(),
-                            'max_workspace_users' => $form['workspaceMaxUsers']->getData()
+                            'max_workspace_users' => $form['workspaceMaxUsers']->getData(),
+                            'show_help_button' => $form['showHelpButton']->getData(),
+                            'help_url' => $form['helpUrl']->getData()
                         )
                     );
 

@@ -20,7 +20,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -60,16 +60,29 @@ class ResourcePickerType extends TextType
         $builder->addModelTransformer($this->transformer);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $resolver->setDefaults(array('label' => 'resource', 'attr' => $this->defaultAttributes));
-        $resolver->setNormalizers(
+        $view->vars['display_view_button'] = $options['display_view_button'];
+        $view->vars['display_browse_button'] = $options['display_browse_button'];
+        $view->vars['display_download_button'] = $options['display_download_button'];
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(
             array(
-                'attr' => function (Options $options, $value) {
-                    return array_merge($this->defaultAttributes, $value);
-                }
+                'label' => 'resource',
+                'attr' => $this->defaultAttributes,
+                'display_view_button' => true,
+                'display_browse_button' => true,
+                'display_download_button' => true
             )
         );
+
+        $resolver
+            ->setNormalizer('attr', function (Options $options, $value) {
+                return array_merge($this->defaultAttributes, $value);
+            });
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)

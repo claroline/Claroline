@@ -209,6 +209,14 @@ class ResourceController
      *     options={"expose"=true}
      * )
      *
+     * @EXT\Route(
+     *     "/open/{node}",
+     *     name="claro_resource_open_short",
+     *     requirements={"node" = "\d+"},
+     *     defaults={"resourceType" = null},
+     *     options={"expose"=true}
+     * )
+     *
      * Opens a resource.
      *
      * @param ResourceNode $node     the node
@@ -219,7 +227,7 @@ class ResourceController
      * @throws AccessDeniedException
      * @throws \Exception
      */
-    public function openAction(ResourceNode $node, $resourceType)
+    public function openAction(ResourceNode $node, $resourceType = null)
     {
         //in order to remember for later. To keep links breadcrumb working we'll need to do something like this
         //if we don't want to change to much code
@@ -231,6 +239,9 @@ class ResourceController
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);
+        if ($resourceType === null) {
+            $resourceType = $node->getResourceType()->getName();
+        }
         $event = $this->dispatcher->dispatch(
             'open_'.$resourceType,
             'OpenResource',
@@ -507,9 +518,18 @@ class ResourceController
         $nodesWithCreatorPerms = array();
 
         if ($node === null) {
-            $nodesWithCreatorPerms = $this->resourceManager->getRoots($user);
+            $nodes = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
+
+            foreach ($nodes as $el) {
+                $item = $el;
+                $dateModification = $el['modification_date'];
+                $item['modification_date'] = $dateModification->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $dateCreation = $el['creation_date'];
+                $item['creation_date'] = $dateCreation->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));;
+                $nodesWithCreatorPerms[] = $item;
+            }
         } else {
             $isRoot = false;
             $workspaceId = $node->getWorkspace()->getId();

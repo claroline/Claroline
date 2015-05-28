@@ -199,9 +199,16 @@
             this.$el.empty();
             var orderedNodes = [];
 
+            var j = 1;
             //first we need to order the nodes !
             for (var i in this.nodes) {
-                orderedNodes[this.nodes[i].index_dir] = this.nodes[i];
+                
+                if (this.nodes[i].index_dir === null) {
+                    orderedNodes[j] = this.nodes[i];
+                    j++;
+                } else {
+                    orderedNodes[this.nodes[i].index_dir] = this.nodes[i];
+                }
             }
 
             for (var i = 1; i < orderedNodes.length; i++) {

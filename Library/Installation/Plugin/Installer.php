@@ -84,10 +84,8 @@ class Installer
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
         $this->log('Saving plugin configuration...');
-        $this->om->startFlushSuite();
         $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
         $this->baseInstaller->install($plugin);
-        $this->om->endFlushSuite();
     }
 
     /**

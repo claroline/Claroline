@@ -226,9 +226,9 @@ class SettingChecker
             'composer.json' => 'file',
             'composer.lock' => 'file',
             'files' => 'directory',
-            'templates' => 'directory',
             'vendor' => 'directory',
-            'web' => 'directory'
+            'web' => 'directory',
+            'web/uploads' => 'directory'
         );
 
         foreach ($writableElements as $element => $type) {

@@ -1,0 +1,41 @@
+<div id="modal-options-configure-form"
+     class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'configuration'|trans({}, 'platform') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="options-configure-form"
+                  action="{{ path('claro_contact_options_configure') }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                <h4>{{ 'category'|trans({}, 'platform') }}</h4>
+                <br>
+                {{ form_row(form.showAllMyContacts) }}
+                {{ form_row(form.showAllVisibleUsers) }}
+                <hr>
+                <h4>{{ 'contact'|trans({}, 'platform') }}</h4>
+                <br>
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </span>
+            <button type="button" id='configure-btn' class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

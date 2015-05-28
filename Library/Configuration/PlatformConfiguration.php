@@ -59,6 +59,8 @@ class PlatformConfiguration
     private $workspaceMaxUsers;
     private $autoLogginAfterRegistration;
     private $registrationMailValidation;
+    private $showHelpButton;
+    private $helpUrl;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -588,5 +590,25 @@ class PlatformConfiguration
     public function getRegistrationMailValidation()
     {
         return $this->registrationMailValidation ;
+    }
+
+    public function setShowHelpButton($showHelpButton)
+    {
+        $this->showHelpButton = $showHelpButton;
+    }
+
+    public function getShowHelpButton()
+    {
+        return $this->showHelpButton;
+    }
+
+    public function setHelpUrl($helpUrl)
+    {
+        $this->helpUrl = $helpUrl;
+    }
+
+    public function getHelpUrl()
+    {
+        return $this->helpUrl;
     }
 }

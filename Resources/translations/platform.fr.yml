@@ -70,6 +70,8 @@ actualize: Actualiser
 add: Ajouter
 add_a_logo: 'Ajouter un logo'
 add_category: 'Ajouter une catégorie'
+add_contact_to_category: 'Ajouter le contact à une catégorie'
+add_contacts: 'Ajouter des contacts'
 add_field_to_facet: 'Ajouter un champ à une facette'
 add_field_to_panel: 'Ajouter un champ'
 add_filter: 'Ajouter un filtre'
@@ -106,10 +108,12 @@ advanced_parameters: 'Paramètres avancés'
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
 all: Tous
 all_available_workspaces: 'Tous les espaces d''activités disponibles'
+all_my_contacts: 'Tous mes contacts'
 all_my_workspaces: 'Tous mes espaces d''activités'
 all_public_personal_workspaces: 'Tous les espaces personnels publics'
 all_public_workspaces: 'Tous les espaces d''activités publics'
 all_roles: 'Tous les rôles'
+all_visible_users: 'Tous les utilisateurs visibles'
 all_workspaces: 'Tous les espaces d''activités'
 already_existing_user: 'L''utilisateur existe déjà.'
 already_exists: 'existe déjà'
@@ -162,6 +166,9 @@ captcha: Captcha
 categories: Catégories
 categories_organization: 'Organisation des catégories'
 categorize: 'Classer par catégorie'
+category: Catégorie
+category_creation: 'Création d''une catégorie'
+category_edition: 'Modification de la catégorie'
 category_explanations_1: 'Chaque catégorie doit avoir un nom unique.'
 category_explanations_2: 'Sélectionnez une catégorie pour gérer ses sous-catégories.'
 category_root: 'Catégories de base'
@@ -189,6 +196,8 @@ configuration: Configuration
 configure: Configurer
 confirm_send_data: 'Nous vous proposons de marquer votre accord pour l''envoi de données :'
 connections: 'Nb Cnx.'
+contact: Contact
+contacts_per_page: 'Contacts par page'
 content: Contenu
 cookie_lifetime: 'Durée de vie du cookie'
 copiable: Copiable
@@ -280,9 +289,11 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_contact: 'Supprimer le contact'
+delete_contact_confirm_message: 'Voulez-vous vraiment supprimer ce contact ?'
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
-delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences?'
+delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences ?'
 description: Description
 desktop: Bureau
 desktop_and_home: 'Bureau et accueil'
@@ -410,6 +421,7 @@ has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activi
 has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+help_url: 'URL de l''aide'
 hide: Cacher
 history: Historique
 home: Accueil
@@ -496,7 +508,7 @@ link_workspace: 'Lier un espace d''activités'
 links: Liens
 list_groups: 'Lister les groupes'
 list_users: 'Lister les utilisateurs'
-list_view: 'Vue en liste (beta)'
+list_view: 'Vue en liste'
 list_workspaces: 'Tous les espaces d''activités'
 lock: Verrouiller
 locked: Verrouillé
@@ -592,10 +604,11 @@ new_message_alert: 'Vous avez %count% nouveaux message(s)'
 new_password: 'Nouveau mot de passe'
 new_role_message: 'Vous venez de recevoir le role %name%'
 new_role_message_object: 'Vos permissions sur la plateforme ont changé'
-'no': Non
+no: Non
 no_action_found: 'Aucune action trouvée.'
 no_activity_in_workspace: 'Cet espace ne contient actuellement aucune activité.'
 no_category: 'Il n''y a aucune catégorie'
+no_contact: 'Aucun contact'
 no_email: 'Ce mail ne correspond pas a un utilisateur inscrit'
 no_filter: 'Aucun filtre'
 no_group: 'Aucun groupe'
@@ -720,6 +733,8 @@ registration: Inscription
 registration_to_workspaces: 'Inscription à des espaces d''activités'
 registration_validation: 'Validation de l''inscription'
 remove: Enlever
+remove_contact_from_category: 'Retirer le contact de la catégorie'
+remove_contact_from_category_confirm_message: 'Êtes-vous sûr de vouloir retirer ce contact de cette catégorie ?'
 remove_facet: 'Supprimer une facette'
 remove_facet_confirm: 'Etes-vous sur de vouloir supprimer la facette %name% ?'
 remove_field: 'Supprimer une champ'
@@ -817,6 +832,7 @@ select_contacts_title: 'Sélectionnez les destinataires'
 select_groups_for_registration_to_workspace: 'Choississez les groupes à inscrire'
 select_roles_to_assign: 'Selectionnez les Rôles à attribuer'
 select_users_for_registration_to_workspace: 'Choississez les utilisateurs à inscrire'
+select_users_to_add_to_your_contacts: 'Sélectionnez des utilisateurs à ajouter à vos contacts'
 select_workspace_to_link: 'Choisissez un espace d''activités à lier'
 select_workspaces_for_registration: 'Choisissez les espaces d''activités pour l''inscription'
 selected_users: 'Utilisateurs sélectionnés'
@@ -845,11 +861,18 @@ settings: Paramètres
 sharable: Partageable
 share: Partager
 show: Voir
+show_all_my_contacts: 'Montrer "Tous mes contacts"'
+show_all_visible_users: 'Montrer "Tous les utilisateurs visibles"'
 show_as: 'Voir en tant que'
 show_as_admin: 'Voir comme admin'
 show_as_user: 'Voir comme utilisateur'
+show_help_button: 'Montrer le bouton d''aide'
+show_mail: 'Montrer l''adresse mail'
+show_phone: 'Montrer le numéro de téléphone'
+show_picture: 'Montrer la photo'
 show_profile: 'Voir le profile'
 show_profile_for_anonymous: 'Profil public accessible aux anonymes'
+show_username: 'Montrer le nom d''utilisateur'
 simple: Simple
 start_date: 'Date de début'
 start_maintenance: 'Lancer le mode maintenance'

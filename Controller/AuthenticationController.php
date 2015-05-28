@@ -336,6 +336,11 @@ class AuthenticationController
     {
         $event = $this->dispatcher->dispatch('render_external_authentication_button', 'RenderAuthenticationButton');
 
-        return new Response($event->getContent());
+        $eventContent = $event->getContent();
+        if (!empty($eventContent)) {
+            $eventContent = '<div class="external_authentication"><hr>' . $eventContent . '</div>';
+        }
+
+        return new Response($eventContent);
     }
 }
