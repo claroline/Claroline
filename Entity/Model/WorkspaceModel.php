@@ -16,11 +16,21 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="claro_workspace_model")
+ * @ORM\Table(
+ *     name="claro_workspace_model",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="workspace_model_unique_name_workspace",
+ *             columns={"name", "workspace_id"}
+ *         )
+ *     }
+ * )
  * @ORM\Entity
+ * @DoctrineAssert\UniqueEntity({"name", "workspace"})
  */
 class WorkspaceModel
 {
@@ -32,7 +42,7 @@ class WorkspaceModel
     private $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $name;
@@ -154,5 +164,15 @@ class WorkspaceModel
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getNameAndWorkspace()
+    {
+        return $this->name .
+            ' (' .
+            $this->workspace->getName() .
+            ' [' .
+            $this->workspace->getCode() .
+            '])';
     }
 }
