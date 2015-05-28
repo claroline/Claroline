@@ -6,15 +6,13 @@ parameters:
 
 services:
     icap.wiki.section_repository:
-        class:           "%icap.wiki.section_repository.class%"
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: "%icap.wiki.section_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - "%icap.wiki.section.class%"
 
     icap.wiki.contribution_repository:
-        class:           "%icap.wiki.contribution_repository.class%"
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: "%icap.wiki.contribution_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - "%icap.wiki.contribution.class%"
