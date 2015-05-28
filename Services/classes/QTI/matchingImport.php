@@ -78,10 +78,10 @@ class matchingImport extends qtiImport {
         $this->createLabels();
         $this->createProposals();
     }
-    
+
     /**
      * Get shuffle
-     * 
+     *
      * @access protected
      */
     protected function getShuffle() {
@@ -116,13 +116,13 @@ class matchingImport extends qtiImport {
             $label->setScoreRightResponse($this->notation($identifiant));
             $label->setInteractionMatching($this->interactionMatching);
             $label->setOrdre($ordre);
-            
+
            if ($simpleLabel->hasAttribute("fixed") && $simpleLabel->getAttribute("fixed") == 'true') {
                 $label->setPositionForce(true);
             } else {
                 $label->setPositionForce(false);
             }
-            
+
             //recording in the DBB
             $this->om->persist($label);
             $this->om->flush();
@@ -149,13 +149,13 @@ class matchingImport extends qtiImport {
             $proposal = new Proposal();
             $proposal->setValue($this->value($simpleProposal));
             $proposal->setOrdre($ordre);
-            
+
             if ($simpleProposal->hasAttribute("fixed") && $simpleProposal->getAttribute("fixed") == 'true') {
                 $proposal->setPositionForce(true);
             } else {
                 $proposal->setPositionForce(false);
             }
-            
+
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->om->persist($proposal);
@@ -249,17 +249,15 @@ class matchingImport extends qtiImport {
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'single') {
             //type : to drag
-            $type = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:TypeMatching')
-                ->findOneBy(array('code' => 2));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeMatching')
+                         ->findOneBy(array('code' => 2));
             $this->interactionMatching->setTypeMatching($type);
         } else {
             //type : to bind
-            $type = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:TypeMatching')
-                ->findOneBy(array('code' => 1));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeMatching')
+                         ->findOneBy(array('code' => 1));
             $this->interactionMatching->setTypeMatching($type);
         }
     }

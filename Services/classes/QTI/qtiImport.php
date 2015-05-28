@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Question;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 abstract class qtiImport
 {
@@ -325,7 +326,7 @@ abstract class qtiImport
     private function createDirQTIImport($ws)
     {
         $manager = $this->container->get('claroline.manager.resource_manager');
-        $parent = $this->doctrine
+        $parent = $this->om
                        ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                        ->findWorkspaceRoot($ws);
         $dir = new Directory();
