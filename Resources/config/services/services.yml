@@ -9,16 +9,14 @@ parameters:
 
 services:
     icap.blog.tag_repository:
-        class:           "%icap.blog.tag_repository.class%"
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: "%icap.blog.tag_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - "%icap.blog.tag.class%"
 
     icap.blog.post_repository:
-        class:           "%icap.blog.post_repository.class%"
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: "%icap.blog.post_repository.class%"
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - "%icap.blog.post.class%"
 
