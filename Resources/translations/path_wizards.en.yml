@@ -14,6 +14,9 @@ draft: Not published
 edit: Edit
 editor: Path editor
 
+# h
+hide_path_info: Hide information of the Path
+
 # m
 modified: with pending changes
 
@@ -71,6 +74,7 @@ save_path_changes: You have unsaved changes. Are you sure you want to leave this
 secondary_resources: Secondary resources
 see_activity: See activity
 select_activity: Select existing activity
+show_path_info: Show information o the Path
 sidebar_close: Close
 step_add_child: Add a step
 step_copy: Copy

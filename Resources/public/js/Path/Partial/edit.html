@@ -64,7 +64,7 @@
                         </ul>
                     </nav>
 
-                    <div class="panel-body">
+                    <div class="panel-body" data-ng-if="!hidePath">
                         <!-- Name of the path -->
                         <div class="row form-group">
                             <label class="control-label col-md-3 required" for="innova_path_name">{{ 'path_name'|trans:{}:'path_wizards' }}</label>
@@ -107,6 +107,13 @@
                                 <p data-ng-if="pathEditCtrl.published && pathEditCtrl.modified && !pathEditCtrl.unsaved" class="form-control-static text-warning">{{ 'published'|trans:{}:'path_wizards' }} {{ 'modified'|trans:{}:'path_wizards' }}</p>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="panel-footer text-center toggle-path-info" data-ng-click="hidePath = !hidePath">
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': hidePath, 'fa-angle-double-up': !hidePath }"></span>
+                        <span data-ng-if="!hidePath">{{ 'hide_path_info'|trans:{}:'path_wizards' }}</span>
+                        <span data-ng-if="hidePath">{{ 'show_path_info'|trans:{}:'path_wizards' }}</span>
+                        <span class="fa fa-fw" data-ng-class="{ 'fa-angle-double-down': hidePath, 'fa-angle-double-up': !hidePath }"></span>
                     </div>
                 </div>
             </div>

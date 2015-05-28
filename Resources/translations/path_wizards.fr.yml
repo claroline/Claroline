@@ -14,6 +14,9 @@ draft: Non publié
 edit: Modifier
 editor: Editeur de Parcours
 
+# h
+hide_path_info: Masquer les informations relatives au Parcours
+
 # m
 modified: avec des modifications en attente
 
@@ -71,6 +74,7 @@ save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vr
 secondary_resources: Ressources complémentaires
 see_activity: Voir l'activité
 select_activity: Sélectionner une activité existante
+show_path_info: Afficher les informations relatives au Parcours
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
