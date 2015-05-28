@@ -351,7 +351,7 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:InteractionMatching')
                             ->getInteractionMatching($interaction->getId());
-                    
+
                     if ($interactionMatching[0]->getShuffle()) {
                         $interactionMatching[0]->shuffleProposals();
                         $interactionMatching[0]->shuffleLabels();
@@ -384,8 +384,8 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-        
-        
+
+
         $variables = array(
             'exoID' => $exoID,
             'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
@@ -453,7 +453,7 @@ class QuestionController extends Controller
         $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID    = -1;
-        
+
         if(count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
         }
@@ -573,7 +573,7 @@ class QuestionController extends Controller
                         'nbResponses' => $nbResponses,
                         'linkedCategory' => $linkedCategory,
                         'exoID' => $exoID,
-                        'locker' => $this->getLockCategory()                           
+                        'locker' => $this->getLockCategory()
                         )
                     );
 
@@ -2077,6 +2077,7 @@ class QuestionController extends Controller
      */
     public function duplicateAction ($interID, $exoID)
     {
+        $exercise = null;
         $interaction = $this->getDoctrine()
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
@@ -2111,8 +2112,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionQCMHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-                        $this->get('translator') 
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                        $this->get('translator')
                     );
 
                     break;
@@ -2127,8 +2128,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionGraphicHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-                        $this->get('translator') 
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                        $this->get('translator')
                     );
 
                     break;
@@ -2143,8 +2144,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionHoleHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-                        $this->get('translator') 
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                        $this->get('translator')
                     );
 
                     break;
@@ -2159,8 +2160,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionOpenHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-                        $this->get('translator') 
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                        $this->get('translator')
                     );
 
                     break;
@@ -2174,8 +2175,8 @@ class QuestionController extends Controller
                     $interXHandler = new \UJM\ExoBundle\Form\InteractionMatchingHandler(
                         NULL , NULL, $this->getDoctrine()->getManager(),
                         $this->container->get('ujm.exercise_services'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exoID,
-                        $this->get('translator') 
+                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
+                        $this->get('translator')
                     );
 
                     break;
@@ -2204,10 +2205,10 @@ class QuestionController extends Controller
         }
 
     }
-    
+
      /**
      * Get the lock category
-     * 
+     *
      * @return the name of category locked
      */
     private function getLockCategory() {
