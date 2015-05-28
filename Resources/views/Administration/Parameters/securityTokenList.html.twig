@@ -93,8 +93,8 @@
                     <p>{{ 'security_token_delete_confirm_message'|trans({}, 'platform') }}</p>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="delete-security-token-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/>
-                    <input type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/>
+                    <button type="submit" id="delete-security-token-confirm-ok" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"> {{ 'cancel'|trans({}, 'platform') }}</button>
                 </div>
             </div>
         </div>
