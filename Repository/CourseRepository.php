@@ -108,4 +108,67 @@ class CourseRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findDescendantCoursesByCursus(
+        Cursus $cursus,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE EXISTS (
+                SELECT cc
+                FROM Claroline\CursusBundle\Entity\Cursus cc
+                WHERE cc.course = c
+                AND cc.root = :root
+                AND cc.lft >= :left
+                AND cc.rgt <= :right
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('root', $cursus->getRoot());
+        $query->setParameter('left', $cursus->getLft());
+        $query->setParameter('right', $cursus->getRgt());
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findDescendantSearchedCoursesByCursus(
+        Cursus $cursus,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            AND EXISTS (
+                SELECT cc
+                FROM Claroline\CursusBundle\Entity\Cursus cc
+                WHERE cc.course = c
+                AND cc.root = :root
+                AND cc.lft >= :left
+                AND cc.rgt <= :right
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('root', $cursus->getRoot());
+        $query->setParameter('left', $cursus->getLft());
+        $query->setParameter('right', $cursus->getRgt());
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

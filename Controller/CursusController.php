@@ -12,13 +12,16 @@
 namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
+use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
+use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\CursusType;
-use Claroline\CursusBundle\Form\pluginConfigurationType;
+use Claroline\CursusBundle\Form\PluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -673,7 +676,7 @@ class CursusController extends Controller
         }
 
         $form = $this->formFactory->create(
-            new pluginConfigurationType(),
+            new PluginConfigurationType(),
             $this->cursusManager->getConfirmationEmail()
         );
 
@@ -704,7 +707,7 @@ class CursusController extends Controller
         $formData = $this->request->get('cursus_plugin_configuration_form');
         $this->cursusManager->persistConfirmationEmail($formData['content']);
         $form = $this->formFactory->create(
-            new pluginConfigurationType(),
+            new PluginConfigurationType(),
             $this->cursusManager->getConfirmationEmail()
         );
 
@@ -758,21 +761,21 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/courses/registration/widget",
+     *     "/courses/registration/widget/{widgetInstance}",
      *     name="claro_cursus_courses_registration_widget",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidget.html.twig")
      */
-    public function coursesRegistrationWidgetAction()
+    public function coursesRegistrationWidgetAction(WidgetInstance $widgetInstance)
     {
-        return array();
+        return array('widgetInstance' => $widgetInstance);
     }
 
     /**
      * @EXT\Route(
-     *     "/courses/list/registration/widget/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     "/courses/list/registration/widget/{widgetInstance}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
      *     name="claro_cursus_courses_list_for_registration_widget",
      *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
      *     options={"expose"=true}
@@ -782,6 +785,7 @@ class CursusController extends Controller
      */
     public function coursesListForRegistrationWidgetAction(
         User $authenticatedUser,
+        WidgetInstance $widgetInstance,
         $search = '',
         $page = 1,
         $max = 20,
@@ -789,9 +793,31 @@ class CursusController extends Controller
         $order = 'ASC'
     )
     {
-        $courses = $search === '' ?
-            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $configCursus = $config->getCursus();
+
+        if (is_null($configCursus)) {
+            $courses = $search === '' ?
+                $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
+                $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+        } else {
+            $courses = $search === '' ?
+                $this->cursusManager->getDescendantCoursesByCursus(
+                    $configCursus,
+                    $orderedBy,
+                    $order,
+                    $page,
+                    $max
+                ) :
+                $this->cursusManager->getDescendantSearchedCoursesByCursus(
+                    $configCursus,
+                    $search,
+                    $orderedBy,
+                    $order,
+                    $page,
+                    $max
+                );
+        }
         $coursesArray = array();
 
         foreach ($courses as $course) {
@@ -841,6 +867,7 @@ class CursusController extends Controller
         }
 
         return array(
+            'widgetInstance' => $widgetInstance,
             'courses' => $courses,
             'search' => $search,
             'page' => $page,
@@ -918,6 +945,60 @@ class CursusController extends Controller
         $this->cursusManager->removeUserFromCourseQueue($authenticatedUser, $course);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/registration/widget/{widgetInstance}/configure/form",
+     *     name="claro_cursus_courses_registration_widget_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     */
+    public function coursesRegistrationWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+
+        $form = $this->formFactory->create(
+            new CoursesWidgetConfigurationType(),
+            $config
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'config' => $config
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/registration/widget/configure/config/{config}",
+     *     name="claro_cursus_courses_registration_widget_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     */
+    public function coursesRegistrationWidgetConfigureAction(CoursesWidgetConfig $config)
+    {
+        $form = $this->formFactory->create(
+            new CoursesWidgetConfigurationType(),
+            $config
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->cursusManager->persistCoursesWidgetConfiguration($config);
+
+            return new JsonResponse('success', 204);
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'config' => $config
+            );
+        }
     }
 
     private function checkToolAccess()

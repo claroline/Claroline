@@ -14,12 +14,14 @@
     var currentMax = $('#courses-registration-widget-datas-box').data('max');
     var currentOrderedBy = $('#courses-registration-widget-datas-box').data('ordered-by');
     var currentOrder = $('#courses-registration-widget-datas-box').data('order');
+    var widgetInstanceId = $('#courses-registration-widget-datas-box').data('widget-instance-id');
     
     function refreshCoursesList()
     {
         var route = Routing.generate(
             'claro_cursus_courses_list_for_registration_widget',
             {
+                'widgetInstance': widgetInstanceId,
                 'search': currentSearch,
                 'max': currentMax,
                 'orderedBy': currentOrderedBy,

@@ -1,4 +1,4 @@
-{% macro renderPager(pager, search, max, orderedBy, order) %}
+{% macro renderPager(pager, widgetInstanceId, search, max, orderedBy, order) %}
     {% if search is empty %}
         {{
             pagerfanta(
@@ -8,6 +8,7 @@
                     'proximity' : 1,
                     'routeName': 'claro_cursus_courses_list_for_registration_widget',
                     'routeParams': {
+                        'widgetInstance': widgetInstanceId,
                         'max': max,
                         'orderedBy': orderedBy,
                         'order': order
@@ -24,6 +25,7 @@
                     'proximity' : 1,
                     'routeName': 'claro_cursus_courses_list_for_registration_widget',
                     'routeParams': {
+                        'widgetInstance': widgetInstanceId,
                         'search': search,
                         'max': max,
                         'orderedBy': orderedBy,
@@ -35,28 +37,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(search, max, orderedBy, order) %}
-    {% if order == 'ASC' %}
-        {% set newOrder = 'DESC' %}
-    {% else %}
-        {% set newOrder = 'ASC' %}
-    {% endif %}
-
-    {{
-        path(
-            'claro_users_list_for_user_picker',
-            {
-                'search': search,
-                'max': max,
-                'orderedBy': orderedBy,
-                'order': newOrder
-            }
-        )
-    }}
-{% endmacro %}
-
 {% from _self import renderPager %}
-{% from _self import sortUrl %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
         
 {% if search != '' %}
@@ -87,127 +68,144 @@
     </div>
 </div>
 
-{% if courses.getNbPages() > 1 %}
-    {{ renderPager(courses, search, max, orderedBy, order) }}
-{% endif %}
+{% if courses|length > 0 %}
 
-<ul class="media-list">
-        
-    {% for course in courses %}
-        {% set courseId = course.getId() %}
-        {% set icon = course.getIcon() %}
-    
-        {% if icon is empty %}
-            {% set iconPath = asset('files/cursusbundle/icons/no_icon.png') %}
-        {% else %}
-            {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
-        {% endif %}
-        <h3 class="media-heading">
-            {{ course.getTitle() }}
-        </h3>
-        <hr>
-        <li class="media">
-            <div class="media-left col-md-2 text-center">
-                <img class="media-object"
-                     src="{{ iconPath }}"
-                     alt=""
-                     width="150px"
-                >
-            </div>
-            <div class="media-body col-md-10">
-                <div>
-                    {{ course.getDescription()|raw }}
+    {% if courses.getNbPages() > 1 %}
+        {{ renderPager(courses, widgetInstance.getId(), search, max, orderedBy, order) }}
+    {% endif %}
+
+    <div class="panel-group" role="tablist">
+
+        {% for course in courses %}
+            {% set courseId = course.getId() %}
+            {% set icon = course.getIcon() %}
+
+            {% if icon is empty %}
+                {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
+            {% else %}
+                {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span data-toggle="collapse"
+                              href="#course-content-{{ courseId }}"
+                              class="pointer-hand"
+                        >
+                            {{ course.getTitle() }}
+                            <small>[{{ course.getCode() }}]</small>
+                        </span>
+                    </h3>
+                </div>
+                <div id="course-content-{{ courseId }}" class="panel-collapse collapse">
+                    <div class="panel-body">   
+                
+                        <div class="media">
+                            <div class="media-left col-md-2 text-center">
+                                <img class="media-object"
+                                     src="{{ iconPath }}"
+                                     alt=""
+                                     width="150px"
+                                >
+                            </div>
+                            <div class="media-body col-md-10">
+                                <div>
+                                    {{ course.getDescription()|raw }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        {% if sessions[courseId] is not defined %}
+                            <div class="alert alert-warning">
+                                {{ 'no_session'|trans({}, 'cursus') }}.
+
+                                {% if courseQueues[courseId] is defined %}
+                                    <span class="cancel-course-queue-request-btn pointer-hand"
+                                          id="course-queue-btn-{{ courseId }}"
+                                          data-course-id="{{ courseId }}"
+                                    >
+                                        <span class="label label-success">
+                                            {{ 'request_done'|trans({}, 'platform') }}
+                                        </span>
+                                    </span>
+                                {% else %}
+                                    <span class="course-queue-request-btn pointer-hand"
+                                          id="course-queue-btn-{{ courseId }}"
+                                          data-course-id="{{ courseId }}"
+                                    >
+                                        <span class="label label-info">
+                                            {{ 'next_session_registration_request'|trans({}, 'platform') }}
+                                        </span>
+                                    </span>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div>
+                                <h4>{{ 'sessions'|trans({}, 'cursus') }}</h4>
+                                <ul>
+                                    {% for session in sessions[courseId] %}
+                                        {% set sessionId = session.getId() %}
+                                        {% set startDate = session.getStartDate() %}
+                                        {% set endDate = session.getEndDate() %}
+                                        <li>
+                                            <span>
+                                                {{ session.getName() }}
+                                                [
+                                                {% if startDate is empty %}
+                                                    ?
+                                                {% else %}
+                                                    {{ startDate|intl_date_format }}
+                                                {% endif %}
+                                                <i class="fa fa-long-arrow-right"></i>
+
+                                                {% if endDate is empty %}
+                                                    ?
+                                                {% else %}
+                                                    {{ endDate|intl_date_format }}
+                                                {% endif %}
+                                                ]
+                                            </span>
+
+                                            <span id="session-registration-btn-{{ sessionId }}">
+                                                {% if registeredSessions[sessionId] is defined %}
+                                                    &nbsp;
+                                                    <span class="label label-success">
+                                                        {{ 'registered'|trans({}, 'platform') }}
+                                                    </span>
+                                                {% elseif pendingSessions[sessionId] is defined %}
+                                                    &nbsp;
+                                                    <span class="label label-info">
+                                                        {{ 'pending'|trans({}, 'platform') }}
+                                                    </span>
+                                                {% elseif session.getPublicRegistration() %}
+                                                    &nbsp;
+                                                    <span class="btn btn-default btn-sm session-register-btn"
+                                                          data-session-id="{{ sessionId }}"
+                                                    >
+                                                        <i class="fa fa-sign-in"></i>
+                                                        {{ 'self_register'|trans({}, 'cursus') }}
+                                                    </span>
+                                                {% endif %}
+                                            </span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </li>
-        <hr>
-                
-        {% if sessions[courseId] is not defined %}
-            <div class="alert alert-warning">
-                {{ 'no_session'|trans({}, 'cursus') }}.
-                
-                {% if courseQueues[courseId] is defined %}
-                    <span class="cancel-course-queue-request-btn pointer-hand"
-                          id="course-queue-btn-{{ courseId }}"
-                          data-course-id="{{ courseId }}"
-                    >
-                        <span class="label label-success">
-                            {{ 'request_done'|trans({}, 'platform') }}
-                        </span>
-                    </span>
-                {% else %}
-                    <span class="course-queue-request-btn pointer-hand"
-                          id="course-queue-btn-{{ courseId }}"
-                          data-course-id="{{ courseId }}"
-                    >
-                        <span class="label label-info">
-                            {{ 'next_session_registration_request'|trans({}, 'platform') }}
-                        </span>
-                    </span>
-                {% endif %}
-            </div>
-        {% else %}
-            <div>
-                <h4>{{ 'sessions'|trans({}, 'cursus') }}</h4>
-                <ul>
-                    {% for session in sessions[courseId] %}
-                        {% set sessionId = session.getId() %}
-                        {% set startDate = session.getStartDate() %}
-                        {% set endDate = session.getEndDate() %}
-                        <li>
-                            <span>
-                                {{ session.getName() }}
-                                [
-                                {% if startDate is empty %}
-                                    ?
-                                {% else %}
-                                    {{ startDate|intl_date_format }}
-                                {% endif %}
-                                <i class="fa fa-long-arrow-right"></i>
+        {% endfor %}
+    </div>
 
-                                {% if endDate is empty %}
-                                    ?
-                                {% else %}
-                                    {{ endDate|intl_date_format }}
-                                {% endif %}
-                                ]
-                            </span>
-
-                            <span id="session-registration-btn-{{ sessionId }}">
-                                {% if registeredSessions[sessionId] is defined %}
-                                    &nbsp;
-                                    <span class="label label-success">
-                                        {{ 'registered'|trans({}, 'platform') }}
-                                    </span>
-                                {% elseif pendingSessions[sessionId] is defined %}
-                                    &nbsp;
-                                    <span class="label label-info">
-                                        {{ 'pending'|trans({}, 'platform') }}
-                                    </span>
-                                {% elseif session.getPublicRegistration() %}
-                                    &nbsp;
-                                    <span class="btn btn-default btn-sm session-register-btn"
-                                          data-session-id="{{ sessionId }}"
-                                    >
-                                        <i class="fa fa-sign-in"></i>
-                                        {{ 'self_register'|trans({}, 'cursus') }}
-                                    </span>
-                                {% endif %}
-                            </span>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        
-        {% if not loop.last %}
-            <hr style="border: solid 2px">
-        {% endif %}
-    {% endfor %}
-</ul>
-
-{% if courses.getNbPages() > 1 %}
-    {{ renderPager(courses, search, max, orderedBy, order) }}
+    {% if courses.getNbPages() > 1 %}
+        {{ renderPager(courses, widgetInstance.getId(), search, max, orderedBy, order) }}
+    {% endif %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_course'|trans({}, 'cursus') }}
+    </div>
 {% endif %}
 
 <div id="courses-registration-widget-datas-box"
@@ -215,5 +213,6 @@
      data-max="{{ max }}"
      data-ordered-by="{{ orderedBy }}"
      data-order="{{ order }}"
+     data-widget-instance-id="{{ widgetInstance.getId() }}"
 >
 </div>
