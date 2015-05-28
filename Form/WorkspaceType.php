@@ -57,7 +57,7 @@ class WorkspaceType extends AbstractType
                             ->setParameter('userId', $user->getId())
                             ->orderBy('wm.name', 'ASC');
                     },
-                    'property' => 'name',
+                    'property' => 'nameAndWorkspace',
                     'required' => false,
                     'label' => 'model'
                 )
