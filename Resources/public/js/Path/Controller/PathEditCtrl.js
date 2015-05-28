@@ -83,22 +83,28 @@ PathEditCtrl.prototype.redo = function () {
  * Save the path
  */
 PathEditCtrl.prototype.save = function () {
-    this.pathService.save().then(function () {
-        // Mark path as modified
-        this.modified = true;
-        this.unsaved  = false;
-    }.bind(this));
+    if (this.unsaved) {
+        // Save only with there is something to change
+        this.pathService.save().then(function () {
+            // Mark path as modified
+            this.modified = true;
+            this.unsaved  = false;
+        }.bind(this));
+    }
 };
 
 /**
  * Publish the path modifications
  */
 PathEditCtrl.prototype.publish = function () {
-    this.pathService.publish().then(function () {
-        this.modified  = false;
-        this.published = true;
-        this.unsaved   = false;
-    }.bind(this));
+    if (!this.published || this.modified) {
+        // Publish if there is something to publish
+        this.pathService.publish().then(function () {
+            this.modified  = false;
+            this.published = true;
+            this.unsaved   = false;
+        }.bind(this));
+    }
 };
 
 /**
