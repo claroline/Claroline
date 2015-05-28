@@ -2,4 +2,4 @@
 
 {# no transchoice filter in twigjs... #}
 
-{{ 'alert ending'|trans({}, 'messages') }}
+{{ 'alert_ending'|trans({}, 'messages') }}

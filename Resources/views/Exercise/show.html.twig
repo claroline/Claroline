@@ -100,7 +100,7 @@
                                 {% if entity.nbQuestion != 0 %}
                                     {{ entity.nbQuestion }}
                                 {% else %}
-                                    {{ 'allQuestion'|trans }}
+                                    {{ 'all_question'|trans }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -155,7 +155,7 @@
                                 {% if(entity.correctionMode == 1) %}
                                     {{ 'at the end of assessment' | trans }}
                                 {% elseif (entity.correctionMode == 2) %}
-                                    {{ 'after the last attempt' | trans }}
+                                    {{ 'after_the_last_attempt' | trans }}
                                 {% elseif (entity.correctionMode == 3) %}
                                     {{ 'from' | trans }} : {{ entity.dateCorrection|date('d/m/Y \\- H\\hi\\ms\\s') }}
                                 {% elseif (entity.correctionMode == 4) %}

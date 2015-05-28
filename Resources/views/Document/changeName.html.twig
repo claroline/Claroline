@@ -17,7 +17,7 @@
 
                     <div class="modal-footer">
                         <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
-                            onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'alreadyExist' | trans }}', 'updateName');
+                            onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'already_exist' | trans }}', 'updateName');
                                 return false;" class="btn btn-primary"/>
 
                         <input type="hidden" id="oldName" name="oldName" value="{{oldDocLabel}}"/>

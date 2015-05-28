@@ -6,7 +6,7 @@
                 </br>
             </div>
             <div class="modal-body">
-                <h3 class="panel-title">{{'add a new picture'|trans}}</h3>
+                <h3 class="panel-title">{{'add_a_new_picture'|trans}}</h3>
                 <label for="label">{{ 'picture name' | trans }} : </label>
                 <form id="uploadForm" enctype="multipart/form-data" method="post"
                       action="{{ path('ujm_interactiongraphic_AddImg', { 'redirection': 0 }) }}">
@@ -16,7 +16,7 @@
                         <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
                         <button type="submit" class="btn btn-primary" id="submit_picture"
                                 onclick="ValidName('{{ 'wrongName' | trans }}','label', '{{ path('ujm_Document_name_alreadyExist') }}',
-                                    '{{ 'alreadyExist' | trans }}', 'uploadForm');return false;">{{ 'ok'|trans({}, 'platform') }}</button>
+                                    '{{ 'already_exist' | trans }}', 'uploadForm');return false;">{{ 'ok'|trans({}, 'platform') }}</button>
                     </div>
                 </form>
            </div>

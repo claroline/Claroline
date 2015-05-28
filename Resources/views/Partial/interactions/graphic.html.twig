@@ -13,7 +13,7 @@
             {% if src == 'edit' %}
                 {% if app.user.id == entity.interaction.question.user.id %}
                     <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
-                        <i class="fa fa-picture-o"></i> {{ "add a new picture" | trans }}
+                        <i class="fa fa-picture-o"></i> {{ 'add_a_new_picture' | trans }}
                     </a>
                 {% else %}
                     {{ "only owner graphic" | trans }}
@@ -85,9 +85,9 @@
     </table>
 </div>
 {% if src == 'edit' %}
-    <div id="addButtonAnswer" class="form-group row" style="display:inline;"><a class="btn btn-primary" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>&nbsp;{{ 'addZoneAnswer' | trans }}</a></div>
+    <div id="addButtonAnswer" class="form-group row" style="display:inline;"><a class="btn btn-primary" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>&nbsp;{{ 'add_zone_answer' | trans }}</a></div>
 {% else %}
-    <div id="addButtonAnswer" class="form-group row" style="display:none;"><a class="btn btn-primary" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>&nbsp;{{ 'addZoneAnswer' | trans }}</a></div>
+    <div id="addButtonAnswer" class="form-group row" style="display:none;"><a class="btn btn-primary" id="addp" onClick="addAnswerZone('{{'noImgSelect' | trans}}');"><i class="fa fa-plus"></i>&nbsp;{{ 'add_zone_answer' | trans }}</a></div>
 {% endif %}
 <div id="AlreadyPlacedArray" style="display:none;">
 

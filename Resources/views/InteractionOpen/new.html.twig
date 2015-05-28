@@ -29,11 +29,11 @@
 {% if error is defined %}
     <script type="text/javascript">
         insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add_hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
         insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add hint' | trans }}', '{{ 'delete' | trans }}');
+        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'add_hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

@@ -77,7 +77,7 @@
 
         {% if nbUserPaper > 0 %}
             <fieldset id="container" class="alert alert-info">
-                {{ 'already answered' | trans }}
+                {{ 'already_answered' | trans }}
                 {% if retryButton %} :
                     <div style="float:right;">
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">

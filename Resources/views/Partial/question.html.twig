@@ -20,7 +20,7 @@
        <div class="col-md-7"> 
            {{ form_widget(form.interaction.question.description) }}
        </div>
-       <a id="buttonEdition" class="btn btn-primary" title="{{'advanced edition' | trans }}" onClick="advancedEdition('interaction_question_description','buttonEdition',event);"><i class="fa fa-font"></i></a>
+       <a id="buttonEdition" class="btn btn-primary" title="{{'advanced_edition' | trans }}" onClick="advancedEdition('interaction_question_description','buttonEdition',event);"><i class="fa fa-font"></i></a>
    </div> 
    <div class="form-group row {% if not form.interaction.invite.vars.valid %} has-error{% endif %}">     
        <label class="control-label col-md-1">{{ 'Interaction.invite' | trans }}</label>

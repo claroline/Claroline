@@ -34,28 +34,28 @@
 ##
 
 # A
-access my question bank: Access to my questions bank
+#access my question bank: Access to my questions bank
+#addDoc: Add a document
+#add user: Add user
+#administration: Administration
+#alreadyPlaced: Already placed answers.
 actions: Actions
 add: Add
-add a new picture: Add a new picture
-addChoice: Add a choice
-addDoc: Add a document
-addLabel: Add a label
-addProposal: Add a proposal
-add hint: Add hint
-add user: Add user
-addZoneAnswer: Add answer zone
-administration: Administration
-advanced edition: Advenced edition
-after the last attempt: After the last attempt
-alert ending: Are you sure you want to finish ? (You can't alter your answers anymore)
+add_a_new_picture: Add a new picture
+add_choice: Add a choice
+add_label: Add a label
+add_proposal: Add a proposal
+add_hint: Add hint
+add_zone_answer: Add answer zone
+advanced_edition: Advenced edition
+after_the_last_attempt: After the last attempt
+alert_ending: Are you sure you want to finish ? (You can't alter your answers anymore)
 all: All
-allow to edit: Allow to edit
-allQuestion: All the questions
+allow_to_edit: Allow to edit
+all_question: All the questions
 already: This question is already shared with this user
-already answered: You have already answered at this exercise
-alreadyExist: This name exist already
-alreadyPlaced: Already placed answers.
+already_answered: You have already answered at this exercise
+already_exist: This name exist already
 alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer zone: Answer zone
@@ -434,7 +434,6 @@ your answer: Your answer
 #properties of entities
 At the end of assessment: At the end of assessment
 At the same time that the correction: At the same time that the correction
-After the last attempt: After the last attempt
 
 Category.value: Category
 

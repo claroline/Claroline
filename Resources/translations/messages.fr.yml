@@ -34,28 +34,28 @@
 ##
 
 # A
-access my question bank: Accéder à ma banque de questions
+#access my question bank: Accéder à ma banque de questions
+#addDoc: Ajouter un document
+#add user: Ajouter un utilisateur
+#administration: Administration
+#alreadyPlaced: Réponses déjà placées
 actions: Actions
 add: Ajouter
-add a new picture: Ajouter une nouvelle image
-addChoice: Ajouter un choix
-addLabel: Ajouter un label
-addDoc: Ajouter un document
-addProposal: Ajouter une proposition
-add hint: Ajouter un indice
-add user: Ajouter un utilisateur
-addZoneAnswer: Ajouter une zone de réponse
-administration: Administration
-advanced edition: Edition avancée
-after the last attempt: Après le dernier essai
-alert ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
+add_a_new_picture: Ajouter une nouvelle image
+add_choice: Ajouter un choix
+add_label: Ajouter un label
+add_proposal: Ajouter une proposition
+add_hint: Ajouter un indice
+add_zone_answer: Ajouter une zone de réponse
+advanced_edition: Edition avancée
+after_the_last_attempt: Après le dernier essai
+alert_ending: Etes-vous sur de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses)
 all: Tout
-allow to edit: Autoriser l'édition
-allQuestion: Toutes les questions
+allow_to_edit: Autoriser l'édition
+all_question: Toutes les questions
 already: Cette question est déjà partagée avec cet utilisateur
-already answered: Vous avez déjà répondu à cet exercice
-alreadyExist: Ce nom existe déjà.
-alreadyPlaced: Réponses déjà placées
+already_answered: Vous avez déjà répondu à cet exercice
+already_exist: Ce nom existe déjà.
 alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
 answer zone: Zone de réponse
@@ -434,7 +434,6 @@ your answer: Votre réponse
 #properties of entities
 At the end of assessment: A la fin du test
 At the same time that the correction: En même temps que la correction
-After the last attempt: Après le dernier essai
 
 Category.value: Catégorie
 

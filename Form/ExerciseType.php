@@ -65,7 +65,7 @@ class ExerciseType extends AbstractType
                     'label' => 'availability of correction',
                     'choices' => array(
                         '1' => 'At the end of assessment',
-                        '2' => 'After the last attempt',
+                        '2' => 'after_the_last_attempt',
                         '3' => 'From',
                         '4' => 'Never'
                     )
