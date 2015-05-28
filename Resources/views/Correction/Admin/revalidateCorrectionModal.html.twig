@@ -12,7 +12,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn-group">
-                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">{{ 'Cancel'|trans({}, 'icap_dropzone') }}</button>
                     <a id="revalidate_modal_link" class="btn btn-primary"
                        href="{{ path('icap_dropzone_drops_detail_correction_validation',
                            {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
