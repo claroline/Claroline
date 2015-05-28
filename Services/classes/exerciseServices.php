@@ -97,7 +97,7 @@ class exerciseServices
         $interactionQCMID = $request->request->get('interactionQCMToValidated');
         $response = array();
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
         if ($interQCM->getTypeQCM()->getCode() == 2) {
@@ -247,7 +247,7 @@ class exerciseServices
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
@@ -356,7 +356,7 @@ class exerciseServices
         $penalty = 0;
         $session = $request->getSession();
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
         $response = $request->request->get('interOpen');
@@ -420,7 +420,7 @@ class exerciseServices
      */
     public function responseHole($request, $paperID = 0)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $res = array();
         $interactionHoleID = $request->request->get('interactionHoleToValidated');
         $tabResp = array();
@@ -493,7 +493,7 @@ class exerciseServices
      */
     public function holeMark($interHole, $request, $penalty)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $score = 0;
 
         foreach($interHole->getHoles() as $hole) {
@@ -564,7 +564,7 @@ class exerciseServices
         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
         $response = $request->request->get('jsonResponse');
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
 
         $penalty = 0;
@@ -1058,7 +1058,7 @@ class exerciseServices
         $scorePaper = 0;
         $scoreTemp = false;
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $interactions = $this->om
                              ->getRepository('UJMExoBundle:Interaction')
@@ -1252,7 +1252,7 @@ class exerciseServices
     public function getBadgeLinked($resourceId)
     {
         $badges = array();
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $badgesRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
                           ->findBy(array('resource' => $resourceId));
 
@@ -1281,7 +1281,7 @@ class exerciseServices
      */
     public function badgesInfoUser($userId, $resourceId, $locale)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $badgesInfoUser = array();
         $i = 0;
 
@@ -1450,7 +1450,7 @@ class exerciseServices
      */
     public function getTypeQCM()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeQCM = array();
         $types = $em->getRepository('UJMExoBundle:TypeQCM')
@@ -1472,7 +1472,7 @@ class exerciseServices
      */
     public function getTypeOpen()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeOpen = array();
         $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
@@ -1494,7 +1494,7 @@ class exerciseServices
      */
     public function getTypeMatching()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeMatching = array();
         $types = $em->getRepository('UJMExoBundle:TypeMatching')
