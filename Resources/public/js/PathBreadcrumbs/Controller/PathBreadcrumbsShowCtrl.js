@@ -31,7 +31,6 @@ var PathBreadcrumbsShowCtrl = function PathBreadcrumbsShowCtrl($routeParams, $sc
             // Get parents of the step
             if (angular.isDefined(this.step) && angular.isObject(this.step)) {
                 this.parents = this.pathService.getParents(this.step);
-                console.log(this.parents);
             }
 
             // Calculate roadback to the previous step
