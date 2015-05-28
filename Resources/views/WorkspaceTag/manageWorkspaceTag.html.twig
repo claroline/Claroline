@@ -181,7 +181,7 @@
 </div>
 
 <div id="remove-workspace-tag-validation-box" class="modal fade" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="buttonmodal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -191,18 +191,16 @@
                 <p>{{ 'remove_workspace_from_category_confirm_message'|trans({}, 'platform') }}</p>
             </div>
             <div class="modal-footer">
-                <input
-                    type="button"
+                <button
+                    type="submit"
                     id="remove-workspace-tag-confirm-ok"
                     class="btn btn-primary"
-                    value="{{ 'ok'|trans({}, 'platform') }}"
-                />
-                <input
+                >{{ 'ok'|trans({}, 'platform') }}</button>
+                <button
                     type="button"
                     class="btn btn-default"
                     data-dismiss="modal"
-                    value="{{ 'cancel'|trans({}, 'platform') }}"
-                />
+                >{{ 'cancel'|trans({}, 'platform') }}</button>
             </div>
         </div>
     </div>
@@ -232,16 +230,14 @@
                 {% endif %}
             </div>
             <div class="modal-footer">
-                <input type="button"
+                <button type="submit"
                     id="category-validate-btn"
                     class="btn btn-primary"
-                    value="{{ 'validate'|trans({}, 'platform') }}"
-                />
-                <input type="button"
+                >{{ 'validate'|trans({}, 'platform') }}</button>
+                <button type="button"
                     class="btn btn-default"
                     data-dismiss="modal"
-                    value="{{ 'close'|trans({}, 'platform') }}"
-                />
+                >{{ 'close'|trans({}, 'platform') }}</button>
             </div>
         </div>
     </div>
