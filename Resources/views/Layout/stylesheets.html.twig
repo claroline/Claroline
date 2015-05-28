@@ -4,10 +4,8 @@
 
 {% if config.getParameter('theme') != 'claroline' %}
     {# from theme #}
-    {% set pathAsset = "{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" %}
-    {% if asset_exists(pathAsset) %}
-        <link rel="stylesheet" href="{{ pathAsset }}" screen="media" />
-    {% endif %}
+    {# please use asset_exists to be sure the theme is here #}
+    <link rel="stylesheet" href="{{ asset('') ~ 'themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' }}" screen="media" />
 {% endif %}
 
 {% stylesheets debug=false filter='lessphp, cssmin'  output='vendor/fortawesome/font-awesome/css/font-awesome.css'
