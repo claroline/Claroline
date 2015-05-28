@@ -7,26 +7,22 @@ services:
     # doctrine repositories
     icap_badge.repository.badge:
         class:           Icap\BadgeBundle\Repository\BadgeRepository
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - Icap\BadgeBundle\Entity\Badge
 
     # form
     icap_badge.form.badge:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ["@form.factory", createNamed]
         arguments: ["badge_form", "badge_form"]
     icap_badge.form.badge.workspace:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ["@form.factory", createNamed]
         arguments: ["badge_form", "badge_form_workspace"]
     icap_badge.widget.form.badge_usage:
         class: Symfony\Component\Form\Form
-        factory_method: createNamed
-        factory_service: form.factory
+        factory: ["@form.factory", createNamed]
         arguments: ["badge_usage_widget_form", "badge_usage_widget_config"]
 
     # form handler
