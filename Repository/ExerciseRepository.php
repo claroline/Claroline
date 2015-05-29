@@ -30,7 +30,7 @@ class ExerciseRepository extends EntityRepository
         }
         $dql = 'SELECT sum(r.mark) as noteExo, p.id as paper
             FROM UJM\ExoBundle\Entity\Response r JOIN r.paper p JOIN p.exercise e
-            WHERE e.id= ?1 AND p.interupt=0 group by p.id ?2';
+            WHERE e.id= ?1 AND p.interupt=0 group by p.id ?3';
 
         $query = $this->_em->createQuery($dql)
                       ->setParameters(array(1 => $exoId, 2 => $order, 3 => $orderBy));
