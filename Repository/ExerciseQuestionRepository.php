@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * ExerciseQuestionRepository
@@ -41,11 +42,12 @@ class ExerciseQuestionRepository extends EntityRepository
      */
     public function getCountQuestion($exoId)
     {
-        $dql = 'SELECT count(eq.question) as nbq
+        $query = $this->_em->createQuery(
+                'SELECT count(eq.question) as nbq
                 FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
-                WHERE eq.exercise='.$exoId;
-
-        $query = $this->_em->createQuery($dql);
+                WHERE eq.exercise = ?1'
+        );
+        $query->setParameter(1, $exoId);
 
         return $query->getSingleResult();
     }
