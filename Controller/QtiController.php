@@ -88,7 +88,7 @@ class QtiController extends Controller {
     {
         $request = $this->container->get('request');
         $file  = $request->files->get('qtifile');
-        
+
         $qtiRepos->createDirQTI();
         $root = array();
         $fichier = array();

@@ -36,6 +36,9 @@ class WSRestController extends Controller
         // Login allow to link a doc and a user
         // check also login matches to the connected user
 
+        $request = $this->container->get('request');
+        $fileUp  = $request->files->get('picture');
+
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userDir = $this->container->getParameter('ujm.param.exo_directory') . '/users_documents/'.$this->container->get('security.context')
                 ->getToken()->getUser()->getUsername();
@@ -55,14 +58,14 @@ class WSRestController extends Controller
                     mkdir($userDir.'/'.$dir);
                 }
             }
-            if ((isset($_FILES['picture'])) && ($_FILES['picture'] != '')) {
-                $file = basename($_FILES['picture']['name']);
-                move_uploaded_file($_FILES['picture']['tmp_name'], $userDir.'/images/'. $file);
+            if ((isset($fileUp)) && ($fileUp != '')) {
+                $file = $fileUp->getClientOriginalName();
+                $fileUp->move($userDir.'/images/', $fileUp->getClientOriginalName());
 
                 $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
-                $document->setLabel(trim($_POST['label']));
+                $document->setLabel(trim($request->get('label')));
                 $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.token_storage')->getToken()->getUser());

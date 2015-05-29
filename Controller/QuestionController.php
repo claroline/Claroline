@@ -1157,8 +1157,9 @@ class QuestionController extends Controller
      */
     public function updateNameAction()
     {
-        $newlabel = $_POST['newlabel'];
-        $oldlabel = $_POST['oldName'];
+        $request = $this->container->get('request');
+        $newlabel  = $request->get('newlabel');
+        $oldlabel  = $request->get('oldName');
 
         $em = $this->getDoctrine()->getManager();
 
