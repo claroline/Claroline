@@ -570,29 +570,6 @@ UserPicker.prototype.open = function () {
 
             function initializeSelectedUsers()
             {
-                var idsValues = $('#user-picker-input-' + userPicker.pickerName).val();
-                var namesValues = (userPicker.multiple === 'multiple') ?
-                    $('#user-picker-input-' + userPicker.pickerName).data('selected-users-names') :
-                    $('#user-picker-input-view-' + userPicker.pickerName).val();
-
-                if (namesValues !== undefined &&
-                    namesValues !== 'undefined' &&
-                    idsValues !== undefined &&
-                    idsValues !== 'undefined') {
-                
-                    var ids = idsValues.split(',');
-                    var names = namesValues.split(';;;');
-                    var matched = (ids.length === names.length);
-
-                    for (var i = 0; i < ids.length; i++) {
-
-                        if (!isNaN(parseInt(ids[i]))) {
-                            var name = matched ? names[i] : '???';
-                            selectedUsers[ids[i]] = name;
-                            addUserToSelectedUsersBox(ids[i], name);
-                        }
-                    }
-                }
                 var matchedSelected = (userPicker.parameters['selectedUserIds'].length === selectedUserNames.length);
 
                 for (var i = 0; i < userPicker.parameters['selectedUserIds'].length; i++) {
@@ -778,7 +755,6 @@ UserPicker.prototype.open = function () {
                     }
                 }
                 modalElement.modal('hide');
-//                $('#user-picker-close-modal-btn').trigger('click');
             });
 
             initializeSelectedUsers();

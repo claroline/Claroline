@@ -61,10 +61,11 @@ class UserController extends Controller
     }
 
     /**
-     * @EXT\Route("/searchInWorkspace/{workspaceId}/{search}",
-     *      name="claro_user_search_in_workspace",
-     *      options = {"expose"=true},
-     *      requirements={"workspaceId" = "\d+"}
+     * @EXT\Route(
+     *     "/searchInWorkspace/{workspaceId}/{search}",
+     *     name="claro_user_search_in_workspace",
+     *     options = {"expose"=true},
+     *     requirements={"workspaceId" = "\d+"}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:User:user_search_workspace_results.html.twig")
@@ -443,6 +444,59 @@ class UserController extends Controller
                     array(),
                     'platform'
                 )
+            );
+        }
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "user/{user}/infos/request",
+     *     name="claro_user_infos_request",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function userInfosRequestAction(User $user)
+    {
+        $datas = array(
+            'id' => $user->getId(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'username' => $user->getUsername(),
+            'mail' => $user->getMail(),
+            'phone' => $user->getPhone(),
+            'picture' => $user->getPicture()
+        );
+
+        return new JsonResponse($datas, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "users/infos/request",
+     *     name="claro_users_infos_request",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     */
+    public function usersInfosRequestAction(array $users)
+    {
+        $datas = array();
+
+        foreach ($users as $user) {
+            $datas[] = array(
+                'id' => $user->getId(),
+                'firstName' => $user->getFirstName(),
+                'lastName' => $user->getLastName(),
+                'username' => $user->getUsername(),
+                'mail' => $user->getMail(),
+                'phone' => $user->getPhone(),
+                'picture' => $user->getPicture()
             );
         }
 

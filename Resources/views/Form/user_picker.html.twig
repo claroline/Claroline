@@ -10,8 +10,12 @@
                    id="user-picker-input-{{ timedPickerName }}"
 
                    {% if value is not empty %}
-                       value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
-                       data-selected-users-names="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %};;;{% endif %}{% endif %}{% endfor %}"
+                   
+                       {% if value[0] is iterable %}
+                           value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                       {% else %}
+                           value="{{ value[0] }}"
+                       {% endif %}
                    {% endif %}
             >
         {% else %}
@@ -19,8 +23,10 @@
                    name="{{ full_name }}"
                    id="user-picker-input-{{ timedPickerName }}"
 
-                   {% if value is not empty and value['id'] is defined %}
+                   {% if (value is not empty) and (value is iterable) and (value['id'] is defined) %}
                        value="{{ value['id'] }}"
+                   {% else %}
+                       value="{{ value }}"
                    {% endif %}
             >
         {% endif %}
@@ -30,9 +36,23 @@
                        
                    {% if value is not empty %}
                        {% if multiple %}
-                           value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                   
+                           {% if value[0] is iterable %}
+                               value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                               data-status="OK"
+                           {% else %}
+                               data-value="{{ value[0] }}"
+                               data-status="id"
+                           {% endif %}
+                           data-multiple="multiple"
                        {% elseif value['name'] is defined %}
                            value="{{ value['name'] }}"
+                           data-status="OK"
+                           data-multiple="single"
+                       {% else %}
+                           data-value="{{ value }}"
+                           data-status="id"
+                           data-multiple="single"
                        {% endif %}
                    {% endif %}
                    id="user-picker-input-view-{{ timedPickerName }}"
@@ -85,6 +105,17 @@
             {% endfor %}
 
             $('body').on('click', '.user-picker-{{ timedPickerName }}', function () {
+                var selectedUserIds = {{ selectedUserIds|json_encode }};
+                var inputValue = $('#user-picker-input-{{ timedPickerName }}').val();
+                var ids = inputValue.split(',');
+
+                if (ids.length > 0 && ids[0] !== '') {
+
+                    for (var i = 0; i < ids.length; i++) {
+                        selectedUserIds.push(parseInt(ids[i]));
+                    }
+                }
+                
                 var userPicker = new UserPicker();
                 var settings = {
                     picker_name: "{{ timedPickerName }}",
@@ -100,7 +131,7 @@
                     show_platform_roles: {% if show_platform_roles %}true{% else %}false{% endif %},
                     blacklist: {{ excludedUserIds|json_encode }},
                     whitelist: {{ forcedUserIds|json_encode }},
-                    selected_users: {{ selectedUserIds|json_encode }},
+                    selected_users: selectedUserIds,
                     forced_groups: {{ forcedGroupIds|json_encode }},
                     forced_roles: {{ forcedRoleIds|json_encode }},
                     forced_workspaces: {{ forcedWorkspaceIds|json_encode }},
@@ -109,6 +140,66 @@
                 userPicker.configure(settings, null);
                 userPicker.open();
             });
+        </script>
+
+        <script type="text/javascript">
+            (function () {
+                var input = $('#user-picker-input-view-{{ timedPickerName }}');
+                input.each(function () {
+                    var element = $(this);
+                    var value = '' + element.data('value');
+                    var multiple = element.data('multiple');
+                    var status = element.data('status');
+                    
+                    if (status === 'id') {
+                        
+                        if (multiple === 'single') {
+                            $.ajax({
+                                url: Routing.generate(
+                                    'claro_user_infos_request',
+                                    {'user': parseInt(value)}
+                                ),
+                                type: 'GET',
+                                success: function (datas) {
+                                    var name = datas['firstName'] + ' ' + datas['lastName'];
+                                    element.val(name);
+                                }
+                            });
+                        } else if (multiple === 'multiple') {
+                            var ids = value.split(',');
+                            
+                            if (ids.length > 0 && ids[0] !== '') {
+                                var userIds = [];
+                                
+                                for (var i = 0; i < ids.length; i++) {
+                                    userIds.push(parseInt(ids[i]));
+                                }
+                                var route = Routing.generate('claro_users_infos_request');
+                                var parameters = {};
+                                parameters.userIds = userIds;
+                                route += '?' + $.param(parameters);
+                                
+                                $.ajax({
+                                    url: route,
+                                    type: 'GET',
+                                    success: function (datas) {
+                                        var names = '';
+                                        
+                                        for (var j = 0; j < datas.length; j++) {
+                                            names += datas[j]['firstName'] + ' ' + datas[j]['lastName'];
+                                            
+                                            if (j < datas.length - 1) {
+                                                names += ',';
+                                            }
+                                        }
+                                        element.val(names);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            })();
         </script>
     {% endspaceless %}
 {% endblock %}
