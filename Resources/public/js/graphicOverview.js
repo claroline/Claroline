@@ -51,7 +51,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
             break;
             
          case 'brown' :
-            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+             $('#' + id + 'ra' + i).attr('src', prefix + 'circlebrown.png');
             break;
             
         default :
@@ -94,7 +94,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
             break;
             
          case 'brown' :
-            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+             $('#' + id + 'ra' + i).attr('src', prefix + 'circlebrown.png');
              break;
         default :
             $('#' + id + 'ra' + i).attr('src', prefix + 'squareblack.png');
