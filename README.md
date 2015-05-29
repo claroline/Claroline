@@ -65,7 +65,6 @@ Project setup
     - *app/logs*
     - *app/config*
     - *files*
-    - *templates*
     - *web/uploads*
 - Run the following commands:
     - `$ composer require composer/composer dev-master`
@@ -84,6 +83,9 @@ You can then create a first admin user with:
 ```sh
 $ php app/console claroline:user:create -a
 ```
+
+If the css doesn't work do :
+    - `$ php app/console assetic:dump`
 
 The application is accessible in your browser via:
 
