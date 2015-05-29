@@ -81,7 +81,7 @@ class WikiListener extends ContainerAware
     public function onCopy(CopyResourceEvent $event)
     {
         $wiki = $event->getResource();
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
 
         $newWiki = $this->container->get('icap.wiki.manager')->copyWiki($wiki, $loggedUser);
 
