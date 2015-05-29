@@ -63,12 +63,11 @@ class QuestionRepository extends EntityRepository
     public function findByCategory($userId, $whatToFind)
     {
         $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q JOIN q.category c
-            WHERE c.value LIKE :search
-            AND q.user = '.$userId.'
-        ';
+            WHERE c.value LIKE ?1
+            AND q.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -86,12 +85,11 @@ class QuestionRepository extends EntityRepository
     public function findByTitle($userId, $whatToFind)
     {
         $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q
-            WHERE q.title LIKE :search
-            AND q.user = '.$userId.'
-        ';
+            WHERE q.title LIKE ?1
+            AND q.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }

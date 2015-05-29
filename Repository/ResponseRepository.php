@@ -68,9 +68,10 @@ class ResponseRepository extends EntityRepository
     {
         $dql = 'SELECT r.mark, count(r.mark) as nb
             FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
-            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise='.$exoId.' AND r.interaction ='.$interId.' AND r.response != \'\' GROUP BY r.mark';
+            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise= ?1 AND r.interaction = ?2 AND r.response != \'\' GROUP BY r.mark';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql)
+                      ->setParameters(array(1 => $exoId, 2 => $interId));
 
         return $query->getResult();
     }
@@ -89,9 +90,10 @@ class ResponseRepository extends EntityRepository
     {
         $dql = 'SELECT r.mark
             FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
-            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise='.$exoId.' AND r.interaction ='.$interId.' ORDER BY p.id';
+            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise= ?1 AND r.interaction = ?2 ORDER BY p.id';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql)
+                      ->setParameters(array(1 => $exoId, 2 => $interId));
 
         return $query->getResult();
     }

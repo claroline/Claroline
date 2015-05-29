@@ -97,9 +97,9 @@ class InteractionRepository extends EntityRepository
         $questionsList = array();
         $nbQuestionsTot = 0;
 
-        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
-            . ' ORDER BY eq.ordre';
-        $query = $em->createQuery($dql);
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
+               ORDER BY eq.ordre';
+        $query = $em->createQuery($dql)->setParameter(1, $exoId);
         $eqs = $query->getResult();
 
         foreach ($eqs as $eq) {
@@ -157,15 +157,16 @@ class InteractionRepository extends EntityRepository
 
         $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                JOIN eq.question q
-               WHERE eq.exercise=' . $exoSearch;
+               WHERE eq.exercise= ?1';
         $dql .= ' AND q.id NOT IN
                 (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq2
                 JOIN eq2.question q2
                 JOIN eq2.exercise e2
-                WHERE e2.id=' . $exoImport . ')';
+                WHERE e2.id= ?2)';
         $dql .= ' ORDER BY eq.ordre';
 
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql)
+                    ->setParameters(array(1 => $exoSearch, 2 => $exoImport));
         $eqs = $query->getResult();
 
         foreach ($eqs as $eq) {
@@ -226,19 +227,6 @@ class InteractionRepository extends EntityRepository
      */
     public function getUserInteractionImport($em, $uid, $exoId)
     {
-        /*$dql = "
-            SELECT i FROM UJM\ExoBundle\Entity\Interaction i
-            JOIN i.question q JOIN q.category c '
-            WHERE q.user='{$uid}'
-            AND q NOT IN (
-                SELECT que FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
-                JOIN eq.question que
-                WHERE eq.exercise='{$exoId}'
-            )
-            ORDER BY c.value, q.title";
-
-        return $em->createQuery($dql)->getResult();*/
-
         $questions = array();
 
         $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
@@ -281,10 +269,10 @@ class InteractionRepository extends EntityRepository
     {
         $questions = array();
 
-        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
-            . ' ORDER BY eq.ordre';
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
+                ORDER BY eq.ordre';
 
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql)->setParameter(1, $exoId);
         $eqs = $query->getResult();
 
         foreach ($eqs as $eq) {
@@ -320,12 +308,11 @@ class InteractionRepository extends EntityRepository
     public function findByType($userId, $whatToFind)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q
-            WHERE i.type LIKE :search
-            AND q.user = '.$userId.'
-        ';
+            WHERE i.type LIKE ?1
+            AND q.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -343,12 +330,11 @@ class InteractionRepository extends EntityRepository
     public function findByContain($userId, $whatToFind)
     {
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q
-            WHERE i.invite LIKE :search
-            AND q.user = '.$userId.'
-        ';
+                WHERE i.invite LIKE ?1
+                AND q.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -367,21 +353,22 @@ class InteractionRepository extends EntityRepository
      */
     public function findByAll($userId, $whatToFind, $searchToImport = FALSE, $exoID = -1)
     {
+        $params = array(1 => "%$whatToFind%", 2 => $userId);
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q JOIN q.category c
-            WHERE (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
-            AND q.user = '.$userId.'
-        ';
+            WHERE (i.invite LIKE ?1 OR i.type LIKE ?1 OR c.value LIKE ?1 OR q.title LIKE ?1)
+            AND q.user = ?2';
 
         if ($searchToImport === TRUE) {
             $dql .= ' AND q.id NOT IN
                     (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                     JOIN eq.question q2
                     JOIN eq.exercise e2
-                    WHERE e2.id=' . $exoID . ')';
+                    WHERE e2.id= ?3)';
+            $params[3] = $exoID;
         }
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters($params);
 
         return $query->getResult();
     }
