@@ -64,20 +64,14 @@ class exerciseServices
      * Get IP client
      *
      * @access public
+     * @param Request $request
      *
      * @return IP Client
      */
-    public function getIP()
+    public function getIP(Request $request)
     {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
 
-        return $ip;
+        return $request->getClientIp();
     }
 
 
