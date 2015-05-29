@@ -149,7 +149,7 @@
      */
     manager.get = function(name) {
         return views[name];
-    }
+    };
 
     /**
      * Opens or closes a picker by its name.
@@ -164,6 +164,10 @@
 
         action = action === 'close' ? 'close' : 'open';
         dispatcher.trigger(action + '-picker-' + name);
+    };
+
+    manager.destroy = function (name) {
+        delete views[name];
     };
 
     /**

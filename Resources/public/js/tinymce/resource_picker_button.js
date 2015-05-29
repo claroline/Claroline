@@ -15,7 +15,7 @@
     var translator = window.Translator;
     var buttons = window.tinymce.claroline.buttons || {};
 
-    tinymce.claroline.buttons.resource_picker = function(editor){
+    tinymce.PluginManager.add('resourcePicker', function(editor, url) {
         editor.addButton('resourcePicker', {
             'icon': 'none fa fa-folder-open',
             'classes': 'widget btn',
@@ -25,5 +25,7 @@
                 tinymce.claroline.buttons.resourcePickerOpen();
             }
         });
-    };
+    });
+
+    tinymce.claroline.plugins.resourcePicker = true;
 }());
