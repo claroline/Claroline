@@ -13,7 +13,7 @@ class AdditionalInsaller extends BaseInstaller
         $self = $this;
         $this->logger = function ($message) use ($self) {
             $self->log($message);
-        }
+        };
     }
 
     public function preUpdate($currentVersion, $targetVersion)
