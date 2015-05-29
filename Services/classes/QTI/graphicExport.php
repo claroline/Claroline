@@ -70,7 +70,7 @@ class graphicExport extends qtiExport
         $Coords_value= $coords->getValue();
         $Coords_size = $coords->getSize();
         $radius = $Coords_size/2;
-        list($x, $y) = split('[,]', $Coords_value);
+        list($x, $y) = explode(',', $Coords_value);
 
         $x_center_circle = $x + ($radius);
         $y_center_circle = $y + ($radius);

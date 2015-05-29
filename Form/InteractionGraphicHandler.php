@@ -265,6 +265,10 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
                 return "orange";
             case "y" :
                 return "yellow";
+            case "k" :
+                return "black";
+            case "n" :
+                return "brown";
             default :
                 return "white";
         }

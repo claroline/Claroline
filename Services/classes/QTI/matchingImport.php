@@ -124,11 +124,11 @@ class matchingImport extends qtiImport {
             }
 
             //recording in the DBB
-            $this->om->persist($label);
-            $this->om->flush();
+            $this->om->persist($label);          
             $this->associatedLabels[$identifiant] = $label;
             $ordre++;
         }
+        $this->om->flush();
     }
 
     /**
@@ -159,7 +159,6 @@ class matchingImport extends qtiImport {
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->om->persist($proposal);
-            $this->om->flush();
             $rightLabel = 0;
             //compare all relations to the proposal selected
             foreach ($allRelations as $relation) {
@@ -175,11 +174,11 @@ class matchingImport extends qtiImport {
                     $proposal->addAssociatedLabel($label);
                     $proposal->setInteractionMatching($this->interactionMatching);
                     $this->om->persist($proposal);
-                    $this->om->flush();
                 }
             }
             $ordre++;
         }
+        $this->om->flush();
     }
 
     /**

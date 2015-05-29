@@ -153,9 +153,9 @@ class qcmImport extends qtiImport {
             $choice->setRightResponse($this->getRightResponse($simpleChoice->getAttribute("identifier")));
             $choice->setInteractionQCM($this->interactionQCM);
             $this->om->persist($choice);
-            $this->om->flush();
             $order ++;
         }
+        $this->om->flush();
     }
 
     /**

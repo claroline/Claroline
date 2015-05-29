@@ -613,6 +613,11 @@ class ExerciseController extends Controller
             $qid = $request->request->get('qid');
 
             $em = $this->getDoctrine()->getManager();
+            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                         . 'WHERE eq.exercise='.$exoID;
+            $query = $em->createQuery($dql);
+            $result = $query->getResult();
+            $maxOrdre = (int) $result[0][1] + 1;
 
             foreach ($qid as $q) {
                 $question = $this->getDoctrine()
@@ -626,20 +631,14 @@ class ExerciseController extends Controller
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
 
                     $eq = new ExerciseQuestion($exo, $question);
-
-                    $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                         . 'WHERE eq.exercise='.$exoID;
-
-                    $query = $em->createQuery($dql);
-                    $maxOrdre = $query->getResult();
-
-                    $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+                    $eq->setOrdre((int) $maxOrdre);
                     $em->persist($eq);
+                    $maxOrdre++;
 
-                    $em->flush();
                 }
-            }
 
+            }
+            $em->flush();
             $url = (string)$this->generateUrl('ujm_exercise_questions',array('id' => $exoID,'pageNow' => $pageGoNow));
 
             return new \Symfony\Component\HttpFoundation\Response($url);
@@ -1209,7 +1208,7 @@ class ExerciseController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionMatching')
                     ->getInteractionMatching($interactionToDisplay->getId());
-                
+
                 if ($interactionToDisplayed[0]->getShuffle()) {
                         $interactionToDisplayed[0]->shuffleProposals();
                         $interactionToDisplayed[0]->shuffleLabels();
@@ -1820,9 +1819,7 @@ class ExerciseController extends Controller
             }
 
             $em->remove($paper);
-
-            $em->flush();
-
         }
+        $em->flush();
     }
 }

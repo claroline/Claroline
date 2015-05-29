@@ -216,8 +216,6 @@ class holeExport extends qtiExport
             echo $error->code."<br>" ;
         }
 
-        die($xml);
-
         return (count(libxml_get_errors()));
     }
 }

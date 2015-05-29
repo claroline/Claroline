@@ -403,7 +403,7 @@ class PaperController extends Controller
 
         } else {
 
-            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
     }
 

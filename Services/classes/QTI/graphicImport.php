@@ -83,9 +83,9 @@ class graphicImport extends qtiImport {
             $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
             $coords->setColor('white');
             $coords->setInteractionGraphic($this->interactionGraph);
-            $this->om->persist($coords);
-            $this->om->flush();
+            $this->om->persist($coords);           
         }
+        $this->om->flush();
     }
 
     /**

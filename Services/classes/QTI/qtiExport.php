@@ -73,7 +73,6 @@ abstract class qtiExport
             echo $nodeId."<br>";
 
         }
-        die();
     }
 
     /**
