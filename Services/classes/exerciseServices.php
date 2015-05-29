@@ -159,7 +159,7 @@ class exerciseServices
      * @return string userScore/scoreMax
      */
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
-    {
+    {//var_dump($response);die();
         $score = 0;
         $scoreMax = $this->qcmMaxScore($interQCM);
 
@@ -191,9 +191,10 @@ class exerciseServices
             foreach ($allChoices as $choice) {
                 $markByChoice[(string) $choice->getId()] = $choice->getWeight();
             }
-
-            foreach ($response as $res) {
-                $score += $markByChoice[$res];
+            if ($response[0] != null) {
+                foreach ($response as $res) {
+                    $score += $markByChoice[$res];
+                }
             }
 
             if ($score > $scoreMax) {
