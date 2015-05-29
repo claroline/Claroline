@@ -43,14 +43,7 @@
         }
     };
 
-    /**
-     * Add resource picker and upload files buttons in a TinyMCE editor if data-resource-picker is on.
-     *
-     * @param editor A TinyMCE editor object.
-     *
-     */
-    tinymce.claroline.buttons.upload_file = function (editor)
-    {
+    tinymce.PluginManager.add('fileUpload', function(editor, url) {
         editor.addButton('fileUpload', {
             'icon': 'none fa fa-file',
             'classes': 'widget btn',
@@ -80,5 +73,7 @@
                 });
             }
         });
-    };
+    });
+
+    tinymce.claroline.plugins.fileUpload = true;
 }());

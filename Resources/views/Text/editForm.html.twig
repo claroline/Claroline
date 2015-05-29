@@ -18,7 +18,7 @@
     </div>
     <form role="form" novalidate="validate" method="post" action="{{ _path('claro_text_edit', {'old':_resource.getId()}) }}" id="edit_form">
         <div class="panel-body">
-            <textarea name="content" cols="50" rows="15" class="hide claroline-tiny-mce" data-custom-buttons='resource_picker upload_file'>{{ text|raw }}</textarea>
+            <textarea name="content" cols="50" rows="15" class="hide claroline-tiny-mce">{{ text|raw }}</textarea>
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>

@@ -29,7 +29,8 @@
     tinymce.claroline = {
         'disableBeforeUnload': false,
         'domChange': null,
-        'buttons': {}
+        'buttons': {},
+        'plugins': {}
     };
 
     /**
@@ -170,21 +171,6 @@
         });
 
         tinymce.claroline.setBeforeUnloadActive(editor);
-        var buttonsDatas = $('#' + editor.id).attr('data-custom-buttons');
-        var buttons = (buttonsDatas === undefined) ?
-            [] :
-            buttonsDatas.split(" ");
-
-        for (var i=0; i < buttons.length; i++) {
-            var functionKey = buttons[i];
-            var functBtn = tinymce.claroline.buttons[functionKey];
-            if (functBtn) {
-                functBtn(editor);
-            } else {
-                console.error('The function ' + functionKey + ' is not defined');
-            }
-        }
-
 
         $('body').bind('ajaxComplete', function () {
             setTimeout(function () {
@@ -252,14 +238,6 @@
         'autoresize_min_height': 100,
         'autoresize_max_height': 500,
         'content_css': home.asset + 'css/clarolinecore/tinymce.css',
-        'plugins': [
-            'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
-            'searchreplace wordcount visualblocks visualchars fullscreen',
-            'insertdatetime media nonbreaking save table directionality',
-            'template paste textcolor emoticons code -mention -accordion'
-        ],
-        'toolbar1': 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | ' +
-                    'resourcePicker fileUpload | fullscreen displayAllButtons',
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
                     'media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
@@ -284,6 +262,25 @@
         $('textarea.claroline-tiny-mce:not(.tiny-mce-done)').each(function () {
             var element = $(this);
             var config = null;
+
+            var plugins = [
+                'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars fullscreen',
+                'insertdatetime media nonbreaking save table directionality',
+                'template paste textcolor emoticons code -mention -accordion'
+            ];
+
+            var toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons |'
+
+            $.each(tinymce.claroline.plugins, function(key, value) {
+                if (value === true) {
+                    plugins.push(key);
+                    toolbar1 += ' ' + key;
+                }
+            });
+
+            tinymce.claroline.configuration.plugins = plugins;
+            tinymce.claroline.configuration.toolbar1 = toolbar1;
 
             if (element.data('newTab') === 'yes') {
                 config = _.extend({}, tinymce.claroline.configuration);

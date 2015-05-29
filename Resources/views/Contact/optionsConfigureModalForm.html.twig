@@ -18,7 +18,7 @@
                   action="{{ path('claro_contact_options_configure') }}"
                   method="POST"
                   {{ form_enctype(form) }}
-            > 
+            >
                 <h4>{{ 'category'|trans({}, 'platform') }}</h4>
                 <br>
                 {{ form_row(form.showAllMyContacts) }}
@@ -33,7 +33,7 @@
             <span class="btn btn-default" data-dismiss="modal">
                 {{ 'cancel'|trans({}, 'platform') }}
             </span>
-            <button type="button" id='configure-btn' class="btn btn-primary">
+            <button type="submit" id='configure-btn' class="btn btn-primary">
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
         </div>
