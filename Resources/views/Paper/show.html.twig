@@ -89,7 +89,9 @@
 
                             {% set maxScore = maxScore + coords[x].scoreCoords %}
                             {% set numb = coords[x].value|split(',') %}
-                            {% set repcoX = repco[x]|split('-') %}
+                            {% if repco[x] is defined %}
+                                {% set repcoX = repco[x]|split('-') %}
+                            {% endif %}
 
                             <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.interaction.id }}ra{{ x }}"
                                  alt="RightAnswer{{ x }}" width="{{ coords[x].size }}" style="z-index: 2;"/>
@@ -99,9 +101,17 @@
 
                             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
 
+                            {% if repcoX[0] is defined and repcoX[0] != '' %}
+                                {% set abscissa   = repcoX[0] %}
+                                {% set ordoninate = repcoX[1] %}
+                            {% else %}
+                                {% set abscissa   = 'a' %}
+                                {% set ordoninate = 'a' %}
+                            {% endif %}
+                            
                             <script type="text/javascript">
                                     whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
-                                    '{{repcoX[0]}}', '{{repcoX[1]}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
+                                    '{{abscissa}}', '{{ordoninate}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
                                     '{{ coords[x].size }}', '{{inter.interaction.id}}')
                             </script>
 
