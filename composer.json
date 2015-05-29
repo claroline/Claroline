@@ -1,5 +1,6 @@
 {
     "name": "ujm/exo-bundle",
+    "description": "Exercise tool for Claroline-Connect",
     "type": "claroline-plugin",
     "require": {
         "claroline/core-bundle": "~5.0",
