@@ -4,18 +4,11 @@ namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeCollection;
-use Icap\BadgeBundle\Entity\BadgeRule;
-use Icap\BadgeBundle\Entity\BadgeTranslation;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -153,7 +146,7 @@ class exerciseServices
      * @return string userScore/scoreMax
      */
     public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
-    {//var_dump($response);die();
+    {
         $score = 0;
         $scoreMax = $this->qcmMaxScore($interQCM);
 
@@ -444,8 +437,6 @@ class exerciseServices
             $penalty = $this->getPenalty($interHole->getInteraction(), $paperID);
         }
 
-
-        //$score .= '/'.$this->holeMaxScore($interHole);
         $score = $this->holeMark($interHole, $request->request, $penalty);
 
         foreach($interHole->getHoles() as $hole) {

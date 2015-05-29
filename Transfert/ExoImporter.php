@@ -14,13 +14,11 @@ namespace UJM\ExoBundle\Transfert;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Subscription;
-use UJM\ExoBundle\Form\ExerciseHandler;
 
 /**
  * @DI\Service("claroline.importer.exo_importer")

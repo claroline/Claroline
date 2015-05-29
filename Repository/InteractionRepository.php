@@ -198,12 +198,6 @@ class InteractionRepository extends EntityRepository
      */
     public function getPaperInteraction($em, $ids)
     {
-        /* $qb = $this->createQueryBuilder('i');
-
-          $qb ->where($qb->expr()->in('i.id', $ids));
-
-          return $qb->getQuery()->getResult(); */
-
         $interactions = array();
 
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i '

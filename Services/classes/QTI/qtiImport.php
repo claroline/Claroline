@@ -9,7 +9,6 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Category;
 use UJM\ExoBundle\Entity\Interaction;

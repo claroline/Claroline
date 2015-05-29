@@ -2,9 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionHole;
-use UJM\ExoBundle\Entity\WordResponse;
-
 class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
 
     protected $validator;
@@ -29,7 +26,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     public function processAdd()
     {
-        
+
         if ( $this->request->getMethod() == 'POST' ) {
             $this->form->handleRequest($this->request);
             //Uses the default category if no category selected
@@ -43,7 +40,6 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
                         if (count($errorList) > 0) {
-                            //echo 'test : '.$errorList[0]->getMessage();die();
                             return $errorList[0]->getMessage();
                         }
                     }
@@ -66,7 +62,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
      */
     protected function onSuccessAdd($interHole)
     {
-        
+
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
         $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
@@ -75,11 +71,9 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
 
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
-                //$hole->addWordResponse($wr);
                 $wr->setHole($hole);
                 $this->em->persist($wr);
             }
-            //$interHole->addHole($hole);
             $hole->setInteractionHole($interHole);
             $this->em->persist($hole);
         }
@@ -129,7 +123,6 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
                         if (count($errorList) > 0) {
-                            //echo 'test : '.$errorList[0]->getMessage();die();
                             return $errorList[0]->getMessage();
                         }
                     }
@@ -191,7 +184,6 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         // On persiste tous les holes de l'interaction hole.
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
-                //$hole->addWordResponse($wr);
                 $wr->setHole($hole);
                 $this->em->persist($wr);
             }
@@ -286,7 +278,6 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
                     $response = $wr->getResponse();
                     $select .= "<option value=\"$id\">$response</option>";
                 }
-                //$select .= '</select>';
                 $html = str_replace($regExpr, $select, $html);
             }
         }

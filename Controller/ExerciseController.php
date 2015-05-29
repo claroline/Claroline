@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -16,7 +15,6 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Entity\Interaction;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -1358,7 +1356,6 @@ class ExerciseController extends Controller
         if ($exercise->getNbQuestion() == 0) {
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
         }
-        //$marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
         $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'noteExo');
         $tabMarks = array();
         $histoMark = array();
@@ -1379,7 +1376,7 @@ class ExerciseController extends Controller
         }
 
         ksort($tabMarks);
-        $scoreList = implode(",", array_keys($tabMarks));//echo $scoreList;die();
+        $scoreList = implode(",", array_keys($tabMarks));
 
         if (max($tabMarks) > 4) {
             $maxY = max($tabMarks);
@@ -1502,7 +1499,6 @@ class ExerciseController extends Controller
         foreach ($marks as $mark) {
             $tabScoreExo[] = $mark["noteExo"];
         }
-        //var_dump($tabScoreExo);die();
 
         //Average exercise's score
         foreach ($tabScoreExo as $se) {
@@ -1524,7 +1520,6 @@ class ExerciseController extends Controller
                 $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
             }
         }
-        //var_dump($tabScoreQ);die();
 
         //Array of average of each question's score
         foreach ($eqs as $eq) {
@@ -1536,7 +1531,6 @@ class ExerciseController extends Controller
             $sm = $sm / count($papers);
             $tabScoreAverageQ[$eq->getQuestion()->getId()] = $sm;
         }
-        //var_dump($tabScoreAverageQ);die();
 
         //Array of (x-Mx)(y-My)
         foreach ($eqs as $eq) {
@@ -1547,7 +1541,6 @@ class ExerciseController extends Controller
                 $i++;
             }
         }
-        //var_dump($productMarginMark);die();
 
         foreach ($eqs as $eq) {
             $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
@@ -1568,7 +1561,6 @@ class ExerciseController extends Controller
                 $tabCoeffQ[] = 0;
             }
         }
-        //var_dump($tabCoeffQ);die();
 
         $coeffQ = implode(",", $tabCoeffQ);
         $histoDiscrimination['coeffQ'] = $coeffQ;

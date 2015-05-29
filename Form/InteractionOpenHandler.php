@@ -2,9 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionOpen;
-use UJM\ExoBundle\Entity\Category;
-
 class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 

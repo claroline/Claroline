@@ -59,7 +59,6 @@ class InteractionQCMType extends AbstractType
                     'label' => 'Inter_QCM.weightChoice'
                 )
             );
-        //$builder->add('interaction');
         $builder
             ->add(
                 'typeQCM', 'entity', array(

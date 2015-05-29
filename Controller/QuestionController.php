@@ -15,7 +15,6 @@ use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Entity\Share;
-use \UJM\ExoBundle\Entity\Category;
 
 use UJM\ExoBundle\Form\InteractionGraphicType;
 use UJM\ExoBundle\Form\InteractionHoleType;
@@ -1416,10 +1415,6 @@ class QuestionController extends Controller
         $page = $request->query->get('page'); // Which page
         $exoID = $request->query->get('exoID'); // If we import or see the questions
         $displayAll = $request->query->get('displayAll', 0); // If we want to have all the questions in one page
-
-//      echo $type . ' | '. $whatToFind . ' | '. $where . ' | '. $page . ' | '. $exoID . ' | '. $displayAll;die();
-//      b4 : All | i | all | 1 | 5 | 0
-
 
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {

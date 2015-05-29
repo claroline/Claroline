@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\Coords;
 
 class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler

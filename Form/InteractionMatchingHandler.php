@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Form\InteractionHandler;
 
 class InteractionMatchingHandler extends InteractionHandler
@@ -22,7 +21,7 @@ class InteractionMatchingHandler extends InteractionHandler
             $this->checkCategory();
             $this->checkTitle();
             if ( $this->validateNbClone() === FALSE ) {
-                
+
                 return 'infoDuplicateQuestion';
             }
 
@@ -142,7 +141,7 @@ class InteractionMatchingHandler extends InteractionHandler
         $originalProposals = $arg_list[2];
         $originalHints = $arg_list[3];
 
-        $proposals = $interMatching->getProposals();        //var_dump($proposals);
+        $proposals = $interMatching->getProposals();
         $indLabel = 1;
 
         //remove all relationships between proposal and label
@@ -188,12 +187,10 @@ class InteractionMatchingHandler extends InteractionHandler
 
         // Persist all Labels of interactionMatching
         foreach ($interMatching->getLabels() as $label) {
-            //$interMatching->addLabel($label);
             $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
         }
         foreach ($interMatching->getProposals() as $proposal) {
-            //$interMatching->addProposal($proposal);
             $proposal->setInteractionMatching($interMatching);
             $this->em->persist($proposal);
         }

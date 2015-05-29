@@ -18,7 +18,6 @@ class qtiServices {
      */
     public function createZip($tmpFileName, $title) {
         $response = new BinaryFileResponse($tmpFileName);
-        //$response->headers->set('Content-Type', $content->getContentType());
         $response->headers->set('Content-Type', 'application/application/zip');
         $response->headers->set('Content-Disposition', 'attachment; filename='.$title.'_QTI-Archive.zip');
         $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate'); // HTTP 1.1.

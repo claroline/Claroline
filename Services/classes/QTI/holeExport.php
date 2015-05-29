@@ -190,10 +190,6 @@ class holeExport extends qtiExport
         //For the question created before the 2014/10/09
         $html = str_replace('</select>', '', $html);
 
-//        if ($this->xmlIsValide($html) >0 ) {
-//            $html = 'Error QTI<textEntryInteraction responseIdentifier="blank_1" expectedLength="15" value=""></textEntryInteraction>';
-//        }
-
         $fragment = $this->document->createDocumentFragment();
         $fragment->appendXML($html);
         $this->itemBody->appendChild($fragment);

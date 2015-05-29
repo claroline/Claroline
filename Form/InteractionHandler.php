@@ -9,8 +9,6 @@ use UJM\ExoBundle\Entity\Category;
 use Symfony\Component\Translation\DataCollectorTranslator;
 use Claroline\CoreBundle\Entity\User;
 
-use UJM\ExoBundle\Entity\Exercise;
-
 abstract class InteractionHandler
 {
     protected $form;
@@ -90,7 +88,6 @@ abstract class InteractionHandler
     protected function persistHints($inter) {
         foreach ($inter->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            //$interQCM->getInteraction()->addHint($hint);
             $hint->setInteraction($inter->getInteraction());
             $this->em->persist($hint);
         }

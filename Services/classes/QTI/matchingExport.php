@@ -42,7 +42,6 @@ class matchingExport extends qtiExport
         $this->qtiResponseDeclaration('RESPONSE','identifier', $this->cardinality);
         $this->qtiOutComeDeclaration();
 
-        //$this->defaultValueTag();
         $this->correctResponseTag();
         $this->itemBodyTag();
         $this->matchingInteractionTag();
@@ -151,7 +150,7 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
-        
+
         if ($proposal->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {
@@ -208,7 +207,7 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
-        
+
         if ($label->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {

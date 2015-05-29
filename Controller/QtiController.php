@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 class QtiController extends Controller {
@@ -125,8 +124,6 @@ class QtiController extends Controller {
                 //please use $fs->move() instead
                 //@see http://symfony.com/doc/current/components/filesystem/introduction.html
                 exec('mv '.$qtiRepos->getUserDir().$comma_separated.'/* '.$qtiRepos->getUserDir());
-                //$sf = new FileSystem();
-                //$sf->copyDir($qtiRepos->getUserDir().$comma_separated, $qtiRepos->getUserDir());die();
             }
         }
 

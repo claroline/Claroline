@@ -51,7 +51,6 @@ class matchingImport extends qtiImport {
         $ci = $ib->getElementsByTagName("matchInteraction")->item(0);
         $text = '';
         if ($ci->getElementsByTagName("prompt")->item(0)) {
-            //$prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
             $prompt = $ci->getElementsByTagName("prompt")->item(0);
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
@@ -124,7 +123,7 @@ class matchingImport extends qtiImport {
             }
 
             //recording in the DBB
-            $this->om->persist($label);          
+            $this->om->persist($label);
             $this->associatedLabels[$identifiant] = $label;
             $ordre++;
         }

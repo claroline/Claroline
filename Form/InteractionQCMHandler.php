@@ -2,8 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionQCM;
-
 class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
 {
 
@@ -24,7 +22,7 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
                 return 'infoDuplicateQuestion';
             }
 
-            if ( $this->form->isValid() ) {          
+            if ( $this->form->isValid() ) {
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;
@@ -63,7 +61,6 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
             $choice->setOrdre($ord);
-            //$interQCM->addChoice($choice);
             $choice->setInteractionQCM($interQCM);
             $this->em->persist($choice);
             $ord = $ord + 1;
@@ -158,12 +155,9 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->em->persist($interQCM->getInteraction());
 
         // On persiste tous les choices de l'interaction QCM.
-        //$ord = 1;
         foreach ($interQCM->getChoices() as $choice) {
-            //$choice->setOrdre($ord);
             $interQCM->addChoice($choice);
             $this->em->persist($choice);
-            //$ord++;
         }
 
         $this->em->flush();
