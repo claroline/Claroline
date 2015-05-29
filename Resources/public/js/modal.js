@@ -203,7 +203,7 @@
         .success(function (data) {
             var modalElement = modal.create(data);
 
-            modalElement.on('click', 'button.btn', function (event) {
+            modalElement.on('click', 'button[type="submit"]', function (event) {
                 event.preventDefault();
                 modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });

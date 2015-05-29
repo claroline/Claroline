@@ -228,11 +228,10 @@
                 <div id="activity-past-evaluations-modal-body" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <input type="button"
+                    <button type="button"
                         class="btn btn-default"
                         data-dismiss="modal"
-                        value="{{ 'close'|trans({}, 'platform') }}"
-                    />
+                    >{{ 'close'|trans({}, 'platform') }}<button
                 </div>
             </div>
         </div>
@@ -244,16 +243,14 @@
                 <div id="activity-evaluation-edition-modal-body" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <input type="button"
+                    <button type="button"
                         class="btn btn-default"
                         data-dismiss="modal"
-                        value="{{ 'cancel'|trans({}, 'platform') }}"
-                    />
-                    <input id="activity-evaluation-edition-validate-btn"
-                        type="button"
+                    >{{ 'cancel'|trans({}, 'platform') }}<button
+                    <button id="activity-evaluation-edition-validate-btn"
+                        type="submit"
                         class="btn btn-primary"
-                        value="{{ 'ok'|trans({}, 'platform') }}"
-                    />
+                    >{{ 'ok'|trans({}, 'platform') }}<button
                 </div>
             </div>
         </div>
@@ -265,16 +262,14 @@
                 <div id="activity-past-evaluation-edition-modal-body" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <input id="activity-past-evaluation-edition-cancel-btn"
+                    <button id="activity-past-evaluation-edition-cancel-btn"
                         type="button"
                         class="btn btn-default"
-                        value="{{ 'cancel'|trans({}, 'platform') }}"
-                    />
-                    <input id="activity-past-evaluation-edition-validate-btn"
-                        type="button"
+                    >{{ 'cancel'|trans({}, 'platform') }}<button
+                    <button id="activity-past-evaluation-edition-validate-btn"
+                        type="submit"
                         class="btn btn-primary"
-                        value="{{ 'ok'|trans({}, 'platform') }}"
-                    />
+                    >{{ 'ok'|trans({}, 'platform') }}<button
                 </div>
             </div>
         </div>
