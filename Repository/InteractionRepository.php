@@ -229,10 +229,10 @@ class InteractionRepository extends EntityRepository
     {
         $questions = array();
 
-        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
-            . ' ORDER BY eq.ordre';
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
+                ORDER BY eq.ordre';
 
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql)->setParameter(1, $exoId);
         $eqs = $query->getResult();
 
         foreach ($eqs as $eq) {
