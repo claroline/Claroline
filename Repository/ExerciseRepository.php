@@ -24,16 +24,16 @@ class ExerciseRepository extends EntityRepository
      * Return array
      */
     public function getExerciseMarks($exoId, $order = '')
-    {die();
+    {
         if ($order != '') {
-            $orderBy = ' ORDER BY ' . $order;
+            $orderBy = ' ORDER BY ?2';
         }
         $dql = 'SELECT sum(r.mark) as noteExo, p.id as paper
             FROM UJM\ExoBundle\Entity\Response r JOIN r.paper p JOIN p.exercise e
             WHERE e.id= ?1 AND p.interupt=0 group by p.id ?2';
 
         $query = $this->_em->createQuery($dql)
-                      ->setParameters(array(1 => $exoId, 2 => $orderBy));
+                      ->setParameters(array(1 => $exoId, 2 => $order, 3 => $orderBy));
 
         return $query->getResult();
     }
