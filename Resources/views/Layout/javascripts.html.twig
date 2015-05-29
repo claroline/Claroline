@@ -68,11 +68,14 @@
     'bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.sortable.min.js'
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
+{% javascripts 
+    'bundles/bazingajstranslation/js/translator.min.js'
+    'js/translations/resource/*.js'
+    'js/translations/home/*.js'
+    'js/translations/platform/*.js'
+    %}<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-<script type="text/javascript" src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}?locales=fr,en,es"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}?locales=fr,en,es"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}?locales=fr,en,es"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
