@@ -817,7 +817,6 @@ class ExerciseController extends Controller
      */
     private function prepareInteractionsPaper($id, $exercise)
     {
-        $em = $this->getDoctrine()->getManager();
         $orderInter = '';
         $tabOrderInter = array();
         $tab = array();
@@ -1493,7 +1492,6 @@ class ExerciseController extends Controller
         $histoDiscrimination = array();
         $scoreAverageExo = 0;
         $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'paper');
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
 
         //Array of exercise's scores
         foreach ($marks as $mark) {
@@ -1545,7 +1543,6 @@ class ExerciseController extends Controller
         foreach ($eqs as $eq) {
             $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
             $sumPenq = 0;
-            $coeff = null;
             $standardDeviationQ = null;
             $standardDeviationE = $this->sd($tabScoreExo);
             $n = count($productMarginMarkQ);

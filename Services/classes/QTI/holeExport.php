@@ -194,24 +194,4 @@ class holeExport extends qtiExport
         $fragment->appendXML($html);
         $this->itemBody->appendChild($fragment);
     }
-
-    /**
-     * xmlIsValide
-     *
-     * @access private
-     * @return boolean
-     *
-     */
-    private function xmlIsValide($xml)
-    {
-        libxml_use_internal_errors(true);
-        $doc = simplexml_load_string($xml);
-        $errors = libxml_get_errors();
-        foreach ($errors as $error) {
-            echo $error->level." - ";
-            echo $error->code."<br>" ;
-        }
-
-        return (count(libxml_get_errors()));
-    }
 }

@@ -66,7 +66,6 @@ class matchingImport extends qtiImport {
     * @access protected
     */
     protected function createInteractionMatching() {
-        $rp = $this->assessmentItem->getElementsByTagName("responseProcessing");
         $this->interactionMatching = new InteractionMatching();
         $this->interactionMatching->setInteraction($this->interaction);
         //for recording the type of the question

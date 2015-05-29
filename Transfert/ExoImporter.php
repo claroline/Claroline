@@ -58,8 +58,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function addExoDescription($rootNode)
     {
-        $rootPath = $this->getRootPath();
-
         $rootNode
             ->prototype('array')
                 ->children()

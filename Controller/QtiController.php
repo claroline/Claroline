@@ -92,7 +92,6 @@ class QtiController extends Controller {
         $root = array();
         $fichier = array();
 
-        $rst = 'its a zip file';
         $file->move($qtiRepos->getUserDir(), $file->getClientOriginalName());
         $zip = new \ZipArchive;
         if ($zip->open($qtiRepos->getUserDir() . $file->getClientOriginalName()) !== true) {

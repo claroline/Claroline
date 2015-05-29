@@ -92,23 +92,6 @@ class qcmExport extends qtiExport
     }
 
     /**
-     * add the tag defaultValue in outcomeDeclaration
-     *
-     * @access private
-     *
-     */
-    private function defaultValueTag()
-    {
-        //add the tag <Default value> to the item <outcomeDeclaration>
-        $defaultValue = $this->document->CreateElement('defaultValue');
-        $this->outcomeDeclaration->appendChild($defaultValue);
-        $value = $this->document->CreateElement("value");
-        $prompttxt =  $this->document->CreateTextNode("0");
-        $value->appendChild($prompttxt);
-        $defaultValue->appendChild($value);
-    }
-
-    /**
      * Implements the abstract method
      * add the tag correctResponse in responseDeclaration
      *

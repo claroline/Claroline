@@ -181,7 +181,6 @@ class QuestionController extends Controller
     public function bankFilterAction($idExo = -1)
     {
         $vars = array();
-        $sharedWithMe = array();
         $shareRight = array();
         $questionWithResponse = array();
         $alreadyShared = array();
@@ -212,7 +211,6 @@ class QuestionController extends Controller
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
         $alreadyShared = $allActions[2];
-        $sharedWithMe = $allActions[3];
         $shareRight = $allActions[4];
 
         $listExo = $this->getDoctrine()
@@ -645,11 +643,6 @@ class QuestionController extends Controller
                                 ->getToken()->getUser(),$catID
                         ), $interactionMatching[0]
                     );
-
-                    if ($exoID != -1) {
-                       $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-                       $variable['_resource'] = $exercise;
-                    }
 
                     $typeMatching = $services->getTypeMatching();
 
@@ -1993,12 +1986,10 @@ class QuestionController extends Controller
         $actionQ = array();
         $questionWithResponse = array();
         $alreadyShared = array();
-        $sharedWithMe = array();
         $shareRight = array();
 
         $searchToImport = FALSE;
 
-        //if ($request->isXmlHttpRequest()) {
         $userSearch = $request->request->get('userSearch');
         $exoID = $request->request->get('exoID');
         $where = $request->request->get('where');
@@ -2024,7 +2015,6 @@ class QuestionController extends Controller
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
         $alreadyShared = $allActions[2];
-        $sharedWithMe = $allActions[3];
         $shareRight = $allActions[4];
 
         $listExo = $this->getDoctrine()
@@ -2058,7 +2048,6 @@ class QuestionController extends Controller
 
             return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
         }
-        //}
     }
 
     /**

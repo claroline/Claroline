@@ -1674,7 +1674,7 @@ class exerciseServices
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param Doctrine EntityManager $em
      */
-    public function addQuestionInExercise($inter, $exercise, $em) {
+    public function addQuestionInExercise($inter, $exercise) {
         if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
                 $this->setExerciseQuestion($exercise, $inter);

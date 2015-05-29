@@ -218,7 +218,7 @@ abstract class InteractionHandler
      */
     protected function addAnExercise($inter) {
 
-        $this->exoServ->addQuestionInExercise($inter, $this->exercise, $this->em->getRepository('UJMExoBundle:Exercise'));
+        $this->exoServ->addQuestionInExercise($inter, $this->exercise);
     }
 
     /**
