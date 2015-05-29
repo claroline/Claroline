@@ -10,8 +10,13 @@
                    id="user-picker-input-{{ timedPickerName }}"
 
                    {% if value is not empty %}
-                       value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
-                       data-selected-users-names="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %};;;{% endif %}{% endif %}{% endfor %}"
+                   
+                       {% if value[0] is iterable %}
+                           value="{% for v in value %}{% if v['id'] is defined %}{{ v['id'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                           data-selected-users-names="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %};;;{% endif %}{% endif %}{% endfor %}"
+                       {% else %}
+                           value="{{ value[0] }}"
+                       {% endif %}
                    {% endif %}
             >
         {% else %}
@@ -19,8 +24,10 @@
                    name="{{ full_name }}"
                    id="user-picker-input-{{ timedPickerName }}"
 
-                   {% if value is not empty and value['id'] is defined %}
+                   {% if (value is not empty) and (value is iterable) and (value['id'] is defined) %}
                        value="{{ value['id'] }}"
+                   {% else %}
+                       value="{{ value }}"
                    {% endif %}
             >
         {% endif %}
@@ -30,9 +37,16 @@
                        
                    {% if value is not empty %}
                        {% if multiple %}
-                           value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                   
+                           {% if value[0] is iterable %}
+                               value="{% for v in value %}{% if v['name'] is defined %}{{ v['name'] }}{% if not loop.last %},{% endif %}{% endif %}{% endfor %}"
+                           {% else %}
+                               value="{{ value[0] }}"
+                           {% endif %}
                        {% elseif value['name'] is defined %}
                            value="{{ value['name'] }}"
+                       {% else %}
+                           value="{{ value }}"
                        {% endif %}
                    {% endif %}
                    id="user-picker-input-view-{{ timedPickerName }}"
