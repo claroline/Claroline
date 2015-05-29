@@ -98,6 +98,6 @@ class FacebookManager
 
     public function isActive()
     {
-        $this->platformConfigHandler->getParameter('facebook_client_active');
+        return $this->platformConfigHandler->getParameter('facebook_client_active');
     }
 }
