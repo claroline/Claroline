@@ -20,8 +20,9 @@ class QtiController extends Controller {
     {
         $request = $this->container->get('request');
         $exoID = $request->get('exerciceID');
+        $file  = $request->files->get('qtifile');
 
-        if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
+        if ($file->getMimeType() != 'application/zip') {
 
             return $this->importError('qti format warning', $exoID);
         }
@@ -85,19 +86,21 @@ class QtiController extends Controller {
      */
     private function extractFiles($qtiRepos)
     {
+        $request = $this->container->get('request');
+        $file  = $request->files->get('qtifile');
+        
         $qtiRepos->createDirQTI();
         $root = array();
         $fichier = array();
 
         $rst = 'its a zip file';
-        move_uploaded_file($_FILES["qtifile"]["tmp_name"],
-                $qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $file->move($qtiRepos->getUserDir(), $file->getClientOriginalName());
         $zip = new \ZipArchive;
-        if ($zip->open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]) !== true) {
+        if ($zip->open($qtiRepos->getUserDir() . $file->getClientOriginalName()) !== true) {
 
             return false;
         }
-        $res = zip_open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $res = zip_open($qtiRepos->getUserDir() .$file->getClientOriginalName());
         $zip->extractTo($qtiRepos->getUserDir());
 
         $i=0;
