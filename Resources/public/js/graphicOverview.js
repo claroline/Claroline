@@ -19,6 +19,9 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     // Set the shape/color of the answer zone
     if (shape == 'circle') {
         switch (color) {
+        case 'black' :
+            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            break;
         case 'white' :
             $('#' + id + 'ra' + i).attr('src', prefix + 'circlew.png');
             break;
@@ -46,44 +49,55 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
         case 'yellow' :
             $('#' + id + 'ra' + i).attr('src', prefix + 'circley.png');
             break;
-
+            
+         case 'brown' :
+            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+            break;
+            
         default :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'circlew.png');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circleblack.png');
             break;
         }
 
     } else if (shape == 'square') {
         switch (color) {
+         case 'black' :
+            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            break;
+            
         case 'white' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squarew.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarew.png');
             break;
 
         case 'red' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squarer.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarer.png');
             break;
 
         case 'blue' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squareb.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareb.png');
             break;
 
         case 'purple' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squarep.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarep.png');
             break;
 
         case 'green' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squareg.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareg.png');
             break;
 
         case 'orange' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squareo.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareo.png');
             break;
 
         case 'yellow' :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squarey.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squarey.png');
             break;
-
+            
+         case 'brown' :
+            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+             break;
         default :
-            $('#' + id + 'ra' + i).attr('src', prefix + 'squarew.jpg');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareblack.png');
         }
     }
 
