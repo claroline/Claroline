@@ -1,15 +1,15 @@
 {% trans_default_domain "icap_wiki" %}
 
 <div id="editSectionContainer-{{ section.id }}">
-    <div class="modal-content">
-        <div class="modal-header">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <h3 id="myModalLabel">{% trans %}Edit section{% endtrans %}</h3>
         </div>
-        <div class="modal-body">
+        <div class="panel-body">
             {% include "IcapWikiBundle:Section:editForm.html.twig"%}
         </div>
-        <div class="modal-footer">
-            <button id="editSectionContainer-cancel-{{ section.id }}" class="btn" >{% trans %}Cancel{% endtrans %}</button>
+        <div class="panel-footer">
+            <button id="editSectionContainer-cancel-{{ section.id }}" class="btn btn-default" >{% trans %}Cancel{% endtrans %}</button>
             <button id="editSectionContainer-submit-{{ section.id }}" class="btn btn-primary">{% trans %}Save{% endtrans %}</button>
         </div>
     </div>
@@ -31,7 +31,7 @@
             });
 
             $('a.delete-section[data-section="{{ section.id }}"]').each(function(){
-                $(this).appendTo($('#editSectionContainer-{{ section.id }} .modal-footer'));
+                $(this).appendTo($('#editSectionContainer-{{ section.id }} .panel-footer'));
                 $(this).addClass('pull-left');
                 var deleteLink = $(this);
                 deleteLink.attr("data-path", deleteLink.attr('href'));

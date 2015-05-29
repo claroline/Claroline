@@ -28,9 +28,6 @@ div.panel-wiki {
 .wiki-header-buttons {
 	margin-bottom: 10px;
 }
-
-.wiki-new-section-container .modal-content, .wiki-edit-section-container .modal-content{ box-shadow: none;}
-
 /*Wiki contents*/
 div.wiki-contents-inner { float:left; min-width: 20%; }
 div.wiki-contents ul { list-style-type: none; padding-left: 10px; }
@@ -75,16 +72,28 @@ span.invisible-section-text {font-style: italic;}
 .wiki-deleted-sections-header{margin:40px 0 20px;}
 #wiki-deleted-sections-list li {line-height: 25px; padding: 3px;}
 
-.wiki-new-section-container .modal-content, .wiki-edit-section-container .modal-content {
+/*Wiki Section edit and create new*/
+.wiki-new-section-container .panel, .wiki-edit-section-container .panel{ box-shadow: none;}
+
+.wiki-new-section-container .panel,
+.wiki-new-section-container .panel .panel-heading,
+.wiki-new-section-container .panel .panel-footer,
+.wiki-edit-section-container .panel,
+.wiki-edit-section-container .panel .panel-heading,
+.wiki-edit-section-container .panel .panel-footer{
     background-color: #EDF3FF;
 }
 
-.wiki-new-section-container .modal-content > div[class^=modal-], .wiki-edit-section-container .modal-content > div[class^=modal-] {
+.wiki-new-section-container .panel > div[class^=panel-], .wiki-edit-section-container .panel > div[class^=panel-] {
     padding:5px;
 }
 
-.wiki-new-section-container .modal-content .modal-header h3,  .wiki-edit-section-container .modal-content .modal-header h3{
+.wiki-new-section-container .panel .panel-heading h3,  .wiki-edit-section-container .panel .panel-heading h3{
     margin:0;
 }
 
-.wiki-new-section-container .modal-content .modal-footer, .wiki-edit-section-container .modal-content .modal-footer {margin-top: -25px;}
+.wiki-new-section-container .panel .panel-footer,
+.wiki-edit-section-container .panel .panel-footer {
+    margin-top: -25px;
+    text-align: right;
+}

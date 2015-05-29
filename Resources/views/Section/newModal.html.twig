@@ -1,15 +1,15 @@
 {% trans_default_domain "icap_wiki" %}
 
 <div id="newSectionContainer-{{ parentSectionId }}">
-    <div class="modal-content">
-        <div class="modal-header">
+    <div class="panel panel-default">
+        <div class="panel-heading">
             <h3 id="myModalLabel">{% trans %}New section{% endtrans %}</h3>
         </div>
-        <div class="modal-body">
+        <div class="panel-body">
             {% include "IcapWikiBundle:Section:newForm.html.twig"%}
         </div>
-        <div class="modal-footer">
-            <button id="newSectionContainer-cancel-{{ parentSectionId }}" class="btn" >{% trans %}Cancel{% endtrans %}</button>
+        <div class="panel-footer">
+            <button id="newSectionContainer-cancel-{{ parentSectionId }}" class="btn btn-default" >{% trans %}Cancel{% endtrans %}</button>
             <button id="newSectionContainer-submit-{{ parentSectionId }}" class="btn btn-primary">{% trans %}Create{% endtrans %}</button>
         </div>
     </div>
