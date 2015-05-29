@@ -70,9 +70,9 @@
 {% endjavascripts %}
 <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/bazingajstranslation/js/translator.min.js') }}"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
-<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}?locales=fr,en,es"></script>
+<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}?locales=fr,en,es"></script>
+<script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}?locales=fr,en,es"></script>
 <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/datepicker/js/bootstrap-datepicker.js') }}"></script>
 {% if 'en' != app.request.locale %}
