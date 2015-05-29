@@ -1,9 +1,5 @@
 <div class="modal-dialog user-picker-modal" id="user-picker-modal-{{ pickerName }}">
-    <form novalidate="novalidate"
-          action=""
-          id="user-picker-modal-form" 
-          class="modal-content"
-    >
+    <div id="user-picker-modal-content" class="modal-content">
         <div class='modal-header'>
             <button type="button"
                     class="close"
@@ -155,13 +151,11 @@
             >
                 {{ 'cancel'|trans({}, 'platform') }}
             </button>
-            <button type="submit"
-                    class="btn btn-primary submit"
-            >
+            <button class="btn btn-primary submit">
                 {{ 'ok'|trans({}, 'platform') }}
             </button>
         </div>
-    </form>
+    </div>
 </div>
 
 <div id="user-picker-main-datas-box"
