@@ -14,9 +14,9 @@
                 {{ parent.name | truncate }}
             </a>
 
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <!--<a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <b class="caret"></b>
-            </a>
+            </a>-->
         </li>
 
         <!-- Current step -->
@@ -29,7 +29,6 @@
         <li data-ng-if="pathNavigationCtrl.next">
             <a href="#/{{ pathNavigationCtrl.next.id }}" data-container="body" data-placement="top" data-toggle="tooltip" data-original-title="{{ pathNavigationCtrl.next.name }}">
                 <span class="fa fa-ellipsis-h"></span>
-                <span class=""></span>
             </a>
         </li>
     </ul>
