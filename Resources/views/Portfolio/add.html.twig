@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_add') }}" method="post" id="portfolioForm" class="form-horizontal" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
         {{ form_widget(form) }}

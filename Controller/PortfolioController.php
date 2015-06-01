@@ -86,19 +86,22 @@ class PortfolioController extends Controller
                     /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfoliosPager */
                     $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, 1, 10);
 
-                    $data = [];
-                    foreach ($portfoliosPager as $portfolio) {
-                        $titleWidget = $portfolio->getTitleWidget();
-                        $data[] = [
-                            'id' => $portfolio->getId(),
-                            'url' => $this->generateUrl('icap_portfolio_view', ['portfolioSlug' => $titleWidget->getSlug()]),
-                            'title' => $titleWidget->getTitle(),
-                            'slug' => $titleWidget->getSlug(),
-                            'countUnreadComments' => $portfolio->getCountUnreadComments()
-                        ];
-                    }
+                    $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
+                    $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, 1, 10);
 
-                    return new JsonResponse($data);
+                    $importManager          = $this->getImportManager();
+                    $availableImportFormats = $importManager->getAvailableFormats();
+
+                    $parameters = array(
+                        'portfoliosPager' => $portfoliosPager,
+                        'guidedPortfoliosPager' => $guidedPortfoliosPager,
+                        'availableImportFormats' => $availableImportFormats,
+                        'portfolioId' => 0
+                    );
+
+                    $html = $this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $parameters);
+
+                    return new Response($html);
                 }
                 else {
                     $this->getSessionFlashbag()

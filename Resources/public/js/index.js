@@ -22,15 +22,36 @@
 
         $("a.modal_action, #no_portfolio a").click(function (event) {
             event.preventDefault();
-            modal.displayForm(
+            modal.fromUrl(
                 event.delegateTarget.href,
-                function(data, textStatus, jqXHR) {
-                    console.log($("#list_content"));
-                    //$("#list_content").html(data);
-                },
-                function(data) {
-                    console.log('pouet');
-                });
+                function(modalElement) {
+                    var modalForm = $("form", modalElement);
+
+                    modalElement.on('click', 'button[type="submit"]', function (event) {
+                        event.preventDefault();
+                        submitForm(modalElement, modalForm);
+                    });
+
+                    modalElement.on('keypress', function (event) {
+                        if (event.keyCode === 13 && e.target.nodeName !== 'TEXTAREA') {
+                            event.preventDefault();
+                            submitForm(modalElement, modalForm);
+                        }
+                    });
+                }
+            );
         });
+
+        function submitForm(modalElement, form) {
+            $.ajax({
+                url: form.attr('action'),
+                data: form.serializeArray(),
+                type: 'POST',
+                success: function(data, textStatus, jqXHR) {
+                    $("#list_content").html(data);
+                    modalElement.modal('hide');
+                }
+            });
+        }
     });
 })();

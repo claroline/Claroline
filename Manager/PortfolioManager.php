@@ -82,6 +82,7 @@ class PortfolioManager
     public function addPortfolio(Portfolio $portfolio, TitleWidget $titleWidget)
     {
         $titleWidget->setPortfolio($portfolio);
+        $portfolio->setWidgets([$titleWidget]);
 
         $this->entityManager->persist($titleWidget);
 
