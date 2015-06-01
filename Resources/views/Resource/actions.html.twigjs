@@ -10,7 +10,7 @@
                 </a>
                 <ul class="dropdown-menu create" role="menu">
                     {% for resourceType, name in creatableTypes %}
-                        <li role="presentation"><a role="menuitem" id='{{ resourceType }}'>{{ name }}</a></li>
+                        <li role="presentation"><a role="menuitem" id='{{ resourceType }}'>{{ resourceType|trans({}, 'resource') }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
