@@ -15,7 +15,9 @@ var ResourcesPrimaryShowCtrl = function ResourcesPrimaryShowCtrl($sce) {
         });
 
         if (url) {
-            this.resourceUrl = $sce.trustAsResourceUrl('http://localhost' + url);
+            this.resourceUrl = {
+                url: url
+            };
         }
     }
 
@@ -26,4 +28,8 @@ var ResourcesPrimaryShowCtrl = function ResourcesPrimaryShowCtrl($sce) {
 ResourcesPrimaryShowCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
 ResourcesPrimaryShowCtrl.prototype.constructor = ResourcesPrimaryShowCtrl;
 
-ResourcesPrimaryShowCtrl.prototype.resourceUrl = null;
+ResourcesPrimaryShowCtrl.prototype.resourceUrl = {};
+
+ResourcesPrimaryShowCtrl.prototype.resourceLoaded = function () {
+    console.log('test loaded');
+};

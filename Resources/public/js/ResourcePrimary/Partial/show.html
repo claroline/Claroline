@@ -1,3 +1,4 @@
-<div data-ng-if="resourcesPrimaryShowCtrl.resourceUrl && resourcesPrimaryShowCtrl.resourceUrl">
-    <iframe style="border:none; padding:0;" width="100%" height="400px" data-ng-src="{{ resourcesPrimaryShowCtrl.resourceUrl }}"></iframe>
+<div class="step-resource">
+    <!-- data-ng-if="resourcesPrimaryShowCtrl.resourceUrl && resourcesPrimaryShowCtrl.resourceUrl" -->
+    <iframe style="border:none; padding:0;" width="100%" height="700px" data-ng-src="{{ resourcesPrimaryShowCtrl.resourceUrl.url }}" data-ng-init="resourcesPrimaryShowCtrl.resourceLoaded()"></iframe>
 </div>

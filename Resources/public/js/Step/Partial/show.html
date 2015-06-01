@@ -14,7 +14,7 @@
             <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }}">&nbsp;</div>
 
             <div class="panel-body">
-                <div class="row">
+                <div class="panel-step-heading row">
                     <!-- Previous step button -->
                     <div class="col-md-1 col-sm-2 col-xs-2 text-left">
                         <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
@@ -38,7 +38,7 @@
                 </div>
 
                 <!-- Description of the Step -->
-                <div class="panel-body" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
+                <div class="step-description" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
 
                 <!-- Primary resource of the Step -->
                 <resources-primary-show data-resources="stepShowCtrl.step.primaryResource"></resources-primary-show>
