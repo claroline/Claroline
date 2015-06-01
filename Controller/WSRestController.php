@@ -65,8 +65,9 @@ class WSRestController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
+                $BDDPath = substr($userDir, 30);
                 $document->setLabel(trim($request->get('label')));
-                $document->setUrl($userDir.'/images/'. $file);
+                $document->setUrl($BDDPath.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.token_storage')->getToken()->getUser());
 

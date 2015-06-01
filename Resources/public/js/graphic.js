@@ -34,6 +34,7 @@ function sendData(select, path, prefx) {
             // Set its new attributes
             $(answerImg).attr("id", "AnswerImage");
             $(answerImg).attr('src', data);
+            alert(data);
 
             // Add it to the page
             $('#Answer').append(answerImg);
@@ -81,6 +82,8 @@ function LoadPic(path, prefx, iddoc) {
     // Selected document label in the list
     var select = $("*[id$='"+iddoc+"'] option:selected").text();
 
+    prefx = prefx+'/';
+
     // Get the matching url for a given label in order to load the new image
     sendData(select, path, prefx);
 
@@ -97,7 +100,7 @@ function LoadPic(path, prefx, iddoc) {
     value = 0;
     grade = 0;
     point = {};
-    
+
     //displays the button to add an answer
     $('#addButtonAnswer').css({"display" : "inline"});
 }
@@ -133,10 +136,10 @@ function LoadPic(path, prefx, iddoc) {
 
         // With the url of the dragged image
         $(img).attr('src', el.attr('src'));
-        
+
          // With the style of the dragged image
         $(img).attr('style',el.attr('style'));
-       
+
          // Add it to the page
         $('#dragContainer' + grade).append(img);
 
@@ -271,7 +274,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
                             if (selectedZone.css("left") == 'auto') {
                                 position = container;
                             }
-                           
+
                             // Position x answer zone
                             imgx = parseInt(position.css("left").substring(0, position.css("left").indexOf('p')));
 
@@ -342,7 +345,7 @@ function switchColorShape(prefix, shape, color, target, targetColor) {
             target.attr("src", prefix + 'circley.png');
             targetColor.css({ 'background-color' : '#FFEB00' });
             break;
-            
+
         case 'brown' :
             target.attr("src", prefix + 'circlebrown.png');
             targetColor.css({ 'background-color' : '#5A4C41' });
@@ -355,7 +358,7 @@ function switchColorShape(prefix, shape, color, target, targetColor) {
 
     } else if (shape == 'square') {
         switch (color) {
-        case 'black' :  
+        case 'black' :
             target.attr("src", prefix + 'squareblack.png');
             targetColor.css({ 'background-color' : '#000000' });
             break;
@@ -394,7 +397,7 @@ function switchColorShape(prefix, shape, color, target, targetColor) {
             target.attr("src", prefix + 'squarey.png');
             targetColor.css({ 'background-color' : '#FFEB00' });
             break;
-            
+
         case 'brown' :
             target.attr("src", prefix + 'squarebrown.png');
             targetColor.css({ 'background-color' : '#5A4C41' });
@@ -525,7 +528,7 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
 
     $('#delete'+grade).click(function(e) {
         $(this).parent('td').parent('tr').remove();
-        var chiffre = $(this).attr('id').replace('delete', '');  
+        var chiffre = $(this).attr('id').replace('delete', '');
         $('#dragContainer'+chiffre).remove();
         setOrderAfterDel();
         e.preventDefault();
