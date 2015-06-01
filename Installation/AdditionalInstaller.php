@@ -26,6 +26,7 @@ class AdditionalInstaller extends BaseInstaller
      */
     public function postInstall()
     {
+        $this->widgetInstaller();
 
         return $this;
     }
