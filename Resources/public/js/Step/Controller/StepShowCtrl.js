@@ -3,8 +3,14 @@
  * @returns {StepShowCtrl}
  * @constructor
  */
-var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService) {
+var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, $sce) {
     StepBaseCtrl.apply(this, arguments);
+
+    if (this.step && this.step.description) {
+        console.log('coucou');
+        // Trust content to allow Cross Sites URL
+        this.step.description = $sce.trustAsHtml(this.step.description);
+    }
 
     return this;
 };

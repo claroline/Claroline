@@ -14,12 +14,6 @@ plugin:
   widgets:
      - name: innova_path_widget
        is_configurable: false
-       is_displayable_in_desktop: false
-       is_displayable_in_workspace: true
-       is_exportable: false
-
-     - name: innova_my_paths_widget
-       is_configurable: false
        is_displayable_in_desktop: true
-       is_displayable_in_workspace: false
+       is_displayable_in_workspace: true
        is_exportable: false
