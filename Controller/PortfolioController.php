@@ -82,26 +82,7 @@ class PortfolioController extends Controller
         try {
             if ($this->getPortfolioFormHandler()->handleAdd($portfolio)) {
                 if ($request->isXmlHttpRequest()) {
-                    $ownedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgetsAndComments($loggedUser, false);
-                    /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfoliosPager */
-                    $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, 1, 10);
-
-                    $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
-                    $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, 1, 10);
-
-                    $importManager          = $this->getImportManager();
-                    $availableImportFormats = $importManager->getAvailableFormats();
-
-                    $parameters = array(
-                        'portfoliosPager' => $portfoliosPager,
-                        'guidedPortfoliosPager' => $guidedPortfoliosPager,
-                        'availableImportFormats' => $availableImportFormats,
-                        'portfolioId' => 0
-                    );
-
-                    $html = $this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $parameters);
-
-                    return new Response($html);
+                    return new Response($this->refreshPortfolioList($loggedUser));
                 }
                 else {
                     $this->getSessionFlashbag()
@@ -113,10 +94,12 @@ class PortfolioController extends Controller
             }
         } catch (\Exception $exception) {
             if ($request->isXmlHttpRequest()) {
-                return new JsonResponse('Erreur', 500);
+                return new JsonResponse('Error while adding a portfolio', 500);
             }
             else {
-                $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
+                $this->getSessionFlashbag()
+                    ->add('error', $this->getTranslator()
+                        ->trans('portfolio_add_error_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
@@ -129,23 +112,65 @@ class PortfolioController extends Controller
     }
 
     /**
+     * @param User $loggedUser
+     *
+     * @return string
+     */
+    protected function refreshPortfolioList(User $loggedUser)
+    {
+        $ownedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findByUserWithWidgetsAndComments($loggedUser, false);
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfoliosPager */
+        $portfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($ownedPortfolioQuery, 1, 10);
+
+        $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
+        $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, 1, 10);
+
+        $importManager = $this->getImportManager();
+        $availableImportFormats = $importManager->getAvailableFormats();
+
+        $parameters = array(
+            'portfoliosPager' => $portfoliosPager,
+            'guidedPortfoliosPager' => $guidedPortfoliosPager,
+            'availableImportFormats' => $availableImportFormats,
+            'portfolioId' => 0
+        );
+
+        return $this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $parameters);
+    }
+
+    /**
      * @Route("/rename/{id}", name="icap_portfolio_rename", requirements={"id" = "\d+"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function renameAction(User $loggedUser, TitleWidget $titleWidget)
+    public function renameAction(Request $request, User $loggedUser, TitleWidget $titleWidget)
     {
         $this->checkPortfolioToolAccess();
 
         try {
             if ($this->getPortfolioFormHandler()->handleRename($titleWidget)) {
-                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                if ($request->isXmlHttpRequest()) {
+                    return new Response($this->refreshPortfolioList($loggedUser));
+                }
+                else {
+                    $this->getSessionFlashbag()
+                        ->add('success', $this->getTranslator()
+                            ->trans('portfolio_rename_success_message', array(), 'icap_portfolio'));
+
+                    return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                }
             }
         } catch (\Exception $exception) {
-            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_rename_error_message', array(), 'icap_portfolio'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse('Error while renaming the portfolio', 500);
+            }
+            else {
+                $this->getSessionFlashbag()
+                    ->add('error', $this->getTranslator()
+                        ->trans('portfolio_rename_error_message', array(), 'icap_portfolio'));
+            }
 
             return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
@@ -162,7 +187,7 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function deleteAction(User $loggedUser, Portfolio $portfolio)
+    public function deleteAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
         $this->checkPortfolioToolAccess();
 
@@ -173,9 +198,23 @@ class PortfolioController extends Controller
         try {
             $this->getPortfolioFormHandler()->handleDelete($portfolio);
 
-            $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_delete_success_message', array(), 'icap_portfolio'));
+            if ($request->isXmlHttpRequest()) {
+                return new Response($this->refreshPortfolioList($loggedUser));
+            }
+            else {
+                $this->getSessionFlashbag()
+                    ->add('success', $this->getTranslator()
+                        ->trans('portfolio_delete_success_message', array(), 'icap_portfolio'));
+            }
         } catch (\Exception $exception) {
-            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_delete_error_message', array(), 'icap_portfolio'));
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse('Error while deleting the portfolio', 500);
+            }
+            else {
+                $this->getSessionFlashbag()
+                    ->add('error', $this->getTranslator()
+                        ->trans('portfolio_delete_error_message', array(), 'icap_portfolio'));
+            }
         }
 
         return $this->redirect($this->generateUrl('icap_portfolio_index'));
@@ -187,20 +226,34 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function updateVisibilityAction(User $loggedUser, Portfolio $portfolio)
+    public function updateVisibilityAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
         $this->checkPortfolioToolAccess();
 
         try {
             if ($this->getPortfolioFormHandler()->handleVisibility($portfolio)) {
-                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_visibility_update_success_message', array(), 'icap_portfolio'));
+                if ($request->isXmlHttpRequest()) {
+                    return new Response($this->refreshPortfolioList($loggedUser));
+                }
+                else {
+                    $this->getSessionFlashbag()
+                        ->add('success', $this->getTranslator()
+                            ->trans('portfolio_visibility_update_success_message', array(), 'icap_portfolio'));
+
+                    return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                }
+            }
+        } catch (\Exception $exception) {
+            if ($request->isXmlHttpRequest()) {
+                return new JsonResponse('Error while updating visibility of the portfolio', 500);
+            }
+            else {
+                $this->getSessionFlashbag()
+                    ->add('error', $this->getTranslator()
+                        ->trans('portfolio_visibility_update_error_message', array(), 'icap_portfolio'));
 
                 return $this->redirect($this->generateUrl('icap_portfolio_index'));
             }
-        } catch (\Exception $exception) {
-            $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_visibility_update_error_message', array(), 'icap_portfolio'));
-
-            return $this->redirect($this->generateUrl('icap_portfolio_index'));
         }
 
         return array(
@@ -215,13 +268,20 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function manageGuidesAction(User $loggedUser, Portfolio $portfolio)
+    public function manageGuidesAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
         try {
             if ($this->getPortfolioFormHandler()->handleGuides($portfolio)) {
-                $this->getSessionFlashbag()->add('success', $this->getTranslator()->trans('portfolio_guides_update_success_message', array(), 'icap_portfolio'));
+                if ($request->isXmlHttpRequest()) {
+                    return new Response($this->refreshPortfolioList($loggedUser));
+                }
+                else {
+                    $this->getSessionFlashbag()
+                        ->add('success', $this->getTranslator()
+                            ->trans('portfolio_guides_update_success_message', array(), 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                    return $this->redirect($this->generateUrl('icap_portfolio_index'));
+                }
             }
         } catch (\Exception $exception) {
             $this->getSessionFlashbag()->add('error', $this->getTranslator()->trans('portfolio_guides_update_error_message', array(), 'icap_portfolio'));
