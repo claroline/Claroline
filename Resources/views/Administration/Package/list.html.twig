@@ -19,16 +19,34 @@
 {% endblock %}
 
 {% block section_content %}
+{% set allowUpdate = true %}
+{% for file, isWritable in files %}
+    {% if not isWritable %}
+        {% set allowUpdate = false %}
+    {% endif %}
+{% endfor %}
 <div class="panel">
     <div class="well">
+        {% if not allowUpdate %}
+            <h4> {{ 'permissions'|trans({}, 'platform') }} </h4>
+            {{ 'packages_permissions_error'|trans({}, 'platform') }}
+            <ul>
+            {% for file, isWritable in files %}
+                {% if not isWritable %}
+                    <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({},' platform') }} </li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+        {% else %}
         <h4> {{ 'tips'|trans({}, 'platform') }} </h4>
-        <ul>
-            <li>{{ 'backup_reminder'|trans({}, 'platform') }}</li>
-            <li>{{ 'logs_error_location'|trans({}, 'platform') }}</li>
-            <li>{{ 'package_install_auto_reload'|trans({}, 'platform') }}</li>
-            <li>{{ 'activate_maintenance_mode'|trans({}, 'platform') }}</li>
-            <li>{{ 'install_update_cant_be_undone'|trans({}, 'platform') }}</li>
-        </ul>
+            <ul>
+                <li>{{ 'backup_reminder'|trans({}, 'platform') }}</li>
+                <li>{{ 'logs_error_location'|trans({}, 'platform') }}</li>
+                <li>{{ 'package_install_auto_reload'|trans({}, 'platform') }}</li>
+                <li>{{ 'activate_maintenance_mode'|trans({}, 'platform') }}</li>
+                <li>{{ 'install_update_cant_be_undone'|trans({}, 'platform') }}</li>
+            </ul>
+        {% endif %}
     </div>
     <div class="panel-body">
         <div class="panel-group" id="core-accordion">
@@ -43,7 +61,7 @@
                 <div id="packages" class="panel-collapse collapse">
                     <div class="panel-inner">
                         {% for installedPkg in installed %}
-                            {{ macros.renderPackageElement(installedPkg, fetched, false) }}
+                            {{ macros.renderPackageElement(installedPkg, fetched, false, allowUpdate) }}
                         {% endfor %}
                     </div>
                 </div>
@@ -61,7 +79,7 @@
                 <div id="uninstalled" class="panel-collapse collapse">
                     <div class="panel-inner">
                         {% for package in uninstalled %}
-                            {{ macros.renderPackageElement(package, fetched, true)}}
+                            {{ macros.renderPackageElement(package, fetched, true, allowUpdate)}}
                         {% endfor %}
                     </div>
                 </div>

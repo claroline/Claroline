@@ -147,7 +147,7 @@
     and soon to be installed but I'm very lazy.
     Feel free to split this method if you want.
 #}
-{% macro renderPackageElement(package, upgradablePackages, fetchNew) %}
+{% macro renderPackageElement(package, upgradablePackages, fetchNew, isWritable) %}
     <div class="panel-group" id="accordion-{{ package.name }}">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -179,8 +179,8 @@
                                 {% endif %}
                             {% endfor %}
                             {% if found == true %}
-                                {% if version_compare(version, foundPkg.version, '<') %}
-                                    <a class="badge alert-warning install-pkg"
+                                {% if version_compare(version, foundPkg.version, '<') and isWritable %}
+                                    <a class="badge alert-warning {% if isWritable %} install-pkg {% endif %}"
                                         data-package-name="{{ package.name }}"
                                         data-package-version="{{ foundPkg.version }}"
                                     >
@@ -198,13 +198,15 @@
                                 </span>
                             {% endif %}
                         {% else %}
-                            <a
-                                class="badge install-pkg"
-                                data-package-name="{{ package.name }}"
-                                data-package-version="{{ package.version }}"
-                            >
-                                {{ 'install'|trans({}, 'platform') }}
-                            </a>
+                            {% if isWritable %}
+                                <a
+                                    class="badge install-pkg"
+                                    data-package-name="{{ package.name }}"
+                                    data-package-version="{{ package.version }}"
+                                >
+                                    {{ 'install'|trans({}, 'platform') }}
+                                </a>
+                            {% endif %}
                         {% endif %}
                     </span>
                 </h5>

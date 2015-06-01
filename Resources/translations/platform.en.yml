@@ -1105,3 +1105,4 @@ yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
 404: 'Page Not found'
+is_not_writable: is not writable

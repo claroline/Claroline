@@ -83,6 +83,13 @@ class PackageController extends Controller
      */
     public function listAction()
     {
+        $rootPath = $this->container->getParameter('claroline.param.root_directory') . '/';
+        $files = array(
+            realpath($rootPath . 'vendor/composer/autoload_namespaces.php') => is_writable(realpath($rootPath . 'vendor/composer/autoload_namespaces.php')),
+            realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
+            realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'app/config/bundles.ini'))
+        );
+
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');
         $coreVersion = $coreBundle->getVersion();
         $api = $this->configHandler->getParameter('repository_api');
@@ -110,7 +117,8 @@ class PackageController extends Controller
         return array(
             'fetched' => $fetched,
             'installed' => $installed,
-            'uninstalled' => $uninstalled
+            'uninstalled' => $uninstalled,
+            'files' => $files
         );
     }
 
