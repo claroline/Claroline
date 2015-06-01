@@ -36,13 +36,16 @@ open_templates: Ouvrir les modèles
 # p
 path_breadcrumbs: Afficher le fils d'Ariane ?
 path_description: Description
+path_init_structure: Créer une nouvelle structure vide
+path_init_structure_template: Créer une structure à partir d'un modèle
 path_name: Nom
+path_no_structure: Ce Parcours n'a aucune structure.
 path_status: Statut
 path_save_success: Le parcours a correctement été sauvegardé.
 path_save_error: Une erreur s'est produite lors de la sauvegarde du parcours.
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
-preview: Prévisualiser
+preview: Retour au Parcours
 preview_with_pending_changes_button: Prévisualiser la dernière version publiée
 preview_with_pending_changes_message: Le Parcours a des modifications non sauvegardées ou non publiées.<br/><br/> Si vous le visualisez sans sauvegarde/publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
 preview_with_pending_changes_title: Modifications non publiées/sauvegardées
@@ -101,6 +104,7 @@ template_delete: Supprimer
 template_name: Nom
 template_save: Sauvegarder le modèle
 template_edit_title: Modèle
+toggle_summary: Afficher/Masquer le sommaire
 
 # u
 undo: Annuler

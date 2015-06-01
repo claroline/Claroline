@@ -7,16 +7,27 @@
 
     angular.module('AlertModule').factory('AlertService', [
         '$timeout',
-        function ($timeout) {
-            var alerts = {};
-            var currentIndex = 0;
+        function AlertService($timeout) {
+            var duration = 7000;
+
+            var alerts = [];
+
+            var current = {};
 
             return {
+                getCurrent: function getCurrent() {
+                    if (alerts.length > 0) {
+                        this.displayAlert(alerts.shift());
+                    }
+
+                    return current;
+                },
+
                 /**
                  * Get all alerts
-                 * @returns Array
+                 * @returns {Array}
                  */
-                getAlerts: function () {
+                getAlerts: function getAlerts() {
                     return alerts;
                 },
 
@@ -26,28 +37,46 @@
                  * @param type
                  * @returns AlertService
                  */
-                addAlert: function (type, msg) {
-                    currentIndex++;
+                addAlert: function addAlert(type, msg) {
+                    var display = false;
+                    if (alerts.length == 0) {
+                        display = true;
+                    }
 
-                    var alert = { id: currentIndex, type: type, msg: msg };
-                    alerts[currentIndex] = alert;
+                    // Store alert
+                    alerts.push({ type: type, msg: msg });
 
-                    // Auto close alert
-                    $timeout(function () {
-                        this.closeAlert(alert);
-                    }.bind(this), 8000);
+                    if (display) {
+                        this.displayAlert(alerts.shift());
+                    }
 
                     return this;
                 },
 
+                displayAlert: function displayAlert(alert) {
+                    current.type = alert.type;
+                    current.msg = alert.msg;
+
+                    // Auto close alert
+                    $timeout(function () {
+                        this.closeCurrent();
+                    }.bind(this), duration);
+                },
+
                 /**
-                 * Close an alert
-                 * @param alert
+                 * Close current displayed alert
                  * @returns AlertService
                  */
-                closeAlert: function (alert) {
-                    if (alerts[alert.id]) {
-                        delete alerts[alert.id];
+                closeCurrent: function closeCurrent() {
+                    if (current) {
+                        // Empty the current alert object
+                        delete current.type;
+                        delete current.msg;
+                    }
+
+                    if (alerts.length > 0) {
+                        // Display next alert in the stack
+                        this.displayAlert(alerts.shift());
                     }
 
                     return this;

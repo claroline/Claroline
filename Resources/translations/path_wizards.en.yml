@@ -36,13 +36,16 @@ open_templates: Open templates
 # p
 path_breadcrumbs: Show breadcrumbs ?
 path_description: Description
+path_init_structure: Create a new empty structure
+path_init_structure_template: Créer une structure à partir d'un modèle
 path_name: Name
+path_no_structure: There is no structure for this path.
 path_status: Status
 path_save_error: An error occurred while saving path.
 path_save_success: The path has been successfully saved.
 path_template_save_error: An error occurred while saving template.
 path_template_save_success: The template has been successfully saved.
-preview: Preview
+preview: Back to Path
 preview_with_pending_changes_button: Preview the last published version
 preview_with_pending_changes_message: Path has changes which are not published or not saved.<br/><br/> If you display it without saving/publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
 preview_with_pending_changes_title: Pending modifications
@@ -101,6 +104,7 @@ template_edit_title: Template
 template_name: Name
 template_save: Save template
 templates: Templates
+toggle_summary: Display/Hide summary
 
 # u
 undo: Undo

@@ -1,6 +1,6 @@
 <div>
     <!-- Angular can't initialize 2 directives on same element (here, PathSummaryDirective & NgPageslideDirective) so we need a container -->
-    <div data-pageslide="" data-ps-open="pathSummaryEditCtrl.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push-class="path-summary-opened">
+    <div data-pageslide="" data-ps-open="pathSummaryEditCtrl.state.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push-class="path-summary-opened">
         <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="pathSummaryEditCtrl.close()">
             <span class="fa fa-times"></span>
             <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
@@ -10,12 +10,12 @@
             <!-- List title -->
             <h2>
                 <span class="fa fa-sitemap"></span>
-                {{ 'summary'|trans:{}:'path_wizards' }}
+                {{ pathSummaryEditCtrl.title }}
             </h2>
 
             <!-- Block to display where there is no structure -->
-            <div data-ng-if="pathSummaryEditCtrl.structure.length === 0" class="text-center row">
-                <em>There is no structure for this path.</em>
+            <div data-ng-if="pathSummaryEditCtrl.structure.length === 0" class="text-center">
+                <em>{{ 'path_no_structure'|trans:{}:'path_wizards' }}</em>
                 <br/><br/>
                 <!--<div class="alert alert-info text-left">
                     <span class="fa fa-info-circle"></span>
@@ -27,14 +27,14 @@
                     </ul>
                 </div>-->
 
-                <div class="text-center">
-                    <a href="" class="btn btn-primary" role="button" data-ng-click="pathSummaryEditCtrl.createNew()">
-                        <span class="fa fa-pencil"></span>
-                        Initialize a new structure
-                    </a>
-                    <!--<button class="btn btn-default" role="button" data-ng-click="pathSummaryEditCtrl.createFromTemplate()">
-                        <span class="fa fa-download"></span>
-                        Create from template
+                <div class="text-center col-md-12">
+                    <button type="button" role="button" class="btn btn-block btn-primary" data-ng-click="pathSummaryEditCtrl.createNew()">
+                        <span class="fa fa-fw fa-pencil"></span>
+                        {{ 'path_init_structure'|trans:{}:'path_wizards' }}
+                    </button>
+                    <!--<button type="button" role="button" class="btn btn-block btn-default" data-ng-click="pathSummaryEditCtrl.createFromTemplate()">
+                        <span class="fa fa-fw fa-download"></span>
+                        {{ 'path_init_structure_template'|trans:{}:'path_wizards' }}
                     </button>-->
                 </div>
             </div>

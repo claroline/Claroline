@@ -24,8 +24,19 @@
              */
             var path = null;
 
-            // Do not allow adding children to steps at the max depth
+            /**
+             * Maximum depth of a Path
+             * @type {number}
+             */
             var maxDepth = 8;
+
+            /**
+             * State of the Path summary
+             * @type {object}
+             */
+            var summary = {
+                opened: true
+            };
 
             return {
                 /**
@@ -64,6 +75,14 @@
                     return maxDepth;
                 },
 
+                getSummaryState: function getSummaryState() {
+                    return summary;
+                },
+
+                toggleSummaryState: function toggleSummaryState() {
+                    summary.opened = !summary.opened;
+                },
+
                 /**
                  * Initialize a new Path structure
                  */
@@ -71,7 +90,7 @@
                     // Create a generic root step
                     var rootStep = StepService.new();
 
-                    path.structure.push(rootStep);
+                    path.steps.push(rootStep);
 
                     // Set root step as current step
                     this.goTo(rootStep);

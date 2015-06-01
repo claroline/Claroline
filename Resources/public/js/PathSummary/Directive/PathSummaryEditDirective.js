@@ -10,7 +10,7 @@
                 controllerAs: 'pathSummaryEditCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit.html',
                 scope: {
-                    opened    : '='
+                    title: '='
                 },
                 bindToController: true
             };

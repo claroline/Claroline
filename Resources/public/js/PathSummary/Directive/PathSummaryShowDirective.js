@@ -10,7 +10,7 @@
                 controllerAs: 'pathSummaryShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathSummary/Partial/show.html',
                 scope: {
-                    opened    : '='
+                    title: '='
                 },
                 bindToController: true
             };

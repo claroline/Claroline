@@ -33,11 +33,4 @@ PathBaseCtrl.prototype.path = {};
  * Is path summary opened or closed ?
  * @type {boolean}
  */
-PathBaseCtrl.prototype.summaryOpened = true;
-
-/**
- * Open or close summary of the Path
- */
-PathBaseCtrl.prototype.toggleSummary = function () {
-    this.summaryOpened = !this.summaryOpened;
-};
+PathBaseCtrl.prototype.summary = {};

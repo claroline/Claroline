@@ -1,4 +1,4 @@
-<div data-ng-repeat="alert in alerts" class="alert alert-{{ alert.type }} alert-box" data-ng-click="closeAlert(alert)" data-ng-class="{ 'alert-success': 'success' == alert.type, 'alert-warning': 'warning' == alert.type, 'alert-danger': 'error' == alert.type, 'alert-info': 'info' == alert.type }">
-    <span class="fa" data-ng-class="{ 'fa-check': 'success' == alert.type, 'fa-warning': 'warning' == alert.type, 'fa-times': 'error' == alert.type, 'fa-info': 'info' == alert.type }"></span>
-    <span data-ng-bind="alert.msg"></span>
+<div class="alert-box" data-ng-click="closeCurrent()" data-ng-class="{ 'text-success': 'success' == current.type, 'text-warning': 'warning' == current.type, 'text-danger': 'error' == current.type, 'text-info': 'info' == current.type }">
+    <span class="fa fa-fw" data-ng-class="{ 'fa-check': 'success' == current.type, 'fa-warning': 'warning' == current.type, 'fa-times': 'error' == current.type, 'fa-info': 'info' == current.type }"></span>
+    <span data-ng-bind="current.msg"></span>
 </div>

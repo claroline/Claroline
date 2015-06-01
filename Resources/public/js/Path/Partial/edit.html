@@ -1,16 +1,15 @@
 <div class="path-form">
     <!-- Summary of the Path-->
-    <path-summary-edit data-opened="pathEditCtrl.summaryOpened"></path-summary-edit>
+    <path-summary-edit data-title="pathEditCtrl.path.name"></path-summary-edit>
 
     <!-- Form of the Path -->
     <form action="#" role="form" class="form-horizontal" method="post">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
+                    <!--<div class="panel-heading">
                         <h3 class="panel-title">{{ pathEditCtrl.path.name }}</h3>
-                        <alert-box></alert-box>
-                    </div>
+                    </div>-->
 
                     <nav class="navbar navbar-default navbar-static-top" role="navigation">
                         <ul class="nav navbar-nav navbar-left">
@@ -27,15 +26,6 @@
                                 <a href="" data-ng-click="pathEditCtrl.redo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}">
                                     <span class="fa fa-share"></span>
                                     <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
-                                </a>
-                            </li>
-
-                            <!-- Open summary button -->
-                            <li>
-                                <a href="" data-ng-click="pathEditCtrl.toggleSummary()" role="button">
-                                    <span class="fa fa-sitemap"></span>
-                                    <span data-ng-if="!pathEditCtrl.summaryOpened">{{ 'open_summary'|trans:{}:'path_wizards' }}</span>
-                                    <span data-ng-if="pathEditCtrl.summaryOpened">{{ 'close_summary'|trans:{}:'path_wizards' }}</span>
                                 </a>
                             </li>
                         </ul>
@@ -62,6 +52,11 @@
                                 </a>
                             </li>
                         </ul>
+
+                        <p class="navbar-text navbar-right">
+                            <!-- User messages -->
+                            <alert-box></alert-box>
+                        </p>
                     </nav>
 
                     <div class="panel-body" data-ng-if="!hidePath">
@@ -120,7 +115,7 @@
         </div>
 
         <!-- Breadcrumbs -->
-        <path-breadcrumbs-show data-ng-if="pathEditCtrl.path.breadcrumbs"></path-breadcrumbs-show>
+        <path-navigation data-ng-if="pathEditCtrl.path.breadcrumbs"></path-navigation>
 
         <!-- Display current step -->
         <div data-ng-view=""></div>

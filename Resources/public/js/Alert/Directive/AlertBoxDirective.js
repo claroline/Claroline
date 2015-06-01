@@ -13,10 +13,12 @@
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/Alert/Partial/alert-box.html',
                 scope: {},
                 link: function (scope) {
-                    scope.alerts = AlertService.getAlerts();
+                    scope.current = AlertService.getCurrent();
 
-                    scope.closeAlert  = function (alert) {
-                        AlertService.closeAlert(alert);
+                    console.log(scope.current);
+
+                    scope.closeCurrent  = function () {
+                        AlertService.closeCurrent();
                     };
                 }
             }

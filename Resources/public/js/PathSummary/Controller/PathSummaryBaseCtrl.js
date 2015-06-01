@@ -9,6 +9,8 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
     this.pathService = PathService;
     this.current = $routeParams;
 
+    this.state = this.pathService.getSummaryState();
+
     var path = this.pathService.getPath();
     if (angular.isObject(path)) {
         // Set the structure of the path
@@ -25,10 +27,16 @@ var PathSummaryBaseCtrl = function PathSummaryBaseCtrl($routeParams, PathService
 PathSummaryBaseCtrl.prototype.webDir = null;
 
 /**
- * Is summary opened ?
+ * Sate of the summary
  * @type {boolean}
  */
-PathSummaryBaseCtrl.prototype.opened = false;
+PathSummaryBaseCtrl.prototype.state = false;
+
+/**
+ * Title to display on the summary
+ * @type {null}
+ */
+PathSummaryBaseCtrl.prototype.title = null;
 
 /**
  * Structure of the current path
@@ -46,7 +54,7 @@ PathSummaryBaseCtrl.prototype.current = {};
  * Close Summary
  */
 PathSummaryBaseCtrl.prototype.close = function close() {
-    this.opened = false;
+    this.pathService.toggleSummaryState();
 };
 
 /**

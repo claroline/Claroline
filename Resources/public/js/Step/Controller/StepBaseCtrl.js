@@ -47,3 +47,10 @@ StepBaseCtrl.prototype.inheritedResources = [];
 StepBaseCtrl.prototype.goTo = function goTo(step) {
     this.pathService.goTo(step);
 };
+
+/**
+ * Allow toggle Summary from the current step
+ */
+StepBaseCtrl.prototype.toggleSummary = function () {
+    this.pathService.toggleSummaryState();
+};

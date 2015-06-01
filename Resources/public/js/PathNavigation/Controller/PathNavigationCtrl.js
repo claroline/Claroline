@@ -1,12 +1,14 @@
 /**
  * Class constructor
- * @returns {PathBreadcrumbsShowCtrl}
+ * @returns {PathNavigationCtrl}
  * @constructor
  */
-var PathBreadcrumbsShowCtrl = function PathBreadcrumbsShowCtrl($routeParams, $scope, PathService) {
+var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathService) {
     this.pathService = PathService;
 
     this.current = $routeParams;
+
+    this.summaryState = this.pathService.getSummaryState();
 
     // listen to path changes to update history
     $scope.$watch(
@@ -33,7 +35,8 @@ var PathBreadcrumbsShowCtrl = function PathBreadcrumbsShowCtrl($routeParams, $sc
                 this.parents = this.pathService.getParents(this.step);
             }
 
-            // Calculate roadback to the previous step
+            // Get the next step
+            this.next = this.pathService.getNext(this.step);
         }.bind(this)
     , true);
 
@@ -44,16 +47,35 @@ var PathBreadcrumbsShowCtrl = function PathBreadcrumbsShowCtrl($routeParams, $sc
  * Current matched route
  * @type {object}
  */
-PathBreadcrumbsShowCtrl.prototype.current = {};
+PathNavigationCtrl.prototype.current = {};
 
 /**
  * Current displayed step
  * @type {object}
  */
-PathBreadcrumbsShowCtrl.prototype.step = {};
+PathNavigationCtrl.prototype.step = {};
+
+/**
+ * Next step
+ * @type {object}
+ */
+PathNavigationCtrl.prototype.next = null;
 
 /**
  * Parents of the current step
  * @type {object}
  */
-PathBreadcrumbsShowCtrl.prototype.parents = {};
+PathNavigationCtrl.prototype.parents = {};
+
+/**
+ * Current state of the summary
+ * @type {object}
+ */
+PathNavigationCtrl.prototype.summaryState = {};
+
+/**
+ * Allow toggle Summary from the current step
+ */
+PathNavigationCtrl.prototype.toggleSummary = function () {
+    this.pathService.toggleSummaryState();
+};
