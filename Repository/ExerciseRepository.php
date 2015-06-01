@@ -14,32 +14,6 @@ class ExerciseRepository extends EntityRepository
 {
 
     /**
-     * Scores of an exercise
-     *
-     * @access public
-     *
-     * @param integer $exoId id Exercise
-     * @param String $order to order result
-     *
-     * Return array
-     */
-    public function getExerciseMarks($exoId, $order = '')
-    {
-        $dql = 'SELECT sum(r.mark) as noteExo, p.id as paper
-            FROM UJM\ExoBundle\Entity\Response r JOIN r.paper p JOIN p.exercise e
-            WHERE e.id= ?1 AND p.interupt=0 group by p.id ';
-
-        if ($order != '') {
-            $dql .= ' ORDER BY ' . $order;
-        }
-
-        $query = $this->_em->createQuery($dql)
-                      ->setParameter(1, $exoId);
-
-        return $query->getResult();
-    }
-
-    /**
      * Exercises created by an user
      *
      * @access public

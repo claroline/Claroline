@@ -1355,7 +1355,7 @@ class ExerciseController extends Controller
         if ($exercise->getNbQuestion() == 0) {
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
         }
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'noteExo');
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'noteExo');
         $tabMarks = array();
         $histoMark = array();
 
@@ -1491,7 +1491,7 @@ class ExerciseController extends Controller
         $tabCoeffQ = array();
         $histoDiscrimination = array();
         $scoreAverageExo = 0;
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'paper');
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'paper');
 
         //Array of exercise's scores
         foreach ($marks as $mark) {
