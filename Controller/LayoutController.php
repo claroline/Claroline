@@ -186,7 +186,7 @@ class LayoutController extends Controller
                     $this->roleManager->getRoleByName('ROLE_USER')
                 )
             ) {
-                $registerTarget = 'claro_registration_user_registration_form';
+                $registerTarget = $this->router->generate('claro_registration_user_registration_form');
             }
 
             $loginTarget = $this->router->generate('claro_desktop_open');
