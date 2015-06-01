@@ -19,10 +19,17 @@ class Updater050100 extends Updater
 
     public function postUpdate()
     {
+        $this->removeWidget();
+
+        $this->removeTool();
+    }
+
+    private function removeWidget()
+    {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         // Retrieve the widget
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array (
+        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneBy(array (
             'name' => 'innova_my_paths_widget',
         ));
 
@@ -33,7 +40,19 @@ class Updater050100 extends Updater
         }
     }
 
-    private function removeWidget() {
+    private function removeTool()
+    {
+        $em = $this->container->get('doctrine.orm.entity_manager');
 
+        // Retrieve the tool
+        $tool = $em->getRepository('ClarolineCoreBundle:Tool\Tool')->findOneBy(array (
+            'name' => 'innova_path',
+        ));
+
+        if ($tool) {
+            // Delete Widget
+            $em->remove($tool);
+            $em->flush();
+        }
     }
 }

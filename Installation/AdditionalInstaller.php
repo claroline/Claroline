@@ -34,19 +34,10 @@ class AdditionalInstaller extends BaseInstaller
             $updater010209->postUpdate();
         }
 
-
-        // TEST
-        $em = $this->container->get('doctrine.orm.entity_manager');
-
-        // Retrieve the widget
-        $widget = $em->getRepository('ClarolineCoreBundle:Widget\Widget')->findBy(array (
-            'name' => 'innova_my_paths_widget',
-        ));
-
-        if ($widget) {
-            // Delete Widget
-            $em->remove($widget);
-            $em->flush();
+        if ( version_compare($currentVersion, '5.1.0', '<') && version_compare($targetVersion, '5.1.0', '>=') ) {
+            $updater010209 = new Updater\Updater050100($this->container);
+            $updater010209->setLogger($this->logger);
+            $updater010209->postUpdate();
         }
 
         return $this;
