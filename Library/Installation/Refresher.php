@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;
+use Bazinga\Bundle\JsTranslationBundle\Command\DumpCommand as TranslationDumpCommand;
 
 /**
  * @DI\Service("claroline.installation.refresher")
@@ -72,6 +73,10 @@ class Refresher
 
     public function dumpAssets($environment)
     {
+        $translationDumpCommand = new TranslationDumpCommand();
+        $translationDumpCommand->setContainer($this->container);
+        $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+
         $assetDumpCmd = new DumpCommand();
         $assetDumpCmd->setContainer($this->container);
         $assetDumpCmd->getDefinition()->addOption(
