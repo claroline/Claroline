@@ -50,6 +50,19 @@
                 success: function(data, textStatus, jqXHR) {
                     $("#list_content").html(data);
                     modalElement.modal('hide');
+                    toastr.options = {
+                        "closeButton": true,
+                        "positionClass": "toast-top-center",
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "3000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                    toastr.success(Translator.trans('portfolio_added_ajax_notification', {}, 'icap_portfolio'));
                 }
             });
         }

@@ -65,7 +65,8 @@
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/comments.css'
-      "@IcapPortfolioBundle/Resources/views/less/comments.less"
+      '@IcapPortfolioBundle/Resources/views/less/comments.less'
+      '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.less'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -99,6 +100,7 @@
         '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
         '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-tinymce/tinymce.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
