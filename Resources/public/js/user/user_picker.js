@@ -14,6 +14,7 @@ var UserPicker = function () {
     this.showAllUsers = 0;
     this.showFilters = 1;
     this.showId = 0;
+    this.showPicture = 0;
     this.showUsername = 1;
     this.showMail = 0;
     this.showCode = 0;
@@ -61,6 +62,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
     
     if (configurationDatas['show_id'] !== undefined) {
         this.showId = configurationDatas['show_id'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['show_picture'] !== undefined) {
+        this.showPicture = configurationDatas['show_picture'] ? 1 : 0;
     }
     
     if (configurationDatas['show_username'] !== undefined) {
@@ -133,6 +138,7 @@ UserPicker.prototype.open = function () {
             'showAllUsers': userPicker.showAllUsers,
             'showFilters': userPicker.showFilters,
             'showId': userPicker.showId,
+            'showPicture': userPicker.showPicture,
             'showUsername': userPicker.showUsername,
             'showMail': userPicker.showMail,
             'showCode': userPicker.showCode,
@@ -532,6 +538,7 @@ UserPicker.prototype.open = function () {
                             'mode': userPicker.multiple,
                             'showAllUsers': userPicker.showAllUsers,
                             'showId': userPicker.showId,
+                            'showPicture': userPicker.showPicture,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
@@ -549,6 +556,7 @@ UserPicker.prototype.open = function () {
                             'mode': userPicker.multiple,
                             'showAllUsers': userPicker.showAllUsers,
                             'showId': userPicker.showId,
+                            'showPicture': userPicker.showPicture,
                             'showUsername': userPicker.showUsername,
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
