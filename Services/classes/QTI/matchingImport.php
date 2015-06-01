@@ -86,7 +86,7 @@ class matchingImport extends qtiImport {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $mi = $ib->getElementsBYTagName("matchInteraction")->item(0);
         $shuffle = $mi->getAttribute("shuffle");
-        if ($shuffle == true ) {
+        if ($shuffle == 'true' ) {
             $this->interactionMatching->setShuffle(true);
         } else {
             $this->interactionMatching->setShuffle(false);
