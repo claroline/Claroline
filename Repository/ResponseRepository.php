@@ -34,6 +34,31 @@ class ResponseRepository extends EntityRepository
     }
 
     /**
+     * Scores of an exercise for each paper
+     *
+     * @access public
+     *
+     * @param integer $exoId id Exercise
+     * @param String $order to order result
+     *
+     * Return array
+     */
+    public function getExerciseMarks($exoId, $order)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->select('sum(r.mark) as noteExo, p.id as paper')
+           ->join('r.paper', 'p')
+           ->join('p.exercise', 'e')
+           ->where('e.id = ?1')
+           ->andWhere('p.interupt =  ?2')
+           ->groupBy('p.id')
+           ->orderBy($order, 'ASC')
+           ->setParameters(array(1 => $exoId, 2 => 0));
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Get the reponses for a paper and an user
      *
      * @access public
