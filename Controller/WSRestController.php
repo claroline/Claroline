@@ -65,7 +65,7 @@ class WSRestController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
-                $BDDPath = substr($userDir, 30);
+                $BDDPath = str_replace("/var/www/Claroline/app/../web", ".", $userDir);
                 $document->setLabel(trim($request->get('label')));
                 $document->setUrl($BDDPath.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));

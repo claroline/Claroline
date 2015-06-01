@@ -34,7 +34,6 @@ function sendData(select, path, prefx) {
             // Set its new attributes
             $(answerImg).attr("id", "AnswerImage");
             $(answerImg).attr('src', data);
-            alert(data);
 
             // Add it to the page
             $('#Answer').append(answerImg);
@@ -81,8 +80,6 @@ function LoadPic(path, prefx, iddoc) {
 
     // Selected document label in the list
     var select = $("*[id$='"+iddoc+"'] option:selected").text();
-
-    prefx = prefx+'/';
 
     // Get the matching url for a given label in order to load the new image
     sendData(select, path, prefx);
