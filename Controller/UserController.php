@@ -82,9 +82,9 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_user_picker",
-     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -140,6 +140,7 @@ class UserController extends Controller
         $showAllUsers = 0,
         $showFilters = 1,
         $showId = 0,
+        $showPicture = 0,
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0,
@@ -190,6 +191,7 @@ class UserController extends Controller
             'showAllUsers' => $showAllUsers,
             'showFilters' => $showFilters,
             'showId' => $showId,
+            'showPicture' => $showPicture,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
             'showCode' => $showCode,
@@ -208,15 +210,15 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
      *     name="claro_searched_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -286,6 +288,7 @@ class UserController extends Controller
         $mode = 'single',
         $showAllUsers = 0,
         $showId = 0,
+        $showPicture = 0,
         $showUsername = 1,
         $showMail = 0,
         $showCode = 0,
@@ -335,6 +338,7 @@ class UserController extends Controller
             'mode' => $mode,
             'showAllUsers' => $showAllUsers,
             'showId' => $showId,
+            'showPicture' => $showPicture,
             'showUsername' => $showUsername,
             'showMail' => $showMail,
             'showCode' => $showCode,
