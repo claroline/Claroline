@@ -91,14 +91,12 @@
     </div>
 
     {% if isVisibleHomeTab and not isLockedHomeTab and editionMode %}
-        <br>
-        <div id="create-widget-instance" class="panel panel-default">
-            <div class="panel-heading pointer-hand text-center">
-                <i class="fa fa-plus-circle">
-                    {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
-                </i>
-            </div>
-        </div>
+        <hr>
+        <span id="create-widget-instance" class="btn btn-primary">
+            <i class="fa fa-plus-circle">
+            </i>
+            {{ 'add_widget_to_home_tab'|trans({}, 'platform') }}
+        </span>
     {% endif %}
 </div>
 
