@@ -292,8 +292,8 @@
                 contentType: false,
                 success: function(data, textStatus, jqXHR) {
                     if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                        $('.modal').modal('hide');
                         callBack(data, textStatus, jqXHR);
+                        $('.modal').modal('hide');
                     } else {
                         $('.modal-dialog', modalElement).replaceWith(data);
                         formRenderHandler(data);
@@ -309,8 +309,8 @@
             $.post(url, formData)
             .success(function (data, textStatus, jqXHR) {
                 if (jqXHR.getResponseHeader('Content-Type') === 'application/json') {
-                    modalElement.modal('hide');
                     callBack(data, textStatus, jqXHR);
+                    modalElement.modal('hide');
                 } else {
                     $('.modal-dialog', modalElement).replaceWith(data);
                     formRenderHandler(data);
