@@ -1,6 +1,9 @@
 <?php
 
+use Symfony\Component\Debug\Debug;
+
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+Debug::enable(E_ALL ^ ~E_DEPRECATED, false);
 
 // Use APC for autoloading to improve performance.
 // Change 'sf2' to a unique prefix in order to prevent cache key conflicts
