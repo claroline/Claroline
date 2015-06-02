@@ -240,6 +240,8 @@ csv_users_import_infos_format_a: 'User informations must be defined in one line 
 csv_users_import_infos_format_b: 'Note that you must not add a file header'
 csv_users_import_infos_optional: Optional
 csv_users_import_infos_required: Required
+csv_users_import_infos_ws_role_a: 'The default roles are "Collaborator" and "Manager" and the values that have to be used in the CSV are respectively "collaborator" and "manager"'
+csv_users_import_infos_ws_role_b: 'If these roles are modified, the new names have to be used in the CSV'
 curl_facebook_application_validation_error: 'Curl extension is missing.'
 current_category: 'Current category'
 cut: Cut
