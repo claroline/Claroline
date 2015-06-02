@@ -78,6 +78,25 @@
             });
         });
 
+        $('#import_action a').click(function(event) {
+            event.preventDefault();
+            modal.displayForm(
+                event.target.href,
+                function(data) {
+                    $.ajax({
+                        url: window.location,
+                        success: function(data, textStatus, jqXHR) {
+                            updateListContent(data);
+                            toastr.success(Translator.trans('portfolio_imported_ajax_notification', {}, 'icap_portfolio'));
+                        }
+                    });
+                },
+                function(data) {
+                },
+                'portfolio_import'
+            )
+        });
+
         function deleteConfirmCallback(target, modal) {
             $.ajax({
                 url: $(target).attr('href'),

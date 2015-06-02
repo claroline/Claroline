@@ -1,4 +1,6 @@
-{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+{% extends app.request.xmlHttpRequest
+         ? 'IcapPortfolioBundle::modalLayout.html.twig'
+         : 'IcapPortfolioBundle::layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'importing_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
@@ -22,7 +24,7 @@
 {% endblock %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_import') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_import') }}" method="post" class="form-horizontal" id="portfolio_import" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
         {{ form_row(form.format) }}
@@ -30,11 +32,13 @@
 
         {{ form_rest(form) }}
 
+        {% if not app.request.xmlHttpRequest %}
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary">{{ 'import'|trans({}, 'platform') }}</button>
                 <a href="{{ path("icap_portfolio_index") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
         </div>
+        {% endif %}
     </form>
 {% endblock %}
