@@ -29,13 +29,13 @@
 
         {{ form_widget(form) }}
 
+        {% if not app.request.xmlHttpRequest %}
         <div class="form-group">
-            {% if not app.request.xmlHttpRequest %}
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
                 <a href="{{ path("icap_portfolio_index") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
-            {% endif %}
         </div>
+        {% endif %}
     </form>
 {% endblock %}
