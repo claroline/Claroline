@@ -224,11 +224,10 @@ class SettingChecker
             'app/config/platform_options.yml' => 'file',
             'app/logs' => 'directory',
             'composer.json' => 'file',
-            'composer.lock' => 'file',
             'files' => 'directory',
-            'vendor' => 'directory',
             'web' => 'directory',
-            'web/uploads' => 'directory'
+            'web/uploads' => 'directory',
+            'web/js' =>  'directory'
         );
 
         foreach ($writableElements as $element => $type) {

@@ -1105,4 +1105,5 @@ yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
 your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
-is_not_writable: n'est pas accessible en écriture
+is_not_writable: 'n''est pas accessible en écriture'
+packages_permissions_error: 'Veuillez corriger les erreurs suivantes pour commencer les mises à jour.'

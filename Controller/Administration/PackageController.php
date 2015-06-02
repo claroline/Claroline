@@ -87,7 +87,9 @@ class PackageController extends Controller
         $files = array(
             realpath($rootPath . 'vendor/composer/autoload_namespaces.php') => is_writable(realpath($rootPath . 'vendor/composer/autoload_namespaces.php')),
             realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
-            realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'app/config/bundles.ini'))
+            realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'vendor')),
+            realpath($rootPath . 'web/js') => is_writable(realpath($rootPath . 'web/js')),
+            realpath($rootPath . 'app/cache') => is_writable(realpath($rootPath . 'app/cache'))
         );
 
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');
