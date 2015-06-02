@@ -27,14 +27,11 @@ function insertStyle(tOpen, deleteTrans) {
 function formWordResponseEdit(nbResponses) {
     // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
-
         // Add a row to the table
         $('#tablewr').find('tbody').append('<tr></tr>');
 
-         $(this).find('.row').each(function () {
-
+        $(this).find('.row').each(function () {
             addRowToTablewr($(this));
-
         });
         if (nbResponses == 0) {
             // Add the delete button
@@ -97,35 +94,49 @@ function openEdit(nbResponses) {
     codeOpen = typeOpen[$('#ujm_exobundle_interactionopentype_typeopenquestion').val()];
     if (codeOpen == 4) {
         showOpenWord();
-        formWordResponseEdit(nbResponses);
     } else if (codeOpen == 3) {
         showShortResponse ();
-        formWordResponseEdit(nbResponses);
     }
+    formWordResponseEdit(nbResponses);
 }
 
-function showOpenWord () {
+function showOpenWord(nbResponses) {
     $('#qOpenOneWord').css('display', 'block');
     $('#qOpenScoreMaxLongResp').css('display', 'none');
     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
+  //Check if not edition or not form error
+    if (nbResponses === 0) {
+        if ($('#tablewr tr').length === 1) {
+            $('#tablewr').find('tbody').append('<tr></tr>');
+            addWr(container, deleteWr);
+        }
+    }
 }
 
 function showShortResponse () {
     showOpenWord ();
 }
 
-function showLongResponse () {
+function showLongResponse() {
     $('#qOpenScoreMaxLongResp').css('display', 'block');
     $('#qOpenOneWord').css('display', 'none');
     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
+    var lengthTab = $("#tablewr tr").length;
+    //removes empty lines
+    for(var i=1; i<lengthTab;i++) {  
+        if ($("#ujm_exobundle_interactionopentype_wordResponses_"+i+"_response").val() === '' || $("#ujm_exobundle_interactionopentype_wordResponses_"+i+"_score").val()=== '')
+        {
+            $("#ujm_exobundle_interactionopentype_wordResponses_"+i+"_response").parent('td').parent('tr').remove();
+        }
+    }
 }
 
 $('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
-    if (typeOpen[$(this).val()] == 4) {
-        showOpenWord();
+    if (typeOpen[$(this).val()] == 4) {    
+        showOpenWord(0);
     } else if (typeOpen[$(this).val()] == 2) {
         showLongResponse();
     } else if (typeOpen[$(this).val()] == 3) {
-        showOpenWord ();
+        showOpenWord (0);
     }
 });

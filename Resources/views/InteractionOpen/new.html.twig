@@ -5,7 +5,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'open_creation' | trans }}</h3>
     </div>
-    <form onsubmit="return CheckForm();" action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
@@ -29,7 +29,8 @@
 {% if error is defined %}
     <script type="text/javascript">
        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+       openEdit(0);
+       newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">

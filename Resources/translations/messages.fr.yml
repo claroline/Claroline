@@ -219,7 +219,7 @@ InteractionQCM: QCM
 #InteractionMatching: A relier/ panier
 
 # K
-key word: Mot clé
+key_word: Mot clé
 keys words: Mots clés
 kind of question: Quel type de question
 

@@ -219,7 +219,7 @@ InteractionQCM: QCM
 #InteractionMatching: To drag/ To bind
 
 # K
-key word: Key word
+key_word: Key word
 keys words: Keys words
 kind of question: What kind of question
 
@@ -298,7 +298,7 @@ num_paper: Paper's number
 my models: My models
 
 # O
-oneWord: One world
+oneWord: One word
 onlyOnce: => The rights answers count only once.
 only owner category: Only the owner can change the category
 only owner graphic: Only the owner can change the picture
