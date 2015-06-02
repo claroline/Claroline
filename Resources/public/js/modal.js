@@ -279,10 +279,9 @@
         formRenderHandler = formRenderHandler || function () {};
 
         if (formId) {
-            //this implementation works
+            //this implementation works for file fields
             var form = $(modalElement).find('form');
             var url = form.attr('action');
-//         var formData = new FormData(form[0]);
             var formData = new FormData(document.getElementById(formId));
 
             $.ajax({
@@ -296,8 +295,7 @@
                         $('.modal').modal('hide');
                         callBack(data, textStatus, jqXHR);
                     } else {
-                        //how do I find the root element of html ? It would be better to not have to use this class.
-                        $('.modal-dialog').replaceWith(data);
+                        $('.modal-dialog', modalElement).replaceWith(data);
                         formRenderHandler(data);
                     }
                 }
