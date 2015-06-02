@@ -21,7 +21,17 @@
 {% endblock %}
 {% block section_content %}
     <div class='panel-heading'>
-        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">
+            {{ 'resources' | trans({}, 'platform') }}
+            <i id="root-dir-icon-edit-btn"
+               class="fa fa-edit pull-right pointer-hand"
+               data-node-id="{{ resource.getId() }}"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'edit_root_directory_icon' | trans({}, 'platform') }}"
+            >    
+            </i>
+        </h3>
     </div>
     {% include 'ClarolineCoreBundle:Tool\\workspace\\resource_manager:resourcesRightsForm.html.twig' %}
 {% endblock %}
