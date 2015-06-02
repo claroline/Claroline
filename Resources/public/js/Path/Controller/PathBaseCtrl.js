@@ -28,9 +28,3 @@ PathBaseCtrl.prototype.id = null;
  * @type {object}
  */
 PathBaseCtrl.prototype.path = {};
-
-/**
- * Is path summary opened or closed ?
- * @type {boolean}
- */
-PathBaseCtrl.prototype.summary = {};

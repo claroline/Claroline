@@ -6,8 +6,7 @@
 var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, $sce) {
     StepBaseCtrl.apply(this, arguments);
 
-    if (this.step && this.step.description) {
-        console.log('coucou');
+    if (angular.isDefined(this.step) && angular.isDefined(this.step.description) && typeof this.step.description == 'string') {
         // Trust content to allow Cross Sites URL
         this.step.description = $sce.trustAsHtml(this.step.description);
     }
