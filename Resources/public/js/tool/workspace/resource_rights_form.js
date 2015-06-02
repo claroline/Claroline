@@ -336,4 +336,20 @@
             });
         }
     });
+
+    $('body').on('click', '#root-dir-icon-edit-btn',function () {
+        var nodeId = $(this).data('node-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'claro_resource_icon_edit_form',
+                {'node': nodeId}
+            ),
+            doNothing,
+            function() {},
+            'resource-icon-form'
+        );
+    });
+    
+    var doNothing = function () {};
 })();
