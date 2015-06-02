@@ -25,6 +25,16 @@ class FileSystem extends Fs
             }
         }
     }
+    
+    public function rmDirContent($path, $recursive = false)
+    {
+        $iterator = new \DirectoryIterator($path);
+        
+        foreach ($iterator as $el) {
+            if ($el->isDir()) $this->rmdir($el->getRealPath(), $recursive);
+            if ($el->isFile()) $this->remove($el->getRealPath());
+        }
+    }
 
     //override not supported yet
     public function copyDir($path, $target, $originalPath = '', $originalTarget = '')

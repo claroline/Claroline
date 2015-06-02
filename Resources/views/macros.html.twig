@@ -180,7 +180,7 @@
                             {% endfor %}
                             {% if found == true %}
                                 {% if version_compare(version, foundPkg.version, '<') and isWritable %}
-                                    <a class="badge alert-warning {% if isWritable %} install-pkg {% endif %}"
+                                    <a class="badge alert-warning install-pkg"
                                         data-package-name="{{ package.name }}"
                                         data-package-version="{{ foundPkg.version }}"
                                     >

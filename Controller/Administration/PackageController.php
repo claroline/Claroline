@@ -89,7 +89,10 @@ class PackageController extends Controller
             realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
             realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'vendor')),
             realpath($rootPath . 'web/js') => is_writable(realpath($rootPath . 'web/js')),
-            realpath($rootPath . 'app/cache') => is_writable(realpath($rootPath . 'app/cache'))
+            realpath($rootPath . 'app/cache') => is_writable(realpath($rootPath . 'app/cache')),
+            realpath($rootPath . 'app/logs') => is_writable(realpath($rootPath . 'app/logs')),
+            realpath($rootPath . 'web/bundles') => is_writable(realpath($rootPath . 'web/bundles'))
+            //realpath($rootPath . 'web') => is_writable(realpath($rootPath . 'web'))
         );
 
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');

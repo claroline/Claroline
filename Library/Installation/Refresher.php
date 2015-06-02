@@ -19,9 +19,9 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
-use Symfony\Component\Filesystem\Filesystem;
 use JMS\DiExtraBundle\Annotation as DI;
 use Bazinga\Bundle\JsTranslationBundle\Command\DumpCommand as TranslationDumpCommand;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 /**
  * @DI\Service("claroline.installation.refresher")
@@ -73,6 +73,14 @@ class Refresher
 
     public function dumpAssets($environment)
     {
+        $fs = new FileSystem();
+        //remove web/bundles content
+        if ($this->output) {
+            $this->output->writeln('Removing web bundles and js directories...');
+        }
+        $fs->rmDirContent($this->container->getParameter('claroline.param.web_bundles_directory'));
+        //remove web/js content
+        $fs->rmDirContent($this->container->getParameter('claroline.param.web_js_directory'));
         $translationDumpCommand = new TranslationDumpCommand();
         $translationDumpCommand->setContainer($this->container);
         $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
