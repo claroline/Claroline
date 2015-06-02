@@ -28,12 +28,11 @@
 <div class="panel">
     <div class="well">
         {% if not allowUpdate %}
-            <h4> {{ 'permissions'|trans({}, 'platform') }} </h4>
-            {{ 'packages_permissions_error'|trans({}, 'platform') }}
+            <h4> {{ 'packages_permissions_error'|trans({}, 'platform') }} </h4>
             <ul>
             {% for file, isWritable in files %}
                 {% if not isWritable %}
-                    <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({},' platform') }} </li>
+                    <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
                 {% endif %}
             {% endfor %}
             </ul>
