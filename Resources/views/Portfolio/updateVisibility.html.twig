@@ -1,4 +1,6 @@
-{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+{% extends app.request.xmlHttpRequest
+         ? 'IcapPortfolioBundle::modalLayout.html.twig'
+         : 'IcapPortfolioBundle::layout.html.twig' %}
 
 {% form_theme form _self %}
 
@@ -184,12 +186,14 @@
 
         {{ form_rest(form) }}
 
+        {% if not app.request.xmlHttpRequest %}
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary">{{ 'update_visibility'|trans({}, 'icap_portfolio') }}</button>
                 <a href="{{ path("icap_portfolio_index") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
         </div>
+        {% endif %}
     </form>
 {% endblock %}
 

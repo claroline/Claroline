@@ -32,6 +32,14 @@
             {
                 target: "a.rename_link",
                 message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
+            },
+            {
+                target: "a.update_visibility_link",
+                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
+            },
+            {
+                target: "a.update_guides_link",
+                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
             }];
         elementsToModalized.forEach(function (element, index) {
             modalized(element);
