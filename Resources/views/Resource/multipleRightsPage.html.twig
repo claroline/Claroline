@@ -2,7 +2,7 @@
      {% set isModal = false %}
 {% endif %}
 
-{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, workspaceRoles, resource) %}
+{% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable, workspaceRoles, resource, wsManagerRoleName) %}
     {% for tag in tagsList %}
         {% if displayable[tag.getId()] %}
             {% set currentIndex = index ~ "-" ~ tag.getId() %}
@@ -19,7 +19,7 @@
                 <div id="collapse-{{ currentIndex }}" class="panel-body collapse">
                     {% if hierarchy %}
                         {% if hierarchy[tag.getId()]|length > 0 %}
-                            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource) }}
+                            {{ _self.showTag(hierarchy[tag.getId()], tagWorkspaces, hierarchy, currentIndex, displayable, workspaceRoles, resource, wsManagerRoleName) }}
                         {% endif %}
                     {% endif %}
                     {% if tagWorkspaces[tag.getId()] is defined %}
@@ -36,10 +36,10 @@
                                 </div>
                                 <div id="collapse-{{ currentIndex }}-{{ workspace.getCode() }}" class="list-group collapse">
                                     {% for role in workspaceRoles[workspace.getCode()] %}
-                                        {% if role.getName() != 'ROLE_WS_MANAGER_' ~ workspace.getGuid() %}
+                                        {% if role.getName() != wsManagerRoleName %}
                                             <a class="workspace-role-item list-group-item"
                                                href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
-                                                {{ role.getTranslationKey() }}
+                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
                                             </a>
                                         {% endif %}
                                     {% endfor %}
@@ -71,6 +71,7 @@
 {% from _self import renderPager %}
 
 {% set mode = 'panel' %}
+{% set wsManagerRoleName = 'ROLE_WS_MANAGER_' ~ currentWorkspace.getGuid() %}
 
 {% if isModal %}
     {% set mode = 'modal' %}
@@ -273,7 +274,7 @@
                                         <div id="collapse-all-{{ workspace.getCode() }}" class="list-group collapse">
                                             {% for role in workspaceRoles[workspace.getCode()] %}
 
-                                                {% if 'ROLE_WS_MANAGER' in role.getName() != 1 %}
+                                                {% if role.getName() != wsManagerRoleName %}
                                                     <a class="workspace-role-item list-group-item"
                                                        href="{{ path('claro_resource_right_form', {'node':resource.id, 'role':role.id}) }}">
                                                         {{ role.getTranslationKey()|trans({}, 'platform') }}
@@ -290,7 +291,7 @@
                             </div>
                         </div>
                     </div>
-                    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource) }}
+                    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, workspaceRoles, resource, wsManagerRoleName) }}
                 </div>
                 <div id="form-rights-tag-wrapper"></div>
             </div>

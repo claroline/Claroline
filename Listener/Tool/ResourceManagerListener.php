@@ -229,6 +229,7 @@ class ResourceManagerListener
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resourcesRights.html.twig',
             array(
                 'workspace' => $workspace,
+                'currentWorkspace' => $workspace,
                 'resource' => $resource,
                 'resourceRights' => $roleRights,
                 'workspaces' => $datas['workspaces'],

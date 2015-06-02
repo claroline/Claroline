@@ -208,8 +208,8 @@
                 modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
             });
 
-            modalElement.on('keypress', function (e) {
-                if (e.keyCode === 13 && e.target.nodeName !== 'TEXTAREA') {
+            modalElement.on('keypress', function (event) {
+                if (event.keyCode === 13 && event.target.nodeName !== 'TEXTAREA') {
                     event.preventDefault();
                     modal.submitForm(modalElement, successHandler, formId, formRenderHandler);
                 }

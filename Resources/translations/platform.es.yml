@@ -241,6 +241,8 @@ csv_users_import_infos_format_a: 'Las informaciones del usuario deben estar defi
 csv_users_import_infos_format_b: 'Tenga en cuenta que no debe agregar un encabezado de archivo'
 csv_users_import_infos_optional: Original
 csv_users_import_infos_required: Obligatorio
+csv_users_import_infos_ws_role_a: 'Los roles predefinidos por la plataforma son "Colaborador" y "Administrador" pero los valores a utilizar en el archivo CSV son "collaborator" y "manager" respectivamente'
+csv_users_import_infos_ws_role_b: 'Si estos roles son modificados, el nuevo nombre introducido debe ser utilizado en el archivo CSV'
 curl_facebook_application_validation_error: 'La extinción Curl no esta presente.'
 current_category: 'Categoría actual'
 cut: Cortar
@@ -336,6 +338,7 @@ edit_public_profile: edit_public_profile
 edit_public_profile_preferences_error: edit_public_profile_preferences_error
 edit_public_profile_preferences_success: edit_public_profile_preferences_success
 edit_rights_success: 'La modificación de los derechos de acceso a sido realizada con éxito'
+edit_root_directory_icon: 'Modificar el icono del directorio raíz'
 edit_security_token: 'Editar el token de seguridad'
 edit_your_profile_error: edit_your_profile_error
 edit_your_profile_success: edit_your_profile_success
