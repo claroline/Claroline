@@ -11,21 +11,24 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Form\ResourceIconType;
+use Claroline\CoreBundle\Form\ResourceNameType;
+use Claroline\CoreBundle\Form\ResourcePropertiesType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\Factory\FormFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ResourcePropertiesController extends Controller
 {
@@ -39,7 +42,7 @@ class ResourcePropertiesController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"     = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
@@ -83,7 +86,7 @@ class ResourcePropertiesController extends Controller
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
+        $form = $this->formFactory->create(new ResourceNameType(), $node);
 
         return array('form' => $form->createView(), 'nodeId' => $node->getId());
     }
@@ -106,7 +109,7 @@ class ResourcePropertiesController extends Controller
     {
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
-        $form = $this->formFactory->create(FormFactory::TYPE_RESOURCE_RENAME, array(), $node);
+        $form = $this->formFactory->create(new ResourceNameType(), $node);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -139,12 +142,13 @@ class ResourcePropertiesController extends Controller
      */
     public function propertiesFormAction(ResourceNode $node)
     {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
         $username = $node->getCreator()->getUsername();
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         $form = $this->formFactory->create(
-            FormFactory::TYPE_RESOURCE_PROPERTIES,
-            array('creator' => $username),
+            new ResourcePropertiesType($username),
             $node
         );
 
@@ -173,14 +177,12 @@ class ResourcePropertiesController extends Controller
      */
     public function changePropertiesAction(ResourceNode $node, User $user)
     {
-        if (!$user === $node->getCreator()) {
-             throw new AccessDeniedException();
-        }
-
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
         $form = $this->formFactory->create(
-            FormFactory::TYPE_RESOURCE_PROPERTIES,
-            array('creator' => $creatorUsername), $node
+            new ResourcePropertiesType($creatorUsername),
+            $node
         );
         $form->handleRequest($this->request);
 
@@ -207,8 +209,92 @@ class ResourcePropertiesController extends Controller
 
             return new JsonResponse($arrayNode);
         }
+        $isDir = $node->getResourceType()->getName() === 'directory';
 
-        return array('form' => $form->createView(), 'nodeId' => $node->getId());
+        return array(
+            'form' => $form->createView(),
+            'nodeId' => $node->getId(),
+            'isDir' => $isDir
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}/icon/edit/form",
+     *     name="claro_resource_icon_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:iconEditForm.html.twig")
+     *
+     * Displays the resource properties form.
+     *
+     * @param ResourceNode $node
+     *
+     * @return Response
+     */
+    public function iconEditFormAction(ResourceNode $node)
+    {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
+        $username = $node->getCreator()->getUsername();
+        $isDir = $node->getResourceType()->getName() === 'directory';
+
+        $form = $this->formFactory->create(
+            new ResourceIconType($username),
+            $node
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'nodeId' => $node->getId(),
+            'isDir' => $isDir
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/node/{node}/icon/edit",
+     *     name="claro_resource_icon_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:iconEditForm.html.twig")
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     *
+     * Changes the resource properties.
+     *
+     * @param ResourceNode $node
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @return SResponse
+     */
+    public function iconEditAction(ResourceNode $node, User $user)
+    {
+        $collection = new ResourceCollection(array($node));
+        $this->checkAccess('EDIT', $collection);
+        $creatorUsername = $node->getCreator()->getUsername();
+        $form = $this->formFactory->create(
+            new ResourceIconType($creatorUsername),
+            $node
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $file = $form->get('newIcon')->getData();
+
+            if ($file) {
+                $this->resourceManager->changeIcon($node, $file);
+            }
+            $arrayNode = $this->resourceManager->toArray($node, $this->tokenStorage->getToken());
+
+            return new JsonResponse($arrayNode);
+        }
+        $isDir = $node->getResourceType()->getName() === 'directory';
+
+        return array(
+            'form' => $form->createView(),
+            'nodeId' => $node->getId(),
+            'isDir' => $isDir
+        );
     }
 
     /**

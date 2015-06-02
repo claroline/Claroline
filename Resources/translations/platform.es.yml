@@ -338,6 +338,7 @@ edit_public_profile: edit_public_profile
 edit_public_profile_preferences_error: edit_public_profile_preferences_error
 edit_public_profile_preferences_success: edit_public_profile_preferences_success
 edit_rights_success: 'La modificación de los derechos de acceso a sido realizada con éxito'
+edit_root_directory_icon: 'Modificar el icono del directorio raíz'
 edit_security_token: 'Editar el token de seguridad'
 edit_your_profile_error: edit_your_profile_error
 edit_your_profile_success: edit_your_profile_success
