@@ -32,7 +32,7 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function indexAction(User $loggedUser, $page, $guidedPage, $portfolioSlug)
+    public function indexAction(Request $request, User $loggedUser, $page, $guidedPage, $portfolioSlug)
     {
         $this->checkPortfolioToolAccess();
 
@@ -58,12 +58,18 @@ class PortfolioController extends Controller
             $portfolioId = $titleWidget->getPortfolio()->getId();
         }
 
-        return array(
+        $returnData = array(
             'portfoliosPager' => $portfoliosPager,
             'guidedPortfoliosPager' => $guidedPortfoliosPager,
             'availableImportFormats' => $availableImportFormats,
             'portfolioId' => $portfolioId
         );
+
+        if ($request->isXmlHttpRequest()) {
+            $returnData = new Response($this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $returnData));
+        }
+
+        return $returnData;
     }
 
     /**

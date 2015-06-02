@@ -26,16 +26,3 @@
 <div id="list_content">
     {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}
 </div>
-
-{% if portfoliosPager.haveToPaginate %}
-    {{
-        pagerfanta(
-            portfoliosPager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'icap_portfolio_index'
-            }
-        )
-    }}
-{%  endif %}

@@ -94,3 +94,16 @@
         {{ 'no_portfolios_create_one'|trans({'%newPortfolioUrl%': path('icap_portfolio_add')}, 'icap_portfolio')|raw }}
     </p>
 {% endif %}
+
+{% if portfoliosPager.haveToPaginate %}
+    {{
+        pagerfanta(
+            portfoliosPager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'icap_portfolio_index'
+            }
+        )
+    }}
+{%  endif %}

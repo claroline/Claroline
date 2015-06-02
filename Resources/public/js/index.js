@@ -67,11 +67,22 @@
             });
         });
 
+        $('#list_content').on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: event.target.href,
+                success: function(data, textStatus, jqXHR) {
+                    updateListContent(data);
+                    toastr.success(Translator.trans('portfolio_paginated_ajax_notification', {}, 'icap_portfolio'));
+                }
+            });
+        });
+
         function deleteConfirmCallback(target, modal) {
             $.ajax({
                 url: $(target).attr('href'),
                 success: function(data, textStatus, jqXHR) {
-                    $("#list_content").html(data);
+                    updateListContent(data);
                     toastr.success(Translator.trans('portfolio_deleted_ajax_notification', {}, 'icap_portfolio'));
                     modal.modal('hide');
                 }
@@ -84,7 +95,7 @@
                 data: form.serializeArray(),
                 type: 'POST',
                 success: function(data, textStatus, jqXHR) {
-                    $("#list_content").html(data);
+                    updateListContent(data);
                     modalElement.modal('hide');
                     toastr.success(message);
                 }
@@ -113,6 +124,10 @@
                     }
                 );
             });
+        }
+
+        function updateListContent(content) {
+            $("#list_content").html(content);
         }
     });
 })();
