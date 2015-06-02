@@ -85,7 +85,7 @@ class matchingExport extends qtiExport
             $shuffle = "false";
         }
         $this->matchInteraction = $this->document->CreateElement('matchInteraction');
-        $this->matchInteraction->setAttribute("directedPair", "RESPONSE");
+        $this->matchInteraction->setAttribute("responseIdentifier", "RESPONSE");
         $this->matchInteraction->setAttribute("shuffle", $shuffle);
         $this->matchInteraction->setAttribute("maxAssociation", $maxAssociation);
         $this->itemBody->appendChild($this->matchInteraction);
