@@ -241,6 +241,8 @@ csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être d
 csv_users_import_infos_format_b: 'Notez que vous ne devez pas ajouter un en-tête de fichier'
 csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
+csv_users_import_infos_ws_role_a: 'Les rôles prédéfinis par la plate-forme sont "Collaborateur" et "Gestionnaire" et les valeurs à utiliser dans le CSV sont respectivement "collaborator" et "manager"'
+csv_users_import_infos_ws_role_b: 'Si ces rôles sont modifiés, le nouveau nom entré doit être utilisé dans le CSV'
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
 cut: Couper
