@@ -61,3 +61,17 @@
                     </a>
                 </li>
             {% endblock %}
+
+
+            <!-- Vu avec Donovan : quand on est admin, on peut accéder à UN espace collecticiel d'UN étudiant -->
+            <!-- Accès à un espace collecticiel -->
+            {% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
+                <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}active {% endblock %}">
+                    <a id="editCriteriaLink" href="
+                    {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
+                        {{ path('innova_collecticiel_drop', {'resourceId': dropzone.id, 'resourceId2': dropzone.id}) }}
+                    {% endblock %}" class="hometab-link">
+                        Accès à un espace collecticiel
+                    </a>
+                </li>
+            {% endblock %}
