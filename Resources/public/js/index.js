@@ -40,7 +40,7 @@
         $('#list_content').on('click', '.exchange_link', function(event) {
             var scope = angular.element($("#exchange_space_container")).scope();
             scope.$apply(function(){
-                var portfolioId = $(event.delegateTarget).val();
+                var portfolioId = $(event.currentTarget).val();
                 if (portfolioId !== scope.selectedPortfolioId) {
 
                     scope.clickOnPortolio(portfolioId);
