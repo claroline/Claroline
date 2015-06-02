@@ -15,46 +15,45 @@
                 scope: {
                     resources : '=' // Resources of the Step
                 },
-                bindToController: true
+                bindToController: true,
+                link: function (scope, element, attrs) {
+                    var iframeChangeTimeout = null;
+
+                    var activityFrame = element.find('iframe');
+
+                    var resizeIframe = function (activityFrame) {
+                        var height = $(activityFrame).contents().find('body').first().height();
+
+                        if (height) {
+                            $(activityFrame).css('height', height + 15);
+                        }
+                    };
+
+                    // Manage the height of the iFrame
+                    $(activityFrame).load(function () {
+                        var iframe = this;
+                        setTimeout(function () {
+                            resizeIframe(iframe);
+                        }, 50);
+                    });
+
+                    $(window).on('resize', function () {
+                        clearTimeout(iframeChangeTimeout);
+                        iframeChangeTimeout = setTimeout(function () {
+                            $(activityFrame).each(function () {
+                                resizeIframe(this);
+                            });
+                        }, 300);
+                    });
+
+                    clearTimeout(iframeChangeTimeout);
+                    iframeChangeTimeout = setTimeout(function () {
+                        $(activityFrame).each(function () {
+                            resizeIframe(activityFrame);
+                        });
+                    }, 300);
+                }
             };
         }
     ]);
 })();
-
-
-/*$(document).ready(function() {
- // Enable tooltip
- $('*').tooltip({ placement: 'top' });
-
- var $frame = $('iframe#{{ currentStep.activity.primaryResource.id }}');
-
- // Resize IFrame on load
- $frame.load(function () {
- resizeIframe($(this));
-
- // Observe DOM modifications to resize IFrame to fit content
- var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
- var observer = new MutationObserver(function (mutations, observer) {
- resizeIframe($frame);
- });
-
- observer.observe($frame.get(0).contentDocument.body, {
- subtree: true,
- childList: true
- });
-
- $frame.on('resize', function () {
- resizeIframe($frame);
- });
- }).attr('src', '{{ path('claro_resource_open', {'node': currentStep.activity.primaryResource.id, 'resourceType': currentStep.activity.primaryResource.resourceType.name }) }}');
-
- // Resize IFrame on window resize
- $(window).on('resize', function () {
- resizeIframe($frame);
- });
- });
-
- function resizeIframe(frame) {
- var height = frame.contents().height();
- frame.animate({ height: height }, 100, function() {});
- }*/

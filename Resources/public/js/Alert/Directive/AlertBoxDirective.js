@@ -15,8 +15,6 @@
                 link: function (scope) {
                     scope.current = AlertService.getCurrent();
 
-                    console.log(scope.current);
-
                     scope.closeCurrent  = function () {
                         AlertService.closeCurrent();
                     };

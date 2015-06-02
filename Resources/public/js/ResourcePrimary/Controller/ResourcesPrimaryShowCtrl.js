@@ -29,7 +29,3 @@ ResourcesPrimaryShowCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
 ResourcesPrimaryShowCtrl.prototype.constructor = ResourcesPrimaryShowCtrl;
 
 ResourcesPrimaryShowCtrl.prototype.resourceUrl = {};
-
-ResourcesPrimaryShowCtrl.prototype.resourceLoaded = function () {
-    console.log('test loaded');
-};
