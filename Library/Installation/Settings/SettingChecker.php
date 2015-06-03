@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Settings;
 
 class SettingChecker
 {
-    const REQUIRED_PHP_VERSION = '5.4.1';
+    const REQUIRED_PHP_VERSION = '5.5.0';
 
     private $categories = array();
 
@@ -223,8 +223,8 @@ class SettingChecker
             'app/config/parameters.yml' => 'file',
             'app/config/platform_options.yml' => 'file',
             'app/logs' => 'directory',
-            'composer.json' => 'file',
             'files' => 'directory',
+            'files/templates' => 'directory',
             'web' => 'directory',
             'web/uploads' => 'directory',
             'web/js' =>  'directory'

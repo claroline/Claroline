@@ -86,12 +86,11 @@ class Refresher
             $this->output->writeln('Dumping translations...');
         }
         $translationDumpCommand = new TranslationDumpCommand();
+        $translationDumpCommand->setContainer($this->container);
+        $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
         if ($this->output) {
             $this->output->writeln('Compiling javascripts...');
         }
-        $translationDumpCommand->setContainer($this->container);
-        $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
-
         $assetDumpCmd = new DumpCommand();
         $assetDumpCmd->setContainer($this->container);
         $assetDumpCmd->getDefinition()->addOption(
