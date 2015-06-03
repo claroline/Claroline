@@ -151,10 +151,10 @@
                 {{ form_widget(form.visibility) }}
             </div>
         </div>
-        <div class="row" id="choose_visibility_elements">
+        <div class="row{% if 1 != form.visibility.vars.data %} hidden{% endif %}" id="choose_visibility_elements">
             <div class="col-md-11 col-md-offset-1">
                 <div class="form-group">
-                    <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}>
+                    <div>
                         <label class="row">{{ 'select_visible_users'|trans({}, 'icap_portfolio') }}</label>
                         <div class="row">
                             <div class="col-md-12">
@@ -164,7 +164,7 @@
                             </div>
                         </div>
                     </div>
-                    <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}>
+                    <div>
                         <label class="row">{{ 'select_visible_groups'|trans({}, 'icap_portfolio') }}</label>
                         <div class="row">
                             <div class="col-md-12">
@@ -174,7 +174,7 @@
                             </div>
                         </div>
                     </div>
-                    <div {% if 1 != form.visibility.vars.data %}class="hidden" {% endif %}>
+                    <div>
                         <label class="row">{{ 'select_visible_teams'|trans({}, 'icap_portfolio') }}</label>
                         <div class="row">
                             <div class="col-md-12">
