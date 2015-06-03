@@ -109,12 +109,17 @@ class LayoutController extends Controller
         $bundleManager = $this->get('claroline.manager.bundle_manager');
         $version = $bundleManager->getCoreBundleVersion();
 
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
+            $this->roleManager->validateRoleInsert(new User(), $roleUser);
+
         return array(
             'footerMessage' => $this->configHandler->getParameter('footer'),
             'footerLogin' => $this->configHandler->getParameter('footer_login'),
             'footerWorkspaces' => $this->configHandler->getParameter('footer_workspaces'),
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
-            'coreVersion' => $version
+            'coreVersion' => $version,
+            'selfRegistration' => $selfRegistration
         );
     }
 
