@@ -33,9 +33,8 @@ class VisibilityPortfolioType extends AbstractType
             ->add('visibility', 'choice', array(
                 'choices'       => Portfolio::getVisibilityLabels(),
                 'required'      => true,
-                'expanded'      => true,
                 'label'         => 'visibility',
-                'theme_options' => array('label_width' => 'col-md-1'),
+                'theme_options' => array('label_width' => 'col-md-2'),
             ))
             ->add('portfolio_users', 'collection', array(
                 'type'          => 'icap_portfolio_visible_user_form',
