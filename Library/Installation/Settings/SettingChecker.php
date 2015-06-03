@@ -137,7 +137,8 @@ class SettingChecker
             'PHP-XML' => class_exists('DomDocument'),
             'fileinfo' => extension_loaded('fileinfo'),
             'PDO' => class_exists('PDO'),
-            'curl' => function_exists('curl_exec')
+            'curl' => function_exists('curl_exec'),
+            'intl' => defined('INTL_ICU_VERSION'),
         );
 
         foreach ($requiredExtensions as $extension => $isEnabled) {
@@ -162,7 +163,7 @@ class SettingChecker
             'XML' => function_exists('utf8_decode'),
             'gd' => extension_loaded('gd'),
             'ffmpeg' => extension_loaded('ffmpeg'),
-            'intl' => defined('INTL_ICU_VERSION')
+            'ldap' => extension_loaded('ldap')
         );
 
         foreach ($recommendedExtensions as $extension => $isEnabled) {
