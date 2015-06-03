@@ -35,11 +35,11 @@
             },
             {
                 target: "a.update_visibility_link",
-                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_update_visibility_ajax_notification', {}, 'icap_portfolio')
             },
             {
                 target: "a.update_guides_link",
-                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_update_guides_ajax_notification', {}, 'icap_portfolio')
             }];
         elementsToModalized.forEach(function (element, index) {
             modalized(element);
@@ -73,7 +73,6 @@
                 url: event.target.href,
                 success: function(data, textStatus, jqXHR) {
                     updateListContent(data);
-                    toastr.success(Translator.trans('portfolio_paginated_ajax_notification', {}, 'icap_portfolio'));
                 }
             });
         });
