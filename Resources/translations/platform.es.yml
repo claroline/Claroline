@@ -1110,3 +1110,7 @@ your_username: 'Su nombre de usuario es '
 404: 'Page Not found'
 is_not_writable: is_not_writable
 packages_permissions_error: packages_permissions_error
+put_back_permissions_after_update: put_back_permissions_after_update
+warnings: warnings
+requirement_failed_for_update: requirement_failed_for_update
+requirement_failed_for_install: requirement_failed_for_install

@@ -84,7 +84,7 @@ class PackageController extends Controller
     public function listAction()
     {
         $rootPath = $this->container->getParameter('claroline.param.root_directory') . '/';
-        $files = array(
+        $danger = array(
             realpath($rootPath . 'vendor/composer/autoload_namespaces.php') => is_writable(realpath($rootPath . 'vendor/composer/autoload_namespaces.php')),
             realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
             realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'vendor')),
@@ -92,8 +92,18 @@ class PackageController extends Controller
             realpath($rootPath . 'app/cache') => is_writable(realpath($rootPath . 'app/cache')),
             realpath($rootPath . 'app/logs') => is_writable(realpath($rootPath . 'app/logs')),
             realpath($rootPath . 'web/bundles') => is_writable(realpath($rootPath . 'web/bundles'))
-            //realpath($rootPath . 'web') => is_writable(realpath($rootPath . 'web'))
         );
+
+        $warnings = array();
+        $bundles = $this->bundleManager->getInstalled();
+
+        foreach ($bundles as $bundle) {
+            $path = realpath($rootPath . 'vendor/' . $bundle->getBasePath());
+            $warnings[$path] = is_writable($path);
+            $basePath = substr($bundle->getBasePath(), 0, strrpos($bundle->getBasePath(), '/'));
+            $basePath = realpath($rootPath . 'vendor/' . $basePath);
+            $warnings[$basePath] = is_writable($basePath);
+        }
 
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');
         $coreVersion = $coreBundle->getVersion();
@@ -123,7 +133,8 @@ class PackageController extends Controller
             'fetched' => $fetched,
             'installed' => $installed,
             'uninstalled' => $uninstalled,
-            'files' => $files
+            'danger' => $danger,
+            'warnings' => $warnings
         );
     }
 

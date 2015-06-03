@@ -147,7 +147,7 @@
     and soon to be installed but I'm very lazy.
     Feel free to split this method if you want.
 #}
-{% macro renderPackageElement(package, upgradablePackages, fetchNew, isWritable) %}
+{% macro renderPackageElement(package, upgradablePackages, fetchNew, baseRequirementSatisfied) %}
     <div class="panel-group" id="accordion-{{ package.name }}">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -179,13 +179,19 @@
                                 {% endif %}
                             {% endfor %}
                             {% if found == true %}
-                                {% if version_compare(version, foundPkg.version, '<') and isWritable %}
-                                    <a class="badge alert-warning install-pkg"
-                                        data-package-name="{{ package.name }}"
-                                        data-package-version="{{ foundPkg.version }}"
-                                    >
-                                        {{ 'update'|trans({}, 'platform') }}
-                                    </a>
+                                {% if version_compare(version, foundPkg.version, '<') and baseRequirementSatisfied %}
+                                    {% if is_installation_requirement_satisfied(package.basePath) %}
+                                        <a class="badge alert-warning install-pkg"
+                                            data-package-name="{{ package.name }}"
+                                            data-package-version="{{ foundPkg.version }}"
+                                        >
+                                            {{ 'update'|trans({}, 'platform') }}
+                                        </a>
+                                    {% else %}
+                                        <span class="badge alert-danger">
+                                            {{ 'requirement_failed_for_update'|trans({}, 'platform') }}
+                                        </span>
+                                    {% endif %}
                                 {% endif %}
                                 {% if version_compare(version, foundPkg.version, '=') %}
                                     <span class="badge alert-success">
@@ -198,7 +204,7 @@
                                 </span>
                             {% endif %}
                         {% else %}
-                            {% if isWritable %}
+                            {% if baseRequirementSatisfied and is_installation_requirement_satisfied(package.basePath) %}
                                 <a
                                     class="badge install-pkg"
                                     data-package-name="{{ package.name }}"
@@ -206,6 +212,10 @@
                                 >
                                     {{ 'install'|trans({}, 'platform') }}
                                 </a>
+                            {% else %}
+                                <span class="badge alert-danger">
+                                    {{ 'requirement_failed_for_install'|trans({}, 'platform') }}
+                                </span>
                             {% endif %}
                         {% endif %}
                     </span>
@@ -258,6 +268,9 @@
                     {% endif %}
                 {% endif %}
                 <hr>
+                {% if not is_installation_requirement_satisfied(package.basePath) %}
+                    {{ render_package_missing_permissions(package.basePath)|raw }}
+                {% endif %}
             </div>
         </div>
     </div>

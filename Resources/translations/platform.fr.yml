@@ -1110,3 +1110,7 @@ your_username: 'Votre nom d''utilisateur est '
 404: 'La page que vous cherchez n''existe pas.'
 is_not_writable: 'n''est pas accessible en écriture'
 packages_permissions_error: 'Veuillez corriger les erreurs suivantes pour commencer les mises à jour.'
+put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d''origine après une mise à jour.'
+warnings: Attention
+requirement_failed_for_update: Prérequis non remplis pour la mise à jour
+requirement_failed_for_install: Prérequis non rempis pour l'installation
