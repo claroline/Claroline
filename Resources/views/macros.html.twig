@@ -204,7 +204,7 @@
                                 </span>
                             {% endif %}
                         {% else %}
-                            {% if baseRequirementSatisfied and is_installation_requirement_satisfied(package.basePath) %}
+                            {% if baseRequirementSatisfied and is_installation_requirement_satisfied(package.basePath, package.requirements) %}
                                 <a
                                     class="badge install-pkg"
                                     data-package-name="{{ package.name }}"
@@ -268,8 +268,11 @@
                     {% endif %}
                 {% endif %}
                 <hr>
-                {% if not is_installation_requirement_satisfied(package.basePath) %}
-                    {{ render_package_missing_permissions(package.basePath)|raw }}
+                {% if fetchNew == true %}
+                    {% if not is_installation_requirement_satisfied(package.basePath, package.requirements) %}
+                        {{ render_package_missing_permissions(package.basePath)|raw }}
+                        {{ render_package_missing_require(package.requirements)|raw }}
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

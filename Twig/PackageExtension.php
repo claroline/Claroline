@@ -44,7 +44,7 @@ class PackageExtension extends \Twig_Extension
         return array(
             'is_installation_requirement_satisfied' => new \Twig_Function_Method($this, 'isPackageInstallable'),
             'render_package_missing_permissions' => new \Twig_Function_Method($this, 'renderMissingPermissions'),
-            'render_package_missing_require' => new \Twig_Function_Method($this, 'renderMissingPermissions')
+            'render_package_missing_require' => new \Twig_Function_Method($this, 'renderMissingRequire')
         );
     }
 
@@ -53,12 +53,16 @@ class PackageExtension extends \Twig_Extension
         return 'package_extension';
     }
 
-    public function isPackageInstallable($basePath)
+    public function isPackageInstallable($basePath, $requirements = null)
     {
         $fullPath = realpath($this->vendorPath . '/' . $basePath);
         $basePath = realpath($this->vendorPath . '/' . substr($basePath, 0, strrpos($basePath, '/')));
+        $requirementsMet = true;
+        $isWritable = ($fullPath && $basePath) ? is_writable($fullPath) & is_writable($basePath): is_writable($basePath);
+        $missingsExtensions = $this->findMissingRequireExtensions($requirements);
+        if (count($missingsExtensions) >= 1) $requirementsMet = false;
 
-        return ($fullPath && $basePath) ? is_writable($fullPath) & is_writable($basePath): is_writable($basePath);
+        return $isWritable & $requirementsMet;
     }
 
     public function renderMissingPermissions($basePath)
@@ -85,7 +89,48 @@ class PackageExtension extends \Twig_Extension
         return $rendering;
     }
 
-    public function renderMissingRequire($require)
+    public function renderMissingRequire($require = null)
+    {
+        $missingExtensions = $this->findMissingRequireExtensions($require);
+        $liExt = '';
+        $liBundle = '';
+
+        foreach ($missingExtensions as $ext) {
+            $arr = explode('ext-', $ext);
+            $missingExtensionMsg = $this->translator->trans('ext_php_missing', array('%ext%' => $arr[1]), 'platform');
+            $liExt .= sprintf("<li class='alert alert-danger'>%s</li>", $missingExtensionMsg);
+        }
+
+        $rendering = sprintf(
+            '<ul>%s%s</ul>',
+            $liExt,
+            $liBundle
+        );
+
+        return $rendering;
+    }
+
+    //do not support version yet...
+    private function findMissingRequireExtensions($object)
+    {
+        $missings = array();
+        if ($object === null) return $missings;
+        $requires = get_object_vars($object);
+
+        //check php extension...
+        foreach ($requires as $require => $version) {
+            if (strpos($require, 'ext-') === 0) {
+                $arr = explode('ext-', $require);
+                if (!extension_loaded($arr[1])) {
+                    $missings[] = $require;
+                }
+            }
+        }
+
+        return $missings;
+    }
+
+    private function findMissingRequireBundle($object)
     {
 
     }

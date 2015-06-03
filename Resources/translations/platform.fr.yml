@@ -1114,3 +1114,4 @@ put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d
 warnings: Attention
 requirement_failed_for_update: Prérequis non remplis pour la mise à jour
 requirement_failed_for_install: Prérequis non rempis pour l'installation
+ext_php_missing: L'extension php %ext% est manquante

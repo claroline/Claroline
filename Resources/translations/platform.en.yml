@@ -1114,3 +1114,4 @@ put_back_permissions_after_update: 'Don''t forget to put your original permissio
 warnings: Warnings
 requirement_failed_for_update: Requirements failed for update
 requirement_failed_for_install: Requirements failed for install
+ext_php_missing: The php extension %ext% is missing

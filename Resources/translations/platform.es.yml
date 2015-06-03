@@ -1114,3 +1114,4 @@ put_back_permissions_after_update: put_back_permissions_after_update
 warnings: warnings
 requirement_failed_for_update: requirement_failed_for_update
 requirement_failed_for_install: requirement_failed_for_install
+ext_php_missing: ext_php_missing
