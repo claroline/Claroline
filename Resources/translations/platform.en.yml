@@ -1116,3 +1116,4 @@ requirement_failed_for_update: Requirements failed for update
 requirement_failed_for_install: Requirements failed for install
 ext_php_missing: The php extension %ext% is missing
 claroline_bundle_missing: The bundle %bundle% is not installed. Please install it before going further.
+package_update_danger: This functionnality is not stable yet and can crash your platform. Please backup your data before going further.

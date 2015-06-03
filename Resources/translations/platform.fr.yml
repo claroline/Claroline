@@ -1116,3 +1116,4 @@ requirement_failed_for_update: Prérequis non remplis pour la mise à jour
 requirement_failed_for_install: Prérequis non remplis pour l'installation
 ext_php_missing: L'extension php %ext% est manquante
 claroline_bundle_missing: Le bundle %bundle% n'est pas installé. Veuillez l'installer avant d'aller plus loin.
+package_update_danger: Cette fonctionnalité n'est pas encore totalement stable et peut rendre inutilisable votre plateforme. Il est important de bien faire un backup de vos données avant de l'utiliser.

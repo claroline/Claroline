@@ -26,6 +26,11 @@
     {% endif %}
 {% endfor %}
 <div class="panel">
+    <div class="alert alert-danger">
+        <div>
+            {{ 'package_update_danger'|trans({}, 'platform') }}
+        </div>
+    </div>
     <div class="well">
         {% if not allowUpdate %}
             <h4> {{ 'packages_permissions_error'|trans({}, 'platform') }} </h4>
