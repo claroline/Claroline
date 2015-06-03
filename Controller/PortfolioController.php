@@ -62,7 +62,9 @@ class PortfolioController extends Controller
             'portfoliosPager' => $portfoliosPager,
             'guidedPortfoliosPager' => $guidedPortfoliosPager,
             'availableImportFormats' => $availableImportFormats,
-            'portfolioId' => $portfolioId
+            'portfolioId' => $portfolioId,
+            'page' => $page,
+            'guidedPage' => $guidedPage
         );
 
         if ($request->isXmlHttpRequest()) {

@@ -45,7 +45,7 @@
             modalized(element);
         });
 
-        $('#list_content').on('click', '.exchange_link', function(event) {
+        $('#list').on('click', '.exchange_link', function(event) {
             var scope = angular.element($("#exchange_space_container")).scope();
             scope.$apply(function(){
                 var portfolioId = $(event.currentTarget).val();
@@ -57,7 +57,7 @@
             });
         });
 
-        $('#list_content').on('click', '.delete', function(event) {
+        $('#list').on('click', '.delete', function(event) {
             event.preventDefault();
             var deleteLink = $(event.target);
             deleteLink.confirmModal({
@@ -67,12 +67,12 @@
             });
         });
 
-        $('#list_content').on('click', '.pagination a', function(event) {
+        $('#list').on('click', '.pagination a', function(event) {
             event.preventDefault();
             $.ajax({
                 url: event.target.href,
                 success: function(data, textStatus, jqXHR) {
-                    updateListContent(data);
+                    updateList(data);
                 }
             });
         });
@@ -85,7 +85,7 @@
                     $.ajax({
                         url: window.location,
                         success: function(data, textStatus, jqXHR) {
-                            updateListContent(data);
+                            updateList(data);
                             toastr.success(Translator.trans('portfolio_imported_ajax_notification', {}, 'icap_portfolio'));
                         }
                     });
@@ -100,7 +100,7 @@
             $.ajax({
                 url: $(target).attr('href'),
                 success: function(data, textStatus, jqXHR) {
-                    updateListContent(data);
+                    updateList(data);
                     toastr.success(Translator.trans('portfolio_deleted_ajax_notification', {}, 'icap_portfolio'));
                     modal.modal('hide');
                 }
@@ -113,7 +113,7 @@
                 data: form.serializeArray(),
                 type: 'POST',
                 success: function(data, textStatus, jqXHR) {
-                    updateListContent(data);
+                    updateList(data);
                     modalElement.modal('hide');
                     toastr.success(message);
                 }
@@ -144,8 +144,8 @@
             });
         }
 
-        function updateListContent(content) {
-            $("#list_content").html(content);
+        function updateList(content) {
+            $("#list").html(content);
         }
     });
 })();
