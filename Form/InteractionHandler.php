@@ -6,7 +6,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
 use UJM\ExoBundle\Entity\Category;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
 
 abstract class InteractionHandler
@@ -34,7 +34,7 @@ abstract class InteractionHandler
      * @param Translation $translator
      *
      */
-    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, DataCollectorTranslator $translator=NULL)
+    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, TranslatorInterface $translator=NULL)
     {
         $this->form     = $form;
         $this->request  = $request;
