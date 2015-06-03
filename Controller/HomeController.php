@@ -22,6 +22,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @TODO doc
@@ -88,6 +89,10 @@ class HomeController
      */
     public function homeAction($type)
     {
+        if (null === $this->manager->getType($type)) {
+             throw new NotFoundHttpException("Page not found");
+        }
+
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
             array(

@@ -104,7 +104,7 @@ class HomeManager
      */
     public function contentLayout($type, $father = null, $region = null, $admin = null)
     {
-        $type = $this->type->findOneBy(array('name' => $type));
+        $type = $this->getType($type);
         $content = $this->getContentByType($type->getName(), $father, $region);
         $array = null;
 
@@ -118,6 +118,16 @@ class HomeManager
         }
 
         return $array;
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return ClarolineCoreBundle:Home\Type
+     */
+    public function getType($type)
+    {
+        return $this->type->findOneBy(array('name' => $type));
     }
 
     /**
