@@ -11,9 +11,12 @@
 
 namespace Claroline\ForumBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ForumBundle\Entity\Category;
@@ -67,6 +70,8 @@ class Manager
     private $mailManager;
     private $container;
     private $sc;
+    private $maskManager;
+    private $rightsManager;
 
     /**
      * Constructor.
@@ -80,7 +85,9 @@ class Manager
      *     "router"         = @DI\Inject("router"),
      *     "mailManager"    = @DI\Inject("claroline.manager.mail_manager"),
      *     "container"      = @DI\Inject("service_container"),
-     *     "sc"           = @DI\Inject("security.context")
+     *     "sc"             = @DI\Inject("security.context"),
+     *     "maskManager"    = @DI\Inject("claroline.manager.mask_manager"),
+     *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
      * })
      */
     public function __construct(
@@ -92,7 +99,9 @@ class Manager
         RouterInterface $router,
         MailManager $mailManager,
         ContainerInterface $container,
-        SecurityContextInterface $sc
+        SecurityContextInterface $sc,
+        MaskManager $maskManager,
+        RightsManager $rightsManager
     )
     {
         $this->om = $om;
@@ -110,6 +119,8 @@ class Manager
         $this->mailManager = $mailManager;
         $this->container = $container;
         $this->sc = $sc;
+        $this->maskManager = $maskManager;
+        $this->rightsManager = $rightsManager;
     }
 
     /**
@@ -626,5 +637,24 @@ class Manager
         $this->om->remove($notification);
         $this->dispatch(new UnsubscribeForumEvent($forum));
         $this->om->endFlushSuite();
+    }
+
+    public function createDefaultPostRights(ResourceNode $node)
+    {
+        $workspace = $node->getWorkspace();
+        $resourceType = $node->getResourceType();
+        $role = $this->roleRepo->findOneBaseWorkspaceRole('COLLABORATOR', $workspace);
+
+        if (!is_null($role)) {
+            $postDecoder = $this->maskManager->getDecoder($resourceType, 'post');
+
+            if (!is_null($postDecoder)) {
+                $rights = $this->rightsManager->getOneByRoleAndResource($role, $node);
+                $value = $postDecoder->getValue();
+                $mask = $rights->getMask();
+                $permissions = $mask | $value;
+                $this->rightsManager->editPerms($permissions, $role, $node);
+            }
+        }
     }
 }
