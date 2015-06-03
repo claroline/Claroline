@@ -104,12 +104,12 @@
                         <p class="text-muted">{{ message.getCreationDate()| timeAgo }}</p>
                         <hr>
                         <div class="pull-right clearfix">
-                            {% if canAnswer and not subject.isClosed() %}
+                            {% if canPost and not subject.isClosed() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_quote_message_form', {'message': message.getId()}) }}">
                                     <i class="fa fa-pencil"></i> {{ 'quote'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
-                            {% if canAnswer and not subject.isClosed() %}
+                            {% if canPost and not subject.isClosed() %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}">
                                     <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
@@ -135,9 +135,12 @@
         </table>
         <div>
             {{ renderPager(subject.getId(), pager, max) }}
-            <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
+            
+            {% if canPost %}
+                <btn id='fast-reply-btn' class='btn btn-primary pull-right'>{{ 'fast_reply'|trans({}, 'forum')}}</btn>
+            {% endif %}
         </div>
-        {% if canAnswer %}
+        {% if canPost %}
         <div class="fast-reply" style="display: none;">
             <h4><i class="fa fa-reply"></i> {{ 'new_message' | trans({}, 'forum') }}</h4>
             <div>
@@ -155,7 +158,7 @@
 	            <a class="btn btn-default" href='{{ path('claro_forum_subjects', { 'category': category.getId() }) }}'>
 	               {{ 'back'|trans({}, 'platform') }}
 	            </a>
-	            {% if canAnswer %}
+	            {% if canPost %}
 	                <a class="btn btn-primary">
 	                    <i class="fa fa-reply"></i> {{ 'send' | trans({}, 'platform') }}
 	                </a>
@@ -167,7 +170,18 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if canAnswer %}
+    <script>
+        (function () {
+            $('#max-select').on('change', function () {
+                window.location.href = Routing.generate(
+                    'claro_forum_messages',
+                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
+                );
+            });
+        })();
+    </script>
+    
+    {% if canPost %}
         <script>
             (function () {
                 'use strict';
@@ -200,6 +214,7 @@
             })();
         </script>
     {% endif %}
+        
     {% if isModerator %}
         <script>
             function createValidationBox() {
@@ -230,15 +245,16 @@
                     }
                 });
             });
-            $('#max-select').on('change', function () {
-                window.location.href = Routing.generate(
-                    'claro_forum_messages',
-                    {'subject': {{ subject.getId()}}, 'max': $(this).val()}
-                );
-            });
-            $('body').on('click', '#fast-reply-btn', function() {
-                $('.fast-reply').show();
-            });
+        </script>
+    {% endif %}
+        
+    {% if canPost %}
+        <script>
+            (function () {
+                $('body').on('click', '#fast-reply-btn', function() {
+                    $('.fast-reply').show();
+                });
+            })();
         </script>
     {% endif %}
 {% endblock %}

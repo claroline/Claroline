@@ -308,7 +308,7 @@ class ForumController extends Controller
         ) && !$isAnon;
         $pager = $this->manager->getMessagesPager($subject, $page, $max);
         $collection = new ResourceCollection(array($forum->getResourceNode()));
-        $canAnswer = $this->authorization->isGranted('post', $collection) && !$isAnon;
+        $canPost = $this->authorization->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
 
         return array(
@@ -317,9 +317,9 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'form' => $form->createView(),
-            'canAnswer' => $canAnswer,
             'category' => $subject->getCategory(),
-            'max' => $max
+            'max' => $max,
+            'canPost' => $canPost
         );
     }
 
@@ -328,6 +328,7 @@ class ForumController extends Controller
      *     "/create/message/{subject}",
      *     name="claro_forum_create_message"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @param Subject $subject
      */
@@ -946,6 +947,7 @@ class ForumController extends Controller
      *     "/reply/message/{message}",
      *     name="claro_forum_reply_message_form"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @Template("ClarolineForumBundle:Forum:replyMessageForm.html.twig")
      * @param Message $message
@@ -982,6 +984,7 @@ class ForumController extends Controller
      *     "/quote/message/{message}",
      *     name="claro_forum_quote_message_form"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      *
      * @Template("ClarolineForumBundle:Forum:quoteMessageForm.html.twig")
      * @param Message $message
@@ -997,7 +1000,7 @@ class ForumController extends Controller
 
         if ($form->isValid()) {
             $newMsg = $form->getData();
-            $this->manager->createMessage($newMsg, $message);
+            $this->manager->createMessage($newMsg, $subject);
 
             return new RedirectResponse(
                 $this->generateUrl('claro_forum_messages', array('subject' => $subject->getId()))
