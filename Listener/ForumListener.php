@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
+use Claroline\CoreBundle\Event\ResourceCreatedEvent;
 use Claroline\CoreBundle\Event\ImportResourceTemplateEvent;
 use Claroline\CoreBundle\Event\ExportResourceTemplateEvent;
 use Claroline\ForumBundle\Entity\Forum;
@@ -113,5 +114,9 @@ class ForumListener extends ContainerAware
         }            
     }
 
-
+    public function onResourceCreated(ResourceCreatedEvent $event)
+    {
+        $node = $event->getResourceNode();
+        $this->container->get('claroline.manager.forum_manager')->createDefaultPostRights($node);
+    }
 }
