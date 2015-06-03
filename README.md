@@ -8,4 +8,4 @@ It also creates a widget that lists all of your favourites so that you can open 
 ## Installation
 To install the plugin, run this following command:
 ```sh
-$ composer require hevinci/favourite-bundle "~1.1"
+$ composer require hevinci/favourite-bundle "~2.0"
