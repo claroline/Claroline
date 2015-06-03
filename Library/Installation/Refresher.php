@@ -74,14 +74,21 @@ class Refresher
     public function dumpAssets($environment)
     {
         $fs = new FileSystem();
+        /*
         //remove web/bundles content
         if ($this->output) {
             $this->output->writeln('Removing web bundles and js directories...');
         }
         $fs->rmDirContent($this->container->getParameter('claroline.param.web_bundles_directory'));
         //remove web/js content
-        $fs->rmDirContent($this->container->getParameter('claroline.param.web_js_directory'));
+        $fs->rmDirContent($this->container->getParameter('claroline.param.web_js_directory'));*/
+        if ($this->output) {
+            $this->output->writeln('Dumping translations...');
+        }
         $translationDumpCommand = new TranslationDumpCommand();
+        if ($this->output) {
+            $this->output->writeln('Compiling javascripts...');
+        }
         $translationDumpCommand->setContainer($this->container);
         $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
 
