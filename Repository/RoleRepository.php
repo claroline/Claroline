@@ -605,4 +605,15 @@ class RoleRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findOneBaseWorkspaceRole($roleType, Workspace $workspace)
+    {
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.name = 'ROLE_WS_{$roleType}_{$workspace->getGuid()}'
+        ";
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getOneOrNullResult();
+    }
 }
