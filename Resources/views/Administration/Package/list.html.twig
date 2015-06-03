@@ -20,7 +20,7 @@
 
 {% block section_content %}
 {% set allowUpdate = true %}
-{% for file, isWritable in files %}
+{% for file, isWritable in danger %}
     {% if not isWritable %}
         {% set allowUpdate = false %}
     {% endif %}
@@ -30,7 +30,7 @@
         {% if not allowUpdate %}
             <h4> {{ 'packages_permissions_error'|trans({}, 'platform') }} </h4>
             <ul>
-            {% for file, isWritable in files %}
+            {% for file, isWritable in danger %}
                 {% if not isWritable %}
                     <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
                 {% endif %}
@@ -44,10 +44,37 @@
                 <li>{{ 'package_install_auto_reload'|trans({}, 'platform') }}</li>
                 <li>{{ 'activate_maintenance_mode'|trans({}, 'platform') }}</li>
                 <li>{{ 'install_update_cant_be_undone'|trans({}, 'platform') }}</li>
+                <li>{{ 'put_back_permissions_after_update'|trans({}, 'platform') }}</li>
             </ul>
         {% endif %}
     </div>
     <div class="panel-body">
+        {% if warnings|length > 0 %}
+            <div class="panel-group" id="warnings-accordion">
+                <div class="panel panel-default">
+                    <div class="panel alert alert-warning">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#core-accordion" href="#warnings">
+                                <b>{{ 'warnings'|trans({}, 'platform') }}</b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="warnings" class="panel-collapse collapse">
+                        <div class="panel-inner">
+                            </br>
+                            <ul>
+                                {% for file, isWritable in warnings %}
+                                    {% if not isWritable %}
+                                        <li class="alert alert-warning"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </br>
+        {% endif %}
         <div class="panel-group" id="core-accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
