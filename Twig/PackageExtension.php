@@ -58,9 +58,20 @@ class PackageExtension extends \Twig_Extension
         $fullPath = realpath($this->vendorPath . '/' . $basePath);
         $basePath = realpath($this->vendorPath . '/' . substr($basePath, 0, strrpos($basePath, '/')));
         $requirementsMet = true;
-        $isWritable = ($fullPath && $basePath) ? is_writable($fullPath) & is_writable($basePath): is_writable($basePath);
+        $isWritable = true;
+
+        if ($fullPath && $basePath) {
+            $isWritable = is_writable($fullPath) & is_writable($basePath);
+        } else {
+            if ($fullPath) $isWritable = is_writable($fullPath);
+            if ($basePath) $isWritable = is_writable($basePath);
+        }
+
         $missingsExtensions = $this->findMissingRequireExtensions($requirements);
         if (count($missingsExtensions) >= 1) $requirementsMet = false;
+
+        $missingsBundles = $this->findMissingRequireBundle($requirements);
+        if (count($missingsBundles) >= 1) $requirementsMet = false;
 
         return $isWritable & $requirementsMet;
     }
@@ -91,13 +102,20 @@ class PackageExtension extends \Twig_Extension
 
     public function renderMissingRequire($require = null)
     {
-        $missingExtensions = $this->findMissingRequireExtensions($require);
         $liExt = '';
         $liBundle = '';
+        $missingExtensions = $this->findMissingRequireExtensions($require);
 
         foreach ($missingExtensions as $ext) {
             $arr = explode('ext-', $ext);
             $missingExtensionMsg = $this->translator->trans('ext_php_missing', array('%ext%' => $arr[1]), 'platform');
+            $liExt .= sprintf("<li class='alert alert-danger'>%s</li>", $missingExtensionMsg);
+        }
+
+        $missingBundles = $this->findMissingRequireBundle($require);
+
+        foreach ($missingBundles as $bundle) {
+            $missingExtensionMsg = $this->translator->trans('claroline_bundle_missing', array('%bundle%' => $bundle), 'platform');
             $liExt .= sprintf("<li class='alert alert-danger'>%s</li>", $missingExtensionMsg);
         }
 
@@ -132,6 +150,20 @@ class PackageExtension extends \Twig_Extension
 
     private function findMissingRequireBundle($object)
     {
+        $missings = array();
+        if ($object === null) return $missings;
+        $requires = get_object_vars($object);
 
+        //check composer requirements...
+        foreach ($requires as $require => $version) {
+            if (strpos($require, 'ext-') !== 0 && strpos($require, 'php') !== 0) {
+                //then we must check if the require is somewhere...
+                if (!is_dir($this->vendorPath . '/' . $require)) {
+                    $missings[] = $require;
+                }
+            }
+        }
+
+        return $missings;
     }
 }

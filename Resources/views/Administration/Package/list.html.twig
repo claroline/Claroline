@@ -49,7 +49,14 @@
         {% endif %}
     </div>
     <div class="panel-body">
-        {% if warnings|length > 0 %}
+        {% set displayWarnings = false %}
+        {% for file, isWritable in warnings %}
+            {% if not isWritable %}
+                {% set displayWarnings = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% if displayWarnings %}
             <div class="panel-group" id="warnings-accordion">
                 <div class="panel panel-default">
                     <div class="panel alert alert-warning">

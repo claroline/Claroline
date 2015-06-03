@@ -656,7 +656,7 @@ over_max_length: 'Cette valeur est trop longue'
 owner: Propriétaire
 owner_s: Propriétaire(s)
 package_install: 'Installation d''un paquet'
-package_install_auto_reload: 'Cette page est rechargée automatiquement à la fin de l''installaion d''un paquet.'
+package_install_auto_reload: 'Cette page est rechargée automatiquement à la fin de l''installation d''un paquet.'
 package_install_confirm: 'Êtes-vous sûr de vouloir installer %bundle% %version% ?'
 package_update_impossible: 'Mise à jour des paquets impossible sur cette page. Veuillez contacter l''administrateur.'
 package_upgrade_all_warning: 'Attention, ceci mettra à jour tous les paquets de la plateforme. Cette opération ne peut être annulée. Il est conseillé d''effectuer une sauvegarde des fichiers ainsi que de la base de données avant d''effectuer cette opération.'
@@ -1113,5 +1113,6 @@ packages_permissions_error: 'Veuillez corriger les erreurs suivantes pour commen
 put_back_permissions_after_update: 'N''oubliez pas de remettre les permissions d''origine après une mise à jour.'
 warnings: Attention
 requirement_failed_for_update: Prérequis non remplis pour la mise à jour
-requirement_failed_for_install: Prérequis non rempis pour l'installation
+requirement_failed_for_install: Prérequis non remplis pour l'installation
 ext_php_missing: L'extension php %ext% est manquante
+claroline_bundle_missing: Le bundle %bundle% n'est pas installé. Veuillez l'installer avant d'aller plus loin.
