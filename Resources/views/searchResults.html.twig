@@ -89,7 +89,7 @@
                         </td>
                         <td>
                             <div>
-                                <p class="message-content"> {{ message.getContent() }} </p>
+                                <p class="message-content"> {{ message.getContent()|raw }} </p>
                                 <p class="text-muted">{{ message.getCreationDate()| timeAgo }} </p>
                             </div>
                         </td>
