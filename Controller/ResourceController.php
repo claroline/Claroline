@@ -185,6 +185,11 @@ class ResourceController
                         array(),
                         $isPublished
                     );
+                    $this->dispatcher->dispatch(
+                        'resource_created_' . $resourceType,
+                        'ResourceCreated',
+                        array($createdResource->getResourceNode())
+                    );
 
                     $nodesArray[] = $this->resourceManager->toArray(
                         $createdResource->getResourceNode(), $this->tokenStorage->getToken()
