@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Installation\Settings;
 
 class SettingChecker
 {
-    const REQUIRED_PHP_VERSION = '5.5.0';
+    const REQUIRED_PHP_VERSION = '5.4.1';
 
     private $categories = array();
 
@@ -96,6 +96,12 @@ class SettingChecker
             'Parameter %parameter% must be set to %value% in your php.ini',
             array('parameter' => 'detect_unicode', 'value' => 'false'),
             false === ini_get('detect_unicode')
+        );
+        
+        $category->addRequirement(
+            'Parameter %parameter% should be equal or greater than %value% in your php.ini',
+            array('parameter' => 'max_execution_time', 'value' => 600),
+            ini_get('max_execution_time') >= 600 ? true: false
         );
 
         $category->addRecommendation(
