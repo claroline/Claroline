@@ -1,4 +1,6 @@
-{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+{% extends app.request.xmlHttpRequest
+         ? 'IcapPortfolioBundle::modalLayout.html.twig'
+         : 'IcapPortfolioBundle::layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'adding_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
@@ -10,7 +12,7 @@
             {
                 'icon': 'fa fa-list-alt',
                 'name': 'my_portfolios'|trans({}, 'icap_portfolio'),
-                'href': path('icap_portfolio_list')
+                'href': path('icap_portfolio_index')
             },
             {
                 'icon': 'fa fa-list-alt',
@@ -22,16 +24,18 @@
 {% endblock %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_add') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_add') }}" method="post" id="portfolioForm" class="form-horizontal" {{ form_enctype(form) }}>
         {{ form_errors(form) }}
 
         {{ form_widget(form) }}
 
+        {% if not app.request.xmlHttpRequest %}
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-primary">{{ 'add'|trans({}, 'platform') }}</button>
-                <a href="{{ path("icap_portfolio_list") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+                <a href="{{ path("icap_portfolio_index") }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
             </div>
         </div>
+        {% endif %}
     </form>
 {% endblock %}

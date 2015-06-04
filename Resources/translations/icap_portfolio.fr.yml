@@ -72,11 +72,8 @@ no_comments: 'Aucun commentaire'
 comment_type_your_message: 'Ecrivez votre message ici...'
 comment_send: 'Envoyer'
 configuration: 'Configuration'
-portfolio_i_guide: 'Portfolios dont je suis accompagnateur'
 see: 'Voir'
 guide_exchange: 'Echanger avec les accompagnateurs'
-portfolio_exchange_space: 'Espace d''échange sur les portfolios'
-portfolios: 'Portfolios'
 portfolios_comments: 'Echanges'
 my_owned_portfolio: 'Mes portfolios'
 no_owned_portfolio: 'Aucun portfolio possédé'
@@ -86,7 +83,7 @@ select_portfolio_to_comment: 'Sélectionner un portfolio pour échanger dessus'
 comment_date_format: 'dd/MM/yyyy HH:mm:ss'
 see_all_exchange: 'Voir tous les échanges'
 no_skills: 'Aucune compétence renseignée'
-import_portfolio: 'Importer un portfolio'
+import: 'Importer'
 export_portfolio: 'Exporter au format Leap2A'
 importing_portfolio: 'Importation d''un portfolio'
 icap_portfolio_import_form_format: 'Format d''importation'
@@ -100,7 +97,7 @@ check_before_do_import: 'Si les données affichées sont correctes vous pouvez'
 experience_title: 'Expérience'
 experience_post: 'Intitulé du poste'
 experience_company_name: 'Entreprise'
-my_portfolios: 'Mes portfolios'
+my_portfolios: 'Mon espace portfolio'
 today: "aujourd'hui"
 formation_establishmentName: "Etablissement"
 formation_diploma : "Diplôme"
@@ -110,3 +107,14 @@ user_information_form_show_avatar: "Affichage de la photo du profil ?"
 user_information_form_show_mail: "Affichage de l'adresse mail ?"
 user_information_form_show_phone: "Affichage du numéro de téléphone ?"
 user_information_form_show_description: "Affichage de la description du profil ?"
+owner: "Propriétaire"
+presentation: "Présentation"
+portfolio: "Portfolio"
+exchange_space: "Espace d'échange"
+presentation_message: "<h3>Bienvenue dans votre espace portfolio</h3><br>Depuis cet espace vous pouvez :<br /><ul><li>gérer vos portfolios</li><li>voir les portfolios que vous accompagnez</li><li>échanger sur vos portfolios ou les portfolios que vous accompagnez</li></ul>"
+portfolio_added_ajax_notification: "Portfolio ajouté avec succès"
+portfolio_renamed_ajax_notification: "Portfolio renommé avec succès"
+portfolio_update_visibility_ajax_notification: "Visibilité du portfolio mise à jour avec succès"
+portfolio_update_guides_ajax_notification: "Liste des accompagnateurs du portfolio mise à jour avec succès"
+portfolio_imported_ajax_notification: "Import d'un portfolio effectué avec succès"
+portfolio_deleted_ajax_notification: "Portfolio supprimé avec succès"

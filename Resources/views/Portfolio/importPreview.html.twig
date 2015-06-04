@@ -1,4 +1,6 @@
-{% extends 'IcapPortfolioBundle::layout.html.twig' %}
+{% extends app.request.xmlHttpRequest
+         ? 'IcapPortfolioBundle::modalLayout.html.twig'
+         : 'IcapPortfolioBundle::layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'preview_importing_portfolio' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
@@ -10,7 +12,7 @@
             {
                 'icon': 'fa fa-list-alt',
                 'name': 'my_portfolios'|trans({}, 'icap_portfolio'),
-                'href': path('icap_portfolio_list')
+                'href': path('icap_portfolio_index')
             },
             {
                 'icon': 'fa fa-list-alt',
@@ -22,7 +24,7 @@
 {% endblock %}
 
 {% block content_body %}
-    <form method="POST">
+    <form action="{{ path('icap_portfolio_import_preview', {'format': format, 'previewId': previewId}) }}" method="post" id="portfolio_import_preview">
         <p>
             {{ 'check_before_do_import'|trans({}, 'icap_portfolio') }} <button type="submit" class="btn btn-xs btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
         </p>
@@ -39,6 +41,8 @@
                 </div>
             {% endif %}
         {% endfor %}
+        {% if not app.request.xmlHttpRequest %}
         <button type="submit" class="btn btn-primary">{{ 'do_import'|trans({}, 'icap_portfolio') }}</button>
+        {% endif %}
     </form>
 {% endblock %}

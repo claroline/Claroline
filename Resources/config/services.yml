@@ -5,15 +5,13 @@ parameters:
 services:
     # repositories
     icap_portfolio.repository.widget_type:
-        class:           %icap_portfolio.repository.widget_type.class%
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: %icap_portfolio.repository.widget_type.class%
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - IcapPortfolioBundle:Widget\WidgetType
     icap_portfolio.repository.widget:
-        class:           %icap_portfolio.repository.widget.class%
-        factory_service: doctrine.orm.entity_manager
-        factory_method:  getRepository
+        class: %icap_portfolio.repository.widget.class%
+        factory: ["@doctrine.orm.entity_manager", getRepository]
         arguments:
             - IcapPortfolioBundle:Widget\AbstractWidget
 

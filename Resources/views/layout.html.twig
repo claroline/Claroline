@@ -2,25 +2,28 @@
 
 {% block title %}{{ parent() }} - {{ 'my_portfolios'|trans({}, 'icap_portfolio') }}{% endblock %}
 
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-list-alt',
+                'name': 'my_portfolios'|trans({}, 'icap_portfolio'),
+                'href': path('icap_portfolio_index')
+            }
+        ])
+    }}
+{% endblock %}
+
 {% block content %}
-    <div class="panel panel-default">
-        <div class="panel-heading relative">
-            <h3 class="panel-title">
-                {% block content_title %}{{ 'my_portfolios'|trans({}, 'icap_portfolio') }}{% endblock %}
-            </h3>
-        </div>
-        <div class="panel-body content_body">
-            {{ macros.flashBox() }}
-            {% block content_body %}{% endblock %}
-        </div>
-    </div>
+    {{ macros.flashBox() }}
+    {% block content_body %}{% endblock %}
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/style.css'
-      "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
-    %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    "@IcapPortfolioBundle/Resources/views/less/portfolio.less"
+    "@IcapPortfolioBundle/Resources/views/less/tabs.less" %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
     {% endstylesheets %}
 {% endblock %}

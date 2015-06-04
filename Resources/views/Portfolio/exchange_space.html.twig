@@ -1,0 +1,73 @@
+<div data-ng-app="commentsApp" data-ng-strict-di>
+    <div id="exchange_space_container" class="portfolios-container col-lg-3">
+        <div class="portfolio-container" data-ng-init="init()">
+            <p class="list-group-item title lead text-center">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</p>
+            <ul class="list-group">
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | filter:{type: 'owned'})"
+                    data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                    data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !ownedPortfolios.length">
+                    {{ 'no_owned_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+            </ul>
+            <p class="list-group-item title lead text-center">{{ 'my_guided_portfolio'|trans({}, 'icap_portfolio') }}</p>
+            <ul class="list-group">
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | filter:{type: 'guided'})"
+                    data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                    data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !guidedPortfolios.length">
+                    {{ 'no_guided_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="comments-container col-lg-9">
+        <div class="title-container">
+            <p class="lead text-center">{{ 'portfolios_comments'|trans({}, 'icap_portfolio') }}</p>
+        </div>
+        <div class="comment-container loading"
+             data-scroll-container data-ng-init="initComments(selectedPortfolioId)" data-ng-class="{'loading': !comments.$resolved}">
+            <div class="media comment ng-cloak" data-ng-repeat="comment in comments | orderBy:['+date']"
+                 data-ng-show="selectedPortfolioId && comments.$resolved">
+                {% verbatim %}
+                <img class="pull-left media-object avatar" alt="{{ comment.sender.firstName }} {{ comment.sender.lastName }}"
+                     data-ng-src="{{ assetPath + comment.sender.avatar }}" data-ng-if="comment.sender.avatar">
+                <span class="fa pull-left avatar empty-avatar" data-ng-if="!comment.sender.avatar" data-ng-class="{'loading': !comment.date, 'fa-user': comment.date}"></span>
+                <div class="media-body">
+                    <small class="pull-right time" data-ng-show="comment.date">
+                        <span class="fa fa-calendar"></span>
+                        {{ comment.date|date : ('comment_date_format'|trans) }}
+                    </small>
+                    <small class="pull-right loading" data-ng-show="!comment.date"></small>
+                    <h5 class="media-heading">{{ comment.sender.firstName }} {{ comment.sender.lastName }}</h5>
+                    <p class="col-lg-10" data-ng-bind-html="comment.message"></p>
+                </div>
+                {% endverbatim %}
+            </div>
+            <div class="ng-cloak" data-ng-show="selectedPortfolioId && comments.$resolved && 0 >= comments.length">
+                <p class="col-lg-10">{{ 'no_comments'|trans({}, 'icap_portfolio') }}.</p>
+            </div>
+            <div class="alert alert-info ng-cloak" data-ng-show="!selectedPortfolioId && comments.$resolved">
+                <p>{{ 'select_portfolio_to_comment'|trans({}, 'icap_portfolio') }}.</p>
+            </div>
+        </div>
+        <form name="comment-form">
+            <div class="send-container">
+                <textarea ui-tinymce="tinyMceConfig" class="form-control send-comment" rows="3" name="comment"
+                          disabled="disabled" data-ng-disabled="!selectedPortfolioId" data-ng-model="comment"></textarea>
+            </div>
+            <div class="btn-panel">
+                <button type="button" class="btn btn-sm btn-primary pull-right" disabled="disabled"
+                        data-ng-disabled="!selectedPortfolioId" data-ng-click="addComment(selectedPortfolioId, comment); comment = ''">
+                    {{ 'comment_send'|trans({}, 'icap_portfolio') }}</button>
+            </div>
+        </form>
+    </div>
+</div>

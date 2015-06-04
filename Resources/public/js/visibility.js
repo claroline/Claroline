@@ -4,9 +4,7 @@
     $(function() {
         var visibilityFormName = "icap_portfolio_visibility_form";
         var visibilityForm     = $("#visibility_form");
-        var chooseUserBlock    = $("#choose_user");
-        var chooseGroupBlock   = $("#choose_group");
-        var chooseTeamBlock    = $("#choose_team");
+        var chooseBlock        = $("#choose_visibility_elements");
         var userSelect2Field   = $("#icap_portfolio_visibility_form_search_user");
         var groupSelect2Field  = $("#icap_portfolio_visibility_form_search_group");
         var teamSelect2Field   = $("#icap_portfolio_visibility_form_search_team");
@@ -84,14 +82,10 @@
         visibilityForm.change(function() {
             var formValues = parseFormValue($(this).serializeArray());
             if (1 == formValues.visibility) {
-                chooseUserBlock.removeClass('hidden');
-                chooseGroupBlock.removeClass('hidden');
-                chooseTeamBlock.removeClass('hidden');
+                chooseBlock.removeClass('hidden');
             }
             else {
-                chooseUserBlock.addClass('hidden');
-                chooseGroupBlock.addClass('hidden');
-                chooseTeamBlock.addClass('hidden');
+                chooseBlock.addClass('hidden');
             }
         });
 

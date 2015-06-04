@@ -72,11 +72,8 @@ no_comments: 'No comment'
 comment_type_your_message: 'Type your message here...'
 comment_send: 'Send'
 configuration: 'Configuration'
-portfolio_i_guide: 'Portfolios I am guide on'
 see: 'See'
 guide_exchange: 'Exchange with guides'
-portfolio_exchange_space: 'Portfolio exchange space'
-portfolios: 'Portfolios'
 portfolios_comments: 'Exchanges'
 my_owned_portfolio: 'My portfolios'
 no_owned_portfolio: 'No owned portfolio'
@@ -86,7 +83,7 @@ select_portfolio_to_comment: 'Select a portfolio to discuss about it'
 comment_date_format: 'MM/dd/yyyy HH:mm:ss'
 see_all_exchange: 'See all exchange'
 no_skills: 'No skills given'
-import_portfolio: 'Import a portfolio'
+import: 'Import'
 export_portfolio: 'Export in Leap2A format'
 importing_portfolio: 'Importing a portfolio'
 icap_portfolio_import_form_format: 'Importing format'
@@ -100,7 +97,7 @@ check_before_do_import: 'If shown data are correct you can'
 experience_title: 'Experience'
 experience_post: 'Job title'
 experience_company_name: 'Company'
-my_portfolios: 'My portfolios'
+my_portfolios: 'My portfolio space'
 today: "today"
 formation_establishmentName: "Establishment"
 formation_diploma : "Diploma"
@@ -110,3 +107,14 @@ user_information_form_show_avatar: "Display profile picture ?"
 user_information_form_show_mail: "Display email ?"
 user_information_form_show_phone: "Display phone number ?"
 user_information_form_show_description: "Display profile description ?"
+owner: "Owner"
+presentation: "Presentation"
+portfolio: "Portfolio"
+exchange_space: "Exchange space"
+presentation_message: "<h3>Welcome in your portfolio area</h3><br>From this area you can :<br /><ul><li>manage your portfolio</li><li>see the portfolio you guide</li><li>exchange on you portfolio or on the portfolio you guide</li></ul>"
+portfolio_added_ajax_notification: "Portfolio added withsuccess"
+portfolio_renamed_ajax_notification: "Portfolio renamed with success"
+portfolio_update_visibility_ajax_notification: "Visibility of the portfolio updated with success"
+portfolio_update_guides_ajax_notification: "Guide list of the portfolio updated with success"
+portfolio_imported_ajax_notification: "Import of a portfolio made with success"
+portfolio_deleted_ajax_notification: "Portfolio deleted with success"
