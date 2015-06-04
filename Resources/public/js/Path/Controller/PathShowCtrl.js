@@ -28,5 +28,5 @@ PathShowCtrl.prototype.edit = function () {
         id: this.id
     });
 
-    window.open(url, '_blank');
+    window.open(url);
 };
