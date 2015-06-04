@@ -36,7 +36,7 @@ Project setup
     - If you use PHP 5.5, you need to install the following extensions manually:
         - php5-json
         - php5-intl
-- A RDBMS like MySQL (>=5.0, recommended) or PostgreSQL (>= 8.0)
+- A RDBMS like MySQL (>=5.0, recommended)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
 
