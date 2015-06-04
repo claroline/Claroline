@@ -128,8 +128,7 @@ class ForumController extends Controller
         }
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $isAnon = $this->isAnon();
-        $canCreateSubject = $this->authorization->isGranted('post', $collection) &&
-            !$isAnon;
+        $canCreateSubject = $this->authorization->isGranted('post', $collection);
         $isModerator = $this->authorization->isGranted('moderate', $collection) &&
             !$isAnon;
 
@@ -149,6 +148,7 @@ class ForumController extends Controller
      *     "/form/subject/{category}",
      *     name="claro_forum_form_subject_creation"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      *
      * @param Category $category
@@ -176,6 +176,7 @@ class ForumController extends Controller
      *     "/form/category/{forum}",
      *     name="claro_forum_form_category_creation"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      *
      * @param Forum $forum
@@ -201,6 +202,7 @@ class ForumController extends Controller
      *     "/category/create/{forum}",
      *     name="claro_forum_create_category"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template()
      * @param Forum $forum
      */
@@ -232,6 +234,7 @@ class ForumController extends Controller
      *     "/subject/create/{category}",
      *     name="claro_forum_create_subject"
      * )
+     * @ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @Template("ClarolineForumBundle:Forum:subjectForm.html.twig")
      * @param Category $category
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
