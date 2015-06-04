@@ -1,30 +1,31 @@
 <div data-ng-app="commentsApp" data-ng-strict-di>
     <div id="exchange_space_container" class="portfolios-container col-lg-3">
-        <div class="title-container">
-            <p class="lead text-center">{{ 'portfolios'|trans({}, 'icap_portfolio') }}</p>
+        <div class="portfolio-container" data-ng-init="init()">
+            <p class="list-group-item title lead text-center">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</p>
+            <ul class="list-group">
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | filter:{type: 'owned'})"
+                    data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                    data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !ownedPortfolios.length">
+                    {{ 'no_owned_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+            </ul>
+            <p class="list-group-item title lead text-center">{{ 'my_guided_portfolio'|trans({}, 'icap_portfolio') }}</p>
+            <ul class="list-group">
+                <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | filter:{type: 'guided'})"
+                    data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
+                    data-ng-click="clickOnPortolio(portfolio.id)">
+                    {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
+                </li>
+                <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !guidedPortfolios.length">
+                    {{ 'no_guided_portfolio'|trans({}, 'icap_portfolio') }}
+                </li>
+            </ul>
         </div>
-        <ul class="list-group portfolio-container" data-ng-init="init()">
-            <li class="list-group-item title">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</li>
-            <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
-            <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | filter:{type: 'owned'})"
-                 data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
-                 data-ng-click="clickOnPortolio(portfolio.id)">
-                {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
-            </li>
-            <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !ownedPortfolios.length">
-                {{ 'no_owned_portfolio'|trans({}, 'icap_portfolio') }}
-            </li>
-            <li class="list-group-item title">{{ 'my_guided_portfolio'|trans({}, 'icap_portfolio') }}</li>
-            <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
-            <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | filter:{type: 'guided'})"
-                 data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
-                 data-ng-click="clickOnPortolio(portfolio.id)">
-                {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
-            </li>
-            <li class="list-group-item empty ng-cloak" data-ng-show="portfolios.$resolved && !guidedPortfolios.length">
-                {{ 'no_guided_portfolio'|trans({}, 'icap_portfolio') }}
-            </li>
-        </ul>
     </div>
 
     <div class="comments-container col-lg-9">
