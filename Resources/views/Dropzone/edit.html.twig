@@ -27,9 +27,10 @@
                 -->
             </div>
         </h2>
-        {{ macros.flashBox() }}
-        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
 
+        {{ macros.flashBox() }}
+
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
             <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
             <!-- suivant si on est ADMIN ou pas -->
             {% if adminInnova %}
@@ -38,7 +39,6 @@
                 <!-- (Mon) Espace collecticiel -->
                 {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}
             {% endif %}
-
         </ul>
 
         {% block drop_zone_content_edit %}

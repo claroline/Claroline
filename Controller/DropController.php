@@ -46,7 +46,7 @@ class DropController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropAction(Dropzone $dropzone,User $user)
+    public function dropAction(Dropzone $dropzone, User $user)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
