@@ -861,7 +861,8 @@ EXPORT;
             ->setLabel($experienceWidgetLabel = uniqid())
             ->setDescription($experienceWidgetDescription = uniqid())
             ->setWebsite($experienceWidgetWebsite = uniqid())
-            ->setCompanyName($experienceWidgetCompanyName = uniqid());
+            ->setCompanyName($experienceWidgetCompanyName = uniqid())
+            ->setPost($experienceWidgetPost = uniqid());
 
         $portfolio = new Portfolio();
         $portfolio
@@ -894,6 +895,7 @@ EXPORT;
         <content type="html"><![CDATA[$experienceWidgetDescription]]></content>
         <leap2:orgdata leap2:field="website">$experienceWidgetWebsite</leap2:orgdata>
         <leap2:orgdata leap2:field="legal_org_name">$experienceWidgetCompanyName</leap2:orgdata>
+        <leap2:myrole>$experienceWidgetPost</leap2:myrole>
         <leap2:date leap2:point="start">$experienceWidgetStartDate</leap2:date>
         <leap2:date leap2:point="end">$experienceWidgetEndDate</leap2:date>
         <rdf:type rdf:resource="leap2:activity"/>
