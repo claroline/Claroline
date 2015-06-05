@@ -285,7 +285,7 @@ CONTENT;
         <title>$formationsWidgetLabel</title>
         <id>portfolio:formations/$formationsWidgetId</id>
         <updated>$formationsWidgetUpdatedAtText</updated>
-        <content type="text">$formationsWidgetContent</content>
+        <content type="html">$formationsWidgetContent</content>
         <leap2:date leap2:point="start">$formationsWidgetStartedAtText</leap2:date>
         <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
         <rdf:type rdf:resource="leap2:activity"/>
@@ -336,6 +336,85 @@ CONTENT;
         $this->assertEquals($formationsWidgetResourceUri, $formationsWidgetResource->getUri());
     }
 
+    public function testLeap2aImportPortfolioWithExperienceWidget()
+    {
+        $importer = new Leap2aImporter();
+
+        $portfolioTitle = uniqid();
+
+        $user = new User();
+        $user->setUsername(uniqid())
+            ->setFirstName($firstname = uniqid())
+            ->setLastName($lastname = uniqid());
+
+        $experienceWidgetId            = mt_rand();
+        $experienceWidgetStartedAt     = new \DateTime();
+        $experienceWidgetStartedAtText = (new \DateTime())->format(\DateTime::ATOM);
+        $experienceWidgetUpdatedAtText = $experienceWidgetStartedAt->add(new \DateInterval('P2D'))
+            ->format(\DateTime::ATOM);
+        $experienceWidgetEndedAtText   = $experienceWidgetStartedAt->add(new \DateInterval('P4D'))
+            ->format(\DateTime::ATOM);
+        $experienceWidgetLabel         = uniqid();
+        $experienceWidgetPost          = uniqid();
+        $experienceWidgetCompanyName   = uniqid();
+        $experienceWidgetWebsite       = uniqid();
+        $experienceWidgetDescription   = uniqid();
+
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories"
+      xmlns:claroline="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <id>54c793498714a</id>
+    <title>$portfolioTitle</title>
+    <author>
+        <name>$firstname $lastname</name>
+    </author>
+    <updated>2015-01-29T14:31:53+01:00</updated>
+    <entry>
+        <title>$experienceWidgetLabel</title>
+        <id>portfolio:formations/$experienceWidgetId</id>
+        <updated>$experienceWidgetUpdatedAtText</updated>
+        <content type="html">$experienceWidgetDescription</content>
+        <leap2:orgdata leap2:field="website">$experienceWidgetWebsite</leap2:orgdata>
+        <leap2:orgdata leap2:field="legal_org_name">$experienceWidgetCompanyName</leap2:orgdata>
+        <leap2:myrole>$experienceWidgetPost</leap2:myrole>
+        <leap2:date leap2:point="start">$experienceWidgetStartedAtText</leap2:date>
+        <leap2:date leap2:point="end">$experienceWidgetEndedAtText</leap2:date>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Work" scheme="categories:life_area"/>
+    </entry>
+</feed>
+CONTENT;
+
+        $importedPortfolio = $importer->import($content, $user);
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
+
+        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
+        $this->assertNotNull($importedPortfolioTitleWidget);
+        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
+
+        $this->assertEquals($importedPortfolio->getUser(), $user);
+
+        $experienceWidgets = $importedPortfolio->getWidget('experience');
+        $this->assertEquals(1, count($experienceWidgets), 'Number of experience widget.');
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\ExperienceWidget $experienceWidget */
+        $experienceWidget = $experienceWidgets[0];
+
+        $this->assertEquals('Icap\PortfolioBundle\Entity\Widget\ExperienceWidget', get_class($experienceWidget));
+        $this->assertEquals($experienceWidgetLabel, $experienceWidget->getLabel());
+        $this->assertEquals($experienceWidgetPost, $experienceWidget->getPost());
+        $this->assertEquals($experienceWidgetCompanyName, $experienceWidget->getCompanyName());
+        $this->assertEquals($experienceWidgetWebsite, $experienceWidget->getWebsite());
+        $this->assertEquals($experienceWidgetDescription, $experienceWidget->getDescription());
+        $this->assertEquals($experienceWidgetStartedAtText, $experienceWidget->getStartDate()->format(\DateTime::ATOM));
+        $this->assertEquals($experienceWidgetEndedAtText, $experienceWidget->getEndDate()->format(\DateTime::ATOM));
+    }
     public function testLeap2aImportPortfolioWithFormationWidgetWithoutDates()
     {
         $importer = new Leap2aImporter();
@@ -375,7 +454,7 @@ CONTENT;
         <title>$formationsWidgetLabel</title>
         <id>portfolio:formations/$formationsWidgetId</id>
         <updated>$formationsWidgetUpdatedAtText</updated>
-        <content type="text">$formationsWidgetContent</content>
+        <content type="html">$formationsWidgetContent</content>
         <rdf:type rdf:resource="leap2:activity"/>
         <category term="Education" scheme="categories:life_area"/>
         <link rel="leap2:has_part" href="portfolio:resource/$formationsWidgetResourceId" leap2:display_order="1"/>
@@ -673,7 +752,7 @@ CONTENT;
         <title>$formationsWidgetLabel</title>
         <id>portfolio:formations/$formationsWidgetId</id>
         <updated>$formationsWidgetUpdatedAtText</updated>
-        <content type="text">$formationsWidgetContent</content>
+        <content type="html">$formationsWidgetContent</content>
         <leap2:date leap2:point="start">$formationsWidgetStartedAtText</leap2:date>
         <leap2:date leap2:point="end">$formationsWidgetEndedAtText</leap2:date>
         <rdf:type rdf:resource="leap2:activity"/>

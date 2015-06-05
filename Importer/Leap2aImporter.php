@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Entity\Widget\ExperienceWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
@@ -96,8 +97,10 @@ class Leap2aImporter implements ImporterInterface
 
         $textWidgets = $this->extractTextWidgets($nodes);
 
+        $experienceWidgets = $this->extractExperienceWidgets($nodes);
+
         /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets = array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets);
+        $widgets = array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets, $experienceWidgets);
 
         $widgetRowNumber = 1;
         foreach ($widgets as $widget) {
@@ -117,7 +120,7 @@ class Leap2aImporter implements ImporterInterface
     protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
     {
         $skillsWidgets     = [];
-        $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:selection' and category/@term = 'Abilities']");
+        $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:selection' and category/@term='Abilities']");
 
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
             $skillsWidget = new SkillsWidget();
@@ -167,7 +170,7 @@ class Leap2aImporter implements ImporterInterface
     protected function extractFormationsWidgets(\SimpleXMLElement $nodes)
     {
         $formationsWidgets      = [];
-        $formationsWidgetsNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:activity' and category/@term = 'Education']");
+        $formationsWidgetsNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:activity' and category/@term='Education']");
 
         foreach ($formationsWidgetsNodes as $formationsWidgetsNode) {
             $formationsWidget = new FormationsWidget();
@@ -245,14 +248,14 @@ class Leap2aImporter implements ImporterInterface
      */
     private function extractUserInformationWidgets(\SimpleXMLElement $nodes)
     {
-        $userInformationWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:person']");
+        $userInformationWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:person']");
         $userInformationWidgets     = [];
 
         if (0 < count($userInformationWidgetNodes)) {
-            $birthDateNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field ='dob']");
+            $birthDateNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='dob']");
             $birthDate     = (string)$birthDateNode[0];
 
-            $cityNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field = 'other' and @leap2:label = 'city']");
+            $cityNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='other' and @leap2:label='city']");
             $city     = (string)$cityNode[0];
 
             $userInformationWidget = new UserInformationWidget();
@@ -275,7 +278,7 @@ class Leap2aImporter implements ImporterInterface
     private function extractTextWidgets(\SimpleXMLElement $nodes)
     {
         $textWidgets     = [];
-        $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource = 'leap2:entry']");
+        $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:entry']");
 
         foreach ($textWidgetNodes as $textWidgetNode) {
             $textWidget = new TextWidget();
@@ -287,5 +290,57 @@ class Leap2aImporter implements ImporterInterface
         }
 
         return $textWidgets;
+    }
+
+    /**
+     * @param \SimpleXMLElement $nodes
+     *
+     * @return ExperienceWidget[]
+     */
+    private function extractExperienceWidgets(\SimpleXMLElement $nodes)
+    {
+        $experienceWidgets = [];
+        $experienceWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:activity' and category/@term='Work']");
+
+        foreach ($experienceWidgetNodes as $experienceWidgetNode) {
+            $experienceWidget = new ExperienceWidget();
+            $experienceWidgetTitleNode = $experienceWidgetNode->xpath("title");
+
+            if (0 === count($experienceWidgetTitleNode)) {
+                throw new \Exception('Entry has no title.');
+            }
+
+            $experienceWidgetLabel = (string)$experienceWidgetTitleNode[0];
+
+            $websiteNode = $experienceWidgetNodes[0]->xpath("leap2:orgdata[@leap2:field='website']");
+            $website = (string)$websiteNode[0];
+
+            $companyNameNode = $experienceWidgetNodes[0]->xpath("leap2:orgdata[@leap2:field='legal_org_name']");
+            $companyName = (string)$companyNameNode[0];
+
+            $postNode = $experienceWidgetNodes[0]->xpath("leap2:myrole");
+            $post = (string)$postNode[0];
+
+            $experienceWidgetStartDate = $experienceWidgetNode->xpath("leap2:date[@leap2:point='start']");
+            if (0 < count($experienceWidgetStartDate)) {
+                $experienceWidget->setStartDate(new \DateTime((string)$experienceWidgetStartDate[0]));
+            }
+
+            $experienceWidgetEndDate = $experienceWidgetNode->xpath("leap2:date[@leap2:point='end']");
+            if (0 < count($experienceWidgetEndDate)) {
+                $experienceWidget->setEndDate(new \DateTime((string)$experienceWidgetEndDate[0]));
+            }
+
+            $experienceWidget
+                ->setLabel($experienceWidgetLabel)
+                ->setDescription((string)$experienceWidgetNode->content)
+                ->setWebsite($website)
+                ->setCompanyName($companyName)
+                ->setPost($post);
+
+            $experienceWidgets[] = $experienceWidget;
+        }
+
+        return $experienceWidgets;
     }
 }
