@@ -1,0 +1,12 @@
+    <entry>
+        <title>{{ widget.label }}</title>
+        <id>portfolio:experience/{{ widget.id }}</id>
+        <updated>{{ widget.updatedAt|date(constant('\DateTime::ATOM')) }}</updated>
+        <content type="html"><![CDATA[{{ widget.description|raw }}]]></content>
+        <leap2:orgdata leap2:field="website">{{ widget.website }}</leap2:orgdata>
+        <leap2:orgdata leap2:field="legal_org_name">{{ widget.companyname }}</leap2:orgdata>
+        <leap2:date leap2:point="start">{{ widget.startDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
+        <leap2:date leap2:point="end">{{ widget.endDate|date(constant('\DateTime::ATOM')) }}</leap2:date>
+        <rdf:type rdf:resource="leap2:activity"/>
+        <category term="Work" scheme="categories:life_area"/>
+    </entry>
