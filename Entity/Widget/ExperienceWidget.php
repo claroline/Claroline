@@ -104,7 +104,7 @@ class ExperienceWidget extends AbstractWidget
     }
 
     /**
-     * @return \Date
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -112,7 +112,7 @@ class ExperienceWidget extends AbstractWidget
     }
 
     /**
-     * @param \Date $startDate
+     * @param \DateTime $startDate
      *
      * @return ExperienceWidget
      */
@@ -124,7 +124,7 @@ class ExperienceWidget extends AbstractWidget
     }
 
     /**
-     * @return \Date
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -132,7 +132,7 @@ class ExperienceWidget extends AbstractWidget
     }
 
     /**
-     * @param \Date $endDate
+     * @param \DateTime $endDate
      *
      * @return ExperienceWidget
      */

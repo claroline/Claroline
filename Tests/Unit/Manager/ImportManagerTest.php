@@ -20,6 +20,14 @@ class ImportManagerTest extends MockeryTestCase
         $importers = [
             new Leap2aImporter()
         ];
+        $importManager = new ImportManager($importers);
+
+        $expected = array(
+            'leap2a' => 'Leap2a'
+        );
+
+        $this->assertEquals($expected, $importManager->getAvailableFormats());
+
         $importManager = new ImportManager();
 
         $expected = array(
@@ -35,7 +43,7 @@ class ImportManagerTest extends MockeryTestCase
             new Leap2aImporter(),
             new Leap2aImporter()
         ];
-        $importManager = new ImportManager();
+        $importManager = new ImportManager($importers);
 
         $expected = array(
             'leap2a' => 'Leap2a'
@@ -58,9 +66,19 @@ class ImportManagerTest extends MockeryTestCase
     public function testDoImportWithoutEntityManager()
     {
         $importManager = new ImportManager();
+        $content = <<<CONTENT
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      xmlns:leap2="http://terms.leapspecs.org/"
+      xmlns:categories="http://www.leapspecs.org/2A/categories">
+    <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
+    <title>title</title>
+</feed>
+CONTENT;
 
         $this->setExpectedException('Exception', 'No entity manager, you can only simulate an import.');
 
-        $portfolio = $importManager->doImport(uniqid(), new User(), uniqid());
+        $portfolio = $importManager->doImport($content, new User(), 'leap2a');
     }
 }
