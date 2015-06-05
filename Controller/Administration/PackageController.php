@@ -109,6 +109,10 @@ class PackageController extends Controller
         $coreVersion = $coreBundle->getVersion();
         $api = $this->configHandler->getParameter('repository_api');
         $url = $api . "/version/$coreVersion/tags/last";
+
+        if ($this->configHandler->getParameter('use_repository_test')) {
+            $url .= '/test';
+        }
         //ask the server wich are the last available packages now.
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

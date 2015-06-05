@@ -75,6 +75,7 @@ class PlatformConfigurationHandler
         'country' => '-',
         'datas_sending_url' => 'http://stats.claroline.net/insert.php',
         'repository_api' => 'http://packages.claroline.net/api.php',
+        'use_repository_test' => false,
         'auto_logging_after_registration' => false,
         'registration_mail_validation' => false,
         'resource_soft_delete' => false,

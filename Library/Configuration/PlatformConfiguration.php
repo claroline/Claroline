@@ -56,6 +56,7 @@ class PlatformConfiguration
     private $maxStorageSize;
     private $maxUploadResources;
     private $repositoryApi;
+    private $useRepositoryTest;
     private $workspaceMaxUsers;
     private $autoLogginAfterRegistration;
     private $registrationMailValidation;
@@ -610,5 +611,15 @@ class PlatformConfiguration
     public function getHelpUrl()
     {
         return $this->helpUrl;
+    }
+
+    public function setUseRepositoryTest($bool)
+    {
+        $this->useRepositoryTest = $bool;
+    }
+
+    public function getUseRepositoryTest()
+    {
+        return $this->useRepositoryTest;
     }
 }
