@@ -366,7 +366,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u2 FROM Claroline\CoreBundle\Entity\User u2
             JOIN u2.groups g2
             JOIN g2.roles r2 WITH r2 IN (
-                SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = ' . Role::WS_ROLE . '
+                SELECT pr2 from Claroline\CoreBundle\Entity\Role pr2 WHERE pr2.type = :type
             )
             LEFT JOIN r2.workspace wol2
             WHERE wol2.id = :workspaceId AND u IN (
@@ -382,6 +382,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId())
             ->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }

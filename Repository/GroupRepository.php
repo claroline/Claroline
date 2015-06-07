@@ -36,7 +36,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 LEFT JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -45,6 +45,7 @@ class GroupRepository extends EntityRepository
        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -69,7 +70,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -80,6 +81,7 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
         $query->setParameter('search', "%{$search}%");
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -98,13 +100,14 @@ class GroupRepository extends EntityRepository
             SELECT g, wr
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
             )
             LEFT JOIN wr.workspace w
             WHERE w.id = :workspaceId
        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspace->getId());
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -123,7 +126,7 @@ class GroupRepository extends EntityRepository
             SELECT g
             FROM Claroline\CoreBundle\Entity\Group g
             LEFT JOIN g.roles wr WITH wr IN (
-                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
             )
             LEFT JOIN wr.workspace w
             WHERE w IN (:workspaces)
@@ -131,6 +134,7 @@ class GroupRepository extends EntityRepository
        ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -153,7 +157,7 @@ class GroupRepository extends EntityRepository
             LEFT JOIN g.roles wr WITH wr IN (
                 SELECT pr
                 FROM Claroline\CoreBundle\Entity\Role pr
-                WHERE pr.type = ' . Role::WS_ROLE . '
+                WHERE pr.type = :type
             )
             LEFT JOIN wr.workspace w
             WHERE w IN (:workspaces)
@@ -163,6 +167,7 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaces', $workspaces);
         $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $query->getResult();
     }
@@ -187,7 +192,7 @@ class GroupRepository extends EntityRepository
             (
                 SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
                 JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = ' . Role::WS_ROLE . '
+                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
                 )
                 JOIN wr.workspace w
                 WHERE w.id = :id
@@ -198,6 +203,7 @@ class GroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('id', $workspace->getId());
         $query->setParameter('search', "%{$search}%");
+        $query->setParameter('type', Role::WS_ROLE);
 
         return $executeQuery ? $query->getResult() : $query;
     }
