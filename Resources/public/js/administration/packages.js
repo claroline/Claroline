@@ -14,7 +14,7 @@ $('.install-pkg').on('click', function(event) {
         $('#log-content').show();
         //var logFile = Routing.generate('claro_admin_plugins_log', {'date': date});
         var logFile = $('#log-content').attr('href') + '?logFile=' + 'update-' + date + '.log';
-        //alert (logFile);
+        alert (logFile);
         var logDisplayer = new window.Claroline.LogDisplayer.Displayer('#log-content');
         logDisplayer.setLogFile(logFile);
         logDisplayer.start();
@@ -56,6 +56,7 @@ $('.refresh-platform').on('click', function(event) {
     var url = Routing.generate('claro_admin_refresh', {
         'date': date
     });
+    var html = Twig.render(RefresherLog, {});
 
     var errorHandler = function(logDisplayer) {
         location.reload();
@@ -69,7 +70,6 @@ $('.refresh-platform').on('click', function(event) {
         $('#log-content').show();
         //var logFile = Routing.generate('claro_admin_plugins_log', {'date': date});
         var logFile = $('#log-content').attr('href') + '?logFile=' + 'refresh-' + date + '.log';
-        //alert (logFile);
         var logDisplayer = new window.Claroline.LogDisplayer.Displayer('#log-content');
         logDisplayer.setLogFile(logFile);
         logDisplayer.start();
@@ -79,7 +79,7 @@ $('.refresh-platform').on('click', function(event) {
         url,
         successHandler,
         undefined,
-        Translator.trans('platform_refresh_confirm', {}, 'platform'),
+        html,
         Translator.trans('platform_refresh', {}, 'platform'),
         waitingHandler,
         undefined,
@@ -89,11 +89,13 @@ $('.refresh-platform').on('click', function(event) {
         true
     );
 
+    //it's dirty but I'm lazy.
     $('.btn-modal-confirm').on('click', function(e) {
         modal.on('hide.bs.modal', function(e) {
             e.preventDefault();
         });
         $('.modal-footer').hide();
         $('#package-confirm-msg').hide();
+        $('#refresher-confirm-msg').hide();
     });
 });
