@@ -1123,8 +1123,8 @@ platform_refresh: Refresh platform files
 refresh: refresh
 refresh_explanation: |
     Some issues can be cause because javascript and css aren't properly generated. </br>
-    And other common source of problem is the plateform cache </br>
-    If you want to try to solve them, please empty your app/cache directory and click on "refresh" </br>
+    If you want to try to solve them, please click on "refresh" </br>
+    You can also try to empty your app/cache directory before this operation.
 platform_refresh_confirm: Do you really want to refresh the platform files ?
 is_not_writable_recursive: 'is not writable recursively'
 test_repository_activated: 'Test repositories are activated'

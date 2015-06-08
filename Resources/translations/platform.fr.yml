@@ -1122,9 +1122,9 @@ use_test_repo: Utiliser les dépôts de test
 platform_refresh: Raffraîchir les fichiers de la plateforme
 refresh: Raffraîchir
 refresh_explanation: |
-    Certains problèmes peuvent être causé car les fichiers javascripts et css n'ont pas été bien générés. </br>
-    Il est également possible que le cache de la plateforme subisse des probèmes. </br>
-    Afin de tenter de résoudre ces problèmes, veuillez vider le répertoire app/cache et cliquer sur "Raffraîchir"  </br>
+    Certains problèmes peuvent être causés car les fichiers javascripts et css n'ont pas été bien générés. </br>
+    Afin de tenter de résoudre, veuillez sur "Raffraîchir"  </br>
+    Pour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.
 platform_refresh_confirm: Êtes-vous sûr de vouloir raffraîchir les fichiers de la plateforme ?
 is_not_writable_recursive: 'et ses sous dossiers ne sont pas accessibles en écriture'
 test_repository_activated: 'Les dépôts de test sont activés'
