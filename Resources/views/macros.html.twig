@@ -1,9 +1,16 @@
-{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText ) %}
+{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText, adminInnova ) %}
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
                 <div class="text-muted">{{ documentListText }}</div>
             {% endif %}
+            
+        {% if adminInnova %}
+            {{ "adminnnnnnnnnn" }}
+        {% else %}
+            {{ "pas adminnnnnnnnnn" }}
+        {% endif %}
+
             <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well table-striped">
                 {% if drop.documents|length <= 0 %}
                     <tr>
@@ -13,7 +20,7 @@
                     <thead>
                         <tr class="text-left">
 {#                            <th></th> #}
-                            <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th>{{ adminInnova }} {{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>

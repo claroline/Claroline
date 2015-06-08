@@ -47,8 +47,8 @@
     </style>
     <div class="container">
         <h3>
-            {# InnovaERV : affichage enlevé car affiché en double #}
-            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
+            {# InnovaERV : affichage enlevé car affiché en double
+            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}  #}
         </h3>
 
         {{ macros.flashBox() }}
@@ -76,7 +76,7 @@
 
         {# DOCUMENTS ALLREADY ADDED #}
         <h4>{{ 'Documents added  the copy'|trans({},'innova_collecticiel') }}</h4>
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null) }}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova) }}
 
         <br/>
         {# ADD DOCUMENT #}

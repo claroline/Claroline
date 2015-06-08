@@ -150,7 +150,7 @@ class DropController extends DropzoneBaseController
         && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
         }
-
+        
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
