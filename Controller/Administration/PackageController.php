@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -84,27 +85,36 @@ class PackageController extends Controller
      */
     public function listAction()
     {
+        $fs = new FileSystem();
         $rootPath = $this->container->getParameter('claroline.param.root_directory') . '/';
         $danger = array(
-            realpath($rootPath . 'vendor/composer/autoload_namespaces.php') => is_writable(realpath($rootPath . 'vendor/composer/autoload_namespaces.php')),
-            realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
-            realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'vendor')),
-            realpath($rootPath . 'web/js') => is_writable(realpath($rootPath . 'web/js')),
-            realpath($rootPath . 'app/cache') => is_writable(realpath($rootPath . 'app/cache')),
-            realpath($rootPath . 'app/logs') => is_writable(realpath($rootPath . 'app/logs')),
-            realpath($rootPath . 'web/bundles') => is_writable(realpath($rootPath . 'web/bundles'))
+            'simple' => array(
+                realpath($rootPath . 'vendor/composer/autoload_namespaces.php') => is_writable(realpath($rootPath . 'vendor/composer/autoload_namespaces.php')),
+                realpath($rootPath . 'app/config/bundles.ini') => is_writable(realpath($rootPath . 'app/config/bundles.ini')),
+                realpath($rootPath . 'vendor') => is_writable(realpath($rootPath . 'vendor')),
+                realpath($rootPath . 'app/logs') => is_writable(realpath($rootPath . 'app/logs')),
+                realpath($rootPath . 'web/bundles') => is_writable(realpath($rootPath . 'web/bundles'))
+            ),
+            'recursive' => array(
+                realpath($rootPath . 'web/js') => $fs->isWritable(realpath($rootPath . 'web/js'), true),
+                realpath($rootPath . 'app/cache') => $fs->isWritable(realpath($rootPath . 'app/cache'), true),
+                realpath($rootPath . 'web/themes') =>  $fs->isWritable(realpath($rootPath . 'web/themes'), true),
+                realpath($rootPath . 'web/css') =>  $fs->isWritable(realpath($rootPath . 'web/css'), true),
+                realpath($rootPath . 'web/vendor') =>  $fs->isWritable(realpath($rootPath . 'web/vendor'), true)
+            )
         );
 
-        $warnings = array();
-        $bundles = $this->bundleManager->getInstalled();
-
-        foreach ($bundles as $bundle) {
-            $path = realpath($rootPath . 'vendor/' . $bundle->getBasePath());
-            $warnings[$path] = is_writable($path);
-            $basePath = substr($bundle->getBasePath(), 0, strrpos($bundle->getBasePath(), '/'));
-            $basePath = realpath($rootPath . 'vendor/' . $basePath);
-            $warnings[$basePath] = is_writable($basePath);
-        }
+        $refresh = array(
+            'simple' => array(
+                realpath($rootPath . 'web/bundles') => is_writable(realpath($rootPath . 'web/bundles')),
+            ),
+            'recursive' => array(
+                realpath($rootPath . 'web/js') => $fs->isWritable(realpath($rootPath . 'web/js'), true),
+                realpath($rootPath . 'web/themes') =>  $fs->isWritable(realpath($rootPath . 'web/themes'), true),
+                realpath($rootPath . 'web/css') =>  $fs->isWritable(realpath($rootPath . 'web/css'), true),
+                realpath($rootPath . 'web/vendor') =>  $fs->isWritable(realpath($rootPath . 'web/vendor'), true)
+            )
+        );
 
         $coreBundle = $this->bundleManager->getBundle('CoreBundle');
         $coreVersion = $coreBundle->getVersion();
@@ -139,7 +149,7 @@ class PackageController extends Controller
             'installed' => $installed,
             'uninstalled' => $uninstalled,
             'danger' => $danger,
-            'warnings' => $warnings,
+            'refresh' => $refresh,
             'useTestRepo' => $this->configHandler->getParameter('use_repository_test')
         );
     }
@@ -221,8 +231,36 @@ class PackageController extends Controller
         return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
     }
 
-    public function refreshPlatformAction()
+    /**
+     * @EXT\Route(
+     *     "/refresh/{date}",
+     *     name="claro_admin_refresh",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function refreshPlatformAction($date)
     {
-        
+        $this->bundleManager->refresh($date);
+
+        return new Response('done');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/refresh/log/{date}",
+     *     name="claro_admin_plugins_refresh_log",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Install a plugin.
+     *
+     * @return Response
+     */
+    public function displayRefreshLog($date)
+    {
+        $content = @file_get_contents($this->bundleManager->getRefreshLog() . '-' . $date . '.log');
+        if (!$content) $content = '';
+
+        return new Response($content);
     }
 }

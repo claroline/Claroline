@@ -17,6 +17,7 @@ use JMS\DiExtraBundle\Annotation\Service;
 use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 /**
  * @Service
@@ -55,13 +56,14 @@ class PackageExtension extends \Twig_Extension
 
     public function isPackageInstallable($basePath, $requirements = null)
     {
+        $fs = new FileSystem();
         $fullPath = realpath($this->vendorPath . '/' . $basePath);
         $basePath = realpath($this->vendorPath . '/' . substr($basePath, 0, strrpos($basePath, '/')));
         $requirementsMet = true;
         $isWritable = true;
 
         if ($fullPath && $basePath) {
-            $isWritable = is_writable($fullPath) & is_writable($basePath);
+            $isWritable = $fs->isWritable($fullPath, true) & is_writable($basePath);
         } else {
             if ($fullPath) $isWritable = is_writable($fullPath);
             if ($basePath) $isWritable = is_writable($basePath);
@@ -78,13 +80,15 @@ class PackageExtension extends \Twig_Extension
 
     public function renderMissingPermissions($basePath)
     {
+        $fs = new FileSystem();
         $fullPath = realpath($this->vendorPath . '/' . $basePath);
         $basePath = realpath($this->vendorPath . '/' . substr($basePath, 0, strrpos($basePath, '/')));
         $fullPathElement = $basePathElement = '';
         $notWritable = $this->translator->trans('is_not_writable', array(), 'platform');
+        $notWritableRecursive = $this->translator->trans('is_not_writable_recursive', array(), 'platform');
 
-        if (!is_writable($fullPath) && $fullPath) {
-            $fullPathElement = "<li class='alert alert-danger'>" . $fullPath . ' ' . $notWritable . "</li>";
+        if ($fullPath && !$fs->isWritable($fullPath, true)) {
+            $fullPathElement = "<li class='alert alert-danger'>" . $fullPath . ' ' . $notWritableRecursive . "</li>";
         }
 
         if (!is_writable($basePath) && $basePath) {

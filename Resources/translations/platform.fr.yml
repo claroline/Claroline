@@ -1119,3 +1119,11 @@ claroline_bundle_missing: Le bundle %bundle% n'est pas installé. Veuillez l'ins
 package_update_danger: Cette fonctionnalité n'est pas encore totalement stable et peut rendre inutilisable votre plateforme. Il est important de bien faire un backup de vos données avant de l'utiliser.
 use_stable_repo: Utiliser les dépôts stables
 use_test_repo: Utiliser les dépôts de test
+platform_refresh: Raffraîchir les fichiers de la plateforme
+refresh: Raffraîchir
+refresh_explanation: |
+    Certains problèmes peuvent être causé car les fichiers javascripts et css n'ont pas été bien générés. </br>
+    Il est également possible que le cache de la plateforme subisse des probèmes. </br>
+    Afin de tenter de résoudre ces problèmes, veuillez vider le répertoire app/cache et cliquer sur "Raffraîchir"  </br>
+platform_refresh_confirm: Êtes-vous sûr de vouloir raffraîchir les fichiers de la plateforme ?
+is_not_writable_recursive: 'et ses sous dossiers ne sont pas accessibles en écriture'

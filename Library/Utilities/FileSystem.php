@@ -25,11 +25,11 @@ class FileSystem extends Fs
             }
         }
     }
-    
+
     public function rmDirContent($path, $recursive = false)
     {
         $iterator = new \DirectoryIterator($path);
-        
+
         foreach ($iterator as $el) {
             if ($el->isDir()) $this->rmdir($el->getRealPath(), $recursive);
             if ($el->isFile()) $this->remove($el->getRealPath());
@@ -77,5 +77,19 @@ class FileSystem extends Fs
         } else {
             unlink($dir);
         }
+    }
+
+    public function isWritable($path, $recursive = false)
+    {
+        if (!$recursive) return is_writable($path);
+
+        $it = new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new \RecursiveIteratorIterator($it, \RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach ($files as $file) {
+            if (!is_writable($file)) return false;
+        }
+
+        return true;
     }
 }

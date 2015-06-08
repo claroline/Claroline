@@ -153,7 +153,7 @@ class BundleManager
         if ($this->configHandler->getParameter('use_repository_test')) {
             $url .= '/test';
         }
-        
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -234,6 +234,11 @@ class BundleManager
     public function getLogFile()
     {
         return $this->kernelRootDir . "/logs/update";
+    }
+
+    public function getRefreshLog()
+    {
+        return $this->kernelRootDir . "/logs/refresh";
     }
 
     public function executeOperationFile($date = null)
@@ -353,5 +358,16 @@ class BundleManager
     public function getConfigurablePlugins()
     {
         return $this->pluginRepository->findBy(array('hasOptions' => true));
+    }
+
+    public function refresh($date)
+    {
+        $logFile = $this->getRefreshLog() . '-' . $date;
+        $logFile .= '.log';
+        $output = new StreamOutput(fopen($logFile, 'a', false));
+        $this->refresher->setOutput($output);
+        $this->refresher->installAssets();
+        $this->refresher->dumpAssets('prod');
+        $this->refresher->compileGeneratedThemes();
     }
 }

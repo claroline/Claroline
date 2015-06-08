@@ -148,6 +148,7 @@
     Feel free to split this method if you want.
 #}
 {% macro renderPackageElement(package, upgradablePackages, fetchNew, baseRequirementSatisfied) %}
+    {% set displayUpgradePerms = false %}
     <div class="panel-group" id="accordion-{{ package.name }}">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -188,6 +189,7 @@
                                             {{ 'update'|trans({}, 'platform') }}
                                         </a>
                                     {% else %}
+                                        {% set displayUpgradePerms = true %}
                                         <span class="badge alert-danger">
                                             {{ 'requirement_failed_for_update'|trans({}, 'platform') }}
                                         </span>
@@ -268,10 +270,12 @@
                     {% endif %}
                 {% endif %}
                 <hr>
-                {% if fetchNew == true %}
-                    {% if not is_installation_requirement_satisfied(package.basePath, package.requirements) %}
+                {% if fetchNew and not is_installation_requirement_satisfied(package.basePath, package.requirements) %}
+                    {{ render_package_missing_permissions(package.basePath)|raw }}
+                    {{ render_package_missing_require(package.requirements)|raw }}
+                {% else %}
+                    {% if displayUpgradePerms == true %}
                         {{ render_package_missing_permissions(package.basePath)|raw }}
-                        {{ render_package_missing_require(package.requirements)|raw }}
                     {% endif %}
                 {% endif %}
             </div>

@@ -20,7 +20,12 @@
 
 {% block section_content %}
 {% set allowUpdate = true %}
-{% for file, isWritable in danger %}
+{% for file, isWritable in danger.simple %}
+    {% if not isWritable %}
+        {% set allowUpdate = false %}
+    {% endif %}
+{% endfor %}
+{% for file, isWritable in danger.recursive %}
     {% if not isWritable %}
         {% set allowUpdate = false %}
     {% endif %}
@@ -35,11 +40,16 @@
         {% if not allowUpdate %}
             <h4> {{ 'packages_permissions_error'|trans({}, 'platform') }} </h4>
             <ul>
-            {% for file, isWritable in danger %}
-                {% if not isWritable %}
-                    <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
-                {% endif %}
-            {% endfor %}
+                {% for file, isWritable in danger.simple %}
+                    {% if not isWritable %}
+                        <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
+                    {% endif %}
+                {% endfor %}
+                {% for file, isWritable in danger.recursive %}
+                    {% if not isWritable %}
+                        <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable_recursive'|trans({}, 'platform') }}. </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
         {% else %}
         <h4> {{ 'tips'|trans({}, 'platform') }} </h4>
@@ -54,39 +64,54 @@
         {% endif %}
     </div>
     <div class="panel-body">
-        {% set displayWarnings = false %}
-        {% for file, isWritable in warnings %}
+        {% set refreshAllowed = true %}
+        {% for file, isWritable in refresh.simple %}
             {% if not isWritable %}
-                {% set displayWarnings = true %}
+                {% set refreshAllowed = false %}
+            {% endif %}
+        {% endfor %}
+        {% for file, isWritable in refresh.recursive %}
+            {% if not isWritable %}
+                {% set refreshAllowed = false %}
             {% endif %}
         {% endfor %}
 
-        {% if displayWarnings %}
-            <div class="panel-group" id="warnings-accordion">
-                <div class="panel panel-default">
-                    <div class="panel alert alert-warning">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#core-accordion" href="#warnings">
-                                <b>{{ 'warnings'|trans({}, 'platform') }}</b>
-                            </a>
-                        </h4>
-                    </div>
-                    <div id="warnings" class="panel-collapse collapse">
-                        <div class="panel-inner">
-                            </br>
+        <div class="panel-group" id="refresh-accordion">
+            <div class="panel panel-default">
+                <div class="panel alert alert-warning">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#refresh-accordion" href="#refresh">
+                            <b>{{ 'platform_refresh'|trans({}, 'platform') }}</b>
+                        </a>
+                    </h4>
+                </div>
+                <div id="refresh" class="panel-collapse collapse">
+                    <div class="panel-inner">
+                        <div>
                             <ul>
-                                {% for file, isWritable in warnings %}
+                                {% for file, isWritable in refresh.simple %}
                                     {% if not isWritable %}
-                                        <li class="alert alert-warning"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
+                                        <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable'|trans({}, 'platform') }}. </li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for file, isWritable in refresh.recursive %}
+                                    {% if not isWritable %}
+                                        <li class="alert alert-danger"> {{ file }} {{ 'is_not_writable_recursive'|trans({}, 'platform') }}. </li>
                                     {% endif %}
                                 {% endfor %}
                             </ul>
                         </div>
+                        <div class="well"> {{ 'refresh_explanation'|trans({}, 'platform')|raw }} </div>
+                    </div>
+                    <div class="panel-footer">
+                        {% if refreshAllowed %}
+                            <button class="btn btn-primary refresh-platform"> {{ 'refresh'|trans({}, 'platform') }} </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            </br>
-        {% endif %}
+        </div>
+        </br>
         <div class="panel-group" id="core-accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
