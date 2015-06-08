@@ -44,7 +44,7 @@ class MyContactsListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopResourceManager(DisplayToolEvent $event)
+    public function onDisplayDesktopContactTool(DisplayToolEvent $event)
     {
         $params = array();
         $params['_controller'] = 'ClarolineCoreBundle:Contact:myContactsToolIndex';
