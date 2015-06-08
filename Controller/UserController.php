@@ -82,9 +82,9 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "user/picker/name/{pickerName}/title/{pickerTitle}/mode/{mode}/show/all/{showAllUsers}/filters/{showFilters}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}/{attachName}",
      *     name="claro_user_picker",
-     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"mode"="single","showAllUsers"=0,"showFilters"=1,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0,"attachName"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -145,7 +145,8 @@ class UserController extends Controller
         $showMail = 0,
         $showCode = 0,
         $showGroups = 0,
-        $showPlatformRoles = 0
+        $showPlatformRoles = 0,
+        $attachName = 1
     )
     {
         $adminRole = $this->roleManager->getRoleByUserAndRoleName(
@@ -197,6 +198,7 @@ class UserController extends Controller
             'showCode' => $showCode,
             'showGroups' => $showGroups,
             'showPlatformRoles' => $showPlatformRoles,
+            'attachName' => $attachName,
             'excludedUsersIds' => $excludedIds,
             'forcedUsersIds' => $forcedUsersIds,
             'selectedUsers' => $selectedUsers,
@@ -210,15 +212,15 @@ class UserController extends Controller
 
     /**
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}/{attachName}",
      *     name="claro_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0,"attachName"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\Route(
-     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}",
+     *     "users/list/for/user/picker/mode/{mode}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}/show/all/{showAllUsers}/{showId}/{showPicture}/{showUsername}/{showMail}/{showCode}/{showGroups}/{showPlatformRoles}/{attachName}",
      *     name="claro_searched_users_list_for_user_picker",
-     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0},
+     *     defaults={"page"=1, "max"=50, "orderedBy"="lastName","order"="ASC","search"="","mode"="single","showAllUsers"=0,"showId"=0,"showPicture"=0,"showUsername"=1,"showMail"=0,"showCode"=0,"showGroups"=0,"showPlatformRoles"=0,"attachName"=1},
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -293,7 +295,8 @@ class UserController extends Controller
         $showMail = 0,
         $showCode = 0,
         $showGroups = 0,
-        $showPlatformRoles = 0
+        $showPlatformRoles = 0,
+        $attachName = 1
     )
     {
         $withAllUsers = intval($showAllUsers) === 1;
@@ -344,6 +347,7 @@ class UserController extends Controller
             'showCode' => $showCode,
             'showGroups' => $showGroups,
             'showPlatformRoles' => $showPlatformRoles,
+            'attachName' => $attachName,
             'profilePreferences' => $profilePreferences,
             'shownWorkspaceIds' => $shownWorkspaceIds
         );

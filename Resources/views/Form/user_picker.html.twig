@@ -130,6 +130,7 @@
                     show_code: {% if show_code %}true{% else %}false{% endif %},
                     show_groups: {% if show_groups %}true{% else %}false{% endif %},
                     show_platform_roles: {% if show_platform_roles %}true{% else %}false{% endif %},
+                    attach_name: {% if attach_name %}true{% else %}false{% endif %},
                     blacklist: {{ excludedUserIds|json_encode }},
                     whitelist: {{ forcedUserIds|json_encode }},
                     selected_users: selectedUserIds,
