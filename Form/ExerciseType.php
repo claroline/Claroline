@@ -62,9 +62,9 @@ class ExerciseType extends AbstractType
             //->add('correctionMode', 'text', array('label' => 'Availability of correction'))
             ->add(
                 'correctionMode', 'choice', array(
-                    'label' => 'availability of correction',
+                    'label' => 'availability_of_correction',
                     'choices' => array(
-                        '1' => 'At the end of assessment',
+                        '1' => 'at_the_end_of_assessment',
                         '2' => 'after_the_last_attempt',
                         '3' => 'From',
                         '4' => 'Never'
@@ -82,10 +82,10 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'markMode', 'choice', array(
-                    'label' => 'availability of score',
+                    'label' => 'availability_of_score',
                     'choices' => array(
-                        '1' => 'At the same time that the correction',
-                        '2' => 'At the end of assessment'
+                        '1' => 'at_the_same_time_that_the_correction',
+                        '2' => 'at_the_end_of_assessment'
                     )
                 )
             )

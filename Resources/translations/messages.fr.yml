@@ -58,18 +58,18 @@ already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
 alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
-answer zone: Zone de réponse
-attempt info1: Vous avez droit à
-attempt info2sing: essai
-attempt info2plur: essais
-attempt info3: Essai N°
-attempt info4: Il vous reste
-attempt info5: afin d'améliorer votre note
-attempt info6: Il ne vous reste plus aucun essai
-at the end of assessment: A la fin du test
-at the same time that the correction: En même temps que la correction
-availability of correction: Disponibilité de la correction
-availability of score: Disponibilité de la note
+answer_zone: Zone de réponse
+attempt_info1: Vous avez droit à
+attempt_info2sing: essai
+attempt_info2plur: essais
+attempt_info3: Essai N°
+attempt_info4: Il vous reste
+attempt_info5: afin d'améliorer votre note
+attempt_info6: Il ne vous reste plus aucun essai
+at_the_end_of_assessment: A la fin du test
+at_the_same_time_that_the_correction: En même temps que la correction
+availability_of_correction: Disponibilité de la correction
+availability_of_score: Disponibilité de la note
 
 # B
 badgeObtained: Félicitation ! Vous avez obtenu le badge de connaissances
@@ -432,9 +432,6 @@ your answer: Votre réponse
 
 
 #properties of entities
-At the end of assessment: A la fin du test
-At the same time that the correction: En même temps que la correction
-
 Category.value: Catégorie
 
 Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)

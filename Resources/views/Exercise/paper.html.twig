@@ -27,15 +27,15 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
             <span style="float:right;">
                 {% if(maxAttempsAllowed > 0) %}
-                    {{ "attempt info1" | trans }} {{ maxAttempsAllowed }}
+                    {{ "attempt_info1" | trans }} {{ maxAttempsAllowed }}
                     {% if(maxAttempsAllowed > 1) %}
-                        {{ "attempt info2plur" | trans }}
+                        {{ "attempt_info2plur" | trans }}
                     {% else %}
-                        {{ "attempt info2sing" | trans }}
+                        {{ "attempt_info2sing" | trans }}
                     {% endif %}
                      -
                 {% endif %}
-                {{ "attempt info3" | trans }} {{ numAttempt }}
+                {{ "attempt_info3" | trans }} {{ numAttempt }}
             </span>
         </h3>
     </div>

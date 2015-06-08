@@ -58,18 +58,18 @@ already_answered: You have already answered at this exercise
 already_exist: This name exist already
 alter category: Alter this cataegory
 answer_coched: No response expected is checked
-answer zone: Answer zone
-attempt info1: You have
-attempt info2sing: attempt
-attempt info2plur: attempts
-attempt info3: Attempt N°
-attempt info4: You have
-attempt info5: in order to improve your score
-attempt info6: You do not have attempt
-at the end of assessment: At the end of assessment
-at the same time that the correction: At the same time that the correction
-availability of correction: Availability of correction
-availability of score: Availability of score
+answer_zone: Answer zone
+attempt_info1: You have
+attempt_info2sing: attempt
+attempt_info2plur: attempts
+attempt_info3: Attempt N°
+attempt_info4: You have
+attempt_info5: in order to improve your score
+attempt_info6: You do not have attempt
+at_the_end_of_assessment: At the end of assessment
+at_the_same_time_that_the_correction: At the same time that the correction
+availability_of_correction: Availability of correction
+availability_of_score: Availability of score
 
 # B
 badgeObtained: Congratulations ! You got the badge of knowledge
@@ -432,9 +432,6 @@ your answer: Your answer
 
 
 #properties of entities
-At the end of assessment: At the end of assessment
-At the same time that the correction: At the same time that the correction
-
 Category.value: Category
 
 Choice.feedback: Feedback if this answer is checked (optional)
