@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
@@ -138,7 +139,8 @@ class PackageController extends Controller
             'installed' => $installed,
             'uninstalled' => $uninstalled,
             'danger' => $danger,
-            'warnings' => $warnings
+            'warnings' => $warnings,
+            'useTestRepo' => $this->configHandler->getParameter('use_repository_test')
         );
     }
 
@@ -191,5 +193,36 @@ class PackageController extends Controller
         $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
 
         return $event->getResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/package/repository/test",
+     *     name="claro_admin_use_test_repository"
+     * )
+     */
+    public function useTestPackageAction()
+    {
+        $this->configHandler->setParameter('use_repository_test', true);
+
+        return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/package/repository/stable",
+     *     name="claro_admin_use_stable_repository"
+     * )
+     */
+    public function useStablePackageAction()
+    {
+        $this->configHandler->setParameter('use_repository_test', false);
+
+        return new RedirectResponse($this->generateUrl('claro_admin_plugins'));
+    }
+
+    public function refreshPlatformAction()
+    {
+        
     }
 }
