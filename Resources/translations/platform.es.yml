@@ -1117,3 +1117,5 @@ requirement_failed_for_install: requirement_failed_for_install
 ext_php_missing: ext_php_missing
 claroline_bundle_missing: claroline_bundle_missing
 package_update_danger: package_update_danger
+use_stable_repo: use_stable_repo
+use_test_repo: use_test_repo

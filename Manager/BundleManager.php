@@ -128,6 +128,11 @@ class BundleManager
     {
         $api = $this->configHandler->getParameter('repository_api');
         $url = $api . "/bundle/$bundle/coreVersion/{$this->getCoreBundleVersion()}/download";
+
+        if ($this->configHandler->getParameter('use_repository_test')) {
+            $url .= '/test';
+        }
+
         $ch = curl_init();
         $zipFile = sys_get_temp_dir() . '/' . uniqid() . '.zip';
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -144,6 +149,11 @@ class BundleManager
     {
         $api = $this->configHandler->getParameter('repository_api');
         $url = $api . "/bundle/$bundle/coreVersion/{$this->getCoreBundleVersion()}/installable";
+
+        if ($this->configHandler->getParameter('use_repository_test')) {
+            $url .= '/test';
+        }
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

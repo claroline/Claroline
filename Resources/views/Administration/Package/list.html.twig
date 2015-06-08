@@ -123,6 +123,12 @@
                 </div>
             </div>
         </div>
+        </br>
+        {% if useTestRepo %}
+            <a href="{{ path('claro_admin_use_stable_repository') }}" class="btn btn-primary"> {{ 'use_stable_repo'|trans({}, 'platform') }} </a>
+        {% else %}
+            <a href="{{ path('claro_admin_use_test_repository') }}" class="btn btn-primary"> {{ 'use_test_repo'|trans({}, 'platform') }} </a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
