@@ -263,10 +263,18 @@
         </div>
     </div>
 
+    {% if team.getTeamManager() is not empty %}
+        {% set managerId = manager.getId() %}
+    {% else %}
+        {% set managerId = -1 %}
+    {% endif %}
+
     <div id="team-datas"
          data-team-id="{{ team.getId() }}"
          data-max-users="{{ team.getMaxUsers() }}"
          data-nb-users="{{ team.getUsers()|length }}"
+         data-workspace-id="{{ workspace.getId() }}"
+         data-team-manager-id="{{ managerId }}"
     >
     </div>
 {% endblock %}

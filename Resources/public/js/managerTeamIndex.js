@@ -13,6 +13,8 @@
     var teamId = $('#team-datas').data('team-id');
     var maxUsers = $('#team-datas').data('max-users');
     var nbUsers = $('#team-datas').data('nb-users');
+    var workspaceId = $('#team-datas').data('workspace-id');
+    var currentManagerId = $('#team-datas').data('team-manager-id');
 
     $('#edit-params-btn').on('click', function () {
         window.Claroline.Modal.displayForm(
@@ -142,17 +144,18 @@
     });
 
     $('#select-team-manager-btn').on('click', function () {
-        $.ajax({
-            url: Routing.generate(
-                'claro_team_manager_registration_users_list',
-                {'team': teamId}
-            ),
-            type: 'GET',
-            success: function (datas) {
-                $('#view-registration-manager-body').html(datas);
-                $('#view-registration-manager-box').modal('show');
-            }
-        });
+        var userPicker = new UserPicker();
+        var params = {
+            picker_name: 'team-manager-picker',
+            picker_title: Translator.trans('team_manager_selection', {}, 'team'),
+            forced_workspaces: [workspaceId]
+        };
+        
+        if (currentManagerId !== -1) {
+            params['selected_users'] = [currentManagerId];
+        }
+        userPicker.configure(params, registerManager);
+        userPicker.open();
     });
 
     $('body').on('click', '#remove-team-manager-btn', function () {
@@ -166,74 +169,50 @@
             Translator.trans('remove_team_manager_confirm_message', {}, 'team'),
             Translator.trans('remove_team_manager', {}, 'team')
         );
+        currentManagerId = -1;
     });
+    
+    var registerManager = function (userId) {
+        
+        if (userId !== null) {
+            currentManagerId = userId;
+            
+            $.ajax({
+                url: Routing.generate(
+                    'claro_user_infos_request',
+                    {'user': userId}
+                ),
+                type: 'GET',
+                success: function (datas) {
+                    var firstName = datas['firstName'];
+                    var lastName = datas['lastName'];
 
-    $('#view-registration-manager-body').on('click', 'a', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var url = $(this).attr('href');
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-            async: false,
-            success: function (result) {
-                $('#view-registration-manager-body').html(result);
-            }
-        });
-    });
-
-    $('#view-registration-manager-body').on('click', '#search-manager-btn', function () {
-        var search = $('#search-manager-input').val();
-
-        $.ajax({
-            url: Routing.generate(
-                'claro_team_manager_registration_users_list',
-                {
-                    'team': teamId,
-                    'search': search
+                    $.ajax({
+                        url: Routing.generate(
+                            'claro_team_manager_register_manager',
+                            {'team': teamId, 'user': userId}
+                        ),
+                        type: 'POST',
+                        async: false,
+                        success: function () {
+                            var managerBox = firstName + ' ' + lastName + ' ' +
+                                '<span>' +
+                                    '<i id="remove-team-manager-btn"' +
+                                       'class="fa fa-times-circle pointer-hand"' +
+                                       'style="color: #D9534F"' +
+                                       'data-toggle="tooltip"' +
+                                       'data-placement="top"' +
+                                       'title="' + Translator.trans('remove_team_manager', {}, 'team') + '"' +
+                                    '>' +
+                                    '</i>' +
+                                '</span>';
+                            $('#team-manager-box').html(managerBox);
+                        }
+                    });
                 }
-            ),
-            type: 'GET',
-            async: false,
-            success: function (result) {
-                $('#view-registration-manager-body').html(result);
-            }
-        });
-    });
-
-    $('#view-registration-manager-body').on('click', '.register-manager-btn', function () {
-        var userId = $(this).data('user-id');
-        var firstName = $(this).data('user-first-name');
-        var lastName = $(this).data('user-last-name');
-
-        $.ajax({
-            url: Routing.generate(
-                'claro_team_manager_register_manager',
-                {
-                    'team': teamId,
-                    'user': userId
-                }
-            ),
-            type: 'POST',
-            async: false,
-            success: function () {
-                var managerBox = firstName + ' ' + lastName + ' ' +
-                    '<span>' +
-                        '<i id="remove-team-manager-btn"' +
-                           'class="fa fa-times-circle pointer-hand"' +
-                           'style="color: #D9534F"' +
-                           'data-toggle="tooltip"' +
-                           'data-placement="top"' +
-                           'title="' + Translator.trans('remove_team_manager', {}, 'team') + '"' +
-                        '>' +
-                        '</i>' +
-                    '</span>';
-                $('#team-manager-box').html(managerBox);
-                $('#view-registration-manager-box').modal('hide');
-            }
-        });
-    });
+            });
+        }
+    };
 
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
