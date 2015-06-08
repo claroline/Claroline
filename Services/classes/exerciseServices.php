@@ -1369,29 +1369,29 @@ class exerciseServices
      *
      * @return array
      */
-    public function getActionInteraction($em, $interaction)
-    {
-        $response = $em->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $interaction->getId()));
-        if (count($response) > 0) {
-            $questionWithResponse[$interaction->getId()] = 1;
-        } else {
-            $questionWithResponse[$interaction->getId()] = 0;
-        }
-
-        $share = $em->getRepository('UJMExoBundle:Share')
-            ->findBy(array('question' => $interaction->getQuestion()->getId()));
-        if (count($share) > 0) {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 1;
-        } else {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 0;
-        }
-
-        $actions[0] = $questionWithResponse;
-        $actions[1] = $alreadyShared;
-
-        return $actions;
-    }
+//    public function getActionInteraction($em, $interaction)
+//    {
+//        $response = $em->getRepository('UJMExoBundle:Response')
+//            ->findBy(array('interaction' => $interaction->getId()));
+//        if (count($response) > 0) {
+//            $questionWithResponse[$interaction->getId()] = 1;
+//        } else {
+//            $questionWithResponse[$interaction->getId()] = 0;
+//        }
+//
+//        $share = $em->getRepository('UJMExoBundle:Share')
+//            ->findBy(array('question' => $interaction->getQuestion()->getId()));
+//        if (count($share) > 0) {
+//            $alreadyShared[$interaction->getQuestion()->getId()] = 1;
+//        } else {
+//            $alreadyShared[$interaction->getQuestion()->getId()] = 0;
+//        }
+//
+//        $actions[0] = $questionWithResponse;
+//        $actions[1] = $alreadyShared;
+//
+//        return $actions;
+//    }
 
     /**
      * For an shared interaction whith me, know if it's linked with response and if I can modify it
