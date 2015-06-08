@@ -20,6 +20,7 @@ var UserPicker = function () {
     this.showCode = 0;
     this.showGroups = 0;
     this.showPlatformRoles = 0;
+    this.attachName = 1;
     this.userIds = [];
     this.forcedUserIds = [];
     this.selectedUserIds = [];
@@ -88,6 +89,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
         this.showPlatformRoles = configurationDatas['show_platform_roles'] ? 1 : 0;
     }
     
+    if (configurationDatas['attach_name'] !== undefined) {
+        this.attachName = configurationDatas['attach_name'] ? 1 : 0;
+    }
+    
     if (configurationDatas['blacklist'] !== undefined) {
         this.userIds = configurationDatas['blacklist'];
     }
@@ -143,7 +148,8 @@ UserPicker.prototype.open = function () {
             'showMail': userPicker.showMail,
             'showCode': userPicker.showCode,
             'showGroups': userPicker.showGroups,
-            'showPlatformRoles': userPicker.showPlatformRoles
+            'showPlatformRoles': userPicker.showPlatformRoles,
+            'attachName': userPicker.attachName
         }
     );
     route += '?' + $.param(this.parameters);
@@ -543,7 +549,8 @@ UserPicker.prototype.open = function () {
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
                             'showGroups': userPicker.showGroups,
-                            'showPlatformRoles': userPicker.showPlatformRoles
+                            'showPlatformRoles': userPicker.showPlatformRoles,
+                            'attachName': userPicker.attachName
                         }
                     ) :
                     Routing.generate(
@@ -561,7 +568,8 @@ UserPicker.prototype.open = function () {
                             'showMail': userPicker.showMail,
                             'showCode': userPicker.showCode,
                             'showGroups': userPicker.showGroups,
-                            'showPlatformRoles': userPicker.showPlatformRoles
+                            'showPlatformRoles': userPicker.showPlatformRoles,
+                            'attachName': userPicker.attachName
                         }
                     );
                 route += '?' + $.param(userPicker.parameters);
