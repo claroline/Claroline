@@ -1127,3 +1127,4 @@ refresh_explanation: |
     If you want to try to solve them, please empty your app/cache directory and click on "refresh" </br>
 platform_refresh_confirm: Do you really want to refresh the platform files ?
 is_not_writable_recursive: 'is not writable recursively'
+test_repository_activated: 'Test repositories are activated'

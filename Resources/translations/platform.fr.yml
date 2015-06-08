@@ -1127,3 +1127,4 @@ refresh_explanation: |
     Afin de tenter de résoudre ces problèmes, veuillez vider le répertoire app/cache et cliquer sur "Raffraîchir"  </br>
 platform_refresh_confirm: Êtes-vous sûr de vouloir raffraîchir les fichiers de la plateforme ?
 is_not_writable_recursive: 'et ses sous dossiers ne sont pas accessibles en écriture'
+test_repository_activated: 'Les dépôts de test sont activés'

@@ -61,6 +61,11 @@
                 <li>{{ 'install_update_cant_be_undone'|trans({}, 'platform') }}</li>
                 <li>{{ 'put_back_permissions_after_update'|trans({}, 'platform') }}</li>
             </ul>
+            {% if useTestRepo %}
+                <div class="alert alert-warning">
+                    {{ 'test_repository_activated'|trans({}, 'platform') }}
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     <div class="panel-body">
