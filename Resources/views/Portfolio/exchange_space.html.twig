@@ -4,7 +4,7 @@
             <p class="list-group-item title lead text-center">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</p>
             <ul class="list-group">
                 <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
-                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | filter:{type: 'owned'})"
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in ownedPortfolios = (portfolios | toArray : false | filter:{type: 'owned'})"
                     data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
                     data-ng-click="clickOnPortolio(portfolio.id)">
                     {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
@@ -16,7 +16,7 @@
             <p class="list-group-item title lead text-center">{{ 'my_guided_portfolio'|trans({}, 'icap_portfolio') }}</p>
             <ul class="list-group">
                 <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>
-                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | filter:{type: 'guided'})"
+                <li class="list-group-item portfolio ng-cloak" role="button" data-ng-repeat="portfolio in guidedPortfolios = (portfolios | toArray : false | filter:{type: 'guided'})"
                     data-ng-class="{'unread': 0 < portfolio.unreadComments, 'active': selectedPortfolioId == portfolio.id}"
                     data-ng-click="clickOnPortolio(portfolio.id)">
                     {% verbatim %}{{ portfolio.title }}<span data-ng-show="0 < portfolio.unreadComments" class="badge pull-right">{{ portfolio.unreadComments }}</span>{% endverbatim %}
@@ -34,7 +34,7 @@
         </div>
         <div class="comment-container loading"
              data-scroll-container data-ng-init="initComments(selectedPortfolioId)" data-ng-class="{'loading': !comments.$resolved}">
-            <div class="media comment ng-cloak" data-ng-repeat="comment in comments | orderBy:['+date']"
+            <div class="media comment ng-cloak" data-ng-repeat="comment in comments"
                  data-ng-show="selectedPortfolioId && comments.$resolved">
                 {% verbatim %}
                 <img class="pull-left media-object avatar" alt="{{ comment.sender.firstName }} {{ comment.sender.lastName }}"
