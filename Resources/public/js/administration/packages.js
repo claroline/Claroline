@@ -14,7 +14,6 @@ $('.install-pkg').on('click', function(event) {
         $('#log-content').show();
         //var logFile = Routing.generate('claro_admin_plugins_log', {'date': date});
         var logFile = $('#log-content').attr('href') + '?logFile=' + 'update-' + date + '.log';
-        alert (logFile);
         var logDisplayer = new window.Claroline.LogDisplayer.Displayer('#log-content');
         logDisplayer.setLogFile(logFile);
         logDisplayer.start();
