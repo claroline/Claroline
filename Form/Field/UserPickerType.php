@@ -78,6 +78,7 @@ class UserPickerType extends AbstractType
         $view->vars['show_code'] = $options['show_code'];
         $view->vars['show_groups'] = $options['show_groups'];
         $view->vars['show_platform_roles'] = $options['show_platform_roles'];
+        $view->vars['attach_name'] = $options['attach_name'];
         $view->vars['blacklist'] = $options['blacklist'];
         $view->vars['whitelist'] = $options['whitelist'];
         $view->vars['selected_users'] = $options['selected_users'];
@@ -108,6 +109,7 @@ class UserPickerType extends AbstractType
                 'show_code' => false,
                 'show_groups' => false,
                 'show_platform_roles' => false,
+                'attach_name' => true,
                 'blacklist' => array(),
                 'whitelist' => array(),
                 'selected_users' => array(),
