@@ -32,7 +32,6 @@ use Icap\LessonBundle\Event\Log\LogChapterMoveEvent;
 use Icap\LessonBundle\Event\Log\LogChapterReadEvent;
 use Icap\LessonBundle\Event\Log\LogChapterUpdateEvent;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 

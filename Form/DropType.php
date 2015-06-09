@@ -4,7 +4,7 @@ namespace Innova\CollecticielBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DropType extends AbstractType
 {
@@ -17,7 +17,7 @@ class DropType extends AbstractType
         return 'innova_collecticiel_drop_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'translation_domain' => 'innova_collecticiel'

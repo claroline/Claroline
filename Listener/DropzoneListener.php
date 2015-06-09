@@ -61,7 +61,7 @@ class DropzoneListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
         $collection = new ResourceCollection(array($event->getResource()->getResourceNode()));
-        if (false === $this->container->get('security.context')->isGranted('EDIT', $collection)) {
+        if (false === $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection)) {
             $route = $this->container
                 ->get('router')
                 ->generate(

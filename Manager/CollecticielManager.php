@@ -44,6 +44,7 @@ class CollecticielManager
 
         $adminInnova = false;
 
+        // TODO : change service to @security.authorization_checker
         if ( $this->securityContext->isGranted('ROLE_ADMIN' === true)
         && $this->get('security.context')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
