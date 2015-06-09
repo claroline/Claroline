@@ -23,23 +23,28 @@
         var elementsToModalized = [
             {
                 target: "a.modal_action",
-                message: Translator.trans('portfolio_added_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_added_ajax_notification', {}, 'icap_portfolio'),
+                exchangeSpaceNeedUpdate: true
             },
             {
                 target: "#no_portfolio a",
-                message: Translator.trans('portfolio_added_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_added_ajax_notification', {}, 'icap_portfolio'),
+                exchangeSpaceNeedUpdate: true
             },
             {
                 target: "a.rename_link",
-                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_renamed_ajax_notification', {}, 'icap_portfolio'),
+                exchangeSpaceNeedUpdate: true
             },
             {
                 target: "a.update_visibility_link",
-                message: Translator.trans('portfolio_update_visibility_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_update_visibility_ajax_notification', {}, 'icap_portfolio'),
+                exchangeSpaceNeedUpdate: false
             },
             {
                 target: "a.update_guides_link",
-                message: Translator.trans('portfolio_update_guides_ajax_notification', {}, 'icap_portfolio')
+                message: Translator.trans('portfolio_update_guides_ajax_notification', {}, 'icap_portfolio'),
+                exchangeSpaceNeedUpdate: false
             }];
         elementsToModalized.forEach(function (element, index) {
             modalized(element);
@@ -86,6 +91,7 @@
                         url: window.location,
                         success: function(data, textStatus, jqXHR) {
                             updateList(data);
+                            updateExchangeSpace();
                             toastr.success(Translator.trans('portfolio_imported_ajax_notification', {}, 'icap_portfolio'));
                         }
                     });
@@ -101,19 +107,23 @@
                 url: $(target).attr('href'),
                 success: function(data, textStatus, jqXHR) {
                     updateList(data);
+                    updateExchangeSpace();
                     toastr.success(Translator.trans('portfolio_deleted_ajax_notification', {}, 'icap_portfolio'));
                     modal.modal('hide');
                 }
             });
         }
 
-        function submitForm(modalElement, form, message) {
+        function submitForm(modalElement, form, message, exchangeSpaceNeedUpdate) {
             $.ajax({
                 url: form.attr('action'),
                 data: form.serializeArray(),
                 type: 'POST',
                 success: function(data, textStatus, jqXHR) {
                     updateList(data);
+                    if (exchangeSpaceNeedUpdate) {
+                        updateExchangeSpace();
+                    }
                     modalElement.modal('hide');
                     toastr.success(message);
                 }
@@ -130,13 +140,13 @@
 
                         modalElement.on('click', 'button[type="submit"]', function (event) {
                             event.preventDefault();
-                            submitForm(modalElement, modalForm, element.message);
+                            submitForm(modalElement, modalForm, element.message, element.exchangeSpaceNeedUpdate);
                         });
 
                         modalElement.on('keypress', function (event) {
                             if (event.keyCode === 13 && event.target.nodeName !== 'TEXTAREA') {
                                 event.preventDefault();
-                                submitForm(modalElement, modalForm);
+                                submitForm(modalElement, modalForm, element.message, element.exchangeSpaceNeedUpdate);
                             }
                         });
                     }
@@ -146,6 +156,13 @@
 
         function updateList(content) {
             $("#list").html(content);
+        }
+
+        function updateExchangeSpace() {
+            var scope = angular.element($("#exchange_space_container")).scope();
+            scope.$apply(function(){
+                scope.refreshComments(false);
+            });
         }
     });
 })();
