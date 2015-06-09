@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_ticket")
@@ -20,6 +21,7 @@ class Ticket
 
     /**
      * @ORM\Column(nullable=false)
+     * @Assert\NotBlank()
      */
     protected $title;
 

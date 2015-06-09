@@ -1,0 +1,7 @@
+create_ticket: 'Créer un ticket'
+no_ticket: 'Aucun ticket'
+priority: 'Priorité'
+ticket_creation: 'Création d''un ticket'
+ticket_deletion: 'Suppression du ticket'
+ticket_deletion_confirm_message: 'Êtes-vous sûr de vouloir supprimer ce ticket ?'
+ticket_edition: 'Modification du ticket'

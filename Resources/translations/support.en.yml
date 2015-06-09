@@ -1,0 +1,7 @@
+create_ticket: 'Create a ticket'
+no_ticket: 'No ticket'
+priority: 'Priority'
+ticket_creation: 'Ticket creation'
+ticket_deletion: 'Ticket deletion'
+ticket_deletion_confirm_message: 'Are you sure you want to delete this ticket ?'
+ticket_edition: 'Ticket edition'

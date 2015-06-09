@@ -72,4 +72,17 @@ class TicketRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findLastTicketNumByUser(User $user)
+    {
+        $dql = "
+            SELECT MAX(t.num) AS ticket_num
+            FROM FormaLibre\SupportBundle\Entity\Ticket t
+            WHERE t.user = :user
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $query->getSingleResult();
+    }
 }

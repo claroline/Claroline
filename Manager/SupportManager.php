@@ -40,6 +40,7 @@ class SupportManager
     public function deleteTicket(Ticket $ticket)
     {
         $this->om->remove($ticket);
+        $this->om->flush();
     }
 
     public function persistAdminTicket(AdminTicket $adminTicket)
@@ -51,6 +52,19 @@ class SupportManager
     public function deleteAdminTicket(AdminTicket $adminTicket)
     {
         $this->om->remove($adminTicket);
+        $this->om->flush();
+    }
+
+    public function generateTicketNum(User $user)
+    {
+        $num = 1;
+        $lastNum = $this->ticketRepo->findLastTicketNumByUser($user);
+
+        if (!is_null($lastNum['ticket_num'])) {
+            $num = $lastNum['ticket_num'] + 1;
+        }
+
+        return $num;
     }
 
 
