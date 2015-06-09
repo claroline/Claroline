@@ -8,7 +8,7 @@ use FormaLibre\SupportBundle\Entity\Ticket;
 
 /**
  * @ORM\Table(name="formalibre_admin_ticket")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="FormaLibre\SupportBundle\Repository\TicketRepository")
  */
 class AdminTicket
 {

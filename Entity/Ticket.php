@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="formalibre_ticket")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="FormaLibre\SupportBundle\Repository\TicketRepository")
  */
 class Ticket
 {
@@ -19,7 +19,12 @@ class Ticket
     protected $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(nullable=false)
+     */
+    protected $title;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
@@ -32,7 +37,7 @@ class Ticket
     protected $user;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime")
+     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
      */
     protected $creationDate;
 
@@ -52,7 +57,7 @@ class Ticket
     protected $spentTime;
 
     /**
-     * @ORM\Column(name="status_date", type="datetime")
+     * @ORM\Column(name="status_date", type="datetime", nullable=false)
      */
     protected $statusDate;
 
@@ -60,6 +65,11 @@ class Ticket
      * @ORM\Column(type="json_array", nullable=true)
      */
     protected $details;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    protected $num;
 
     public function getId()
     {
@@ -69,6 +79,16 @@ class Ticket
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    public function setTitle($title)
+    {
+        $this->title = $title;
     }
 
     public function getDescription()
@@ -149,5 +169,15 @@ class Ticket
     public function setDetails($details)
     {
         $this->details = $details;
+    }
+
+    public function getNum()
+    {
+        return $this->num;
+    }
+
+    public function setNum($num)
+    {
+        $this->num = $num;
     }
 }

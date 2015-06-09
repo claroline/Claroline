@@ -16,7 +16,7 @@ class AdminSupportController extends Controller
     /**
      * @EXT\Route(
      *     "/admin/support/management",
-     *     name="forma_libre_admin_support_management",
+     *     name="formalibre_admin_support_management",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
