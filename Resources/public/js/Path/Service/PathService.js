@@ -131,14 +131,14 @@
                                 deferred.reject(response);
                             } else {
                                 // Get updated data
-                                angular.copy(response.data, path);
+                                angular.merge(path, response.data);
 
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('path_save_success', {}, 'path_wizards'));
 
                                 deferred.resolve(response);
                             }
-                        })
+                        }.bind(this))
 
                         .error(function (response) {
                             AlertService.addAlert('error', Translator.trans('path_save_error', {}, 'path_wizards'));
@@ -167,14 +167,14 @@
                                 deferred.reject(response);
                             } else {
                                 // Get updated data
-                                angular.copy(response.data, path);
+                                angular.merge(path, response.data);
 
                                 // Display confirm message
                                 AlertService.addAlert('success', Translator.trans('publish_success', {}, 'path_wizards'));
 
                                 deferred.resolve(response);
                             }
-                        })
+                        }.bind(this))
 
                         .error(function (response) {
                             AlertService.addAlert('error', Translator.trans('publish_error', {}, 'path_wizards'));

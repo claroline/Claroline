@@ -25,31 +25,31 @@
     <!-- Actions available -->
     <span data-ng-show="showButtons == step.id || pathSummaryEditCtrl.current.stepId == step.id || (!pathSummaryEditCtrl.current.stepId && 0 == step.lvl)" class="step-actions btn-group" data-nodrag="">
         <!-- Add child -->
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.addStep(step)" data-ng-disabled="step.lvl >= pathSummaryEditCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_wizards' }}">
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.addStep(step)" data-ng-disabled="step.lvl >= pathSummaryEditCtrl.maxDepth" data-toggle="tooltip" data-container="body" title="{{ 'step_add_child' | trans:{}:'path_wizards' }}">
             <span class="fa fa-plus"></span>
             <span class="sr-only">{{ 'step_add_child' | trans:{}:'path_wizards' }}</span>
         </a>
 
         <!-- Copy to clipboard -->
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.copy(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.copy" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_wizards' }}">
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.copy(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.copy" data-toggle="tooltip" data-container="body" title="{{ 'step_copy' | trans:{}:'path_wizards' }}">
             <span class="fa fa-copy"></span>
             <span class="sr-only">{{ 'step_copy' | trans:{}:'path_wizards' }}</span>
         </a>
 
         <!-- Paste from clipboard -->
-        <a href="#" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.paste(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_wizards' }}">
+        <a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.paste(step)" data-ng-disabled="pathSummaryEditCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_wizards' }}">
             <span class="fa fa-paste"></span>
             <span class="sr-only">{{ 'step_paste' | trans:{}:'path_wizards' }}</span>
         </a>
 
         <!-- Create as template -->
-        <!--<a href="#" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.saveAsTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_wizards' }}">
+        <!--<a href="" role="button" class="btn btn-default btn-sm" data-ng-click="pathSummaryEditCtrl.saveAsTemplate(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_to_template' | trans:{}:'path_wizards' }}">
             <span class="fa fa-download"></span>
             <span class="sr-only">{{ 'step_to_template' | trans:{}:'path_wizards' }}</span>
         </a>-->
 
         <!-- Delete step -->
-        <a href="#" class="btn btn-danger btn-sm" data-ng-click="pathSummaryEditCtrl.removeStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
+        <a href="" role="button" class="btn btn-danger btn-sm" data-ng-click="pathSummaryEditCtrl.removeStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
             <span class="fa fa-trash-o"></span>
             <span class="sr-only">{{ 'step_delete' | trans:{}:'path_wizards' }}</span>
         </a>
