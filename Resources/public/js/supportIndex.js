@@ -16,6 +16,8 @@
         );
     });
     
+    $('[data-toggle="popover"]').popover({html: true});
+    
     var removeTicketRow = function (event, ticketId) {
         $('#row-ticket-' + ticketId).remove();
     };

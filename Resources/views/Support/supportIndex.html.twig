@@ -47,54 +47,80 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th>
+                            <th class="col-md-1">
                                 <a href="{{ sortUrl('num', order) }}">
                                     #
                                 </a>
                             </th>
-                            <th>
+                            <th class="col-md-4">
                                 <a href="{{ sortUrl('title', order) }}">
                                     {{ 'title'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th>
-                                <a href="{{ sortUrl('priority', order) }}">
-                                    {{ 'priority'|trans({}, 'support') }}
-                                </a>
-                            </th>
-                            <th>
+                            <th class="col-md-2">
                                 <a href="{{ sortUrl('status', order) }}">
                                     {{ 'status'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th>
-                                <a href="{{ sortUrl('creationDate', order) }}">
-                                    {{ 'creation_date'|trans({}, 'platform') }}
+                            <th class="col-md-2">
+                                <a href="{{ sortUrl('priority', order) }}">
+                                    {{ 'priority'|trans({}, 'support') }}
                                 </a>
                             </th>
-                            <th>
-                                {{ 'actions'|trans({}, 'platform') }}
+                            <th class="col-md-1">
+                            </th>
+                            <th class="col-md-1">
+                            </th>
+                            <th class="col-md-1">
                             </th>
                         </tr>
                         
                         {% for ticket in tickets %}
                             {% set ticketId = ticket.getId() %}
+                            {% set ticketDescription = ticket.getDescription() %}
                             <tr id="row-ticket-{{ ticketId }}">
-                                <td>{{ ticket.getNum() }}</td>
-                                <td>{{ ticket.getTitle() }}</td>
-                                <td>{{ ticket.getPriority() }}</td>
-                                <td>
-                                    {{ ticket.getStatus() }}
-                                    [{{ ticket.getStatusDate()|intl_date_format }}]
+                                <td class="col-md-1">
+                                    #{{ ticket.getNum() }}
                                 </td>
-                                <td>{{ ticket.getCreationDate()|intl_date_format }}</td>
-                                <td>
+                                <td class="col-md-4">
+                                    <b class="pointer-hand"
+                                       data-toggle="popover"
+                                       data-container="body" 
+                                       data-placement="right"
+                                       data-content="{{ ticketDescription|raw }}"
+                                    >
+                                        {{ ticket.getTitle() }}
+                                    </b>
+                                    <p>
+                                        {{ 'created_on'|trans({}, 'support') }}
+                                        {{ ticket.getCreationDate()|intl_date_format }}
+                                    </p>
+                                </td>
+                                <td class="col-md-2">
+                                    {{ 'status'|trans({}, 'platform') }}:
+                                    {{ ticket.getStatus() }}
+                                    <p>
+                                        [{{ ticket.getStatusDate()|intl_date_format }}]
+                                    </p>
+                                </td>
+                                <td class="col-md-2">
+                                    {{ 'priority'|trans({}, 'support') }}:
+                                    {{ ticket.getPriority() }}
+                                </td>
+                                <td class="col-md-1">
+                                    <i class="fa fa-comment-o"></i>
+                                </td>
+                                <td class="col-md-1">
+                                    <i class="fa fa-clock-o"></i>
+                                    {{ ticket.getSpentTime() }}
+                                </td>
+                                <td class="col-md-1">
                                     <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticketId}) }}"
-                                       class="btn btn-default"
+                                       class="btn btn-sm btn-default"
                                     >
                                         <i class="fa fa-edit"></i>
                                     </a>
-                                    <span class="btn btn-danger delete-ticket-btn"
+                                    <span class="btn btn-sm btn-danger delete-ticket-btn"
                                           data-ticket-id="{{ ticketId }}"
                                     >
                                         <i class="fa fa-trash"></i>

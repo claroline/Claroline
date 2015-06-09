@@ -53,7 +53,7 @@ class SupportController extends Controller
      * @EXT\Route(
      *     "/support/index/ordered/by/{orderedBy}/order/{order}",
      *     name="formalibre_support_index",
-     *     defaults={"orderedBy"="num","order"="ASC"},
+     *     defaults={"orderedBy"="num","order"="DESC"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -62,7 +62,7 @@ class SupportController extends Controller
     public function supportIndexAction(
         User $authenticatedUser,
         $orderedBy = 'num',
-        $order = 'ASC'
+        $order = 'DESC'
     )
     {
         $tickets = $this->supportManager->getTicketsByUser(
