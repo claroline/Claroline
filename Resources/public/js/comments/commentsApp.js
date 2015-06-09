@@ -1,7 +1,7 @@
 'use strict';
 
 var commentsApp = angular.module('commentsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-    'app.translation', 'app.interpolator', 'app.directives']);
+    'app.translation', 'app.interpolator', 'app.directives', 'angular-toArrayFilter']);
 
 commentsApp.config(["$httpProvider", function($http) {
     var elementToRemove = ['title', 'id', 'type', 'unreadComments'];
