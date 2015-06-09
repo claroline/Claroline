@@ -32,7 +32,7 @@ class WidgetTypeManager
     {
         $widgetTypes       = $this->widgetTypeRepository->findAllInArray();
         $sortedWidgetTypes = array();
-²
+
         foreach ($widgetTypes as $widgetType) {
             if ($widgetType['name'] !== 'title') {
                 $sortedWidgetTypes[$widgetType['name']] = $widgetType;

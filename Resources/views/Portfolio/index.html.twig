@@ -59,6 +59,15 @@
                     </div>
                 </div>
             </div>
+            {% for widgetType in widgetTypes %}
+            <div role="tabpanel" class="tab-pane" id="{{ widgetType.name }}">
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ widgetType.name }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
     </div>
