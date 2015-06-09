@@ -28,6 +28,23 @@ class WidgetTypeManager
     /**
      * @return array
      */
+    public function getWidgetsTypes()
+    {
+        $widgetTypes       = $this->widgetTypeRepository->findAllInArray();
+        $sortedWidgetTypes = array();
+²
+        foreach ($widgetTypes as $widgetType) {
+            if ($widgetType['name'] !== 'title') {
+                $sortedWidgetTypes[$widgetType['name']] = $widgetType;
+            }
+        }
+
+        return $sortedWidgetTypes;
+    }
+
+    /**
+     * @return array
+     */
     public function getWidgetsConfig()
     {
         $widgetTypes       = $this->widgetTypeRepository->findAllInArray();

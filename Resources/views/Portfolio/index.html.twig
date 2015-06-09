@@ -30,6 +30,17 @@
                     </span>
                 </a>
             </li>
+            {% for widgetType in widgetTypes %}
+            <li class="{{ widgetType.name }}-tab">
+                <a href="#{{ widgetType.name }}" aria-controls="{{ widgetType.name }}" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-{{ widgetType.icon }}"></i>
+                        <span class="visible-md-inline visible-lg-inline">{{ (widgetType.name ~ '_title')|trans({}, 'icap_portfolio') }}</span>
+                    </span>
+                </a>
+            </li>
+            {% endfor %}
         </ul>
 
         <div class="tab-content">

@@ -58,13 +58,17 @@ class PortfolioController extends Controller
             $portfolioId = $titleWidget->getPortfolio()->getId();
         }
 
+        /** @var \Icap\PortfolioBundle\Manager\WidgetTypeManager $widgetTypeManager */
+        $widgetTypeManager = $this->get('icap_portfolio.manager.widget_type');
+
         $returnData = array(
             'portfoliosPager' => $portfoliosPager,
             'guidedPortfoliosPager' => $guidedPortfoliosPager,
             'availableImportFormats' => $availableImportFormats,
             'portfolioId' => $portfolioId,
             'page' => $page,
-            'guidedPage' => $guidedPage
+            'guidedPage' => $guidedPage,
+            'widgetTypes' => $widgetTypeManager->getWidgetsTypes()
         );
 
         if ($request->isXmlHttpRequest()) {
