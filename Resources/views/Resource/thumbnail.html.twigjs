@@ -8,6 +8,7 @@
         data-type="{{ node.type }}"
         data-mime-type="{{ node.mime_type }}"
         data-path="{{ node.path_for_display }}"
+        data-allow-select="{{ isSelectionAllowed}}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>

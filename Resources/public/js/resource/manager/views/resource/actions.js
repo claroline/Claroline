@@ -341,18 +341,20 @@
                 $('.node-chk-' + this.parameters.viewName).prop('checked', true);
 
                 $.each($('.node-chk-' + this.parameters.viewName), (function (index, el) {
-                    this.dispatcher.trigger('node-check-status-' + this.parameters.viewName, {
-                        node: {
-                            id: $(el).attr('value'),
-                            name: $(el).attr('data-node-name'),
-                            type: $(el).attr('data-type'),
-                            mimeType: $(el).attr('data-mime-type'),
-                            path: $(el).attr('data-path')
+                    if ($(el).attr('data-allow-select') === 'true') {
+                        this.dispatcher.trigger('node-check-status-' + this.parameters.viewName, {
+                            node: {
+                                id: $(el).attr('value'),
+                                name: $(el).attr('data-node-name'),
+                                type: $(el).attr('data-type'),
+                                mimeType: $(el).attr('data-mime-type'),
+                                path: $(el).attr('data-path')
 
-                        },
-                        isChecked: true,
-                        isPickerMode: this.parameters.isPickerMode
-                    });
+                            },
+                            isChecked: true,
+                            isPickerMode: this.parameters.isPickerMode
+                        });
+                    }
                 }).bind(this));
             } else {
                 $('.node-chk-' + this.parameters.viewName).prop('checked', false);
