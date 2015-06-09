@@ -44,7 +44,7 @@ class PlayerController
         ObjectManager $objectManager,
         PathManager   $pathManager)
     {
-        $this->om = $objectManager;
+        $this->om          = $objectManager;
         $this->pathManager = $pathManager;
     }
 
@@ -70,9 +70,10 @@ class PlayerController
         $resourceIcons = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')->findByIsShortcut(false);
 
         return array (
-            '_resource'     => $path,
-            'resourceIcons' => $resourceIcons,
-            'editEnabled'   => $this->pathManager->isAllow('EDIT', $path),
+            '_resource'       => $path,
+            'userProgression' => $this->pathManager->getUserProgression($path),
+            'resourceIcons'   => $resourceIcons,
+            'editEnabled'     => $this->pathManager->isAllow('EDIT', $path),
         );
     }
 }

@@ -35,3 +35,10 @@ services:
             pathManager:     @innova_path.manager.path
             pathHandler:     @innova_path.form.handler.path
         scope: request
+
+    # User Progression controller
+    innova_path.controller.user_progression:
+        class: %innova_path.controller.user_progression.class%
+        arguments:
+            userProgressionManager: @innova_path.manager.user_progression
+        scope: request

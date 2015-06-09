@@ -21,6 +21,12 @@ PathShowCtrl.prototype.constructor = PathShowCtrl;
 PathShowCtrl.prototype.editEnabled = false;
 
 /**
+ * Progression of the current User (key => stepId, value => json representation of UserProgression Entity)
+ * @type {object}
+ */
+PathShowCtrl.prototype.userProgression = {};
+
+/**
  * Open Path editor
  */
 PathShowCtrl.prototype.edit = function () {

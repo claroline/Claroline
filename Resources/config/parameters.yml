@@ -1,25 +1,27 @@
 parameters: 
     # Controllers
-    innova_path.controller.path.class:            Innova\PathBundle\Controller\PathController
-    innova_path.controller.path_template.class:   Innova\PathBundle\Controller\PathTemplateController
-    innova_path.controller.path_player.class:     Innova\PathBundle\Controller\Wizard\PlayerController
-    innova_path.controller.path_editor.class:     Innova\PathBundle\Controller\Wizard\EditorController
+    innova_path.controller.path.class:             Innova\PathBundle\Controller\PathController
+    innova_path.controller.path_template.class:    Innova\PathBundle\Controller\PathTemplateController
+    innova_path.controller.path_player.class:      Innova\PathBundle\Controller\Wizard\PlayerController
+    innova_path.controller.path_editor.class:      Innova\PathBundle\Controller\Wizard\EditorController
+    innova_path.controller.user_progression.class: Innova\PathBundle\Controller\Wizard\UserProgressionController
 
     # Managers
-    innova_path.manager.path.class:               Innova\PathBundle\Manager\PathManager
-    innova_path.manager.publishing.class:         Innova\PathBundle\Manager\PublishingManager
-    innova_path.manager.path_template.class:      Innova\PathBundle\Manager\PathTemplateManager
-    innova_path.manager.step.class:               Innova\PathBundle\Manager\StepManager
+    innova_path.manager.path.class:                Innova\PathBundle\Manager\PathManager
+    innova_path.manager.publishing.class:          Innova\PathBundle\Manager\PublishingManager
+    innova_path.manager.path_template.class:       Innova\PathBundle\Manager\PathTemplateManager
+    innova_path.manager.step.class:                Innova\PathBundle\Manager\StepManager
+    innova_path.manager.user_progression.class:    Innova\PathBundle\Manager\UserProgressionManager
     
     # Form types
-    innova_path.form.type.abstract_path.class:    Innova\PathBundle\Form\Type\AbstractPathType
-    innova_path.form.type.path.class:             Innova\PathBundle\Form\Type\PathType
-    innova_path.form.type.path_template.class:    Innova\PathBundle\Form\Type\PathTemplateType
+    innova_path.form.type.abstract_path.class:     Innova\PathBundle\Form\Type\AbstractPathType
+    innova_path.form.type.path.class:              Innova\PathBundle\Form\Type\PathType
+    innova_path.form.type.path_template.class:     Innova\PathBundle\Form\Type\PathTemplateType
     
     # Form handlers
-    innova_path.form.handler.abstract.class:      Innova\PathBundle\Form\Handler\AbstractPathHandler
-    innova_path.form.handler.path.class:          Innova\PathBundle\Form\Handler\PathHandler
-    innova_path.form.handler.path_template.class: Innova\PathBundle\Form\Handler\PathTemplateHandler
+    innova_path.form.handler.abstract.class:       Innova\PathBundle\Form\Handler\AbstractPathHandler
+    innova_path.form.handler.path.class:           Innova\PathBundle\Form\Handler\PathHandler
+    innova_path.form.handler.path_template.class:  Innova\PathBundle\Form\Handler\PathTemplateHandler
 
     # Listeners
-    innova_path.listener.path.class:              Innova\PathBundle\EventListener\Resource\PathListener
+    innova_path.listener.path.class:               Innova\PathBundle\EventListener\Resource\PathListener

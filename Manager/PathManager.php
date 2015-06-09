@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -160,6 +161,22 @@ class PathManager
         }
 
         return $paths;
+    }
+
+    /**
+     * Get progression of a User into a Path
+     * @param \Innova\PathBundle\Entity\Path\Path $path
+     * @param \Claroline\CoreBundle\Entity\User $user
+     * @return array
+     */
+    public function getUserProgression(Path $path, User $user = null)
+    {
+        if (empty($user)) {
+            // Get current authenticated User
+            $user = $this->securityToken->getToken()->getUser();
+        }
+
+        return $this->om->getRepository('InnovaPathBundle:UserProgression')->findByPathAndUser($path, $user);
     }
 
     /**
