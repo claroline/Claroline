@@ -78,60 +78,60 @@ class exerciseServices
      *
      * Return array
      */
-    public function responseQCM($request, $paperID = 0)
-    {
-        $res = array();
-        $interactionQCMID = $request->request->get('interactionQCMToValidated');
-        $response = array();
-
-        $em = $this->doctrine->getManager();
-        $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
-
-        if ($interQCM->getTypeQCM()->getCode() == 2) {
-            $response[] = $request->request->get('choice');
-        } else {
-            if ($request->request->get('choice') != null) {
-                $response = $request->request->get('choice');
-            }
-        }
-
-        $allChoices = $interQCM->getChoices();
-
-        $penalty = 0;
-
-        $session = $request->getSession();
-
-        if ($paperID == 0) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-                    $penalty += $penal;
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interQCM->getInteraction(), $paperID);
-        }
-
-        $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
-
-        $responseID = '';
-
-        foreach ($response as $res) {
-            if ($res != null) {
-                $responseID .= $res.';';
-            }
-        }
-
-        $res = array(
-            'score'    => $score,
-            'penalty'  => $penalty,
-            'interQCM' => $interQCM,
-            'response' => $responseID
-        );
-
-        return $res;
-
-    }
+//    public function responseQCM($request, $paperID = 0)
+//    {
+//        $res = array();
+//        $interactionQCMID = $request->request->get('interactionQCMToValidated');
+//        $response = array();
+//
+//        $em = $this->doctrine->getManager();
+//        $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
+//
+//        if ($interQCM->getTypeQCM()->getCode() == 2) {
+//            $response[] = $request->request->get('choice');
+//        } else {
+//            if ($request->request->get('choice') != null) {
+//                $response = $request->request->get('choice');
+//            }
+//        }
+//
+//        $allChoices = $interQCM->getChoices();
+//
+//        $penalty = 0;
+//
+//        $session = $request->getSession();
+//
+//        if ($paperID == 0) {
+//            if ($session->get('penalties')) {
+//                foreach ($session->get('penalties') as $penal) {
+//                    $penalty += $penal;
+//                }
+//            }
+//            $session->remove('penalties');
+//        } else {
+//            $penalty = $this->getPenalty($interQCM->getInteraction(), $paperID);
+//        }
+//
+//        $score = $this->qcmMark($interQCM, $response, $allChoices, $penalty);
+//
+//        $responseID = '';
+//
+//        foreach ($response as $res) {
+//            if ($res != null) {
+//                $responseID .= $res.';';
+//            }
+//        }
+//
+//        $res = array(
+//            'score'    => $score,
+//            'penalty'  => $penalty,
+//            'interQCM' => $interQCM,
+//            'response' => $responseID
+//        );
+//
+//        return $res;
+//
+//    }
 
     /**
      * To calculate the score for a QCM
@@ -145,59 +145,59 @@ class exerciseServices
      *
      * @return string userScore/scoreMax
      */
-    public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
-    {
-        $score = 0;
-        $scoreMax = $this->qcmMaxScore($interQCM);
-
-        $rightChoices = array();
-        $markByChoice = array();
-
-        if (!$interQCM->getWeightResponse()) {
-            foreach ($allChoices as $choice) {
-                if ($choice->getRightResponse()) {
-                    $rightChoices[] = (string) $choice->getId();
-                }
-            }
-
-            $result = array_diff($response, $rightChoices);
-            $resultBis = array_diff($rightChoices, $response);
-
-            if ((count($result) == 0) && (count($resultBis) == 0)) {
-                $score = $interQCM->getScoreRightResponse() - $penality;
-            } else {
-                $score = $interQCM->getScoreFalseResponse() - $penality;
-            }
-            if ($score < 0) {
-                $score = 0;
-            }
-
-            $score .= ' / '.$scoreMax;
-        } else {
-            //points par réponse
-            foreach ($allChoices as $choice) {
-                $markByChoice[(string) $choice->getId()] = $choice->getWeight();
-            }
-            if ($response[0] != null) {
-                foreach ($response as $res) {
-                    $score += $markByChoice[$res];
-                }
-            }
-
-            if ($score > $scoreMax) {
-                $score = $scoreMax;
-            }
-
-            $score -= $penality;
-
-            if ($score < 0) {
-                $score = 0;
-            }
-            $score .= '/'.$scoreMax;
-        }
-
-        return $score;
-    }
+//    public function qcmMark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penality)
+//    {
+//        $score = 0;
+//        $scoreMax = $this->qcmMaxScore($interQCM);
+//
+//        $rightChoices = array();
+//        $markByChoice = array();
+//
+//        if (!$interQCM->getWeightResponse()) {
+//            foreach ($allChoices as $choice) {
+//                if ($choice->getRightResponse()) {
+//                    $rightChoices[] = (string) $choice->getId();
+//                }
+//            }
+//
+//            $result = array_diff($response, $rightChoices);
+//            $resultBis = array_diff($rightChoices, $response);
+//
+//            if ((count($result) == 0) && (count($resultBis) == 0)) {
+//                $score = $interQCM->getScoreRightResponse() - $penality;
+//            } else {
+//                $score = $interQCM->getScoreFalseResponse() - $penality;
+//            }
+//            if ($score < 0) {
+//                $score = 0;
+//            }
+//
+//            $score .= ' / '.$scoreMax;
+//        } else {
+//            //points par réponse
+//            foreach ($allChoices as $choice) {
+//                $markByChoice[(string) $choice->getId()] = $choice->getWeight();
+//            }
+//            if ($response[0] != null) {
+//                foreach ($response as $res) {
+//                    $score += $markByChoice[$res];
+//                }
+//            }
+//
+//            if ($score > $scoreMax) {
+//                $score = $scoreMax;
+//            }
+//
+//            $score -= $penality;
+//
+//            if ($score < 0) {
+//                $score = 0;
+//            }
+//            $score .= '/'.$scoreMax;
+//        }
+//
+//        return $score;
+//    }
 
     /**
      * Return the number of papers for an exercise and for an user
@@ -880,22 +880,22 @@ class exerciseServices
      *
      * @return float
      */
-    public function qcmMaxScore($interQCM)
-    {
-        $scoreMax = 0;
-
-        if (!$interQCM->getWeightResponse()) {
-            $scoreMax = $interQCM->getScoreRightResponse();
-        } else {
-            foreach ($interQCM->getChoices() as $choice) {
-                if ($choice->getRightResponse()) {
-                    $scoreMax += $choice->getWeight();
-                }
-            }
-        }
-
-        return $scoreMax;
-    }
+//    public function qcmMaxScore($interQCM)
+//    {
+//        $scoreMax = 0;
+//
+//        if (!$interQCM->getWeightResponse()) {
+//            $scoreMax = $interQCM->getScoreRightResponse();
+//        } else {
+//            foreach ($interQCM->getChoices() as $choice) {
+//                if ($choice->getRightResponse()) {
+//                    $scoreMax += $choice->getWeight();
+//                }
+//            }
+//        }
+//
+//        return $scoreMax;
+//    }
 
     /**
      * Get score max possible for a graphic question
@@ -1403,29 +1403,29 @@ class exerciseServices
      *
      * @return array
      */
-    public function getActionShared($em, $shared)
-    {
-        $inter = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $shared->getQuestion()->getId()));
-
-        $sharedWithMe[$shared->getQuestion()->getId()] = $inter;
-        $shareRight[$inter->getId()] = $shared->getAllowToModify();
-
-        $response = $em->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $inter->getId()));
-
-        if (count($response) > 0) {
-            $questionWithResponse[$inter->getId()] = 1;
-        } else {
-            $questionWithResponse[$inter->getId()] = 0;
-        }
-
-        $actionsS[0] = $sharedWithMe;
-        $actionsS[1] = $shareRight;
-        $actionsS[2] = $questionWithResponse;
-
-        return $actionsS;
-    }
+//    public function getActionShared($em, $shared)
+//    {
+//        $inter = $em->getRepository('UJMExoBundle:Interaction')
+//                ->findOneBy(array('question' => $shared->getQuestion()->getId()));
+//
+//        $sharedWithMe[$shared->getQuestion()->getId()] = $inter;
+//        $shareRight[$inter->getId()] = $shared->getAllowToModify();
+//
+//        $response = $em->getRepository('UJMExoBundle:Response')
+//            ->findBy(array('interaction' => $inter->getId()));
+//
+//        if (count($response) > 0) {
+//            $questionWithResponse[$inter->getId()] = 1;
+//        } else {
+//            $questionWithResponse[$inter->getId()] = 0;
+//        }
+//
+//        $actionsS[0] = $sharedWithMe;
+//        $actionsS[1] = $shareRight;
+//        $actionsS[2] = $questionWithResponse;
+//
+//        return $actionsS;
+//    }
 
     /**
      * Get the types of QCM, Multiple response, unique response
@@ -1434,20 +1434,20 @@ class exerciseServices
      *
      * @return array
      */
-    public function getTypeQCM()
-    {
-        $em = $this->doctrine->getManager();
-
-        $typeQCM = array();
-        $types = $em->getRepository('UJMExoBundle:TypeQCM')
-                    ->findAll();
-
-        foreach ($types as $type) {
-            $typeQCM[$type->getId()] = $type->getCode();
-        }
-
-        return $typeQCM;
-    }
+//    public function getTypeQCM()
+//    {
+//        $em = $this->doctrine->getManager();
+//
+//        $typeQCM = array();
+//        $types = $em->getRepository('UJMExoBundle:TypeQCM')
+//                    ->findAll();
+//
+//        foreach ($types as $type) {
+//            $typeQCM[$type->getId()] = $type->getCode();
+//        }
+//
+//        return $typeQCM;
+//    }
 
     /**
      * Get the types of open question long, short, numeric, one word
@@ -1503,29 +1503,29 @@ class exerciseServices
      *
      * @return array
      */
-    private function getPenalty($interaction, $paperID)
-    {
-        $penalty = 0;
-
-        $hints = $interaction->getHints();
-
-        foreach ($hints as $hint) {
-            $lhp = $this->om
-                        ->getRepository('UJMExoBundle:LinkHintPaper')
-                        ->getLHP($hint->getId(), $paperID);
-            if (count($lhp) > 0) {
-                $signe = substr($hint->getPenalty(), 0, 1);
-
-                if ($signe == '-') {
-                    $penalty += substr($hint->getPenalty(), 1);
-                } else {
-                    $penalty += $hint->getPenalty();
-                }
-            }
-        }
-
-        return $penalty;
-    }
+//    private function getPenalty($interaction, $paperID)
+//    {
+//        $penalty = 0;
+//
+//        $hints = $interaction->getHints();
+//
+//        foreach ($hints as $hint) {
+//            $lhp = $this->om
+//                        ->getRepository('UJMExoBundle:LinkHintPaper')
+//                        ->getLHP($hint->getId(), $paperID);
+//            if (count($lhp) > 0) {
+//                $signe = substr($hint->getPenalty(), 0, 1);
+//
+//                if ($signe == '-') {
+//                    $penalty += substr($hint->getPenalty(), 1);
+//                } else {
+//                    $penalty += $hint->getPenalty();
+//                }
+//            }
+//        }
+//
+//        return $penalty;
+//    }
 
     /**
      * Get interactions in order for a paper

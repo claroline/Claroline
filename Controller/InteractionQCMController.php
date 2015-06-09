@@ -25,7 +25,7 @@ class InteractionQCMController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.InteractionQCM');
         $interQCM  = new InteractionQCM();
         $form      = $this->createForm(
             new InteractionQCMType(
@@ -211,8 +211,8 @@ class InteractionQCMController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exercise_services');
-        $res = $exerciseSer->responseQCM($request);
+        $interQcmSer = $this->container->get('uujm.interaction_qcm');
+        $res = $interQcmSer->response($request);
 
         $vars['score']    = $res['score'];
         $vars['penalty']  = $res['penalty'];

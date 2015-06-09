@@ -1,16 +1,249 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of qcm
  *
- * @author david
+ * Servives for the qcm
  */
-class qcm {
-    //put your code here
+namespace UJM\ExoBundle\Services\classes\Interactions;
+
+class qcm extends interaction {
+
+    /**
+     * implement the abstract method
+     * To process the user's response for a paper(or a test)
+     *
+     * @access public
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
+     * @return array
+     */
+     public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
+     {
+         $interactionQCMID = $request->request->get('interactionQCMToValidated');
+
+         $em = $this->doctrine->getManager();
+         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
+
+         $response = $this->convertResponseInArray($request->request->get('choice'), $interQCM->getTypeQCM()->getCode());
+         $responseID = $this->convertResponseInChr($response);
+
+         $allChoices = $interQCM->getChoices();
+
+         $session = $request->getSession();
+         $penalty = $this->getPenalty($interQCM->getInteraction(), $session, $paperID);
+
+         $score = $this->mark($interQCM, $response, $allChoices, $penalty);
+
+         $res = array(
+             'score'    => $score,
+             'penalty'  => $penalty,
+             'interQCM' => $interQCM,
+             'response' => $responseID
+         );
+
+         return $res;
+
+     }
+
+     /**
+     * implement the abstract method
+     * To calculate the score for a QCM
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+     * @param array[integer] $response array of id Choice selected
+     * @param array[UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
+     * @param float $penalty penalty if the user showed hints
+     *
+     * @return string userScore/scoreMax
+     */
+     public function mark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penalty)
+     {
+        $score = 0;
+        $scoreMax = $this->maxScore($interQCM);
+
+        if (!$interQCM->getWeightResponse()) {
+            $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty) . '/' . $scoreMax;
+        } else {
+            $score = $this->markWeightResponse($allChoices, $response, $penalty) . '/' . $scoreMax;
+        }
+
+        return $score;
+     }
+
+     /**
+      * implement the abstract method
+      * Get score max possible for a QCM
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+      *
+      * @return float
+      */
+     public function maxScore($interQCM)
+     {
+         $scoreMax = 0;
+
+         if (!$interQCM->getWeightResponse()) {
+             $scoreMax = $interQCM->getScoreRightResponse();
+         } else {
+             foreach ($interQCM->getChoices() as $choice) {
+                 if ($choice->getRightResponse()) {
+                     $scoreMax += $choice->getWeight();
+                 }
+             }
+         }
+
+         return $scoreMax;
+     }
+
+     /**
+      * Get the types of QCM, Multiple response, unique response
+      *
+      * @access public
+      *
+      * @return array
+      */
+     public function getTypeQCM()
+     {
+         $em = $this->doctrine->getManager();
+
+         $typeQCM = array();
+         $types = $em->getRepository('UJMExoBundle:TypeQCM')
+                     ->findAll();
+
+         foreach ($types as $type) {
+             $typeQCM[$type->getId()] = $type->getCode();
+         }
+
+         return $typeQCM;
+     }
+
+     /**
+      * Get response in array
+      *
+      * @access private
+      *
+      * @param array[integer] or int $response
+      * @param integer $qcmCode type of qcm (multiple or simple)
+      *
+      *
+      * @return array[integer]
+      */
+     private function convertResponseInArray($resp, $qcmCode)
+     {
+         $response = array();
+
+         if ($qcmCode == 2) {
+             $response[] = $resp;
+         } else {
+             if ($resp != null) {
+                 $response = $resp;
+             }
+         }
+
+         return $response;
+     }
+
+     /**
+      * Get response in String
+      *
+      * @access private
+      *
+      * @param array[integer] or int $response
+      *
+      * @return String
+      */
+     private function convertResponseInChr($response)
+     {
+         $responseID = '';
+
+         foreach ($response as $res) {
+             if ($res != null) {
+                 $responseID .= $res.';';
+             }
+         }
+
+         return $responseID;
+
+     }
+
+     /**
+      * Calculate the score with weightResponse
+      *
+      * @access private
+      *
+      * @param array[UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
+      * @param array[integer] $response array of id Choice selected
+      * @param float $penalty penalty if the user showed hints
+      *
+      * @return float
+      */
+     private function markWeightResponse($allChoices, $response, $penalty)
+     {
+         $score = 0;
+         $markByChoice = array();
+         foreach ($allChoices as $choice) {
+             $markByChoice[(string) $choice->getId()] = $choice->getWeight();
+         }
+         if ($response[0] != null) {
+             foreach ($response as $res) {
+                 $score += $markByChoice[$res];
+             }
+         }
+
+         if ($score > $scoreMax) {
+             $score = $scoreMax;
+         }
+
+         $score -= $penalty;
+
+         if ($score < 0) {
+             $score = 0;
+         }
+
+         return $score;
+     }
+
+     /**
+      * Calculate the score with global mark
+      *
+      * @access private
+      *
+      * @param array[\UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
+      * @param array[integer] $response array of id Choice selected
+      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+      * @param float $penalty penalty if the user showed hints
+      *
+      * @return float
+      */
+     private function markGlobal($allChoices, $response, $interQCM, $penalty)
+     {
+         $score = 0;
+         $rightChoices = array();
+         foreach ($allChoices as $choice) {
+             if ($choice->getRightResponse()) {
+                 $rightChoices[] = (string) $choice->getId();
+             }
+         }
+
+         $result = array_diff($response, $rightChoices);
+         $resultBis = array_diff($rightChoices, $response);
+
+         if ((count($result) == 0) && (count($resultBis) == 0)) {
+             $score = $interQCM->getScoreRightResponse() - $penalty;
+         } else {
+             $score = $interQCM->getScoreFalseResponse() - $penalty;
+         }
+         if ($score < 0) {
+             $score = 0;
+         }
+
+         return $score;
+     }
+
 }

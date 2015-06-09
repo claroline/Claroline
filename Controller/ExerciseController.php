@@ -873,6 +873,7 @@ class ExerciseController extends Controller
 
         //To record response
         $exerciseSer = $this->container->get('ujm.exercise_services');
+        $interQcmSer = $this->container->get('uujm.interaction_qcm');
         $ip = $exerciseSer->getIP($request);
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
@@ -882,7 +883,7 @@ class ExerciseController extends Controller
 
         switch ($typeInterToRecorded) {
             case "InteractionQCM":
-                $res = $exerciseSer->responseQCM($request, $session->get('paper'));
+                $res = $interQcmSer->response($request, $session->get('paper'));
                 break;
 
             case "InteractionGraphic":
@@ -1419,7 +1420,7 @@ class ExerciseController extends Controller
         foreach ($eqs as $eq) {
             $questionList[] = $eq->getQuestion()->getTitle();
 
-            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer);
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em);
 
             $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
 
@@ -1612,7 +1613,7 @@ class ExerciseController extends Controller
 
         foreach ($eqs as $eq) {
 
-            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer);
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em);
 
             $up[] = $responsesTab['correct'];
             $down[] = (int) $responsesTab['correct'] + (int) $responsesTab['partiallyRight'] + (int) $responsesTab['wrong'];
@@ -1639,57 +1640,60 @@ class ExerciseController extends Controller
      * @param integer $exerciseId
      * @param doctrine collection $eqs questions linked with the exercise
      * @param Doctrine Entity manager $em
-     * @param ujm.exercise_services $exerciseSer
      *
      * @return array
      */
-    private function getCorrectAnswer($exerciseId, $eq, $em, $exerciseSer)
+    private function getCorrectAnswer($exerciseId, $eq, $em)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $scoreMax = 0;
 
         $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
 
         $responses = $em->getRepository('UJMExoBundle:Response')
-                        ->getExerciseInterResponsesWithCount($exerciseId, $interaction->getId());
+                        ->getExerciseInterRsponsesWithCount($exerciseId, $interaction->getId());
+        $typeInter = $interaction->getType();
+        $interSer  = $this->container->get('ujm.' . $typeInter);
+        $interX    = $em->getRepository('UJMExoBundle:' . $typeInter)
+                        ->getInteractionQCM($interaction->getId());
+        $scoreMax = $interSer->maxScore($interX[0]);
+        $responsesTab = $this->responseStatus($responses, $scoreMax);
 
-        switch ( $interaction->getType()) {
-            case "InteractionQCM":
-                $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
-                               ->getInteractionQCM($interaction->getId());
-                $scoreMax = $exerciseSer->qcmMaxScore($interQCM[0]);
-                $responsesTab = $this->responseStatus($responses, $scoreMax);
-                break;
-
-            case "InteractionGraphic":
-                $interGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')
-                                   ->getInteractionGraphic($interaction->getId());
-                $scoreMax = $exerciseSer->graphicMaxScore($interGraphic[0]);
-                $responsesTab = $this->responseStatus($responses, $scoreMax);
-                break;
-
-            case "InteractionHole":
-                $interHole = $em->getRepository('UJMExoBundle:InteractionHole')
-                                ->getInteractionHole($interaction->getId());
-                $scoreMax = $exerciseSer->holeMaxScore($interHole[0]);
-                $responsesTab = $this->responseStatus($responses, $scoreMax);
-                break;
-
-            case "InteractionOpen":
-                $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                                   ->getInteractionOpen($interaction->getId());
-                $scoreMax = $exerciseSer->openMaxScore($interOpen[0]);
-                $responsesTab = $this->responseStatus($responses, $scoreMax);
-                break;
-
-            case "InteractionMatching":
-                $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
-                                   ->getInteractionMatching($interaction->getId());
-                $scoreMax = $exerciseSer->matchingMaxScore($interMatching[0]);
-                $responsesTab = $this->responseStatus($responses, $scoreMax);
-                break;
-        }
+//        switch ( $interaction->getType()) {
+//            case "InteractionQCM":
+//                $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
+//                               ->getInteractionQCM($interaction->getId());
+//                $scoreMax = $exerciseSer->qcmMaxScore($interQCM[0]);
+//                $responsesTab = $this->responseStatus($responses, $scoreMax);
+//                break;
+//
+//            case "InteractionGraphic":
+//                $interGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')
+//                                   ->getInteractionGraphic($interaction->getId());
+//                $scoreMax = $exerciseSer->graphicMaxScore($interGraphic[0]);
+//                $responsesTab = $this->responseStatus($responses, $scoreMax);
+//                break;
+//
+//            case "InteractionHole":
+//                $interHole = $em->getRepository('UJMExoBundle:InteractionHole')
+//                                ->getInteractionHole($interaction->getId());
+//                $scoreMax = $exerciseSer->holeMaxScore($interHole[0]);
+//                $responsesTab = $this->responseStatus($responses, $scoreMax);
+//                break;
+//
+//            case "InteractionOpen":
+//                $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+//                                   ->getInteractionOpen($interaction->getId());
+//                $scoreMax = $exerciseSer->openMaxScore($interOpen[0]);
+//                $responsesTab = $this->responseStatus($responses, $scoreMax);
+//                break;
+//
+//            case "InteractionMatching":
+//                $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
+//                                   ->getInteractionMatching($interaction->getId());
+//                $scoreMax = $exerciseSer->matchingMaxScore($interMatching[0]);
+//                $responsesTab = $this->responseStatus($responses, $scoreMax);
+//                break;
+//        }
 
         return $responsesTab;
     }

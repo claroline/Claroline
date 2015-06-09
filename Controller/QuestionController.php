@@ -58,7 +58,7 @@ class QuestionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.Interaction');
 
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
@@ -92,6 +92,7 @@ class QuestionController extends Controller
             ->getUserInteraction($uid);
 
         foreach ($interactions as $interaction) {
+
             $actions = $services->getActionInteraction($em, $interaction);
             $questionWithResponse += $actions[0];
             $alreadyShared += $actions[1];
@@ -494,8 +495,8 @@ class QuestionController extends Controller
                     } else {
                         $editForm = $form;
                     }
-
-                    $typeQCM = $services->getTypeQCM();
+                    $serviceQcm = $this->container->get('ujm.InteractionQCM');
+                    $typeQCM = $serviceQcm->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM[0];
                     $variables['edit_form']      = $editForm->createView();
@@ -834,8 +835,8 @@ class QuestionController extends Controller
                                 ->getToken()->getUser()
                         ), $entity
                     );
-
-                    $typeQCM = $services->getTypeQCM();
+                    $serviceQcm = $this->container->get('ujm.InteractionQCM');
+                    $typeQCM = $serviceQcm->getTypeQCM();
 
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionQCM:new.html.twig', array(

@@ -4,12 +4,12 @@ namespace UJM\ExoBundle\Services\twig;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-use UJM\ExoBundle\Services\classes\exerciseServices;
+use \Symfony\Component\DependencyInjection\Container;
 
 class twigExtensions extends \Twig_Extension
 {
     protected $doctrine;
-    protected $exerciseSer;
+    protected $container;
 
     /**
      * Constructor
@@ -17,13 +17,13 @@ class twigExtensions extends \Twig_Extension
      * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     * @param \UJM\ExoBundle\Services\classes\exerciseServices $exerciseSer Dependency Injection
+     * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
-    public function __construct(Registry $doctrine, exerciseServices $exerciseSer)
+    public function __construct(Registry $doctrine, Container $container)
     {
         $this->doctrine  = $doctrine;
-        $this->exerciseSer = $exerciseSer;
+        $this->container = $container;
     }
 
     /**
@@ -173,8 +173,9 @@ class twigExtensions extends \Twig_Extension
      */
     public function roundUpOrDown($markToBeAdjusted)
     {
+        $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        return $this->exerciseSer->roundUpDown($markToBeAdjusted);
+        return $exerciseSer->roundUpDown($markToBeAdjusted);
     }
 
     /**
@@ -211,8 +212,9 @@ class twigExtensions extends \Twig_Extension
      */
     public function initTabResponseMatching($response, $interMatching)
     {
+        $exerciseSer = $this->container->get('ujm.exercise_services');
 
-        return $this->exerciseSer->initTabResponseMatching($response, $interMatching);
+        return $exerciseSer->initTabResponseMatching($response, $interMatching);
     }
 
     /**
@@ -344,7 +346,9 @@ class twigExtensions extends \Twig_Extension
      */
     private function getQCMScoreMax($interQCM)
     {
-        return $this->exerciseSer->qcmMaxScore($interQCM);
+        $interQcmSer = $this->container->get('ujm.InteractionQCM');
+
+        return $interQcmSer->qcmMaxScore($interQCM);
     }
 
     /**
@@ -358,7 +362,9 @@ class twigExtensions extends \Twig_Extension
      */
     private function getOpenScoreMax($interOpen)
     {
-        return $this->exerciseSer->openMaxScore($interOpen);
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+
+        return $exerciseSer->openMaxScore($interOpen);
     }
 
     /**
@@ -372,7 +378,9 @@ class twigExtensions extends \Twig_Extension
      */
     private function getHoleScoreMax($interHole)
     {
-        return $this->exerciseSer->holeMaxScore($interHole);
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+
+        return $exerciseSer->holeMaxScore($interHole);
     }
 
     /**
@@ -386,7 +394,9 @@ class twigExtensions extends \Twig_Extension
      */
     private function getGraphicScoreMax($interG)
     {
-        return $this->exerciseSer->graphicMaxScore($interG);
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+
+        return $exerciseSer->graphicMaxScore($interG);
     }
 
     /**
@@ -400,6 +410,8 @@ class twigExtensions extends \Twig_Extension
      */
     private function getMatchingScoreMax($interMatching)
     {
-        return $this->exerciseSer->matchingMaxScore($interMatching);
+        $exerciseSer = $this->container->get('ujm.exercise_services');
+
+        return $exerciseSer->matchingMaxScore($interMatching);
     }
 }
