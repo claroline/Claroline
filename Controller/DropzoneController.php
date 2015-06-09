@@ -323,7 +323,7 @@ class DropzoneController extends DropzoneBaseController
         }
 
         $adminInnova = false;
-        if ( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN' === true)
+        if ( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
         && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
         }

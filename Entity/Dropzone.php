@@ -247,7 +247,7 @@ class Dropzone extends AbstractResource
      * Event for Workspace Agenda linked to DROP phase
      *
      * @ORM\OneToOne(
-     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"remove"})
+     *    targetEntity="Claroline\AgendaBundle\Entity\Event",cascade={"remove"})
      * @ORM\JoinColumn(name="event_agenda_drop",onDelete="SET NULL")
      * )
      */
@@ -258,7 +258,7 @@ class Dropzone extends AbstractResource
      * Event for Workspace Agenda linked to Correction phase.
      *
      * @ORM\OneToOne(
-     *    targetEntity="Claroline\CoreBundle\Entity\Event",cascade={"remove"})
+     *    targetEntity="Claroline\AgendaBundle\Entity\Event",cascade={"remove"})
      * @ORM\JoinColumn(name="event_agenda_correction",onDelete="SET NULL")
      */
     protected $eventCorrection = null;
@@ -270,7 +270,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Event; $eventCorrection
+     * @param \Claroline\AgendaBundle\Entity\Event; $eventCorrection
      */
     public function setEventCorrection($eventCorrection)
     {
@@ -278,7 +278,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Event;
+     * @return \Claroline\AgendaBundle\Entity\Event;
      */
     public function getEventCorrection()
     {
@@ -286,7 +286,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @param Claroline\CoreBundle\Entity\Event; $eventDrop
+     * @param Claroline\AgendaBundle\Entity\Event; $eventDrop
      */
     public function setEventDrop($eventDrop)
     {
@@ -294,7 +294,7 @@ class Dropzone extends AbstractResource
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Event;
+     * @return \Claroline\AgendaBundle\Entity\Event;
      */
     public function getEventDrop()
     {
