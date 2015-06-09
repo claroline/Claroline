@@ -4,14 +4,9 @@
             {% if documentListText is not null %}
                 <div class="text-muted">{{ documentListText }}</div>
             {% endif %}
-            
-        {% if adminInnova %}
-            {{ "adminnnnnnnnnn" }}
-        {% else %}
-            {{ "pas adminnnnnnnnnn" }}
-        {% endif %}
 
-            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well table-striped">
+
+            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well">
                 {% if drop.documents|length <= 0 %}
                     <tr>
                         <td>{{ 'No document associated'|trans({},'innova_collecticiel') }}</td>
@@ -30,7 +25,13 @@
                     </thead>
                     <tbody>
                         {% for index, document in drop.documents %}
-                            <tr id="row_{{ document.id }}">
+                            {# InnovaERV : Affichage de la ligne du tableau en fonction du type : admin ou pas #}
+                            {% if adminInnova %}
+                                <tr id="row_{{ document.id }}" class="warning">
+                            {% else %}
+                                <tr id="row_{{ document.id }}" class="info">
+                            {% endif %}
+                            {# InnovaERV : Fin ajout : Affichage ... #}
 {#                                <td>{{ document.id }}</td> #}
                                 <td>
                                     {% if document.url is not null %}
