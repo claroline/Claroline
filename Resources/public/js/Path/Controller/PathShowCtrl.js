@@ -3,9 +3,16 @@
  * @returns {PathShowCtrl}
  * @constructor
  */
-var PathShowCtrl = function PathShowCtrl($route, PathService) {
+var PathShowCtrl = function PathShowCtrl($route, PathService, UserProgressionService) {
     // Call parent constructor
     PathBaseCtrl.apply(this, arguments);
+
+    this.userProgressionService = UserProgressionService;
+
+    // Store UserProgression
+    if (angular.isObject(this.userProgression)) {
+        this.userProgressionService.set(this.userProgression);
+    }
 
     return this;
 };

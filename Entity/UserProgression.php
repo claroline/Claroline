@@ -18,13 +18,17 @@ class UserProgression implements \JsonSerializable
      * Default status when creating a new UserProgression
      * @var string
      */
-    protected static $statusDefault = 'seen';
+    protected static $statusDefault = 'to_do';
 
     /**
      * List of available status
      * @var array
      */
-    protected static $statusAvailable = array ('seen');
+    protected static $statusAvailable = array (
+        'to_do',
+        'done',
+        'to_review'
+    );
 
     /**
      * Unique identifier
@@ -61,6 +65,15 @@ class UserProgression implements \JsonSerializable
      * @ORM\Column(name="progression_status", type="string")
      */
     protected $status;
+
+    /**
+     * CLass constructor
+     */
+    public function __construct()
+    {
+        // Set the default status
+        $this->status = static::$statusDefault;
+    }
 
     /**
      * Get id

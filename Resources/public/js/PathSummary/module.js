@@ -5,6 +5,7 @@
     'use strict';
 
     angular.module('PathSummaryModule', [
-        'PathModule'
+        'PathModule',
+        'UserProgressionModule'
     ]);
 })();

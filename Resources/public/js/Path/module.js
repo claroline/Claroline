@@ -8,6 +8,7 @@
         'HistoryModule',
         'ClipboardModule',
         'StepModule',
-        'TemplateModule'
+        'TemplateModule',
+        'UserProgressionModule'
     ]);
 })();
