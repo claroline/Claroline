@@ -89,7 +89,6 @@ class EditorController
      *      name    = "innova_path_editor_wizard",
      *      options = { "expose" = true }
      * )
-     * @Method("GET")
      * @Template("InnovaPathBundle:Wizard:editor.html.twig")
      */
     public function displayAction(Path $path)

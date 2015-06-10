@@ -59,7 +59,6 @@ class PlayerController
      *      defaults = { "stepId" = null },
      *      options  = { "expose" = true }
      * )
-     * @Method("GET")
      * @Template("InnovaPathBundle:Wizard:player.html.twig")
      */
     public function displayAction(Path $path)
