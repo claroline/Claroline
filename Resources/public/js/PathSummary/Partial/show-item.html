@@ -13,19 +13,19 @@
         {{ step.name | truncate }}
     </div>
 
-    <!--<span class="step-progression" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status">
-        &lt;!&ndash; Step has never be seen &ndash;&gt;
+    <span class="step-progression" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status">
+        <!-- Step has never be seen -->
         <span data-ng-switch-default="" class="fa fa-eye-slash" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have not seen this step"></span>
 
-        &lt;!&ndash; Step is to do &ndash;&gt;
+        <!-- Step is to do -->
         <span data-ng-switch-when="to_do" class="fa fa-eye-slash" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have to do this step"></span>
 
-        &lt;!&ndash; Step is done &ndash;&gt;
+        <!-- Step is done -->
         <span data-ng-switch-when="done" class="fa fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have done this step"></span>
 
-        &lt;!&ndash; Step is to review &ndash;&gt;
+        <!-- Step is to review -->
         <span data-ng-switch-when="to_review" class="fa fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have to review this step"></span>
-    </span>-->
+    </span>
 </div>
 
 <ol class="step-children lvl lvl-{{ step.lvl }}-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
