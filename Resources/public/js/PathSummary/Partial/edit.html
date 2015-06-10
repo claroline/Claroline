@@ -1,0 +1,50 @@
+<div>
+    <!-- Angular can't initialize 2 directives on same element (here, PathSummaryDirective & NgPageslideDirective) so we need a container -->
+    <div data-pageslide="" data-ps-open="pathSummaryEditCtrl.state.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push-class="path-summary-opened">
+        <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="pathSummaryEditCtrl.close()">
+            <span class="fa fa-times"></span>
+            <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
+        </a>
+
+        <div class="path-summary">
+            <!-- List title -->
+            <h2>
+                <span class="fa fa-sitemap"></span>
+                {{ pathSummaryEditCtrl.title }}
+            </h2>
+
+            <!-- Block to display where there is no structure -->
+            <div data-ng-if="pathSummaryEditCtrl.structure.length === 0" class="text-center">
+                <em>{{ 'path_no_structure'|trans:{}:'path_wizards' }}</em>
+                <br/><br/>
+                <!--<div class="alert alert-info text-left">
+                    <span class="fa fa-info-circle"></span>
+                    To create a new one you can :
+                    <br/><br/>
+                    <ul>
+                        <li><strong>Initialize a new structure</strong> : this will create an empty structure.</li>
+                        <li><strong>Create from template</strong> : this will use selected template data to fill your new path.</li>
+                    </ul>
+                </div>-->
+
+                <div class="text-center col-md-12">
+                    <button type="button" role="button" class="btn btn-block btn-primary" data-ng-click="pathSummaryEditCtrl.createNew()">
+                        <span class="fa fa-fw fa-pencil"></span>
+                        {{ 'path_init_structure'|trans:{}:'path_wizards' }}
+                    </button>
+                    <!--<button type="button" role="button" class="btn btn-block btn-default" data-ng-click="pathSummaryEditCtrl.createFromTemplate()">
+                        <span class="fa fa-fw fa-download"></span>
+                        {{ 'path_init_structure_template'|trans:{}:'path_wizards' }}
+                    </button>-->
+                </div>
+            </div>
+
+            <!-- Block to display when a structure is set -->
+            <div class="path-summary-tree" data-ng-if="pathSummaryEditCtrl.structure.length !== 0" data-ui-tree="pathSummaryEditCtrl.treeOptions">
+                <ol class="tree" data-ui-tree-nodes="" data-ng-model="pathSummaryEditCtrl.structure" data-nodrop="">
+                    <li data-ui-tree-node="" data-ng-repeat="step in pathSummaryEditCtrl.structure" data-ng-include="pathSummaryEditCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/edit-item.html'"></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>

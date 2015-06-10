@@ -31,3 +31,10 @@ services:
             resourceManager: @claroline.manager.resource_manager
             session:         @session
             translator:      @translator
+
+    # User Progression manager
+    innova_path.manager.user_progression:
+        class: %innova_path.manager.user_progression.class%
+        arguments:
+            objectManager: @doctrine.orm.entity_manager
+            securityToken:   @security.token_storage

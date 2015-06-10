@@ -1,0 +1,15 @@
+<div class="path-show">
+    <!-- Summary of the Path-->
+    <path-summary-show data-title="pathShowCtrl.path.name"></path-summary-show>
+
+    <!-- Breadcrumbs -->
+    <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs"></path-navigation>
+
+    <button type="button" class="btn btn-primary btn-path-edit pull-right" data-ng-if="pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
+        <span class="fa fa-pencil"></span>
+        {{ 'edit'|trans:{}:'path_wizards' }}
+    </button>
+
+    <!-- Current step -->
+    <div data-ng-view=""></div>
+</div>

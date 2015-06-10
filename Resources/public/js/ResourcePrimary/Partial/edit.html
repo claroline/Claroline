@@ -1,0 +1,36 @@
+<div class="panel panel-default">
+    <!-- Primary resource -->
+    <div class="panel-heading">
+        <h4 class="panel-title" data-ng-click="resourcesPrimaryEditCtrl.collapsed = !resourcesPrimaryEditCtrl.collapsed">
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': resourcesPrimaryEditCtrl.collapsed, 'fa-caret-down': !resourcesPrimaryEditCtrl.collapsed }"></span>
+
+            <span class="badge">{{ resourcesPrimaryEditCtrl.resources ? resourcesPrimaryEditCtrl.resources.length : 0 }}</span>
+
+            <span>{{ 'primary_resource'|trans:{}:'path_wizards' }}</span>
+        </h4>
+
+        <btn-resource-picker data-parameters="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
+            <span class="fa fa-plus"></span>
+            <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resources_browse'|trans:{}:'path_wizards' }}</span>
+            <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{ 'resources_replace'|trans:{}:'path_wizards' }}</span>
+        </btn-resource-picker>
+    </div>
+
+    <div class="panel-body" data-ng-show="!resourcesPrimaryEditCtrl.collapsed">
+        <!-- No resource message -->
+        <em data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'no_primary_resource'|trans:{}:'path_wizards' }}</em>
+
+        <!-- Resource -->
+        <div data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">
+            <div style="display:inline-block; vertical-align: middle; margin-right: 15px;">
+                <img height="60" data-ng-src="{{ resourcesPrimaryEditCtrl.resourceIcons[resourcesPrimaryEditCtrl.resources[0].mimeType] || resourcesPrimaryEditCtrl.resourceIcons['custom/default'] }}" alt="{{ resourcesPrimaryEditCtrl.resources[0].mimeType }}" />
+            </div>
+            <div style="display:inline-block; vertical-align: middle;">
+                <p class="h4">{{ resourcesPrimaryEditCtrl.resources[0].name }}</p>
+                <button type="button" role="button" class="btn btn-xs btn-danger" data-ng-click="resourcesPrimaryEditCtrl.removeResource(resourcesPrimaryEditCtrl.resources[0])">
+                    <span class="fa fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_wizards' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

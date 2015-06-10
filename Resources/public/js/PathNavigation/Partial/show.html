@@ -1,0 +1,31 @@
+<div class="clearfix">
+    <!-- Toggle summary button -->
+    <button type="button" role="button" data-ng-click="pathNavigationCtrl.toggleSummary()" class="pull-left btn btn-lg btn-default" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}" data-ng-class="{ 'active': pathNavigationCtrl.summaryState.opened }">
+        <span class="fa fa-sitemap"></span>
+        <span class="sr-only">{{ 'toggle_summary'|trans:{}:'path_wizards' }}</span>
+    </button>
+
+    <ul class="pull-left path-breadcrumbs" data-ng-if="pathNavigationCtrl.step">
+        <!-- Parents of the current Step -->
+        <li data-ng-repeat="parent in pathNavigationCtrl.parents" class="lvl lvl-{{ parent.lvl }}-zindex-reverse lvl-{{ parent.lvl }}-hover">
+            <div class="lvl-indicator lvl lvl-{{ parent.lvl }}"></div>
+
+            <a href="#/{{ parent.id }}">
+                {{ parent.name | truncate }}
+            </a>
+        </li>
+
+        <!-- Current step -->
+        <li class="current lvl lvl-{{ pathNavigationCtrl.step.lvl }}-zindex-reverse">
+            <div class="lvl-indicator lvl lvl-{{ pathNavigationCtrl.step.lvl }}"></div>
+            {{ pathNavigationCtrl.step.name }}
+        </li>
+
+        <!-- Next step -->
+        <li data-ng-if="pathNavigationCtrl.next">
+            <a href="#/{{ pathNavigationCtrl.next.id }}" data-container="body" data-placement="top" data-toggle="tooltip" data-original-title="{{ pathNavigationCtrl.next.name }}">
+                <span class="fa fa-ellipsis-h"></span>
+            </a>
+        </li>
+    </ul>
+</div>

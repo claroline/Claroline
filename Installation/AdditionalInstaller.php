@@ -20,17 +20,6 @@ class AdditionalInstaller extends BaseInstaller
     }
     
     /**
-     * Action to perform after Bundle installation
-     * Load default allowed types for the non digital resources
-     * @return \Innova\PathBundle\Installation\AdditionalInstaller
-     */
-    public function postInstall()
-    {
-
-        return $this;
-    }
-    
-    /**
      * Action to perform after Bundle update
      * Load default allowed types for the non digital resources if the previous bundle version is less than 1.1
      * @param string $currentVersion - The current version of the bundle
@@ -40,28 +29,17 @@ class AdditionalInstaller extends BaseInstaller
     public function postUpdate($currentVersion, $targetVersion)
     {
         if ( version_compare($currentVersion, '1.2.9', '<') && version_compare($targetVersion, '1.2.9', '>=') ) {
-            // Update entity class name
-            $em = $this->container->get('doctrine.orm.entity_manager');
-            $query = $em->createQuery(
-                "UPDATE Claroline\CoreBundle\Entity\Resource\ResourceNode AS rn
-                 SET rn.class='Innova\\PathBundle\\Entity\\Path\\Path' 
-                 WHERE rn.class='Innova\\PathBundle\\Entity\\Path' "
-            );
-            $query->getResult();
+            $updater010209 = new Updater\Updater010209($this->container);
+            $updater010209->setLogger($this->logger);
+            $updater010209->postUpdate();
         }
 
-        $this->widgetInstaller();
-        
-        return $this;
-    }
+        if ( version_compare($currentVersion, '5.1.0', '<') && version_compare($targetVersion, '5.1.0', '>=') ) {
+            $updater010209 = new Updater\Updater050100($this->container);
+            $updater010209->setLogger($this->logger);
+            $updater010209->postUpdate();
+        }
 
-    /**
-     * Insert widget
-     */
-    public function widgetInstaller()
-    {
-        $widgetInstaller = new WidgetInstaller($this->container);
-        $widgetInstaller->setLogger($this->logger);
-        $widgetInstaller->postUpdate();
+        return $this;
     }
 }

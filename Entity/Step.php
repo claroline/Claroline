@@ -289,65 +289,6 @@ class Step implements \JsonSerializable
         
         return $this;
     }
-    
-    /**
-     * Get all siblings of the steps
-     * @throws \Exception
-     * @return array
-     */
-    public function getSiblings()
-    {
-        $siblings = array ();
-        
-        $parent = $this->getParent();
-        if (!empty($parent)) {
-            // Current step has a parent
-            $siblings = clone $parent->getChildren();
-        
-            // Remove current step from parent children
-            $siblings->removeElement($this);
-            $siblings = $siblings->toArray();
-            
-            // Order siblings by stepOrder
-            $sortSiblings = function (Step $a, Step $b) {
-                if ($a->getOrder() === $b->getOrder()) {
-                    return 0;
-                }
-                return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
-            };
-            
-            uasort($siblings, $sortSiblings);
-        }
-        
-        return $siblings;
-    }
-    
-    /**
-     * Get all the parents chain of the step
-     * @return array
-     */
-    public function getParents()
-    {
-        $parents = array ();
-        
-        $parent = $this->getParent();
-        if (!empty($parent)) {
-            $parents[] = $parent;
-            $parents = array_merge($parents, $parent->getParents());
-            
-            // Sort parents
-            $sortParents = function (Step $a, Step $b) {
-                if ($a->getLvl() === $b->getLvl()) {
-                    return 0;
-                }
-                return ($a->getLvl() < $b->getLvl()) ? -1 : 1;
-            };
-            
-            uasort($parents, $sortParents);
-        }
-        
-        return $parents;
-    }
 
     /**
      * Wrapper to access workspace of the Step
@@ -389,59 +330,6 @@ class Step implements \JsonSerializable
         else {
             return '';
         }
-    }
-
-    /**
-     * Is current step the root of its own Path ?
-     * @return bool
-     */
-    public function isRoot()
-    {
-        return null === $this->parent;
-    }
-
-    public function getPrevious()
-    {
-        $previous = null;
-
-        // If current step is the Root of the Tree, there is no previous step
-        if (!$this->isRoot()) {
-            $siblings = array_values($this->parent->getChildren()->toArray());
-
-            $currentIndex = array_search($this, $siblings, true);
-            if (false !== $currentIndex && !empty($siblings[$currentIndex - 1])) {
-                $previous = $siblings[$currentIndex - 1];
-            } else {
-                // Previous is empty so current step has no sibling previous it => so previous is parent
-                $previous = $this->parent;
-            }
-        }
-
-        return $previous;
-    }
-
-    public function getNext()
-    {
-        $next = null;
-
-        if ($this->children->count() > 0) {
-            // Get the first child as next step
-            $next = $this->children->first();
-        } else if (!$this->isRoot()) {
-            // Ascend to parent to current step siblings
-            $siblings = array_values($this->parent->getChildren()->toArray());
-
-            $currentIndex = array_search($this, $siblings, true);
-            if (false !== $currentIndex && !empty($siblings[$currentIndex + 1])) {
-                $next = $siblings[$currentIndex + 1];
-            } else {
-                // Next is empty so current step has no sibling after it
-
-                // TODO
-            }
-        }
-
-        return $next;
     }
 
     /**
@@ -553,7 +441,7 @@ class Step implements \JsonSerializable
             }
 
             if (!empty($parameters)) {
-                $resources = $parameters->getSecondaryResources();
+                $resources = $parameters->getSecondaryResources()->toArray();
             }
 
             // Jump to parent

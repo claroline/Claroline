@@ -1,0 +1,26 @@
+<ul class="nav nav-tabs resource-tabs">
+    <!-- Inherited resources -->
+    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited | filter:{isExcluded: false}">
+        <a href="" role="button" data-ng-click="resourcesSecondaryShowCtrl.showResource(resource)">
+            <!-- Resource lvl -->
+            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }}"></div>
+
+            <!-- Resource icon -->
+            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+        </a>
+    </li>
+
+    <!-- Owned resources -->
+    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.resources">
+        <a href="" role="button" data-ng-click="resourcesSecondaryShowCtrl.showResource(resource)">
+            <!-- Resource icon -->
+            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+        </a>
+    </li>
+</ul>

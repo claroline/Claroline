@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * MyPathsController
  *
  * @Route(
- *      "",
+ *      "/widget",
  *      name    = "innova_path_widget",
  *      service = "innova_path.controller.path_widget"
  * )
@@ -23,7 +23,7 @@ class MyPathsController extends Controller
     /**
      * Renders all paths for a user
      * @Route(
-     *     "/path",
+     *     "/desktop",
      *     name="claro_desktop_paths",
      *     options={"expose"=true}
      * )
@@ -46,7 +46,7 @@ class MyPathsController extends Controller
      * @return array
      *
      * @Route(
-     *     "/path/workspace/{workspaceId}",
+     *     "/workspace",
      *     name="claro_workspace_paths",
      *     options={"expose"=true}
      * )

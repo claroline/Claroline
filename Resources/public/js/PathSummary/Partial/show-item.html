@@ -1,0 +1,33 @@
+<!-- Item row -->
+<div data-nodrag="" class="tree-item" data-ng-class="{ 'active-step': pathSummaryShowCtrl.current.stepId == step.id || (!pathSummaryShowCtrl.current.stepId && 0 == step.lvl) }">
+    <!-- Level indicator -->
+    <div class="lvl-indicator lvl lvl-{{ step.lvl }}"></div>
+
+    <!-- Step name -->
+    <div class="step" data-ng-class="{ 'lvl lvl-{{ step.lvl }}-text': pathSummaryShowCtrl.current.stepId == step.id }" data-ng-click="pathSummaryShowCtrl.goTo(step)">
+        <!-- Collapse / Expand button -->
+        <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="0 != step.children.length" role="button">
+            <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsed, 'fa-caret-down': !collapsed }"></span>
+        </a>
+
+        {{ step.name | truncate }}
+    </div>
+
+    <!--<span class="step-progression" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status">
+        &lt;!&ndash; Step has never be seen &ndash;&gt;
+        <span data-ng-switch-default="" class="fa fa-eye-slash" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have not seen this step"></span>
+
+        &lt;!&ndash; Step is to do &ndash;&gt;
+        <span data-ng-switch-when="to_do" class="fa fa-eye-slash" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have to do this step"></span>
+
+        &lt;!&ndash; Step is done &ndash;&gt;
+        <span data-ng-switch-when="done" class="fa fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have done this step"></span>
+
+        &lt;!&ndash; Step is to review &ndash;&gt;
+        <span data-ng-switch-when="to_review" class="fa fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="You have to review this step"></span>
+    </span>-->
+</div>
+
+<ol class="step-children lvl lvl-{{ step.lvl }}-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
+    <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathSummaryShowCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/show-item.html'"></li>
+</ol>

@@ -1,0 +1,90 @@
+<ul class="nav nav-tabs resource-tabs">
+    <!-- Inherited resources -->
+    <li class="resource dropdown-fix" role="presentation" data-ng-repeat="resource in resourcesSecondaryEditCtrl.inherited" data-ng-class="{ excluded: resource.isExcluded }">
+        <a href="" role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <!-- Resource lvl -->
+            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }}"></div>
+
+            <!-- Resource icon -->
+            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryEditCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryEditCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+
+            <span class="caret"></span>
+        </a>
+
+        <!-- Menu of actions -->
+        <ul class="dropdown-menu" role="menu">
+            <!-- Go to resource -->
+            <li role="presentation">
+                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.showResource(resource)">
+                    <span class="fa fa-fw fa-sign-out"></span>
+                    {{ 'resource_show'|trans:{}:'path_wizards' }}
+                </a>
+            </li>
+
+            <!-- Toggle excluded -->
+            <li role="presentation">
+                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.toggleExcluded(resource)">
+                    <span data-ng-if="resource.isExcluded">
+                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_show_parent'|trans:{}:'path_wizards' }}
+                    </span>
+                    <span data-ng-if="!resource.isExcluded">
+                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_hide_parent'|trans:{}:'path_wizards' }}
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Owned resources -->
+    <li class="resource dropdown-fix" role="presentation" data-ng-repeat="resource in resourcesSecondaryEditCtrl.resources">
+        <a href="" role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <!-- Resource icon -->
+            <img class="resource-icon" data-ng-src="{{ resourcesSecondaryEditCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryEditCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
+
+            <!-- Resource name -->
+            {{ resource.name }}
+
+            <span class="caret"></span>
+        </a>
+
+        <!--Menu of actions -->
+        <ul class="dropdown-menu" role="menu">
+            <!-- Go to resource -->
+            <li role="presentation">
+                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.showResource(resource)">
+                    <span class="fa fa-fw fa-sign-out"></span> {{ 'resource_show'|trans:{}:'path_wizards' }}
+                </a>
+            </li>
+
+            <!-- Toggle propagation to children -->
+            <li role="presentation">
+                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.togglePropagation(resource)">
+                    <span data-ng-if="!resource.propagateToChildren">
+                        <span class="fa fa-fw fa-eye"></span> {{ 'resource_propagate'|trans:{}:'path_wizards' }}
+                    </span>
+                    <span data-ng-if="resource.propagateToChildren">
+                        <span class="fa fa-fw fa-eye-slash"></span> {{ 'resource_no_propagate'|trans:{}:'path_wizards' }}
+                    </span>
+                </a>
+            </li>
+
+            <!-- Delete resource -->
+            <li role="presentation" class="divider"></li>
+            <li role="presentation">
+                <a href="" role="menuitem" tabindex="-1" data-ng-click="resourcesSecondaryEditCtrl.removeResource(resource)">
+                    <span class="fa fa-fw fa-trash-o"></span> {{ 'resource_delete'|trans:{}:'path_wizards' }}
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- Add secondary resource button -->
+    <li role="presentation">
+        <btn-resource-picker data-parameters="resourcesSecondaryEditCtrl.resourcePicker">
+            <span class="fa fa-plus"></span> {{ 'resources_browse'|trans:{}:'path_wizards' }}
+        </btn-resource-picker>
+    </li>
+</ul>

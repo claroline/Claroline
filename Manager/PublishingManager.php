@@ -295,7 +295,18 @@ class PublishingManager
      */
     protected function cleanSteps(array $neededSteps = array(), array $existingSteps = array())
     {
-        $toRemove = array_diff($existingSteps, $neededSteps);
+        $toRemove = array_filter($existingSteps, function ($current) use ($neededSteps) {
+            $removeStep = true;
+            foreach ($neededSteps as $step) {
+                if ($current->getId() == $step->getId()) {
+                    $removeStep = false;
+                    break;
+                }
+            }
+
+            return $removeStep;
+        });
+
         foreach ($toRemove as $stepToRemove) {
             $this->path->removeStep($stepToRemove);
             $this->om->remove($stepToRemove);

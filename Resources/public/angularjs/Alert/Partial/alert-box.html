@@ -1,4 +1,0 @@
-<div data-ng-repeat="alert in alerts" class="alert alert-{{ alert.type }} alert-box" data-ng-click="closeAlert(alert)" data-ng-class="{ 'alert-success': 'success' == alert.type, 'alert-warning': 'warning' == alert.type, 'alert-danger': 'error' == alert.type, 'alert-info': 'info' == alert.type }">
-    <span class="fa" data-ng-class="{ 'fa-check': 'success' == alert.type, 'fa-warning': 'warning' == alert.type, 'fa-times': 'error' == alert.type, 'fa-info': 'info' == alert.type }"></span>
-    <span data-ng-bind="alert.msg"></span>
-</div>

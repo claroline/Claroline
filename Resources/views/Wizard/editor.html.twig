@@ -1,17 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
-
-{% block stylesheets %}
-    {# Claroline CSS #}
-    {{ parent() }}
-
-    {# Path Editor styles #}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/innovapath/editor.css'
-        '@InnovaAngularUITreeBundle/Resources/public/css/*'
-        '@InnovaPathBundle/Resources/public/less/Editor/app.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
-{% endblock %}
+{% extends "InnovaPathBundle:Wizard:layout.html.twig" %}
 
 {% block resourceBreadcrumb %}
     <li>
@@ -22,105 +9,11 @@
     <li class="active">{{ 'edit' | trans({}, 'platform') }}</li>
 {% endblock %}
 
-{% block content %}
-    {# Angular UI #}
+{% block path_wizard %}
     <div data-ng-cloak="" data-ng-app="PathEditorApp" class="path-editor">
         {# Path Form (we not directly alter the entity, but work with a JSON structure which stores info before publishing) #}
-        <path-form data-id="{{ _resource.id }}" data-path="{{ _resource.structure | raw | escape }}" data-modified="{{ _resource.modified }}" data-published="{{ _resource.published }}"></path-form>
+        <path-edit data-id="{{ _resource.id }}" data-path="{{ _resource.structure | raw | escape }}" data-modified="{{ _resource.modified }}" data-published="{{ _resource.published }}"></path-edit>
+
+        {{ tinymce_init() }}
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    {# Claroline JS #}
-    {{ parent() }}
-
-    {# Translations #}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'path_editor' }) }}"></script>
-
-    {# Angular JS #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-js.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-resource.min.js'
-        '@InnovaAngularJSBundle/Resources/public/js/angular-touch.min.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {# Angular UI #}
-    {% javascripts debug=false filter='jsmin' output='vendor/angular/angular-ui.js'
-        '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUITreeBundle/Resources/public/js/*'
-        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
-        '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
-        '@InnovaAngularUITranslationBundle/Resources/public/js/*'
-        '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {% javascripts debug=false filter='jsmin' output='vendor/innovapath/editor.js'
-        '@InnovaPathBundle/Resources/public/angularjs/Utils/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Utils/Filter/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Utils/Service/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Utils/Resource/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Form/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Form/Directive/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/Service/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Alert/Directive/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Clipboard/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Confirm/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Confirm/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Confirm/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/History/*'
-        '@InnovaPathBundle/Resources/public/angularjs/History/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Path/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Path/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Path/Directive/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Path/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Step/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Step/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/Directive/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Resource/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/Template/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Controller/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Directive/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Resource/*'
-        '@InnovaPathBundle/Resources/public/angularjs/Template/Service/*'
-
-        '@InnovaPathBundle/Resources/public/angularjs/PathEditor.app.js'
-        '@InnovaPathBundle/Resources/public/angularjs/PathEditor.routes.js'
-    %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
-    {# Set some vars needed by Angular parts #}
-    <script type="text/javascript">
-        {# Make Twig variables accessibles by AngularJS #}
-        var EditorApp = {};
-
-        EditorApp.webDir        = "{{ asset('') }}";
-        EditorApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
-
-        EditorApp.resourceIcons = {
-            {% for resourceIcon in resourceIcons %}
-            "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
-            {% endfor %}
-        };
-    </script>
 {% endblock %}
