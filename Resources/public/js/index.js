@@ -131,7 +131,7 @@
         }
 
         function modalized(element) {
-            $('#portfolio_list').on('click', element.target, function (event) {
+            $('#list').on('click', element.target, function (event) {
                 event.preventDefault();
                 modal.fromUrl(
                     event.target.href,
