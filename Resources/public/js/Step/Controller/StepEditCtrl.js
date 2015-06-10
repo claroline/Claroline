@@ -9,8 +9,8 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
     this.scope       = $scope;
     this.stepService = StepService;
 
-    // Set TinyMCE language
-    this.tinymceOptions.language = AngularApp.locale;
+    // Set TinyMCE language (need to remap english language)
+    this.tinymceOptions.language = 'en_EN' == AngularApp.locale ? 'en' : AngularApp.locale;
 
     /**
      * Activity resource picker config
