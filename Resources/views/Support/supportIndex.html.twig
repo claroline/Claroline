@@ -52,17 +52,17 @@
                                     #
                                 </a>
                             </th>
-                            <th class="col-md-4">
+                            <th class="col-md-6">
                                 <a href="{{ sortUrl('title', order) }}">
                                     {{ 'title'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th class="col-md-2">
+                            <th class="col-md-1">
                                 <a href="{{ sortUrl('status', order) }}">
                                     {{ 'status'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th class="col-md-2">
+                            <th class="col-md-1">
                                 <a href="{{ sortUrl('priority', order) }}">
                                     {{ 'priority'|trans({}, 'support') }}
                                 </a>
@@ -82,7 +82,7 @@
                                 <td class="col-md-1">
                                     #{{ ticket.getNum() }}
                                 </td>
-                                <td class="col-md-4">
+                                <td class="col-md-6">
                                     <b class="pointer-hand"
                                        data-toggle="popover"
                                        data-container="body" 
@@ -96,14 +96,14 @@
                                         {{ ticket.getCreationDate()|intl_date_format }}
                                     </p>
                                 </td>
-                                <td class="col-md-2">
+                                <td class="col-md-1">
                                     {{ 'status'|trans({}, 'platform') }}:
                                     {{ ticket.getStatus() }}
                                     <p>
                                         [{{ ticket.getStatusDate()|intl_date_format }}]
                                     </p>
                                 </td>
-                                <td class="col-md-2">
+                                <td class="col-md-1">
                                     {{ 'priority'|trans({}, 'support') }}:
                                     {{ ticket.getPriority() }}
                                 </td>
