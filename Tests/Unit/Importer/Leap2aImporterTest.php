@@ -44,10 +44,7 @@ CONTENT;
         $portfolio = $importer->import($content, $user);
 
         $this->assertEquals(get_class($portfolio), 'Icap\PortfolioBundle\Entity\Portfolio');
-
-        $portfolioTitleWidget = $portfolio->getTitleWidget();
-        $this->assertNotNull($portfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $portfolioTitleWidget->getTitle());
+        $this->assertEquals($portfolioTitle, $portfolio->getTitle());
     }
 
     public function testLeap2aImportEmptyPortfolio()
@@ -81,11 +78,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals(get_class($importedPortfolio), 'Icap\PortfolioBundle\Entity\Portfolio');
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
     }
 
@@ -225,11 +218,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $skillsWidgets = $importedPortfolio->getWidget('skills');
@@ -308,11 +297,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $formationsWidgets = $importedPortfolio->getWidget('formations');
@@ -393,11 +378,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $experienceWidgets = $importedPortfolio->getWidget('experience');
@@ -475,11 +456,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $formationsWidgets = $importedPortfolio->getWidget('formations');
@@ -621,11 +598,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $userInformationsWidgets = $importedPortfolio->getWidget('userInformation');
@@ -683,11 +656,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $textWidgets = $importedPortfolio->getWidget('text');
@@ -808,11 +777,7 @@ CONTENT;
         $importedPortfolio = $importer->import($content, $user);
 
         $this->assertEquals('Icap\PortfolioBundle\Entity\Portfolio', get_class($importedPortfolio));
-
-        $importedPortfolioTitleWidget = $importedPortfolio->getTitleWidget();
-        $this->assertNotNull($importedPortfolioTitleWidget);
-        $this->assertEquals($portfolioTitle, $importedPortfolioTitleWidget->getTitle());
-
+        $this->assertEquals($portfolioTitle, $importedPortfolio->getTitle());
         $this->assertEquals($importedPortfolio->getUser(), $user);
 
         $formationsWidgets = $importedPortfolio->getWidget('formations');

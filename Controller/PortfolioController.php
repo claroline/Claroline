@@ -5,7 +5,6 @@ namespace Icap\PortfolioBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\ImportData;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
 use Icap\PortfolioBundle\Exporter\Exporter;
 use Icap\PortfolioBundle\Form\Type\PortfolioImport;
@@ -42,20 +41,20 @@ class PortfolioController extends Controller
         $guidedPortfolioQuery = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findGuidedPortfolios($loggedUser, false);
         $guidedPortfoliosPager = $this->get('claroline.pager.pager_factory')->createPager($guidedPortfolioQuery, $guidedPage, 10);
 
-        $importManager          = $this->getImportManager();
+        $importManager = $this->getImportManager();
         $availableImportFormats = $importManager->getAvailableFormats();
 
         $portfolioId = 0;
 
         if (null !== $portfolioSlug) {
-            /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-            $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
+            /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
+            $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
 
-            if (null === $titleWidget) {
+            if (null === $portfolio) {
                 throw $this->createNotFoundException();
             }
 
-            $portfolioId = $titleWidget->getPortfolio()->getId();
+            $portfolioId = $portfolio->getId();
         }
 
         /** @var \Icap\PortfolioBundle\Manager\WidgetTypeManager $widgetTypeManager */
@@ -156,12 +155,12 @@ class PortfolioController extends Controller
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @Template()
      */
-    public function renameAction(Request $request, User $loggedUser, TitleWidget $titleWidget)
+    public function renameAction(Request $request, User $loggedUser, Portfolio $portfolio)
     {
         $this->checkPortfolioToolAccess();
 
         try {
-            if ($this->getPortfolioFormHandler()->handleRename($titleWidget)) {
+            if ($this->getPortfolioFormHandler()->handleRename($portfolio)) {
 
                 if ($request->isXmlHttpRequest()) {
                     return new Response($this->refreshPortfolioList($loggedUser));
@@ -188,8 +187,8 @@ class PortfolioController extends Controller
         }
 
         return array(
-            'form' => $this->getPortfolioFormHandler()->getRenameForm($titleWidget)->createView(),
-            'portfolio' => $titleWidget
+            'form' => $this->getPortfolioFormHandler()->getRenameForm($portfolio)->createView(),
+            'portfolio' => $portfolio
         );
     }
 
@@ -316,9 +315,8 @@ class PortfolioController extends Controller
     {
         $this->checkPortfolioToolAccess();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
-        $portfolio   = $titleWidget->getPortfolio();
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
+        $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
 
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
@@ -465,10 +463,9 @@ class PortfolioController extends Controller
         $this->checkPortfolioToolAccess();
 
         /** @var User|null $user */
-        $user        = $this->getUser();
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\TitleWidget')->findOneBySlug($portfolioSlug);
-        $portfolio   = $titleWidget->getPortfolio();
+        $user = $this->getUser();
+        /** @var \Icap\PortfolioBundle\Entity\Portfolio $portfolio */
+        $portfolio = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Portfolio')->findOneBySlug($portfolioSlug);
 
         if (null === $portfolio) {
             throw $this->createNotFoundException("Unknown portfolio.");
@@ -503,9 +500,8 @@ class PortfolioController extends Controller
             $this->get('event_dispatcher')->dispatch('log', $event);
 
             $responseParameters  = array(
-                'titleWidget'   => $titleWidget,
-                'portfolio'     => $portfolio,
-                'openingMode'   => $openingMode
+                'portfolio' => $portfolio,
+                'openingMode' => $openingMode
             );
 
             if (PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW === $openingMode) {

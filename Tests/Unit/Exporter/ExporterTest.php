@@ -105,20 +105,14 @@ class ExporterTest extends MockeryTestCase
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         $portfolio = new Portfolio();
         $portfolio
-            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget));
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
+            ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
+        $portfolioLastUpdateDate = (new \DateTime())->format(\DateTime::ATOM);
         $expected = <<<EXPORT
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
@@ -142,13 +136,6 @@ EXPORT;
     public function testLeap2aExportPortfolioWithOneBadge()
     {
         $exporter = new Exporter($this->twigEngine);
-
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
 
         /** @var \Icap\PortfolioBundle\Entity\Widget\BadgesWidget $badgesWidget */
         $badgesWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\BadgesWidget[getId, getUpdatedAt]');
@@ -179,8 +166,10 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $badgesWidget));
+            ->setWidgets(array($badgesWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
         $portfolioLastUpdateDate = $badgesWidgetUpdatedAt->format(\DateTime::ATOM);
@@ -226,13 +215,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\BadgesWidget $badgesWidget */
         $badgesWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\BadgesWidget[getId, getUpdatedAt]');
         $badgesWidget->shouldReceive('getId')->andReturn($badgesWidgetId = rand(0, PHP_INT_MAX));
@@ -267,8 +249,10 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $badgesWidget));
+            ->setWidgets(array($badgesWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
         $portfolioLastUpdateDate = $badgesWidgetUpdatedAt->format(\DateTime::ATOM);
@@ -323,13 +307,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         $skillsWidgetSkill = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill[getId]');
         $skillsWidgetSkill->shouldReceive('getId')->andReturn($skillsWidgetSkillId = rand(0, PHP_INT_MAX));
         $skillsWidgetSkill
@@ -349,8 +326,10 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $skillsWidget));
+            ->setWidgets(array($skillsWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
         $portfolioLastUpdateDate = $skillsWidgetUpdatedAt->format(\DateTime::ATOM);
@@ -404,13 +383,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         $skillsWidgetSkill = $this->mock('Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill[getId]');
         $skillsWidgetSkill->shouldReceive('getId')->andReturn($skillsWidgetSkillId = rand(0, PHP_INT_MAX));
         $skillsWidgetSkill
@@ -437,8 +409,10 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $skillsWidget, $skillsWidget2));
+            ->setWidgets(array($skillsWidget, $skillsWidget2));
 
         $actual = $exporter->export($portfolio, 'leap2a');
         $portfolioLastUpdateDate = $skillsWidgetUpdatedAt->format(\DateTime::ATOM);
@@ -501,13 +475,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\TextWidget $textWidget */
         $textWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TextWidget[getId, getUpdatedAt]');
         $textWidget->shouldReceive('getId')->andReturn($textWidgetId = rand(0, PHP_INT_MAX));
@@ -518,11 +485,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $textWidget));
+            ->setWidgets(array($textWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $textWidgetUpdatedAt = $textWidgetUpdatedAt->format(\DateTime::ATOM);
         $expected = <<<EXPORT
 <?xml version="1.0" encoding="utf-8"?>
@@ -555,13 +523,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\TextWidget $textWidget */
         $textWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TextWidget[getId, getUpdatedAt]');
         $textWidget->shouldReceive('getId')->andReturn($textWidgetId = rand(0, PHP_INT_MAX));
@@ -572,11 +533,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $textWidget));
+            ->setWidgets(array($textWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $textWidgetUpdatedAt = $textWidgetUpdatedAt->format(\DateTime::ATOM);
         $expected = <<<EXPORT
 <?xml version="1.0" encoding="utf-8"?>
@@ -609,13 +571,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\UserInformationWidget $userInformationsWidget */
         $userInformationsWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\UserInformationWidget[getId, getUpdatedAt]');
         $userInformationsWidget->shouldReceive('getId')->andReturn($userInformationsWidgetId = rand(0, PHP_INT_MAX));
@@ -627,11 +582,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $userInformationsWidget));
+            ->setWidgets(array($userInformationsWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $userInformationsWidgetUpdatedAt = $userInformationsWidgetUpdatedAt->format(\DateTime::ATOM);
         $userInformationsWidgetBirthDate = $userInformationsWidgetBirthDate->format(\DateTime::ATOM);
         $expected = <<<EXPORT
@@ -672,13 +628,6 @@ EXPORT;
 
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationWidgetResource */
         $formationWidgetResource = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource[getId]');
         $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
@@ -704,11 +653,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $formationWidget));
+            ->setWidgets(array($formationWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $formationWidgetUpdatedAt = $formationWidgetUpdatedAt->format(\DateTime::ATOM);
         $formationWidgetStartDate = $formationWidgetStartDate->format(\DateTime::ATOM);
         $formationWidgetEndDate = $formationWidgetEndDate->format(\DateTime::ATOM);
@@ -763,13 +713,6 @@ EXPORT;
 
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource $formationWidgetResource */
         $formationWidgetResource = $this->mock('Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource[getId]');
         $formationWidgetResource->shouldReceive('getId')->andReturn($formationWidgetResourceId = rand(0, PHP_INT_MAX));
@@ -791,11 +734,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $formationWidget));
+            ->setWidgets(array($formationWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $formationWidgetUpdatedAt = $formationWidgetUpdatedAt->format(\DateTime::ATOM);
         $formationWidgetStartDate = $formationWidgetStartDate->format(\DateTime::ATOM);
         $formationWidgetEndDate = $formationWidgetEndDate->format(\DateTime::ATOM);
@@ -844,13 +788,6 @@ EXPORT;
     {
         $exporter = new Exporter($this->twigEngine);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\TitleWidget[getUpdatedAt]');
-        $titleWidget->shouldReceive('getUpdatedAt')->andReturn(new \DateTime());
-        $titleWidget
-            ->setTitle($portfolioTitle = uniqid())
-            ->setSlug($portfolioSlug = uniqid());
-
         /** @var \Icap\PortfolioBundle\Entity\Widget\ExperienceWidget $experienceWidget */
         $experienceWidget = $this->mock('Icap\PortfolioBundle\Entity\Widget\ExperienceWidget[getId, getUpdatedAt]');
         $experienceWidget->shouldReceive('getId')->andReturn($experienceWidgetId = rand(0, PHP_INT_MAX));
@@ -866,11 +803,12 @@ EXPORT;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle($portfolioTitle = uniqid())
+            ->setSlug($portfolioSlug = uniqid())
             ->setUser($this->createUser($firstname = uniqid(), $lastname = uniqid()))
-            ->setWidgets(array($titleWidget, $experienceWidget));
+            ->setWidgets(array($experienceWidget));
 
         $actual = $exporter->export($portfolio, 'leap2a');
-        $portfolioLastUpdateDate = $titleWidget->getUpdatedAt()->format(\DateTime::ATOM);
         $experienceWidgetUpdatedAt = $experienceWidgetUpdatedAt->format(\DateTime::ATOM);
         $experienceWidgetStartDate = $experienceWidgetStartDate->format(\DateTime::ATOM);
         $experienceWidgetEndDate = $experienceWidgetEndDate->format(\DateTime::ATOM);

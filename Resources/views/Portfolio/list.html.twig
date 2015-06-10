@@ -41,12 +41,12 @@
             {% for portfolio in portfoliosPager %}
                 <tr class="portfolio">
                     <td>
-                        {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) %}
+                        {% set portfolioUrl = path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) %}
                         <a href="{{ portfolioUrl }}"
-                           title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
+                           title="{{ portfolio.title }}">{{ portfolio.title }}</a>
 
                         <a href="{{ portfolioUrl }}"
-                           title="{{ portfolioUrl }}" class="block text-muted">{{ url('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}</a>
+                           title="{{ portfolioUrl }}" class="block text-muted">{{ url('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}</a>
                     </td>
                     <td>
                         <span class="block visibility">
@@ -59,7 +59,7 @@
                     </td>
                     <td>
                         <div class="btn-group btn-group-xs">
-                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}"
+                            <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}"
                                class="btn btn-xs btn-primary">{{ 'update'|trans({}, 'icap_portfolio') }}</a>
                             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
@@ -88,7 +88,7 @@
                                 <li>
                                     <a href="{{ path('icap_portfolio_delete', {'id': portfolio.id}) }}" class="delete"
                                              data-confirm-title="{{ 'portfolio_deletion_confirm_title'|trans({}, 'icap_portfolio') }}"
-                                             data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.titleWidget.title}, 'icap_portfolio') }}"
+                                             data-confirm-message="{{ 'portfolio_deletion_confirm_message'|trans({'%portfolioName%': portfolio.title}, 'icap_portfolio') }}"
                                              data-confirm-ok="{{ 'delete'|trans({}, 'platform') }}"
                                              data-confirm-cancel="{{ 'cancel'|trans({}, 'platform') }}">
                                         <span class="fa fa-trash-o"></span> {{ 'delete'|trans({}, 'platform') }}
@@ -104,8 +104,8 @@
                             <span class="fa fa-comment-o"></span>
                             {% if 0 < countUnreadComments %} <span class="badge">{{ countUnreadComments }}</span>{% endif %}
                         </button>
-                        <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.titleWidget.slug, 'format': 'leap2a'}) }}"
-                           download="{{ portfolio.titleWidget.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
+                        <a href="{{ path('icap_portfolio_export', {'portfolioSlug': portfolio.slug, 'format': 'leap2a'}) }}"
+                           download="{{ portfolio.slug }}.leap2a.xml" title="{{ 'export_portfolio'|trans({}, 'icap_portfolio') }}"
                            data-toggle="tooltip" data-container="body" data-placement="left" class="btn btn-xs btn-default">
                             <span class="fa fa-download"></span>
                         </a>

@@ -12,7 +12,6 @@ use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TextWidget;
-use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
 use Icap\PortfolioBundle\Transformer\XmlToArray;
 
@@ -65,18 +64,12 @@ class Leap2aImporter implements ImporterInterface
         if (0 === count($portfolioTitleNodes)) {
             throw new \Exception("Missing portfolio's title");
         }
-        $portfolioTitle = (string)$portfolioTitleNodes[0];
-
-        $titleWidget = new TitleWidget();
-        $titleWidget->setTitle($portfolioTitle);
-
-        $widgets   = $this->retrieveWidgets($xml);
-        $widgets[] = $titleWidget;
 
         $portfolio = new Portfolio();
         $portfolio
+            ->setTitle((string)$portfolioTitleNodes[0])
             ->setUser($user)
-            ->setWidgets($widgets);
+            ->setWidgets($this->retrieveWidgets($xml));
 
         return $portfolio;
     }

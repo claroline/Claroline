@@ -17,13 +17,13 @@
         {% for portfolio in guidedPortfoliosPager %}
             <tr class="portfolio">
                 <td>
-                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" title="{{ portfolio.titleWidget.title }}">{{ portfolio.titleWidget.title }}</a>
+                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" title="{{ portfolio.title }}">{{ portfolio.title }}</a>
                 </td>
                 <td>
                     {{ portfolio.user.lastName }} {{ portfolio.user.firstName }}
                 </td>
                 <td>
-                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.titleWidget.slug}) }}" class="btn btn-sm btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
+                    <a href="{{ path('icap_portfolio_view', {'portfolioSlug': portfolio.slug}) }}" class="btn btn-sm btn-primary" title="">{{ 'see'|trans({}, 'icap_portfolio') }} <span class="fa fa-arrow-right"></span></a>
                 </td>
             </tr>
         {% else %}

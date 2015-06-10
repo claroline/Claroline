@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ titleWidget.title | striptags | raw }}{% endblock %}
+{% block title %}{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName ~ ' - ' ~ 'portfolio' | trans({}, 'icap_portfolio') ~ ' - ' ~ portfolio.title | striptags | raw }}{% endblock %}
 
 {% set viewMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_VIEW') == openingMode) %}
 {% set editMode = (constant('Icap\\PortfolioBundle\\Manager\\PortfolioManager::PORTFOLIO_OPENING_MODE_EDIT') == openingMode) %}
@@ -35,7 +35,7 @@
                         {% else %}
                             <div class="portfolio-title-container margin">
                                 <div class="portfolio-title">
-                                    {% include 'IcapPortfolioBundle:templates:title.html.twig' with {'widget': titleWidget} only %}
+                                    <h2 id="portfolio-title">{{ portfolio.title }}</h2>
                                 </div>
                             </div>
                         {% endif %}
@@ -55,7 +55,7 @@
                     <div class="panel panel-default communication_panel nghide" data-comments-container="portfolio.comments" data-ng-class="{'nghide': !displayComment}">
                         <div class="panel-heading">
                             {{ 'communication_panel' | trans({}, 'icap_portfolio') }}
-                            <a href="{{ path('icap_portfolio_index', {'portfolioSlug': titleWidget.slug}) }}#!exchange_space"
+                            <a href="{{ path('icap_portfolio_index', {'portfolioSlug': portfolio.slug}) }}#!exchange_space"
                                title="{{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}" class="pull-right text-muted fa fa-share">
                                 {{ 'see_all_exchange'|trans({}, 'icap_portfolio') }}</a>
                         </div>

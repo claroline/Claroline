@@ -12,7 +12,6 @@ use Icap\PortfolioBundle\Entity\Portfolio;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="widget_type", type="string")
  * @ORM\DiscriminatorMap({
- *      "title"           = "TitleWidget",
  *      "userInformation" = "UserInformationWidget",
  *      "skills"          = "SkillsWidget",
  *      "text"            = "TextWidget",
