@@ -30,7 +30,7 @@
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exoID }) }}">
-            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
         <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}', '{{ exoID }}');">
             <i class="fa fa-download"></i> {{ 'import QTI' | trans }}
@@ -45,11 +45,11 @@
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
-                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}">
-                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -62,7 +62,7 @@
 
         <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
             <div class="input-group" style="width: 350px; margin-top: 20px;">
-                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}" name="userSearch"
+                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans }}" name="userSearch"
                     onkeydown="if (event.keyCode == 13) {
                         briefSearchSubmit();
                         return false; }">
@@ -144,7 +144,7 @@
             {% else %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'exercice linked Question' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'exercice_linked_question' | trans }}</h3>
                     </div>
                     <div class="panel-body">
                         {% if interactions is not empty %}

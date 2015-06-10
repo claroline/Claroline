@@ -31,7 +31,7 @@
             <i class="fa fa-download"></i> {{ 'import questions' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
-            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
             <i class="fa fa-save"></i> {{ 'exportQTIExercise' | trans }}
@@ -41,14 +41,14 @@
     <div class="list-group">
         <div class="list-group-item">
             {% if interactions is not empty %}
-                <p>{{ 'changeOrder' | trans }}.</p>
+                <p>{{ 'change_order' | trans }}.</p>
                 {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage and displayAll == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID, 'displayAll': 1 }) }} ">
-                        <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                        <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
                     </a>
                 {% elseif displayAll == 1 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID }) }} ">
-                        <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
+                        <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans }}
                     </a>
                 {% endif %}
             {% endif %}

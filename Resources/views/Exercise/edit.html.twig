@@ -7,7 +7,7 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'exercise edit' | trans }} {% endblock %}
+{% block title %} {{ 'exercise_edit' | trans }} {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -17,12 +17,12 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">{{ entity.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'exercise edit' | trans }}</li>
+    <li class="active">{{ 'exercise_edit' | trans }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise edit' | trans }}</h3>
+        <h3 class="panel-title">{{ 'exercise_edit' | trans }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
@@ -36,7 +36,7 @@
                 {#--------------------------------------------- Definition of the exercise -----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'exercise definition' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'exercise_definition' | trans }}</h3>
                     </div>
                     <div class="panel-body">
                         {{ form_row(edit_form.title) }}

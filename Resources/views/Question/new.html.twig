@@ -54,7 +54,7 @@
     <div class="panel-body">
         {% if exoID == -1 %}
             <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back to the list' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">

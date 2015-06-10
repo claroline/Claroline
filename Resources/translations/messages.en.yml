@@ -72,88 +72,79 @@ availability_of_correction: Availability of correction
 availability_of_score: Availability of score
 
 # B
-badgeObtained: Congratulations ! You got the badge of knowledge
+badge_obtained: Congratulations ! You got the badge of knowledge
 badgeNoObtained: You have not yet received the badge of knowledge
 back: Back
-back to the list: Back to the list
-bank of questions: Bank of questions
-briefSearch: Brief Search
+back_to_the_list: Back to the list
+bank_of_questions: Bank of questions
+brief_search: Brief Search
 
 # C
 category: Category
-calculationMeasureDifficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
+calculation_measure_difficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
 cercle: Circle
 change: Change
-changeName: Change the name of the document
-changeOrder: To change questions order, move it by using drag and drop
-choice: Choice
-choose: Choose 
+change_name: Change the name of the document
+change_order: To change questions order, move it by using drag and drop
+choice: Choice 
 choose_image : Choose an image
 choose_category : Choose a category
 choose_type: Choose type
-chooseType: Choose type of document to display
-close: Close
 color: Color
 comment: Comment
 compose: Answer
 consult_hint: Consult the hint results in a penalty of X points, do you want to continue
-containSearch: Whose question contains
+contain_search: Whose question contains
 correct: Correct
 correction: Correction
-correction date: Correction date
+correction_date: Correction date
 course_name: Course name
 correspondence: correspondence
-correspondence empty: You have no correspondence !
-correspondenceError: You can't associate the same proposal with several labels !
+correspondence_empty: You have no correspondence !
+correspondence_error: You can't associate the same proposal with several labels !
 create: Create
-create a new category: Create a new category
-create a new entry: Create a new question
-creationDate: Creation date
-create hole : Create hole
+create_a_new_category: Create a new category
+create_a_new_entry: Create a new question
+creation_date: Creation date
+create_hole : Create hole
 
 # D
 date: Date
 default : Default
-delDocQuestion: Delete this document and all the linked questions
 delete: Delete
-delete document: Deletion of document
-delete hole: Delete the hole
-delete of my bank: Delete of my bank
-delete of my exercise: Delete of my exercise
-delete papers: Delete the papers
+delete_of_my_bank: Delete of my bank
+delete_of_my_exercise: Delete of my exercise
+delete_papers: Delete the papers
 description: Description
-displayAllList: Display the whole list
-display all on this page: Display all on this page
+display_all_list: Display the whole list
+display_all_on_this_page: Display all on this page
 display pagination: Display with pagination
 docimology: Docimology
-docManage: Manage my documents
-docName: Document name
+doc_manage: Manage my documents
 document: Document
-doNothing: Do nothing and go back to my documents management
-drop category: Drop this category
+drop_category: Drop this category
 duplicate: Duplicate
-duplicate this question: <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
+duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
 duration: Duration
 
 # E
 edit: Edit
-edit a category: Edit a category
-edit a question: Edit a question
-end date: End date
+edit_category: Edit a category
+edit_question: Edit a question
+end_date: End date
 entry: Entry
 erase: To erase an answer zone, maintain press 's' key and click on the cross which allows to move it
 exercise: Exercise
-exercise alert break: The interruption of this exercise is not allowed. Your paper will be considered finish !
-exercise definition: Exercise definition
-exercise creation: Exercise creation
-exercise edit: Exercise edit
-exercice linked Question: Questions linked to the exercise
+exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
+exercise_definition: Exercise definition
+exercise_edit: Exercise edit
+exercice_linked_question: Questions linked to the exercise
 exit: Exit
-expected answer: Expected answer
-explainCoeffDis0: The copies must have the same questions to calculate the coefficient of discrimination.
-explainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
-explainCoeffDis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
-explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
+expected_answer: Expected answer
+explain_coeff_dis0: The copies must have the same questions to calculate the coefficient of discrimination.
+explain_coeff_dis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
+explain_coeff_dis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
+explain_coeff_dis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
 explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
 export CSV of results: Export CSV of results
 exportQTIExercise : Export questions of exercise in QTI format
@@ -547,7 +538,6 @@ ujm_exobundle_interactionopentype_interaction_hints: Hints
 ujm_exobundle_interactionmatchingtype_proposals: Response
 ujm_exobundle_interactionmatchingtype_labels: Question
 ujm_exobundle_interactionopentype_wordResponses: Keywords
-ujm_exobundle_interactionqcmtype_choices: Choices
 ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Hints
 

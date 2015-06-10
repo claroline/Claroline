@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'bank of questions' | trans,
+                    'name': 'bank_of_questions' | trans,
                     'href': ''
                 }
             ])
@@ -27,16 +27,16 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'bank of questions' | trans }} {% endblock %}
+{% block title %} {{ 'bank_of_questions' | trans }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'bank of questions' | trans }}</h3>
+        <h3 class="panel-title">{{ 'bank_of_questions' | trans }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
-            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
         <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}',  '-1');">
             <i class="fa fa-upload"></i> {{ 'import QTI' | trans }}
@@ -51,11 +51,11 @@
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
-                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -69,7 +69,7 @@
 
         <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
             <div class="input-group" style="width: 350px; margin-top: 20px;">
-                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}" name="userSearch"
+                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans }}" name="userSearch"
                     onkeydown="if (event.keyCode == 13) {
                         //briefSearch('{#{ path('ujm_question_briefSearch') }#}', -1, 'index');
                         briefSearchSubmit();

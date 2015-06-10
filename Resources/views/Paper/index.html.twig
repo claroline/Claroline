@@ -45,7 +45,7 @@
             {% if _resource.published == FALSE %}
                 <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
                    class="btn btn-primary">
-                    <i class="fa fa-trash-o"></i> {{ 'delete papers' | trans }}
+                    <i class="fa fa-trash-o"></i> {{ 'delete_papers' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -68,7 +68,7 @@
                </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': papers[0].exercise.id, 'all': 1 }) }}">
-                    <i class="fa fa-list"></i> {{ 'displayAllList' | trans }}
+                    <i class="fa fa-list"></i> {{ 'display_all_list' | trans }}
                 </a>
             </div>
 

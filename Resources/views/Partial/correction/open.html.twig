@@ -9,7 +9,7 @@
     {{ response|raw}}
 
     {% if inter.typeopenquestion == 'oneWord' %}
-        <p><h3 class="panel-title">{{ 'expected answer' | trans }}</h3></p>
+        <p><h3 class="panel-title">{{ 'expected_answer' | trans }}</h3></p>
         <div id="eAnswer">{{ goodResponseOpenOneWord(inter.id) }}</div>
     {% endif %}
 

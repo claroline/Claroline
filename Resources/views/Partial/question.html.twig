@@ -11,9 +11,9 @@
         <div class="col-md-5">
             {{ form_widget(form.interaction.question.category) }}    
         </div> 
-        <a title="{{ 'edit a category' | trans }}" id="editCategory" style="display: none;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
-        <a title="{{ 'create a new category' | trans }}" id="addCategory" style="display: inline-block;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
-        <a title="{{ 'drop category' | trans }}" id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i></a>
+        <a title="{{ 'edit_category' | trans }}" id="editCategory" style="display: none;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
+        <a title="{{ 'create_a_new_category' | trans }}" id="addCategory" style="display: inline-block;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
+        <a title="{{ 'drop_category' | trans }}" id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i></a>
    </div>
    <div id="descriptionDiv" class="form-group row collapse">
        <label class="col-md-1">{{ 'Exepertise.description' | trans }}</label>

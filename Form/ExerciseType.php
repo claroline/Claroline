@@ -77,7 +77,7 @@ class ExerciseType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd/MM/yyyy H:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
-                    'label' => 'correction date',
+                    'label' => 'correction_date',
                 )
             )
             ->add(

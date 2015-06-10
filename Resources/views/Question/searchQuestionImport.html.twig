@@ -13,11 +13,11 @@
 
             {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
             <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
-                <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
             </button>
             {% elseif displayAll == 1 %}
                 <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
-                <i class="fa fa-plus-circle"></i> {{ 'display pagination' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans }}
             </button>
             {% endif %}
 
