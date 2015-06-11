@@ -43,9 +43,7 @@ $(document).ready(function () {
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var row = "row_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var documentId = $(this).attr("data-document_id");
-        console.log(documentId);
         var button = document.getElementById("delete_" + documentId);
-        console.log(button);
         
         $(button).hide();
 

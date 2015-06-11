@@ -111,7 +111,6 @@
                 if ($('#innova_collecticiel_correct_comment_form_comment').val() == '') {
                     e.preventDefault();
                     setRequireStyle();
-                    console.log(tinymce.get('innova_collecticiel_correct_comment_form_comment'));
                     tinymce.get('innova_collecticiel_correct_comment_form_comment').on('keyup', function (e) {
                         if (tinymce.get('innova_collecticiel_correct_comment_form_comment').getContent() != '') {
                             removeRequiredStyle();
