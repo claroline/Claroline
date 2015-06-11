@@ -5,9 +5,10 @@
     'use strict';
 
     angular.module('StepModule').factory('StepService', [
+        '$http',
         'IdentifierService',
         'ResourceService',
-        function StepService(IdentifierService, ResourceService) {
+        function StepService($http, IdentifierService, ResourceService) {
             /**
              * Step object
              * @constructor
@@ -95,7 +96,7 @@
                  * @param activity
                  */
                 setActivity: function (step, activity) {
-                    if (typeof activity !== 'undefined' && activity !== null && activity.length !== 0) {
+                    if (angular.isDefined(activity) && angular.isObject(activity)) {
                         // Populate step
                         step.activityId  = activity['id'];
                         step.name        = activity['name'];
@@ -103,12 +104,20 @@
                         step.primaryResource = [];
                         step.resources = [];
 
-                        // Initialize a new Resource object (parameters : claro type, mime type, id, name)
-                        var primaryResource = ResourceService.new(activity['primaryResource']['type'], activity['primaryResource']['mimeType'], activity['primaryResource']['resourceId'], activity['primaryResource']['name']);
-                        this.addResource(step.primaryResource, primaryResource);
+                        // Primary resource
+                        if (angular.isDefined(activity['primaryResource']) && angular.isObject(activity['primaryResource'])) {
+                            // Initialize a new Resource object (parameters : claro type, mime type, id, name)
+                            var primaryResource = ResourceService.new(
+                                activity['primaryResource']['type'],
+                                activity['primaryResource']['mimeType'],
+                                activity['primaryResource']['resourceId'],
+                                activity['primaryResource']['name']
+                            );
+                            this.addResource(step.primaryResource, primaryResource);
+                        }
 
                         // Secondary resources
-                        if (null !== activity['resources']) {
+                        if (angular.isDefined(activity['resources']) && angular.isObject(activity['resources'])) {
                             for (var i = 0; i < activity['resources'].length; i++) {
                                 var current = activity['resources'][i];
 
