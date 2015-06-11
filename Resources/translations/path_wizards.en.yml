@@ -69,7 +69,7 @@ resource_show: Show resource
 resource_show_parent: Display in this step
 resources_browse: Add resource
 resources_replace: Replace
-root_default_name: <untitled>
+root_default_name: untitled
 
 # s
 save: Save

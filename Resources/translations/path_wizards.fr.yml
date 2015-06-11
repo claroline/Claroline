@@ -34,7 +34,7 @@ open_summary: Ouvrir le sommaire
 open_templates: Ouvrir les modèles
 
 # p
-path_breadcrumbs: Afficher le fils d'Ariane ?
+path_breadcrumbs: Afficher le fil d'Ariane ?
 path_description: Description
 path_init_structure: Créer une nouvelle structure vide
 path_init_structure_template: Créer une structure à partir d'un modèle
@@ -69,7 +69,7 @@ resource_show: Voir la ressource
 resource_show_parent: Afficher dans cette étape
 resources_browse: Ajouter une ressource
 resources_replace: Remplacer
-root_default_name: <sans nom>
+root_default_name: sans nom
 
 # s
 save: Sauvegarder
