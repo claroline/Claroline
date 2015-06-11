@@ -32,41 +32,6 @@ abstract class AbstractWidget
     protected $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $label;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="col", type="integer", options={"default" = 0})
-     */
-    protected $column;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="row", type="integer", options={"default" = 0})
-     */
-    protected $row;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="size_x", type="integer", options={"default" = 1})
-     */
-    protected $sizeX = 1;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="size_y", type="integer", options={"default" = 1})
-     */
-    protected $sizeY = 1;
-
-    /**
      * @var \Datetime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
@@ -83,11 +48,19 @@ abstract class AbstractWidget
     protected $updatedAt;
 
     /**
-     * @var Portfolio
-     * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="widgets")
-     * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @var \Icap\PortfolioBundle\Entity\PortfolioWidget[]
+     *
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\PortfolioWidget", mappedBy="widget")
      */
-    protected $portfolio;
+    protected $portfolioWidget;
+
+    /**
+     * @var \Claroline\CoreBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     */
+    protected $user;
 
     /**
      * @var string
@@ -115,106 +88,6 @@ abstract class AbstractWidget
     }
 
     /**
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    /**
-     * @param int $column
-     *
-     * @return $this
-     */
-    public function setColumn($column)
-    {
-        $this->column = $column;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getColumn()
-    {
-        return $this->column;
-    }
-
-    /**
-     * @param int $row
-     *
-     * @return $this
-     */
-    public function setRow($row)
-    {
-        $this->row = $row;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRow()
-    {
-        return $this->row;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSizeX()
-    {
-        return $this->sizeX;
-    }
-
-    /**
-     * @param int $sizeX
-     *
-     * @return AbstractWidget
-     */
-    public function setSizeX($sizeX)
-    {
-        $this->sizeX = $sizeX;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSizeY()
-    {
-        return $this->sizeY;
-    }
-
-    /**
-     * @param int $sizeY
-     *
-     * @return AbstractWidget
-     */
-    public function setSizeY($sizeY)
-    {
-        $this->sizeY = $sizeY;
-
-        return $this;
-    }
-
-    /**
      * @return \Datetime
      */
     public function getCreatedAt()
@@ -231,21 +104,21 @@ abstract class AbstractWidget
     }
 
     /**
-     * @return \Icap\PortfolioBundle\Entity\Portfolio
+     * @return \Claroline\CoreBundle\Entity\User
      */
-    public function getPortfolio()
+    public function getUser()
     {
-        return $this->portfolio;
+        return $this->user;
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
+     * @param \Claroline\CoreBundle\Entity\User $user
      *
-     * @return $this
+     * @return AbstractWidget
      */
-    public function setPortfolio(Portfolio $portfolio)
+    public function setUser($user)
     {
-        $this->portfolio = $portfolio;
+        $this->user = $user;
 
         return $this;
     }

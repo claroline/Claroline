@@ -86,11 +86,11 @@ class Portfolio
     protected $portfolioTeams;
 
     /**
-     * @var \Icap\PortfolioBundle\Entity\Widget\WidgetNode[]
+     * @var \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      *
-     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", mappedBy="portfolio", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\PortfolioWidget", mappedBy="portfolio", cascade={"persist"})
      */
-    protected $widgets;
+    protected $portfolioWidgets;
 
     /**
      * @var \Icap\PortfolioBundle\Entity\PortfolioComment[]
@@ -112,7 +112,7 @@ class Portfolio
     public function __construct()
     {
         $this->commentsViewAt = new \DateTime();
-        $this->widgets = new ArrayCollection();
+        $this->$portfolioWidgets = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
@@ -335,40 +335,41 @@ class Portfolio
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $abstractWidgets
+     * @param \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets
      *
      * @return Portfolio
      */
-    public function setWidgets($abstractWidgets)
+    public function setPortfolioWidgets($portfolioWidgets)
     {
-        foreach ($abstractWidgets as $abstractWidget) {
-            $abstractWidget->setPortfolio($this);
+        foreach ($portfolioWidgets as $portfolioWidget) {
+            $portfolioWidget->setPortfolio($this);
         }
 
-        $this->widgets = $abstractWidgets;
+        $this->portfolioWidgets = $portfolioWidgets;
 
         return $this;
     }
 
     /**
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      */
-    public function getWidgets()
+    public function getPortfolioWidgets()
     {
-        return $this->widgets;
+        return $this->portfolioWidgets;
     }
 
     /**
-     * @param string $widgetType
+     * @param string|null $widgetType
      *
-     * @return AbstractWidget[]
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
-    public function getWidget($widgetType)
+    public function getWidgets($widgetType = null)
     {
         $widgets = array();
 
-        foreach ($this->getWidgets() as $widget) {
-            if ($widgetType === $widget->getWidgetType()) {
+        foreach ($this->getPortfolioWidgets() as $portfolioWidget) {
+            $widget = $portfolioWidget->getWidget();
+            if ($widgetType !== null || $widgetType === $widget->getWidgetType()) {
                 $widgets[] = $widget;
             }
         }
@@ -465,6 +466,7 @@ class Portfolio
     public function getLastUpdateDate()
     {
         $lastUpdateDate = null;
+//        return $lastUpdateDate;
 
         foreach ($this->getWidgets() as $widget) {
             if ($lastUpdateDate < $widget->getUpdatedAt()) {
