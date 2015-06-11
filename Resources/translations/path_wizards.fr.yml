@@ -81,7 +81,7 @@ show_path_info: Afficher les informations relatives au Parcours
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
-step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
+step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape (ainsi que toutes les étapes enfants associées) ?
 step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
 step_description: Description
 step_drag: Déplacer l'élément
