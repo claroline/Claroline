@@ -13,24 +13,26 @@
                     <div class="col-md-offset-2">
                         <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                         {% if not viewMode %}
-                            <div data-ng-repeat="widget in widgets | filter:{type: 'title'} track by widget.id" data-ng-show="widgets.length > 0">
-                                <div class="portfolio-title-container{% if not editMode %} margin{% endif %}" data-widget>
-                                    <div class="portfolio-title" data-ng-bind-html="widget.views.view" data-ng-show="!widget.editing && !widget.views.form"></div>
-                                    <div class="widget-actions">
-                                    {% if editMode %}
-                                        <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit(widget);"
-                                                data-ng-if="!widget.isEditing()">
-                                            <span class="fa fa-pencil"></span>
-                                        </button>
-                                    {% endif %}
-                                    </div>
-                                    <div class="loading" data-ng-show="widget.editing && !widget.views.form"></div>
-                                    <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
-                                        <div data-bind-html="widget.views.form" class="form-group"></div>
-                                        <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                                        <button type="button" class="btn btn-md btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
-                                    </form>
+                            <div class="portfolio-title-container{% if not editMode %} margin{% endif %}">
+                                <div class="portfolio-title" data-ng-show="!portfolio.isEditing">
+                                    <h2 id="portfolio-title">{% verbatim %}{{ portfolio.title }}{% endverbatim %}</h2>
                                 </div>
+                                <div class="widget-actions">
+                                {% if editMode %}
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="portfolio.isEditing = true" data-ng-if="!portfolio.isEditing">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>
+                                {% endif %}
+                                </div>
+                                <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save()" data-ng-show="portfolio.isEditing">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" id="icap_portfolio_title_form_title"
+                                               name="icap_portfolio_title_form[title]" data-ng-model="portfolio.title"
+                                               required="required" />
+                                    </div>
+                                    <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                                    <button type="button" class="btn btn-md btn-default" data-ng-click="portfolio.isEditing = false">{{ 'cancel'|trans({}, 'platform') }}</button>
+                                </form>
                             </div>
                         {% else %}
                             <div class="portfolio-title-container margin">
@@ -98,7 +100,7 @@
                         <div data-ng-include="'templates/menu_widget-type.tpl.html'">
                         </div>
                         {% endif %}
-                        <p class="no-data well" data-ng-show="widgets.length <= 1">
+                        <p class="no-data well" data-ng-show="widgets.length <= 0">
                         {% if editMode %}
                             {{ 'no_widget'|trans({}, 'icap_portfolio')|raw }}
                         {% else %}
@@ -106,13 +108,13 @@
                         {% endif %}
                         </p>
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
-                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
+                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | orderBy:'+row +col' track by widget.id">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
                     {% else %}
                             <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="widgets.length">
-                                <li data-gridster-item="widget" data-ng-repeat="widget in widgets | filter:{type: '!title'} | orderBy:'+row +col' track by widget.id">
+                                <li data-gridster-item="widget" data-ng-repeat="widget in widgets | orderBy:'+row +col' track by widget.id">
                                     <div class="panel panel-default widget-panel">
                                         <div class="panel-heading">
                                             {% verbatim %}{{ widget.label }}{% endverbatim %}
