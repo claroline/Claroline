@@ -5,6 +5,7 @@ portfolioApp
         return {
             portfolio:   null,
             portfolioId: null,
+            originalTitle: null,
 
             getPortfolio: function(portfolioId) {
                 this.portfolioId = portfolioId;
@@ -16,7 +17,10 @@ portfolioApp
                 return this.portfolio;
             },
             save: function(portfolio) {
+                var self = this;
                 var success = function() {
+                    self.originalTitle = portfolio.title;
+                    portfolio.editing = false;
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
@@ -24,6 +28,14 @@ portfolioApp
                 }
 
                 return portfolio.$update(success, failed);
+            },
+            rename: function(portfolio) {
+                portfolio.editing = true;
+                this.originalTitle = portfolio.title;
+            },
+            cancelRename: function(portfolio) {
+                portfolio.editing = false;
+                portfolio.title = this.originalTitle;
             },
             updateViewCommentsDate: function () {
                 this.portfolio.commentsViewAt = new Date();

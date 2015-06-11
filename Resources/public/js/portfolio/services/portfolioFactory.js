@@ -12,5 +12,7 @@ portfolioApp
                 update: { method: "PUT" }
             });
 
+        portfolio.prototype.editing = false;
+
         return portfolio;
     }]);

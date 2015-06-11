@@ -305,7 +305,7 @@ class PortfolioManager
      */
     public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
     {
-        $data           = array();
+        $data = array();
 
         $form = $this->getForm($portfolio);
         $form->submit($parameters);

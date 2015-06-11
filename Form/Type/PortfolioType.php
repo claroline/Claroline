@@ -20,7 +20,8 @@ class PortfolioType extends AbstractType
                     'widget' => 'single_text'
                 ))
             ->add('comments', 'text', array('mapped' => false))
-            ->add('widgets', 'text', array('mapped' => false));
+            ->add('widgets', 'text', array('mapped' => false))
+            ->add('title', 'text');
     }
 
     public function getName()

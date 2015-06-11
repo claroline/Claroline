@@ -14,24 +14,24 @@
                         <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                         {% if not viewMode %}
                             <div class="portfolio-title-container{% if not editMode %} margin{% endif %}">
-                                <div class="portfolio-title" data-ng-show="!portfolio.isEditing">
+                                <div class="portfolio-title" data-ng-show="!portfolio.editing">
                                     <h2 id="portfolio-title">{% verbatim %}{{ portfolio.title }}{% endverbatim %}</h2>
                                 </div>
                                 <div class="widget-actions">
                                 {% if editMode %}
-                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="portfolio.isEditing = true" data-ng-if="!portfolio.isEditing">
+                                    <button class="widget-action btn btn-sm btn-primary" data-ng-click="edit()" data-ng-if="!portfolio.editing">
                                         <span class="fa fa-pencil"></span>
                                     </button>
                                 {% endif %}
                                 </div>
-                                <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save()" data-ng-show="portfolio.isEditing">
+                                <form name="form" class="edit-container form-inline widget-panel" data-loading-form="save()" data-ng-show="portfolio.editing">
                                     <div class="form-group">
                                         <input type="text" class="form-control" id="icap_portfolio_title_form_title"
                                                name="icap_portfolio_title_form[title]" data-ng-model="portfolio.title"
                                                required="required" />
                                     </div>
                                     <button type="submit" class="btn btn-md btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                                    <button type="button" class="btn btn-md btn-default" data-ng-click="portfolio.isEditing = false">{{ 'cancel'|trans({}, 'platform') }}</button>
+                                    <button type="button" class="btn btn-md btn-default" data-ng-click="cancelRename()">{{ 'cancel'|trans({}, 'platform') }}</button>
                                 </form>
                             </div>
                         {% else %}

@@ -16,6 +16,18 @@ portfolioApp
             widgetsManager.create(portfolioManager.portfolioId, type, column || 1);
         };
 
+        $scope.edit = function() {
+            portfolioManager.rename($scope.portfolio);
+        }
+
+        $scope.save = function() {
+            return portfolioManager.save($scope.portfolio);
+        }
+
+        $scope.cancelRename = function() {
+            portfolioManager.cancelRename($scope.portfolio);
+        }
+
         $scope.gridsterOptions = {
             columns:    16, // the width of the grid, in columns
             swapping:   true, // whether or not to have items of the same size switch places instead of pushing down if they are the same size
