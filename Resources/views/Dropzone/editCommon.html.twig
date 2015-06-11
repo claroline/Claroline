@@ -265,7 +265,8 @@
 
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
-                if (peerReviewEnabled) {
+                // when loading the page without having saved yet, all tabs available by default
+                if (peerReviewEnabled || typeof peerReviewEnabled === 'undefined') {
                     // show the peerReview options
                     $('.peer-review-options').show();
                     // hide the manuals options.
@@ -299,7 +300,7 @@
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
             };
-
+            
             enablePeerReviewOptions({{ dropzone.peerReview }});
 
             var manualPlanning = function () {

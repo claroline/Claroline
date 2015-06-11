@@ -42,6 +42,12 @@ $(document).ready(function () {
     $('#modal_confirm').on('click', function(event) {
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
         var row = "row_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+        var documentId = $(this).attr("data-document_id");
+        console.log(documentId);
+        var button = document.getElementById("delete_" + documentId);
+        console.log(button);
+        
+        $(button).hide();
 
         $(selector).prop('checked', true); // Cocher la case "Valider"
         $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
