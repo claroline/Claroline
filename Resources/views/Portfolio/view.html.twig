@@ -9,7 +9,7 @@
     <div id="portfolio-section" data-portfolio-container="{{ portfolio.id }}">
         <div id="portfolio-container"{% if not viewMode %} data-ng-if="portfolio.$resolved"{% endif %}>
             <header>
-                <div class="row container">
+                <div class="row">
                     <div class="col-md-offset-2">
                         <h1 id="username">{{ portfolio.user.firstName ~ ' ' ~ portfolio.user.lastName }}</h1>
                         {% if not viewMode %}
