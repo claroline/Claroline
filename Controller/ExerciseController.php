@@ -873,7 +873,6 @@ class ExerciseController extends Controller
 
         //To record response
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        $interQcmSer = $this->container->get('uujm.interaction_qcm');
         $ip = $exerciseSer->getIP($request);
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
@@ -881,27 +880,30 @@ class ExerciseController extends Controller
             ->getRepository('UJMExoBundle:Response')
             ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
-        switch ($typeInterToRecorded) {
-            case "InteractionQCM":
-                $res = $interQcmSer->response($request, $session->get('paper'));
-                break;
+        $interSer  = $this->container->get('ujm.' . $typeInterToRecorded);
+        $res       = $interSer->response($request, $session->get('paper'));
 
-            case "InteractionGraphic":
-                $res = $exerciseSer->responseGraphic($request, $session->get('paper'));
-                break;
-
-            case "InteractionHole":
-                $res = $exerciseSer->responseHole($request, $session->get('paper'));
-                break;
-
-            case "InteractionOpen":
-                $res = $exerciseSer->responseOpen($request, $session->get('paper'));
-                break;
-
-            case "InteractionMatching":
-                $res = $exerciseSer->responseMatching($request, $session->get('paper'));
-                break;
-        }
+//        switch ($typeInterToRecorded) {
+//            case "InteractionQCM":
+//                $res = $interQcmSer->response($request, $session->get('paper'));
+//                break;
+//
+//            case "InteractionGraphic":
+//                $res = $exerciseSer->responseGraphic($request, $session->get('paper'));
+//                break;
+//
+//            case "InteractionHole":
+//                $res = $exerciseSer->responseHole($request, $session->get('paper'));
+//                break;
+//
+//            case "InteractionOpen":
+//                $res = $exerciseSer->responseOpen($request, $session->get('paper'));
+//                break;
+//
+//            case "InteractionMatching":
+//                $res = $exerciseSer->responseMatching($request, $session->get('paper'));
+//                break;
+//        }
 
         if (count($response) == 0) {
             //INSERT Response
@@ -1109,6 +1111,7 @@ class ExerciseController extends Controller
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
+        //todo remplacer switch dans les services avec methode du genre toDisplayed
         switch ($typeInterToDisplayed) {
             case "InteractionQCM":
 
@@ -1117,10 +1120,10 @@ class ExerciseController extends Controller
                     ->getRepository('UJMExoBundle:InteractionQCM')
                     ->getInteractionQCM($interactionToDisplay->getId());
 
-                if ($interactionToDisplayed[0]->getShuffle()) {
-                    $interactionToDisplayed[0]->shuffleChoices();
+                if ($interactionToDisplayed->getShuffle()) {
+                    $interactionToDisplayed->shuffleChoices();
                 } else {
-                    $interactionToDisplayed[0]->sortChoices();
+                    $interactionToDisplayed->sortChoices();
                 }
 
                 $responseGiven = $this->getDoctrine()
@@ -1144,7 +1147,7 @@ class ExerciseController extends Controller
                     ->getInteractionGraphic($interactionToDisplay->getId());
 
                 $coords = $em->getRepository('UJMExoBundle:Coords')
-                    ->findBy(array('interactionGraphic' => $interactionToDisplayed[0]->getId()));
+                    ->findBy(array('interactionGraphic' => $interactionToDisplayed->getId()));
 
                 $responseGiven = $this->getDoctrine()
                     ->getManager()
@@ -1207,12 +1210,12 @@ class ExerciseController extends Controller
                     ->getRepository('UJMExoBundle:InteractionMatching')
                     ->getInteractionMatching($interactionToDisplay->getId());
 
-                if ($interactionToDisplayed[0]->getShuffle()) {
-                        $interactionToDisplayed[0]->shuffleProposals();
-                        $interactionToDisplayed[0]->shuffleLabels();
+                if ($interactionToDisplayed->getShuffle()) {
+                        $interactionToDisplayed->shuffleProposals();
+                        $interactionToDisplayed->shuffleLabels();
                     } else {
-                        $interactionToDisplayed[0]->sortProposals();
-                        $interactionToDisplayed[0]->sortLabels();
+                        $interactionToDisplayed->sortProposals();
+                        $interactionToDisplayed->sortLabels();
                     }
 
                 $responseMatch = $this->getDoctrine()
@@ -1231,7 +1234,7 @@ class ExerciseController extends Controller
 
         $array['workspace']              = $workspace;
         $array['tabOrderInter']          = $tabOrderInter;
-        $array['interactionToDisplayed'] = $interactionToDisplayed[0];
+        $array['interactionToDisplayed'] = $interactionToDisplayed;
         $array['interactionType']        = $typeInterToDisplayed;
         $array['numQ']                   = $numQuestionToDisplayed;
         $array['paper']                  = $session->get('paper');
@@ -1655,7 +1658,7 @@ class ExerciseController extends Controller
         $interSer  = $this->container->get('ujm.' . $typeInter);
         $interX    = $em->getRepository('UJMExoBundle:' . $typeInter)
                         ->getInteractionQCM($interaction->getId());
-        $scoreMax = $interSer->maxScore($interX[0]);
+        $scoreMax = $interSer->maxScore($interX);
         $responsesTab = $this->responseStatus($responses, $scoreMax);
 
 //        switch ( $interaction->getType()) {

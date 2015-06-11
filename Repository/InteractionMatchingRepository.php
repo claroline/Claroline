@@ -28,7 +28,7 @@ class InteractionMatchingRepository extends EntityRepository
         $qb->join('im.interaction', 'i')
             ->where($qb->expr()->in('i.id', $interactionId));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
 }

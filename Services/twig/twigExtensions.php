@@ -90,55 +90,60 @@ class twigExtensions extends \Twig_Extension
      */
     public function getInterTwig($interId, $typeInter)
     {
-        switch ($typeInter)
-        {
-            case "InteractionQCM":
-                $interQCM = $this->doctrine
-                                 ->getManager()
-                                 ->getRepository('UJMExoBundle:InteractionQCM')
-                                 ->getInteractionQCM($interId);
-                $inter['question'] = $interQCM[0];
-                $inter['maxScore'] = $this->getQCMScoreMax($interQCM[0]);
-            break;
+        $interSer        = $this->container->get('ujm.' . $typeInter);
+        $interactionX    = $interSer->getInteractionX($interId);
+        $inter['question'] = $interactionX;
+        $inter['maxScore'] = $interSer->gmaxScore($interactionX);
 
-            case "InteractionGraphic":
-                $interG = $this->doctrine
-                               ->getManager()
-                               ->getRepository('UJMExoBundle:InteractionGraphic')
-                               ->getInteractionGraphic($interId);
-                $inter['question'] = $interG[0];
-                $inter['maxScore'] = $this->getGraphicScoreMax($interG[0]);
-            break;
-
-            case "InteractionHole":
-                $interHole = $this->doctrine
-                                  ->getManager()
-                                  ->getRepository('UJMExoBundle:InteractionHole')
-                                  ->getInteractionHole($interId);
-                $inter['question'] = $interHole[0];
-                $inter['maxScore'] = $this->getHoleScoreMax($interHole[0]);
-            break;
-
-            case "InteractionOpen":
-                $interOpen = $this->doctrine
-                               ->getManager()
-                               ->getRepository('UJMExoBundle:InteractionOpen')
-                               ->getInteractionOpen($interId);
-                $inter['question'] = $interOpen[0];
-                $inter['maxScore'] = $this->getOpenScoreMax($interOpen[0]);
-            break;
-
-            case "InteractionMatching":
-                $interMatching = $this->doctrine
-                               ->getManager()
-                               ->getRepository('UJMExoBundle:InteractionMatching')
-                               ->getInteractionMatching($interId);
-
-                $inter['question'] = $interMatching[0];
-                $inter['maxScore'] = $this->getMatchingScoreMax($interMatching[0]);
-
-            break;
-        }
+//        switch ($typeInter)
+//        {
+//            case "InteractionQCM":
+//                $interQCM = $this->doctrine
+//                                 ->getManager()
+//                                 ->getRepository('UJMExoBundle:InteractionQCM')
+//                                 ->getInteractionQCM($interId);
+//                $inter['question'] = $interQCM;
+//                $inter['maxScore'] = $this->getQCMScoreMax($interQCM);
+//            break;
+//
+//            case "InteractionGraphic":
+//                $interG = $this->doctrine
+//                               ->getManager()
+//                               ->getRepository('UJMExoBundle:InteractionGraphic')
+//                               ->getInteractionGraphic($interId);
+//                $inter['question'] = $interG;
+//                $inter['maxScore'] = $this->getGraphicScoreMax($interG);
+//            break;
+//
+//            case "InteractionHole":
+//                $interHole = $this->doctrine
+//                                  ->getManager()
+//                                  ->getRepository('UJMExoBundle:InteractionHole')
+//                                  ->getInteractionHole($interId);
+//                $inter['question'] = $interHole;
+//                $inter['maxScore'] = $this->getHoleScoreMax($interHole);
+//            break;
+//
+//            case "InteractionOpen":
+//                $interOpen = $this->doctrine
+//                               ->getManager()
+//                               ->getRepository('UJMExoBundle:InteractionOpen')
+//                               ->getInteractionOpen($interId);
+//                $inter['question'] = $interOpen;
+//                $inter['maxScore'] = $this->getOpenScoreMax($interOpen);
+//            break;
+//
+//            case "InteractionMatching":
+//                $interMatching = $this->doctrine
+//                               ->getManager()
+//                               ->getRepository('UJMExoBundle:InteractionMatching')
+//                               ->getInteractionMatching($interId);
+//
+//                $inter['question'] = $interMatching;
+//                $inter['maxScore'] = $this->getMatchingScoreMax($interMatching);
+//
+//            break;
+//        }
 
         return $inter;
     }

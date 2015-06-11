@@ -16,7 +16,7 @@ class matching extends interaction {
      *
      * @return array
      */
-     public function response()
+     public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
 
      }
@@ -44,11 +44,28 @@ class matching extends interaction {
       *
       * @return float
       */
-     public function maxScore($interMatching)
+     public function maxScore($interMatching = null)
      {
          die('service matching refactoring');
          $scoreMax = 0;
 
          return $scoreMax;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionMatching
+     */
+     public function getInteractionX($interId)
+     {
+         $interMatching = $this->om
+                          ->getRepository('UJMExoBundle:InteractionMatching')
+                          ->getInteractionMatching($interId);
+
+         return $interMatching;
      }
 }

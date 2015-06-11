@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
+use \Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -25,6 +26,7 @@ class exerciseServices
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
     protected $eventDispatcher;
     protected $doctrine;
+    protected $container;
 
     /**
      * Constructor
@@ -36,6 +38,7 @@ class exerciseServices
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Dependency Injection
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
     public function __construct(
@@ -43,7 +46,8 @@ class exerciseServices
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorizationChecker,
         EventDispatcherInterface $eventDispatcher,
-        Registry $doctrine
+        Registry $doctrine,
+        Container $container
     )
     {
         $this->om = $om;
@@ -51,6 +55,7 @@ class exerciseServices
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher      = $eventDispatcher;
         $this->doctrine             = $doctrine;
+        $this->container            = $container;
     }
 
     /**
@@ -769,38 +774,43 @@ class exerciseServices
             $interaction = $this->om
                                 ->getRepository('UJMExoBundle:Interaction')
                                 ->getInteraction($eq->getQuestion()->getId());
-            switch ($interaction->getType()){
-                case 'InteractionQCM':
-                    $interQCM = $this->om
-                                     ->getRepository('UJMExoBundle:InteractionQCM')
-                                     ->getInteractionQCM($interaction->getId());
-                    $scoreMax = $this->qcmMaxScore($interQCM[0]);
-                    break;
-                case 'InteractionGraphic':
-                    $interGraphic = $this->om
-                                         ->getRepository('UJMExoBundle:InteractionGraphic')
-                                         ->getInteractionGraphic($interaction->getId());
-                    $scoreMax = $this->graphicMaxScore($interGraphic[0]);
-                    break;
-                case 'InteractionOpen':
-                    $interOpen = $this->om
-                                      ->getRepository('UJMExoBundle:InteractionOpen')
-                                      ->getInteractionOpen($interaction->getId());
-                    $scoreMax = $this->openMaxScore($interOpen[0]);
-                    break;
-                case 'InteractionHole':
-                    $interHole = $this->om
-                                      ->getRepository('UJMExoBundle:InteractionHole')
-                                      ->getInteractionHole($interaction->getId());
-                    $scoreMax = $this->holeMaxScore($interHole[0]);
-                    break;
-                case 'InteractionMatching':
-                    $interMatching = $this->om
-                                      ->getRepository('UJMExoBundle:InteractionMatching')
-                                      ->getInteractionMatching($interaction->getId());
-                    $scoreMax = $this->matchingMaxScore($interMatching[0]);
-                    break;
-            }
+
+            $interSer        = $this->container->get('ujm.' . $typeInter);
+            $interactionX    = $interSer->getInteractionX($interaction->getId());
+            $scoreMax        = $interSer->maxScore($interactionX);
+
+//            switch ($interaction->getType()){
+//                case 'InteractionQCM':
+//                    $interQCM = $this->om
+//                                     ->getRepository('UJMExoBundle:InteractionQCM')
+//                                     ->getInteractionQCM($interaction->getId());
+//                    $scoreMax = $this->qcmMaxScore($interQCM);
+//                    break;
+//                case 'InteractionGraphic':
+//                    $interGraphic = $this->om
+//                                         ->getRepository('UJMExoBundle:InteractionGraphic')
+//                                         ->getInteractionGraphic($interaction->getId());
+//                    $scoreMax = $this->graphicMaxScore($interGraphic);
+//                    break;
+//                case 'InteractionOpen':
+//                    $interOpen = $this->om
+//                                      ->getRepository('UJMExoBundle:InteractionOpen')
+//                                      ->getInteractionOpen($interaction->getId());
+//                    $scoreMax = $this->openMaxScore($interOpen);
+//                    break;
+//                case 'InteractionHole':
+//                    $interHole = $this->om
+//                                      ->getRepository('UJMExoBundle:InteractionHole')
+//                                      ->getInteractionHole($interaction->getId());
+//                    $scoreMax = $this->holeMaxScore($interHole);
+//                    break;
+//                case 'InteractionMatching':
+//                    $interMatching = $this->om
+//                                      ->getRepository('UJMExoBundle:InteractionMatching')
+//                                      ->getInteractionMatching($interaction->getId());
+//                    $scoreMax = $this->matchingMaxScore($interMatching);
+//                    break;
+//            }
 
             $exoTotalScore += $scoreMax;
         }
@@ -830,42 +840,46 @@ class exerciseServices
 
         foreach ($interQuestionsTab as $interQuestion) {
             $interaction = $this->om->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
-            switch ( $interaction->getType()) {
-                case "InteractionQCM":
-                    $interQCM = $this->om
-                                     ->getRepository('UJMExoBundle:InteractionQCM')
-                                     ->getInteractionQCM($interaction->getId());
-                    $exercisePaperTotalScore += $this->qcmMaxScore($interQCM[0]);
-                    break;
+            $interSer        = $this->container->get('ujm.' . $interaction->getType());
+            $interactionX    = $interSer->getInteractionX($interaction->getId());
+            $exercisePaperTotalScore += $interSer->maxScore($interactionX);
 
-                case "InteractionGraphic":
-                    $interGraphic = $this->om
-                                         ->getRepository('UJMExoBundle:InteractionGraphic')
-                                         ->getInteractionGraphic($interaction->getId());
-                    $exercisePaperTotalScore += $this->graphicMaxScore($interGraphic[0]);
-                    break;
-
-                case "InteractionHole":
-                    $interHole = $this->om
-                                      ->getRepository('UJMExoBundle:InteractionHole')
-                                      ->getInteractionHole($interaction->getId());
-                    $exercisePaperTotalScore += $this->holeMaxScore($interHole[0]);
-                    break;
-
-                case "InteractionOpen":
-                    $interOpen = $this->om
-                                      ->getRepository('UJMExoBundle:InteractionOpen')
-                                      ->getInteractionOpen($interaction->getId());
-                    $exercisePaperTotalScore += $this->openMaxScore($interOpen[0]);
-                    break;
-
-                case "InteractionMatching":
-                    $interMatching = $this->om
-                                          ->getRepository('UJMExoBundle:InteractionMatching')
-                                          ->getInteractionMatching($interaction->getId());
-                    $exercisePaperTotalScore += $this->matchingMaxScore($interMatching[0]);
-                    break;
-            }
+//            switch ( $interaction->getType()) {
+//                case "InteractionQCM":
+//                    $interQCM = $this->om
+//                                     ->getRepository('UJMExoBundle:InteractionQCM')
+//                                     ->getInteractionQCM($interaction->getId());
+//                    $exercisePaperTotalScore += $this->qcmMaxScore($interQCM);
+//                    break;
+//
+//                case "InteractionGraphic":
+//                    $interGraphic = $this->om
+//                                         ->getRepository('UJMExoBundle:InteractionGraphic')
+//                                         ->getInteractionGraphic($interaction->getId());
+//                    $exercisePaperTotalScore += $this->graphicMaxScore($interGraphic);
+//                    break;
+//
+//                case "InteractionHole":
+//                    $interHole = $this->om
+//                                      ->getRepository('UJMExoBundle:InteractionHole')
+//                                      ->getInteractionHole($interaction->getId());
+//                    $exercisePaperTotalScore += $this->holeMaxScore($interHole);
+//                    break;
+//
+//                case "InteractionOpen":
+//                    $interOpen = $this->om
+//                                      ->getRepository('UJMExoBundle:InteractionOpen')
+//                                      ->getInteractionOpen($interaction->getId());
+//                    $exercisePaperTotalScore += $this->openMaxScore($interOpen);
+//                    break;
+//
+//                case "InteractionMatching":
+//                    $interMatching = $this->om
+//                                          ->getRepository('UJMExoBundle:InteractionMatching')
+//                                          ->getInteractionMatching($interaction->getId());
+//                    $exercisePaperTotalScore += $this->matchingMaxScore($interMatching);
+//                    break;
+//            }
         }
 
         return $exercisePaperTotalScore;
@@ -1319,6 +1333,8 @@ class exerciseServices
      */
     public function getActionsAllQuestions($listInteractions, $userID, $em)
     {
+        $interServ= $this->container->get('ujm.Interaction_general');
+
         $allActions           = array();
         $actionQ              = array();
         $questionWithResponse = array();
@@ -1330,7 +1346,7 @@ class exerciseServices
                 if ($interaction->getQuestion()->getUser()->getId() == $userID) {
                     $actionQ[$interaction->getQuestion()->getId()] = 1; // my question
 
-                    $actions = $this->getActionInteraction($em, $interaction);
+                    $actions = $interServ->getActionInteraction($interaction);
                     $questionWithResponse += $actions[0];
                     $alreadyShared += $actions[1];
                 } else {

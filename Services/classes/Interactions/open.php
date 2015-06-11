@@ -16,7 +16,7 @@ class open extends interaction {
      *
      * @return array
      */
-     public function response()
+     public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
 
      }
@@ -44,11 +44,45 @@ class open extends interaction {
       *
       * @return float
       */
-     public function maxScore($interOpen)
+     public function maxScore($interOpen = null)
      {
          die('service open refactoring');
          $scoreMax = 0;
 
          return $scoreMax;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionOpen
+     */
+     public function getInteractionX($interId)
+     {
+         $interOpen = $this->om
+                          ->getRepository('UJMExoBundle:InteractionOpen')
+                          ->getInteractionOpen($interId);
+
+         return $interOpen;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionOpen
+     */
+     public function getInteractionX($interId)
+     {
+         $interOpen = $this->om
+                          ->getRepository('UJMExoBundle:InteractionOpen')
+                          ->getInteractionOpen($interId);
+
+         return $interOpen;
      }
 }

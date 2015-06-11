@@ -16,7 +16,7 @@ class hole extends interaction {
      *
      * @return array
      */
-     public function response()
+     public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
 
      }
@@ -44,11 +44,28 @@ class hole extends interaction {
       *
       * @return float
       */
-     public function maxScore($interHole)
+     public function maxScore($interHole = null)
      {
          die('service hole refactoring');
          $scoreMax = 0;
 
          return $scoreMax;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionHole
+     */
+     public function getInteractionX($interId)
+     {
+         $interHole = $this->om
+                          ->getRepository('UJMExoBundle:InteractionHole')
+                          ->getInteractionHole($interId);
+
+         return $interHole;
      }
 }

@@ -27,7 +27,7 @@ class InteractionHoleRepository extends EntityRepository
         $qb->join('ihole.interaction', 'i')
             ->where($qb->expr()->in('i.id', $interactionId));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 
 }

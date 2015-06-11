@@ -17,7 +17,7 @@ class graphic extends interaction {
      *
      * @return array
      */
-     public function response()
+     public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
 
      }
@@ -45,11 +45,28 @@ class graphic extends interaction {
       *
       * @return float
       */
-     public function maxScore($interGraph)
+     public function maxScore($interGraph = null)
      {
          die('service graphic refactoring');
          $scoreMax = 0;
 
          return $scoreMax;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionGraphic
+     */
+     public function getInteractionX($interId)
+     {
+         $interGraphic = $this->om
+                          ->getRepository('UJMExoBundle:InteractionGraphic')
+                          ->getInteractionGraphic($interId);
+
+         return $interGraphic;
      }
 }

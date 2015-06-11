@@ -28,6 +28,6 @@ class InteractionGraphicRepository extends EntityRepository
         $qb->join('igraph.interaction', 'i')
            ->where($qb->expr()->in('i.id', $interactionId));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 }

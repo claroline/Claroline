@@ -28,6 +28,6 @@ class InteractionOpenRepository extends EntityRepository
         $qb->join('iopen.interaction', 'i')
             ->where($qb->expr()->in('i.id', $interactionId));
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()->getSingleResult();
     }
 }

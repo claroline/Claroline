@@ -211,7 +211,7 @@ class InteractionQCMController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $interQcmSer = $this->container->get('uujm.interaction_qcm');
+        $interQcmSer = $this->container->get('ujm.interaction_qcm');
         $res = $interQcmSer->response($request);
 
         $vars['score']    = $res['score'];

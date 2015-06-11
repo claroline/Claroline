@@ -25,80 +25,11 @@ abstract class interaction {
      *
      */
     public function __construct(
-        Registry $doctrine, ObjectManager $om
+        \Claroline\CoreBundle\Persistence\ObjectManager $om, Registry $doctrine
     )
     {
         $this->doctrine = $doctrine;
         $this->om       = $om;
-    }
-
-    /**
-     * For an interaction know if it's linked with response and if it's shared
-     *
-     * @access public
-     *
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     *
-     * @return array[boolean]
-     */
-    public function getActionInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
-    {
-        $response = $this->doctrine->getManager()
-                         ->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $interaction->getId()));
-        if (count($response) > 0) {
-            $questionWithResponse[$interaction->getId()] = 1;
-        } else {
-            $questionWithResponse[$interaction->getId()] = 0;
-        }
-
-        $share = $em->getRepository('UJMExoBundle:Share')
-            ->findBy(array('question' => $interaction->getQuestion()->getId()));
-        if (count($share) > 0) {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 1;
-        } else {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 0;
-        }
-
-        $actions[0] = $questionWithResponse;
-        $actions[1] = $alreadyShared;
-
-        return $actions;
-    }
-
-    /**
-     * For an shared interaction whith me, know if it's linked with response and if I can modify it
-     *
-     * @access public
-     *
-     * @param Doctrine EntityManager $em
-     * @param \UJM\ExoBundle\Entity\Share $shared
-     *
-     * @return array
-     */
-    public function getActionShared($shared)
-    {
-        $em = $this->doctrine->getEntityManager();
-        $inter = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $shared->getQuestion()->getId()));
-
-        $sharedWithMe[$shared->getQuestion()->getId()] = $inter;
-        $shareRight[$inter->getId()] = $shared->getAllowToModify();
-
-        $response = $em->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $inter->getId()));
-
-        if (count($response) > 0) {
-            $questionWithResponse[$inter->getId()] = 1;
-        } else {
-            $questionWithResponse[$inter->getId()] = 0;
-        }
-
-        $actionsS[0] = $sharedWithMe;
-        $actionsS[1] = $shareRight;
-        $actionsS[2] = $questionWithResponse;
-
-        return $actionsS;
     }
 
     /**
@@ -148,9 +79,9 @@ abstract class interaction {
      */
     protected function getPenalty($interaction, \Symfony\Component\HttpFoundation\Session\SessionInterface $session, $paperID)
     {
+        $penalty = 0;
         if ($paperID == 0) {
             if ($session->get('penalties')) {
-                $penalty = 0;
                 foreach ($session->get('penalties') as $penal) {
 
                     $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
@@ -202,4 +133,14 @@ abstract class interaction {
      * @return float
      */
      abstract public function maxScore();
+
+     /**
+     * abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...)
+     */
+     abstract public function getInteractionX($interId);
 }

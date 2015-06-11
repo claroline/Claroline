@@ -60,7 +60,7 @@ class qcm extends interaction {
      *
      * @return string userScore/scoreMax
      */
-     public function mark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM, array $response, $allChoices, $penalty)
+     public function mark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM = null, array $response = null, $allChoices = null, $penalty = null)
      {
         $score = 0;
         $scoreMax = $this->maxScore($interQCM);
@@ -68,7 +68,7 @@ class qcm extends interaction {
         if (!$interQCM->getWeightResponse()) {
             $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty) . '/' . $scoreMax;
         } else {
-            $score = $this->markWeightResponse($allChoices, $response, $penalty) . '/' . $scoreMax;
+            $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax) . '/' . $scoreMax;
         }
 
         return $score;
@@ -84,7 +84,7 @@ class qcm extends interaction {
       *
       * @return float
       */
-     public function maxScore($interQCM)
+     public function maxScore($interQCM = null)
      {
          $scoreMax = 0;
 
@@ -99,6 +99,23 @@ class qcm extends interaction {
          }
 
          return $scoreMax;
+     }
+
+     /**
+     * implement the abstract method
+     *
+     * @access public
+     * @param Integer $interId id of interaction
+     *
+     * @return \UJM\ExoBundle\Entity\InteractionQCM
+     */
+     public function getInteractionX($interId)
+     {
+         $interQCM = $this->om
+                          ->getRepository('UJMExoBundle:InteractionQCM')
+                          ->getInteractionQCM($interId);
+
+         return $interQCM;
      }
 
      /**
@@ -183,7 +200,7 @@ class qcm extends interaction {
       *
       * @return float
       */
-     private function markWeightResponse($allChoices, $response, $penalty)
+     private function markWeightResponse($allChoices, $response, $penalty, $scoreMax)
      {
          $score = 0;
          $markByChoice = array();

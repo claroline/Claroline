@@ -284,34 +284,42 @@ class qtiRepository {
      */
     public function export($interaction)
     {
-        $typeInter = $interaction->getType();
-        switch ($typeInter) {
-            case "InteractionQCM":
-                $qtiExport = $this->container->get('ujm.qti_qcm_export');
-
-                return $qtiExport->export($interaction, $this);
-
-            case "InteractionGraphic":
-                $qtiExport = $this->container->get('ujm.qti_graphic_export');
-
-                return $qtiExport->export($interaction, $this);
-
-            case "InteractionHole":
-                $qtiExport = $this->container->get('ujm.qti_hole_export');
-
-                return $qtiExport->export($interaction, $this);
-
-            case "InteractionOpen":
-                $qtiExport = $this->serviceOpenQuestion($interaction->getId());
-
-                return $qtiExport->export($interaction, $this);
-
-            case "InteractionMatching":
-                $qtiExport = $this->container->get('ujm.qti_matching_export');
-
-                return $qtiExport->export($interaction, $this);
-
+        if ($interaction->getType() != 'InteractionOpen') {
+            $service = 'ujm.qti_export_' . $interaction->getType();
+            $qtiExport = $this->container->get($service);
+        } else {
+            $qtiExport = $this->serviceOpenQuestion($interaction->getId());
         }
+
+        return $qtiExport->export($interaction, $this);
+
+//        switch ($typeInter) {
+//            case "InteractionQCM":
+//                $qtiExport = $this->container->get('ujm.qti_qcm_export');
+//
+//                return $qtiExport->export($interaction, $this);
+//
+//            case "InteractionGraphic":
+//                $qtiExport = $this->container->get('ujm.qti_graphic_export');
+//
+//                return $qtiExport->export($interaction, $this);
+//
+//            case "InteractionHole":
+//                $qtiExport = $this->container->get('ujm.qti_hole_export');
+//
+//                return $qtiExport->export($interaction, $this);
+//
+//            case "InteractionOpen":
+//                $qtiExport = $this->serviceOpenQuestion($interaction->getId());
+//
+//                return $qtiExport->export($interaction, $this);
+//
+//            case "InteractionMatching":
+//                $qtiExport = $this->container->get('ujm.qti_matching_export');
+//
+//                return $qtiExport->export($interaction, $this);
+//
+//        }
     }
 
     /**
@@ -329,7 +337,7 @@ class qtiRepository {
         $em = $this->container->get('doctrine')->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
                         ->getInteractionOpen($interId);
-        $type = ucfirst($interOpen[0]->getTypeOpenQuestion());
+        $type = ucfirst($interOpen->getTypeOpenQuestion());
         $serv = $this->container->get('ujm.qti_open_'.$type.'_export');
 
         return $serv;

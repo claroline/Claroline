@@ -28,17 +28,33 @@ services:
 
     ujm.exercise_services:
         class: UJM\ExoBundle\Services\classes\exerciseServices
-        arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine]
+        arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
 
-    ujm.Interaction:
-        class: UJM\ExoBundle\Services\classes\Interaction\interaction
+    ujm.Interaction_general:
+        class: UJM\ExoBundle\Services\classes\Interactions\interactionGeneral
+        arguments: [@doctrine]
+
+    ujm.InteractionGraphic:
+        class: UJM\ExoBundle\Services\classes\Interactions\graphic
+        arguments: [@claroline.persistence.object_manager, @doctrine]
+
+    ujm.InteractionHole:
+        class: UJM\ExoBundle\Services\classes\Interactions\hole
+        arguments: [@claroline.persistence.object_manager, @doctrine]
+
+    ujm.InteractionMatching:
+        class: UJM\ExoBundle\Services\classes\Interactions\matching
+        arguments: [@claroline.persistence.object_manager, @doctrine]
+
+    ujm.InteractionOpen:
+        class: UJM\ExoBundle\Services\classes\Interactions\Open
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionQCM:
-        class: UJM\ExoBundle\Services\classes\Interaction\qcm
+        class: UJM\ExoBundle\Services\classes\Interactions\qcm
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
-    ujm.qti_qcm_export:
+    ujm.qti_export_InteractionQCM:
         class: UJM\ExoBundle\Services\classes\QTI\qcmExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
@@ -48,7 +64,7 @@ services:
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.qti_graphic_export:
+    ujm.qti_export_InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\QTI\graphicExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
@@ -58,7 +74,7 @@ services:
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.qti_hole_export:
+    ujm.qti_export_InteractionHole:
         class: UJM\ExoBundle\Services\classes\QTI\holeExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
@@ -98,7 +114,7 @@ services:
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.qti_matching_export:
+    ujm.qti_export_InteractionMatching:
         class: UJM\ExoBundle\Services\classes\QTI\matchingExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
