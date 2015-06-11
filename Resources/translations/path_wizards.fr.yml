@@ -47,8 +47,8 @@ path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 preview: Retour au Parcours
 preview_with_pending_changes_button: Prévisualiser la dernière version publiée
-preview_with_pending_changes_message: Le Parcours a des modifications non sauvegardées ou non publiées.<br/><br/> Si vous le visualisez sans sauvegarde/publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
-preview_with_pending_changes_title: Modifications non publiées/sauvegardées
+preview_with_pending_changes_message: Le Parcours a des modifications non publiées.<br/><br/> Si vous le visualisez sans publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
+preview_with_pending_changes_title: Modifications non publiées
 previous_step: Etape précédente
 primary_resource: Ressource principale
 properties: Propriétés

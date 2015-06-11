@@ -47,7 +47,7 @@ path_template_save_error: An error occurred while saving template.
 path_template_save_success: The template has been successfully saved.
 preview: Back to Path
 preview_with_pending_changes_button: Preview the last published version
-preview_with_pending_changes_message: Path has changes which are not published or not saved.<br/><br/> If you display it without saving/publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
+preview_with_pending_changes_message: Path has changes which are not published.<br/><br/> If you display it without publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
 preview_with_pending_changes_title: Pending modifications
 previous_step: Previous step
 primary_resource: Primary resource
