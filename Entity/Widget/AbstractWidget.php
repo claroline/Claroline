@@ -158,12 +158,7 @@ abstract class AbstractWidget
     {
         return array(
             'id'     => $this->getId(),
-            'label'  => $this->getLabel(),
             'type'   => $this->getWidgetType(),
-            'row'    => $this->getRow(),
-            'col'    => $this->getColumn(),
-            'sizeX'  => $this->getSizeX(),
-            'sizeY'  => $this->getSizeY()
         );
     }
 

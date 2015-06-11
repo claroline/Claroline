@@ -231,7 +231,8 @@ class PortfolioManager
 
         $data = array(
             'id' => $portfolio->getId(),
-            'title' => $portfolio->getTitle()
+            'title' => $portfolio->getTitle(),
+            'widgets' => []
         );
 
         foreach ($widgets as $widget) {

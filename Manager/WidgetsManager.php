@@ -5,6 +5,7 @@ namespace Icap\PortfolioBundle\Manager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -168,18 +169,24 @@ class WidgetsManager
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param PortfolioWidget $portfolioWidget
      * @param bool           $withView
      *
      * @return array
      */
-    public function getWidgetData(AbstractWidget $widget, $withView = true)
+    public function getWidgetData(PortfolioWidget $portfolioWidget, $withView = true)
     {
+        $widget = $portfolioWidget->getWidget();
+
         $widgetViews = array(
             'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
         );
 
-        return  $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty());
+        $widgetData = [
+            'widget' => $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty())
+        ];
+
+        return  $portfolioWidget->getData() + $widgetData;
     }
 
     /**
@@ -190,18 +197,18 @@ class WidgetsManager
      */
     public function getByPortfolioForGridster(Portfolio $portfolio, $inArray = false)
     {
-        $widgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findOrderedByRowAndCol($portfolio);
+        $portfolioWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:PortfolioWidget")->findOrderedByRowAndCol($portfolio);
 
         if ($inArray) {
-            $widgetsInArray = [];
-            foreach ($widgets as $widget) {
-                $widgetsInArray[] = $this->getWidgetData($widget);
+            $portfolioWidgetsInArray = [];
+            foreach ($portfolioWidgets as $portfolioWidget) {
+                $portfolioWidgetsInArray[] = $this->getWidgetData($portfolioWidget);
             }
 
-            $widgets = $widgetsInArray;
+            $portfolioWidgets = $portfolioWidgetsInArray;
         }
 
-        return $widgets;
+        return $portfolioWidgets;
     }
 }
  

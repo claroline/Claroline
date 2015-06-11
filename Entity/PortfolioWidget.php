@@ -204,4 +204,20 @@ class PortfolioWidget
 
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getData()
+    {
+        return [
+            'portfolio_id' => $this->getPortfolio()->getId(),
+            'widget_id' => $this->getWidget()->getId(),
+            'label' => $this->getLabel(),
+            'row' => $this->getRow(),
+            'col' => $this->getColumn(),
+            'sizeX' => $this->getSizeX(),
+            'sizeY' => $this->getSizeY()
+        ];
+    }
 }
