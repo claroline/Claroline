@@ -15,6 +15,26 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
     this.clipboardDisabled = this.clipboardService.getDisabled();
     this.maxDepth = this.pathService.getMaxDepth();
 
+    this.treeOptions = {
+        dragStart: function (event) {
+            // Disable tooltip on drag handlers
+            $('.angular-ui-tree-handle').tooltip('disable');
+
+            // Hide tooltip for the dragged element
+            if (event.source && event.source.nodeScope && event.source.nodeScope.$element) {
+                event.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
+            }
+        },
+        dropped: function (event) {
+            // Enable tooltip on drag handlers
+            $('.angular-ui-tree-handle').tooltip('enable');
+
+            // Recalculate step levels
+            console.log('cpucou');
+            this.pathService.reorderSteps(this.structure);
+        }.bind(this)
+    };
+
     return this;
 };
 
@@ -41,24 +61,7 @@ PathSummaryEditCtrl.prototype.maxDepth = null;
  * Summary sortable options
  * @type {object}
  */
-PathSummaryEditCtrl.prototype.treeOptions = {
-    dragStart: function (event) {
-        // Disable tooltip on drag handlers
-        $('.angular-ui-tree-handle').tooltip('disable');
-
-        // Hide tooltip for the dragged element
-        if (event.source && event.source.nodeScope && event.source.nodeScope.$element) {
-            event.source.nodeScope.$element.find('.angular-ui-tree-handle').tooltip('toggle');
-        }
-    },
-    dropped: function (event) {
-        // Enable tooltip on drag handlers
-        $('.angular-ui-tree-handle').tooltip('enable');
-
-        // Recalculate step levels
-        this.pathService.reorderSteps(this.structure);
-    }.bind(this)
-};
+PathSummaryEditCtrl.prototype.treeOptions = {};
 
 /**
  * Initialize an empty structure for path
