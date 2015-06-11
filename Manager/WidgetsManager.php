@@ -193,7 +193,7 @@ class WidgetsManager
      * @param Portfolio $portfolio
      * @param bool      $inArray
      *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]|array
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]|array
      */
     public function getByPortfolioForGridster(Portfolio $portfolio, $inArray = false)
     {

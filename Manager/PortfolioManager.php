@@ -224,8 +224,8 @@ class PortfolioManager
      */
     public function getPortfolioData(Portfolio $portfolio)
     {
-        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets */
+        $portfolioWidgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
@@ -235,8 +235,8 @@ class PortfolioManager
             'widgets' => []
         );
 
-        foreach ($widgets as $widget) {
-            $data['widgets'][] = $this->widgetsManager->getWidgetData($widget);
+        foreach ($portfolioWidgets as $portfolioWidget) {
+            $data['widgets'][] = $this->widgetsManager->getWidgetData($portfolioWidget);
         }
 
         $commentsDatas = array();
