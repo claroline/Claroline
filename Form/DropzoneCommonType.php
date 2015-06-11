@@ -40,9 +40,9 @@ class DropzoneCommonType extends AbstractType
             ->add('peerReview', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    false => 'Peer review evaluation',
                     true => 'Standard evaluation'
                 ),
+                'data' => true,
                 'expanded' => true,
                 'multiple' => false
             ))
