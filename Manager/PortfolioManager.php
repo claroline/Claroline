@@ -236,7 +236,7 @@ class PortfolioManager
         );
 
         foreach ($portfolioWidgets as $portfolioWidget) {
-            $data['widgets'][] = $this->widgetsManager->getWidgetData($portfolioWidget);
+            $data['widgets'][] = $this->widgetsManager->getPortfolioWidgetData($portfolioWidget);
         }
 
         $commentsDatas = array();

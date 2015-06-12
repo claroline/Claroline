@@ -26,7 +26,6 @@ class AbstractWidgetRepository extends EntityRepository
 
         return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
-
     /**
      * @param Portfolio $portfolio
      * @param integer   $column
@@ -46,4 +45,20 @@ class AbstractWidgetRepository extends EntityRepository
 
         return $executeQuery ? $query->getQuery()->getOneOrNullResult(): $query->getQuery();
     }
+
+    /**
+     * @param string $type
+     * @param bool   $executeQuery
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget|\Doctrine\ORM\Query
+     */
+    public function findByType($type, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('w')
+            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+        ;
+
+        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+    }
+
 }

@@ -127,7 +127,7 @@ class WidgetsManager
             $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
-            $data = $this->getWidgetData($widget);
+            $data = $this->getPortfolioWidgetData($widget);
 
             return $data;
         }
@@ -174,7 +174,7 @@ class WidgetsManager
      *
      * @return array
      */
-    public function getWidgetData(PortfolioWidget $portfolioWidget, $withView = true)
+    public function getPortfolioWidgetData(PortfolioWidget $portfolioWidget, $withView = true)
     {
         $widget = $portfolioWidget->getWidget();
 
@@ -202,13 +202,37 @@ class WidgetsManager
         if ($inArray) {
             $portfolioWidgetsInArray = [];
             foreach ($portfolioWidgets as $portfolioWidget) {
-                $portfolioWidgetsInArray[] = $this->getWidgetData($portfolioWidget);
+                $portfolioWidgetsInArray[] = $this->getPortfolioWidgetData($portfolioWidget);
             }
 
             $portfolioWidgets = $portfolioWidgetsInArray;
         }
 
         return $portfolioWidgets;
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgets($widgetType)
+    {
+        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findByType($widgetType);
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgetData(AbstractWidget $widget)
+    {
+        $widgetViews = array(
+            'views' => array('view' => $this->getView($widget, $widget->getWidgetType()))
+        );
+
+        return $widget->getCommonData() + $widgetViews + $widget->getData();
     }
 }
  

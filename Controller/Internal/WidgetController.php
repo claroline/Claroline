@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/internal/portfolio/widget/{type}/{id}")
+ * @Route("/internal/portfolio/widget/{type}")
  */
 class WidgetController extends BaseController
 {
@@ -23,11 +23,17 @@ class WidgetController extends BaseController
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function getAction(Request $request, User $loggedUser, $type, $id = null)
+    public function getAllAction(Request $request, User $loggedUser, $type)
     {
         $this->checkPortfolioToolAccess();
 
+        $widgets = $this->getWidgetsManager()->getWidgets($type);
+
         $data = [];
+
+        foreach ($widgets as $widget) {
+            $data[] = $this->getWidgetsManager()->getWidgetData($widget);
+        }
 
         $response = new JsonResponse();
         $response->setData($data);

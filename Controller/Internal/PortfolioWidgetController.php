@@ -36,7 +36,7 @@ class PortfolioWidgetController extends BaseController
         else {
             /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
             $widget = $this->getWidgetsManager()->getNewWidget($portfolio, $type);
-            $data   = $this->getWidgetsManager()->getWidgetData($widget, false);
+            $data   = $this->getWidgetsManager()->getPortfolioWidgetData($widget, false);
         }
 
         $response = new JsonResponse();
