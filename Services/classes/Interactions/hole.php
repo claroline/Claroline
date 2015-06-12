@@ -33,7 +33,7 @@ class hole extends interaction {
 
         $score = $this->mark($interHole, $request->request, $penalty);
 
-        $response = $this->getResponseJson($interHole);
+        $response = $this->getJsonResponse($interHole, $request);
 
         $res = array(
             'penalty'   => $penalty,
@@ -65,7 +65,7 @@ class hole extends interaction {
              $response = $request->get('blank_'.$hole->getPosition());
              $response = trim($response);
              $response = preg_replace('/\s+/', ' ', $response);
-             $score += $this->getScoreHole($hole);
+             $score += $this->getScoreHole($hole, $response);
          }
 
          $score -= $penalty;
@@ -144,11 +144,12 @@ class hole extends interaction {
      /**
       *
       * @access private
-      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+      * @param \Symfony\Component\HttpFoundation\Request $request
       *
       * @return json
       */
-     private function getJsonResponse()
+     private function getJsonResponse($interHole, $request)
      {
          $em = $this->doctrine->getManager();
          foreach($interHole->getHoles() as $hole) {
@@ -166,17 +167,18 @@ class hole extends interaction {
              }
          }
 
-         $response = json_encode($tabResp);
+         return json_encode($tabResp);
      }
 
      /**
       *
       * @access private
       * @param \UJM\ExoBundle\Entity\Hole $hole
+      * @param String $response
       *
       * @return float
       */
-     private function getScoreHole($hole)
+     private function getScoreHole($hole, $response)
      {
          $em = $this->doctrine->getManager();
          if ($hole->getSelector() == true) {

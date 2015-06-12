@@ -58,6 +58,7 @@ class twigExtensions extends \Twig_Extension
             'explodeString'           => new \Twig_Function_Method($this, 'explodeString'),
             'initTabResponseMatching' => new \Twig_Function_Method($this, 'initTabResponseMatching'),
             'goodResponseOpenOneWord' => new \Twig_Function_Method($this, 'goodResponseOpenOneWord'),
+            'goodGraphCoords'         => new \Twig_Function_Method($this, 'goodGraphCoords'),
         );
 
     }
@@ -93,57 +94,7 @@ class twigExtensions extends \Twig_Extension
         $interSer        = $this->container->get('ujm.' . $typeInter);
         $interactionX    = $interSer->getInteractionX($interId);
         $inter['question'] = $interactionX;
-        $inter['maxScore'] = $interSer->gmaxScore($interactionX);
-
-//        switch ($typeInter)
-//        {
-//            case "InteractionQCM":
-//                $interQCM = $this->doctrine
-//                                 ->getManager()
-//                                 ->getRepository('UJMExoBundle:InteractionQCM')
-//                                 ->getInteractionQCM($interId);
-//                $inter['question'] = $interQCM;
-//                $inter['maxScore'] = $this->getQCMScoreMax($interQCM);
-//            break;
-//
-//            case "InteractionGraphic":
-//                $interG = $this->doctrine
-//                               ->getManager()
-//                               ->getRepository('UJMExoBundle:InteractionGraphic')
-//                               ->getInteractionGraphic($interId);
-//                $inter['question'] = $interG;
-//                $inter['maxScore'] = $this->getGraphicScoreMax($interG);
-//            break;
-//
-//            case "InteractionHole":
-//                $interHole = $this->doctrine
-//                                  ->getManager()
-//                                  ->getRepository('UJMExoBundle:InteractionHole')
-//                                  ->getInteractionHole($interId);
-//                $inter['question'] = $interHole;
-//                $inter['maxScore'] = $this->getHoleScoreMax($interHole);
-//            break;
-//
-//            case "InteractionOpen":
-//                $interOpen = $this->doctrine
-//                               ->getManager()
-//                               ->getRepository('UJMExoBundle:InteractionOpen')
-//                               ->getInteractionOpen($interId);
-//                $inter['question'] = $interOpen;
-//                $inter['maxScore'] = $this->getOpenScoreMax($interOpen);
-//            break;
-//
-//            case "InteractionMatching":
-//                $interMatching = $this->doctrine
-//                               ->getManager()
-//                               ->getRepository('UJMExoBundle:InteractionMatching')
-//                               ->getInteractionMatching($interId);
-//
-//                $inter['question'] = $interMatching;
-//                $inter['maxScore'] = $this->getMatchingScoreMax($interMatching);
-//
-//            break;
-//        }
+        $inter['maxScore'] = $interSer->maxScore($interactionX);
 
         return $inter;
     }
@@ -338,6 +289,16 @@ class twigExtensions extends \Twig_Extension
                     ->getManager()
                     ->getRepository('UJMExoBundle:WordResponse')
                     ->getgoodResponseOneWord($interOpenId);
+    }
+
+    public function goodGraphCoords($interGraph)
+    {
+         $coords = $this->doctrine
+                        ->getManager()
+                        ->getRepository('UJMExoBundle:Coords')
+                        ->findBy(array('interactionGraphic' => $interGraph->getId()));
+
+         return $coords;
     }
 
     /**

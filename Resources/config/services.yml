@@ -47,7 +47,7 @@ services:
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionOpen:
-        class: UJM\ExoBundle\Services\classes\Interactions\Open
+        class: UJM\ExoBundle\Services\classes\Interactions\open
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionQCM:

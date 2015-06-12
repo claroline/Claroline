@@ -882,28 +882,6 @@ class ExerciseController extends Controller
         $interSer  = $this->container->get('ujm.' . $typeInterToRecorded);
         $res       = $interSer->response($request, $session->get('paper'));
 
-//        switch ($typeInterToRecorded) {
-//            case "InteractionQCM":
-//                $res = $interQcmSer->response($request, $session->get('paper'));
-//                break;
-//
-//            case "InteractionGraphic":
-//                $res = $exerciseSer->responseGraphic($request, $session->get('paper'));
-//                break;
-//
-//            case "InteractionHole":
-//                $res = $exerciseSer->responseHole($request, $session->get('paper'));
-//                break;
-//
-//            case "InteractionOpen":
-//                $res = $exerciseSer->responseOpen($request, $session->get('paper'));
-//                break;
-//
-//            case "InteractionMatching":
-//                $res = $exerciseSer->responseMatching($request, $session->get('paper'));
-//                break;
-//        }
-
         if (count($response) == 0) {
             //INSERT Response
             $response = new Response();
@@ -1106,136 +1084,12 @@ class ExerciseController extends Controller
         $workspace, $paper
     )
     {
-        $em = $this->getDoctrine()->getManager();
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
         $interSer       = $this->container->get('ujm.' .  $interactionToDisplay->getType());
         $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
         $responseGiven  = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
-
-        //todo remplacer switch dans les services avec methode du genre toDisplayed
-//
-//        switch ($typeInterToDisplayed) {
-//            case "InteractionQCM":
-//
-//                $interactionToDisplayed = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:InteractionQCM')
-//                    ->getInteractionQCM($interactionToDisplay->getId());
-//
-//                if ($interactionToDisplayed->getShuffle()) {
-//                    $interactionToDisplayed->shuffleChoices();
-//                } else {
-//                    $interactionToDisplayed->sortChoices();
-//                }
-//
-//                $responseGiven = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:Response')
-//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-//
-//                if (count($responseGiven) > 0) {
-//                    $responseGiven = $responseGiven[0]->getResponse();
-//                } else {
-//                    $responseGiven = '';
-//                }
-//
-//                break;
-//
-//            case "InteractionGraphic":
-//
-//                $interactionToDisplayed = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:InteractionGraphic')
-//                    ->getInteractionGraphic($interactionToDisplay->getId());
-//
-//                $coords = $em->getRepository('UJMExoBundle:Coords')
-//                    ->findBy(array('interactionGraphic' => $interactionToDisplayed->getId()));
-//
-//                $responseGiven = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:Response')
-//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-//
-//                if (count($responseGiven) > 0) {
-//                    $responseGiven = $responseGiven[0]->getResponse();
-//                } else {
-//                    $responseGiven = '';
-//                }
-//
-//                //faire un service twig
-//                $array['listCoords'] = $coords;
-//
-//                break;
-//
-//            case "InteractionHole":
-//                $interactionToDisplayed = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:InteractionHole')
-//                    ->getInteractionHole($interactionToDisplay->getId());
-//
-//                $responseGiven = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:Response')
-//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-//
-//                if (count($responseGiven) > 0) {
-//                    $responseGiven = $responseGiven[0]->getResponse();
-//                } else {
-//                    $responseGiven = '';
-//                }
-//
-//                break;
-//
-//            case "InteractionOpen":
-//
-//                $interactionToDisplayed = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:InteractionOpen')
-//                    ->getInteractionOpen($interactionToDisplay->getId());
-//
-//                $responseGiven = $this->getDoctrine()
-//                                      ->getManager()
-//                                      ->getRepository('UJMExoBundle:Response')
-//                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-//
-//                if (count($responseGiven) > 0) {
-//                    $responseGiven = $responseGiven[0]->getResponse();
-//                } else {
-//                    $responseGiven = '';
-//                }
-//
-//                break;
-//
-//            case "InteractionMatching":
-//
-//                $interactionToDisplayed = $this->getDoctrine()
-//                    ->getManager()
-//                    ->getRepository('UJMExoBundle:InteractionMatching')
-//                    ->getInteractionMatching($interactionToDisplay->getId());
-//
-//                if ($interactionToDisplayed->getShuffle()) {
-//                        $interactionToDisplayed->shuffleProposals();
-//                        $interactionToDisplayed->shuffleLabels();
-//                    } else {
-//                        $interactionToDisplayed->sortProposals();
-//                        $interactionToDisplayed->sortLabels();
-//                    }
-//
-//                $responseMatch = $this->getDoctrine()
-//                                      ->getManager()
-//                                      ->getRepository('UJMExoBundle:Response')
-//                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-//
-//                if (count($responseMatch) > 0) {
-//                    $responseGiven = $this->container->get('ujm.exercise_services')->getTabResponseIndex($responseMatch[0]->getResponse());
-//                } else {
-//                    $responseGiven = '';
-//                }
-//
-//                break;
-//        }
 
         $array['workspace']              = $workspace;
         $array['tabOrderInter']          = $tabOrderInter;
@@ -1665,43 +1519,6 @@ class ExerciseController extends Controller
                         ->getInteractionQCM($interaction->getId());
         $scoreMax = $interSer->maxScore($interX);
         $responsesTab = $this->responseStatus($responses, $scoreMax);
-
-//        switch ( $interaction->getType()) {
-//            case "InteractionQCM":
-//                $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
-//                               ->getInteractionQCM($interaction->getId());
-//                $scoreMax = $exerciseSer->qcmMaxScore($interQCM[0]);
-//                $responsesTab = $this->responseStatus($responses, $scoreMax);
-//                break;
-//
-//            case "InteractionGraphic":
-//                $interGraphic = $em->getRepository('UJMExoBundle:InteractionGraphic')
-//                                   ->getInteractionGraphic($interaction->getId());
-//                $scoreMax = $exerciseSer->graphicMaxScore($interGraphic[0]);
-//                $responsesTab = $this->responseStatus($responses, $scoreMax);
-//                break;
-//
-//            case "InteractionHole":
-//                $interHole = $em->getRepository('UJMExoBundle:InteractionHole')
-//                                ->getInteractionHole($interaction->getId());
-//                $scoreMax = $exerciseSer->holeMaxScore($interHole[0]);
-//                $responsesTab = $this->responseStatus($responses, $scoreMax);
-//                break;
-//
-//            case "InteractionOpen":
-//                $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-//                                   ->getInteractionOpen($interaction->getId());
-//                $scoreMax = $exerciseSer->openMaxScore($interOpen[0]);
-//                $responsesTab = $this->responseStatus($responses, $scoreMax);
-//                break;
-//
-//            case "InteractionMatching":
-//                $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
-//                                   ->getInteractionMatching($interaction->getId());
-//                $scoreMax = $exerciseSer->matchingMaxScore($interMatching[0]);
-//                $responsesTab = $this->responseStatus($responses, $scoreMax);
-//                break;
-//        }
 
         return $responsesTab;
     }

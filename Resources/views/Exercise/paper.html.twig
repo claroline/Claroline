@@ -97,6 +97,7 @@
                     <div style="position: relative;" id="Answer">
                         <p id="ContainerCursorPaper">
                             {% set i = 1 %}
+                            {% set listCoords = goodGraphCoords(interactionToDisplayed) %}
                             {% for coords in listCoords %}
                                 <img class="AnswerImage" src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" alt="AnswerZone{{ i }}"
                                     id="cursor{{ i }}" style="position: absolute;"/>

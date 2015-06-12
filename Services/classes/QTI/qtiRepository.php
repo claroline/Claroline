@@ -293,33 +293,6 @@ class qtiRepository {
 
         return $qtiExport->export($interaction, $this);
 
-//        switch ($typeInter) {
-//            case "InteractionQCM":
-//                $qtiExport = $this->container->get('ujm.qti_qcm_export');
-//
-//                return $qtiExport->export($interaction, $this);
-//
-//            case "InteractionGraphic":
-//                $qtiExport = $this->container->get('ujm.qti_graphic_export');
-//
-//                return $qtiExport->export($interaction, $this);
-//
-//            case "InteractionHole":
-//                $qtiExport = $this->container->get('ujm.qti_hole_export');
-//
-//                return $qtiExport->export($interaction, $this);
-//
-//            case "InteractionOpen":
-//                $qtiExport = $this->serviceOpenQuestion($interaction->getId());
-//
-//                return $qtiExport->export($interaction, $this);
-//
-//            case "InteractionMatching":
-//                $qtiExport = $this->container->get('ujm.qti_matching_export');
-//
-//                return $qtiExport->export($interaction, $this);
-//
-//        }
     }
 
     /**
