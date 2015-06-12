@@ -25,7 +25,7 @@ class ChoiceType extends AbstractType
                     'required' => true, 
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'expected answer'               
+                    'placeholder' => 'expected_answer'               
                     )
                 )
             )
