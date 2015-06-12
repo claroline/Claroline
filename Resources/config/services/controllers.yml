@@ -33,7 +33,6 @@ services:
             formFactory:     @form.factory
             resourceManager: @claroline.manager.resource_manager
             pathManager:     @innova_path.manager.path
-            pathHandler:     @innova_path.form.handler.path
         scope: request
 
     # User Progression controller

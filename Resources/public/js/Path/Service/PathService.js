@@ -113,7 +113,7 @@
                             name:        path.name,
                             description: path.description,
                             breadcrumbs: path.breadcrumbs,
-                            structure:   path
+                            structure:   angular.toJson(path)
                         }
                     };
 

@@ -215,6 +215,7 @@ class PathManager
     {
         // Check if JSON structure is built
         $structure = $path->getStructure();
+
         if (empty($structure)) {
             // Initialize path structure
             $path->initializeStructure();

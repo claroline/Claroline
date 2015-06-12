@@ -2,10 +2,10 @@
 
 namespace Innova\PathBundle\Controller\Wizard;
 
-use Innova\PathBundle\Form\Handler\PathHandler;
 use Innova\PathBundle\Manager\PathManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -64,22 +64,19 @@ class EditorController
      * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
      * @param \Innova\PathBundle\Manager\PathManager $pathManager
-     * @param \Innova\PathBundle\Form\Handler\PathHandler $pathHandler
      */
     public function __construct(
         ObjectManager        $objectManager,
         RouterInterface      $router,
         FormFactoryInterface $formFactory,
         ResourceManager      $resourceManager,
-        PathManager          $pathManager,
-        PathHandler          $pathHandler)
+        PathManager          $pathManager)
     {
         $this->om              = $objectManager;
         $this->router          = $router;
         $this->formFactory    = $formFactory;
         $this->resourceManager = $resourceManager;
         $this->pathManager     = $pathManager;
-        $this->pathHandler     = $pathHandler;
     }
 
     /**
@@ -90,6 +87,7 @@ class EditorController
      *      options = { "expose" = true }
      * )
      * @Template("InnovaPathBundle:Wizard:editor.html.twig")
+     * @Method("GET|POST")
      */
     public function displayAction(Path $path)
     {
@@ -107,6 +105,7 @@ class EditorController
     /**
      * Save Path
      * @param Path $path
+     * @param \Symfony\Component\HttpFoundation\Request $request
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
@@ -116,7 +115,7 @@ class EditorController
      * )
      * @Method("PUT")
      */
-    public function saveAction(Path $path)
+    public function saveAction(Path $path, Request $request)
     {
         $this->pathManager->checkAccess('EDIT', $path);
 
@@ -129,18 +128,19 @@ class EditorController
         $response = array ();
 
         // Try to process data
-        $this->pathHandler->setForm($form);
-        if ($this->pathHandler->process()) {
-            $data = $this->pathHandler->getData();
+        $form->handleRequest($request);
+        if ( $form->isValid() ) {
+            // Form is valid => create or update the path
+            $this->pathManager->edit($path);
 
             // Validation OK
             $response['status']   = 'OK';
             $response['messages'] = array ();
-            $response['data']     = json_decode($data->getStructure());
+            $response['data']     = $path->getStructure();
         } else {
             // Validation Error
             $response['status']   = 'ERROR_VALIDATION';
-            $response['messages'] = $this->pathHandler->getFormErrors();
+            $response['messages'] = $this->getFormErrors($form);
             $response['data']     = null;
         }
 
@@ -243,5 +243,25 @@ class EditorController
         ));
 
         return new RedirectResponse($route);
+    }
+
+    /**
+     * @param $form
+     * @return array
+     */
+    private function getFormErrors($form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $key => $error) {
+            $errors[$key] = $error->getMessage();
+        }
+
+        // Get errors from children
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getFormErrors($child);
+            }
+        }
+        return $errors;
     }
 }
