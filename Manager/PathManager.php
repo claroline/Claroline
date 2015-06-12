@@ -103,17 +103,6 @@ class PathManager
     }
 
     /**
-     * Get a workspace from id
-     * @param  integer $workspaceId
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
-     * @deprecated used in PathHandler when creating a new path. But now the only to create a new path is the claroline way. S
-     */
-    public function getWorkspace($workspaceId)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
-    }
-
-    /**
      * Get all Paths of the Platform
      * @param bool $toPublish If false, returns all paths, if true returns only paths which need publishing
      */
