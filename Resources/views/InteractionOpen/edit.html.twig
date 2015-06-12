@@ -37,7 +37,7 @@
 
         {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-        <form action="{{ path('ujm_interactionopen_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <form onsubmit="return checkFormOpen();" id="formOpen" action="{{ path('ujm_interactionopen_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
             <div class="panel-body">
                 {% set form = edit_form %}
 
@@ -57,21 +57,21 @@
                     <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
                 {% endif %}
             </div>
-           {% if locker != "" %}
-        <input type="hidden" id="locker" value="{{locker.value}}">
-    {% endif %}
+            {% if locker != "" %}
+                <input type="hidden" id="locker" value="{{locker.value}}">
+            {% endif %}
         </form>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
+      
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
-
+    {% include "UJMExoBundle:Partial:modal/confirmOneWord.html.twig" %}
     <script type="text/javascript">
         $(document).ready(function() {
             insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');

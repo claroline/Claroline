@@ -419,6 +419,7 @@ validate: Validate
 # W
 warning: Are you sure you want to delete this document
 warning_change_type_q: Warning you may lose your data entered continue
+warning_one_word: You chose a question word. Attention has spaces in your answer.
 whichAction: Which action would you like to do
 with: With
 withResponse: With answers

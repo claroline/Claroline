@@ -419,6 +419,7 @@ validate: Valider
 # W
 warning: Êtes-vous sûr de vouloir supprimer ce document
 warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
+warning_one_word: Vous avez choisi une question à un mot. Attention, il a des espaces dans votre réponse.
 whichAction: Quelle action souhaitez-vous réaliser
 with: Avec
 withResponse: Avec des réponses
