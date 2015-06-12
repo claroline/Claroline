@@ -102,6 +102,32 @@ abstract class interaction {
     }
 
     /**
+      *
+      * Find if exist already an answer
+      *
+      * @access protected
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
+     public function getAlreadyResponded($interactionToDisplay, $session)
+     {
+         $responseGiven = $this->doctrine
+                               ->getManager()
+                               ->getRepository('UJMExoBundle:Response')
+                               ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+
+         if (count($responseGiven) > 0) {
+             $responseGiven = $responseGiven[0]->getResponse();
+         } else {
+             $responseGiven = '';
+         }
+
+         return $responseGiven;
+     }
+
+    /**
      * abstract method
      * To process the user's response for a paper(or a test)
      *
@@ -115,13 +141,13 @@ abstract class interaction {
      abstract public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0);
 
      /**
-     * abstract method
-     * To calculate the score for a question
-     *
-     * @access public
-     *
-     * @return string userScore/scoreMax
-     */
+      * abstract method
+      * To calculate the score for a question
+      *
+      * @access public
+      *
+      * @return string userScore/scoreMax
+      */
      abstract public function mark();
 
     /**
@@ -135,12 +161,24 @@ abstract class interaction {
      abstract public function maxScore();
 
      /**
-     * abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...)
-     */
+      * abstract method
+      *
+      * @access public
+      * @param Integer $interId id of interaction
+      *
+      * @return \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...)
+      */
      abstract public function getInteractionX($interId);
+
+     /**
+      * abstract method
+      *
+      * @access public
+      * @param Integer $interId id of inetraction
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      */
+     abstract public function getResponseGiven($interId, $session, $interactionX);
+
 }

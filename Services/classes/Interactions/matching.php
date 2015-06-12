@@ -14,6 +14,9 @@ class matching extends interaction {
      *
      * @access public
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
      * @return array
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
@@ -46,8 +49,11 @@ class matching extends interaction {
       */
      public function maxScore($interMatching = null)
      {
-         die('service matching refactoring');
          $scoreMax = 0;
+
+         foreach ($interMatching->getLabels() as $label) {
+             $scoreMax += $label->getScoreRightResponse();
+         }
 
          return $scoreMax;
      }
@@ -67,5 +73,32 @@ class matching extends interaction {
                           ->getInteractionMatching($interId);
 
          return $interMatching;
+     }
+
+     /**
+      * implement the abstract method
+      *
+      * call getAlreadyResponded and prepare the interaction to displayed if necessary
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
+     public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+     {
+         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
+
+         if ($interactionX->getShuffle()) {
+             $interactionX->shuffleProposals();
+             $interactionX->shuffleLabels();
+         } else {
+             $interactionX->sortProposals();
+             $interactionX->sortLabels();
+         }
+
+         return $responseGiven;
      }
 }

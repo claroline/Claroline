@@ -15,6 +15,9 @@ class graphic extends interaction {
      *
      * @access public
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
      * @return array
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
@@ -47,8 +50,15 @@ class graphic extends interaction {
       */
      public function maxScore($interGraph = null)
      {
-         die('service graphic refactoring');
          $scoreMax = 0;
+
+         $rightCoords = $this->om
+                            ->getRepository('UJMExoBundle:Coords')
+                            ->findBy(array('interactionGraphic' => $interGraph->getId()));
+
+         foreach ($rightCoords as $score) {
+             $scoreMax += $score->getScoreCoords();
+         }
 
          return $scoreMax;
      }
@@ -68,5 +78,24 @@ class graphic extends interaction {
                           ->getInteractionGraphic($interId);
 
          return $interGraphic;
+     }
+
+     /**
+      * implement the abstract method
+      *
+      * call getAlreadyResponded and prepare the interaction to displayed if necessary
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
+     public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+     {
+         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
+
+         return $responseGiven;
      }
 }

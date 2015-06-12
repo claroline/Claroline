@@ -1111,126 +1111,132 @@ class ExerciseController extends Controller
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
+        $interSer       = $this->container->get('ujm.' .  $interactionToDisplay->getType());
+        $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
+        $responseGiven  = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
+
         //todo remplacer switch dans les services avec methode du genre toDisplayed
-        switch ($typeInterToDisplayed) {
-            case "InteractionQCM":
-
-                $interactionToDisplayed = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:InteractionQCM')
-                    ->getInteractionQCM($interactionToDisplay->getId());
-
-                if ($interactionToDisplayed->getShuffle()) {
-                    $interactionToDisplayed->shuffleChoices();
-                } else {
-                    $interactionToDisplayed->sortChoices();
-                }
-
-                $responseGiven = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Response')
-                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-
-                if (count($responseGiven) > 0) {
-                    $responseGiven = $responseGiven[0]->getResponse();
-                } else {
-                    $responseGiven = '';
-                }
-
-                break;
-
-            case "InteractionGraphic":
-
-                $interactionToDisplayed = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:InteractionGraphic')
-                    ->getInteractionGraphic($interactionToDisplay->getId());
-
-                $coords = $em->getRepository('UJMExoBundle:Coords')
-                    ->findBy(array('interactionGraphic' => $interactionToDisplayed->getId()));
-
-                $responseGiven = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Response')
-                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-
-                if (count($responseGiven) > 0) {
-                    $responseGiven = $responseGiven[0]->getResponse();
-                } else {
-                    $responseGiven = '';
-                }
-
-                $array['listCoords'] = $coords;
-
-                break;
-
-            case "InteractionHole":
-                $interactionToDisplayed = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:InteractionHole')
-                    ->getInteractionHole($interactionToDisplay->getId());
-
-                $responseGiven = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Response')
-                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-
-                if (count($responseGiven) > 0) {
-                    $responseGiven = $responseGiven[0]->getResponse();
-                } else {
-                    $responseGiven = '';
-                }
-
-                break;
-
-            case "InteractionOpen":
-
-                $interactionToDisplayed = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:InteractionOpen')
-                    ->getInteractionOpen($interactionToDisplay->getId());
-
-                $responseGiven = $this->getDoctrine()
-                                      ->getManager()
-                                      ->getRepository('UJMExoBundle:Response')
-                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-
-                if (count($responseGiven) > 0) {
-                    $responseGiven = $responseGiven[0]->getResponse();
-                } else {
-                    $responseGiven = '';
-                }
-
-                break;
-
-            case "InteractionMatching":
-
-                $interactionToDisplayed = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:InteractionMatching')
-                    ->getInteractionMatching($interactionToDisplay->getId());
-
-                if ($interactionToDisplayed->getShuffle()) {
-                        $interactionToDisplayed->shuffleProposals();
-                        $interactionToDisplayed->shuffleLabels();
-                    } else {
-                        $interactionToDisplayed->sortProposals();
-                        $interactionToDisplayed->sortLabels();
-                    }
-
-                $responseMatch = $this->getDoctrine()
-                                      ->getManager()
-                                      ->getRepository('UJMExoBundle:Response')
-                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
-
-                if (count($responseMatch) > 0) {
-                    $responseGiven = $this->container->get('ujm.exercise_services')->getTabResponseIndex($responseMatch[0]->getResponse());
-                } else {
-                    $responseGiven = '';
-                }
-
-                break;
-        }
+//
+//        switch ($typeInterToDisplayed) {
+//            case "InteractionQCM":
+//
+//                $interactionToDisplayed = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:InteractionQCM')
+//                    ->getInteractionQCM($interactionToDisplay->getId());
+//
+//                if ($interactionToDisplayed->getShuffle()) {
+//                    $interactionToDisplayed->shuffleChoices();
+//                } else {
+//                    $interactionToDisplayed->sortChoices();
+//                }
+//
+//                $responseGiven = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:Response')
+//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+//
+//                if (count($responseGiven) > 0) {
+//                    $responseGiven = $responseGiven[0]->getResponse();
+//                } else {
+//                    $responseGiven = '';
+//                }
+//
+//                break;
+//
+//            case "InteractionGraphic":
+//
+//                $interactionToDisplayed = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:InteractionGraphic')
+//                    ->getInteractionGraphic($interactionToDisplay->getId());
+//
+//                $coords = $em->getRepository('UJMExoBundle:Coords')
+//                    ->findBy(array('interactionGraphic' => $interactionToDisplayed->getId()));
+//
+//                $responseGiven = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:Response')
+//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+//
+//                if (count($responseGiven) > 0) {
+//                    $responseGiven = $responseGiven[0]->getResponse();
+//                } else {
+//                    $responseGiven = '';
+//                }
+//
+//                //faire un service twig
+//                $array['listCoords'] = $coords;
+//
+//                break;
+//
+//            case "InteractionHole":
+//                $interactionToDisplayed = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:InteractionHole')
+//                    ->getInteractionHole($interactionToDisplay->getId());
+//
+//                $responseGiven = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:Response')
+//                    ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+//
+//                if (count($responseGiven) > 0) {
+//                    $responseGiven = $responseGiven[0]->getResponse();
+//                } else {
+//                    $responseGiven = '';
+//                }
+//
+//                break;
+//
+//            case "InteractionOpen":
+//
+//                $interactionToDisplayed = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:InteractionOpen')
+//                    ->getInteractionOpen($interactionToDisplay->getId());
+//
+//                $responseGiven = $this->getDoctrine()
+//                                      ->getManager()
+//                                      ->getRepository('UJMExoBundle:Response')
+//                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+//
+//                if (count($responseGiven) > 0) {
+//                    $responseGiven = $responseGiven[0]->getResponse();
+//                } else {
+//                    $responseGiven = '';
+//                }
+//
+//                break;
+//
+//            case "InteractionMatching":
+//
+//                $interactionToDisplayed = $this->getDoctrine()
+//                    ->getManager()
+//                    ->getRepository('UJMExoBundle:InteractionMatching')
+//                    ->getInteractionMatching($interactionToDisplay->getId());
+//
+//                if ($interactionToDisplayed->getShuffle()) {
+//                        $interactionToDisplayed->shuffleProposals();
+//                        $interactionToDisplayed->shuffleLabels();
+//                    } else {
+//                        $interactionToDisplayed->sortProposals();
+//                        $interactionToDisplayed->sortLabels();
+//                    }
+//
+//                $responseMatch = $this->getDoctrine()
+//                                      ->getManager()
+//                                      ->getRepository('UJMExoBundle:Response')
+//                                      ->getAlreadyResponded($session->get('paper'), $interactionToDisplay->getId());
+//
+//                if (count($responseMatch) > 0) {
+//                    $responseGiven = $this->container->get('ujm.exercise_services')->getTabResponseIndex($responseMatch[0]->getResponse());
+//                } else {
+//                    $responseGiven = '';
+//                }
+//
+//                break;
+//        }
 
         $array['workspace']              = $workspace;
         $array['tabOrderInter']          = $tabOrderInter;

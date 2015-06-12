@@ -8,30 +8,75 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 class hole extends interaction {
+
     /**
      * implement the abstract method
      * To process the user's response for a paper(or a test)
      *
      * @access public
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
      * @return array
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
+        $em = $this->doctrine->getManager();
+        $interactionHoleID = $request->request->get('interactionHoleToValidated');
 
+        $session = $request->getSession();
+
+        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
+
+        $penalty = $this->getPenalty($interHole->getInteraction(), $session, $paperID);
+
+        $score = $this->mark($interHole, $request->request, $penalty);
+
+        $response = $this->getResponseJson($interHole);
+
+        $res = array(
+            'penalty'   => $penalty,
+            'interHole' => $interHole,
+            'response'  => $response,
+            'score'     => $score
+        );
+
+        return $res;
      }
 
      /**
-     * implement the abstract method
-     * To calculate the score
-     *
-     * @access public
-     *
-     * @return string userScore/scoreMax
-     */
-     public function mark()
+      * implement the abstract method
+      * To calculate the score
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
+      * @param \Symfony\Component\HttpFoundation\Request $request
+      * @param float $penalty penalty if the user showed hints
+      *
+      * @return string userScore/scoreMax
+      */
+     public function mark(\UJM\ExoBundle\Entity\InteractionHole $interHole = null, $request, $penalty = null)
      {
+         $score = 0;
+         $scoreMax = $this->maxScore($interHole);
 
+         foreach($interHole->getHoles() as $hole) {
+             $response = $request->get('blank_'.$hole->getPosition());
+             $response = trim($response);
+             $response = preg_replace('/\s+/', ' ', $response);
+             $score += $this->getScoreHole($hole);
+         }
+
+         $score -= $penalty;
+
+         if ($score < 0) {
+             $score = 0;
+         }
+
+         $score .= '/'.$scoreMax;
+
+         return $score;
      }
 
     /**
@@ -46,8 +91,16 @@ class hole extends interaction {
       */
      public function maxScore($interHole = null)
      {
-         die('service hole refactoring');
          $scoreMax = 0;
+         foreach ($interHole->getHoles() as $hole) {
+             $scoretemp = 0;
+             foreach ($hole->getWordResponses() as $wr) {
+                 if ($wr->getScore() > $scoretemp) {
+                     $scoretemp = $wr->getScore();
+                 }
+             }
+             $scoreMax += $scoretemp;
+         }
 
          return $scoreMax;
      }
@@ -67,5 +120,74 @@ class hole extends interaction {
                           ->getInteractionHole($interId);
 
          return $interHole;
+     }
+
+     /**
+      * implement the abstract method
+      *
+      * call getAlreadyResponded and prepare the interaction to displayed if necessary
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
+     public function getResponseGiven($interactionToDisplay, $session, $interactionX)
+     {
+         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
+
+         return $responseGiven;
+     }
+
+     /**
+      *
+      * @access private
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      *
+      * @return json
+      */
+     private function getJsonResponse()
+     {
+         $em = $this->doctrine->getManager();
+         foreach($interHole->getHoles() as $hole) {
+             $response = $request->get('blank_'.$hole->getPosition());
+             $response = trim($response);
+             $response = preg_replace('/\s+/', ' ', $response);
+
+             if ($hole->getSelector()) {
+                 $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+                 $tabResp[$hole->getPosition()] = $wr->getResponse();
+             } else {
+                 $from = array("'", '"');
+                 $to = array("\u0027","\u0022");
+                 $tabResp[$hole->getPosition()] = str_replace($from, $to, $response);
+             }
+         }
+
+         $response = json_encode($tabResp);
+     }
+
+     /**
+      *
+      * @access private
+      * @param \UJM\ExoBundle\Entity\Hole $hole
+      *
+      * @return float
+      */
+     private function getScoreHole($hole)
+     {
+         $em = $this->doctrine->getManager();
+         if ($hole->getSelector() == true) {
+             $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+             $mark = $wr->getScore();
+         } else {
+             foreach ($hole->getWordResponses() as $wr) {
+                 $mark = $this->getScoreWordResponse($wr, $response);
+             }
+         }
+
+         return $mark;
      }
 }

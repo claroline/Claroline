@@ -411,65 +411,65 @@ class exerciseServices
      *
      * @return array
      */
-    public function responseHole($request, $paperID = 0)
-    {
-        $em = $this->doctrine->getManager();
-        $res = array();
-        $interactionHoleID = $request->request->get('interactionHoleToValidated');
-        $tabResp = array();
-
-        $penalty = 0;
-        $session = $request->getSession();
-
-        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
-
-        // Not assessment
-        if ($paperID == 0) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-
-                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
-
-                    if ($signe == '-') {
-                        $penalty += substr($penal, 1);
-                    } else {
-                        $penalty += $penal;
-                    }
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interHole->getInteraction(), $paperID);
-        }
-
-        $score = $this->holeMark($interHole, $request->request, $penalty);
-
-        foreach($interHole->getHoles() as $hole) {
-            $response = $request->get('blank_'.$hole->getPosition());
-            $response = trim($response);
-            $response = preg_replace('/\s+/', ' ', $response);
-
-            if ($hole->getSelector()) {
-                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
-                $tabResp[$hole->getPosition()] = $wr->getResponse();
-            } else {
-                $from = array("'", '"');
-                $to = array("\u0027","\u0022");
-                $tabResp[$hole->getPosition()] = str_replace($from, $to, $response);
-            }
-        }
-
-        $response = json_encode($tabResp);
-
-        $res = array(
-            'penalty'   => $penalty,
-            'interHole' => $interHole,
-            'response'  => $response,
-            'score'     => $score
-        );
-
-        return $res;
-    }
+//    public function responseHole($request, $paperID = 0)
+//    {
+//        $em = $this->doctrine->getManager();
+//        $res = array();
+//        $interactionHoleID = $request->request->get('interactionHoleToValidated');
+//        $tabResp = array();
+//
+//        $penalty = 0;
+//        $session = $request->getSession();
+//
+//        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
+//
+//        // Not assessment
+//        if ($paperID == 0) {
+//            if ($session->get('penalties')) {
+//                foreach ($session->get('penalties') as $penal) {
+//
+//                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
+//
+//                    if ($signe == '-') {
+//                        $penalty += substr($penal, 1);
+//                    } else {
+//                        $penalty += $penal;
+//                    }
+//                }
+//            }
+//            $session->remove('penalties');
+//        } else {
+//            $penalty = $this->getPenalty($interHole->getInteraction(), $paperID);
+//        }
+//
+//        $score = $this->holeMark($interHole, $request->request, $penalty);
+//
+//        foreach($interHole->getHoles() as $hole) {
+//            $response = $request->get('blank_'.$hole->getPosition());
+//            $response = trim($response);
+//            $response = preg_replace('/\s+/', ' ', $response);
+//
+//            if ($hole->getSelector()) {
+//                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+//                $tabResp[$hole->getPosition()] = $wr->getResponse();
+//            } else {
+//                $from = array("'", '"');
+//                $to = array("\u0027","\u0022");
+//                $tabResp[$hole->getPosition()] = str_replace($from, $to, $response);
+//            }
+//        }
+//
+//        $response = json_encode($tabResp);
+//
+//        $res = array(
+//            'penalty'   => $penalty,
+//            'interHole' => $interHole,
+//            'response'  => $response,
+//            'score'     => $score
+//        );
+//
+//        return $res;
+//    }
 
     /**
      * To calculate the score for a question with holes
@@ -482,38 +482,38 @@ class exerciseServices
      *
      * @return string userScore/scoreMax
      */
-    public function holeMark($interHole, $request, $penalty)
-    {
-        $em = $this->doctrine->getManager();
-        $score = 0;
-
-        foreach($interHole->getHoles() as $hole) {
-            $response = $request->get('blank_'.$hole->getPosition());
-            $response = trim($response);
-            $response = preg_replace('/\s+/', ' ', $response);
-            if ($hole->getSelector() == true) {
-                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
-                $score += $wr->getScore();
-            } else {
-                foreach ($hole->getWordResponses() as $wr) {
-                    $score += $this->getScoreWordResponse($wr, $response);
-                }
-            }
-        }
-
-        $scoreMax = $this->holeMaxScore($interHole);
-
-        $score -= $penalty;
-
-        if ($score < 0) {
-            $score = 0;
-        }
-
-        $score .= '/'.$scoreMax;
-
-        return $score;
-
-    }
+//    public function holeMark($interHole, $request, $penalty)
+//    {
+//        $em = $this->doctrine->getManager();
+//        $score = 0;
+//
+//        foreach($interHole->getHoles() as $hole) {
+//            $response = $request->get('blank_'.$hole->getPosition());
+//            $response = trim($response);
+//            $response = preg_replace('/\s+/', ' ', $response);
+//            if ($hole->getSelector() == true) {
+//                $wr = $em->getRepository('UJMExoBundle:WordResponse')->find($response);
+//                $score += $wr->getScore();
+//            } else {
+//                foreach ($hole->getWordResponses() as $wr) {
+//                    $score += $this->getScoreWordResponse($wr, $response);
+//                }
+//            }
+//        }
+//
+//        $scoreMax = $this->holeMaxScore($interHole);
+//
+//        $score -= $penalty;
+//
+//        if ($score < 0) {
+//            $score = 0;
+//        }
+//
+//        $score .= '/'.$scoreMax;
+//
+//        return $score;
+//
+//    }
 
     /**
      * Get max score possible for a question with holes
@@ -524,20 +524,20 @@ class exerciseServices
      *
      * @return float
      */
-    public function holeMaxScore($interHole) {
-        $scoreMax = 0;
-        foreach ($interHole->getHoles() as $hole) {
-            $scoretemp = 0;
-            foreach ($hole->getWordResponses() as $wr) {
-                if ($wr->getScore() > $scoretemp) {
-                    $scoretemp = $wr->getScore();
-                }
-            }
-            $scoreMax += $scoretemp;
-        }
-
-        return $scoreMax;
-    }
+//    public function holeMaxScore($interHole) {
+//        $scoreMax = 0;
+//        foreach ($interHole->getHoles() as $hole) {
+//            $scoretemp = 0;
+//            foreach ($hole->getWordResponses() as $wr) {
+//                if ($wr->getScore() > $scoretemp) {
+//                    $scoretemp = $wr->getScore();
+//                }
+//            }
+//            $scoreMax += $scoretemp;
+//        }
+//
+//        return $scoreMax;
+//    }
 
 
     /**
@@ -920,20 +920,20 @@ class exerciseServices
      *
      * @return float
      */
-    public function graphicMaxScore($interGraphic)
-    {
-        $scoreMax = 0;
-
-        $rightCoords = $this->om
-                            ->getRepository('UJMExoBundle:Coords')
-                            ->findBy(array('interactionGraphic' => $interGraphic->getId()));
-
-        foreach ($rightCoords as $score) {
-            $scoreMax += $score->getScoreCoords(); // Score max
-        }
-
-        return $scoreMax;
-    }
+//    public function graphicMaxScore($interGraphic)
+//    {
+//        $scoreMax = 0;
+//
+//        $rightCoords = $this->om
+//                            ->getRepository('UJMExoBundle:Coords')
+//                            ->findBy(array('interactionGraphic' => $interGraphic->getId()));
+//
+//        foreach ($rightCoords as $score) {
+//            $scoreMax += $score->getScoreCoords(); // Score max
+//        }
+//
+//        return $scoreMax;
+//    }
 
     /**
      * Get score max possible for a open question
@@ -944,24 +944,24 @@ class exerciseServices
      *
      * @return float
      */
-    public function openMaxScore($interOpen)
-    {
-        $scoreMax = 0;
-
-        if ($interOpen->getTypeOpenQuestion() == 'long') {
-            $scoreMax = $interOpen->getScoreMaxLongResp();
-        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            $scoreMax = $this->om
-                             ->getRepository('UJMExoBundle:WordResponse')
-                             ->getScoreMaxOneWord($interOpen->getId());
-        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
-            $scoreMax = $this->om
-                             ->getRepository('UJMExoBundle:WordResponse')
-                             ->getScoreMaxShort($interOpen->getId());
-        }
-
-        return $scoreMax;
-    }
+//    public function openMaxScore($interOpen)
+//    {
+//        $scoreMax = 0;
+//
+//        if ($interOpen->getTypeOpenQuestion() == 'long') {
+//            $scoreMax = $interOpen->getScoreMaxLongResp();
+//        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+//            $scoreMax = $this->om
+//                             ->getRepository('UJMExoBundle:WordResponse')
+//                             ->getScoreMaxOneWord($interOpen->getId());
+//        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+//            $scoreMax = $this->om
+//                             ->getRepository('UJMExoBundle:WordResponse')
+//                             ->getScoreMaxShort($interOpen->getId());
+//        }
+//
+//        return $scoreMax;
+//    }
 
     /**
      * Get score max possible for a matching question
@@ -972,15 +972,15 @@ class exerciseServices
      *
      * @return float
      */
-    public function matchingMaxScore($interMatching)
-    {
-        $scoreMax = 0;
-        foreach ($interMatching->getLabels() as $label) {
-            $scoreMax += $label->getScoreRightResponse();
-        }
-
-        return $scoreMax;
-    }
+//    public function matchingMaxScore($interMatching)
+//    {
+//        $scoreMax = 0;
+//        foreach ($interMatching->getLabels() as $label) {
+//            $scoreMax += $label->getScoreRightResponse();
+//        }
+//
+//        return $scoreMax;
+//    }
 
     /**
      * To link a question with an exercise

@@ -14,6 +14,9 @@ class open extends interaction {
      *
      * @access public
      *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
+     *
      * @return array
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
@@ -46,8 +49,19 @@ class open extends interaction {
       */
      public function maxScore($interOpen = null)
      {
-         die('service open refactoring');
          $scoreMax = 0;
+
+         if ($interOpen->getTypeOpenQuestion() == 'long') {
+             $scoreMax = $interOpen->getScoreMaxLongResp();
+         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+             $scoreMax = $this->om
+                              ->getRepository('UJMExoBundle:WordResponse')
+                              ->getScoreMaxOneWord($interOpen->getId());
+         } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+             $scoreMax = $this->om
+                              ->getRepository('UJMExoBundle:WordResponse')
+                             ->getScoreMaxShort($interOpen->getId());
+         }
 
          return $scoreMax;
      }
@@ -69,20 +83,22 @@ class open extends interaction {
          return $interOpen;
      }
 
-     /**
-     * implement the abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionOpen
-     */
-     public function getInteractionX($interId)
+      /**
+      * implement the abstract method
+      *
+      * call getAlreadyResponded and prepare the interaction to displayed if necessary
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
+     public function getResponseGiven($interactionToDisplay, $session, $interactionX)
      {
-         $interOpen = $this->om
-                          ->getRepository('UJMExoBundle:InteractionOpen')
-                          ->getInteractionOpen($interId);
+         $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
-         return $interOpen;
+         return $responseGiven;
      }
 }
