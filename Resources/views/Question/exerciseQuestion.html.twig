@@ -11,16 +11,16 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'list of question' | trans }} {% endblock %}
+{% block title %} {{ 'list_question' | trans }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'my questions' | trans }}</li>
+    <li class="active">{{ 'my_questions' | trans }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'my questions' | trans }}</h3>
+        <h3 class="panel-title">{{ 'my_questions' | trans }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">
@@ -28,13 +28,13 @@
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">
-            <i class="fa fa-download"></i> {{ 'import questions' | trans }}
+            <i class="fa fa-download"></i> {{ 'import_questions' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
             <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
-            <i class="fa fa-save"></i> {{ 'exportQTIExercise' | trans }}
+            <i class="fa fa-save"></i> {{ 'export_qti_exercise' | trans }}
         </a>
     </div>
 
@@ -71,7 +71,7 @@
                 {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
 
             {% else %}
-                <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
             {% endif %}
         </div>
     </div>

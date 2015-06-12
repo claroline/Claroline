@@ -35,12 +35,12 @@
                 <div class="alert alert-warning">{{ qtiError }}</div>
             {% endif %}
         {% if is_granted('ADMINISTRATE', _resource) %}
-            {{ 'infoExerciseNoPuplished'|trans }} :
+            {{ 'info_exercise_no_puplished'|trans }} :
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
                 <i class="fa fa-check"></i> {{ 'publish' | trans }}
             </a>
         {% else %}
-            {{ 'infoExerciseNoPuplished2'|trans }}
+            {{ 'info_exercise_no_puplished2'|trans }}
         {% endif %}
     </div>
 
@@ -125,7 +125,7 @@
                                 {% if entity.duration != 0 %}
                                     {{ entity.duration }}
                                 {% else %}
-                                    {{ 'noOne'|trans }}
+                                    {{ 'none'|trans }}
                                 {% endif %}
                             </td>
                         </tr>
@@ -140,7 +140,7 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'maximum number of tries' | trans }}</th>
+                            <th class="classic">{{ 'maximum_tries' | trans }}</th>
                             <td class="classic">
                                 {% if entity.maxAttempts != 0 %}
                                     {{ entity.maxAttempts }}
@@ -184,7 +184,7 @@
                             </td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'lock attempt' | trans }}</th>
+                            <th class="classic">{{ 'lock_attempt' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.lockAttempt == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -198,10 +198,10 @@
             </table>
             {% if is_granted('ADMINISTRATE', _resource) %}
                 <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
-                    <i class="fa fa-plus"></i> {{ 'moreInformation' | trans }}
+                    <i class="fa fa-plus"></i> {{ 'more_info' | trans }}
                 </button>
-                <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
-                    <i class="fa fa-minus"></i> {{ 'lessInformation' | trans }}
+                <button type="button" id="less" class="btn btn-primary" onclick="less_information();">
+                    <i class="fa fa-minus"></i> {{ 'less_information' | trans }}
                 </button>
             {% endif %}
         </div>

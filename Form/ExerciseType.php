@@ -56,7 +56,7 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'maxAttempts', 'text', array(
-                    'label' => 'maximum number of tries'
+                    'label' => 'maximum_tries'
                 )
             )
             //->add('correctionMode', 'text', array('label' => 'Availability of correction'))
@@ -119,7 +119,7 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'lockAttempt', 'checkbox', array(
-                    'required' => false, 'label' => 'lock attempt'
+                    'required' => false, 'label' => 'lock_attempt'
                 )
             );
     }

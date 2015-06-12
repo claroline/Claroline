@@ -55,7 +55,6 @@ all_question: All the questions
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
-alter category: Alter this cataegory
 answer_coched: No response expected is checked
 answer_zone: Answer zone
 attempt_info1: You have
@@ -72,7 +71,7 @@ availability_of_score: Availability of score
 
 # B
 badge_obtained: Congratulations ! You got the badge of knowledge
-badgeNoObtained: You have not yet received the badge of knowledge
+badge_no_obtained: You have not yet received the badge of knowledge
 back: Back
 back_to_the_list: Back to the list
 bank_of_questions: Bank of questions
@@ -97,7 +96,6 @@ contain_search: Whose question contains
 correct: Correct
 correction: Correction
 correction_date: Correction date
-course_name: Course name
 correspondence: correspondence
 correspondence_empty: You have no correspondence !
 correspondence_error: You can't associate the same proposal with several labels !
@@ -117,7 +115,6 @@ delete_papers: Delete the papers
 description: Description
 display_all_list: Display the whole list
 display_all_on_this_page: Display all on this page
-display pagination: Display with pagination
 docimology: Docimology
 doc_manage: Manage my documents
 document: Document
@@ -132,7 +129,6 @@ edit_category: Edit a category
 edit_question: Edit a question
 end_date: End date
 entry: Entry
-erase: To erase an answer zone, maintain press 's' key and click on the cross which allows to move it
 exercise: Exercise
 exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
 exercise_definition: Exercise definition
@@ -144,20 +140,19 @@ explain_coeff_dis0: The copies must have the same questions to calculate the coe
 explain_coeff_dis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
 explain_coeff_dis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
 explain_coeff_dis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
-explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
-export CSV of results: Export CSV of results
-exportQTIExercise : Export questions of exercise in QTI format
+explain_measure_difficulty: The measure of difficulty is equal to the percentage of success to the question
+export_csv_results: Export CSV of results
+export_qti_exercise : Export questions of exercise in QTI format
 
 # F
 feedback: Feedback general
-findBy: Find by
-findIn: Find in
-findLabel: Find a document with a specific label
-findQuestion: Find questions
-findWhat: What you're looking for
-final mark: Final mark
+find_by: Find by
+find_in: Find in
+find_question: Find questions
+find_what: What you're looking for
+final_mark: Final mark
 finish: Finish
-forTypeOf: for a question of type
+for_type_of: for a question of type
 frequency: Frequency
 from: From
 
@@ -168,108 +163,95 @@ graphic_edition: Graphic edition
 group: Group
 
 # H
-hide Instructions: Hide instructions
+hide_instructions: Hide instructions
 hint: Hint
 hints: Hints
-hint number: Hint number
-histoDiscrimination: Discrimination coefficient
-histoMarks: Marks' histogram
-histoMeasureOfDifficulty: Histogram of the measure of the difficulty
-histoSuccess: Success' histogram
-hole: Hole
+histo_discrimination: Discrimination coefficient
+histo_marks: Marks' histogram
+histo_measure_difficulty: Histogram of the measure of the difficulty
+histo_success: Success' histogram
+hole: Text with hole
 hole_creation: Hole creation
 hole_edition: Hole edition
-home exercise: Home exercise
+home_exercise: Home exercise
 
 # I
 infiny: Indefinite
-infoDuplicateQuestion: To duplicate a question you must insert an integer number between 0 and 10.
-infoExerciseNoPuplished: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted
-infoExerciseNoPuplished2: This exercise is not yet published. You can't yet compose.
-infoMark: The potential penalties have to be count during your notation
-infoMeasureDifficulty: This measure doesn't count students that didn't saw the question
+info_duplicate_question: To duplicate a question you must insert an integer number between 0 and 10.
+info_exercise_no_puplished: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted
+info_exercise_no_puplished2: This exercise is not yet published. You can't yet compose.
+info_mark: The potential penalties have to be count during your notation
+info_measure_difficulty: This measure doesn't count students that didn't saw the question
 interupt: Interupt
 invite_question: The prompt of question must be completed
-isInterupt: Interupted
+is_interupt: Interupted
 image: Image
 import: Import
-import QTI : Import questions in QTI format
-importQTIExercise: Import exercise in QTI format
-import questions: Import questions
-infoSearchType: If you want to do a search by type, you must used the following key words
-instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
-instruction matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
-inValidMark: Invalid score
+import_qti : Import questions in QTI format
+import_questions: Import questions
+info_search_type: If you want to do a search by type, you must used the following key words
+instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
+instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
+in_valid_mark: Invalid score
 
 # I Intraction type (data in the DB)
 InteractionGraphic: Graphic
-InteractionHole: Hole
-InteractionMatching: Association
+InteractionHole: Text with hole
+InteractionMatching: Matching
 InteractionOpen: Open
 InteractionQCM: QCM
-#InteractionMatching: To drag/ To bind
 
 # K
 key_word: Key word
-keys words: Keys words
-kind of question: What kind of question
+keys_words: Keys words
+kind_question: What kind of question
 
 # L
 label: Label
 label_empty: Fields of the responses should not be empty
 legend: Legend
-lessInformation: Less information
-linkedDoc: Warning, the document you tried to delete is linked to questions
-linkpaper: Link to a test
-linkedQuestions: Linked Questions
+less_information: Less information
 list: List
-list of exercises: List of exercises
-list of question: List of question
-lock attempt: Lock attempt
+list_question: List of question
+lock_attempt: Lock attempt
 long: Long
 
 # M
-manageImg: Manage my documents
+manage_img: Manage my documents
 mark: Mark
-mark this question: Marked this question
-markTooBigest: The mark must be less than or equal to
+mark_question: Marked this question
+mark_bigest: The mark must be less than or equal to
 matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
-maximum number of tries: Maximum number of tries
-meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+maximum_tries: Maximum number of tries
+meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model
-moreInformation: More information
-multiple response: Multiple response
-my account: My account
-my questions: My questions
-my shared questions: Questions which was shared with me
+more_info: More information
+my_questions: My questions
+shared_questions: Questions which was shared with me
 
 # N
-nameUser2Shared: Name of user to share the question
+user_shared: Name of user to share the question
 nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
 nb_label: It must have one choice of label
 nb_proposal: It must have one choice of proposal
-need Correction: The red questions need correction
 never: Never
-newCategoryName: New name of the category
-newName: New name of the document
-newDoc: New document
+new_name: New name of the document
 next: Next
 no: No
-no answer: No answer
-noAnswerZone: There is no answer zone
-noFinish: No finished
-noDocFound: No document found
-noHintShow: Hints not seen, no penalty
-noImg: You must upload a picture
-noImgSelect: You must select an image
-no label: No labels associated
-noOne: None
-noPaperFound: No paper found
-noQuestion: You ask for nothing
-noQuestionFound: No question found
+no_answer: No answer
+no_answer_zone: There is no answer zone
+no_finish: No finished
+no_doc_found: No document found
+no_img: You must upload a picture
+no_img_select: You must select an image
+no_label: No labels associated
+none: None
+no_paper_found: No paper found
+no_question: You ask for nothing
+no_question_found: No question found
 noRightAnswer: No right answer
 noRights: Your aren't the owner of this question and it's not shared with you
 notAllowedModifyPaper: You can't alter your answers anymore !
@@ -482,7 +464,6 @@ Inter_QCM.ScoreFalseResponse: Wrong result
 Inter_QCM.shuffle: Order of random selection
 Inter_QCM.weightChoice: Assign points by response
 
-Inter_Hole.html: Text with hole
 Inter_Hole.orthography: Allow misspellings
 Inter_Hole.score: Score
 Inter_Hole.size: Size
@@ -538,8 +519,6 @@ ujm_exobundle_interactionopentype_interaction: Open question
 ujm_exobundle_interactionopentype_interaction_hints: Hints
 ujm_exobundle_interactionmatchingtype_proposals: Response
 ujm_exobundle_interactionmatchingtype_labels: Question
-ujm_exobundle_interactionopentype_wordResponses: Keywords
-ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Hints
 
 ujm_exobundle_categorytype_value: Name of the new category

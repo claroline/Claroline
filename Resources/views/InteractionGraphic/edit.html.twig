@@ -39,8 +39,8 @@
 
     {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-    <form id="InterGraphForm" onsubmit="return Check( '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
-        '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
+    <form id="InterGraphForm" onsubmit="return Check( '{{ 'no_question' | trans }} ...','{{ 'no_img' | trans }} !',
+        '{{ 'no_answer_zone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
         action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
         <div class="panel-body">

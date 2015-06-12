@@ -55,7 +55,6 @@ all_question: Toutes les questions
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
-alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
 answer_zone: Zone de réponse
 attempt_info1: Vous avez droit à
@@ -97,7 +96,6 @@ contain_search: Dont la question contient
 correct: Correcte
 correction: Correction
 correction_date: Date de la correction
-course_name: Nom du Cours
 correspondence: correspondance
 correspondence_empty: Vous avez réalisé aucune correspondance !
 correspondence_error: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
@@ -117,7 +115,6 @@ delete_papers: Supprimer les copies
 description: Description
 display_all_list: Afficher la liste complète
 display_all_on_this_page: Tout afficher sur cette page
-display pagination: Afficher la pagination
 docimology: Docimologie
 doc_manage: Gestion de mes documents
 document: Document
@@ -128,11 +125,10 @@ duration: Durée
 
 # E
 edit: Editer
-edit_a_category: Editer cette catégorie
+edit_category: Editer cette catégorie
 edit_question: Editer une question
 end_date: Date de fin
 entry: Entrer
-erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la croix permettant de la déplacer
 exercise: Exercice
 exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
 exercise_definition: Définition de l'exercice
@@ -144,20 +140,19 @@ explain_coeff_dis0: Les copies doivent avoir les mêmes questions pour pouvoir c
 explain_coeff_dis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
 explain_coeff_dis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
 explain_coeff_dis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
-explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
-export CSV of results: Export CSV des résultats
-exportQTIExercise : Exporter les questions de l'exercice au format QTI
+explain_measure_difficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
+export_csv_results: Export CSV des résultats
+export_qti_exercise : Exporter les questions de l'exercice au format QTI
 
 # F
 feedback: Feedback général
-findBy: Trouver par
-findIn: Trouver dans
-findLabel: Trouver un document avec un label spécifique
-findQuestion: Rechercher des questions
-findWhat: Ce que vous cherchez
-final mark: Note finale
+find_by: Trouver par
+find_in: Trouver dans
+find_question: Rechercher des questions
+find_what: Ce que vous cherchez
+final_mark: Note finale
 finish: Terminer
-forTypeOf: pour une question de type
+for_type_of: pour une question de type
 frequency: Fréquence
 from: A partir du
 
@@ -168,38 +163,36 @@ graphic_edition: Edition d'une question graphique
 group: Groupe
 
 # H
-hide Instructions: Masquer les consignes
+hide_instructions: Masquer les consignes
 hint: Indice
 hints: Indices
-hint number: Num indice
-histoDiscrimination: Coefficient de discrimination
-histoMarks: Histogramme des notes
-histoMeasureOfDifficulty: Histogramme de l'indice de difficulté
-histoSuccess: Histogramme de réussite
-hole: Blancs
+histo_discrimination: Coefficient de discrimination
+histo_marks: Histogramme des notes
+histo_measure_difficulty: Histogramme de l'indice de difficulté
+histo_success: Histogramme de réussite
+hole: Texte à trous
 hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
-home exercise: Accueil de l'exercice
+home_exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
-infoDuplicateQuestion: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
-infoExerciseNoPuplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
-infoExerciseNoPuplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
-infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation
-infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
+info_duplicate_question: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
+info_exercise_no_puplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
+info_exercise_no_puplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
+info_mark: Les éventuelles pénalités sont à prendre en compte dans votre notation
+info_measure_difficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 interupt: Interrompre
 invite_question: L\'invite de la question doit être rempli
-isInterupt: Interrompu
+is_interupt: Interrompu
 image: Image
 import: Importer
-import QTI : Importer des questions au format QTI
-importQTIExercise: Importer un exercice au format QTI
-import questions: Importer des questions
-infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
-instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
-instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
-inValidMark: Note invalide
+import_qti : Importer des questions au format QTI
+import_questions: Importer des questions
+info_search_type: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
+instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
+instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
+in_valid_mark: Note invalide
 
 # I Intraction type (data in the DB)
 InteractionGraphic: Graphique
@@ -207,69 +200,59 @@ InteractionHole: Texte à trous
 InteractionMatching: Association
 InteractionOpen: Ouverte
 InteractionQCM: QCM
-#InteractionMatching: A relier/ panier
 
 # K
 key_word: Mot clé
-keys words: Mots clés
-kind of question: Quel type de question
+keys_words: Mots clés
+kind_question: Quel type de question
 
 # L
 label: Label
 label_empty: Les champs des réponses ne doivent pas être vides
 legend: Légende
-lessInformation: Moins d'informations
-linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions
-linkpaper: Liées à un test
-linkedQuestions: Questions liées
+less_information: Moins d'informations
 list: Liste
-list of exercises: Liste des exercices
-list of question: Liste des questions
-lock attempt: Verrouiller le test
+list_question: Liste des questions
+lock_attempt: Verrouiller le test
 long: Longue
 
 # M
-manageImg: Gérer mes documents
+manage_img: Gérer mes documents
 mark: Score
-mark this question: Noter cette question
-markTooBigest: La note doit être inférieure ou égale à
+mark_question: Noter cette question
+mark_bigest: La note doit être inférieure ou égale à
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
-maximum number of tries: Nombre d'essai maximum
-meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+maximum_tries: Nombre d'essai maximum
+meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
-moreInformation: Plus d'informations
-multiple response: Réponse multiples
-my account: Mon compte
-my questions: Mes questions
-my shared questions: Questions qui m'ont été partagées
+more_info: Plus d'informations
+my_questions: Mes questions
+shared_questions: Questions qui m'ont été partagées
 
 # N
-nameUser2Shared: Nom de l'utilisateur avec qui partager la question
+user_shared: Nom de l'utilisateur avec qui partager la question
 nb_hole: Il doit y avoir au moins un trou
 nbr_choices: Le nombre de choix doit être supérieur à deux
 nb_label: Il doit y avoir au moins un label
 nb_proposal: Il doit y avoir au moins une proposition
-need Correction: Les questions en rouge nécessitent une correction
+need_correction: Les questions en rouge nécessitent une correction
 never: Jamais
-newCategoryName: Nouveau nom de la catégorie
-newName: Nouveau nom du document
-newDoc: Nouveau document
+new_name: Nouveau nom du document
 next: Suivant
 no: Non
-no answer: Pas de réponse
-noAnswerZone: Vous n\'avez mis aucune zone de réponse
-noDocFound: Pas de document trouvé
-noFinish: Non terminé
-noHintShow: Indices non vus, pas de pénalité
-noImg: Vous devez télécharger une image
-noImgSelect: Vous devez sélectionner une image
-no label: Pas de labels associés
-noOne: Aucune
-noPaperFound: Aucune copie
-noQuestion: Vous ne posez aucune question
-noQuestionFound: Pas de question trouvée
+no_answer: Pas de réponse
+no_answer_zone: Vous n\'avez mis aucune zone de réponse
+no_doc_found: Pas de document trouvé
+no_finish: Non terminé
+no_img: Vous devez télécharger une image
+no_img_select: Vous devez sélectionner une image
+no_label: Pas de labels associés
+none: Aucune
+no_paper_found: Aucune copie
+no_question: Vous ne posez aucune question
+no_question_found: Pas de question trouvée
 noRightAnswer: Aucune bonne réponse
 noRights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
 notAllowedModifyPaper: Vous ne pouvez plus modifier vos réponses !
@@ -482,7 +465,6 @@ Inter_QCM.ScoreFalseResponse: Résultat incorrect
 Inter_QCM.shuffle: Ordre des choix aléatoire
 Inter_QCM.weightChoice: Attribuer les points par réponse
 
-Inter_Hole.html: Texte à trous
 Inter_Hole.orthography: Autoriser les fautes d'orthographe
 Inter_Hole.score: Point
 Inter_Hole.size: Taille
@@ -538,8 +520,6 @@ ujm_exobundle_interactionopentype_interaction: Question ouverte
 ujm_exobundle_interactionopentype_interaction_hints: Indices
 ujm_exobundle_interactionmatchingtype_proposals: Réponse
 ujm_exobundle_interactionmatchingtype_labels: Question
-ujm_exobundle_interactionopentype_wordResponses: Mots clés
-ujm_exobundle_interactionqcmtype_interaction: QCM
 ujm_exobundle_interactionqcmtype_interaction_hints: Indices
 
 ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie

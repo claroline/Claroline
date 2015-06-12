@@ -40,7 +40,7 @@
             </a>
             <a href="{{ path('ujm_paper_export_results', { 'exerciseId': exoID }) }}"
                class="btn btn-primary">
-                {{ 'export CSV of results' | trans }}
+                {{ 'export_csv_results' | trans }}
             </a>
             {% if _resource.published == FALSE %}
                 <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
@@ -109,7 +109,7 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <div class="alert alert-info">{{ 'noPaperFound'|trans }}</div>
+                    <div class="alert alert-info">{{ 'no_paper_found'|trans }}</div>
                 {% endif %}
             {% endif %}
         </div>
