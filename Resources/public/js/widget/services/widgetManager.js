@@ -6,9 +6,7 @@ widgetsApp
             widgets: [],
             getWidgets: function(widgetType) {
                 var widget = widgetFactory.getWidget(widgetType);
-                this.widgets[widgetType] = widget.get({}, function(widgets) {
-                    //console.log(widgets);
-                });
+                this.widgets[widgetType] = widget.get();
 
                 return this.widgets[widgetType];
             }

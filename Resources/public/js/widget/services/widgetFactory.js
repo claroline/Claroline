@@ -18,7 +18,7 @@ widgetsApp
                         id: "@id"
                     },
                     {
-                        get:    { method: "GET" },
+                        get:    { method: "GET", isArray: true },
                         create: { method: "GET" },
                         save:   { method: "POST" },
                         update: { method: "PUT" },

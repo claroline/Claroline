@@ -59,15 +59,15 @@
                     </div>
                 </div>
             </div>
-                {% for widgetType in widgetTypes %}
-                    <div role="tabpanel" class="tab-pane" id="{{ widgetType.name }}">
-                        <div class="row">
-                            <div class="col-md-12">
-                                {% include 'IcapPortfolioBundle:Portfolio:data_widget_type.html.twig' %}
-                            </div>
-                        </div>
+            {% for widgetType in widgetTypes %}
+            <div role="tabpanel" class="tab-pane" id="{{ widgetType.name }}">
+                <div class="row">
+                    <div class="col-md-12 data_widget_container">
+                        {% include 'IcapPortfolioBundle:Portfolio:data_widget_type.html.twig' %}
                     </div>
-                {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
     </div>

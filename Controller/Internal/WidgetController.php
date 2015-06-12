@@ -27,9 +27,7 @@ class WidgetController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $data = [
-            'widgets' => []
-        ];
+        $data = [];
 
         $response = new JsonResponse();
         $response->setData($data);
