@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Services\twig;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\HttpFoundation\Request;
 
 use UJM\ExoBundle\Services\classes\exerciseServices;
 
@@ -91,8 +90,6 @@ class twigExtensions extends \Twig_Extension
      */
     public function getInterTwig($interId, $typeInter)
     {
-        //$em = $this->doctrine->getManager();
-
         switch ($typeInter)
         {
             case "InteractionQCM":

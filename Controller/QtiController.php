@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Doctrine\ORM\EntityManager;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 
 class QtiController extends Controller {
@@ -20,8 +19,9 @@ class QtiController extends Controller {
     {
         $request = $this->container->get('request');
         $exoID = $request->get('exerciceID');
+        $file  = $request->files->get('qtifile');
 
-        if (strstr($_FILES["qtifile"]["type"], 'application/zip') === false) {
+        if ($file->getMimeType() != 'application/zip') {
 
             return $this->importError('qti format warning', $exoID);
         }
@@ -51,6 +51,7 @@ class QtiController extends Controller {
         if ($exoID == -1) {
             return $this->forward('UJMExoBundle:Question:index', array());
         } else {
+            $qtiRepos->assocExerciseQuestion(false);
             return $this->redirect($this->generateUrl( 'ujm_exercise_questions', array( 'id' => $exoID, )));
         }
     }
@@ -84,19 +85,20 @@ class QtiController extends Controller {
      */
     private function extractFiles($qtiRepos)
     {
+        $request = $this->container->get('request');
+        $file  = $request->files->get('qtifile');
+
         $qtiRepos->createDirQTI();
         $root = array();
         $fichier = array();
 
-        $rst = 'its a zip file';
-        move_uploaded_file($_FILES["qtifile"]["tmp_name"],
-                $qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $file->move($qtiRepos->getUserDir(), $file->getClientOriginalName());
         $zip = new \ZipArchive;
-        if ($zip->open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]) !== true) {
+        if ($zip->open($qtiRepos->getUserDir() . $file->getClientOriginalName()) !== true) {
 
             return false;
         }
-        $res = zip_open($qtiRepos->getUserDir() . $_FILES["qtifile"]["name"]);
+        $res = zip_open($qtiRepos->getUserDir() .$file->getClientOriginalName());
         $zip->extractTo($qtiRepos->getUserDir());
 
         $i=0;
@@ -121,8 +123,6 @@ class QtiController extends Controller {
                 //please use $fs->move() instead
                 //@see http://symfony.com/doc/current/components/filesystem/introduction.html
                 exec('mv '.$qtiRepos->getUserDir().$comma_separated.'/* '.$qtiRepos->getUserDir());
-                //$sf = new FileSystem();
-                //$sf->copyDir($qtiRepos->getUserDir().$comma_separated, $qtiRepos->getUserDir());die();
             }
         }
 

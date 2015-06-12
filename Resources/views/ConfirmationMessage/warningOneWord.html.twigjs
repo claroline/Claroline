@@ -1,0 +1,5 @@
+{% twig_js name="warningOneWord" %}
+
+{# no transchoice filter in twigjs... #}
+
+{{ 'warning_one_word'|trans({}, 'messages') }}

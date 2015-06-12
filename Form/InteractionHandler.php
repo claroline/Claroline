@@ -6,10 +6,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
 use UJM\ExoBundle\Entity\Category;
-use Symfony\Component\Translation\DataCollectorTranslator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
-
-use UJM\ExoBundle\Entity\Exercise;
 
 abstract class InteractionHandler
 {
@@ -36,7 +34,7 @@ abstract class InteractionHandler
      * @param Translation $translator
      *
      */
-    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, DataCollectorTranslator $translator=NULL)
+    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, TranslatorInterface $translator=NULL)
     {
         $this->form     = $form;
         $this->request  = $request;
@@ -90,7 +88,6 @@ abstract class InteractionHandler
     protected function persistHints($inter) {
         foreach ($inter->getInteraction()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            //$interQCM->getInteraction()->addHint($hint);
             $hint->setInteraction($inter->getInteraction());
             $this->em->persist($hint);
         }
@@ -221,7 +218,7 @@ abstract class InteractionHandler
      */
     protected function addAnExercise($inter) {
 
-        $this->exoServ->addQuestionInExercise($inter, $this->exercise, $this->em->getRepository('UJMExoBundle:Exercise'));
+        $this->exoServ->addQuestionInExercise($inter, $this->exercise);
     }
 
     /**

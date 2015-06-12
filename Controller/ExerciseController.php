@@ -3,7 +3,6 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -16,7 +15,6 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Entity\Interaction;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -613,6 +611,11 @@ class ExerciseController extends Controller
             $qid = $request->request->get('qid');
 
             $em = $this->getDoctrine()->getManager();
+            $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
+                         . 'WHERE eq.exercise='.$exoID;
+            $query = $em->createQuery($dql);
+            $result = $query->getResult();
+            $maxOrdre = (int) $result[0][1] + 1;
 
             foreach ($qid as $q) {
                 $question = $this->getDoctrine()
@@ -626,20 +629,14 @@ class ExerciseController extends Controller
                     $question = $em->getRepository('UJMExoBundle:Question')->find($q);
 
                     $eq = new ExerciseQuestion($exo, $question);
-
-                    $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                         . 'WHERE eq.exercise='.$exoID;
-
-                    $query = $em->createQuery($dql);
-                    $maxOrdre = $query->getResult();
-
-                    $eq->setOrdre((int) $maxOrdre[0][1] + 1);
+                    $eq->setOrdre((int) $maxOrdre);
                     $em->persist($eq);
+                    $maxOrdre++;
 
-                    $em->flush();
                 }
-            }
 
+            }
+            $em->flush();
             $url = (string)$this->generateUrl('ujm_exercise_questions',array('id' => $exoID,'pageNow' => $pageGoNow));
 
             return new \Symfony\Component\HttpFoundation\Response($url);
@@ -820,7 +817,6 @@ class ExerciseController extends Controller
      */
     private function prepareInteractionsPaper($id, $exercise)
     {
-        $em = $this->getDoctrine()->getManager();
         $orderInter = '';
         $tabOrderInter = array();
         $tab = array();
@@ -877,7 +873,7 @@ class ExerciseController extends Controller
 
         //To record response
         $exerciseSer = $this->container->get('ujm.exercise_services');
-        $ip = $exerciseSer->getIP();
+        $ip = $exerciseSer->getIP($request);
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
             ->getManager()
@@ -1209,7 +1205,7 @@ class ExerciseController extends Controller
                     ->getManager()
                     ->getRepository('UJMExoBundle:InteractionMatching')
                     ->getInteractionMatching($interactionToDisplay->getId());
-                
+
                 if ($interactionToDisplayed[0]->getShuffle()) {
                         $interactionToDisplayed[0]->shuffleProposals();
                         $interactionToDisplayed[0]->shuffleLabels();
@@ -1359,8 +1355,7 @@ class ExerciseController extends Controller
         if ($exercise->getNbQuestion() == 0) {
             $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
         }
-        //$marks = $this->container->get('ujm.exercise_services')->getExerciseHistoMarks($exerciseId);
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'noteExo');
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'noteExo');
         $tabMarks = array();
         $histoMark = array();
 
@@ -1380,7 +1375,7 @@ class ExerciseController extends Controller
         }
 
         ksort($tabMarks);
-        $scoreList = implode(",", array_keys($tabMarks));//echo $scoreList;die();
+        $scoreList = implode(",", array_keys($tabMarks));
 
         if (max($tabMarks) > 4) {
             $maxY = max($tabMarks);
@@ -1496,14 +1491,12 @@ class ExerciseController extends Controller
         $tabCoeffQ = array();
         $histoDiscrimination = array();
         $scoreAverageExo = 0;
-        $marks = $em->getRepository('UJMExoBundle:Exercise')->getExerciseMarks($exerciseId, 'paper');
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'paper');
 
         //Array of exercise's scores
         foreach ($marks as $mark) {
             $tabScoreExo[] = $mark["noteExo"];
         }
-        //var_dump($tabScoreExo);die();
 
         //Average exercise's score
         foreach ($tabScoreExo as $se) {
@@ -1525,7 +1518,6 @@ class ExerciseController extends Controller
                 $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
             }
         }
-        //var_dump($tabScoreQ);die();
 
         //Array of average of each question's score
         foreach ($eqs as $eq) {
@@ -1537,7 +1529,6 @@ class ExerciseController extends Controller
             $sm = $sm / count($papers);
             $tabScoreAverageQ[$eq->getQuestion()->getId()] = $sm;
         }
-        //var_dump($tabScoreAverageQ);die();
 
         //Array of (x-Mx)(y-My)
         foreach ($eqs as $eq) {
@@ -1548,12 +1539,10 @@ class ExerciseController extends Controller
                 $i++;
             }
         }
-        //var_dump($productMarginMark);die();
 
         foreach ($eqs as $eq) {
             $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
             $sumPenq = 0;
-            $coeff = null;
             $standardDeviationQ = null;
             $standardDeviationE = $this->sd($tabScoreExo);
             $n = count($productMarginMarkQ);
@@ -1569,7 +1558,6 @@ class ExerciseController extends Controller
                 $tabCoeffQ[] = 0;
             }
         }
-        //var_dump($tabCoeffQ);die();
 
         $coeffQ = implode(",", $tabCoeffQ);
         $histoDiscrimination['coeffQ'] = $coeffQ;
@@ -1820,9 +1808,7 @@ class ExerciseController extends Controller
             }
 
             $em->remove($paper);
-
-            $em->flush();
-
         }
+        $em->flush();
     }
 }

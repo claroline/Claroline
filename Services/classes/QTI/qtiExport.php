@@ -57,12 +57,7 @@ abstract class qtiExport
      */
     protected function objetcTags()
     {
-//        $imgs = $this->document->getElementsByTagName("img");
-//        foreach ($imgs as $img) {
-//            echo 'ok';
-//        }
         $prompt = $this->document->getElementsByTagName('prompt')->item(0);
-        //$txt = $prompt->nodeValue;
         $txt = html_entity_decode($prompt->nodeValue);
         $regex = '(<a.*?</a>)';
         preg_match_all($regex, $txt, $matches);
@@ -73,7 +68,6 @@ abstract class qtiExport
             echo $nodeId."<br>";
 
         }
-        die();
     }
 
     /**
@@ -193,9 +187,6 @@ abstract class qtiExport
      */
     protected function getResponse()
     {
-        //$this->objetcTags();
-
-        //$tmpFileName = tempnam($this->qtiRepos->getUserDir().'tmp', "xb_");
         $tmpFileName = $this->qtiRepos->getUserDir().'zip/'.$this->question->getId().'_qestion_qti.zip';
         $zip = new \ZipArchive();
         $zip->open($tmpFileName, \ZipArchive::CREATE);

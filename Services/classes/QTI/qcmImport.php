@@ -52,7 +52,6 @@ class qcmImport extends qtiImport {
         $ci = $ib->getElementsByTagName("choiceInteraction")->item(0);
         $text = '';
         if ($ci->getElementsByTagName("prompt")->item(0)) {
-            //$prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
 
             $prompt = $ci->getElementsByTagName("prompt")->item(0);
             $text = $this->domElementToString($prompt);
@@ -153,9 +152,9 @@ class qcmImport extends qtiImport {
             $choice->setRightResponse($this->getRightResponse($simpleChoice->getAttribute("identifier")));
             $choice->setInteractionQCM($this->interactionQCM);
             $this->om->persist($choice);
-            $this->om->flush();
             $order ++;
         }
+        $this->om->flush();
     }
 
     /**
@@ -167,7 +166,6 @@ class qcmImport extends qtiImport {
      */
     protected function choiceValue($simpleChoice) {
         $value = $this->domElementToString($simpleChoice);
-        //$value = str_replace('<simpleChoice>', '', $value);
         $value = preg_replace('(<simpleChoice.*?>)', '', $value);
         $value = str_replace('</simpleChoice>', '', $value);
         $value = html_entity_decode($value);

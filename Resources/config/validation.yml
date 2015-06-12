@@ -32,6 +32,8 @@ UJM\ExoBundle\Entity\WordResponse:
     properties:
         score:
             - UJM\ExoBundle\Validator\Constraints\isValidMark: ~
+        response:
+            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
 
 #UJM\ExoBundle\Entity\Question:
 #    properties:

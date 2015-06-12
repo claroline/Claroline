@@ -2,6 +2,7 @@ var typeOpen;
 var container;
 var tablewr;
 var deleteWr;
+var checkModal = false; //Checks whether the modal (question for a word) is show or hidden
 
 function insertStyle(tOpen, deleteTrans) {
 
@@ -27,14 +28,11 @@ function insertStyle(tOpen, deleteTrans) {
 function formWordResponseEdit(nbResponses) {
     // Get the form field to fill rows of the choices' table
     container.children().first().children('div').each(function () {
-
         // Add a row to the table
         $('#tablewr').find('tbody').append('<tr></tr>');
 
-         $(this).find('.row').each(function () {
-
+        $(this).find('.row').each(function () {
             addRowToTablewr($(this));
-
         });
         if (nbResponses == 0) {
             // Add the delete button
@@ -62,9 +60,9 @@ function addWr(container, deleteWr) {
 
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'wr n°' + (index))
-        .replace(/__name__/g, index)
-        .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
-    );
+            .replace(/__name__/g, index)
+            .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
+            );
 
     // Add the button to delete a choice
     addDelete(contain, deleteWr);
@@ -97,35 +95,81 @@ function openEdit(nbResponses) {
     codeOpen = typeOpen[$('#ujm_exobundle_interactionopentype_typeopenquestion').val()];
     if (codeOpen == 4) {
         showOpenWord();
-        formWordResponseEdit(nbResponses);
     } else if (codeOpen == 3) {
-        showShortResponse ();
-        formWordResponseEdit(nbResponses);
+        showShortResponse();
     }
+    formWordResponseEdit(nbResponses);
 }
 
-function showOpenWord () {
+function showOpenWord(nbResponses) {
     $('#qOpenOneWord').css('display', 'block');
     $('#qOpenScoreMaxLongResp').css('display', 'none');
     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val(0);
+    //Check if not edition or not form error
+    if (nbResponses === 0) {
+        if ($('#tablewr tr').length === 1) {
+            $('#tablewr').find('tbody').append('<tr></tr>');
+            addWr(container, deleteWr);
+        }
+    }
 }
 
-function showShortResponse () {
-    showOpenWord ();
+function showShortResponse() {
+    showOpenWord();
 }
 
-function showLongResponse () {
+function showLongResponse() {
     $('#qOpenScoreMaxLongResp').css('display', 'block');
     $('#qOpenOneWord').css('display', 'none');
     $('#ujm_exobundle_interactionopentype_scoreMaxLongResp').val('');
+    var lengthTab = $("#tablewr tr").length;
+    //removes empty lines
+    for (var i = 1; i < lengthTab; i++) {
+        if ($("#ujm_exobundle_interactionopentype_wordResponses_" + i + "_response").val() === '' || $("#ujm_exobundle_interactionopentype_wordResponses_" + i + "_score").val() === '')
+        {
+            $("#ujm_exobundle_interactionopentype_wordResponses_" + i + "_response").parent('td').parent('tr').remove();
+        }
+    }
 }
 
-$('#ujm_exobundle_interactionopentype_typeopenquestion').change( function () {
+$('#ujm_exobundle_interactionopentype_typeopenquestion').change(function () {
     if (typeOpen[$(this).val()] == 4) {
-        showOpenWord();
+        showOpenWord(0);
     } else if (typeOpen[$(this).val()] == 2) {
         showLongResponse();
     } else if (typeOpen[$(this).val()] == 3) {
-        showOpenWord ();
+        showOpenWord(0);
     }
 });
+
+/**
+ * check if there is space in "typeOneWord"
+ *
+ */
+function checkFormOpen() {
+    if (checkModal === false) {
+        var check = false;
+        if (typeOpen[$('#ujm_exobundle_interactionopentype_typeopenquestion').val()] === 4) {
+            $("*[id$='_response']").each(function () {
+                if ($(this).val().match(/\s/))
+                {
+                    check = true;
+                }
+            });
+        }
+        if (check === true)
+        {
+            $('#confirm-modal').modal('show');
+            return false;
+        }
+        else {
+            return true;
+        }
+    } else {
+        $('#confirm-modal').modal('hide');
+        return true;
+    }
+}
+
+
+

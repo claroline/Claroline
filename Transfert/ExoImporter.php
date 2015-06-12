@@ -14,13 +14,11 @@ namespace UJM\ExoBundle\Transfert;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Processor;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Subscription;
-use UJM\ExoBundle\Form\ExerciseHandler;
 
 /**
  * @DI\Service("claroline.importer.exo_importer")
@@ -60,8 +58,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
 
     public function addExoDescription($rootNode)
     {
-        $rootPath = $this->getRootPath();
-
         $rootNode
             ->prototype('array')
                 ->children()
@@ -95,7 +91,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiRepos->razValues();
         $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
-        if ($questions = opendir($rootPath.'/'.$exoPath)) {
+        if (file_exists($rootPath.'/'.$exoPath)) {
+            $questions = opendir($rootPath.'/'.$exoPath);
             $questionFiles = array();
             while (($question = readdir($questions)) !== false) {
                 if ($question != '.' && $question != '..') {

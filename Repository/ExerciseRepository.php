@@ -14,30 +14,6 @@ class ExerciseRepository extends EntityRepository
 {
 
     /**
-     * Scores of an exercise
-     *
-     * @access public
-     *
-     * @param integer $exoId id Exercise
-     * @param String $order to order result
-     *
-     * Return array
-     */
-    public function getExerciseMarks($exoId, $order = '')
-    {
-        if ($order != '') {
-            $orderBy = ' ORDER BY '.$order;
-        }
-        $dql = 'SELECT sum(r.mark) as noteExo, p.id as paper
-            FROM UJM\ExoBundle\Entity\Response r JOIN r.paper p JOIN p.exercise e
-            WHERE e.id='.$exoId.' AND p.interupt=0 group by p.id'.$orderBy;
-
-        $query = $this->_em->createQuery($dql);
-
-        return $query->getResult();
-    }
-
-    /**
      * Exercises created by an user
      *
      * @access public
@@ -50,9 +26,10 @@ class ExerciseRepository extends EntityRepository
     {
         $dql = 'SELECT e.id, e.title
             FROM UJM\ExoBundle\Entity\Subscription s JOIN s.exercise e
-            WHERE s.user='.$userID.' AND s.creator = 1';
+            WHERE s.user= ?1 AND s.creator = 1';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql)
+                           ->setParameter(1, $userID);
 
         return $query->getResult();
     }
@@ -74,10 +51,11 @@ class ExerciseRepository extends EntityRepository
             FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r
             JOIN r.workspace w
-            WHERE u.id='.$userID.' AND r.name LIKE \'ROLE_WS_MANAGER_%\'
+            WHERE u.id= ?1 AND r.name LIKE \'ROLE_WS_MANAGER_%\'
             ORDER BY w.name' ;
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql)
+                           ->setParameter(1, $userID);
 
         foreach ($query->getResult() as $ws) {
             $dql = 'SELECT e.id, e.title, w.name
@@ -86,37 +64,14 @@ class ExerciseRepository extends EntityRepository
                     JOIN rn.resourceType rt
                     JOIN rn.workspace w
                     WHERE rt.name =\'ujm_exercise\'
-                    AND w.id='.$ws['id'].'
+                    AND w.id= ?1
                     ORDER BY e.title';
-            $queryResources = $this->_em->createQuery($dql);
+            $queryResources = $this->_em->createQuery($dql)
+                                        ->setParameter(1, $ws['id']);
             foreach ($queryResources->getResult() as $resource) {
                 $exercises[] =  $resource;
             }
         }
-
-        /*$dql = "
-            SELECT e.id, e.title
-            FROM UJM\ExoBundle\Entity\Exercise e
-            JOIN e.resourceNode node
-            JOIN node.rights right
-            JOIN right.role r
-            JOIN node.resourceType rt
-            WHERE r.name IN (
-                SELECT r2.name FROM Claroline\CoreBundle\Entity\Role r2
-                LEFT JOIN r2.users u2
-                LEFT JOIN r2.groups g
-                LEFT JOIN g.users u3
-                WHERE r2.name LIKE 'ROLE_WS_MANAGER_%'
-                AND u2.id = '$userID'
-                OR u3.id = '$userID'
-                AND r2.name LIKE 'ROLE_WS_MANAGER_%'
-            ) AND rt.name ='ujm_exercise'
-        ";
-
-        $queryResources = $this->_em->createQuery($dql);
-            foreach ($queryResources->getResult() as $resource) {
-                $exercises[] =  $resource;
-            }*/
 
         return $exercises;
 

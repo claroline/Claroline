@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'hole creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'hole_creation' | trans }}</h3>
     </div>
 
     <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
@@ -34,8 +34,7 @@
         addFormHoleEdit('{{ "response" | trans }}', '{{ "Inter_Hole.size" | trans }}',
         '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}',
         '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}',
-        '{{ "key word" | trans }}', '{{ "points" | trans  }}');
-
+        '{{ "key_word" | trans }}', '{{ "points" | trans  }}');
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
@@ -43,7 +42,7 @@
         addFormHole('{{ "response" | trans }}', '{{ "Inter_Hole.size" | trans }}',
         '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}',
         '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}',
-        '{{ "key word" | trans  }}', '{{ "points" | trans  }}');
+        '{{ "key_word" | trans  }}', '{{ "points" | trans  }}');
 
     newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>

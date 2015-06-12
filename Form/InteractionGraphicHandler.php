@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\Coords;
 
 class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
@@ -265,6 +264,10 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
                 return "orange";
             case "y" :
                 return "yellow";
+            case "k" :
+                return "black";
+            case "n" :
+                return "brown";
             default :
                 return "white";
         }

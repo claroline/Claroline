@@ -117,10 +117,9 @@ class PaperRepository extends EntityRepository
     public function getPaperUser($userID)
     {
         $dql = 'SELECT p FROM UJM\ExoBundle\Entity\Paper p
-                WHERE p.user = '.$userID.'
-        ';
+                WHERE p.user = ?1';
 
-        $query = $this->_em->createQuery($dql);
+        $query = $this->_em->createQuery($dql)->setParameter(1, $userID);
 
         return $query->getResult();
     }

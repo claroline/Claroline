@@ -42,7 +42,6 @@ class matchingExport extends qtiExport
         $this->qtiResponseDeclaration('RESPONSE','identifier', $this->cardinality);
         $this->qtiOutComeDeclaration();
 
-        //$this->defaultValueTag();
         $this->correctResponseTag();
         $this->itemBodyTag();
         $this->matchingInteractionTag();
@@ -86,7 +85,7 @@ class matchingExport extends qtiExport
             $shuffle = "false";
         }
         $this->matchInteraction = $this->document->CreateElement('matchInteraction');
-        $this->matchInteraction->setAttribute("directedPair", "RESPONSE");
+        $this->matchInteraction->setAttribute("responseIdentifier", "RESPONSE");
         $this->matchInteraction->setAttribute("shuffle", $shuffle);
         $this->matchInteraction->setAttribute("maxAssociation", $maxAssociation);
         $this->itemBody->appendChild($this->matchInteraction);
@@ -151,7 +150,7 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
-        
+
         if ($proposal->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {
@@ -208,7 +207,7 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
-        
+
         if ($label->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {

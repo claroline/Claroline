@@ -5,11 +5,6 @@ namespace UJM\ExoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-
-use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Paper;
-use UJM\ExoBundle\Form\PaperType;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -51,10 +46,6 @@ class PaperController extends Controller
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
 
         $this->checkAccess($exercise);
-
-        /*if (count($subscription) < 1) {
-            return $this->redirect($this->generateUrl('exercise_show', array('id' => $exoID)));
-        }*/
 
         if ($exoAdmin === true) {
             $paper = $this->getDoctrine()
@@ -304,7 +295,6 @@ class PaperController extends Controller
         $end = count($userList);
 
         for ($i = 0; $i < $end; $i++) {
-            //$papersOneUser[] = $em->getRepository('UJMExoBundle:Paper')->getPaperUser($userList[$i]->getId());
             $papersOneUser[] = $em->getRepository('UJMExoBundle:Paper')
                                   ->findBy(array(
                                             'user' => $userList[$i]->getId(),
@@ -403,7 +393,7 @@ class PaperController extends Controller
 
         } else {
 
-            throw new \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException();
+            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
         }
     }
 

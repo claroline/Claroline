@@ -18,6 +18,9 @@ function position(shape, color, i, prefix, value, size, points) {
     // Set the shape/color of the right answer zone already placed
     if (shape == 'circle') {
         switch (color) {
+        case 'black' :
+            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            break;
         case 'white' :
             $('#img' + i).attr('src', prefix + 'circlew.png');
             break;
@@ -45,44 +48,53 @@ function position(shape, color, i, prefix, value, size, points) {
         case 'yellow' :
             $('#img' + i).attr('src', prefix + 'circley.png');
             break;
-
+            
+        case 'brown' :
+            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+            break;
         default :
-            $('#img' + i).attr('src', prefix + 'circlew.png');
+            $('#img' + i).attr('src', prefix + 'circleblack.png');
             break;
         }
 
     } else if (shape == 'square') {
-        switch (color) {
+        switch (color) {      
+        case 'black' :
+            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            break;
         case 'white' :
-            $('#img' + i).attr('src', prefix + 'squarew.jpg');
+            $('#img' + i).attr('src', prefix + 'squarew.png');
             break;
 
         case 'red' :
-            $('#img' + i).attr('src', prefix + 'squarer.jpg');
+            $('#img' + i).attr('src', prefix + 'squarer.png');
             break;
 
         case 'blue' :
-            $('#img' + i).attr('src', prefix + 'squareb.jpg');
+            $('#img' + i).attr('src', prefix + 'squareb.png');
             break;
 
         case 'purple' :
-            $('#img' + i).attr('src', prefix + 'squarep.jpg');
+            $('#img' + i).attr('src', prefix + 'squarep.png');
             break;
 
         case 'green' :
-            $('#img' + i).attr('src', prefix + 'squareg.jpg');
+            $('#img' + i).attr('src', prefix + 'squareg.png');
             break;
 
         case 'orange' :
-            $('#img' + i).attr('src', prefix + 'squareo.jpg');
+            $('#img' + i).attr('src', prefix + 'squareo.png');
             break;
 
         case 'yellow' :
-            $('#img' + i).attr('src', prefix + 'squarey.jpg');
+            $('#img' + i).attr('src', prefix + 'squarey.png');
             break;
-
+ 
+        case 'brown' :
+            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+             break;
         default :
-            $('#img' + i).attr('src', prefix + 'squarew.jpg');
+            $('#img' + i).attr('src', prefix + 'squareblack.png');
         }
     }
 
@@ -159,37 +171,45 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
 
     contenu += '<td class="classic">';
 
-    if (color == 'red') {
-         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF0000" \n\
+    if (color == 'white') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFFFF" \n\
                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
-    } else if (color == 'blue') {
-         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #002FFF" \n\
+    }else if (color == 'red') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #C1001F" \n\
                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+    }else if (color == 'blue') {
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #009CDD" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     } else if (color == 'purple') {
-         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #8B008B" \n\
-                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #56267D" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     } else if (color == 'green') {
-        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #008600" \n\
-                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #118E3F" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     } else if (color == 'orange') {
-        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FF7A00" \n\
-                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #C95226" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     } else if (color == 'yellow') {
-        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFF09" \n\
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFEB00" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+     } else if (color == 'brown') {
+         contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #5A4C41" \n\
                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     } else {
-        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #FFFFFF" \n\
-                        onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
+        contenu += '<select class="form-control" id="color' + grade + '" size="1" style="background-color : #000000" \n\
+                         onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">';
     }
 
-    contenu += '<option value="white"  style="background-color:#FFFFFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="red"    style="background-color:#FF0000;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="blue"   style="background-color:#002FFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="purple" style="background-color:#8B008B;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="green"  style="background-color:#008600;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="orange" style="background-color:#FF7A00;"> &nbsp;&nbsp;&nbsp; </option>\n\
-                <option value="yellow" style="background-color:#FFFF09;"> &nbsp;&nbsp;&nbsp; </option>\n\
-            </select></td>';
+    contenu += '<option value="black"  style="background-color:#000000;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="white"  style="background-color:#FFFFFF;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="red"    style="background-color:#C1001F;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="blue"   style="background-color:#009CDD;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="purple" style="background-color:#56267D;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="green"  style="background-color:#118E3F;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="orange" style="background-color:#C95226;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="yellow" style="background-color:#FFEB00;"> &nbsp;&nbsp;&nbsp; </option>\n\
+                <option value="brown"    style="background-color:#5A4C41;"> &nbsp;&nbsp;&nbsp; </option>\n\
+             </select></td>';
 
     contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
                     + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';

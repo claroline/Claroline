@@ -4,18 +4,11 @@ namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\BadgeClaim;
-use Icap\BadgeBundle\Entity\BadgeCollection;
-use Icap\BadgeBundle\Entity\BadgeRule;
-use Icap\BadgeBundle\Entity\BadgeTranslation;
-use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -64,20 +57,14 @@ class exerciseServices
      * Get IP client
      *
      * @access public
+     * @param Request $request
      *
      * @return IP Client
      */
-    public function getIP()
+    public function getIP(Request $request)
     {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip = $_SERVER['HTTP_CLIENT_IP'];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
 
-        return $ip;
+        return $request->getClientIp();
     }
 
 
@@ -97,7 +84,7 @@ class exerciseServices
         $interactionQCMID = $request->request->get('interactionQCMToValidated');
         $response = array();
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interQCM = $em->getRepository('UJMExoBundle:InteractionQCM')->find($interactionQCMID);
 
         if ($interQCM->getTypeQCM()->getCode() == 2) {
@@ -191,9 +178,10 @@ class exerciseServices
             foreach ($allChoices as $choice) {
                 $markByChoice[(string) $choice->getId()] = $choice->getWeight();
             }
-
-            foreach ($response as $res) {
-                $score += $markByChoice[$res];
+            if ($response[0] != null) {
+                foreach ($response as $res) {
+                    $score += $markByChoice[$res];
+                }
             }
 
             if ($score > $scoreMax) {
@@ -247,7 +235,7 @@ class exerciseServices
         $graphId = $request->request->get('graphId'); // Id of the graphic interaction
         $max = $request->request->get('nbpointer'); // Number of answer zones
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $rightCoords = $em->getRepository('UJMExoBundle:Coords')
             ->findBy(array('interactionGraphic' => $graphId));
@@ -356,7 +344,7 @@ class exerciseServices
         $penalty = 0;
         $session = $request->getSession();
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
 
         $response = $request->request->get('interOpen');
@@ -420,7 +408,7 @@ class exerciseServices
      */
     public function responseHole($request, $paperID = 0)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $res = array();
         $interactionHoleID = $request->request->get('interactionHoleToValidated');
         $tabResp = array();
@@ -449,8 +437,6 @@ class exerciseServices
             $penalty = $this->getPenalty($interHole->getInteraction(), $paperID);
         }
 
-
-        //$score .= '/'.$this->holeMaxScore($interHole);
         $score = $this->holeMark($interHole, $request->request, $penalty);
 
         foreach($interHole->getHoles() as $hole) {
@@ -493,7 +479,7 @@ class exerciseServices
      */
     public function holeMark($interHole, $request, $penalty)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $score = 0;
 
         foreach($interHole->getHoles() as $hole) {
@@ -564,7 +550,7 @@ class exerciseServices
         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
         $response = $request->request->get('jsonResponse');
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
 
         $penalty = 0;
@@ -1058,7 +1044,7 @@ class exerciseServices
         $scorePaper = 0;
         $scoreTemp = false;
 
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $interactions = $this->om
                              ->getRepository('UJMExoBundle:Interaction')
@@ -1252,7 +1238,7 @@ class exerciseServices
     public function getBadgeLinked($resourceId)
     {
         $badges = array();
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $badgesRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
                           ->findBy(array('resource' => $resourceId));
 
@@ -1281,7 +1267,7 @@ class exerciseServices
      */
     public function badgesInfoUser($userId, $resourceId, $locale)
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
         $badgesInfoUser = array();
         $i = 0;
 
@@ -1450,7 +1436,7 @@ class exerciseServices
      */
     public function getTypeQCM()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeQCM = array();
         $types = $em->getRepository('UJMExoBundle:TypeQCM')
@@ -1472,7 +1458,7 @@ class exerciseServices
      */
     public function getTypeOpen()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeOpen = array();
         $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
@@ -1494,7 +1480,7 @@ class exerciseServices
      */
     public function getTypeMatching()
     {
-        $em = $this->om;
+        $em = $this->doctrine->getManager();
 
         $typeMatching = array();
         $types = $em->getRepository('UJMExoBundle:TypeMatching')
@@ -1688,7 +1674,7 @@ class exerciseServices
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param Doctrine EntityManager $em
      */
-    public function addQuestionInExercise($inter, $exercise, $em) {
+    public function addQuestionInExercise($inter, $exercise) {
         if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
                 $this->setExerciseQuestion($exercise, $inter);

@@ -26,25 +26,25 @@ class DocumentRepository extends EntityRepository
     public function findByType($type, $userID, $searchLabel)
     {
         if ($type == 'image') {
-            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = '.$userID.' AND
-                (d.type= \'.png\' OR d.type= \'.jpeg\' OR d.type= \'.jpg\' OR d.type= \'.gif\' OR d.type= \'.bmp\')';
+            $dql = ('SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = ?1 AND
+                (d.type= \'.png\' OR d.type= \'.jpeg\' OR d.type= \'.jpg\' OR d.type= \'.gif\' OR d.type= \'.bmp\')');
         } elseif ($type == 'video') {
-            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = '.$userID.' AND
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = ?1 AND
                 (d.type= \'.avi\' OR d.type= \'.mpeg\' OR d.type= \'.wmv\' OR d.type= \'.flv\' OR d.type= \'.mov\')';
         } elseif ($type == 'music') {
-            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = '.$userID.' AND
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = ?1 AND
                 (d.type= \'.mp3\' OR d.type= \'.wav\')';
         } elseif ($type == 'file') {
-            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = '.$userID.' AND NOT
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = ?1 AND NOT
                 d.type= \'.png\' AND NOT d.type= \'.jpeg\' AND NOT d.type= \'.jpg\' AND NOT d.type= \'.gif\' AND NOT d.type= \'.bmp\'
                 AND NOT d.type= \'.avi\' AND NOT d.type= \'.mpeg\' AND NOT d.type= \'.wmv\' AND NOT d.type= \'.flv\' AND NOT d.type= \'.mov\'';
         } elseif ($type == 'all') {
-            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = '.$userID.'';
+            $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d WHERE d.user = ?1';
         }
 
         if ($searchLabel != '') {
             $dql .= ' AND UPPER(d.label) LIKE :search';
-            $query = $this->_em->createQuery($dql)->setParameter('search', "%{$searchLabel}%");
+            $query = $this->_em->createQuery($dql)->setParameters(array(1 => $userID, 2 => $searchLabel));
         } else {
             $query = $this->_em->createQuery($dql);
         }
@@ -66,15 +66,15 @@ class DocumentRepository extends EntityRepository
     public function findByLabel($labelToFind, $userId, $strict)
     {
         $dql = 'SELECT d FROM UJM\ExoBundle\Entity\Document d
-            WHERE d.user = '.$userId.'
-            AND UPPER(d.label) LIKE :search';
+            WHERE d.user = ?1
+            AND UPPER(d.label) LIKE ?2';
 
         if ($strict == 0) {
             $query = $this->_em->createQuery($dql)
-                ->setParameter('search', "{$labelToFind}");
+                ->setParameters(array(1 => $userId, 2 => $labelToFind));
         } else {
              $query = $this->_em->createQuery($dql)
-                ->setParameter('search', "%{$labelToFind}%");
+                ->setParameters(array(1 => $userId, 2 => "%$labelToFind%"));
         }
 
         return $query->getResult();

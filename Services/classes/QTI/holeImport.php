@@ -41,7 +41,7 @@ class holeImport extends qtiImport
 
         $this->createInteractionHole();
 
-        $this->om->flush();
+        $this->om->forceFlush();
 
         $this->addOptionValue();
 
@@ -196,7 +196,7 @@ class holeImport extends qtiImport
         }
         $this->interactionHole->setHtmlWithoutValue($htmlWithoutValue);
         $this->om->persist($this->interactionHole);
-        $this->om->flush();
+        $this->om->forceFlush();
     }
 
     /**
@@ -219,7 +219,6 @@ class holeImport extends qtiImport
         $hole->setInteractionHole($this->interactionHole);
 
         $this->om->persist($hole);
-
         $this->createWordResponse($qtiId, $hole);
     }
 
@@ -313,6 +312,7 @@ class holeImport extends qtiImport
                     $keyWord->setScore($score);
                     $keyWord->setHole($hole);
                     $this->om->persist($keyWord);
+                    
                     $this->tabWrOpt[] = $keyWord;
                 }
             }

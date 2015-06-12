@@ -51,7 +51,6 @@ class matchingImport extends qtiImport {
         $ci = $ib->getElementsByTagName("matchInteraction")->item(0);
         $text = '';
         if ($ci->getElementsByTagName("prompt")->item(0)) {
-            //$prompt = $ci->getElementsByTagName("prompt")->item(0)->nodeValue;
             $prompt = $ci->getElementsByTagName("prompt")->item(0);
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
@@ -67,7 +66,6 @@ class matchingImport extends qtiImport {
     * @access protected
     */
     protected function createInteractionMatching() {
-        $rp = $this->assessmentItem->getElementsByTagName("responseProcessing");
         $this->interactionMatching = new InteractionMatching();
         $this->interactionMatching->setInteraction($this->interaction);
         //for recording the type of the question
@@ -78,17 +76,17 @@ class matchingImport extends qtiImport {
         $this->createLabels();
         $this->createProposals();
     }
-    
+
     /**
      * Get shuffle
-     * 
+     *
      * @access protected
      */
     protected function getShuffle() {
         $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
         $mi = $ib->getElementsBYTagName("matchInteraction")->item(0);
         $shuffle = $mi->getAttribute("shuffle");
-        if ($shuffle == true ) {
+        if ($shuffle == 'true' ) {
             $this->interactionMatching->setShuffle(true);
         } else {
             $this->interactionMatching->setShuffle(false);
@@ -116,19 +114,19 @@ class matchingImport extends qtiImport {
             $label->setScoreRightResponse($this->notation($identifiant));
             $label->setInteractionMatching($this->interactionMatching);
             $label->setOrdre($ordre);
-            
+
            if ($simpleLabel->hasAttribute("fixed") && $simpleLabel->getAttribute("fixed") == 'true') {
                 $label->setPositionForce(true);
             } else {
                 $label->setPositionForce(false);
             }
-            
+
             //recording in the DBB
             $this->om->persist($label);
-            $this->om->flush();
             $this->associatedLabels[$identifiant] = $label;
             $ordre++;
         }
+        $this->om->flush();
     }
 
     /**
@@ -149,17 +147,16 @@ class matchingImport extends qtiImport {
             $proposal = new Proposal();
             $proposal->setValue($this->value($simpleProposal));
             $proposal->setOrdre($ordre);
-            
+
             if ($simpleProposal->hasAttribute("fixed") && $simpleProposal->getAttribute("fixed") == 'true') {
                 $proposal->setPositionForce(true);
             } else {
                 $proposal->setPositionForce(false);
             }
-            
+
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->om->persist($proposal);
-            $this->om->flush();
             $rightLabel = 0;
             //compare all relations to the proposal selected
             foreach ($allRelations as $relation) {
@@ -175,11 +172,11 @@ class matchingImport extends qtiImport {
                     $proposal->addAssociatedLabel($label);
                     $proposal->setInteractionMatching($this->interactionMatching);
                     $this->om->persist($proposal);
-                    $this->om->flush();
                 }
             }
             $ordre++;
         }
+        $this->om->flush();
     }
 
     /**
@@ -249,17 +246,15 @@ class matchingImport extends qtiImport {
         $ri = $this->assessmentItem->getElementsByTagName("responseDeclaration")->item(0);
         if ($ri->hasAttribute("cardinality") && $ri->getAttribute("cardinality") == 'single') {
             //type : to drag
-            $type = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:TypeMatching')
-                ->findOneBy(array('code' => 2));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeMatching')
+                         ->findOneBy(array('code' => 2));
             $this->interactionMatching->setTypeMatching($type);
         } else {
             //type : to bind
-            $type = $this->doctrine
-                ->getManager()
-                ->getRepository('UJMExoBundle:TypeMatching')
-                ->findOneBy(array('code' => 1));
+            $type = $this->om
+                         ->getRepository('UJMExoBundle:TypeMatching')
+                         ->findOneBy(array('code' => 1));
             $this->interactionMatching->setTypeMatching($type);
         }
     }

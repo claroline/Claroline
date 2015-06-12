@@ -374,6 +374,7 @@ class qtiRepository {
      */
     public function assocExerciseQuestion($ws = false)
     {
+        $order = 1;
         foreach($this->exerciseQuestions as $xmlName) {
             if ($ws === false) {
                 $order = -1;

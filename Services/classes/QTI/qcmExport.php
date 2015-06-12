@@ -48,7 +48,6 @@ class qcmExport extends qtiExport
         $this->qtiResponseDeclaration('RESPONSE','identifier', $cardinality);
         $this->qtiOutComeDeclaration();
 
-        //$this->defaultValueTag();
         $this->correctResponseTag();
         $this->itemBodyTag();
         $this->choiceInteractionTag();
@@ -74,7 +73,6 @@ class qcmExport extends qtiExport
     {
         $mapping = $this->document->CreateElement('mapping');
         $i=-1;
-        //$Alphabets = array('A','B','C','D','E','F','G','H','I','G','K','L');
         foreach($this->interactionqcm->getChoices() as $ch) {
 
            $i++;
@@ -91,23 +89,6 @@ class qcmExport extends qtiExport
            $this->simpleChoiceTag($ch, $i);
 
         }
-    }
-
-    /**
-     * add the tag defaultValue in outcomeDeclaration
-     *
-     * @access private
-     *
-     */
-    private function defaultValueTag()
-    {
-        //add the tag <Default value> to the item <outcomeDeclaration>
-        $defaultValue = $this->document->CreateElement('defaultValue');
-        $this->outcomeDeclaration->appendChild($defaultValue);
-        $value = $this->document->CreateElement("value");
-        $prompttxt =  $this->document->CreateTextNode("0");
-        $value->appendChild($prompttxt);
-        $defaultValue->appendChild($value);
     }
 
     /**

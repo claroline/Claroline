@@ -4,11 +4,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use UJM\ExoBundle\Entity\Hint;
-use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\LinkHintPaper;
-use UJM\ExoBundle\Form\HintType;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Hint controller.

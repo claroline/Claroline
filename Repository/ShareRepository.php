@@ -48,10 +48,10 @@ class ShareRepository extends EntityRepository
 
         $questions = array();
 
-        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise=' . $exoId
-            . ' ORDER BY eq.ordre';
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
+                ORDER BY eq.ordre';
 
-        $query = $em->createQuery($dql);
+        $query = $em->createQuery($dql)->setParameter(1, $exoId);
         $eqs = $query->getResult();
 
         foreach ($eqs as $eq) {
@@ -83,12 +83,11 @@ class ShareRepository extends EntityRepository
     public function findByCategoryShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q JOIN q.category c
-            WHERE c.value LIKE :search
-            AND s.user = '.$userId.'
-        ';
+            WHERE c.value LIKE ?1
+            AND s.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -106,12 +105,11 @@ class ShareRepository extends EntityRepository
     public function findByTitleShared($userId, $whatToFind)
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s JOIN s.question q
-            WHERE q.title LIKE :search
-            AND s.user = '.$userId.'
-        ';
+            WHERE q.title LIKE ?1
+            AND s.user = ?2';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -130,12 +128,11 @@ class ShareRepository extends EntityRepository
     {
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
                 WHERE s.question = i.question
-                AND s.user = '.$userId.'
-                AND i.type LIKE :search
-        ';
+                AND s.user = ?2
+                AND i.type LIKE ?1';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -154,12 +151,11 @@ class ShareRepository extends EntityRepository
     {
          $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
                 WHERE s.question = i.question
-                AND s.user = '.$userId.'
-                AND i.invite LIKE :search
-        ';
+                AND s.user = ?2
+                AND i.invite LIKE ?1';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }
@@ -179,12 +175,12 @@ class ShareRepository extends EntityRepository
         $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i,
                 UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Category c
                 WHERE s.question = i.question AND i.question = q AND q.category = c
-                AND s.user = '.$userId.'
-                AND (i.invite LIKE :search OR i.type LIKE :search OR c.value LIKE :search OR q.title LIKE :search)
+                AND s.user = ?2
+                AND (i.invite LIKE ?1 OR i.type LIKE ?1 OR c.value LIKE ?1 OR q.title LIKE ?1)
         ';
 
         $query = $this->_em->createQuery($dql)
-            ->setParameter('search', "%{$whatToFind}%");
+                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
     }

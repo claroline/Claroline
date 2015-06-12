@@ -6,7 +6,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -16,7 +15,6 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Subscription;
 use UJM\ExoBundle\Form\ExerciseType;
 
@@ -153,8 +151,6 @@ class ExerciseListener extends ContainerAware
 
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        //$response = $this->container->get('http_kernel')->forward('UJMExoBundle:Question:index', array());
-        /*$subRequest = $this->container->get('request')->*/
 
         $subRequest = $this->container->get('request')->duplicate(array(), null, array("_controller" => 'UJMExoBundle:Question:index'));
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
@@ -191,7 +187,7 @@ class ExerciseListener extends ContainerAware
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
         $newExercise->setPublished($exerciseToCopy->getPublished());
-        
+
         $em->persist($newExercise);
         $em->flush();
 
