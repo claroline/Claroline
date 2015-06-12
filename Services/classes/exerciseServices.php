@@ -234,100 +234,100 @@ class exerciseServices
      *
      * @return array
      */
-    public function responseGraphic($request, $paperID = 0)
-    {
-        $answers = $request->request->get('answers'); // Answer of the student
-        $graphId = $request->request->get('graphId'); // Id of the graphic interaction
-        $max = $request->request->get('nbpointer'); // Number of answer zones
-
-        $em = $this->doctrine->getManager();
-
-        $rightCoords = $em->getRepository('UJMExoBundle:Coords')
-            ->findBy(array('interactionGraphic' => $graphId));
-
-        $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
-            ->find($graphId);
-
-        $doc = $em->getRepository('UJMExoBundle:Document')
-            ->findOneBy(array('id' => $interG->getDocument()));
-
-        $verif = array();
-        $point = $z = $total = 0;
-
-        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
-
-        for ($i = 0; $i < $max - 1; $i++) {
-            for ($j = 0; $j < $max - 1; $j++) {
-                if (preg_match('/[0-9]+/', $coords[$j])) {
-                    list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
-                    list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
-
-                    $valid = $rightCoords[$i]->getSize(); // Size of the answer zone
-
-                    // If answer student is in right answer
-                    if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) &&
-                        (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
-                    ) {
-                        // Not get points twice for one answer
-                        if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
-                            $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
-                            $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
-                            $z++;
-                        }
-                    }
-                }
-            }
-            $total = $this->graphicMaxScore($interG); // Score max
-        }
-
-        $penalty = 0;
-
-        $session = $request->getSession();
-
-        // Not assessment
-        if ($paperID == 0) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-
-                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
-
-                    if ($signe == '-') {
-                        $penalty += substr($penal, 1);
-                    } else {
-                        $penalty += $penal;
-                    }
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interG->getInteraction(), $paperID);
-        }
-
-        $score = $point - $penalty; // Score of the student with penalty
-
-        // Not negatif score
-        if ($score < 0) {
-            $score = 0;
-        }
-
-        if (!preg_match('/[0-9]+/', $answers)) {
-            $answers = '';
-        }
-
-        $res = array(
-            'point' => $point, // Score of the student without penalty
-            'penalty' => $penalty, // Penalty (hints)
-            'interG' => $interG, // The entity interaction graphic (for the id ...)
-            'coords' => $rightCoords, // The coordonates of the right answer zones
-            'doc' => $doc, // The answer picture (label, src ...)
-            'total' => $total, // Score max if all answers right and no penalty
-            'rep' => $coords, // Coordonates of the answer zones of the student's answer
-            'score' => $score, // Score of the student (right answer - penalty)
-            'response' => $answers // The student's answer (with all the informations of the coordonates)
-        );
-
-        return $res;
-    }
+//    public function responseGraphic($request, $paperID = 0)
+//    {
+//        $answers = $request->request->get('answers'); // Answer of the student
+//        $graphId = $request->request->get('graphId'); // Id of the graphic interaction
+//        $max = $request->request->get('nbpointer'); // Number of answer zones
+//
+//        $em = $this->doctrine->getManager();
+//
+//        $rightCoords = $em->getRepository('UJMExoBundle:Coords')
+//            ->findBy(array('interactionGraphic' => $graphId));
+//
+//        $interG = $em->getRepository('UJMExoBundle:InteractionGraphic')
+//            ->find($graphId);
+//
+//        $doc = $em->getRepository('UJMExoBundle:Document')
+//            ->findOneBy(array('id' => $interG->getDocument()));
+//
+//        $verif = array();
+//        $point = $z = $total = 0;
+//
+//        $coords = preg_split('[;]', $answers); // Divide the answer zones into cells
+//
+//        for ($i = 0; $i < $max - 1; $i++) {
+//            for ($j = 0; $j < $max - 1; $j++) {
+//                if (preg_match('/[0-9]+/', $coords[$j])) {
+//                    list($xa,$ya) = explode("-", $coords[$j]); // Answers of the student
+//                    list($xr,$yr) = explode(",", $rightCoords[$i]->getValue()); // Right answers
+//
+//                    $valid = $rightCoords[$i]->getSize(); // Size of the answer zone
+//
+//                    // If answer student is in right answer
+//                    if ((($xa + 8) < ($xr + $valid)) && (($xa + 8) > ($xr)) &&
+//                        (($ya + 8) < ($yr + $valid)) && (($ya + 8) > ($yr))
+//                    ) {
+//                        // Not get points twice for one answer
+//                        if ($this->alreadyDone($rightCoords[$i]->getValue(), $verif, $z)) {
+//                            $point += $rightCoords[$i]->getScoreCoords(); // Score of the student without penalty
+//                            $verif[$z] = $rightCoords[$i]->getValue(); // Add this answer zone to already answered zones
+//                            $z++;
+//                        }
+//                    }
+//                }
+//            }
+//            $total = $this->graphicMaxScore($interG); // Score max
+//        }
+//
+//        $penalty = 0;
+//
+//        $session = $request->getSession();
+//
+//        // Not assessment
+//        if ($paperID == 0) {
+//            if ($session->get('penalties')) {
+//                foreach ($session->get('penalties') as $penal) {
+//
+//                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
+//
+//                    if ($signe == '-') {
+//                        $penalty += substr($penal, 1);
+//                    } else {
+//                        $penalty += $penal;
+//                    }
+//                }
+//            }
+//            $session->remove('penalties');
+//        } else {
+//            $penalty = $this->getPenalty($interG->getInteraction(), $paperID);
+//        }
+//
+//        $score = $point - $penalty; // Score of the student with penalty
+//
+//        // Not negatif score
+//        if ($score < 0) {
+//            $score = 0;
+//        }
+//
+//        if (!preg_match('/[0-9]+/', $answers)) {
+//            $answers = '';
+//        }
+//
+//        $res = array(
+//            'point' => $point, // Score of the student without penalty
+//            'penalty' => $penalty, // Penalty (hints)
+//            'interG' => $interG, // The entity interaction graphic (for the id ...)
+//            'coords' => $rightCoords, // The coordonates of the right answer zones
+//            'doc' => $doc, // The answer picture (label, src ...)
+//            'total' => $total, // Score max if all answers right and no penalty
+//            'rep' => $coords, // Coordonates of the answer zones of the student's answer
+//            'score' => $score, // Score of the student (right answer - penalty)
+//            'response' => $answers // The student's answer (with all the informations of the coordonates)
+//        );
+//
+//        return $res;
+//    }
 
     /**
      * To process the user's response for a open question and a paper(or a test)
@@ -339,67 +339,67 @@ class exerciseServices
      *
      * @return array
      */
-    public function responseOpen($request, $paperID = 0)
-    {
-        $res = array();
-        $interactionOpenID = $request->request->get('interactionOpenToValidated');
-        $response = '';
-        $tempMark = true;
-
-        $penalty = 0;
-        $session = $request->getSession();
-
-        $em = $this->doctrine->getManager();
-        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
-
-        $response = $request->request->get('interOpen');
-
-        // Not assessment
-        if ($paperID == 0) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-
-                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
-
-                    if ($signe == '-') {
-                        $penalty += substr($penal, 1);
-                    } else {
-                        $penalty += $penal;
-                    }
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interOpen->getInteraction(), $paperID);
-        }
-
-        if ($interOpen->getTypeOpenQuestion() == 'long') {
-            $score = -1;
-        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-            $score = $this->getScoreOpenOneWord($response, $interOpen);
-        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
-            $score = $this->getScoreShortResponse($response, $interOpen);
-        }
-
-        if ($interOpen->getTypeOpenQuestion() != 'long') {
-            $score -= $penalty;
-            if ($score < 0) {
-                $score = 0;
-            }
-        }
-
-        $score .= '/'.$this->openMaxScore($interOpen);
-
-        $res = array(
-            'penalty'   => $penalty,
-            'interOpen' => $interOpen,
-            'response'  => $response,
-            'score'     => $score,
-            'tempMark'  => $tempMark
-        );
-
-        return $res;
-    }
+//    public function responseOpen($request, $paperID = 0)
+//    {
+//        $res = array();
+//        $interactionOpenID = $request->request->get('interactionOpenToValidated');
+//        $response = '';
+//        $tempMark = true;
+//
+//        $penalty = 0;
+//        $session = $request->getSession();
+//
+//        $em = $this->doctrine->getManager();
+//        $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
+//
+//        $response = $request->request->get('interOpen');
+//
+//        // Not assessment
+//        if ($paperID == 0) {
+//            if ($session->get('penalties')) {
+//                foreach ($session->get('penalties') as $penal) {
+//
+//                    $signe = substr($penal, 0, 1); // In order to manage the symbol of the penalty
+//
+//                    if ($signe == '-') {
+//                        $penalty += substr($penal, 1);
+//                    } else {
+//                        $penalty += $penal;
+//                    }
+//                }
+//            }
+//            $session->remove('penalties');
+//        } else {
+//            $penalty = $this->getPenalty($interOpen->getInteraction(), $paperID);
+//        }
+//
+//        if ($interOpen->getTypeOpenQuestion() == 'long') {
+//            $score = -1;
+//        } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+//            $score = $this->getScoreOpenOneWord($response, $interOpen);
+//        } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+//            $score = $this->getScoreShortResponse($response, $interOpen);
+//        }
+//
+//        if ($interOpen->getTypeOpenQuestion() != 'long') {
+//            $score -= $penalty;
+//            if ($score < 0) {
+//                $score = 0;
+//            }
+//        }
+//
+//        $score .= '/'.$this->openMaxScore($interOpen);
+//
+//        $res = array(
+//            'penalty'   => $penalty,
+//            'interOpen' => $interOpen,
+//            'response'  => $response,
+//            'score'     => $score,
+//            'tempMark'  => $tempMark
+//        );
+//
+//        return $res;
+//    }
 
     /**
      * To process the user's response for an question with holes and a paper(or a test)
@@ -550,46 +550,46 @@ class exerciseServices
      *
      * @return array
      */
-    public function responseMatching($request, $paperID = 0)
-    {
-        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
-        $response = $request->request->get('jsonResponse');
-
-        $em = $this->doctrine->getManager();
-        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
-
-        $penalty = 0;
-
-        $session = $request->getSession();
-
-        if ( $paperID == 0 ) {
-            if ($session->get('penalties')) {
-                foreach ($session->get('penalties') as $penal) {
-                    $penalty += $penal;
-                }
-            }
-            $session->remove('penalties');
-        } else {
-            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
-        }
-
-        $tabsResponses = $this->initTabResponseMatching($response, $interMatching);
-        $tabRightResponse = $tabsResponses[1];
-        $tabResponseIndex = $tabsResponses[0];
-
-        $score = $this->matchingMark($interMatching, $penalty, $tabRightResponse, $tabResponseIndex);
-
-        $res = array(
-          'score'            => $score,
-          'penalty'          => $penalty,
-          'interMatching'    => $interMatching,
-          'tabRightResponse' => $tabRightResponse,
-          'tabResponseIndex' => $tabResponseIndex,
-          'response'         => $response
-        );
-
-        return $res;
-    }
+//    public function responseMatching($request, $paperID = 0)
+//    {
+//        $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
+//        $response = $request->request->get('jsonResponse');
+//
+//        $em = $this->doctrine->getManager();
+//        $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
+//
+//        $penalty = 0;
+//
+//        $session = $request->getSession();
+//
+//        if ( $paperID == 0 ) {
+//            if ($session->get('penalties')) {
+//                foreach ($session->get('penalties') as $penal) {
+//                    $penalty += $penal;
+//                }
+//            }
+//            $session->remove('penalties');
+//        } else {
+//            $penalty = $this->getPenalty($interMatching->getInteraction(), $paperID);
+//        }
+//
+//        $tabsResponses = $this->initTabResponseMatching($response, $interMatching);
+//        $tabRightResponse = $tabsResponses[1];
+//        $tabResponseIndex = $tabsResponses[0];
+//
+//        $score = $this->matchingMark($interMatching, $penalty, $tabRightResponse, $tabResponseIndex);
+//
+//        $res = array(
+//          'score'            => $score,
+//          'penalty'          => $penalty,
+//          'interMatching'    => $interMatching,
+//          'tabRightResponse' => $tabRightResponse,
+//          'tabResponseIndex' => $tabResponseIndex,
+//          'response'         => $response
+//        );
+//
+//        return $res;
+//    }
 
     /**
      * For the correction of a matching question :
@@ -694,35 +694,35 @@ class exerciseServices
      *
      * @return string userScore/scoreMax
      */
-    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $penalty, $tabRightResponse, $tabResponseIndex)
-    {
-        $scoretmp = 0;
-        $scoreMax = $this->matchingMaxScore($interMatching);
-
-        foreach ($tabRightResponse as $labelId => $value) {
-            if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
-                    && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
-                $label = $this->om
-                              ->getRepository('UJMExoBundle:Label')
-                              ->find($labelId);
-                $scoretmp += $label->getScoreRightResponse();
-            }
-            if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
-                $label = $this->om
-                              ->getRepository('UJMExoBundle:Label')
-                              ->find($labelId);
-                $scoretmp += $label->getScoreRightResponse();
-            }
-        }
-
-        $score = $scoretmp - $penalty;
-        if ($score < 0) {
-            $score = 0;
-        }
-        $score .= '/'.$scoreMax;
-
-        return $score;
-    }
+//    public function matchingMark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching, $penalty, $tabRightResponse, $tabResponseIndex)
+//    {
+//        $scoretmp = 0;
+//        $scoreMax = $this->matchingMaxScore($interMatching);
+//
+//        foreach ($tabRightResponse as $labelId => $value) {
+//            if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
+//                    && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
+//                $label = $this->om
+//                              ->getRepository('UJMExoBundle:Label')
+//                              ->find($labelId);
+//                $scoretmp += $label->getScoreRightResponse();
+//            }
+//            if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
+//                $label = $this->om
+//                              ->getRepository('UJMExoBundle:Label')
+//                              ->find($labelId);
+//                $scoretmp += $label->getScoreRightResponse();
+//            }
+//        }
+//
+//        $score = $scoretmp - $penalty;
+//        if ($score < 0) {
+//            $score = 0;
+//        }
+//        $score .= '/'.$scoreMax;
+//
+//        return $score;
+//    }
 
 
     /**
@@ -736,22 +736,22 @@ class exerciseServices
      *
      * @return boolean
      */
-    public function alreadyDone($coor, $verif, $z)
-    {
-        $resu = true;
-
-        for ($v = 0; $v < $z; $v++) {
-            // if already placed at this right place
-            if ($coor == $verif[$v]) {
-                $resu = false;
-                break;
-            } else {
-                $resu = true;
-            }
-        }
-
-        return $resu;
-    }
+//    public function alreadyDone($coor, $verif, $z)
+//    {
+//        $resu = true;
+//
+//        for ($v = 0; $v < $z; $v++) {
+//            // if already placed at this right place
+//            if ($coor == $verif[$v]) {
+//                $resu = false;
+//                break;
+//            } else {
+//                $resu = true;
+//            }
+//        }
+//
+//        return $resu;
+//    }
 
     /**
      * Get max score possible for an exercise
@@ -1044,7 +1044,7 @@ class exerciseServices
     }
 
     /**
-     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions marked or no)
+     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions graphiced or no)
      *
      * @access public
      *
@@ -1620,16 +1620,16 @@ class exerciseServices
      *
      * @return float
      */
-    private function getScoreOpenOneWord($response, $interOpen)
-    {
-        $score = 0;
-        foreach ($interOpen->getWordResponses() as $wr) {
-            $score += $this->getScoreWordResponse($wr, $response);
-        }
-
-        return $score;
-
-    }
+//    private function getScoreOpenOneWord($response, $interOpen)
+//    {
+//        $score = 0;
+//        foreach ($interOpen->getWordResponses() as $wr) {
+//            $score += $this->getScoreWordResponse($wr, $response);
+//        }
+//
+//        return $score;
+//
+//    }
 
     /**
      * Get score for a question with key word
@@ -1641,17 +1641,17 @@ class exerciseServices
      *
      * @return float
      */
-    private function getScoreWordResponse($wr, $response)
-    {
-        $score = 0;
-        if ( ((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
-                && $wr->getCaseSensitive() == false))
-                    || (trim($wr->getResponse()) == trim($response)) ) {
-            $score = $wr->getScore();
-        }
-
-        return $score;
-    }
+//    private function getScoreWordResponse($wr, $response)
+//    {
+//        $score = 0;
+//        if ( ((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
+//                && $wr->getCaseSensitive() == false))
+//                    || (trim($wr->getResponse()) == trim($response)) ) {
+//            $score = $wr->getScore();
+//        }
+//
+//        return $score;
+//    }
 
     /**
      * Get score for an open question with short answer
@@ -1663,23 +1663,23 @@ class exerciseServices
      *
      * @return float
      */
-    private function getScoreShortResponse($response, $interOpen)
-    {
-        $score = 0;
-
-        foreach($interOpen->getWordResponses() as $wr) {
-            $pattern = '/'.$wr->getResponse().'/';
-            if (!$wr->getCaseSensitive()) {
-                $pattern .= 'i';
-            }
-            $subject = '/'.$response.'/';
-            if (preg_match($pattern, $subject)) {
-                $score += $wr->getScore();
-            }
-        }
-
-        return $score;
-    }
+//    private function getScoreShortResponse($response, $interOpen)
+//    {
+//        $score = 0;
+//
+//        foreach($interOpen->getWordResponses() as $wr) {
+//            $pattern = '/'.$wr->getResponse().'/';
+//            if (!$wr->getCaseSensitive()) {
+//                $pattern .= 'i';
+//            }
+//            $subject = '/'.$response.'/';
+//            if (preg_match($pattern, $subject)) {
+//                $score += $wr->getScore();
+//            }
+//        }
+//
+//        return $score;
+//    }
 
     /**
      * Add an Interaction in an exercise if created since an exercise

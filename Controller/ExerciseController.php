@@ -852,7 +852,6 @@ class ExerciseController extends Controller
      */
     public function exercisePaperNavAction(Request $request)
     {
-        $response = '';
         $em = $this->getDoctrine()->getManager();
         $session = $request->getSession();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));

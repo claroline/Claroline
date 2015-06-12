@@ -102,6 +102,28 @@ abstract class interaction {
     }
 
     /**
+     * Get score for a question with key word
+     *
+     * @access protected
+     *
+     * @param \UJM\ExoBundle\Entity\WordResponse $wr
+     * @param String $response
+     *
+     * @return float
+     */
+     protected function getScoreWordResponse($wr, $response)
+     {
+         $score = 0;
+         if ( ((strcasecmp(trim($wr->getResponse()), trim($response)) == 0
+                 && $wr->getCaseSensitive() == false))
+                     || (trim($wr->getResponse()) == trim($response)) ) {
+             $score = $wr->getScore();
+         }
+
+         return $score;
+     }
+
+    /**
       *
       * Find if exist already an answer
       *

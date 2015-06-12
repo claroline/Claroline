@@ -21,20 +21,62 @@ class open extends interaction {
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
+         $interactionOpenID = $request->request->get('interactionOpenToValidated');
+         $tempMark = true;
 
+         $session = $request->getSession();
+
+         $em = $this->doctrine->getManager();
+         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')->find($interactionOpenID);
+
+         $response = $request->request->get('interOpen');
+
+         $penalty = $this->getPenalty($interOpen->getInteraction(), $session, $paperID);
+
+         $score = $this->mark($interOpen, $response, $penalty);
+
+         $res = array(
+             'penalty'   => $penalty,
+             'interOpen' => $interOpen,
+             'response'  => $response,
+             'score'     => $score,
+             'tempMark'  => $tempMark
+         );
+
+        return $res;
      }
 
      /**
-     * implement the abstract method
-     * To calculate the score
-     *
-     * @access public
-     *
-     * @return string userScore/scoreMax
-     */
-     public function mark()
+      * implement the abstract method
+      * To calculate the score
+      *
+      * @access public
+      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+      * @param String $response
+      * @param float $penalty penalty if the user showed hints
+      *
+      * @return string userScore/scoreMax
+      */
+     public function mark(\UJM\ExoBundle\Entity\InteractionOpen $interOpen = null, $response = null, $penalty = null)
      {
+         if ($interOpen->getTypeOpenQuestion() == 'long') {
+             $score = -1;
+         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+             $score = $this->getScoreOpenOneWord($response, $interOpen);
+         } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+             $score = $this->getScoreShortResponse($response, $interOpen);
+         }
 
+         if ($interOpen->getTypeOpenQuestion() != 'long') {
+             $score -= $penalty;
+             if ($score < 0) {
+                 $score = 0;
+             }
+         }
+
+         $score .= '/'.$this->maxScore($interOpen);
+
+         return $score;
      }
 
     /**
@@ -101,4 +143,53 @@ class open extends interaction {
 
          return $responseGiven;
      }
+
+     /**
+     * Get score for an open question with one word
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * @return float
+     */
+    private function getScoreOpenOneWord($response, $interOpen)
+    {
+        $score = 0;
+        foreach ($interOpen->getWordResponses() as $wr) {
+            $score += $this->getScoreWordResponse($wr, $response);
+        }
+
+        return $score;
+
+    }
+
+    /**
+     * Get score for an open question with short answer
+     *
+     * @access private
+     *
+     * @param String $response
+     * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
+     *
+     * @return float
+     */
+    private function getScoreShortResponse($response, $interOpen)
+    {
+        $score = 0;
+
+        foreach($interOpen->getWordResponses() as $wr) {
+            $pattern = '/'.$wr->getResponse().'/';
+            if (!$wr->getCaseSensitive()) {
+                $pattern .= 'i';
+            }
+            $subject = '/'.$response.'/';
+            if (preg_match($pattern, $subject)) {
+                $score += $wr->getScore();
+            }
+        }
+
+        return $score;
+    }
 }

@@ -21,19 +21,73 @@ class matching extends interaction {
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
+         $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
+         $response = $request->request->get('jsonResponse');
 
+         $em = $this->doctrine->getManager();
+         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')->find($interactionMatchingId);
+
+         $session = $request->getSession();
+
+         $penalty = $this->getPenalty($interMatching->getInteraction(), $session, $paperID);
+
+         $tabsResponses = $this->initTabResponseMatching($response, $interMatching);
+         $tabRightResponse = $tabsResponses[1];
+         $tabResponseIndex = $tabsResponses[0];
+
+         $score = $this->mark($interMatching, $penalty, $tabRightResponse, $tabResponseIndex);
+
+         $res = array(
+           'score'            => $score,
+           'penalty'          => $penalty,
+           'interMatching'    => $interMatching,
+           'tabRightResponse' => $tabRightResponse,
+           'tabResponseIndex' => $tabResponseIndex,
+           'response'         => $response
+         );
+
+        return $res;
      }
 
      /**
-     * implement the abstract method
-     * To calculate the score
-     *
-     * @access public
-     *
-     * @return string userScore/scoreMax
-     */
-     public function mark()
+      * implement the abstract method
+      * To calculate the score
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
+      * @param float $penality penalty if the user showed hints
+      * @param array $tabRightResponse
+      * @param array $tabResponseIndex
+      *
+      * @return string userScore/scoreMax
+      */
+     public function mark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching = null, $penalty= null, $tabRightResponse= null, $tabResponseIndex= null)
      {
+         $scoretmp = 0;
+         $scoreMax = $this->maxScore($interMatching);
+
+         foreach ($tabRightResponse as $labelId => $value) {
+             if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
+                     && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
+                 $label = $this->om->getRepository('UJMExoBundle:Label')
+                                   ->find($labelId);
+                 $scoretmp += $label->getScoreRightResponse();
+             }
+             if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
+                 $label = $this->om->getRepository('UJMExoBundle:Label')
+                                   ->find($labelId);
+                 $scoretmp += $label->getScoreRightResponse();
+             }
+         }
+
+         $score = $scoretmp - $penalty;
+         if ($score < 0) {
+             $score = 0;
+         }
+         $score .= '/'.$scoreMax;
+
+        return $score;
 
      }
 
