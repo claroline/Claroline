@@ -11,8 +11,7 @@
                 </h4>
             </div>
             <div id="collapse{{ widget.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-widget{{ widget.id }}" aria-expanded="false">
-                <div class="panel-body">
-                    <p>{{ widget.views.view }}</p>
+                <div class="panel-body" data-ng-bind-html="widget.views.view">
                 </div>
             </div>
         </div>

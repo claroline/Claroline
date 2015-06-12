@@ -186,6 +186,7 @@ abstract class AbstractWidget
         return array(
             'id'     => $this->getId(),
             'type'   => $this->getWidgetType(),
+            'label'  => $this->getLabel()
         );
     }
 

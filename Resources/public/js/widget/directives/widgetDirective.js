@@ -3,6 +3,8 @@
 widgetsApp
     .directive("widgetContainer", function() {
         return {
-            controller: "widgetController"
+            restrict: "AC",
+            controller: "widgetController",
+            scope: true
         };
     });
