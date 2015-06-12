@@ -32,6 +32,13 @@ abstract class AbstractWidget
     protected $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $label;
+
+    /**
      * @var \Datetime $createdAt
      *
      * @Gedmo\Timestampable(on="create")
@@ -83,6 +90,26 @@ abstract class AbstractWidget
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return AbstractWidget
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
 
         return $this;
     }

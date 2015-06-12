@@ -31,13 +31,6 @@ class PortfolioWidget
     protected $widget;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", nullable=false)
-     */
-    protected $label;
-
-    /**
      * @var integer
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 0})
@@ -101,26 +94,6 @@ class PortfolioWidget
     public function setWidget(AbstractWidget $widget)
     {
         $this->widget = $widget;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabel()
-    {
-        return $this->label;
-    }
-
-    /**
-     * @param string $label
-     *
-     * @return PortfolioWidget
-     */
-    public function setLabel($label)
-    {
-        $this->label = $label;
 
         return $this;
     }

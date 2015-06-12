@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/06/11 03:18:06
+ * Generation date: 2015/06/12 04:10:53
  */
-class Version20150611151805 extends AbstractMigration
+class Version20150612161049 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,7 +18,6 @@ class Version20150611151805 extends AbstractMigration
             CREATE TABLE icap__portfolio_widget (
                 portfolio_id INT NOT NULL, 
                 widget_id INT NOT NULL, 
-                `label` VARCHAR(255) NOT NULL, 
                 col INT DEFAULT 0 NOT NULL, 
                 row INT DEFAULT 0 NOT NULL, 
                 size_x INT DEFAULT 1 NOT NULL, 
@@ -51,7 +50,6 @@ class Version20150611151805 extends AbstractMigration
             ALTER TABLE icap__portfolio_abstract_widget 
             DROP col, 
             DROP row, 
-            DROP `label`, 
             DROP size_x, 
             DROP size_y, 
             CHANGE portfolio_id user_id INT NOT NULL
@@ -82,7 +80,6 @@ class Version20150611151805 extends AbstractMigration
             ALTER TABLE icap__portfolio_abstract_widget 
             ADD col INT DEFAULT 0 NOT NULL, 
             ADD row INT DEFAULT 0 NOT NULL, 
-            ADD `label` VARCHAR(255) NOT NULL COLLATE utf8_unicode_ci, 
             ADD size_x INT DEFAULT 1 NOT NULL, 
             ADD size_y INT DEFAULT 1 NOT NULL, 
             CHANGE user_id portfolio_id INT NOT NULL
