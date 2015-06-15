@@ -35,7 +35,7 @@ widgetsApp
                     parameters.type = type;
                     parameters.action = action;
 
-                    return urlInterpolator.interpolate("/{{type}}/{{action}}", parameters);
+                    return urlInterpolator.interpolate("/widget/{{type}}/{{action}}", parameters);
                 };
                 widget.prototype.getRenderUrl = function() {
                     return this.generateUrl("render");

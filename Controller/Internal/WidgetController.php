@@ -18,17 +18,24 @@ use Symfony\Component\HttpFoundation\Response;
 class WidgetController extends BaseController
 {
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_widget_get")
+     * @Route("/{type}/{action}", name="icap_portfolio_internal_widget_get", defaults={"action" = "empty"})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function getAction(Request $request, User $loggedUser, $type)
+    public function getAction(Request $request, User $loggedUser, $type, $action)
     {
         $this->checkPortfolioToolAccess();
 
-        $widget = $this->getWidgetsManager()->getNewDataWidget($type);
-        $data = $this->getWidgetsManager()->getWidgetData($widget);
+        $data = [];
+
+        if ("form" === $action) {
+            $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
+        }
+        else {
+            $widget = $this->getWidgetsManager()->getNewDataWidget($type);
+            $data = $this->getWidgetsManager()->getWidgetData($widget);
+        }
 
         $response = new JsonResponse();
         $response->setData($data);
