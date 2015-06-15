@@ -216,9 +216,20 @@ class WidgetsManager
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
-    public function getWidgets($widgetType)
+    public function getWidgets($widgetType = null)
     {
-        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findByType($widgetType);
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget");
+
+        $widgets = [];
+        if ($widgetType !== null) {
+            $widgets = $abstractWidgetRepository->findByType($widgetType);
+        }
+        else {
+            $widgets = $abstractWidgetRepository->findAll();
+        }
+
+        return $widgets;
     }
 
     /**
