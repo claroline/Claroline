@@ -705,7 +705,6 @@ class CorrectionController extends DropzoneBaseController
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
         $countCorrection = count($correction);
-//        echo "Count = " . $countCorrection . " - ";
 
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
@@ -901,12 +900,6 @@ class CorrectionController extends DropzoneBaseController
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
-
-//        $role = $user->getRole();
-//        echo "ROLE : " . $role;die();
-//        echo "userId = " . $userId;
-//        echo " correctionId = " . $correction->getUser()->getId() . " / " . $correction->getDrop()->getId() . " / " . $dropzone->getId();
-//        echo " correctionUserName = " . $correction->getUser()->getUserName();
 
         if ($state == 'show' || $state == 'edit') {
             return $this->render(
@@ -1107,6 +1100,7 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
 
+        // L'URL est déclarée dans le controlleur. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
                 'innova_collecticiel_drops_detail_comment',

@@ -130,6 +130,63 @@
                 </div>
             </div>
 
+            {# Ajout du bloc des commentaires: InnovaERV #}
+            <div class="row">
+                <div class="text-muted col-md-4">{{ 'Comments list'|trans({}, 'innova_collecticiel') }}</div>
+            </div>
+
+            {# Bloc "Liste des commentaires" #}
+            {% block dropzone_list_comment %}
+                <h3>
+                    {{ 'Comments list'|trans({}, 'innova_collecticiel') }}
+                </h3>
+
+                {# Partie Affichage de la liste des commentaires #}
+                {# {% for comments in comments %}
+                    <div class="row">
+                        <div class="text-muted col-md-4">{{ comments.commentText  }}</div>
+                    </div>
+                {% endfor %} #}
+                <div class="box box-warning direct-chat direct-chat-warning">
+                    <div class="box-body">
+                        <!-- Conversations are loaded here -->
+                        <div class="direct-chat-messages">
+                            {% set alternance = 0 %}
+                            {% for comments in comments %}
+                                {% if alternance == comments.user.id %}
+                                    <!-- Message. Default to the left -->
+                                    <div class="direct-chat-msg">
+                                        <div class="direct-chat-info clearfix">
+                                            <span class="direct-chat-name pull-left">Vous</span>
+                                            <span class="direct-chat-timestamp pull-right">{{ comments.commentDate|date("d/m/Y H:i:s") }}</span>
+                                        </div><!-- /.direct-chat-info -->
+                                        <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
+                                        <!-- /.direct-chat-img -->
+                                        <div class="direct-chat-text">{{ comments.commentText|raw }}</div><!-- /.direct-chat-text -->
+                                    </div><!-- /.direct-chat-msg -->
+                                {% else %}
+                                    <!-- Message to the right -->
+                                    <div class="direct-chat-msg right">
+                                        <div class="direct-chat-info clearfix">
+                                            <span class="direct-chat-name pull-right">Correcteur(rice)</span>
+                                            <span class="direct-chat-timestamp pull-left">{{ comments.commentDate|date("d/m/Y H:i:s") }}</span>
+                                        </div><!-- /.direct-chat-info -->
+                                        <div class="direct-chat-text">{{ comments.commentText|raw }}</div><!-- /.direct-chat-text -->
+                                    </div><!-- /.direct-chat-msg -->
+                                {% endif %}
+                                {% set alternance = comments.user.id %}
+                            {% endfor %}
+                        </div><!-- direct-chat-messages -->
+                    </div><!-- box-body-->
+                </div><!-- box box-warning direct-chat direct-chat-warning-->
+
+                {# Partie "Ajout d'un commentaire" #}
+                <div class="form-group">
+                    {% include 'InnovaCollecticielBundle:Comment:addComment.html.twig' %}
+                </div>
+
+            {% endblock %}
+
         {% else %}
             {# TODO InnovaERV : partie "Non admin" qui n'a pas été analysée #}
             {# NO ADMIN #}
