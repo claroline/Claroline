@@ -3,14 +3,14 @@
 widgetsApp
     .factory("widgetFactory", ["$resource", "urlInterpolator", function($resource, urlInterpolator) {
         return {
-            baseUrl: Routing.generate("icap_portfolio_internal_portfolio"),
+            baseUrl: Routing.generate("icap_portfolio_internal_widget"),
             widgetResources: [],
             getWidget: function(type) {
                 if (this.widgetResources[type]) {
                     return this.widgetResources[type];
                 }
 
-                var baseUrl = this.baseUrl + "/widget/:type/:id";
+                var baseUrl = this.baseUrl + "/:type/:id";
                 var widget = $resource(
                     baseUrl,
                     {
@@ -18,7 +18,7 @@ widgetsApp
                         id: "@id"
                     },
                     {
-                        get:    { method: "GET", isArray: true },
+                        get:    { method: "GET" },
                         create: { method: "GET" },
                         save:   { method: "POST" },
                         update: { method: "PUT" },

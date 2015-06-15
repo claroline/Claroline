@@ -6,8 +6,8 @@ widgetsApp
             $scope.widgetType = $attrs['widgetContainer'];
 
             $scope.widgets = widgetManager.getWidgets($scope.widgetType);
-            $scope.widgets.$promise.then(function (widgets) {
-                $scope.widgets = widgets;
+            $scope.widgets.then(function () {
+                $scope.widgets = widgetManager.getWidgetsByType($scope.widgetType);
             });
 
             $scope.assetPath = assetPath;
