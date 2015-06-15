@@ -160,6 +160,20 @@ class WidgetsManager
     }
 
     /**
+     * @param string $type
+     *
+     * @throws \InvalidArgumentException
+     * @return AbstractWidget
+     */
+    public function getNewDataWidget($type)
+    {
+        $widget = $this->widgetFactory->createDataWidget($type);
+        $widget->setId(uniqid());
+
+        return $widget;
+    }
+
+    /**
      * @param AbstractWidget $widget
      */
     public function deleteWidget(AbstractWidget $widget)
@@ -187,6 +201,20 @@ class WidgetsManager
         ];
 
         return  $portfolioWidget->getData() + $widgetData;
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgetData(AbstractWidget $widget)
+    {
+        $widgetViews = array(
+            'views' => array('view' => $this->getView($widget, $widget->getWidgetType()))
+        );
+
+        return $widget->getCommonData() + $widgetViews + $widget->getData();
     }
 
     /**
@@ -230,20 +258,6 @@ class WidgetsManager
         }
 
         return $widgets;
-    }
-
-    /**
-     * @param AbstractWidget $widget
-     *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
-     */
-    public function getWidgetData(AbstractWidget $widget)
-    {
-        $widgetViews = array(
-            'views' => array('view' => $this->getView($widget, $widget->getWidgetType()))
-        );
-
-        return $widget->getCommonData() + $widgetViews + $widget->getData();
     }
 }
  

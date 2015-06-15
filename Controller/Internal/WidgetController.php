@@ -13,10 +13,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @Route("/internal/portfolio/widget/")
+ * @Route("/internal/portfolio/widget")
  */
 class WidgetController extends BaseController
 {
+    /**
+     * @Route("/{type}", name="icap_portfolio_internal_widget_get")
+     * @Method({"GET"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function getAction(Request $request, User $loggedUser, $type)
+    {
+        $this->checkPortfolioToolAccess();
+
+        $widget = $this->getWidgetsManager()->getNewDataWidget($type);
+        $data = $this->getWidgetsManager()->getWidgetData($widget);
+
+        $response = new JsonResponse();
+        $response->setData($data);
+
+        return $response;
+    }
+
     /**
      * @Route("", name="icap_portfolio_internal_widget", options={"expose"=true})
      * @Method({"GET"})
@@ -28,30 +47,6 @@ class WidgetController extends BaseController
         $this->checkPortfolioToolAccess();
 
         $widgets = $this->getWidgetsManager()->getWidgets();
-
-        $data = [];
-
-        foreach ($widgets as $widget) {
-            $data[] = $this->getWidgetsManager()->getWidgetData($widget);
-        }
-
-        $response = new JsonResponse();
-        $response->setData($data);
-
-        return $response;
-    }
-
-    /**
-     * @Route("/{type}", name="icap_portfolio_internal_widget_get")
-     * @Method({"GET"})
-     *
-     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     */
-    public function getAction(Request $request, User $loggedUser, $type)
-    {
-        $this->checkPortfolioToolAccess();
-
-        $widgets = $this->getWidgetsManager()->getWidgets($type);
 
         $data = [];
 

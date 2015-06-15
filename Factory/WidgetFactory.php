@@ -59,5 +59,25 @@ class WidgetFactory
 
         throw new \InvalidArgumentException("Unknown type of widget.");
     }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget
+     */
+    public function createDataWidget($widgetType)
+    {
+        if ($this->widgetTypeManager->isWidgetTypeExists($widgetType)) {
+            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($widgetType));
+            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+            $widget = new $widgetNamespace();
+            $widget
+                ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
+
+            return $widget;
+        }
+
+        throw new \InvalidArgumentException("Unknown type of widget.");
+    }
 }
  

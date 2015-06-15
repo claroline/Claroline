@@ -33,7 +33,7 @@ class PortfolioController extends BaseController
     }
 
     /**
-     * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", options={"expose"=true})
+     * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
