@@ -29,7 +29,6 @@ widgetsApp
                 widget.prototype.new         = true;
                 widget.prototype.type        = type;
                 widget.prototype.updating    = false;
-                widget.prototype.toSave      = false;
 
                 widget.prototype.generateUrl = function(action) {
                     var parameters = {};
