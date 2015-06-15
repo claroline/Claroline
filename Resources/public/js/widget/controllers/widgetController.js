@@ -8,5 +8,9 @@ widgetsApp
             $scope.createWidget = function() {
                 widgetManager.create($scope.widgetType);
             };
+
+            $scope.edit = function(widget) {
+                widgetManager.edit(widget);
+            };
         }
     ]);
