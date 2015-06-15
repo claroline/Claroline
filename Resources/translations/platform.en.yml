@@ -874,6 +874,7 @@ show_phone: 'Show phone'
 show_picture: 'Show picture'
 show_profile: 'Show profile'
 show_profile_for_anonymous: 'Profil public access for anonymous.'
+show_register_button_in_login_page: 'Show register button in login page'
 show_username: 'Show username'
 simple: Simple
 start_date: 'Start date'

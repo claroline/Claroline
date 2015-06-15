@@ -80,7 +80,8 @@ class PlatformConfigurationHandler
         'registration_mail_validation' => false,
         'resource_soft_delete' => false,
         'show_help_button' => false,
-        'help_url' => 'http://claroline.net/workspaces/125/open/tool/home'
+        'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
+        'register_button_at_login' => false
     );
     private $lockedParameters;
 
@@ -188,6 +189,7 @@ class PlatformConfigurationHandler
         $config->setRegistrationMailValidation($this->parameters['registration_mail_validation']);
         $config->setShowHelpButton($this->parameters['show_help_button']);
         $config->setHelpUrl($this->parameters['help_url']);
+        $config->setRegisterButtonAtLogin($this->parameters['register_button_at_login']);
 
         return $config;
     }
