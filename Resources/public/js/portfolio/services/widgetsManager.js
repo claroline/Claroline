@@ -24,11 +24,11 @@ portfolioApp
                     widget.setFormView(this.forms[widget.getType()]);
                     return true;
                 }
-                var $this = this;
+                var self = this;
 
                 return $http.get(widget.getFormUrl()).success(function(formViewData) {
                     widget.setFormView(formViewData.form);
-                    $this.forms[widget.getType()] = formViewData.form;
+                    self.forms[widget.getType()] = formViewData.form;
                 });
             },
             cancelEditing: function(widget, rollback) {
@@ -54,10 +54,10 @@ portfolioApp
 
                 widget.deleteChildren();
 
-                var $this = this;
+                var self = this;
                 var success = function() {
                     widget.setNewMode(false);
-                    $this.cancelEditing(widget);
+                    self.cancelEditing(widget);
                     widget.setUpdatingMode(false);
                 };
                 var failed = function(error) {
@@ -101,11 +101,11 @@ portfolioApp
                 }
                 else {
                     newWidget = widget.create();
-                    var $this = this;
+                    var self = this;
                     newWidget.$promise.then(function() {
-                        $this.emptyWidgets[type] = angular.copy(newWidget);
+                        self.emptyWidgets[type] = angular.copy(newWidget);
                         newWidget.column = column;
-                        $this.edit(newWidget);
+                        self.edit(newWidget);
                     });
                 }
 
@@ -120,9 +120,9 @@ portfolioApp
             delete: function(widget) {
                 if (this.isDeletable(widget)) {
                     widget.isDeleting = true;
-                    var $this = this;
+                    var self = this;
                     var success = function() {
-                        $this.widgets.remove(widget);
+                        self.widgets.remove(widget);
                     };
                     var failed = function(error) {
                         console.error('Error occured while deleting widget');

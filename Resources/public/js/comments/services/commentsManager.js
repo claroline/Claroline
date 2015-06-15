@@ -27,16 +27,16 @@ commentsApp
                 if (portfolioId) {
                     this.comments.$resolved = false;
                     var url = urlInterpolator.interpolate('/{{portfolioId}}/comment', {portfolioId: portfolioId});
-                    var $this = this;
+                    var self = this;
 
                     $http.get(url)
                         .success(function(data) {
                             angular.forEach(data, function(rawComment) {
                                 var comment = commentFactory.getComment(portfolioId);
                                 this.comments.push(new comment(rawComment));
-                            }, $this);
+                            }, self);
 
-                            $this.comments.$resolved = true;
+                            self.comments.$resolved = true;
                         });
                 }
                 else {

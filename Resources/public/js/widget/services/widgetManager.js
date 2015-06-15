@@ -6,7 +6,7 @@ widgetsApp
             widgets: [],
             emptyWidget: null,
             form: null,
-            getWidgets: function() {
+            init: function() {
                 var deferred = $q.defer();
                 var self = this;
                 $http.get(Routing.generate("icap_portfolio_internal_widget"))
@@ -22,11 +22,7 @@ widgetsApp
                         deferred.reject(msg);
                     });
                 return deferred.promise;
-            },
-            getWidgetsByType: function(widgetType) {
-                var widgets = $filter('filter')(this.widgets, {'type': widgetType});
-                widgets.$resolved = true;
-                return widgets;
+
             },
             create: function(type) {
                 var newWidget;
@@ -38,11 +34,11 @@ widgetsApp
                 }
                 else {
                     newWidget = widget.create();
-                    var $this = this;
+                    var self = this;
                     newWidget.$promise.then(function() {
-                        $this.emptyWidget = angular.copy(newWidget);
+                        self.emptyWidget = angular.copy(newWidget);
                         newWidget.column = column;
-                        $this.edit(newWidget);
+                        self.edit(newWidget);
                     });
                 }
 

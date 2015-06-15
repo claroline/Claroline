@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module("indexApp", ["commentsApp", "widgetsApp"]);
+var indexApp = angular.module("indexApp", ["commentsApp", "widgetsApp"]);
