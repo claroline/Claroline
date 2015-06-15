@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\InteractionQCM;
 
-class qcmImport extends qtiImport {
+class QcmImport extends QtiImport {
 
     protected $interactionQCM;
 

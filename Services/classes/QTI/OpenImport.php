@@ -9,7 +9,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\InteractionOpen;
 
-class openImport extends qtiImport
+class OpenImport extends QtiImport
 {
     protected $interactionOpen;
     protected $codeType;

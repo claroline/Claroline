@@ -12,7 +12,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
-abstract class qtiExport
+abstract class QtiExport
 {
 
     protected $doctrine;

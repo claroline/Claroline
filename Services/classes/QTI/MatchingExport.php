@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class matchingExport extends qtiExport
+class MatchingExport extends QtiExport
 {
     private $matchInteraction;
     private $interactionmatching;

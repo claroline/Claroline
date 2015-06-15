@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Services\classes\Interactions;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 
-class interactionGeneral {
+class InteractionGeneral {
 
     /**
      * Constructor

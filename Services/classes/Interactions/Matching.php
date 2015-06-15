@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class matching extends interaction {
+class Matching extends Interaction {
     /**
      * implement the abstract method
      * To process the user's response for a paper(or a test)

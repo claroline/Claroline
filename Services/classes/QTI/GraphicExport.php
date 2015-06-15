@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class graphicExport extends qtiExport
+class GraphicExport extends QtiExport
 {
     private $interactiongraph;
     private $selectPointInteraction;

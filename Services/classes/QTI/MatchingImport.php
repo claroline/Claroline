@@ -11,7 +11,7 @@ use UJM\ExoBundle\Entity\Proposal;
 use UJM\ExoBundle\Entity\Label;
 use UJM\ExoBundle\Entity\InteractionMatching;
 
-class matchingImport extends qtiImport {
+class MatchingImport extends QtiImport {
 
     protected $interactionMatching;
     protected $associatedLabels = [];

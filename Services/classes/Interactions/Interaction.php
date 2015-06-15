@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\Interactions;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 
-abstract class interaction {
+abstract class Interaction {
 
     protected $doctrine;
     protected $om;

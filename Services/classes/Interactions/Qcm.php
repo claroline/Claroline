@@ -6,7 +6,7 @@
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class qcm extends interaction {
+class Qcm extends Interaction {
 
     /**
      * implement the abstract method

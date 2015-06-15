@@ -21,115 +21,115 @@ services:
                 - { name: kernel.event_listener, event: create_log_details_resource-ujm_exercise-exercise_evaluated, method: onCreateLogDetails }
 
     twig.extension.twigExtensions:
-        class: UJM\ExoBundle\Services\twig\twigExtensions
+        class: UJM\ExoBundle\Services\twig\TwigExtensions
         arguments: [@doctrine, @service_container]
         tags:
             - { name: twig.extension }
 
     ujm.exercise_services:
-        class: UJM\ExoBundle\Services\classes\exerciseServices
+        class: UJM\ExoBundle\Services\classes\ExerciseServices
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
 
     ujm.Interaction_general:
-        class: UJM\ExoBundle\Services\classes\Interactions\interactionGeneral
+        class: UJM\ExoBundle\Services\classes\Interactions\InteractionGeneral
         arguments: [@doctrine]
 
     ujm.InteractionGraphic:
-        class: UJM\ExoBundle\Services\classes\Interactions\graphic
+        class: UJM\ExoBundle\Services\classes\Interactions\Graphic
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionHole:
-        class: UJM\ExoBundle\Services\classes\Interactions\hole
+        class: UJM\ExoBundle\Services\classes\Interactions\Hole
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionMatching:
-        class: UJM\ExoBundle\Services\classes\Interactions\matching
+        class: UJM\ExoBundle\Services\classes\Interactions\Matching
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionOpen:
-        class: UJM\ExoBundle\Services\classes\Interactions\open
+        class: UJM\ExoBundle\Services\classes\Interactions\Open
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.InteractionQCM:
-        class: UJM\ExoBundle\Services\classes\Interactions\qcm
+        class: UJM\ExoBundle\Services\classes\Interactions\Qcm
         arguments: [@claroline.persistence.object_manager, @doctrine]
 
     ujm.qti_export_InteractionQCM:
-        class: UJM\ExoBundle\Services\classes\QTI\qcmExport
+        class: UJM\ExoBundle\Services\classes\QTI\QcmExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_qcm_import:
-        class: UJM\ExoBundle\Services\classes\QTI\qcmImport
+        class: UJM\ExoBundle\Services\classes\QTI\QcmImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_export_InteractionGraphic:
-        class: UJM\ExoBundle\Services\classes\QTI\graphicExport
+        class: UJM\ExoBundle\Services\classes\QTI\GraphicExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_graphic_import:
-        class: UJM\ExoBundle\Services\classes\QTI\graphicImport
+        class: UJM\ExoBundle\Services\classes\QTI\GraphicImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_export_InteractionHole:
-        class: UJM\ExoBundle\Services\classes\QTI\holeExport
+        class: UJM\ExoBundle\Services\classes\QTI\HoleExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_hole_import:
-        class: UJM\ExoBundle\Services\classes\QTI\holeImport
+        class: UJM\ExoBundle\Services\classes\QTI\HoleImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_open_long_export:
-        class: UJM\ExoBundle\Services\classes\QTI\openLongExport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenLongExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_open_long_import:
-        class: UJM\ExoBundle\Services\classes\QTI\openLongImport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenLongImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_open_one_word_export:
-        class: UJM\ExoBundle\Services\classes\QTI\openOneWordExport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenOneWordExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_open_one_word_import:
-        class: UJM\ExoBundle\Services\classes\QTI\openOneWordImport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenOneWordImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_open_short_export:
-        class: UJM\ExoBundle\Services\classes\QTI\openShortExport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenShortExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_open_short_import:
-        class: UJM\ExoBundle\Services\classes\QTI\openShortImport
+        class: UJM\ExoBundle\Services\classes\QTI\OpenShortImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_export_InteractionMatching:
-        class: UJM\ExoBundle\Services\classes\QTI\matchingExport
+        class: UJM\ExoBundle\Services\classes\QTI\MatchingExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
     ujm.qti_matching_import:
-        class: UJM\ExoBundle\Services\classes\QTI\matchingImport
+        class: UJM\ExoBundle\Services\classes\QTI\MatchingImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
     ujm.qti_repository:
-        class: UJM\ExoBundle\Services\classes\QTI\qtiRepository
+        class: UJM\ExoBundle\Services\classes\QTI\QtiRepository
         arguments: [@security.token_storage, @service_container]
 
     ujm.qti_services:
-        class: UJM\ExoBundle\Services\classes\QTI\qtiServices
+        class: UJM\ExoBundle\Services\classes\QTI\QtiServices
 
     ujm.exercise.validator.isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator

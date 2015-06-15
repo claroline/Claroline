@@ -15,7 +15,7 @@ use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\Question;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
-abstract class qtiImport
+abstract class QtiImport
 {
     protected $om;
     protected $tokenStorageInterface;

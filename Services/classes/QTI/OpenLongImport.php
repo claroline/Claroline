@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class openLongImport extends openImport
+class OpenLongImport extends OpenImport
 {
     /**
      * overload the export method

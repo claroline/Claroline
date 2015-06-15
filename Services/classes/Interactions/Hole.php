@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class hole extends interaction {
+class Hole extends Interaction {
 
     /**
      * implement the abstract method

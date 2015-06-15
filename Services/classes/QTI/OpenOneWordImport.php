@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * To import an open question whith one word
  *
@@ -9,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\WordResponse;
 
-class openShortImport extends openImport
+class OpenOneWordImport extends OpenImport
 {
     /**
      * overload the export method
@@ -22,7 +23,7 @@ class openShortImport extends openImport
      */
     public function import(qtiRepository $qtiRepos, $assessmentItem)
     {
-        $this->codeType = 3;
+        $this->codeType = 4;
         parent::import($qtiRepos, $assessmentItem);
         $this->createWordResponse();
 

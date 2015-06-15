@@ -17,7 +17,7 @@ use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 
-class exerciseServices
+class ExerciseServices
 {
     protected $om;
     protected $tokenStorage;

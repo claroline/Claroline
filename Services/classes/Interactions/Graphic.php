@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class graphic extends interaction {
+class Graphic extends Interaction {
 
     /**
      * implement the abstract method

@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class qtiServices {
+class QtiServices {
 
     /**
      * For create a zip where questions while be integrate

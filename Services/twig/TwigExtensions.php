@@ -6,7 +6,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 
 use \Symfony\Component\DependencyInjection\Container;
 
-class twigExtensions extends \Twig_Extension
+class TwigExtensions extends \Twig_Extension
 {
     protected $doctrine;
     protected $container;

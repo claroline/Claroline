@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class qcmExport extends qtiExport
+class QcmExport extends QtiExport
 {
 
     private $interactionqcm;

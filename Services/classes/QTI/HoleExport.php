@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class holeExport extends qtiExport
+class HoleExport extends QtiExport
 {
     private $interactionhole;
     private $correctResponse = array();

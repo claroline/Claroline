@@ -1,14 +1,16 @@
 <?php
 
 /**
- * To export in QTI an open question with one word
+ * To export an open short response question in QTI
  *
  */
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class openOneWordExport extends openExport
+class OpenShortExport  extends OpenExport
 {
+    private $extendedTextInteraction;
+
     /**
      * overload the export method
      *
@@ -22,7 +24,12 @@ class openOneWordExport extends openExport
         parent::export($interaction, $qtiRepos);
         $this->promptTag($this->itemBody);
         $this->mappingTag();
-        $this->textEntryInteractionTag();
+        $this->extendedTextInteractionTag();
+
+        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
+                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
+            $this->qtiFeedBack($interaction->getFeedBack());
+        }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
@@ -74,16 +81,15 @@ class openOneWordExport extends openExport
     }
 
     /**
-     * add the tag textEntryInteraction in itemBody
+     * add the tag extendedTextInteraction in itemBody
      *
      * @access private
      *
      */
-    private function textEntryInteractionTag()
+    private function extendedTextInteractionTag()
     {
-        $textEntryInteraction = $this->document->CreateElement('textEntryInteraction');
-        $textEntryInteraction->setAttribute('responseIdentifier', 'RESPONSE');
-        $textEntryInteraction->setAttribute('responseIdentifie', 30);
-        $this->itemBody->appendChild($textEntryInteraction);
+        $this->extendedTextInteraction = $this->document->CreateElement('extendedTextInteraction');
+        $this->extendedTextInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $this->itemBody->appendChild($this->extendedTextInteraction);
     }
 }

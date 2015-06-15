@@ -10,7 +10,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class qtiRepository {
+class QtiRepository {
 
     private $user;
     private $userRootDir;

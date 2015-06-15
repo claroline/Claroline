@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class openLongExport extends openExport
+class OpenLongExport extends OpenExport
 {
     private $extendedTextInteraction;
 

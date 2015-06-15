@@ -11,7 +11,7 @@ use UJM\ExoBundle\Entity\Hole;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\WordResponse;
 
-class holeImport extends qtiImport
+class HoleImport extends QtiImport
 {
     protected $interactionHole;
     protected $qtiTextWithHoles;
@@ -312,7 +312,7 @@ class holeImport extends qtiImport
                     $keyWord->setScore($score);
                     $keyWord->setHole($hole);
                     $this->om->persist($keyWord);
-                    
+
                     $this->tabWrOpt[] = $keyWord;
                 }
             }

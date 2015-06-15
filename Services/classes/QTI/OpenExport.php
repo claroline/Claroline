@@ -7,7 +7,7 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-class openExport extends qtiExport
+class OpenExport extends QtiExport
 {
     protected $interactionopen;
 
