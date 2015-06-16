@@ -1,3 +1,8 @@
 blog_list: Blog list
 blog: Blog
 tag_list: Tag list of a blog
+display_for_list: Display of the list of blogs
+display_block: In block
+display_inline: In line
+articles: art.
+addblog: Add a blog

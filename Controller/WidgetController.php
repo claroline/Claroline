@@ -3,7 +3,6 @@
 namespace Icap\BlogBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Entity\WidgetBlog;
@@ -41,11 +40,15 @@ class WidgetController extends Controller
         $originalWidgetListBlogs = $this->getWidgetManager()->getWidgetListBlogs($widgetInstance);
         $originalWidgetListBlogs = new ArrayCollection($originalWidgetListBlogs);
 
+        $widgetListOptions = $this->getWidgetManager()->getWidgetListOptions($widgetInstance);
+        
         $widgetBlogList = new WidgetBlogList();
         $widgetBlogList->setWidgetListBlogs($originalWidgetListBlogs);
+        $widgetBlogList->setWidgetDisplayListBlogs($widgetListOptions->getDisplayStyle());
 
+        //On rajoute une troisieme option translator
         /** @var Form $form */
-        $form = $this->container->get('form.factory')->create($this->get('icap_blog.form.widget_list'), $widgetBlogList);
+        $form = $this->get('form.factory')->create($this->get('icap_blog.form.widget_list'), $widgetBlogList);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -53,6 +56,10 @@ class WidgetController extends Controller
 
             $widgetListBlogs = $widgetBlogList->getWidgetListBlogs();
 
+            //On recupère la valeur du bouton radio en base
+            $widgetDisplayListBlogs = $widgetBlogList->getWidgetListBlogs();
+
+            //Comparaison entre la valeur donnée en formulaire et celle en base
             foreach ($widgetListBlogs as $widgetListBlog) {
                 if ($originalWidgetListBlogs->contains($widgetListBlog)) {
                     $originalWidgetListBlogs->removeElement($widgetListBlog);
@@ -67,6 +74,9 @@ class WidgetController extends Controller
                 $entityManager->remove($originalWidgetListBlog);
             }
 
+            $widgetListOptions->setDisplayStyle($widgetBlogList->getWidgetDisplayListBlogs());
+
+            $entityManager->persist($widgetListOptions);
             $entityManager->flush();
 
             return new Response('', Response::HTTP_NO_CONTENT);

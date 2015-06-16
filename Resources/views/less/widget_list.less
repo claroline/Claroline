@@ -9,9 +9,39 @@
     & > .input-group {
         margin-bottom: 5px;
     }
+    .col-md-3 {
+        margin-left: -15px;
+        width: 100%;
+    }
+}
+
+
+
+#widget-content-config-modal-body{
+    .panel-body{
+        & > p {
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #blog_widget_list_form_widgetDisplayListBlogs{
+            label {
+                font-weight: normal;
+                margin-right: 20px;
+            }
+            input {
+                vertical-align: top;
+            }
+        }
+    } 
 }
 
 .blog_list {
+    &.list-inline {
+        .col-md-3 {
+            width: 100%;
+        }
+    }
     .list-group-item {
         margin: 5px 5px 5px 0;
         width:  24%;

@@ -80,10 +80,14 @@ class WidgetListener
     public function onWidgetListDisplay(DisplayWidgetEvent $event)
     {
         $blogs = $this->widgetManager->getBlogs($event->getInstance());
+        $widgetOptions = $this->widgetManager->getWidgetListOptions($event->getInstance());
 
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:list.html.twig',
-            array('blogs' => $blogs)
+            array(
+                'blogs' => $blogs, 
+                'diplayStyle' => $widgetOptions->getDisplayStyle()
+            )
         );
 
         $event->setContent($content);
@@ -98,6 +102,7 @@ class WidgetListener
     {
         $widgetBlogList = new WidgetBlogList();
         $widgetBlogList->setWidgetListBlogs($this->widgetManager->getWidgetListBlogs($event->getInstance()));
+        $widgetBlogList->setWidgetDisplayListBlogs($this->widgetManager->getWidgetListOptions($event->getInstance())->getDisplayStyle());
 
         $form = $this->formFactory->create($this->widgetListType, $widgetBlogList);
 

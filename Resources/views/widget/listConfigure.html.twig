@@ -14,6 +14,8 @@
     <div class="panel-body">
         {{ form_errors(form) }}
         {{ form_widget(form.widgetListBlogs) }}
+        <p>{{ 'display_for_list'|trans({}, 'widget') }}</p>
+        {{ form_widget(form.widgetDisplayListBlogs) }}
         {{ form_rest(form) }}
     </div>
     <div class="panel-footer">
