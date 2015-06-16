@@ -25,10 +25,11 @@ widgetsApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.editing     = false;
-                widget.prototype.new         = true;
-                widget.prototype.type        = type;
-                widget.prototype.updating    = false;
+                widget.prototype.isNew = true;
+                widget.prototype.type = type;
+                widget.prototype.isEditing = false;
+                widget.prototype.isUpdating = false;
+                widget.prototype.isDeleting = false;
 
                 widget.prototype.generateUrl = function(action) {
                     var parameters = {};
@@ -46,22 +47,8 @@ widgetsApp
                 widget.prototype.setFormView = function(formView) {
                     this.views.form = formView;
                 };
-                widget.prototype.setEditMode = function(isEditing) {
-                    this.editing = isEditing;
-                };
-                widget.prototype.isEditing = function() {
-                    return this.editing;
-                };
                 widget.prototype.getType = function() {
                     return this.type;
-                };
-                widget.prototype.setNewMode = function(isNew) {
-                    this.new = isNew;
-
-                    return this;
-                };
-                widget.prototype.isNew = function() {
-                    return this.new;
                 };
                 widget.prototype.deleteChildren = function() {
                     if (this.children) {
@@ -76,12 +63,6 @@ widgetsApp
                             this.children.remove(childrenToDelete[i]);
                         }
                     }
-                };
-                widget.prototype.setUpdatingMode = function(isUpdating) {
-                    this.updating = isUpdating;
-                };
-                widget.prototype.isUpdating = function() {
-                    return this.updating;
                 };
 
                 this.widgetResources[type] = widget;

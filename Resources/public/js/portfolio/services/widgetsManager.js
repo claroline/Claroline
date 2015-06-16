@@ -110,7 +110,7 @@ portfolioApp
                 }
 
                 newWidget.column  = column;
-                newWidget.editing = true;
+                newWidget.isEditing = true;
 
                 this.widgets.push(newWidget);
             },

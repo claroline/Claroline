@@ -41,14 +41,14 @@ widgetsApp
                     });
                 }
 
-                newWidget.editing = true;
+                newWidget.isEditing = true;
 
                 this.widgets.push(newWidget);
             },
             edit: function(widget) {
                 widget.copy = angular.copy(widget);
-                if (!widget.isEditing()) {
-                    widget.setEditMode(true);
+                if (!widget.isEditing) {
+                    widget.isEditing  = true;
                     this.loadForm(widget);
                 }
             },

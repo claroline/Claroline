@@ -5,12 +5,16 @@ widgetsApp
         function($scope, widgetManager, $attrs) {
             $scope.widgetType = $attrs['widgetContainer'];
 
-            $scope.createWidget = function() {
+            $scope.create = function() {
                 widgetManager.create($scope.widgetType);
             };
 
             $scope.edit = function(widget) {
                 widgetManager.edit(widget);
+            };
+
+            $scope.delete = function(widget) {
+                widgetManager.delete(widget);
             };
         }
     ]);

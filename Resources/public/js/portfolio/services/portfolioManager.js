@@ -20,7 +20,7 @@ portfolioApp
                 var self = this;
                 var success = function() {
                     self.originalTitle = portfolio.title;
-                    portfolio.editing = false;
+                    portfolio.isEditing = false;
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
@@ -30,11 +30,11 @@ portfolioApp
                 return portfolio.$update(success, failed);
             },
             rename: function(portfolio) {
-                portfolio.editing = true;
+                portfolio.isEditing = true;
                 this.originalTitle = portfolio.title;
             },
             cancelRename: function(portfolio) {
-                portfolio.editing = false;
+                portfolio.isEditing = false;
                 portfolio.title = this.originalTitle;
             },
             updateViewCommentsDate: function () {
