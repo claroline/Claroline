@@ -56,9 +56,14 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default config for the widget'
         );
+        $this->addOption(
+            'external_authentication',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a default external authentication for the plugin'
+        );
         //todo admin tool
         //todo top bar shortcut
-        //todo oauth
 
         $this->addOption(
             'install',
@@ -109,7 +114,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $ivendor = $input->getArgument('vendor');
         $ibundle = $input->getArgument('bundle');
         $vname = strtolower($ivendor);
-        $bname = strtolower($ibundle) . '-bundle';
+        $bname = $this->getNormalizedBundleName($ibundle) . '-bundle';
 
         //create the directories if they don't exist
         $vendorNameDir = "{$vendorDir}/{$vname}";
@@ -130,6 +135,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $rType = $input->getOption('resource_type');
         $tType = $input->getOption('tool');
         $wType = $input->getOption('widget');
+        $eAuth = $input->getOption('external_authentication');
 
         $config = array(
             'plugin' => array(
@@ -140,6 +146,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($rType) $this->addResourceType($rootDir, $ivendor, $ibundle, $rType, $config);
         if ($tType) $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
         if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
+        if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -150,7 +157,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             $ibundle,
             $rType,
             $tType,
-            $wType
+            $wType,
+            $eAuth
         );
 
         if ($input->getOption('install')) {
@@ -185,8 +193,8 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $filepath = $rootDir . '/composer.json';
         $content = file_get_contents($filepath);
-        $content = str_replace('[[name]]', strtolower($vendor) . '/' . strtolower($bundle) . '-bundle', $content);
-        $content = str_replace('[[psr]]', $vendor . '\\\\' . $bundle, $content);
+        $content = str_replace('[[name]]', strtolower($vendor) . '/' . $this->getNormalizedBundleName($bundle) . '-bundle', $content);
+        $content = str_replace('[[psr]]', $vendor . '\\\\' . $bundle . 'Bundle', $content);
         $content = str_replace('[[target_dir]]', $vendor . '/' . $bundle . 'Bundle', $content);
         file_put_contents($filepath, $content);
     }
@@ -358,6 +366,44 @@ class CreatePluginCommand extends ContainerAwareCommand
         }
     }
 
+    private function addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth)
+    {
+        $newPath = $rootDir . '/Listener/ConfigureMenuListener.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents($newPath, $content);
+    }
+
+    private function addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth)
+    {
+        $newPath = $rootDir . '/Manager/SecurityManager.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
+        $content = file_get_contents($templateDir . '/manager.tmp');
+        file_put_contents($newPath, $content);
+    }
+
+    private function addAuthenticationController($rootDir, $vendor, $bundle, $eAuth)
+    {
+        $newPath = $rootDir . '/Controller/AuthenticationController.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_external_authentication_directory');
+        $content = file_get_contents($templateDir . '/controller.tmp');
+        file_put_contents($newPath, $content);
+        $routingFile = $this->getNewRoutingFile($rootDir);
+        $addRouting = file_get_contents($templateDir . '/routing.tmp');
+        if (!strpos(file_get_contents($routingFile), $addRouting)) file_put_contents($routingFile, $addRouting, FILE_APPEND);
+    }
+
+    private function addAuthentication($rootDir, $vendor, $bundle, $tType, &$config)
+    {
+        $this->addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth);
+        $this->addAuthenticationController($rootDir, $vendor, $bundle, $eAuth);
+        $this->addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth);
+    }
+
+    private function getNewRoutingFile($rootDir)
+    {
+        return $rootDir . '/Resources/config/routing.yml';
+    }
 
     private function listFiles($source, $target, $files = array(), $rootDir = null)
     {
@@ -402,7 +448,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $bundle,
         $rType = null,
         $tType = null,
-        $wType = null
+        $wType = null,
+        $eAuth = null
     ) {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
@@ -415,7 +462,7 @@ class CreatePluginCommand extends ContainerAwareCommand
                 $content = file_get_contents($filepath);
                 file_put_contents(
                     $filepath,
-                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType)
+                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth)
                 );
             }
         }
@@ -429,13 +476,26 @@ class CreatePluginCommand extends ContainerAwareCommand
         $content = preg_replace('/\[\[(.*)\]\]/', '', $content);
     }
 
+    private function getNormalizedBundleName($ibundle)
+    {
+        preg_match_all('/[A-Z][^A-Z]*/', $ibundle, $results);
+        $baseDirName = strtolower($results[0][0]);
+
+        for ($i = 1; $i < count($results[0]); $i++) {
+            $baseDirName .= '-' . strtolower($results[0][$i]);
+        }
+
+        return strtolower($baseDirName);
+    }
+
     private function replaceCommonPlaceHolders(
         $content,
         $vendor,
         $bundle,
         $rType = '',
         $tType = '',
-        $wType = ''
+        $wType = '',
+        $eAuth = ''
     )
     {
         $patterns = array(
@@ -448,7 +508,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[Tool\]\]/',
             '/\[\[tool\]\]/',
             '/\[\[Widget\]\]/',
-            '/\[\[widget\]\]/'
+            '/\[\[widget\]\]/',
+            '/\[\[external_authentication\]\]/'
         );
 
         $replacements = array(
@@ -461,7 +522,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             ucfirst($tType),
             strtolower($tType),
             ucfirst($wType),
-            strtolower($wType)
+            strtolower($wType),
+            strtolower($eAuth)
         );
 
         return preg_replace($patterns, $replacements, $content);
