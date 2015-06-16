@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Doctrine\ORM\EntityManager;
 use Icap\BlogBundle\Entity\WidgetListBlog;
 use JMS\DiExtraBundle\Annotation as DI;
+use Icap\BlogBundle\Entity\WidgetListOptions;
 
 /**
  * @DI\Service("icap_blog.manager.widget")
@@ -147,6 +148,25 @@ class WidgetManager
         }
 
         return $resourceNode;
+    }
+
+    /**
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Icap\BlogBundle\Entity\WidgetListOptions
+     */
+    public function getWidgetListOptions(WidgetInstance $widgetInstance)
+    {
+        $widgetListOptions = $this->entityManager
+            ->getRepository('IcapBlogBundle:WidgetListOptions')
+            ->findOneByWidgetInstance($widgetInstance);
+
+        if($widgetListOptions === null) {
+            $widgetListOptions = new WidgetListOptions();
+            $widgetListOptions->setWidgetInstance($widgetInstance);
+        }
+
+        return $widgetListOptions;
     }
 }
  

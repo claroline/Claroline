@@ -11,6 +11,7 @@ class WidgetBlogList
      * @var WidgetListBlog[]
      */
     private $widgetListBlogs;
+    private $widgetDisplayListBlogs='b';
 
     public function __construct()
     {
@@ -33,6 +34,18 @@ class WidgetBlogList
     public function setWidgetListBlogs($widgetListBlogs)
     {
         $this->widgetListBlogs = $widgetListBlogs;
+
+        return $this;
+    }
+
+    public function getWidgetDisplayListBlogs()
+    {
+        return $this->widgetDisplayListBlogs;
+    }
+
+    public function setWidgetDisplayListBlogs($widgetDisplayListBlogs)
+    {
+        $this->widgetDisplayListBlogs = $widgetDisplayListBlogs;
 
         return $this;
     }
