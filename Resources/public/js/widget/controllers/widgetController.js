@@ -4,6 +4,7 @@ widgetsApp
     .controller("widgetController", ["$scope", "widgetManager", "$attrs",
         function($scope, widgetManager, $attrs) {
             $scope.widgetType = $attrs['widgetContainer'];
+            $scope.activePanels = [];
 
             $scope.create = function() {
                 widgetManager.create($scope.widgetType);

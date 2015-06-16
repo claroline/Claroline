@@ -1,28 +1,28 @@
 <div data-widget-container="{{ widgetType.name }}">
     <button type="button" class="btn btn-default" data-ng-click="create()">{{ 'add_data_widget'|trans({}, 'icap_portfolio') }}</button>
-    <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" aria-multiselectable="true" data-ng-show="widgets.length && widgets.$resolved">
+    <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" aria-multiselectable="true"
+         data-ng-show="widgets.length && widgets.$resolved" ng-model="activePanels" data-allow-multiple="true" bs-collapse>
         {% verbatim %}
         <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
             <div class="panel-heading clearfix" role="tab" id="heading-widget{{ widget.id }}">
                 <h4 class="panel-title pull-left" id="collapsible-widget{{ widget.id }}">
-                    <a class="collapsed" data-toggle="collapse" data-parent="#data_widget_list" href="#collapse{{ widget.id }}" aria-expanded="false" aria-controls="collapse{{ widget.id }}">
+                    <a bs-collapse-toggle>
                         {{ widget.label }}
                     </a>
-                    <a class="anchorjs-link" href="#collapsible-widget{{ widget.id }}"><span class="anchorjs-icon"></span></a>
-
-                <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
+                    <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
                 </h4>
                 <div class="widget-actions pull-right">
                     <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget)" data-ng-if="!widget.isEditing">
                         <span class="fa fa-pencil"></span>
                     </button>
-                    <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete(widget)">
+                    <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}"
+                            data-confirm-click="delete(widget)">
                         <span class="fa fa-spinner fa-spin" data-ng-if="widget.isDeleting"></span>
                         <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
                     </button>
                 </div>
             </div>
-            <div id="collapse{{ widget.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-widget{{ widget.id }}" aria-expanded="false">
+            <div class="panel-collapse" role="tabpanel" bs-collapse-target>
                 <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
                 </div>
                 <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.isEditing && widget.views.form">
@@ -30,14 +30,18 @@
                     <div class="panel-footer">
         {% endverbatim %}
                         <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
-                        <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">
+                            {{ 'cancel'|trans({}, 'platform') }}
+                        </button>
                     </div>
                 </form>
                 <div class="panel-body loading" data-ng-show="widget.isEditing && !widget.views.form"></div>
             </div>
         </div>
     </div>
-    <p class="no-data well ng-cloak" data-ng-show="!typedWidgets.length && widgets.$resolved">{{ 'no_data_widget'|trans({}, 'icap_portfolio') }}</p>
+    <p class="no-data well ng-cloak" data-ng-show="!typedWidgets.length && widgets.$resolved">
+        {{ 'no_data_widget'|trans({}, 'icap_portfolio') }}
+    </p>
 
     <div class="loading_container" data-ng-show="!widgets.$resolved"><p class="loading loading_view"></p></div>
 </div>
