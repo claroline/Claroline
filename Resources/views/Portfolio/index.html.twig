@@ -12,6 +12,17 @@
                     </span>
                 </a>
             </li>
+            {% for widgetType in widgetTypes %}
+            <li class="{{ widgetType.name }}-tab">
+                <a href="#{{ widgetType.name }}" aria-controls="{{ widgetType.name }}" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-{{ widgetType.icon }}"></i>
+                        <span class="visible-md-inline visible-lg-inline">{{ (widgetType.name ~ '_title')|trans({}, 'icap_portfolio') }}</span>
+                    </span>
+                </a>
+            </li>
+            {% endfor %}
             <li class="list-tab">
                 <a href="#list" aria-controls="list" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
@@ -30,17 +41,6 @@
                     </span>
                 </a>
             </li>
-            {% for widgetType in widgetTypes %}
-            <li class="{{ widgetType.name }}-tab">
-                <a href="#{{ widgetType.name }}" aria-controls="{{ widgetType.name }}" role="tab" data-toggle="tab">
-                    <span class="icon-bg"></span>
-                    <span class="option-text">
-                        <i class="fa fa-{{ widgetType.icon }}"></i>
-                        <span class="visible-md-inline visible-lg-inline">{{ (widgetType.name ~ '_title')|trans({}, 'icap_portfolio') }}</span>
-                    </span>
-                </a>
-            </li>
-            {% endfor %}
         </ul>
 
         <div data-ng-app="indexApp">
@@ -71,7 +71,6 @@
                 {% endfor %}
             </div>
         </div>
-
     </div>
 {% endblock %}
 
@@ -120,6 +119,7 @@
         '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
         '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
         '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/collapse.min.js'
         '@FrontEndBundle/Resources/public/jquery/plugin/datepicker/js/bootstrap-datepicker.js'
         '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.js'
         '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
