@@ -11,13 +11,13 @@ widgetsApp
                 var self = this;
                 $http.get(Routing.generate("icap_portfolio_internal_widget"))
                     .success(function(data) {
-                        var widgets = [];
                         angular.forEach(data, function(rawWidget) {
                             var widget = widgetFactory.getWidget(rawWidget.type);
-                            widgets.push(new widget(rawWidget));
+                            var newWidget = new widget(rawWidget);
+                            newWidget.isNew = false;
+                            self.widgets.push(newWidget);
                         });
-                        self.widgets = widgets;
-                        deferred.resolve(widgets);
+                        deferred.resolve(self.widgets);
                     }).error(function(msg, code) {
                         deferred.reject(msg);
                     });
@@ -48,7 +48,7 @@ widgetsApp
             edit: function(widget) {
                 widget.copy = angular.copy(widget);
                 if (!widget.isEditing) {
-                    widget.isEditing  = true;
+                    widget.isEditing = true;
                     this.loadForm(widget);
                 }
             },
@@ -63,6 +63,16 @@ widgetsApp
                     widget.setFormView(formViewData.form);
                     self.form[widget.type] = formViewData.form;
                 });
+            },
+            cancelEditing: function(widget, rollback) {
+                if (rollback) {
+                    angular.copy(widget.copy, widget);
+                }
+                widget.isEditing = false;
+
+                if (widget.isNew) {
+                    this.widgets.remove(widget);
+                }
             }
         };
     }]);

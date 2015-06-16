@@ -9,13 +9,15 @@ portfolioApp
             init: function(portfolioId, widgets) {
                 angular.forEach(widgets, function(rawWidget) {
                     var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
-                    this.widgets.push(new widget(rawWidget).setNewMode(false));
+                    var newWidget = new widget(rawWidget);
+                    newWidget.isNew = false;
+                    this.widgets.push(newWidget);
                 }, this);
             },
             edit: function(widget) {
                 widget.copy = angular.copy(widget);
-                if (!widget.isEditing()) {
-                    widget.setEditMode(true);
+                if (!widget.isEditing) {
+                    widget.isEditing  = true;
                     this.loadForm(widget);
                 }
             },
@@ -35,9 +37,9 @@ portfolioApp
                 if (rollback) {
                     angular.copy(widget.copy, widget);
                 }
-                widget.setEditMode(false);
+                widget.isEditing = false;
 
-                if (widget.isNew()) {
+                if (widget.isNew) {
                     this.widgets.remove(widget);
                 }
             },
@@ -49,27 +51,27 @@ portfolioApp
                     widget.col = 0;
                 }
 
-                widget.setUpdatingMode(true);
+                widget.isUpdating = true;
                 delete widget.copy;
 
                 widget.deleteChildren();
 
                 var self = this;
                 var success = function() {
-                    widget.setNewMode(false);
+                    widget.isNew = false;
                     self.cancelEditing(widget);
-                    widget.setUpdatingMode(false);
+                    widget.isUpdating = false;
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
                     console.log(error);
                 }
 
-                if (widget.isNew()) {
+                if (widget.isNew) {
                     delete widget.id;
                 }
 
-                return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
+                return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             create: function(portfolioId, type, column) {
                 var isTypeUnique = widgetsConfig.config[type].isUnique;
@@ -129,7 +131,7 @@ portfolioApp
                         console.log(error);
                     }
                     widget.$delete(success, failed).then(function() {
-                        delete widget.isDeleting;
+                        widget.isDeleting = false;
                     });
                 }
             }

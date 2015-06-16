@@ -16,5 +16,9 @@ widgetsApp
             $scope.delete = function(widget) {
                 widgetManager.delete(widget);
             };
+
+            $scope.cancelEdition = function(widget) {
+                widgetManager.cancelEditing(widget, true);
+            };
         }
     ]);

@@ -1,9 +1,9 @@
 <div {% if not viewMode %}data-widget="widget" {% endif %} class="panel panel-default widget-panel{% if not viewMode %} ng-cloak{% endif %}">
     <div class="panel-heading"{% if not viewMode %} {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %}
-        data-ng-show="!widget.isEditing()"{% endif %}>
+        data-ng-show="!widget.isEditing"{% endif %}>
         {% verbatim %}{{ widget.label }}{% endverbatim %}
         {% if editMode %}
-        <div class="widget-actions" data-ng-show="!widget.isNew() && !widget.isUpdating()">
+        <div class="widget-actions" data-ng-show="!widget.isNew && !widget.isUpdating">
             <button class="widget-action btn btn-xs btn-default draggable-handle">
                 <span class="fa fa-arrows"></span>
             </button>
@@ -15,18 +15,18 @@
                 <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
             </button>
         </div>
-        <span class="pull-right loading" data-ng-if="widget.isUpdating()"></span>
+        <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
         {% endif %}
     </div>
-    <div class="panel-body" data-ng-show="!widget.editing && !widget.views.form">
+    <div class="panel-body" data-ng-show="!widget.isEditing && !widget.views.form">
         <div data-ng-bind-html="widget.views.view"></div>
     </div>
     {% if editMode %}
-    <div class="panel-heading" data-ng-show="widget.editing && widget.views.form">
+    <div class="panel-heading" data-ng-show="widget.isEditing && widget.views.form">
         <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="widget.label">
     </div>
-    <div class="panel-body col-md-12 loading" data-ng-show="widget.editing && !widget.views.form"></div>
-    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.editing && widget.views.form">
+    <div class="panel-body col-md-12 loading" data-ng-show="widget.isEditing && !widget.views.form"></div>
+    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.isEditing && widget.views.form">
         <div class="panel-body" data-bind-html="widget.views.form"></div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
