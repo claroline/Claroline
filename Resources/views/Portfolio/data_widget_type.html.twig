@@ -33,6 +33,7 @@
                         <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">{{ 'cancel'|trans({}, 'platform') }}</button>
                     </div>
                 </form>
+                <div class="panel-body loading" data-ng-show="widget.isEditing && !widget.views.form"></div>
             </div>
         </div>
     </div>
