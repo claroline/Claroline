@@ -1,6 +1,6 @@
 'use strict';
 
-portfolioApp
+appDirectives
     .directive("bindHtml", ["$compile", function($compile) {
         return function(scope, element, attrs) {
             scope.$watch(attrs.bindHtml, function(html) {
