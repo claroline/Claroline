@@ -9,13 +9,7 @@ class AbstractWidgetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('label',  'text')
-            ->add('column', 'integer')
-            ->add('row',    'integer')
-            ->add('col',    'integer', ['property_path' => 'column'])
-            ->add('sizeX',  'integer')
-            ->add('sizeY',  'integer');
+        $builder->add('label',  'text');
     }
 
     /**

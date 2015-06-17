@@ -128,7 +128,7 @@ class WidgetsManager
             $this->entityManager->persist($widget);
             $this->entityManager->flush();
 
-            $data = $this->getPortfolioWidgetData($widget);
+            $data = $this->getWidgetData($widget);
 
             return $data;
         }

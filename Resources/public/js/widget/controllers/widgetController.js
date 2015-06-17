@@ -20,5 +20,9 @@ widgetsApp
             $scope.cancelEdition = function(widget) {
                 widgetManager.cancelEditing(widget, true);
             };
+
+            $scope.save = function(widget) {
+                return widgetManager.save(widget);
+            };
         }
     ]);

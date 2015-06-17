@@ -88,6 +88,29 @@ widgetsApp
                 widget.$delete(success, failed).then(function() {
                     widget.isDeleting = false;
                 });
+            },
+            save: function(widget) {
+                widget.isUpdating = true;
+                delete widget.copy;
+
+                widget.deleteChildren();
+
+                var self = this;
+                var success = function() {
+                    widget.isNew = false;
+                    self.cancelEditing(widget);
+                    widget.isUpdating = false;
+                };
+                var failed = function(error) {
+                    console.error('Error occured while saving widget');
+                    console.log(error);
+                }
+
+                if (widget.isNew) {
+                    delete widget.id;
+                }
+
+                return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             }
         };
     }]);

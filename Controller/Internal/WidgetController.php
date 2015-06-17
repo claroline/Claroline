@@ -94,5 +94,28 @@ class WidgetController extends BaseController
 
         return $response;
     }
+
+    /**
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_put", requirements={"widgetId" = "\d+"})
+     * @Method({"PUT"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function putAction(Request $request, User $loggedUser, $type, $widgetId)
+    {
+        $this->checkPortfolioToolAccess($loggedUser);
+
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+
+        $widget = $abstractWidgetRepository->findOneByWidgetType($type, $widgetId, $loggedUser);
+
+        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
+
+        $response = new JsonResponse();
+        $response->setData($data);
+
+        return $response;
+    }
 }
  
