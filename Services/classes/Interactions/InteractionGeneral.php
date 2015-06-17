@@ -27,7 +27,7 @@ class InteractionGeneral {
      *
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      *
-     * @return array[boolean]
+     * @return boolean[]
      */
     public function getActionInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {

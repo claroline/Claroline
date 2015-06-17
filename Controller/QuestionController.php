@@ -620,7 +620,8 @@ class QuestionController extends Controller
                         ->getRepository('UJMExoBundle:InteractionMatching')
                         ->getInteractionMatching($interaction->getId());
 
-                    $correspondence = $services->initTabRightResponse($interactionMatching);
+                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $correspondence = $interMatchSer->initTabRightResponse($interactionMatching);
                     foreach ($correspondence as $key => $corresp) {
                         $correspondence[$key] = explode('-', $corresp);
                     }

@@ -40,7 +40,7 @@ abstract class Interaction {
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
      * @param integer $paperID id Paper
      *
-     * @return array
+     * @return float
      */
     private function getPenaltyPaper($interaction, $paperID)
     {
@@ -75,7 +75,7 @@ abstract class Interaction {
      * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
      * @param int $paperID
      *
-     * @return int
+     * @return float
      */
     protected function getPenalty($interaction, \Symfony\Component\HttpFoundation\Session\SessionInterface $session, $paperID)
     {

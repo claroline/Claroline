@@ -168,9 +168,9 @@ class TwigExtensions extends \Twig_Extension
      */
     public function initTabResponseMatching($response, $interMatching)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $interMatchSer = $this->container->get('ujm.InteractionMatching');
 
-        return $exerciseSer->initTabResponseMatching($response, $interMatching);
+        return $interMatchSer->initTabResponseMatching($response, $interMatching);
     }
 
     /**

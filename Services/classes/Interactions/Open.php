@@ -17,7 +17,7 @@ class Open extends Interaction {
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * @return mixed[]
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {

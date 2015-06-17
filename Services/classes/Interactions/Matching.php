@@ -17,7 +17,7 @@ class Matching extends Interaction {
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
      *
-     * @return array
+     * @return mixed[]
      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
@@ -113,13 +113,13 @@ class Matching extends Interaction {
      }
 
      /**
-     * implement the abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionMatching
-     */
+      * implement the abstract method
+      *
+      * @access public
+      * @param Integer $interId id of interaction
+      *
+      * @return \UJM\ExoBundle\Entity\InteractionMatching
+      */
      public function getInteractionX($interId)
      {
          $interMatching = $this->om
@@ -130,17 +130,17 @@ class Matching extends Interaction {
      }
 
      /**
-      * implement the abstract method
-      *
-      * call getAlreadyResponded and prepare the interaction to displayed if necessary
-      *
-      * @access public
-      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
-      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
-      *
-      * @return \UJM\ExoBundle\Entity\Response
-      */
+       * implement the abstract method
+       *
+       * call getAlreadyResponded and prepare the interaction to displayed if necessary
+       *
+       * @access public
+       * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+       *
+       * @return \UJM\ExoBundle\Entity\Response
+       */
      public function getResponseGiven($interactionToDisplay, $session, $interactionX)
      {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
@@ -155,4 +155,102 @@ class Matching extends Interaction {
 
          return $responseGiven;
      }
+
+     /**
+      * For the correction of a matching question :
+      * init array of responses of user indexed by labelId
+      * init array of rights responses indexed by labelId
+      *
+      * @access public
+      *
+      * @param String $response
+      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+      *
+      * @return array of arrays
+      */
+    function initTabResponseMatching($response, $interMatching) {
+
+        $tabsResponses = array();
+
+        $tabResponseIndex = $this->getTabResponseIndex($response);
+        $tabRightResponse = $this->initTabRightResponse($interMatching);
+
+        //add in $tabResponseIndex label empty
+        foreach ($interMatching->getLabels() as $label) {
+            if (!isset($tabResponseIndex[$label->getId()])) {
+                $tabResponseIndex[$label->getId()] = null;
+            }
+        }
+
+
+        $tabsResponses[0] = $tabResponseIndex;
+        $tabsResponses[1] = $tabRightResponse;
+
+        return $tabsResponses;
+
+    }
+
+    /**
+     * init array of rights responses indexed by labelId
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * @return mixed[]
+     */
+    function initTabRightResponse($interMatching) {
+        $tabRightResponse = array();
+
+        //array of rights responses indexed by labelId
+        foreach ($interMatching->getProposals() as $proposal) {
+            $associateLabel = $proposal->getAssociatedLabel();
+            if ($associateLabel != null) {
+                foreach ($associateLabel as $associatedLabel) {
+                    $index = $associatedLabel->getId();
+                    if (isset($tabRightResponse[$index])) {
+                        $tabRightResponse[$index] .= '-' . $proposal->getId();
+                    } else {
+                        $tabRightResponse[$index] = $proposal->getId();
+                    }
+                }
+            }
+        }
+
+        //add in $tabRightResponse label empty
+        foreach ($interMatching->getLabels() as $label) {
+            if (!isset($tabRightResponse[$label->getId()])) {
+                $tabRightResponse[$label->getId()] = null;
+            }
+        }
+
+        return $tabRightResponse;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param
+     *
+     * @return integer[]
+     */
+    private function getTabResponseIndex($response) {
+        $tabResponse = explode(';', substr($response, 0, -1));
+        $tabResponseIndex = array();
+
+        //array of responses of user indexed by labelId
+        foreach ($tabResponse as $rep) {
+            $tabTmp = preg_split('(,)', $rep);
+            for ($i = 1; $i < count($tabTmp);$i++) {
+                if (isset($tabResponseIndex[$tabTmp[$i]])) {
+                    $tabResponseIndex[$tabTmp[$i]] .= '-' . $tabTmp[0];
+                } else {
+                    $tabResponseIndex[$tabTmp[$i]] = $tabTmp[0];
+                }
+            }
+        }
+
+        return $tabResponseIndex;
+    }
 }
