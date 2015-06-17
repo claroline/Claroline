@@ -33,7 +33,7 @@ saved_changes: 'Vos changements ont été sauvegardés'
 accept: Accepter
 accessible_from: 'Accessible à partir du'
 accessible_until: 'Accessible jusqu''au'
-account_created: 'Compte créé'
+account_created: 'Les informations de votre compte vous ont été envoyées par mail (il est possible qu''elles arrivent dans votre dossier dédié aux spams).'
 account_duration_label: 'Durée de vie des comptes (jours)'
 account_general_statistics: 'Statistiques générales sur les comptes'
 action: Action
