@@ -26,6 +26,10 @@ services:
         tags:
             - { name: twig.extension }
 
+    ujm.badge_exo:
+        class: UJM\ExoBundle\Services\classes\BadgeExoService
+        arguments: [@doctrine]
+        
     ujm.exercise_services:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]

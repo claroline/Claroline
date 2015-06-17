@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the qcm
+ * Services for the qcm
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 

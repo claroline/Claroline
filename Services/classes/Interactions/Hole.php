@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the hole
+ * Services for the hole
  */
 
 namespace UJM\ExoBundle\Services\classes\Interactions;

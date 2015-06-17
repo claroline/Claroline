@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the matching
+ * Services for the matching
  */
 
 namespace UJM\ExoBundle\Services\classes\Interactions;

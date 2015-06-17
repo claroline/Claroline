@@ -34,6 +34,7 @@ class PaperController extends Controller
         $retryButton = false;
         $nbAttemptAllowed = -1;
         $exerciseSer = $this->container->get('ujm.exercise_services');
+        $badgeExoSer = $this->container->get('ujm.badge_exo');
 
         $arrayMarkPapers = array();
 
@@ -104,9 +105,9 @@ class PaperController extends Controller
             }
         }
 
-        $badgesInfoUser = $exerciseSer->badgesInfoUser(
-                $user->getId(), $exercise->getResourceNode()->getId(),
-                $this->container->getParameter('locale'));
+        $badgesInfoUser = $badgeExoSer->badgesInfoUser(
+        $user->getId(), $exercise->getResourceNode()->getId(),
+        $this->container->getParameter('locale'));
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')
                           ->getCountQuestion($exoID);
@@ -146,6 +147,7 @@ class PaperController extends Controller
         $nbAttemptAllowed = -1;
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exercise_services');
+        $badgeExoSer = $this->container->get('ujm.badge_exo');
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -180,9 +182,9 @@ class PaperController extends Controller
 
         $nbMaxQuestion = count($infosPaper['interactions']);
 
-        $badgesInfoUser = $exerciseSer->badgesInfoUser(
-                $user->getId(), $exercise->getResourceNode()->getId(),
-                $this->container->getParameter('locale'));
+        $badgesInfoUser = $badgeExoSer->badgesInfoUser(
+        $user->getId(), $exercise->getResourceNode()->getId(),
+        $this->container->getParameter('locale'));
 
         if ($exercise->getMaxAttempts() > 0) {
             if (!$exerciseSer->isExerciseAdmin($exercise)) {
