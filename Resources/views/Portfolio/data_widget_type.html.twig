@@ -5,11 +5,14 @@
         <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
             <div class="panel-heading clearfix" role="tab" id="heading-widget{{ widget.id }}">
                 <h4 class="panel-title pull-left" id="collapsible-widget{{ widget.id }}">
-                    <span class="fa" data-ng-class="{ 'fa-caret-right': widget.isCollapsed, 'fa-caret-down': !widget.isCollapsed }"></span>
-                    <span data-ng-click="widget.isCollapsed = !widget.isCollapsed">
+                    <span class="fa" data-ng-click="widget.isCollapsed = !widget.isCollapsed"
+                          data-ng-class="{ 'fa-caret-right': widget.isCollapsed, 'fa-caret-down': !widget.isCollapsed }"></span>
+                    <span data-ng-click="widget.isCollapsed = !widget.isCollapsed" data-ng-show="!widget.isEditing">
                         {{ widget.label }}
                     </span>
-                    <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
+                    <input type="text" data-ng-show="widget.isEditing && widget.views.form" class="input-sm form-control"
+                           name="widget_label" data-ng-model="widget.label">
+                    <span class="pull-right loading" data-ng-if="widget.isEditing && !widget.views.form"></span>
                 </h4>
                 <div class="widget-actions pull-right">
                     <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget)" data-ng-if="!widget.isEditing">
