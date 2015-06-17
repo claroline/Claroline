@@ -4,8 +4,8 @@ appDirectives
     .directive('loadingForm', ["$parse", function ($parse) {
         function link(scope, element, attributes) {
             var longOperation = $parse(attributes['loadingForm']); // "compile" the bound expression to our directive
-            var button        = element.find("button[type=submit]");
-            var buttonHtml    = button.html();
+            var button = element.find("button[type=submit]");
+            var buttonHtml = button.html();
 
             element.on('submit', function (event) {
                 scope.$apply(function () {
