@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the graphic
+ * Services for the graphic
  */
 
 namespace UJM\ExoBundle\Services\classes\Interactions;

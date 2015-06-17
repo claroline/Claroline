@@ -25,7 +25,7 @@ class InteractionMatchingController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.exercise_services');
+        $interMatchSer = $this->container->get('ujm.InteractionMatching');
         $interMatching = new InteractionMatching();
         $form = $this->createForm(
             new InteractionMatchingType(
@@ -78,7 +78,7 @@ class InteractionMatchingController extends Controller
                     ));
         }
 
-        $typeMatching = $services->getTypeMatching();
+        $typeMatching = $interMatchSer->getTypeMatching();
         $formWithError = $this->render(
             'UJMExoBundle:InteractionMatching:new.html.twig', array(
             'entity' => $interMatching,

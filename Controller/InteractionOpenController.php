@@ -26,7 +26,7 @@ class InteractionOpenController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.exercise_services');
+        $interOpenSer = $this->container->get('ujm.InteractionOpen');
         $interOpen  = new InteractionOpen();
         $form      = $this->createForm(
             new InteractionOpenType(
@@ -78,7 +78,7 @@ class InteractionOpenController extends Controller
                     ));
         }
 
-        $typeOpen = $services->getTypeOpen();
+        $typeOpen = $interOpenSer->getTypeOpen();
         $formWithError = $this->render(
             'UJMExoBundle:InteractionOpen:new.html.twig', array(
             'entity' => $interOpen,

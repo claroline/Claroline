@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the matching
+ * Services for the matching
  */
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
@@ -157,6 +157,28 @@ class Matching extends Interaction {
      }
 
      /**
+     * Get the types of Matching, Multiple response, unique response
+     *
+     * @access public
+     *
+     * @return array
+     */
+    public function getTypeMatching()
+    {
+        $em = $this->doctrine->getManager();
+
+        $typeMatching = array();
+        $types = $em->getRepository('UJMExoBundle:TypeMatching')
+                    ->findAll();
+
+        foreach ($types as $type) {
+            $typeMatching[$type->getId()] = $type->getCode();
+        }
+
+        return $typeMatching;
+    }
+
+     /**
       * For the correction of a matching question :
       * init array of responses of user indexed by labelId
       * init array of rights responses indexed by labelId
@@ -168,7 +190,7 @@ class Matching extends Interaction {
       *
       * @return array of arrays
       */
-    function initTabResponseMatching($response, $interMatching) {
+    public function initTabResponseMatching($response, $interMatching) {
 
         $tabsResponses = array();
 
@@ -199,7 +221,7 @@ class Matching extends Interaction {
      *
      * @return mixed[]
      */
-    function initTabRightResponse($interMatching) {
+    public function initTabRightResponse($interMatching) {
         $tabRightResponse = array();
 
         //array of rights responses indexed by labelId

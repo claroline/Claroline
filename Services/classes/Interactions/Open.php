@@ -2,7 +2,7 @@
 
 /**
  *
- * Servives for the matching
+ * Services for the matching
  */
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
@@ -143,6 +143,28 @@ class Open extends Interaction {
 
          return $responseGiven;
      }
+
+     /**
+     * Get the types of open question long, short, numeric, one word
+     *
+     * @access public
+     *
+     * @return array
+     */
+    public function getTypeOpen()
+    {
+        $em = $this->doctrine->getManager();
+
+        $typeOpen = array();
+        $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
+                    ->findAll();
+
+        foreach ($types as $type) {
+            $typeOpen[$type->getId()] = $type->getCode();
+        }
+
+        return $typeOpen;
+    }
 
      /**
      * Get score for an open question with one word
