@@ -596,7 +596,8 @@ class QuestionController extends Controller
                         $variables['_resource'] = $exercise;
                     }
 
-                    $typeOpen = $services->getTypeOpen();
+                    $interOpenSer = $this->container->get('ujm.InteractionOpen');
+                    $typeOpen     = $interOpenSer->getTypeOpen();
 
                     $variables['entity']         = $interactionOpen;
                     $variables['edit_form']      = $editForm->createView();
@@ -648,7 +649,8 @@ class QuestionController extends Controller
                         ), $interactionMatching
                     );
 
-                    $typeMatching = $services->getTypeMatching();
+                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $typeMatching = $interMatchSer->getTypeMatching();
 
                     $variables['entity']         = $interactionMatching;
                     $variables['edit_form']      = $editForm->createView();
@@ -821,7 +823,8 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $typeOpen = $services->getTypeOpen();
+                    $interOpenSer = $this->container->get('ujm.InteractionOpen');
+                    $typeOpen     = $interOpenSer->getTypeOpen();
 
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionOpen:new.html.twig', array(
@@ -842,7 +845,8 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $typeMatching = $services->getTypeMatching();
+                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $typeMatching = $interMatchSer->getTypeMatching();
 
                     return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionMatching:new.html.twig', array(

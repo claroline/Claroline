@@ -468,50 +468,6 @@ class ExerciseServices
     }
 
     /**
-     * Get the types of open question long, short, numeric, one word
-     *
-     * @access public
-     *
-     * @return array
-     */
-    public function getTypeOpen()
-    {
-        $em = $this->doctrine->getManager();
-
-        $typeOpen = array();
-        $types = $em->getRepository('UJMExoBundle:TypeOpenQuestion')
-                    ->findAll();
-
-        foreach ($types as $type) {
-            $typeOpen[$type->getId()] = $type->getCode();
-        }
-
-        return $typeOpen;
-    }
-
-    /**
-     * Get the types of Matching, Multiple response, unique response
-     *
-     * @access public
-     *
-     * @return array
-     */
-    public function getTypeMatching()
-    {
-        $em = $this->doctrine->getManager();
-
-        $typeMatching = array();
-        $types = $em->getRepository('UJMExoBundle:TypeMatching')
-                    ->findAll();
-
-        foreach ($types as $type) {
-            $typeMatching[$type->getId()] = $type->getCode();
-        }
-
-        return $typeMatching;
-    }
-
-    /**
      * Get interactions in order for a paper
      *
      * @access private
