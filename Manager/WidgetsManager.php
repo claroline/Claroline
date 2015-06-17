@@ -162,22 +162,33 @@ class WidgetsManager
 
     /**
      * @param string $type
+     * @param User   $user
      *
-     * @throws \InvalidArgumentException
      * @return AbstractWidget
      */
-    public function getNewDataWidget($type)
+    public function getNewDataWidget($type, User $user)
     {
         $widget = $this->widgetFactory->createDataWidget($type);
-        $widget->setId(uniqid());
+        $widget
+            ->setId(uniqid())
+            ->setUser($user);
 
         return $widget;
     }
 
     /**
+     * @param PortfolioWidget $portfolioWidget
+     */
+    public function deleteWidget(PortfolioWidget $portfolioWidget)
+    {
+        $this->entityManager->remove($portfolioWidget);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @param AbstractWidget $widget
      */
-    public function deleteWidget(AbstractWidget $widget)
+    public function deleteDataWidget(AbstractWidget $widget)
     {
         $this->entityManager->remove($widget);
         $this->entityManager->flush();

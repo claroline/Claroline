@@ -33,7 +33,7 @@ class WidgetController extends BaseController
             $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
         }
         else {
-            $widget = $this->getWidgetsManager()->getNewDataWidget($type);
+            $widget = $this->getWidgetsManager()->getNewDataWidget($type, $loggedUser);
             $data = $this->getWidgetsManager()->getWidgetData($widget);
         }
 
@@ -86,11 +86,43 @@ class WidgetController extends BaseController
         $response = new JsonResponse();
 
         try {
-            $this->getWidgetsManager()->deleteWidget($widget);
+            $this->getWidgetsManager()->deleteDataWidget($widget);
 
         } catch(\Exception $exception){
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{type}", name="icap_portfolio_internal_widget_post")
+     * @Method({"POST"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function postAction(Request $request, User $loggedUser, $type)
+    {
+        $this->checkPortfolioToolAccess($loggedUser);
+
+        $widgetManager = $this->getWidgetsManager();
+
+        try {
+            $newWidget = $widgetManager->getNewDataWidget($type, $loggedUser);
+            $data = $widgetManager->handle($newWidget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
+            $statusCode = Response::HTTP_CREATED;
+        } catch(\Exception $exception){
+            echo "<pre>";
+            var_dump($exception->getMessage());
+            echo "</pre>" . PHP_EOL;
+            $data = [];
+            $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
+        }
+
+        $response = new JsonResponse();
+        $response
+            ->setData($data)
+            ->setStatusCode($statusCode);
 
         return $response;
     }
