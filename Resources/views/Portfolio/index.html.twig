@@ -46,9 +46,9 @@
         <div data-ng-app="indexApp">
             <div class="tab-content index-container" data-ng-strict-di>
                 <div role="tabpanel" class="tab-pane active" id="presentation">
-                    <p>
+                    <div>
                         {{ 'presentation_message'|trans({}, 'icap_portfolio')|raw }}
-                    </p>
+                    </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="list">
                     {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}

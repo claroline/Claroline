@@ -1,5 +1,5 @@
 <div data-widget-container="{{ widgetType.name }}">
-    <button type="button" class="btn btn-default" data-ng-click="create()">{{ 'add_data_widget'|trans({}, 'icap_portfolio') }}</button>
+    <button type="button" class="btn btn-default add_data_button" data-ng-click="create()">{{ 'add_data_widget'|trans({}, 'icap_portfolio') }}</button>
     <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" data-ng-show="widgets.length && widgets.$resolved">
         {% verbatim %}
         <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
