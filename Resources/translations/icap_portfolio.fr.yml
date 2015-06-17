@@ -119,3 +119,4 @@ portfolio_update_guides_ajax_notification: "Liste des accompagnateurs du portfol
 portfolio_imported_ajax_notification: "Import d'un portfolio effectué avec succès"
 portfolio_deleted_ajax_notification: "Portfolio supprimé avec succès"
 no_data_widget: "Aucune données de ce type actuellement."
+add_data_widget: "Ajouter des données"
