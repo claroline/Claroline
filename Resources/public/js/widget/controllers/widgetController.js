@@ -4,13 +4,13 @@ widgetsApp
     .controller("widgetController", ["$scope", "widgetManager", "$attrs",
         function($scope, widgetManager, $attrs) {
             $scope.widgetType = $attrs['widgetContainer'];
-            $scope.activePanels = [];
 
             $scope.create = function() {
                 widgetManager.create($scope.widgetType);
             };
 
             $scope.edit = function(widget) {
+                widget.isCollapsed = false;
                 widgetManager.edit(widget);
             };
 

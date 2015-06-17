@@ -1,14 +1,13 @@
 <div data-widget-container="{{ widgetType.name }}">
     <button type="button" class="btn btn-default" data-ng-click="create()">{{ 'add_data_widget'|trans({}, 'icap_portfolio') }}</button>
-    <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" aria-multiselectable="true"
-         data-ng-show="widgets.length && widgets.$resolved" ng-model="activePanels" data-allow-multiple="true" bs-collapse>
+    <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" data-ng-show="widgets.length && widgets.$resolved">
         {% verbatim %}
         <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
             <div class="panel-heading clearfix" role="tab" id="heading-widget{{ widget.id }}">
                 <h4 class="panel-title pull-left" id="collapsible-widget{{ widget.id }}">
-                    <a bs-collapse-toggle>
+                    <span data-ng-click="widget.isCollapsed = !widget.isCollapsed">
                         {{ widget.label }}
-                    </a>
+                    </span>
                     <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
                 </h4>
                 <div class="widget-actions pull-right">
@@ -22,7 +21,7 @@
                     </button>
                 </div>
             </div>
-            <div class="panel-collapse" role="tabpanel" bs-collapse-target>
+            <div class="panel-collapse" role="tabpanel" collapse="widget.isCollapsed">
                 <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
                 </div>
                 <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.isEditing && widget.views.form">
