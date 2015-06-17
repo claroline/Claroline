@@ -1,6 +1,6 @@
 'use strict';
 
-portfolioApp
+appDirectives
     .directive("collectionForm", function() {
         return {
             scope:    true,

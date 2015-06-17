@@ -1,6 +1,6 @@
 'use strict';
 
-portfolioApp
+appDirectives
     .controller("collectionFormController", ["$scope", "$attrs", function($scope, $attrs) {
         $scope.emptyChild = jQuery.parseJSON($attrs.collectionForm.replace(/'/g, '"'));
         $scope.emptyChild.added = false;
