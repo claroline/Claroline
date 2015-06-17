@@ -1,5 +1,5 @@
 <p>{{ widget.name }}</p>
-<p>{{ widget.startDate|date('date_format'|trans({}, 'platform')) }} - {% if widget.endDate is not null %}{{ widget.endDate|date('date_format'|trans({}, 'platform')) }}{% else %}{{ 'today'|trans({}, 'icap_portfolio') }}{% endif %}</p>
+<p><span class="fa fa-calendar"></span> {{ widget.startDate|date('date_format'|trans({}, 'platform')) }} - {% if widget.endDate is not null %}{{ widget.endDate|date('date_format'|trans({}, 'platform')) }}{% else %}{{ 'today'|trans({}, 'icap_portfolio') }}{% endif %}</p>
 {% if widget.establishmentName is not null %}<p>{{ widget.establishmentName }}</p>{% endif %}
 {% if widget.diploma is not null %}<p>{{ widget.diploma }}</p>{% endif %}
 <ul class="list-group">
