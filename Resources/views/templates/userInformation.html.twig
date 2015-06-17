@@ -1,6 +1,6 @@
 {% if widget.isShowAvatar %}
 <p class="profile_picture">
-    {% set user = widget.portfolio.user %}
+    {% set user = widget.user %}
     {% if user.picture != "" %}
         <img src="{{ asset('uploads/pictures/') ~  user.getPicture() }}" alt="{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}">
     {% else %}
@@ -11,11 +11,11 @@
 {% if widget.birthDate is not null %}<p><span class="fa fa-birthday-cake"></span> {{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}</p>{% endif %}
 {% if widget.city is not null %}<p><span class="fa fa-map-marker"></span> {{ widget.city }}</p>{% endif %}
 {% if widget.isShowMail %}
-<p><span class="fa fa-envelope"></span> {{ widget.portfolio.user.mail }}</p>
+<p><span class="fa fa-envelope"></span> {{ widget.user.mail }}</p>
 {% endif %}
 {% if widget.showPhone %}
-<p><span class="fa fa-phone"></span> {{ widget.portfolio.user.phone }}</p>
+<p><span class="fa fa-phone"></span> {{ widget.user.phone }}</p>
 {% endif %}
 {% if widget.showDescription %}
-<p>{{ widget.portfolio.user.description|raw }}</p>
+<p>{{ widget.user.description|raw }}</p>
 {% endif %}
