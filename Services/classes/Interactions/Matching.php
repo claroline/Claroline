@@ -228,10 +228,11 @@ class Matching extends Interaction {
     }
 
     /**
-     *
+     * init array of student response indexed by labelId
+     * 
      * @access private
      *
-     * @param
+     * @param String $response
      *
      * @return integer[]
      */
