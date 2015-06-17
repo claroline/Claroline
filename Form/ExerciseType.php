@@ -28,30 +28,30 @@ class ExerciseType extends AbstractType
             )
             ->add(
                 'shuffle', 'checkbox', array(
-                    'required' => false, 'label' => 'Exercise.shuffle'
+                    'required' => false, 'label' => 'random_questions'
                 )
             )
             ->add(
                 'nbQuestion', 'text', array(
-                    'label' => 'number of questions to draw',
+                    'label' => 'number_questions_draw',
                     'required' => false
                 )
             )
             ->add(
                 'keepSameQuestion', 'checkbox', array(
-                    'required' => false, 'label' => 'Exercise.keepSameQuestion'
+                    'required' => false, 'label' => 'keep_same_question'
                 )
             )
             //->add('dateCreate')
             ->add(
                 'duration', 'text', array(
-                    'label' => 'Exercise.duration'
+                    'label' => 'duration'
                 )
             )
             //->add('nbQuestionPage')
             ->add(
                 'doprint', 'checkbox', array(
-                    'required' => false, 'label' => 'print paper'
+                    'required' => false, 'label' => 'print_paper'
                 )
             )
             ->add(
@@ -66,8 +66,8 @@ class ExerciseType extends AbstractType
                     'choices' => array(
                         '1' => 'at_the_end_of_assessment',
                         '2' => 'after_the_last_attempt',
-                        '3' => 'From',
-                        '4' => 'Never'
+                        '3' => 'from',
+                        '4' => 'never'
                     )
                 )
             )
@@ -95,12 +95,12 @@ class ExerciseType extends AbstractType
                 'input' => 'datetime',
                 'format' => 'dd/MM/yyyy H:mm:ss',
                 'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
-                'label' => 'start date',
+                'label' => 'start_date',
                 )
             )
             ->add(
                 'useDateEnd', 'checkbox', array(
-                    'required' => false, 'label' => 'use date of end'
+                    'required' => false, 'label' => 'use_date_end'
                 )
             )
             ->add(
@@ -109,12 +109,12 @@ class ExerciseType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd/MM/yyyy H:mm:ss',
                     'attr' => array('data-format' => 'dd/MM/yyyy H:mm:ss'),
-                    'label' => 'Exercise.end_date',
+                    'label' => 'end_date',
                 )
             )
             ->add(
                 'dispButtonInterrupt', 'checkbox', array(
-                    'required' => false, 'label' => 'test exit'
+                    'required' => false, 'label' => 'test_exit'
                 )
             )
             ->add(

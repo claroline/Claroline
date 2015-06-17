@@ -54,9 +54,9 @@
             <div class="panel-footer">
                 <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
                 {% if exoID == -1 %}
-                    <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
+                    <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ 'cancel' | trans({}, "platform") }}</a>
                 {% else %}
-                    <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ "cancel" | trans({}, "platform") }}</a>
+                    <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ 'cancel' | trans({}, "platform") }}</a>
                 {% endif %}
             </div>
             {% if locker != "" %}        
@@ -82,13 +82,13 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            addFormHoleEdit('{{ "response" | trans }}', '{{ "Inter_Hole.size" | trans }}',
-            '{{ "Inter_Hole.orthography" | trans }}', '{{ "delete" | trans }}',
-            '{{ "Hole.selector" | trans }}', '{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}',
-            '{{ "key_word" | trans }}', '{{ "points" | trans  }}',
-             {{ nbResponses }}, '{{ "instruction_add_hole" | trans  }}');
+            addFormHoleEdit("{{ 'response' | trans }}", "{{ 'size' | trans }}",
+            "{{ 'orthography' | trans }}", "{{ 'delete' | trans }}",
+            "{{ 'hole_selector' | trans }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
+            "{{ 'key_word' | trans }}", "{{ 'points' | trans  }}",
+             {{ nbResponses }}, "{{ 'instruction_add_hole' | trans  }}");
 
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+            newHintEdit("{{ 'hint' | trans }}", "{{ 'penalty' | trans }}", "{{ 'hint' | trans }}", "{{ 'delete' | trans }}");
             disableNotYetReady();
         });
     </script>

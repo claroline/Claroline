@@ -7,7 +7,7 @@
     <div class="panel-body">
         {% if listQuestions is not empty %}
             <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
-                {{ exoID }}, 1, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
+                {{ exoID }}, 1, '{{ 'no_thing_import' | trans }}');event.preventDefault();">
                 <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans }}
             </a>
 

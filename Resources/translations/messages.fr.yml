@@ -34,16 +34,11 @@
 ##
 
 # A
-#access my question bank: Accéder à ma banque de questions
-#addDoc: Ajouter un document
-#add user: Ajouter un utilisateur
-#administration: Administration
-#alreadyPlaced: Réponses déjà placées
 actions: Actions
 add: Ajouter
-add_a_new_picture: Ajouter une nouvelle image
 add_choice: Ajouter un choix
 add_label: Ajouter un label
+add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
@@ -78,8 +73,9 @@ bank_of_questions: Banque de questions
 brief_search: Recherche rapide
 
 # C
-category: Catégorie
 calculation_measure_difficulty: Il se calcul avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants
+category: Catégorie
+case_sensitive: Respecter la casse
 cercle: Cercle
 change: Changer
 change_name: Changer le nom du document
@@ -146,6 +142,7 @@ export_qti_exercise : Exporter les questions de l'exercice au format QTI
 
 # F
 feedback: Feedback général
+feedback_answer_check: Commentaire si la réponse est selectionnée(facultatif)
 find_by: Trouver par
 find_in: Trouver dans
 find_question: Rechercher des questions
@@ -173,6 +170,7 @@ histo_success: Histogramme de réussite
 hole: Texte à trous
 hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
+hole_selector: Proposer une liste
 home_exercise: Accueil de l'exercice
 
 # I
@@ -182,6 +180,8 @@ info_exercise_no_puplished: Cet exercice n'est pas encore publié. Les gestionna
 info_exercise_no_puplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
 info_mark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 info_measure_difficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
+inter_matching_shuffle: Ordre des propositions et des labels aléatoire
+interaction_feedback: Commentaire à afficher avec la correction (facultatif)
 interupt: Interrompre
 invite_question: L\'invite de la question doit être rempli
 is_interupt: Interrompu
@@ -194,14 +194,8 @@ instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dan
 instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
 in_valid_mark: Note invalide
 
-# I Intraction type (data in the DB)
-InteractionGraphic: Graphique
-InteractionHole: Texte à trous
-InteractionMatching: Association
-InteractionOpen: Ouverte
-InteractionQCM: QCM
-
 # K
+keep_same_question: Conserver les mêmes questions pour un même utilisateur
 key_word: Mot clé
 keys_words: Mots clés
 kind_question: Quel type de question
@@ -218,18 +212,19 @@ long: Longue
 
 # M
 manage_img: Gérer mes documents
-mark: Score
+mark: Note
 mark_question: Noter cette question
 mark_bigest: La note doit être inférieure ou égale à
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
+matching_value: Type de question associative
 maximum_tries: Nombre d'essai maximum
 meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
 more_info: Plus d'informations
 my_questions: Mes questions
-shared_questions: Questions qui m'ont été partagées
+my_models: Mes modèles
 
 # N
 user_shared: Nom de l'utilisateur avec qui partager la question
@@ -253,137 +248,125 @@ none: Aucune
 no_paper_found: Aucune copie
 no_question: Vous ne posez aucune question
 no_question_found: Pas de question trouvée
-noRightAnswer: Aucune bonne réponse
-noRights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
-notAllowedModifyPaper: Vous ne pouvez plus modifier vos réponses !
-nothingToImport: Aucune question à importer n\'est cochée
-notImageMesssage: Le document doit être une image
-noTitle: La question n\'a pas de titre
-notEnoughtPapers: Pour afficher la docimologie, il doit y avoir au moins 12 copies
-not yet mark: Pas encore noté
-noUserFound: Pas d'utilisateur trouvé
-nQuestion: Question n°
-numberProposal: Numéro de la proposition
-number of papers: Nombre de copies
-number of questions: Nombre de questions
-number of questions to draw: Nombre de questions à tirer (0 pour toutes)
+no_rights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
+not_allowed_modify_paper: Vous ne pouvez plus modifier vos réponses !
+no_thing_import: Aucune question à importer n\'est cochée
+not_image_messsage: Le document doit être une image
+not_enought_papers: Pour afficher la docimologie, il doit y avoir au moins 12 copies
+not_yet_mark: Pas encore noté
+no_user_found: Pas d'utilisateur trouvé
+n_question: Question n°
+number_proposal: Numéro de la proposition
+number_of_papers: Nombre de copies
+number_questions_draw: Nombre de questions à tirer (0 pour toutes)
 numerical: Numérique
 num_paper: Numéro de la copie
-my models: Mes modèles
 
 # O
-oneWord: Un mot
-onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
-only owner category: Seul le propriétaire peut changer la catégorie
-only owner graphic: Seul le propriétaire peut changer l'image
+only_once: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+only_owner_graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
 open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
-order: Ordre
 orders: Consignes
+orthography: Autoriser les fautes d'orthographe
 
 # P
 paper: Passage
-paper exo: Passage d'un test
-paperLegend: Copies nécessitant une correction manuelle
-paper list: Liste des copies
+paper_legend: Copies nécessitant une correction manuelle
+paper_list: Liste des copies
 parameters: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
-picture name: Nom de l'image
-planning_Of_Groups: Planning des groupes
-point: Point
+picture_name: Nom de l'image
 points: Points
 point_answer: Vous devez assigner un point à la réponse attendue
 point_answers: Vous devez assigner un point à chaque réponse
-pointInstruction: Les points doivent être attribués avant le placement de chaque zone de réponse
-pointRightResponse: Points bonne réponse
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 preview: Aperçu
 previous: Précédent
-print paper: Imprimer la copie
+print_paper: Imprimer la copie
+proposal: Proposition
+position_force: Forcer cette position
 publish: Publier
 
 # Q
 qcm: QCM
 qcm_creation: Création d'une question QCM
 qcm_edition: Edition d'une question QCM
-qti can't open zip: Impossible d'ouvrir l'archive
-qti format warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
+qcm_shuffle: Ordre des choix aléatoire
+qti_format_warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
-qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"
-qti no questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il ait au moins une question dans votre exercice
-qti unsupported format: Format non compatible QTI ou non supporté
-qti xml not found: Schéma XML non trouvé
+qti_no_questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il ait au moins une question dans votre exercice
+qti_unsupported_format: Format non compatible QTI ou non supporté
+qti_xml_not_found: Schéma XML non trouvé
 question: Question
 questions: Questions
-question graphic: Question Graphique
-question hole : Question à trous
-question open: Question à Réponse Ouverte
-question qcm: Question QCM
-questions: Questions
-question creation: Création d'une question
-questionSharedWith: Cette question est partagée avec les utilisateurs suivants
+question_creation: Création d'une question
+question_description: Description de la question (facultatif)
+question_model: Définir comme modèle
+question_title: Titre de la question
+question_shared_with: Cette question est partagée avec les utilisateurs suivants
 
 # R
-random order of questions: Ordre des questions aléatoire
+random_questions: Ordre des questions aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
-remove advanced edition: Edition simple
+remove_advanced_edition: Edition simple
 remove_question_confirm_message:  Êtes vous sûr de vouloir supprimer cette question ?
 reset: Réinitialiser
-resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
+resize_zone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
-response number: Numéro de la réponse
 result: Résultats
-role: Rôle
+right_response: Points pour la bonne réponse
 
 # S
 save: Enregistrer
-saveNewOrder: Enregistrer le nouvel ordre
-sawHint: de pénalité pour indices vus
-score and list of question: Note et liste des questions
-scoreError: Attention, le score doit être un chiffre !
-scoreMax : Score maximum possible
+save_order: Enregistrer le nouvel ordre
+score: Score
+score_answer: Points pour cette réponse
+score_list_question: Note et liste des questions
+score_error: Attention, le score doit être un chiffre !
+score_max : Score maximum possible
+score_false_label: Résultat incorrect
+score_right_label: Résultat correct
+score_right_label_matching: Score de l'association
 search: Rechercher un document
-searchQuestion: Chercher des questions
-searchUserPaper: Rechercher les copies de l'utilisateur
-seeDoc: Voir les questions liées à ce document
-seeSharedWith: Question partagée avec des utilisateurs
+search_question: Chercher des questions
+search_user_paper: Rechercher les copies de l'utilisateur
+see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
-selected Image: Image sélectionnée
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
-selectZone: Pour définir et déplacer une zone de réponse, utilisez le glisser/déposer
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
 share: Partager
-shared by: Partagée par
-sharedUser: Partage de question
-shared with: Partager avec
+shared_by: Partagée par
+shared_questions: Questions qui m'ont été partagées
+shared_user: Partage de question
+shared_with: Partager avec
 short: Courte
 show: Afficher
-show Instructions: Montrer les consignes
-start again: Recommencer
+show_instructions: Montrer les consignes
+size: Taille
+start_again: Recommencer
+start_date: Date de début
 sort: Trier les documents
-start date: Date de début
-subscription: Inscription
+
 
 # T
-temporary mark: Note temporaire
-test exit: Sortie du test
+temporary_mark: Note temporaire
+test_exit: Sortie du test
 title: Titre
-To drag: Panier
-To bind: A lier
-try: Tester
 type: Type
+type_qcm: Type du QCM
+type_question: Type de la question
 
 # U
-unique response: Réponse Unique
 unpublish: Dépublier
 upload: Télécharger
 uploading: Chargement en cours
-use date of end: Utiliser une date de fin
+use_date_end: Utiliser une date de fin
 user: Utilisateur
 users: Utilisateurs
 
@@ -394,136 +377,23 @@ validate: Valider
 warning: Êtes-vous sûr de vouloir supprimer ce document
 warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
 warning_one_word: Vous avez choisi une question à un mot. Attention, il a des espaces dans votre réponse.
-whichAction: Quelle action souhaitez-vous réaliser
-with: Avec
-withResponse: Avec des réponses
+weight_choice: Attribuer les points par réponse
 wrong: Fausse
-wrongName: Le nom saisi est incorrect
-wrongPoint: La valeur saisie est incorrecte
+wrong_name: Le nom saisi est incorrect
+wrong_point: La valeur saisie est incorrecte
 
 # Y
 yes: Oui
-your answer: Votre réponse
+your_answer: Votre réponse
 
-
-#properties of entities
-Category.value: Catégorie
-
-Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)
-Choice.label: Réponse proposée
-Choice.positionForce: Forcer cette position
-Choice.rightResponse: Points pour la bonne réponse
-Choice.falseResponse : Points pour la mauvaise réponse
-Choice.weight: Points pour cette réponse
-
-Coords.color: Couleur
-Coords.score: Points pour la bonne réponse
-Coords.shape: Forme
-
-Document.label: Document
-
-Exercise.correctionMode: Mode de la correction
-Exercise.description: Description (facultatif)
-Exercise.dispButtonIterrupt: Autoriser l'interruption du test
-Exercise.doprint: Imprimer la copie à la fin du test
-Exercise.duration: Durée
-Exercise.end_date: Date de fin
-Exercise.keepSameQuestion: Conserver les mêmes questions pour un même utilisateur
-Exercise.lockAttempt: Verrouiller le test
-Exercise.markMode: Note disponible
-Exercise.maxAttemps: Nombre d'essais autorisés
-Exercise.nbQuestion: Nombre de question à tirer aléatoirement
-Exercise.nbQuestionPage: Nombre de questions par page
-Exercise.shuffle: Ordre des questions aléatoire
-Exercise.start_date: Date de début
-Exercise.title: Titre de l'exercice
-
-Exepertise.description: Description
-Exepertise.title_expertise: Titre de l'expertise
-
-From: A partir du
-
-Groupes.name: Nom du groupe
-
-Hole.orthography: Autoriser les fautes d'orthographe
-Hole.score: Points pour une bonne réponse
-Hole.selector: Proposer une liste
-Hole.size: Taille du blanc
-
-Hint.penalty: Pénalité
-Hint.value: Indice
-
-Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
-Interaction.invite: Question
-
-Inter_Matching.shuffle: Ordre des propositions et des labels aléatoire
-
-Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
-
-Inter_QCM.ScoreRightResponse: Résultat correct
-Inter_QCM.ScoreFalseResponse: Résultat incorrect
-Inter_QCM.shuffle: Ordre des choix aléatoire
-Inter_QCM.weightChoice: Attribuer les points par réponse
-
-Inter_Hole.orthography: Autoriser les fautes d'orthographe
-Inter_Hole.score: Point
-Inter_Hole.size: Taille
-
-Label.value : Label
-Label.scoreRight: Score de l'association
-Label.positionForce: Forcer cette position
-
-LockAttempte.date: Date
-
+# Data in the DB
+InteractionGraphic: Graphique
+InteractionHole: Texte à trous
+InteractionMatching: Association
+InteractionOpen: Ouverte
+InteractionQCM: QCM
 Multiple response: Réponse multiples
-
-Never: jamais
-
-Planning.end_time: Date de fin
-Planning.start_time: Date de début
-Points: Points
-
-Proposal.value: Proposition
-Proposal.positionForce: Forcer cette position
-
-Question_creation: Création d'une question
-Question.description: Description de la question (facultatif)
-Question.model: Définir comme modèle
-Question.title: Titre de la question
-
-Roles.name: Nom du rôle
-
-Response.mark: Note
-Response.reponse: Réponse
-
-Subscription.admin: Donner les droits de gestionnaire (exercice)
-
-TypeMatching.value: Type de question associative
-
-TypeOpenQuestion.value: Type de la question
-
-TypeQCM.value: Type du QCM
-
+oneWord: Un mot
+To drag: Panier
+To bind: A lier
 Unique response: Réponse unique
-
-Unit.value: Unité
-
-User.firstName: Prénom
-User.mail: Adresse mail
-User.name: Nom
-User.password: Mot de passe
-User.username: Login utilisateur
-
-ujm_exobundle_interactiongraphictype_document: Documents
-ujm_exobundle_interactiongraphictype_interaction_hints: Indices
-ujm_exobundle_interactionopentype_interaction: Question ouverte
-ujm_exobundle_interactionopentype_interaction_hints: Indices
-ujm_exobundle_interactionmatchingtype_proposals: Réponse
-ujm_exobundle_interactionmatchingtype_labels: Question
-ujm_exobundle_interactionqcmtype_interaction_hints: Indices
-
-ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
-
-WordResonse.caseSensitive: Respecter la casse
-WordResponse.score: Points pour cette réponse
-WordResponse.response_value: Mot

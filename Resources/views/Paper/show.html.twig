@@ -29,11 +29,11 @@
             <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans }}
         </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
-            <i class="fa fa-list"></i> {{ 'paper list' | trans }}
+            <i class="fa fa-list"></i> {{ 'paper_list' | trans }}
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
-                <i class="fa fa-check-square-o"></i> {{ 'start again' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans }}
             </a>
         {% endif %}
 
@@ -209,7 +209,7 @@
         {% if p == -2 or p == -1%}
             {% if p == -1 %}
                 <script type="text/javascript">
-                    alert('{{ 'notAllowedModifyPaper' | trans}}');
+                    alert('{{ 'not_allowed_modify_paper' | trans}}');
                 </script>
             {% endif %}
             <hr/>
@@ -218,7 +218,7 @@
                 {% set scoreFinal = scoreFinal * 20 %}
                 <h3 id="finalLabel">
                     {% if scoreTemp == true %}
-                        {{ "temporary mark" | trans }} :
+                        {{ "temporary_mark" | trans }} :
                     {% else %}
                         {{ 'final_mark' | trans }} :
                     {% endif %}
@@ -274,7 +274,7 @@
             {#% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score and list of question' |trans }}
+                        {{ 'score_list_question' |trans }}
                     </a>
                 </li>
             {% endif %}
@@ -366,7 +366,7 @@
             {% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score and list of question' |trans }}
+                        {{ 'score_list_question' |trans }}
                     </a>
                 </li>
 
@@ -405,23 +405,23 @@
                             {% for interaction in interactions %}
                                 {% if interaction.type == 'InteractionOpen' %}
                                     <option value="{{ loop.index }}" style="color: purple;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionQCM' %}
                                     <option value="{{ loop.index }}" style="color: green;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionGraphic' %}
                                     <option value="{{ loop.index }}" style="color: black;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionHole' %}
                                     <option value="{{ loop.index }}" style="color: blue;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionMatching' %}
                                     <option value="{{ loop.index }}" style="color: orange;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'nQuestion' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% endif %}
 
@@ -431,17 +431,6 @@
                 {% endif %}
             {% endif %}
         </ul>
-
-        {#% if (display == 'all') %}
-            <div>
-                (
-                <h6 style="color: black; display: inline;">{{ 'question graphic' | trans }}</h6>,
-                <h6 style="color: green; display: inline;">{{ 'question qcm' | trans }}</h6>,
-                <h6 style="color: purple; display: inline;">{{ 'question open' | trans }}</h6>,
-                <h6 style="color: blue; display: inline;">{{ 'question hole' | trans }}</h6>
-                ).
-            </div>
-        {% endif %#}
     </div>
 {% endblock %}
 

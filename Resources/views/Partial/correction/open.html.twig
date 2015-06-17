@@ -5,7 +5,7 @@
         {% set response = responses[p].response %}
     {% endif %}
 
-    <p><h3 class="panel-title">{{ 'your answer' | trans }}</h3></p>
+    <p><h3 class="panel-title">{{ 'your_answer' | trans }}</h3></p>
     {{ response|raw}}
 
     {% if inter.typeopenquestion == 'oneWord' %}
@@ -20,7 +20,7 @@
                 <thead>
                     <tr style="background-color: lightsteelblue;">
                         <th class="classic">{{ 'keys_words' | trans }}</th>
-                        <th class="classic">{{ 'WordResonse.caseSensitive' | trans }}</th>
+                        <th class="classic">{{ 'case_sensitive' | trans }}</th>
                         <th class="classic">{{ 'points' | trans }}</th>
                     </tr>
                 </thead>

@@ -1,6 +1,6 @@
 <div id="Instructions" class="alert alert-info col-md-12">
     <a class="close" onclick="HideInstruction();">&times;</a>
-    <p>{{ 'resizeZone' | trans }}.</p>
+    <p>{{ 'resize_zone' | trans }}.</p>
 </div>
 <div class="form-group row" style="margin-bottom:20px;">
     <label class="control-label col-md-2">{{ 'choose_image' | trans }}</label>
@@ -13,10 +13,10 @@
             {% if src == 'edit' %}
                 {% if app.user.id == entity.interaction.question.user.id %}
                     <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
-                        <i class="fa fa-picture-o"></i> {{ 'add_a_new_picture' | trans }}
+                        <i class="fa fa-picture-o"></i> {{ 'add_new_picture' | trans }}
                     </a>
                 {% else %}
-                    {{ "only owner graphic" | trans }}
+                    {{ 'only_owner_graphic' | trans }}
                 {% endif %}
             {% else %}
                 <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
@@ -81,7 +81,7 @@
                 </select>
             </td>
             <td class="classic">
-                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrongPoint' | trans }}', 'default');">
+                <input class="form-control" type="TEXT" id="points" value="1" onblur="CheckScore('{{ 'wrong_point' | trans }}', 'default');">
             </td>
         </tr>
     </table>

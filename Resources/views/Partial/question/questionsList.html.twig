@@ -87,7 +87,7 @@
             </th>
             {% if (questionsList == 'share' or questionsList == 'importShare'
                     or questionsList == 'exoList' or questionsList == 'importExoList') %}
-                <th class="classic">{{ 'shared by' | trans }}</th>
+                <th class="classic">{{ 'shared_by' | trans }}</th>
             {% endif %}
             {% if (questionsList == 'importMy' or questionsList == 'importShare'
                     or questionsList == 'importExoList') %}
@@ -167,7 +167,7 @@
                 </a>
                 {# ham : fin  #}
                 {% else %}
-                    {{ 'noRights' | trans }}
+                    {{ 'no_rights' | trans }}
                 {% endif %}
                 {% if rights['allowEditQuestion'] %}
 

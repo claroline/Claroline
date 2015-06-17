@@ -23,12 +23,12 @@ class HoleType extends AbstractType
             //->add('position', 'text')
             ->add(
                 'orthography', 'checkbox', array(
-                    'required' => false, 'label' => 'Hole.orthography'
+                    'required' => false, 'label' => 'orthography'
                 )
             )
             ->add(
                 'selector', 'checkbox', array(
-                    'required' => false, 'label' => 'Hole.selector'
+                    'required' => false, 'label' => 'hole_selector'
                 )
             )
             ->add(

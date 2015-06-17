@@ -38,14 +38,14 @@
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
             <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
-        <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}',  '-1');">
+        <a class="btn btn-primary" title="{{ 'qti_format_warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}',  '-1');">
             <i class="fa fa-upload"></i> {{ 'import_qti' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_manage_doc') }}">
             <i class="fa fa-file"></i> {{ 'manage_img' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question') }}">
-            <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
+            <i class="fa fa-question"></i> {{ 'search_question' | trans }}
         </a>
 
         {% if QuestionsExo == 'false' %}

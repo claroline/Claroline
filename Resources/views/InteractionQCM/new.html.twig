@@ -31,12 +31,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationQCMEdit('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans }}', 0);
+        creationQCMEdit('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'position_force' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans }}', 0);
         newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationQCM('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}' ,'{{ typeQCM|raw }}');
+        creationQCM('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'position_force' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}' ,'{{ typeQCM|raw }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

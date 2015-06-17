@@ -14,12 +14,12 @@
 
 {% if (inter.interaction.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}
-        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
+        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
         {% set exoMark = exoMark + responses[p].mark %}
     {% else %}
-        {{ 'mark' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not yet mark' | trans }}</span>
+        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not_yet_mark' | trans }}</span>
         {% set temporaryMark = true %}
     {% endif %}
 {% else %}
-    {{ 'mark' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
+    {{ 'score' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
 {% endif %}

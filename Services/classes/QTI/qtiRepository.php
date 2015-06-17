@@ -171,7 +171,7 @@ class qtiRepository {
                             $imported = $other[1];
                             if ($imported == false) {
 
-                                return 'qti unsupported format';
+                                return 'qti_unsupported_format';
                             }
                         }
                         if ($this->exercise != null) {
@@ -183,7 +183,7 @@ class qtiRepository {
             }
             if ($xmlFileFound === false) {
 
-                return 'qti xml not found';
+                return 'qti_xml_not_found';
             }
             closedir($dh);
         }

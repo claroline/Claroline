@@ -31,14 +31,14 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'typeopenquestion', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
-                    'label' => 'TypeOpenQuestion.value',
+                    'label' => 'type_question',
                     'choice_translation_domain' => true
                 )
             );
         $builder
             ->add(
                 'orthographyCorrect', 'checkbox', array(
-                    'label' => 'Inter_Hole.orthography',
+                    'label' => 'orthography',
                     'required' => false
                 )
             );
@@ -55,7 +55,7 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'scoreMaxLongResp', 'text', array(
                 'required' => false,
-                'label' => 'Inter_Open.ScoreMaxLongResp'
+                'label' => 'right_response'
                 )
             );
     }

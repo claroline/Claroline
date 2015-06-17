@@ -17,7 +17,7 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'nQuestion' | trans }}{{numQ}}</li>
+    <li class="active">{{ 'n_question' | trans }}{{numQ}}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -90,7 +90,7 @@
 
                     <h5>{{ "consignes" | trans }} :</h5>
                     <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                        {{ "onlyOnce" | trans }}</em>
+                        {{ "only_once" | trans }}</em>
                     </h6>
     </div>
     <div style="margin-left: 30px;">
@@ -383,7 +383,7 @@
             <li>
                 <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
                     {% for interactionID in tabOrderInter %}
-                        <option value="{{ loop.index }}">{{ 'nQuestion' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                        <option value="{{ loop.index }}">{{ 'n_question' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
                     {% endfor %}
                 </select>
             </li>

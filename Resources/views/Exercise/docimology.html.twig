@@ -34,7 +34,7 @@
                     <h3 class="panel-title">{{ 'legend' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="questionList">
-                    <h4>{{ "number of papers" | trans }} : {{ nbPapers }}</h4>
+                    <h4>{{ "number_of_papers" | trans }} : {{ nbPapers }}</h4>
                     <h3 class="panel-title">{{ "list_question" | trans }}</h3>
                     <ol>
                         {% for questionTitle in questionsList %}
@@ -95,7 +95,7 @@
                 </div>
             </div>
         {% else %}
-            <div class="alert alert-info">{{ 'notEnoughtPapers'|trans }}.</div>
+            <div class="alert alert-info">{{ 'not_enought_papers'|trans }}.</div>
         {% endif %}
     <div>
 {% endblock %}
@@ -132,7 +132,7 @@
 
                     axes: {
                         xaxis: {
-                            label: '{{ 'mark'|trans }}',
+                            label: '{{ 'score'|trans }}',
                             labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             labelOptions:{
                                 fontFamily:'Helvetica',

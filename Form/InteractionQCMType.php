@@ -32,7 +32,7 @@ class InteractionQCMType extends AbstractType
         $builder
             ->add(
                 'shuffle', 'checkbox', array(
-                    'label' => 'Inter_QCM.shuffle',
+                    'label' => 'qcm_shuffle',
                     'required' => false
                 )
             );
@@ -40,30 +40,30 @@ class InteractionQCMType extends AbstractType
             ->add(
                 'scoreRightResponse', 'text', array(
                     'required' => false,
-                    'label' => 'Inter_QCM.ScoreRightResponse',
-                    'attr'  => array( 'placeholder' => 'Coords.score')
+                    'label' => 'score_right_label',
+                    'attr'  => array( 'placeholder' => 'right_response')
                 )
             );
         $builder
             ->add(
                 'scoreFalseResponse', 'text', array(
                     'required' => false,
-                    'label' => 'Inter_QCM.ScoreFalseResponse',
-                    'attr'  => array( 'placeholder' => 'Points','class'=>'col-md-2'),
+                    'label' => 'score_false_label',
+                    'attr'  => array( 'placeholder' => 'points','class'=>'col-md-2'),
                 )
             );
         $builder
             ->add(
                 'weightResponse', 'checkbox', array(
                     'required' => false,
-                    'label' => 'Inter_QCM.weightChoice'
+                    'label' => 'weight_choice'
                 )
             );
         $builder
             ->add(
                 'typeQCM', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
-                    'label' => 'TypeQCM.value',
+                    'label' => 'type_qcm',
                     'data_class' => 'UJM\\ExoBundle\\Entity\\TypeQCM',
                     'multiple' => false,
                     'expanded' => true,

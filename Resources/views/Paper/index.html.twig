@@ -11,17 +11,17 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper list' | trans }} {% endblock %}
+{% block title %} {{ 'paper_list' | trans }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'paper list' | trans }}</li>
+    <li class="active">{{ 'paper_list' | trans }}</li>
 {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'paper list' | trans }}</h3>
+        <h3 class="panel-title">{{ 'paper_list' | trans }}</h3>
     </div>
 
     <div class="panel-body">
@@ -53,7 +53,7 @@
         <hr/>
 
         {% if isAdmin == 1 and  papers is not empty %}
-            {{ 'searchUserPaper' | trans }} :
+            {{ 'search_user_paper' | trans }} :
             <div class="input-group">
                 <input type="text" class="form-control" id="nameUser" placeholder="{{ 'search'|trans({}, 'platform') }}"
                     onkeydown="if (event.keyCode == 13) { searchUserPaper('{{ path('ujm_paper_searchUserPaper') }}', {{exoID}});return false; }">
@@ -81,7 +81,7 @@
                 {% if retryButton %} :
                     <div style="float:right;">
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoID }) }}">
-                            <i class="fa fa-check-square-o"></i> {{ 'start again' | trans }}
+                            <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans }}
                         </a>
                     </div>
                     {% else %}.
@@ -92,14 +92,14 @@
         {% include "UJMExoBundle:Partial:badgeInfos/infos.html.twig" %}
         {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
 
-        <h6 style="color: red; text-align: right;">({{ 'paperLegend' | trans }}).</h6>
-
+        <h6 style="color: red; text-align: right;">({{ 'paper_legend' | trans }}).</h6>
+        
         <div id="resultSearch">
             {% if divResultSearch is defined %}
                 {{ divResultSearch | raw }}
             {% else %}
                 {% if papers is not empty %}
-
+                    
                     {% include "UJMExoBundle:Partial:paper/list.html.twig" %}
 
                     {% if pager.haveToPaginate %}

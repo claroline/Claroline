@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'question creation' | trans,
+                    'name': 'question_creation' | trans,
                     'href': ''
                 }
             ])
@@ -26,13 +26,13 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'question creation' | trans }} {% endblock %}
+{% block title %} {{ 'question_creation' | trans }} {% endblock %}
 
 {% if _resource is defined %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
         <li><a href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">{{ 'my_questions' | trans }}</a></li>
-        <li class="active">{{ 'question creation' | trans }}</li>
+        <li class="active">{{ 'question_creation' | trans }}</li>
     {% endblock %}
 {% endif %}
 
@@ -49,7 +49,7 @@
     <input type="hidden" id="categoryArray" value="{{al}}"/>
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'question creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'question_creation' | trans }}</h3>
     </div>
     <div class="panel-body">
         {% if exoID == -1 %}
