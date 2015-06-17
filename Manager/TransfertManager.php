@@ -191,6 +191,7 @@ class TransfertManager
         $workspace->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $workspace->setDisplayable($configuration->isDisplayable());
         $workspace->setSelfRegistration($configuration->getSelfRegistration());
+        $workspace->setRegistrationValidation($configuration->getRegistrationValidation());
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
