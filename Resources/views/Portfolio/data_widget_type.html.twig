@@ -10,7 +10,7 @@
                     <span data-ng-click="widget.isCollapsed = !widget.isCollapsed" data-ng-show="!widget.isEditing">
                         {{ widget.label }}
                     </span>
-                    <input type="text" data-ng-show="widget.isEditing && widget.views.form" class="input-sm form-control"
+                    <input type="text" data-ng-show="widget.views.form && widget.isEditing" class="input-sm form-control"
                            name="widget_label" data-ng-model="widget.label">
                     <span class="pull-right loading" data-ng-if="widget.isEditing && !widget.views.form"></span>
                 </h4>
@@ -28,7 +28,7 @@
             <div class="panel-collapse" role="tabpanel" collapse="widget.isCollapsed">
                 <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
                 </div>
-                <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.isEditing && widget.views.form">
+                <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.views.form && widget.isEditing">
                     <div class="panel-body" data-bind-html="widget.views.form"></div>
                     <div class="panel-footer">
         {% endverbatim %}

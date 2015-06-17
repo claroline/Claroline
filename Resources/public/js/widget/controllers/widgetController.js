@@ -10,7 +10,6 @@ widgetsApp
             };
 
             $scope.edit = function(widget) {
-                widget.isCollapsed = false;
                 widgetManager.edit(widget);
             };
 

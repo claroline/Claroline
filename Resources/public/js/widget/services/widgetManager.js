@@ -49,6 +49,7 @@ widgetsApp
                 widget.copy = angular.copy(widget);
                 if (!widget.isEditing) {
                     widget.isEditing = true;
+                    widget.isCollapsed = false;
                     this.loadForm(widget);
                 }
             },
