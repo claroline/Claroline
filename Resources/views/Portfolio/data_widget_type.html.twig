@@ -5,6 +5,7 @@
         <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
             <div class="panel-heading clearfix" role="tab" id="heading-widget{{ widget.id }}">
                 <h4 class="panel-title pull-left" id="collapsible-widget{{ widget.id }}">
+                    <span class="fa" data-ng-class="{ 'fa-caret-right': widget.isCollapsed, 'fa-caret-down': !widget.isCollapsed }"></span>
                     <span data-ng-click="widget.isCollapsed = !widget.isCollapsed">
                         {{ widget.label }}
                     </span>
