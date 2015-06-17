@@ -1,6 +1,6 @@
 'use strict';
 
-portfolioApp
+appDirectives
     .directive('confirmClick', ["$parse", "translationService", function ($parse, translationService) {
         var link = function (scope, element, attributes) {
             var clickAction = attributes.confirmClick;

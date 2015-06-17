@@ -53,7 +53,7 @@ class WidgetController extends BaseController
     {
         $this->checkPortfolioToolAccess();
 
-        $widgets = $this->getWidgetsManager()->getWidgets();
+        $widgets = $this->getWidgetsManager()->getWidgets($loggedUser);
 
         $data = [];
 
@@ -63,6 +63,34 @@ class WidgetController extends BaseController
 
         $response = new JsonResponse();
         $response->setData($data);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_widget_delete", requirements={"widgetId" = "\d+"})
+     * @Method({"DELETE"})
+     *
+     * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     */
+    public function deleteAction(Request $request, User $loggedUser, $type, $widgetId)
+    {
+        $this->checkPortfolioToolAccess($loggedUser);
+
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+        $widget = $abstractWidgetRepository->findOneByWidgetType($type, $widgetId, $loggedUser);
+
+        $response = new JsonResponse();
+
+        try {
+            $this->getWidgetsManager()->deleteWidget($widget);
+
+        } catch(\Exception $exception){
+            $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $response;
     }

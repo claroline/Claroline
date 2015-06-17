@@ -74,6 +74,20 @@ widgetsApp
                 if (widget.isNew) {
                     this.widgets.remove(widget);
                 }
+            },
+            delete: function(widget) {
+                widget.isDeleting = true;
+                var self = this;
+                var success = function() {
+                    self.widgets.remove(widget);
+                };
+                var failed = function(error) {
+                    console.error('Error occured while deleting widget');
+                    console.log(error);
+                }
+                widget.$delete(success, failed).then(function() {
+                    widget.isDeleting = false;
+                });
             }
         };
     }]);

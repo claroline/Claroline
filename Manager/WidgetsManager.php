@@ -2,6 +2,7 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
@@ -240,24 +241,13 @@ class WidgetsManager
     }
 
     /**
-     * @param string $widgetType
+     * @param User $user
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
-    public function getWidgets($widgetType = null)
+    public function getWidgets(User $user)
     {
-        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
-        $abstractWidgetRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget");
-
-        $widgets = [];
-        if ($widgetType !== null) {
-            $widgets = $abstractWidgetRepository->findByType($widgetType);
-        }
-        else {
-            $widgets = $abstractWidgetRepository->findAll();
-        }
-
-        return $widgets;
+        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findByUser($user);
     }
 }
  

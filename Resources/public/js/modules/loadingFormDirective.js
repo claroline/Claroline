@@ -1,6 +1,6 @@
 'use strict';
 
-portfolioApp
+appDirectives
     .directive('loadingForm', ["$parse", function ($parse) {
         function link(scope, element, attributes) {
             var longOperation = $parse(attributes['loadingForm']); // "compile" the bound expression to our directive
