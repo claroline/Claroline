@@ -18,7 +18,7 @@ angular.module('portfolioApp').run([
                 '<div class="panel-body">' +
                     '<span class="fa fa-close pull-right" data-ng-click="isadding = false" role="button"></span>' +
                     '<ul class="list-inline widget_type_list">' +
-                        '<li class="widget_type" data-ng-repeat="widgetType in widgetTypes" data-ng-click="$parent.isadding = false; createWidget(widgetType.name, col)" role="button">' +
+                        '<li class="widget_type" data-ng-repeat="widgetType in widgetTypes" data-ng-click="$parent.isadding = false; createWidget(widgetType.name)" role="button">' +
                             '<span class="fa fa-{{ widgetType.icon }}"></span>' +
                             '<span>{{ widgetType.name + \'_title\' | trans }}</span>' +
                         '</li>' +

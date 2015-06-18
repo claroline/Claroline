@@ -34,9 +34,7 @@ class WidgetTypeManager
         $sortedWidgetTypes = array();
 
         foreach ($widgetTypes as $widgetType) {
-            if ($widgetType['name'] !== 'title') {
-                $sortedWidgetTypes[$widgetType['name']] = $widgetType;
-            }
+            $sortedWidgetTypes[$widgetType['name']] = $widgetType;
         }
 
         return $sortedWidgetTypes;
