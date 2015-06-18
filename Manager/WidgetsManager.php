@@ -146,21 +146,6 @@ class WidgetsManager
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
-     *
-     * @throws \InvalidArgumentException
-     * @return AbstractWidget
-     */
-    public function getNewWidget(Portfolio $portfolio, $type)
-    {
-        $widget = $this->widgetFactory->createWidget($portfolio, $type);
-        $widget->setId(uniqid());
-
-        return $widget;
-    }
-
-    /**
      * @param string $type
      * @param User   $user
      *
@@ -253,12 +238,19 @@ class WidgetsManager
 
     /**
      * @param User $user
+     * @param string|null $type
      *
      * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
      */
-    public function getWidgets(User $user)
+    public function getWidgets(User $user, $type = null)
     {
-        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findByUser($user);
+        $criteria = ['user' => $user];
+
+        if ($type !== null) {
+            $criteria['widgetType'] = $type;
+        }
+
+        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findBy($criteria);
     }
 }
  

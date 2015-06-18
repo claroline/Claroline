@@ -19,24 +19,22 @@ use Symfony\Component\HttpFoundation\Response;
 class PortfolioWidgetController extends BaseController
 {
     /**
-     * @Route("/{type}/{action}", name="icap_portfolio_internal_portfolio_widget_get", defaults={"action" = "empty"})
+     * @Route("/{type}", name="icap_portfolio_internal_portfolio_widget_get")
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function getAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $action)
+    public function getAction(Request $request, User $loggedUser, Portfolio $portfolio, $type)
     {
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
-        $data = array();
+        $data = [];
 
-        if ("form" === $action) {
-            $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
-        }
-        else {
-            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-            $widget = $this->getWidgetsManager()->getNewWidget($portfolio, $type);
-            $data   = $this->getWidgetsManager()->getPortfolioWidgetData($widget, false);
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $widgets */
+        $widgets = $this->getWidgetsManager()->getWidgets($loggedUser, $type);
+
+        foreach ($widgets as $widget) {
+            $data[] = $this->getWidgetsManager()->getPortfolioWidgetData($widget);
         }
 
         $response = new JsonResponse();

@@ -13,9 +13,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class WidgetFactory
 {
-    /** @var AbstractWidgetRepository  */
-    protected $abstractWidgetRepository;
-
     /** @var WidgetTypeManager  */
     protected $widgetTypeManager;
 
@@ -26,38 +23,14 @@ class WidgetFactory
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "abstractWidgetRepository" = @DI\Inject("icap_portfolio.repository.widget"),
      *     "widgetTypeManager"        = @DI\Inject("icap_portfolio.manager.widget_type"),
      *     "translator"               = @DI\Inject("translator")
      * })
      */
-    public function __construct(AbstractWidgetRepository $abstractWidgetRepository, WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator)
+    public function __construct(WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator)
     {
-        $this->abstractWidgetRepository = $abstractWidgetRepository;
         $this->widgetTypeManager        = $widgetTypeManager;
         $this->translator               = $translator;
-    }
-
-    /**
-     * @param Portfolio $portfolio
-     * @param string    $widgetType
-     *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget
-     */
-    public function createWidget(Portfolio $portfolio, $widgetType)
-    {
-        if ($this->widgetTypeManager->isWidgetTypeExists($widgetType)) {
-            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($widgetType));
-            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-            $widget = new $widgetNamespace();
-            $widget
-                ->setPortfolio($portfolio)
-                ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
-
-            return $widget;
-        }
-
-        throw new \InvalidArgumentException("Unknown type of widget.");
     }
 
     /**

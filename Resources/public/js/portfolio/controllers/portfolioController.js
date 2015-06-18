@@ -13,7 +13,8 @@ portfolioApp
         $scope.assetPath      = assetPath;
 
         $scope.createWidget = function(type, column) {
-            widgetsManager.create(portfolioManager.portfolioId, type, column || 1);
+            console.log(type);
+            //widgetsManager.create(portfolioManager.portfolioId, type, column || 1);
         };
 
         $scope.edit = function() {

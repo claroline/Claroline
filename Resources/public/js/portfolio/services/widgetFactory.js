@@ -29,44 +29,19 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.isNew = true;
                 widget.prototype.type = type;
-                widget.prototype.isEditing = false;
                 widget.prototype.isUpdating = false;
                 widget.prototype.isDeleting = false;
                 widget.prototype.toSave = false;
 
                 widget.prototype.generateUrl = function(parameters) {
                     parameters.portfolioId = portfolioId;
-                    parameters.type        = type;
+                    parameters.type = type;
 
-                    return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}/{{action}}", parameters);
-                };
-                widget.prototype.getRenderUrl = function() {
-                    return this.generateUrl({action: "render"});
-                };
-                widget.prototype.getFormUrl = function() {
-                    return this.generateUrl({action: "form"});
-                };
-                widget.prototype.setFormView = function(formView) {
-                    this.views.form = formView;
+                    return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}", parameters);
                 };
                 widget.prototype.getType = function() {
                     return this.type;
-                };
-                widget.prototype.deleteChildren = function() {
-                    if (this.children) {
-                        var childrenToDelete = [];
-                        for (var i = 0; i < this.children.length; i++) {
-                            var currentChild = this.children[i];
-                            if (currentChild.toDelete || (undefined !== currentChild.added && !currentChild.added)) {
-                                childrenToDelete.push(currentChild);
-                            }
-                        }
-                        for (var i = 0;i < childrenToDelete.length; i++) {
-                            this.children.remove(childrenToDelete[i]);
-                        }
-                    }
                 };
 
                 this.widgetResources[type] = widget;
