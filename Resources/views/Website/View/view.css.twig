@@ -1,36 +1,36 @@
 <style type="text/css">
 html, body {
-    background-color: {{ options.bgColor }};
-    background-image: url("{{ commonMacros.getImagePath(options.getBgImageForWeb()) }}");
-    background-repeat: {{ options.bgRepeat }};
-    background-position: {{ options.bgPosition }};
+    background-color: {{ options.bgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBgImageForWeb())|raw }}");
+    background-repeat: {{ options.bgRepeat|raw }};
+    background-position: {{ options.bgPosition|raw }};
 }
 
 div.banner{
-    background-color: {{ options.bannerBgColor }};
-    background-image: url("{{ commonMacros.getImagePath(options.getBannerBgImageForWeb()) }}");
-    background-repeat: {{ options.bannerBgRepeat }};
-    background-position: {{ options.bannerBgPosition }};
-    height: {{ options.bannerHeight }}px;
+    background-color: {{ options.bannerBgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getBannerBgImageForWeb())|raw }}");
+    background-repeat: {{ options.bannerBgRepeat|raw }};
+    background-position: {{ options.bannerBgPosition|raw }};
+    height: {{ options.bannerHeight|raw }}px;
 }
 
 div.footer{
-    background-color: {{ options.footerBgColor }};
-    background-image: url("{{ commonMacros.getImagePath(options.getFooterBgImageForWeb()) }}");
-    background-repeat: {{ options.footerBgRepeat }};
-    background-position: {{ options.footerBgPosition }};
-    height: {{ options.footerHeight }}px;
+    background-color: {{ options.footerBgColor|raw }};
+    background-image: url("{{ commonMacros.getImagePath(options.getFooterBgImageForWeb())|raw }}");
+    background-repeat: {{ options.footerBgRepeat|raw }};
+    background-position: {{ options.footerBgPosition|raw }};
+    height: {{ options.footerHeight|raw }}px;
 }
 
 {% if options.totalWidth > 200 %}
     div.website-body {
-        width: {{ options.totalWidth}}px;
+        width: {{ options.totalWidth|raw }}px;
         margin: auto;
     }
 {% endif %}
 
 {% if options.cssCode is not empty %}
-{{ options.cssCode }}
+{{ options.cssCode|raw }}
 {% endif %}
 
 </style>
