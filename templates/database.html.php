@@ -22,9 +22,6 @@
                     <option <?php if ($var('settings')->getDriver() === 'pdo_mysql') echo 'selected' ?>>
                         MySQL
                     </option>
-                    <option <?php if ($var('settings')->getDriver() === 'pdo_pgsql') echo 'selected' ?>>
-                        PostgreSQL
-                    </option>
                 </select>
             </div>
             <?php if (isset($errors['driver'])): ?>
