@@ -209,9 +209,10 @@
                     <tbody id="user-table-body">
                         
                     {% for user in pager.currentPageResults %}
-                        <tr id="row-{{ user.id }}"
+                        {% set userId = user.getId() %}
+                        <tr id="row-{{ userId }}"
                             class="row-user"
-                            data-user-id="{{ user.getId() }}"
+                            data-user-id="{{ userId }}"
                         >
                             {% if canEdit %}
                                 <td>
@@ -232,13 +233,13 @@
                                 {% for role in user.getEntityRoles(false) %}
                                     {% if role.getWorkspace() == workspace %}
                                         <span class="label label-success"
-                                              id="label-{{ role.getId() }}-{{ user.getId()}}"
+                                              id="label-{{ role.getId() }}-{{ userId }}"
                                         >
                                             {{ role.getTranslationKey()|trans({}, 'platform') }}
                                             
                                             {% if canEdit %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
-                                                   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': user.getId(), 'role': role.getId() } ) }}"
+                                                   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': userId, 'role': role.getId() } ) }}"
                                                 >
                                                 </i>
                                             {% endif %}
@@ -247,20 +248,16 @@
                                     {% endif %}
                                 {% endfor %}
 
-                                {% set groups = user.getGroups() %}
-                                {% for group in groups %}
-                                    {% for role in group.getEntityRoles() %}
-                                        {% if role.getWorkspace() == workspace %}
-                                            <span title="{{ group.getName() }}"
-                                                  class="label label-default"
-                                                  id="label-{{ role.getId() }}-{{ user.getId()}}"
-                                            >
-                                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                                            </span>
-                                            &nbsp;
-                                        {% endif %}
+                                {% if groupsRoles[userId] is defined %}
+                                    {% for role in groupsRoles[userId] %}
+                                        <span class="label label-default"
+                                              id="label-{{ role.getId() }}-{{ userId}}"
+                                        >
+                                            {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                        </span>
+                                        &nbsp;
                                     {% endfor %}
-                                {% endfor %}
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}

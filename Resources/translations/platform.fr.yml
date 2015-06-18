@@ -875,6 +875,7 @@ show_phone: 'Montrer le numéro de téléphone'
 show_picture: 'Montrer la photo'
 show_profile: 'Voir le profile'
 show_profile_for_anonymous: 'Profil public accessible aux anonymes'
+show_register_button_in_login_page: 'Montrer le bouton d''inscription sur la page de connexion'
 show_username: 'Montrer le nom d''utilisateur'
 simple: Simple
 start_date: 'Date de début'

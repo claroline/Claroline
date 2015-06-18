@@ -45,6 +45,9 @@
                                 data-ordered-tool-order="{{ toolPermission['orderTool'].getOrder() }}"
                             >
                                 <td>
+                                    <span class="fa fa-sort text-muted"></span>
+                                    &nbsp;
+                                    &nbsp;
                                     <a href="{{ path('claro_workspace_order_tool_edit_form',
                                         {'workspace': workspace.getId(),
                                         'tool': toolPermission['tool'].getId()}) }}"

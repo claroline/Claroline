@@ -542,6 +542,30 @@ class RolesController extends Controller
             $this->userManager->getByRolesIncludingGroups($wsRoles, $page, $max, $order, $direction) :
             $this->userManager->getByRolesAndNameIncludingGroups($wsRoles, $search, $page, $max, $order, $direction);
 
+        $groupsRoles = array();
+
+        foreach ($pager as $user) {
+            $userId = $user->getId();
+            $groupsRoles[$userId] = array();
+            $groups = $user->getGroups();
+
+            foreach ($groups as $group) {
+                $roles = $group->getEntityRoles();
+
+                foreach ($roles as $role) {
+                    $roleId = $role->getId();
+                    $roleWorkspace = $role->getWorkspace();
+
+                    if (!isset($groupsRoles[$userId][$roleId]) &&
+                        !is_null($roleWorkspace) &&
+                        $roleWorkspace->getId() === $workspace->getId()) {
+
+                        $groupsRoles[$userId][$roleId] = $role;
+                    }
+                }
+            }
+        }
+
         return array(
             'workspace' => $workspace,
             'pager' => $pager,
@@ -552,7 +576,8 @@ class RolesController extends Controller
             'direction' => $direction,
             'currentUser' => $currentUser,
             'showMail' => $preferences['mail'],
-            'canEdit' => $canEdit
+            'canEdit' => $canEdit,
+            'groupsRoles' => $groupsRoles
         );
     }
 

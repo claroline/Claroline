@@ -92,6 +92,15 @@ class GeneralType extends AbstractType
                 )
             )
             ->add(
+                'registerButtonAtLogin',
+                'checkbox',
+                array(
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['register_button_at_login']),
+                    'label' => 'show_register_button_in_login_page'
+                )
+            )
+            ->add(
                 'defaultRole',
                 'entity',
                 array(
