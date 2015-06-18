@@ -70,7 +70,7 @@
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{% javascripts debug=false
+{% javascripts debug=false filter='jsmin' output='js/translation/translations.js'
     'bundles/bazingajstranslation/js/translator.min.js'
     'js/translations/config.js'
     'js/translations/*/*.js'
