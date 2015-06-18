@@ -116,24 +116,19 @@ portfolioApp
 
                 this.widgets.push(newWidget);
             },
-            isDeletable: function(widget) {
-                return widgetsConfig.isDeletable(widget.getType());
-            },
             delete: function(widget) {
-                if (this.isDeletable(widget)) {
-                    widget.isDeleting = true;
-                    var self = this;
-                    var success = function() {
-                        self.widgets.remove(widget);
-                    };
-                    var failed = function(error) {
-                        console.error('Error occured while deleting widget');
-                        console.log(error);
-                    }
-                    widget.$delete(success, failed).then(function() {
-                        widget.isDeleting = false;
-                    });
+                widget.isDeleting = true;
+                var self = this;
+                var success = function() {
+                    self.widgets.remove(widget);
+                };
+                var failed = function(error) {
+                    console.error('Error occured while deleting widget');
+                    console.log(error);
                 }
+                widget.$delete(success, failed).then(function() {
+                    widget.isDeleting = false;
+                });
             }
         };
     }]);

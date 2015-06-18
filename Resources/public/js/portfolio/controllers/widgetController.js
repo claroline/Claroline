@@ -14,10 +14,6 @@ portfolioApp
             return widgetsManager.save($scope.widget);
         };
 
-        $scope.isDeletable = function() {
-            return widgetsManager.isDeletable($scope.widget);
-        };
-
         $scope.delete = function() {
             widgetsManager.delete($scope.widget);
         };
