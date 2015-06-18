@@ -17,7 +17,6 @@ class LoadRequiredFixturesData extends AbstractFixture
          * array format:
          *   - name
          *   - is_unique
-         *   - is_deletable
          */
         $widgetTypes = array(
             array('userInformation', true,  'info'),
