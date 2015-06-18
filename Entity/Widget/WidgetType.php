@@ -32,13 +32,6 @@ class WidgetType
     protected $isUnique = false;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_deletable")
-     */
-    protected $isDeletable = false;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $icon;
@@ -69,26 +62,6 @@ class WidgetType
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param boolean $isDeletable
-     *
-     * @return WidgetType
-     */
-    public function setIsDeletable($isDeletable)
-    {
-        $this->isDeletable = $isDeletable;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsDeletable()
-    {
-        return $this->isDeletable;
     }
 
     /**
