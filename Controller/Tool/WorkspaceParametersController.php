@@ -195,7 +195,7 @@ class WorkspaceParametersController extends Controller
         );
         $form = $this->formFactory->create(
             FormFactory::TYPE_WORKSPACE_EDIT,
-            array(null, null, null, null, null, $isAdmin),
+            array(null, null, null, null, null, $isAdmin, $expDate),
             $workspace
         );
         $form->handleRequest($this->request);
