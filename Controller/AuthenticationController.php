@@ -111,6 +111,7 @@ class AuthenticationController
         $lastUsername = $this->request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user = $this->userManager->getUserByUsername($lastUsername);
         $selfRegistrationAllowed = $this->ch->getParameter('allow_self_registration');
+        $showRegisterButton = $this->ch->getParameter('register_button_at_login');
 
         if ($user && !$user->isAccountNonExpired()) {
             return array(
@@ -131,7 +132,8 @@ class AuthenticationController
             'last_username' => $lastUsername,
             'error' => $error,
             'is_expired' => false,
-            'selfRegistrationAllowed' => $selfRegistrationAllowed
+            'selfRegistrationAllowed' => $selfRegistrationAllowed,
+            'showRegisterButton' => $showRegisterButton
         );
     }
 

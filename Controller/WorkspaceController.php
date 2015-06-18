@@ -1480,11 +1480,11 @@ class WorkspaceController extends Controller
             $config = Configuration::fromTemplate($template);
             $config->setWorkspaceName($form->get('name')->getData());
             $config->setWorkspaceCode($form->get('code')->getData());
-            $config->setDisplayable(true);
-            $config->setSelfRegistration(true);
-            $config->setRegistrationValidation(true);
-            $config->setSelfUnregistration(true);
-            $config->setWorkspaceDescription(true);
+            $config->setDisplayable($form->get('displayable')->getData());
+            $config->setSelfRegistration($form->get('selfRegistration')->getData());
+            $config->setRegistrationValidation($form->get('registrationValidation')->getData());
+            $config->setSelfUnregistration($form->get('selfUnregistration')->getData());
+            $config->setWorkspaceDescription($form->get('description')->getData());
             $this->workspaceManager->create($config, $this->tokenStorage->getToken()->getUser());
             $this->workspaceManager->importRichText();
         } else {

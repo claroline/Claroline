@@ -62,6 +62,7 @@ class PlatformConfiguration
     private $registrationMailValidation;
     private $showHelpButton;
     private $helpUrl;
+    private $registerButtonAtLogin;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -611,6 +612,16 @@ class PlatformConfiguration
     public function getHelpUrl()
     {
         return $this->helpUrl;
+    }
+
+    public function getRegisterButtonAtLogin()
+    {
+        return $this->registerButtonAtLogin;
+    }
+
+    public function setRegisterButtonAtLogin($registerButtonAtLogin)
+    {
+        $this->registerButtonAtLogin = $registerButtonAtLogin;
     }
 
     public function setUseRepositoryTest($bool)
