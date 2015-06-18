@@ -205,7 +205,7 @@ class WidgetsManager
         $widget = $portfolioWidget->getWidget();
 
         $widgetViews = array(
-            'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
+            'views' => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
         );
 
         $widgetData = [
