@@ -69,15 +69,27 @@ class WorkspaceEditType extends AbstractType
                 )
             );
         if ($this->expirationDate) {
+            $params = array(
+                'label' => 'expiration_date',
+                'format' => 'dd-MM-yyyy',
+                'widget' => 'single_text',
+                'input' => 'datetime',
+                'attr' => array(
+                    'class' => 'datepicker input-small',
+                    'data-date-format' => 'dd-mm-yyyy',
+                    'autocomplete' => 'off'
+                )
+            );
+
+            if (!$this->isAdmin) {
+                $params['disabled'] = 'disabled';
+            }
+
             $builder->add(
-                    'endDate',
-                    'text',
-                    array(
-                        'disabled' => 'disabled',
-                        'data' => $this->expirationDate,
-                        'label' => 'expiration_date'
-                    )
-                );
+                'endDate',
+                'datepicker',
+                $params
+            );
         }
         $builder->add('creator', 'text', array('disabled' => 'disabled', 'data' => $this->username, 'label' => 'creator'));
         if (isset($options['theme_options']['tinymce']) and !$options['theme_options']['tinymce']) {
