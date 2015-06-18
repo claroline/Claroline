@@ -67,7 +67,7 @@ class ExerciseServices
      * @return IP Client
      */
     public function getIP(Request $request)
-    {
+    {// paper service
 
         return $request->getClientIp();
     }
@@ -84,7 +84,7 @@ class ExerciseServices
      * @return integer
      */
     public function getNbPaper($uid, $exoID, $finished = false)
-    {
+    {// service exercice
         $papers = $this->om
                        ->getRepository('UJMExoBundle:Paper')
                        ->getExerciseUserPapers($uid, $exoID, $finished);
@@ -102,7 +102,7 @@ class ExerciseServices
      * @return float
      */
     public function getExerciseTotalScore($exoID)
-    {
+    {// service exercice
         $exoTotalScore = 0;
 
         $eqs = $this->om
@@ -125,36 +125,6 @@ class ExerciseServices
     }
 
     /**
-     * Get total score for an paper
-     *
-     * @access public
-     *
-     * @param integer $paperID id Paper
-     *
-     * @return float
-     */
-    public function getExercisePaperTotalScore($paperID)
-    {
-        $exercisePaperTotalScore = 0;
-        $paper = $interaction = $this->om
-                                     ->getRepository('UJMExoBundle:Paper')
-                                     ->find($paperID);
-
-        $interQuestions = $paper->getOrdreQuestion();
-        $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
-        $interQuestionsTab = explode(";", $interQuestions);
-
-        foreach ($interQuestionsTab as $interQuestion) {
-            $interaction = $this->om->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
-            $interSer        = $this->container->get('ujm.' . $interaction->getType());
-            $interactionX    = $interSer->getInteractionX($interaction->getId());
-            $exercisePaperTotalScore += $interSer->maxScore($interactionX);
-        }
-
-        return $exercisePaperTotalScore;
-    }
-
-    /**
      * To link a question with an exercise
      *
      * @access public
@@ -164,7 +134,7 @@ class ExerciseServices
      *
      */
     public function setExerciseQuestion($exercise, $interX, $order = -1)
-    {
+    {// service exercice
         $eq = new ExerciseQuestion($exercise, $interX->getInteraction()->getQuestion());
 
         if ($order == -1) {
@@ -183,20 +153,6 @@ class ExerciseServices
     }
 
     /**
-     * To round up and down a score
-     *
-     * @access public
-     *
-     * @param float $toBeAdjusted
-     *
-     * @return float
-     */
-    public function roundUpDown($toBeAdjusted)
-    {
-        return (round($toBeAdjusted / 0.5) * 0.5);
-    }
-
-    /**
      * To know if an user is the creator of an exercise
      *
      * @access public
@@ -206,62 +162,13 @@ class ExerciseServices
      * @return boolean
      */
     public function isExerciseAdmin($exercise)
-    {
+    {// service exercice
         $collection = new ResourceCollection(array($exercise->getResourceNode()));
         if ($this->authorizationChecker->isGranted('ADMINISTRATE', $collection)) {
             return true;
         } else {
             return false;
         }
-    }
-
-    /**
-     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions graphiced or no)
-     *
-     * @access public
-     *
-     * @param \UJM\ExoBundle\Entity\Paper\paper $paper
-     *
-     * @return array
-     */
-    public function getInfosPaper($paper)
-    {
-        $infosPaper = array();
-        $scorePaper = 0;
-        $scoreTemp = false;
-
-        $em = $this->doctrine->getManager();
-
-        $interactions = $this->om
-                             ->getRepository('UJMExoBundle:Interaction')
-                             ->getPaperInteraction($em, str_replace(';', '\',\'', substr($paper->getOrdreQuestion(), 0, -1)));
-
-        $interactions = $this->orderInteractions($interactions, $paper->getOrdreQuestion());
-
-        $infosPaper['interactions'] = $interactions;
-
-        $responses = $this->om
-                          ->getRepository('UJMExoBundle:Response')
-                          ->getPaperResponses($paper->getUser()->getId(), $paper->getId());
-
-        $responses = $this->orderResponses($responses, $paper->getOrdreQuestion());
-
-        $infosPaper['responses'] = $responses;
-
-        $infosPaper['maxExoScore'] = $this->getExercisePaperTotalScore($paper->getId());
-
-        foreach ($responses as $response) {
-            if ($response->getMark() != -1) {
-                $scorePaper += $response->getMark();
-            } else {
-                $scoreTemp = true;
-            }
-        }
-
-        $infosPaper['scorePaper'] = $scorePaper;
-        $infosPaper['scoreTemp'] = $scoreTemp;
-
-        return $infosPaper;
     }
 
     /**
@@ -275,7 +182,7 @@ class ExerciseServices
      * @return array
      */
     public function getScoresUser($userId, $exoId)
-    {
+    {// service exercice
         $tabScoresUser = array();
         $i = 0;
 
@@ -305,7 +212,7 @@ class ExerciseServices
      * @return array
      */
     public function controlUserSharedQuestion($questionID)
-    {
+    {// service question
         $user = $this->tokenStorage->getToken()->getUser();
 
         $questions = $this->om
@@ -324,7 +231,7 @@ class ExerciseServices
      *
      */
     public function manageEndOfExercise(Paper $paper)
-    {
+    {// service exercice
         $paperInfos = $this->getInfosPaper($paper);
 
         if (!$paperInfos['scoreTemp']) {
@@ -334,14 +241,14 @@ class ExerciseServices
     }
 
     /**
-     * Get information if the categories are linked with question, allow to know if a category can be deleted or no
+     * Get information if these categories are linked to questions, allow to know if a category can be deleted or not
      *
      * @access public
      *
-     * @return array[boolean]
+     * @return boolean[]
      */
     public function getLinkedCategories()
-    {
+    {// service question
         $linkedCategory = array();
         $repositoryCategory = $this->om
                                    ->getRepository('UJMExoBundle:Category');
@@ -376,7 +283,7 @@ class ExerciseServices
      * @return boolean
      */
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
-    {
+    {// service exercice
         if (($exoAdmin === false) && ($exercise->getMaxAttempts() > 0)
             && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
             $exercise->getId(), true))
@@ -398,7 +305,7 @@ class ExerciseServices
      * @return boolean
      */
     public function controlDate($exoAdmin, $exercise)
-    {
+    {// service exercice
         if (
             ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
             && (($exercise->getUseDateEnd() == 0)
@@ -424,7 +331,7 @@ class ExerciseServices
      * @return array
      */
     public function getActionsAllQuestions($listInteractions, $userID, $em)
-    {
+    {// service question
         $interServ= $this->container->get('ujm.Interaction_general');
 
         $allActions           = array();
@@ -468,74 +375,7 @@ class ExerciseServices
     }
 
     /**
-     * Get interactions in order for a paper
-     *
-     * @access private
-     *
-     * @param Collection of \UJM\ExoBundle\Entity\Interaction $interactions
-     * @param String $order
-     *
-     * @return array[Interaction]
-     */
-    private function orderInteractions($interactions, $order)
-    {
-        $inter = array();
-        $order = substr($order, 0, strlen($order) - 1);
-        $order = explode(';', $order);
-
-        foreach ($order as $interId) {
-            foreach ($interactions as $key => $interaction) {
-                if ($interaction->getId() == $interId) {
-                    $inter[] = $interaction;
-                    unset($interactions[$key]);
-                    break;
-                }
-            }
-        }
-
-        return $inter;
-    }
-
-    /**
-     * Get responses in order for a paper
-     *
-     * @access private
-     *
-     * @param Collection of \UJM\ExoBundle\Entity\Response $responses
-     * @param String $order
-     *
-     * @çeturn array[Interaction]
-     */
-    private function orderResponses($responses, $order)
-    {
-        $resp = array();
-        $order = substr($order, 0, strlen($order) - 1);
-        $order = explode(';', $order);
-        foreach ($order as $interId) {
-            $tem = 0;
-            foreach ($responses as $key => $response) {
-                if ($response->getInteraction()->getId() == $interId) {
-                    $tem++;
-                    $resp[] = $response;
-                    unset($responses[$key]);
-                    break;
-                }
-            }
-            //if no response
-            if ($tem == 0) {
-                $response = new \UJM\ExoBundle\Entity\Response();
-                $response->setResponse('');
-                $response->setMark(0);
-
-                $resp[] = $response;
-            }
-        }
-
-        return $resp;
-    }
-
-    /**
-     * Add an Interaction in an exercise if created since an exercise
+     * Add an Interaction in an exercise if created from an exercise
      *
      * @access public
      *
@@ -543,7 +383,8 @@ class ExerciseServices
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
      * @param Doctrine EntityManager $em
      */
-    public function addQuestionInExercise($inter, $exercise) {
+    public function addQuestionInExercise($inter, $exercise)
+    {//service exercice
         if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
                 $this->setExerciseQuestion($exercise, $inter);
@@ -554,14 +395,14 @@ class ExerciseServices
     /**
      * To control the User's rights to this question
      *
-     * @access private
+     * @access public
      *
      * @param integer $questionID id Question
      *
      * @return Doctrine Query Result
      */
     public function controlUserQuestion($questionID, $container, $em)
-    {
+    {//service question
         $user = $container->get('security.token_storage')->getToken()->getUser();
 
         $question = $em

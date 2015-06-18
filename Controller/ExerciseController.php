@@ -1224,7 +1224,7 @@ class ExerciseController extends Controller
 
         foreach ($marks as $mark) {
             if ($exercise->getNbQuestion() > 0) {
-                $exoScoreMax = $this->container->get('ujm.exercise_services')->getExercisePaperTotalScore($mark['paper']);
+                $exoScoreMax = $this->container->get('ujm.paper_service')->getPaperTotalScore($mark['paper']);
             }
             $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 

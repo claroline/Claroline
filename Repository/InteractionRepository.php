@@ -194,7 +194,7 @@ class InteractionRepository extends EntityRepository
      * @param Doctrine EntityManager $em
      * @param String $ids list of id of Interaction of the paper
      *
-     * Return array[Interaction]
+     * Return \UJM\ExoBundle\Entity\Interaction[]
      */
     public function getPaperInteraction($em, $ids)
     {
