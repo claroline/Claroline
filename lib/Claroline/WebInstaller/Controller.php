@@ -102,8 +102,9 @@ class Controller
         }
 
         $checker = new DatabaseChecker($databaseSettings);
+        $status = $checker->connectToDatabase();
 
-        if (true !== $status = $checker->connectToDatabase()) {
+        if (true !== $status && !(isset($postSettings['force_install']) && $status === 'not_empty_database')) {
             $this->parameters->setDatabaseGlobalError($status);
 
             return $this->redirect('/database');
