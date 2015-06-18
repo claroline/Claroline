@@ -44,13 +44,6 @@ class PortfolioController extends BaseController
 
         $data = $this->getPortfolioManager()->getPortfolioData($portfolio);
 
-        $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $loggedUser);
-
-        if (null !== $portfolioGuide) {
-            $data['unreadComments'] = $portfolio->getCountUnreadComments($portfolioGuide->getCommentsViewAt());
-            $data['commentsViewAt'] = $portfolioGuide->getCommentsViewAt();
-        }
-
         $response = new JsonResponse($data);
 
         return $response;
