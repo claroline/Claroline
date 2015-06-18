@@ -3,6 +3,13 @@
         <?php if ($var('global_error')): ?>
             <div class="alert alert-danger">
                 <?php echo $trans($var('global_error')) ?>
+                <?php if ($var('global_error') == 'not_empty_database'): ?>
+                    <p><?php echo $trans('not_empty_database_submit') ?></p>
+                    <br>
+                    <button type="submit" name="force_install" class="btn btn-danger">
+                        <?php echo $trans('proceed_anyway') ?>
+                    </button>
+                <?php endif ?>
             </div>
         <?php else: ?>
             <p class="info-txt">
@@ -21,9 +28,6 @@
                 <select name="driver" class="form-control">
                     <option <?php if ($var('settings')->getDriver() === 'pdo_mysql') echo 'selected' ?>>
                         MySQL
-                    </option>
-                    <option <?php if ($var('settings')->getDriver() === 'pdo_pgsql') echo 'selected' ?>>
-                        PostgreSQL
                     </option>
                 </select>
             </div>

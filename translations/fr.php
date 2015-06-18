@@ -113,5 +113,7 @@ return array(
     'agreeing' => 'En acceptant l\'envoi de ces données, vous bénéficierez d\'un meilleur service et vous contribuerez à l\'amélioration de la plateforme Claroline Connect que vous allez installer',
     'personal_data' => 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées',
     'send' => 'Envoyer',
-    'not_send' => 'Ne pas envoyer'
+    'not_send' => 'Ne pas envoyer',
+    'not_empty_database_submit' => 'Si vous continuez l\'installation, il est possible que celle-ci ne s\'effectue pas correctement.',
+    'proceed_anyway' => 'Continuer quand même'
 );
