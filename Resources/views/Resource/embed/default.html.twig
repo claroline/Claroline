@@ -1,6 +1,6 @@
 <a href="{% spaceless %}
     {% if extension ==  'directory' %}
-        {{ path('claro_desktop_open_tool', {'toolName': 'resource_manager'}) }}#resources/{{ node.getId() }}
+        {{ path('claro_workspace_open_tool', {'toolName': 'resource_manager', 'workspaceId': node.getWorkspace().getId()}) }}#resources/{{ node.getId() }}
     {% else %}
         {{ path('claro_resource_open', {'resourceType': node.getResourceType().getName(), 'node' : node.getId()}) }}
     {% endif%}"
