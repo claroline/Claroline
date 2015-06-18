@@ -28,6 +28,20 @@ class PaperService {
     }
 
     /**
+     * Get IP client
+     *
+     * @access public
+     * @param Request $request
+     *
+     * @return IP Client
+     */
+    public function getIP(Request $request)
+    {
+
+        return $request->getClientIp();
+    }
+
+    /**
      * Get total score for an paper
      *
      * @access public

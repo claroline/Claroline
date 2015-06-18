@@ -871,8 +871,8 @@ class ExerciseController extends Controller
         }
 
         //To record response
-        $exerciseSer = $this->container->get('ujm.exercise_services');
-        $ip = $exerciseSer->getIP($request);
+        $paperSer = $this->container->get('ujm.paper_service');
+        $ip = $paperSer->getIP($request);
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
             ->getManager()

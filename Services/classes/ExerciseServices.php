@@ -59,20 +59,6 @@ class ExerciseServices
     }
 
     /**
-     * Get IP client
-     *
-     * @access public
-     * @param Request $request
-     *
-     * @return IP Client
-     */
-    public function getIP(Request $request)
-    {// paper service
-
-        return $request->getClientIp();
-    }
-
-    /**
      * Return the number of papers for an exercise and for an user
      *
      * @access public
