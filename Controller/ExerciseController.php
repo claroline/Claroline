@@ -346,7 +346,7 @@ class ExerciseController extends Controller
                     $questionWithResponse[$interaction->getId()] = 0;
                 }
 
-                $share = $this->container->get('ujm.exo_exercise')->controlUserSharedQuestion(
+                $share = $this->container->get('ujm.exo_question')->controlUserSharedQuestion(
                         $interaction->getQuestion()->getId());
 
                 if ($user->getId() == $interaction->getQuestion()->getUser()->getId()) {
@@ -461,7 +461,8 @@ class ExerciseController extends Controller
                                 ->getToken()->getUser();
         $uid = $user->getId();
 
-        $services = $this->container->get('ujm.exo_exercise');
+        $services    = $this->container->get('ujm.exo_exercise');
+        $questionSer = $this->container->get('ujm.exo_question');
 
         $exoAdmin = $services->isExerciseAdmin($exercise);
 
@@ -502,7 +503,7 @@ class ExerciseController extends Controller
                         ->getExerciseInteractionImport($em, $idExo, $exoID);
                 }
 
-                $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
+                $allActions = $questionSer->getActionsAllQuestions($listQExo, $uid);
 
                 $actionQ = $allActions[0];
                 $questionWithResponse = $allActions[1];

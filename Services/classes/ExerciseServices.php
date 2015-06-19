@@ -11,7 +11,6 @@ use \Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
@@ -20,7 +19,6 @@ use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
 class ExerciseServices
 {
     protected $om;
-    protected $tokenStorage;
     protected $authorizationChecker;
 
     /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface */
@@ -34,7 +32,6 @@ class ExerciseServices
      * @access public
      *
      * @param \Claroline\CoreBundle\Persistence\ObjectManager $om Dependency Injection
-     * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage Dependency Injection
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Dependency Injection
      * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
@@ -43,7 +40,6 @@ class ExerciseServices
      */
     public function __construct(
         ObjectManager $om,
-        TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorizationChecker,
         EventDispatcherInterface $eventDispatcher,
         Registry $doctrine,
@@ -51,7 +47,6 @@ class ExerciseServices
     )
     {
         $this->om = $om;
-        $this->tokenStorage         = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
         $this->eventDispatcher      = $eventDispatcher;
         $this->doctrine             = $doctrine;
@@ -70,7 +65,7 @@ class ExerciseServices
      * @return integer
      */
     public function getNbPaper($uid, $exoID, $finished = false)
-    {// service exercice
+    {
         $papers = $this->om
                        ->getRepository('UJMExoBundle:Paper')
                        ->getExerciseUserPapers($uid, $exoID, $finished);
@@ -88,7 +83,7 @@ class ExerciseServices
      * @return float
      */
     public function getExerciseTotalScore($exoID)
-    {// service exercice
+    {
         $exoTotalScore = 0;
 
         $eqs = $this->om
@@ -120,7 +115,7 @@ class ExerciseServices
      *
      */
     public function setExerciseQuestion($exercise, $interX, $order = -1)
-    {// service exercice
+    {
         $eq = new ExerciseQuestion($exercise, $interX->getInteraction()->getQuestion());
 
         if ($order == -1) {
@@ -148,7 +143,7 @@ class ExerciseServices
      * @return boolean
      */
     public function isExerciseAdmin($exercise)
-    {// service exercice
+    {
         $collection = new ResourceCollection(array($exercise->getResourceNode()));
         if ($this->authorizationChecker->isGranted('ADMINISTRATE', $collection)) {
             return true;
@@ -168,7 +163,7 @@ class ExerciseServices
      * @return array
      */
     public function getScoresUser($userId, $exoId)
-    {// service exercice
+    {
         $tabScoresUser = array();
         $i = 0;
 
@@ -189,26 +184,6 @@ class ExerciseServices
     }
 
     /**
-     * To control the User's rights to this shared question
-     *
-     * @access public
-     *
-     * @param integer $questionID id Question
-     *
-     * @return array
-     */
-    public function controlUserSharedQuestion($questionID)
-    {// service question
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        $questions = $this->om
-                          ->getRepository('UJMExoBundle:Share')
-                          ->getControlSharedQuestion($user->getId(), $questionID);
-
-        return $questions;
-    }
-
-    /**
      * Trigger an event to log informations after to execute an exercise if the score is not temporary
      *
      * @access public
@@ -217,44 +192,13 @@ class ExerciseServices
      *
      */
     public function manageEndOfExercise(Paper $paper)
-    {// service exercice
+    {
         $paperInfos = $this->getInfosPaper($paper);
 
         if (!$paperInfos['scoreTemp']) {
             $event = new LogExerciseEvaluatedEvent($paper->getExercise(), $paperInfos);
             $this->eventDispatcher->dispatch('log', $event);
         }
-    }
-
-    /**
-     * Get information if these categories are linked to questions, allow to know if a category can be deleted or not
-     *
-     * @access public
-     *
-     * @return boolean[]
-     */
-    public function getLinkedCategories()
-    {// service question
-        $linkedCategory = array();
-        $repositoryCategory = $this->om
-                                   ->getRepository('UJMExoBundle:Category');
-
-        $repositoryQuestion = $this->om
-                                   ->getRepository('UJMExoBundle:Question');
-
-        $categoryList = $repositoryCategory->findAll();
-
-
-        foreach ($categoryList as $category) {
-          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
-          if (!$questionLink) {
-              $linkedCategory[$category->getId()] = 0;
-          } else {
-              $linkedCategory[$category->getId()] = 1;
-          }
-        }
-
-        return $linkedCategory;
     }
 
     /**
@@ -269,7 +213,7 @@ class ExerciseServices
      * @return boolean
      */
     public function controlMaxAttemps($exercise, $user, $exoAdmin)
-    {// service exercice
+    {
         if (($exoAdmin === false) && ($exercise->getMaxAttempts() > 0)
             && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
             $exercise->getId(), true))
@@ -291,7 +235,7 @@ class ExerciseServices
      * @return boolean
      */
     public function controlDate($exoAdmin, $exercise)
-    {// service exercice
+    {
         if (
             ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
             && (($exercise->getUseDateEnd() == 0)
@@ -305,62 +249,6 @@ class ExerciseServices
     }
 
     /**
-     *
-     * Call after applied a filter in a questions list to know the actions allowed for each interaction
-     *
-     * @access public
-     *
-     * @param Collection of \UJM\ExoBundle\Entity\Interaction $listInteractions
-     * @param integer $userID id User
-     * @param Doctrine EntityManager $em
-     *
-     * @return array
-     */
-    public function getActionsAllQuestions($listInteractions, $userID, $em)
-    {// service question
-        $interServ= $this->container->get('ujm.exo_Interaction_general');
-
-        $allActions           = array();
-        $actionQ              = array();
-        $questionWithResponse = array();
-        $alreadyShared        = array();
-        $sharedWithMe         = array();
-        $shareRight           = array();
-
-        foreach ($listInteractions as $interaction) {
-                if ($interaction->getQuestion()->getUser()->getId() == $userID) {
-                    $actionQ[$interaction->getQuestion()->getId()] = 1; // my question
-
-                    $actions = $interServ->getActionInteraction($interaction);
-                    $questionWithResponse += $actions[0];
-                    $alreadyShared += $actions[1];
-                } else {
-                    $sharedQ = $em->getRepository('UJMExoBundle:Share')
-                    ->findOneBy(array('user' => $userID, 'question' => $interaction->getQuestion()->getId()));
-
-                    if (count($sharedQ) > 0) {
-                        $actionQ[$interaction->getQuestion()->getId()] = 2; // shared question
-
-                        $actionsS = $this->getActionShared($em, $sharedQ);
-                        $sharedWithMe += $actionsS[0];
-                        $shareRight += $actionsS[1];
-                        $questionWithResponse += $actionsS[2];
-                    } else {
-                        $actionQ[$interaction->getQuestion()->getId()] = 3; // other
-                    }
-                }
-            }
-
-        $allActions[0] = $actionQ;
-        $allActions[1] = $questionWithResponse;
-        $allActions[2] = $alreadyShared;
-        $allActions[3] = $sharedWithMe;
-        $allActions[4] = $shareRight;
-
-        return $allActions;
-    }
-
-    /**
      * Add an Interaction in an exercise if created from an exercise
      *
      * @access public
@@ -370,7 +258,7 @@ class ExerciseServices
      * @param Doctrine EntityManager $em
      */
     public function addQuestionInExercise($inter, $exercise)
-    {//service exercice
+    {
         if ($exercise != null) {
             if ($this->isExerciseAdmin($exercise)) {
                 $this->setExerciseQuestion($exercise, $inter);
@@ -378,23 +266,4 @@ class ExerciseServices
         }
     }
 
-    /**
-     * To control the User's rights to this question
-     *
-     * @access public
-     *
-     * @param integer $questionID id Question
-     *
-     * @return Doctrine Query Result
-     */
-    public function controlUserQuestion($questionID, $container, $em)
-    {//service question
-        $user = $container->get('security.token_storage')->getToken()->getUser();
-
-        $question = $em
-            ->getRepository('UJMExoBundle:Question')
-            ->getControlOwnerQuestion($user->getId(), $questionID);
-
-        return $question;
-    }
 }

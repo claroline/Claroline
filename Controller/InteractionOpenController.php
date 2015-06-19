@@ -95,7 +95,7 @@ class InteractionOpenController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
             'locker' => $catLocker
             )
         );

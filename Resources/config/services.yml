@@ -32,7 +32,7 @@ services:
 
     ujm.exo_exercise:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
-        arguments: [@claroline.persistence.object_manager, @security.token_storage, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
+        arguments: [@claroline.persistence.object_manager, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
 
     ujm.exo_Interaction_general:
         class: UJM\ExoBundle\Services\classes\Interactions\InteractionGeneral
@@ -138,6 +138,10 @@ services:
 
     ujm.exo_qti:
         class: UJM\ExoBundle\Services\classes\QTI\QtiServices
+
+    ujm.exo_question:
+        class: UJM\ExoBundle\Services\classes\QuestionService
+        arguments: [@doctrine, @security.token_storage]
 
     ujm.exo_validator_isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator

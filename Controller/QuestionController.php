@@ -188,7 +188,7 @@ class QuestionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $services = $this->container->get('ujm.exo_exercise');
+        $services = $this->container->get('ujm.exo_question');
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $uid = $user->getId();
@@ -207,7 +207,7 @@ class QuestionController extends Controller
                 ->getExerciseInteraction($em, $idExo, 0);
         }
 
-        $allActions = $services->getActionsAllQuestions($listQExo, $uid, $em);
+        $allActions = $services->getActionsAllQuestions($listQExo, $uid);
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -246,7 +246,7 @@ class QuestionController extends Controller
     {
         $vars = array();
         $allowToAccess = 0;
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $questionSer = $this->container->get('ujm.exo_question');
         $em = $this->getDoctrine()->getManager();
 
         if ($exoID != -1) {
@@ -259,8 +259,8 @@ class QuestionController extends Controller
             }
         }
 
-        $question = $exerciseSer->controlUserQuestion($id, $this->container, $em);
-        $sharedQuestion = $exerciseSer->controlUserSharedQuestion($id);
+        $question = $questionSer->controlUserQuestion($id);
+        $sharedQuestion = $questionSer->controlUserSharedQuestion($id);
 
         if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess == 1) {
             $interaction = $this->getDoctrine()
@@ -387,7 +387,7 @@ class QuestionController extends Controller
 
         $variables = array(
             'exoID' => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
             'locker' => $this->getLockCategory(),
         );
 
@@ -427,7 +427,7 @@ class QuestionController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
             'locker' => $this->getLockCategory(),
             )
         );
@@ -446,10 +446,10 @@ class QuestionController extends Controller
      */
     public function editAction($id, $exoID, $form = null)
     {
-        $services = $this->container->get('ujm.exo_exercise');
+        $services = $this->container->get('ujm.exo_question');
         $em = $this->getDoctrine()->getManager();
-        $question = $services->controlUserQuestion($id, $this->container, $em);
-        $share    = $this->container->get('ujm.exo_exercise')->controlUserSharedQuestion($id);
+        $question = $services->controlUserQuestion($id);
+        $share    = $services->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID    = -1;
 
@@ -470,7 +470,7 @@ class QuestionController extends Controller
                 ->findBy(array('interaction' => $interaction->getId()));
             $nbResponses = count($response);
 
-            $linkedCategory = $this->container->get('ujm.exo_exercise')->getLinkedCategories();
+            $linkedCategory = $services->getLinkedCategories();
 
             if ($user->getId() != $interaction->getQuestion()->getUser()->getId()) {
                 $catID = $interaction->getQuestion()->getCategory()->getId();
@@ -693,7 +693,7 @@ class QuestionController extends Controller
     public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $question = $this->container->get('ujm.exo_exercise')->controlUserQuestion($id, $this->container, $em);
+        $question = $this->container->get('ujm.exo_question')->controlUserQuestion($id);
 
         if (count($question) > 0) {
 
@@ -1929,7 +1929,7 @@ class QuestionController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
-        $services = $this->container->get('ujm.exo_exercise');
+        $services = $this->container->get('ujm.exo_question');
 
         $listInteractions = array();
         $actionQ = array();
@@ -1959,7 +1959,7 @@ class QuestionController extends Controller
                 ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
         }
 
-        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId(), $em);
+        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId());
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -2016,10 +2016,9 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
                             ->find($interID);
-        $service = $this->container->get('ujm.exo_exercise');
+        $service = $this->container->get('ujm.exo_question');
 
-        $em = $this->getDoctrine()->getManager();
-        $question = $service->controlUserQuestion($interaction->getQuestion()->getId(), $this->container, $em);
+        $question = $service->controlUserQuestion($interaction->getQuestion()->getId());
         $sharedQuestion = $service->controlUserSharedQuestion($interID);
 
         $allowToAccess = FALSE;
