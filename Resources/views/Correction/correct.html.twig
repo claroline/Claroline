@@ -1,6 +1,14 @@
 {% extends "InnovaCollecticielBundle::layout.html.twig" %}
 
+{# InnovaERV : cet écran a été "allégé" et la première version  #}
+{# qui devrait servir pour ailleurs a été copiée sur Comment/listComment.html.twig  #}
+{# elle sert notamment à lister les commentaires pour UN document  #}
+
 {% block resourceBreadcrumb %}
+    {# Ligne origine  #}
+    <li class="active"><span class=" fa fa-pencil-square-o"></span> {{ dropzone.resourceNode.name }}</li>
+
+    {# bloc ajouté, voir edit.html.twig  #}
     {% if admin == true %}
         <li><a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}"><span
                         class="fa fa-list"></span> {{ dropzone.resourceNode.name }}</a>
@@ -23,9 +31,45 @@
     {% endif %}
 {% endblock %}
 
-{# Bloc "Correction par ..." #}
 {% block dropzone_content %}
     <div class="container container-dropzone">
+
+        <h2>
+            <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
+            <!-- suivant si on est ADMIN ou pas -->
+            {% if admin == true %}
+                {{ 'Edit evaluation admin'|trans({}, 'innova_collecticiel') }}
+            {% else %}
+                {{ 'Edit evaluation user'|trans({}, 'innova_collecticiel') }}
+            {% endif %}
+
+            <div class="btn-group pull-right">
+                <!-- Suivre cette ressource -->
+                {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %}
+                <!-- ERV/Modif car changement de nom car on renvoie vers une nouvelle page -->
+                <!-- Accéder à la vue personnelle
+                <a class="btn btn-default" href="{% block drops_awaiting_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    <span class="fa fa-list"></span>
+                    {{ 'See personal view'|trans({}, 'innova_collecticiel') }}
+                </a>
+                -->
+            </div>
+        </h2>
+
+        {{ macros.flashBox() }}
+
+        <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
+            <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
+            <!-- suivant si on est ADMIN ou pas -->
+            {% if admin == true %}
+                {% include "InnovaCollecticielBundle:Dropzone:editAdmin.html.twig" %}
+            {% else %}
+                <!-- (Mon) Espace collecticiel -->
+                {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}
+            {% endif %}
+        </ul>
+
+
         {% if admin %}
             <h2 class="{% if correction.reporter %}text-danger{% endif %}">
                 {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
@@ -237,7 +281,34 @@
             {% endblock %}
         {% endif %}
     </div>
+
+
+
+
+
+
+
+        {% block drop_zone_content_edit %}
+        {% endblock %}
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 {% block javascripts %}
     {{ parent() }}
