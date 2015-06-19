@@ -24,7 +24,7 @@ $(document).ready(function () {
         ;
     });
 
-    // InnovaCollecticiel
+    // InnovaERV
     // Ajout pour le traitement de la case à cocher lors de la soumission de documents
     $('#validate-modal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
@@ -37,7 +37,7 @@ $(document).ready(function () {
       //
     })
 
-    // InnovaCollecticiel
+    // InnovaERV
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"
     $('#modal_confirm').on('click', function(event) {
         var selector = "#document_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
@@ -52,6 +52,26 @@ $(document).ready(function () {
 
         // Fermeture de la modal
         $('#validate-modal').modal('hide');
+    });
+
+
+    // InnovaERV
+    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
+    // Mise à jour de la colonne "validate"
+    $('.form-control').on('click', function(event) {
+        // Récupération de l'id du document
+        var docId = $(this).attr("data-document_id");
+
+        // Ajax : appel de la route qui va mettre à jour la base de données
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_validate_document', { documentId: docId }),
+            method: "POST",
+            data: { documentId: docId },
+            success : function(data) {
+                console.log("OK - ");
+                console.log(data);
+            }
+        });
     });
 
 });

@@ -396,4 +396,18 @@ class DocumentController extends DropzoneBaseController
             }
         }
     }
+
+    /**
+     * @Route(
+     *      "/document/{documentId}",
+     *      name="innova_collecticiel_validate_document",
+     *      requirements={"documentId" = "\d+"},
+     *      options={"expose"=true}
+     * )
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @Template()
+     */
+    public function ajaxValidateDocumentAction(Document $document) {
+        die("AJAX-OK");
+    }
 }
