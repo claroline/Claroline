@@ -62,7 +62,11 @@ class Matching extends Interaction {
       *
       * @return string userScore/scoreMax
       */
-     public function mark(\UJM\ExoBundle\Entity\InteractionMatching $interMatching = null, $penalty= null, $tabRightResponse= null, $tabResponseIndex= null)
+     public function mark(
+             \UJM\ExoBundle\Entity\InteractionMatching $interMatching = null, 
+             $penalty= null, $tabRightResponse= null, 
+             $tabResponseIndex= null
+     )
      {
          $scoretmp = 0;
          $scoreMax = $this->maxScore($interMatching);

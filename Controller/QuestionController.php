@@ -58,7 +58,7 @@ class QuestionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $services = $this->container->get('ujm.exo_Interaction_general');
+        $services = $this->container->get('ujm.exo_question');
 
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);

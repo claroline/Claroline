@@ -57,7 +57,11 @@ class Open extends Interaction {
       *
       * @return string userScore/scoreMax
       */
-     public function mark(\UJM\ExoBundle\Entity\InteractionOpen $interOpen = null, $response = null, $penalty = null)
+     public function mark(
+             \UJM\ExoBundle\Entity\InteractionOpen $interOpen = null, 
+             $response = null, 
+             $penalty = null
+     )
      {
          if ($interOpen->getTypeOpenQuestion() == 'long') {
              $score = -1;

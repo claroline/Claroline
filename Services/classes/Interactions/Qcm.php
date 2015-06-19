@@ -60,7 +60,12 @@ class Qcm extends Interaction {
      *
      * @return string userScore/scoreMax
      */
-     public function mark(\UJM\ExoBundle\Entity\InteractionQCM $interQCM = null, array $response = null, $allChoices = null, $penalty = null)
+     public function mark(
+             \UJM\ExoBundle\Entity\InteractionQCM $interQCM = null, 
+             array $response = null, 
+             $allChoices = null, 
+             $penalty = null
+     )
      {
         $score = 0;
         $scoreMax = $this->maxScore($interQCM);

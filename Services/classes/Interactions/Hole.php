@@ -56,7 +56,11 @@ class Hole extends Interaction {
       *
       * @return string userScore/scoreMax
       */
-     public function mark(\UJM\ExoBundle\Entity\InteractionHole $interHole = null, $request = null, $penalty = null)
+     public function mark(
+             \UJM\ExoBundle\Entity\InteractionHole $interHole = null, 
+             $request = null, 
+             $penalty = null
+     )
      {
          $score = 0;
          $scoreMax = $this->maxScore($interHole);
