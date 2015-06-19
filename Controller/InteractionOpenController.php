@@ -212,8 +212,8 @@ class InteractionOpenController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
-        $res = $exerciseSer->responseOpen($request);
+        $interSer = $this->container->get('ujm.exo_InteractionOpen');
+        $res = $interSer->response($request);
 
         $vars['interOpen'] = $res['interOpen'];
         $vars['penalty']   = $res['penalty'];

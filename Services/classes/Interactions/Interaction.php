@@ -9,27 +9,34 @@ namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
 
 abstract class Interaction {
 
     protected $doctrine;
-    protected $om;
+    protected $formFactory;
+    protected $templating;
 
     /**
      * Constructor
      *
      * @access public
      *
-     * @param \Claroline\CoreBundle\Persistence\ObjectManager $om Dependency Injection
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @param \Symfony\Component\Form\FormFactory $formFactory
+     * @param \Symfony\Component\Form\FormFactory $templating
      *
      */
     public function __construct(
-        \Claroline\CoreBundle\Persistence\ObjectManager $om, Registry $doctrine
+        Registry $doctrine,
+        FormFactory $formFactory,
+        TwigEngine $templating
     )
     {
-        $this->doctrine = $doctrine;
-        $this->om       = $om;
+        $this->doctrine    = $doctrine;
+        $this->formFactory = $formFactory;
+        $this->templating  = $templating;
     }
 
     /**
@@ -44,14 +51,14 @@ abstract class Interaction {
      */
     private function getPenaltyPaper($interaction, $paperID)
     {
+        $em = $this->doctrine->getManager();
         $penalty = 0;
 
         $hints = $interaction->getHints();
 
         foreach ($hints as $hint) {
-            $lhp = $this->om
-                        ->getRepository('UJMExoBundle:LinkHintPaper')
-                        ->getLHP($hint->getId(), $paperID);
+            $lhp = $em->getRepository('UJMExoBundle:LinkHintPaper')
+                      ->getLHP($hint->getId(), $paperID);
             if (count($lhp) > 0) {
                 $signe = substr($hint->getPenalty(), 0, 1);
 
@@ -202,5 +209,18 @@ abstract class Interaction {
       *
       */
      abstract public function getResponseGiven($interId, $session, $interactionX);
+
+     /**
+      * abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param mixed[] An array of parameters to pass to the view
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     abstract public function show($interaction, $exoID, $vars);
 
 }

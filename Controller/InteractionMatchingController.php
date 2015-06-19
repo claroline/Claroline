@@ -209,8 +209,8 @@ class InteractionMatchingController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
-        $res = $exerciseSer->responseMatching($request);
+        $interSer = $this->container->get('ujm.exo_InteractionMatching');
+        $res = $interSer->response($request);
 
         $vars['score']            = $res['score'];
         $vars['penalty']          = $res['penalty'];

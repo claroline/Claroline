@@ -222,8 +222,8 @@ class InteractionHoleController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
-        $res = $exerciseSer->responseHole($request);
+        $interSer = $this->container->get('ujm.exo_InteractionHole');
+        $res = $interSer->response($request);
 
         $vars['score']     = $res['score'];
         $vars['penalty']   = $res['penalty'];

@@ -7,6 +7,9 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\ResponseType;
+
 class Open extends Interaction {
     /**
      * implement the abstract method
@@ -58,8 +61,8 @@ class Open extends Interaction {
       * @return string userScore/scoreMax
       */
      public function mark(
-             \UJM\ExoBundle\Entity\InteractionOpen $interOpen = null, 
-             $response = null, 
+             \UJM\ExoBundle\Entity\InteractionOpen $interOpen = null,
+             $response = null,
              $penalty = null
      )
      {
@@ -95,18 +98,17 @@ class Open extends Interaction {
       */
      public function maxScore($interOpen = null)
      {
+         $em = $this->doctrine->getManager();
          $scoreMax = 0;
 
          if ($interOpen->getTypeOpenQuestion() == 'long') {
              $scoreMax = $interOpen->getScoreMaxLongResp();
          } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
-             $scoreMax = $this->om
-                              ->getRepository('UJMExoBundle:WordResponse')
-                              ->getScoreMaxOneWord($interOpen->getId());
+             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
+                            ->getScoreMaxOneWord($interOpen->getId());
          } else if ($interOpen->getTypeOpenQuestion() == 'short') {
-             $scoreMax = $this->om
-                              ->getRepository('UJMExoBundle:WordResponse')
-                             ->getScoreMaxShort($interOpen->getId());
+             $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
+                            ->getScoreMaxShort($interOpen->getId());
          }
 
          return $scoreMax;
@@ -122,9 +124,9 @@ class Open extends Interaction {
      */
      public function getInteractionX($interId)
      {
-         $interOpen = $this->om
-                          ->getRepository('UJMExoBundle:InteractionOpen')
-                          ->getInteractionOpen($interId);
+         $em = $this->doctrine->getManager();
+         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+                         ->getInteractionOpen($interId);
 
          return $interOpen;
      }
@@ -146,6 +148,34 @@ class Open extends Interaction {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
          return $responseGiven;
+     }
+
+     /**
+      * implements the abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param mixed[] An array of parameters to pass to the view
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     public function show($interaction, $exoID, $vars)
+     {
+         $response = new Response();
+         $interactionOpen = $this->doctrine
+                                 ->getManager()
+                                 ->getRepository('UJMExoBundle:InteractionOpen')
+                                 ->getInteractionOpen($interaction->getId());
+
+         $form   = $this->formFactory->create(new ResponseType(), $response);
+
+         $vars['interactionToDisplayed'] = $interactionOpen;
+         $vars['form']            = $form->createView();
+         $vars['exoID']           = $exoID;
+
+         return $this->templating->renderResponse('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
      }
 
      /**

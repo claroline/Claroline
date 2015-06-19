@@ -269,105 +269,12 @@ class QuestionController extends Controller
                 ->getInteraction($id);
 
             $typeInter = $interaction->getType();
+            $interSer  = $this->container->get('ujm.exo_' . $typeInter);
 
-            //todo remplacer switch dans les services avec methode du genre show
-            switch ($typeInter) {
-                case "InteractionQCM":
+            return $interSer->show($interaction, $exoID, $vars);
 
-                    $response = new Response();
-                    $interactionQCM = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:InteractionQCM')
-                        ->getInteractionQCM($interaction->getId());
-
-                    if ($interactionQCM->getShuffle()) {
-                        $interactionQCM->shuffleChoices();
-                    } else {
-                        $interactionQCM->sortChoices();
-                    }
-
-                    $form   = $this->createForm(new ResponseType(), $response);
-
-                    $vars['interactionToDisplayed'] = $interactionQCM;
-                    $vars['form']           = $form->createView();
-                    $vars['exoID']          = $exoID;
-
-                    return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', $vars);
-
-                case "InteractionGraphic":
-
-                    $interactionGraph = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:InteractionGraphic')
-                        ->getInteractionGraphic($interaction->getId());
-
-                    $repository = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Coords');
-
-                    $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph));
-
-                    $vars['interactionToDisplayed'] = $interactionGraph;
-                    $vars['listeCoords']        = $listeCoords;
-                    $vars['exoID']              = $exoID;
-
-                    return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
-
-                case "InteractionHole":
-
-                    $response = new Response();
-                    $interactionHole = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:InteractionHole')
-                        ->getInteractionHole($interaction->getId());
-
-                    $form   = $this->createForm(new ResponseType(), $response);
-
-                    $vars['interactionToDisplayed'] = $interactionHole;
-                    $vars['form']            = $form->createView();
-                    $vars['exoID']           = $exoID;
-
-                    return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
-
-                case "InteractionOpen":
-                    $response = new Response();
-                    $interactionOpen = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:InteractionOpen')
-                        ->getInteractionOpen($interaction->getId());
-
-                    $form   = $this->createForm(new ResponseType(), $response);
-
-                    $vars['interactionToDisplayed'] = $interactionOpen;
-                    $vars['form']            = $form->createView();
-                    $vars['exoID']           = $exoID;
-
-                    return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
-
-                case "InteractionMatching":
-                    $response = new Response();
-                    $interactionMatching = $this->getDoctrine()
-                            ->getManager()
-                            ->getRepository('UJMExoBundle:InteractionMatching')
-                            ->getInteractionMatching($interaction->getId());
-
-                    if ($interactionMatching->getShuffle()) {
-                        $interactionMatching->shuffleProposals();
-                        $interactionMatching->shuffleLabels();
-                    } else {
-                        $interactionMatching->sortProposals();
-                        $interactionMatching->sortLabels();
-                    }
-
-                    $form = $this->createForm(new ResponseType(), $response);
-
-                    $vars['interactionToDisplayed'] = $interactionMatching;
-                    $vars['form'] = $form->createView();
-                    $vars['exoID'] = $exoID;
-
-                    return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
-            }
         } else {
+
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
     }

@@ -36,23 +36,23 @@ services:
 
     ujm.exo_InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\Interactions\Graphic
-        arguments: [@claroline.persistence.object_manager, @doctrine]
+        arguments: [@doctrine, @form.factory, @templating]
 
     ujm.exo_InteractionHole:
         class: UJM\ExoBundle\Services\classes\Interactions\Hole
-        arguments: [@claroline.persistence.object_manager, @doctrine]
+        arguments: [@doctrine, @form.factory, @templating]
 
     ujm.exo_InteractionMatching:
         class: UJM\ExoBundle\Services\classes\Interactions\Matching
-        arguments: [@claroline.persistence.object_manager, @doctrine]
+        arguments: [@doctrine, @form.factory, @templating]
 
     ujm.exo_InteractionOpen:
         class: UJM\ExoBundle\Services\classes\Interactions\Open
-        arguments: [@claroline.persistence.object_manager, @doctrine]
+        arguments: [@doctrine, @form.factory, @templating]
 
     ujm.exo_InteractionQCM:
         class: UJM\ExoBundle\Services\classes\Interactions\Qcm
-        arguments: [@claroline.persistence.object_manager, @doctrine]
+        arguments: [@doctrine, @form.factory, @templating]
 
     ujm.exo_paper:
         class: UJM\ExoBundle\Services\classes\PaperService

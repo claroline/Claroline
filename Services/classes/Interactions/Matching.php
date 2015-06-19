@@ -7,6 +7,9 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
+use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\ResponseType;
+
 class Matching extends Interaction {
     /**
      * implement the abstract method
@@ -63,24 +66,25 @@ class Matching extends Interaction {
       * @return string userScore/scoreMax
       */
      public function mark(
-             \UJM\ExoBundle\Entity\InteractionMatching $interMatching = null, 
-             $penalty= null, $tabRightResponse= null, 
+             \UJM\ExoBundle\Entity\InteractionMatching $interMatching = null,
+             $penalty= null, $tabRightResponse= null,
              $tabResponseIndex= null
      )
      {
+         $em = $this->doctrine->getManager();
          $scoretmp = 0;
          $scoreMax = $this->maxScore($interMatching);
 
          foreach ($tabRightResponse as $labelId => $value) {
              if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
                      && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
-                 $label = $this->om->getRepository('UJMExoBundle:Label')
-                                   ->find($labelId);
+                 $label = $em->getRepository('UJMExoBundle:Label')
+                             ->find($labelId);
                  $scoretmp += $label->getScoreRightResponse();
              }
              if ($tabRightResponse[$labelId] == null && !isset($tabResponseIndex[$labelId])) {
-                 $label = $this->om->getRepository('UJMExoBundle:Label')
-                                   ->find($labelId);
+                 $label = $em->getRepository('UJMExoBundle:Label')
+                             ->find($labelId);
                  $scoretmp += $label->getScoreRightResponse();
              }
          }
@@ -126,9 +130,9 @@ class Matching extends Interaction {
       */
      public function getInteractionX($interId)
      {
-         $interMatching = $this->om
-                          ->getRepository('UJMExoBundle:InteractionMatching')
-                          ->getInteractionMatching($interId);
+         $em = $this->doctrine->getManager();
+         $interMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
+                              ->getInteractionMatching($interId);
 
          return $interMatching;
      }
@@ -158,6 +162,42 @@ class Matching extends Interaction {
          }
 
          return $responseGiven;
+     }
+
+     /**
+      * implements the abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param mixed[] An array of parameters to pass to the view
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     public function show($interaction, $exoID, $vars)
+     {
+         $response = new Response();
+         $interactionMatching = $this->doctrine
+                                     ->getManager()
+                                     ->getRepository('UJMExoBundle:InteractionMatching')
+                                     ->getInteractionMatching($interaction->getId());
+
+        if ($interactionMatching->getShuffle()) {
+            $interactionMatching->shuffleProposals();
+            $interactionMatching->shuffleLabels();
+        } else {
+            $interactionMatching->sortProposals();
+            $interactionMatching->sortLabels();
+        }
+
+        $form = $this->formFactory->create(new ResponseType(), $response);
+
+        $vars['interactionToDisplayed'] = $interactionMatching;
+        $vars['form'] = $form->createView();
+        $vars['exoID'] = $exoID;
+
+        return $this->templating->renderResponse('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
      }
 
      /**
@@ -255,7 +295,7 @@ class Matching extends Interaction {
 
     /**
      * init array of student response indexed by labelId
-     * 
+     *
      * @access private
      *
      * @param String $response
