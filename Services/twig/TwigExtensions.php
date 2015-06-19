@@ -168,7 +168,7 @@ class TwigExtensions extends \Twig_Extension
      */
     public function initTabResponseMatching($response, $interMatching)
     {
-        $interMatchSer = $this->container->get('ujm.InteractionMatching');
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
 
         return $interMatchSer->initTabResponseMatching($response, $interMatching);
     }
@@ -312,7 +312,7 @@ class TwigExtensions extends \Twig_Extension
      */
     private function getQCMScoreMax($interQCM)
     {
-        $interQcmSer = $this->container->get('ujm.InteractionQCM');
+        $interQcmSer = $this->container->get('ujm.exo_InteractionQCM');
 
         return $interQcmSer->qcmMaxScore($interQCM);
     }

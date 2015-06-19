@@ -26,7 +26,7 @@ class InteractionOpenController extends Controller
      */
     public function createAction()
     {
-        $interOpenSer = $this->container->get('ujm.InteractionOpen');
+        $interOpenSer = $this->container->get('ujm.exo_InteractionOpen');
         $interOpen  = new InteractionOpen();
         $form      = $this->createForm(
             new InteractionOpenType(

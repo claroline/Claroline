@@ -404,7 +404,7 @@ class QuestionController extends Controller
                     } else {
                         $editForm = $form;
                     }
-                    $serviceQcm = $this->container->get('ujm.InteractionQCM');
+                    $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
                     $typeQCM = $serviceQcm->getTypeQCM();
 
                     $variables['entity']         = $interactionQCM;
@@ -503,7 +503,7 @@ class QuestionController extends Controller
                         $variables['_resource'] = $exercise;
                     }
 
-                    $interOpenSer = $this->container->get('ujm.InteractionOpen');
+                    $interOpenSer = $this->container->get('ujm.exo_InteractionOpen');
                     $typeOpen     = $interOpenSer->getTypeOpen();
 
                     $variables['entity']         = $interactionOpen;
@@ -528,7 +528,7 @@ class QuestionController extends Controller
                         ->getRepository('UJMExoBundle:InteractionMatching')
                         ->getInteractionMatching($interaction->getId());
 
-                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
                     $correspondence = $interMatchSer->initTabRightResponse($interactionMatching);
                     foreach ($correspondence as $key => $corresp) {
                         $correspondence[$key] = explode('-', $corresp);
@@ -556,7 +556,7 @@ class QuestionController extends Controller
                         ), $interactionMatching
                     );
 
-                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
                     $typeMatching = $interMatchSer->getTypeMatching();
 
                     $variables['entity']         = $interactionMatching;
@@ -688,7 +688,7 @@ class QuestionController extends Controller
                                 ->getToken()->getUser()
                         ), $entity
                     );
-                    $serviceQcm = $this->container->get('ujm.InteractionQCM');
+                    $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
                     $typeQCM = $serviceQcm->getTypeQCM();
 
                     return $this->container->get('templating')->renderResponse(
@@ -730,7 +730,7 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $interOpenSer = $this->container->get('ujm.InteractionOpen');
+                    $interOpenSer = $this->container->get('ujm.exo_InteractionOpen');
                     $typeOpen     = $interOpenSer->getTypeOpen();
 
                     return $this->container->get('templating')->renderResponse(
@@ -752,7 +752,7 @@ class QuestionController extends Controller
                         ), $entity
                     );
 
-                    $interMatchSer = $this->container->get('ujm.InteractionMatching');
+                    $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
                     $typeMatching = $interMatchSer->getTypeMatching();
 
                     return $this->container->get('templating')->renderResponse(

@@ -285,7 +285,7 @@ class QtiRepository {
     public function export($interaction)
     {
         if ($interaction->getType() != 'InteractionOpen') {
-            $service = 'ujm.qti_export_' . $interaction->getType();
+            $service = 'ujm.exo_qti_export_' . $interaction->getType();
             $qtiExport = $this->container->get($service);
         } else {
             $qtiExport = $this->serviceOpenQuestion($interaction->getId());

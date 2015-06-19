@@ -25,7 +25,7 @@ class InteractionQCMController extends Controller
      */
     public function createAction()
     {
-        $services = $this->container->get('ujm.InteractionQCM');
+        $services = $this->container->get('ujm.exo_InteractionQCM');
         $interQCM  = new InteractionQCM();
         $form      = $this->createForm(
             new InteractionQCMType(

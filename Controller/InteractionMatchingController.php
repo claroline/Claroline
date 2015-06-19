@@ -25,7 +25,7 @@ class InteractionMatchingController extends Controller
      */
     public function createAction()
     {
-        $interMatchSer = $this->container->get('ujm.InteractionMatching');
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
         $interMatching = new InteractionMatching();
         $form = $this->createForm(
             new InteractionMatchingType(
