@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class QuestionService {
 
     private $doctrine;
-    protected $tokenStorage;
+    private $tokenStorage;
 
     /**
      * Constructor

@@ -8,6 +8,7 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionHoleType;
 use UJM\ExoBundle\Form\ResponseType;
 
 class Hole extends Interaction {
@@ -174,6 +175,44 @@ class Hole extends Interaction {
          $vars['exoID']           = $exoID;
 
          return $this->templating->renderResponse('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
+     }
+
+     /**
+      * implements the abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param integer $catID
+      * @param Claroline\Entity\User $user
+      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     public function edit($interaction, $exoID, $catID, $user, $form = null)
+     {
+         $interactionHole = $this->doctrine
+                                 ->getManager()
+                                 ->getRepository('UJMExoBundle:InteractionHole')
+                                 ->getInteractionHole($interaction->getId());
+
+         $editForm = $this->formFactory->create(
+             new InteractionHoleType($user, $catID), $interactionHole
+         );
+
+         $linkedCategory = $this->questionService->getLinkedCategories();
+
+         return $this->templating->renderResponse(
+             'UJMExoBundle:InteractionHole:edit.html.twig', array(
+             'entity'         => $interactionHole,
+             'edit_form'      => $editForm->createView(),
+             'nbResponses'    => $this->getNbReponses($interaction),
+             'linkedCategory' => $linkedCategory,
+             'exoID'          => $exoID,
+             'locker'         => $this->categoryService->getLockCategory()
+             )
+         );
      }
 
      /**

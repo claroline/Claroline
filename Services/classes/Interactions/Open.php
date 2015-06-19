@@ -8,6 +8,7 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionOpenType;
 use UJM\ExoBundle\Form\ResponseType;
 
 class Open extends Interaction {
@@ -176,6 +177,56 @@ class Open extends Interaction {
          $vars['exoID']           = $exoID;
 
          return $this->templating->renderResponse('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
+     }
+
+     /**
+      * implements the abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param integer $catID
+      * @param Claroline\Entity\User $user
+      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     public function edit($interaction, $exoID, $catID, $user, $form = null)
+     {
+         $em = $this->doctrine->getEntityManager();
+         $interactionOpen = $this->doctrine
+                                 ->getManager()
+                                 ->getRepository('UJMExoBundle:InteractionOpen')
+                                 ->getInteractionOpen($interaction->getId());
+
+         $editForm = $this->formFactory->create(
+             new InteractionOpenType($user, $catID), $interactionOpen
+         );
+
+         if ($exoID != -1) {
+             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+             $variables['_resource'] = $exercise;
+         }
+
+         $typeOpen     = $this->getTypeOpen();
+
+         $linkedCategory = $this->questionService->getLinkedCategories();
+
+         $variables['entity']         = $interactionOpen;
+         $variables['edit_form']      = $editForm->createView();
+         $variables['nbResponses']    = $this->getNbReponses($interaction);
+         $variables['linkedCategory'] = $linkedCategory;
+         $variables['typeOpen']       = json_encode($typeOpen);
+         $variables['exoID']          = $exoID;
+         $variables['locker']         = $this->categoryService->getLockCategory();
+
+         if ($exoID != -1) {
+             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+             $variables['_resource'] = $exercise;
+         }
+
+         return $this->templating->renderResponse('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
      }
 
      /**

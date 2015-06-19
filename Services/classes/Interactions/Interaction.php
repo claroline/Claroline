@@ -17,6 +17,8 @@ abstract class Interaction {
     protected $doctrine;
     protected $formFactory;
     protected $templating;
+    protected $questionService;
+    protected $categoryService;
 
     /**
      * Constructor
@@ -26,17 +28,24 @@ abstract class Interaction {
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
      * @param \Symfony\Component\Form\FormFactory $formFactory
      * @param \Symfony\Component\Form\FormFactory $templating
+     * @param \UJM\ExoBundle\Services\classe\QuestionService $questionService
+     * @param \UJM\ExoBundle\Services\classe\CategoryService $categoryService
      *
      */
     public function __construct(
         Registry $doctrine,
         FormFactory $formFactory,
-        TwigEngine $templating
+        TwigEngine $templating,
+        \UJM\ExoBundle\Services\classes\QuestionService $questionService,
+        \UJM\ExoBundle\Services\classes\CategoryService $categoryService
+
     )
     {
-        $this->doctrine    = $doctrine;
-        $this->formFactory = $formFactory;
-        $this->templating  = $templating;
+        $this->doctrine        = $doctrine;
+        $this->formFactory     = $formFactory;
+        $this->templating      = $templating;
+        $this->questionService = $questionService;
+        $this->categoryService = $categoryService;
     }
 
     /**
@@ -156,6 +165,23 @@ abstract class Interaction {
          return $responseGiven;
      }
 
+     /**
+      *
+      *
+      * @access protected
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      *
+      * @return integer
+      */
+     protected function getNbReponses($interaction)
+     {
+         $em = $this->doctrine->getEntityManager();
+         $response = $em->getRepository('UJMExoBundle:Response')
+                        ->findBy(array('interaction' => $interaction->getId()));
+
+         return count($response);
+     }
+
     /**
      * abstract method
      * To process the user's response for a paper(or a test)
@@ -222,5 +248,20 @@ abstract class Interaction {
       * @return \Symfony\Component\HttpFoundation\Response
       */
      abstract public function show($interaction, $exoID, $vars);
+
+     /**
+      * abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param integer $catID
+      * @param Claroline\Entity\User $user
+      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     abstract public function edit($interaction, $exoID, $catID, $user, $form = null);
 
 }

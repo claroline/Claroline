@@ -8,6 +8,7 @@
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use UJM\ExoBundle\Entity\Response;
+use UJM\ExoBundle\Form\InteractionMatchingType;
 use UJM\ExoBundle\Form\ResponseType;
 
 class Matching extends Interaction {
@@ -198,6 +199,73 @@ class Matching extends Interaction {
         $vars['exoID'] = $exoID;
 
         return $this->templating->renderResponse('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
+     }
+
+     /**
+      * implements the abstract method
+      *
+      * @access public
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interaction
+      * @param integer $exoID
+      * @param integer $catID
+      * @param Claroline\Entity\User $user
+      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
+      *
+      * @return \Symfony\Component\HttpFoundation\Response
+      */
+     public function edit($interaction, $exoID, $catID, $user, $form = null)
+     {
+         $em = $this->doctrine->getEntityManager();
+         $interactionMatching = $this->doctrine
+                                     ->getManager()
+                                     ->getRepository('UJMExoBundle:InteractionMatching')
+                                     ->getInteractionMatching($interaction->getId());
+
+         $correspondence = $this->initTabRightResponse($interactionMatching);
+         foreach ($correspondence as $key => $corresp) {
+             $correspondence[$key] = explode('-', $corresp);
+         }
+         $tableLabel =  array();
+         $tableProposal = array();
+
+         $ind = 1;
+
+         foreach($interactionMatching->getLabels() as $label){
+             $tableLabel[$ind] = $label->getId();
+             $ind++;
+         }
+
+         $ind = 1;
+         foreach($interactionMatching->getProposals() as $proposal){
+             $tableProposal[$proposal->getId()] = $ind;
+             $ind++;
+         }
+
+         $editForm = $this->formFactory->create(
+             new InteractionMatchingType($user,$catID), $interactionMatching
+         );
+
+         $typeMatching = $this->getTypeMatching();
+         $linkedCategory = $this->questionService->getLinkedCategories();
+
+         $variables['entity']          = $interactionMatching;
+         $variables['edit_form']       = $editForm->createView();
+         $variables['nbResponses']     = $this->getNbReponses($interaction);
+         $variables['linkedCategory']  = $linkedCategory;
+         $variables['typeMatching']    = json_encode($typeMatching);
+         $variables['exoID']           = $exoID;
+         $variables['correspondence']  = json_encode($correspondence);
+         $variables['tableLabel']      = json_encode($tableLabel);
+         $variables['tableProposal']   = json_encode($tableProposal);
+         $variables['locker']          = $this->categoryService->getLockCategory();
+
+         if ($exoID != -1) {
+             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+             $variables['_resource'] = $exercise;
+         }
+
+         return $this->templating->renderResponse('UJMExoBundle:InteractionMatching:edit.html.twig', $variables);
      }
 
      /**

@@ -30,29 +30,33 @@ services:
         class: UJM\ExoBundle\Services\classes\BadgeExoService
         arguments: [@doctrine]
 
+    ujm.exo_category:
+        class: UJM\ExoBundle\Services\classes\CategoryService
+        arguments: [@doctrine, @security.token_storage]
+
     ujm.exo_exercise:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
         arguments: [@claroline.persistence.object_manager, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
 
     ujm.exo_InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\Interactions\Graphic
-        arguments: [@doctrine, @form.factory, @templating]
+        arguments: [@doctrine, @form.factory, @templating, @ujm.exo_question, @ujm.exo_category]
 
     ujm.exo_InteractionHole:
         class: UJM\ExoBundle\Services\classes\Interactions\Hole
-        arguments: [@doctrine, @form.factory, @templating]
+        arguments: [@doctrine, @form.factory, @templating, @ujm.exo_question, @ujm.exo_category]
 
     ujm.exo_InteractionMatching:
         class: UJM\ExoBundle\Services\classes\Interactions\Matching
-        arguments: [@doctrine, @form.factory, @templating]
+        arguments: [@doctrine, @form.factory, @templating, @ujm.exo_question, @ujm.exo_category]
 
     ujm.exo_InteractionOpen:
         class: UJM\ExoBundle\Services\classes\Interactions\Open
-        arguments: [@doctrine, @form.factory, @templating]
+        arguments: [@doctrine, @form.factory, @templating, @ujm.exo_question, @ujm.exo_category]
 
     ujm.exo_InteractionQCM:
         class: UJM\ExoBundle\Services\classes\Interactions\Qcm
-        arguments: [@doctrine, @form.factory, @templating]
+        arguments: [@doctrine, @form.factory, @templating, @ujm.exo_question, @ujm.exo_category]
 
     ujm.exo_paper:
         class: UJM\ExoBundle\Services\classes\PaperService
