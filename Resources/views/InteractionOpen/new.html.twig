@@ -5,7 +5,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'open_creation' | trans }}</h3>
     </div>
-    <form action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
+    <form onsubmit="return checkFormOpen();" id="formOpen" action="{{ path('ujm_interactionopen_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
@@ -24,7 +24,7 @@
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/interactionOpen.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/category_pop.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/hint.js') }}"></script>
-
+{% include "UJMExoBundle:Partial:modal/confirmOneWord.html.twig" %}
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">

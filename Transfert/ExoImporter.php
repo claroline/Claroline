@@ -91,7 +91,8 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $qtiRepos->razValues();
         $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
-        if ($questions = opendir($rootPath.'/'.$exoPath)) {
+        if (file_exists($rootPath.'/'.$exoPath)) {
+            $questions = opendir($rootPath.'/'.$exoPath);
             $questionFiles = array();
             while (($question = readdir($questions)) !== false) {
                 if ($question != '.' && $question != '..') {
