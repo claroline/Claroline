@@ -97,7 +97,31 @@
                 <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
                         {% if editMode %}
-                        <div data-ng-include="'templates/menu_widget-type.tpl.html'">
+                        {#<div data-ng-include="'templates/menu_widget-type.tpl.html'">#}
+                        {#</div>#}
+                        <div class="add_widget" data-ng-init="isadding = false" data-ng-show="!isadding">
+                            <div class="panel-body">
+                                <p class="add_widget_icon" data-ng-click="isadding = true">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle-o fa-stack-2x"></i>
+                                        <i class="fa fa-plus fa-stack-1x"></i>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="add_widget" data-ng-show="isadding">
+                            <div class="panel-body">
+                                <span class="fa fa-close pull-right" data-ng-click="isadding = false" role="button"></span>
+                                <ul class="list-inline widget_type_list">
+                                    {% verbatim %}
+                                    <li class="widget_type" data-ng-repeat="widgetType in widgetTypes"
+                                        data-ng-click="$parent.isadding = false" role="button" data-widget-picker="widgetPickerConfig" data-widget-type="{{ widgetType.name }}">
+                                        <span class="fa fa-{{ widgetType.icon }}"></span>
+                                        <span>{{ widgetType.name + '_title' | trans }}</span>
+                                    </li>
+                                    {% endverbatim %}
+                                </ul>
+                            </div>
                         </div>
                         {% endif %}
                         <p class="no-data well" data-ng-show="widgets.length <= 0">
@@ -216,6 +240,7 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentFactory.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/portfolioDirective.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetPickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/loadingFormDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'
@@ -223,7 +248,6 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/commentsDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
-            '@IcapPortfolioBundle/Resources/public/js/portfolio/templates/menu_widget-type.tpl.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

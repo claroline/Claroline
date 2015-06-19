@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 class PortfolioWidgetController extends BaseController
 {
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_portfolio_widget_get")
+     * @Route("/{type}", name="icap_portfolio_internal_portfolio_widget_get", options={"expose"=true})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})

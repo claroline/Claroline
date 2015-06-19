@@ -70,4 +70,10 @@ portfolioApp
                 } // optional callback fired when item is finished dragging
             }
         };
+
+        $scope.widgetPickerConfig = {
+            successCallback: function (nodes) {
+                console.log('pouet');
+            }
+        };
     }]);
