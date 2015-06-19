@@ -20,7 +20,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     if (shape == 'circle') {
         switch (color) {
         case 'black' :
-            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'circleblack.png');
             break;
         case 'white' :
             $('#' + id + 'ra' + i).attr('src', prefix + 'circlew.png');
@@ -62,7 +62,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
     } else if (shape == 'square') {
         switch (color) {
          case 'black' :
-            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            $('#' + id + 'ra' + i).attr('src', prefix + 'squareblack.png');
             break;
             
         case 'white' :
@@ -94,7 +94,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
             break;
             
          case 'brown' :
-             $('#' + id + 'ra' + i).attr('src', prefix + 'circlebrown.png');
+             $('#' + id + 'ra' + i).attr('src', prefix + 'squarebrown.png');
              break;
         default :
             $('#' + id + 'ra' + i).attr('src', prefix + 'squareblack.png');
