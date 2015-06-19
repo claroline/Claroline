@@ -1,43 +1,54 @@
 var responses = [];
 
+$(window).load( function() {
+    //for create source element for jsPlumb
+        $(".origin").each(function() {
+            jsPlumb.addEndpoint(this, {
+                anchor: 'RightMiddle',
+                cssClass: "endPoints",
+                isSource: true
+            });
+        });
+
+         //for create target element for jsPlumb
+        $(".droppable").each(function() {
+            jsPlumb.addEndpoint(this, {
+                anchor: 'LeftMiddle',
+                cssClass: "endPoints",
+                isTarget: true
+            });
+        });
+});
+
 $(function() {
 
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
 
-        //Create all draggable in source.
-        jsPlumb.makeSource($(".origin"), {
-            anchor: "Right",
-            cssClass: "endPoints",
-            isSource: true
-        });
-
-        //Create all droppable in target
-         jsPlumb.makeTarget($(".droppable"), {
-            anchor: "Left",
-            cssClass: "endPoints",
-            isTarget: true        
+        // for reset all connection
+        $("#resetAll").click(function() {
+            jsPlumb.detachEveryConnection();
         });
 
         //defaults parameteres for all connections
         jsPlumb.importDefaults({
-            ConnectionsDetachable:false,
+            Anchors: ["RightMiddle", "LeftMiddle"],
+            ConnectionsDetachable: false,
             Connector: "Straight",
-            DropOptions: {tolerance:"touch"},
-            Endpoint: "Dot",
-            EndpointStyle: {fillStyle:"#777", radius: 5},
-            HoverPaintStyle: {strokeStyle:"red"},
-            LogEnabled: false,
-            PaintStyle: { strokeStyle:"#777", lineWidth: 4}
+            DropOptions: {tolerance: "touch"},
+            HoverPaintStyle: {strokeStyle: "red"},
+            LogEnabled: true,
+            MaxConnections: -1,
+            PaintStyle: {strokeStyle: "#777", lineWidth: 4}
         });
 
         //if there are multiples same link
-         jsPlumb.bind("beforeDrop", function(info){
+        jsPlumb.bind("beforeDrop", function(info) {
             var connection = jsPlumb.getConnections({
-                source:info["sourceId"],
-                target:info["targetId"]
+                source: info["sourceId"],
+                target: info["targetId"]
             });
-            if(connection.length !== 0){
+            if (connection.length !== 0) {
                 //if the connection is already makes
                 if (info["sourceId"] == connection[0].sourceId && info["targetId"] == connection[0].targetId) {
                     return false;
@@ -51,28 +62,21 @@ $(function() {
 
         //for remove connections
         jsPlumb.bind("click", function(connection) {
-            var target = connection["target"]["id"];
-            var connectionsTarget = jsPlumb.getConnections({
-                target:target
-            });
-            if (connectionsTarget.length > 1) {
-                jsPlumb.detach(connection);
-            } else {
-                jsPlumb.detach(connection);
-                jsPlumb.removeAllEndpoints($("#" + target));
-            }
+            jsPlumb.detach(connection);
         });
     });
 
     //for check in connections
     var formBalise = $("body").find("form");
     var idFormBalise = formBalise.attr("id");
-    if(idFormBalise == "formResponse") {
-        $("#"+idFormBalise).submit(function() {
+    // for validate in exercice
+    if (idFormBalise == "formResponse") {
+        $("#" + idFormBalise).submit(function() {
             $(".origin").each(function() {
                 checkIn($(this));
             });
         });
+        // for validate in test in banque question
     } else {
         $("#submit_response").click(function() {
             $(".origin").each(function() {
@@ -98,11 +102,11 @@ function placeProposal(idLabel, idProposal) {
 function checkIn(divProposal) {
     var idProposal = divProposal.attr("id");
     var proposal = idProposal.replace('draggable_', '');
-    var connections = jsPlumb.getConnections({source:idProposal});
-    if(connections[0]) {
+    var connections = jsPlumb.getConnections({source: idProposal});
+    if (connections[0]) {
         responses[proposal] = 'NULL';
         responses[proposal] = proposals = [];
-        for(i = 0; i < connections.length; i++) {
+        for (i = 0; i < connections.length; i++) {
             var idLabel = connections[i].targetId;
             var label = idLabel.replace('droppable_', '');
             responses[proposal][i] = label;
