@@ -58,7 +58,7 @@ class QuestionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $services = $this->container->get('ujm.Interaction_general');
+        $services = $this->container->get('ujm.exo_Interaction_general');
 
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
@@ -188,7 +188,7 @@ class QuestionController extends Controller
 
         $em = $this->getDoctrine()->getManager();
 
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.exo_exercise');
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $uid = $user->getId();
@@ -246,14 +246,14 @@ class QuestionController extends Controller
     {
         $vars = array();
         $allowToAccess = 0;
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $em = $this->getDoctrine()->getManager();
 
         if ($exoID != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
             $vars['_resource'] = $exercise;
 
-            if ($this->container->get('ujm.exercise_services')
+            if ($this->container->get('ujm.exo_exercise')
                      ->isExerciseAdmin($exercise)) {
                 $allowToAccess = 1;
             }
@@ -387,7 +387,7 @@ class QuestionController extends Controller
 
         $variables = array(
             'exoID' => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
             'locker' => $this->getLockCategory(),
         );
 
@@ -427,7 +427,7 @@ class QuestionController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'entity' => $entity,
             'form'   => $form->createView(),
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
             'locker' => $this->getLockCategory(),
             )
         );
@@ -446,10 +446,10 @@ class QuestionController extends Controller
      */
     public function editAction($id, $exoID, $form = null)
     {
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.exo_exercise');
         $em = $this->getDoctrine()->getManager();
         $question = $services->controlUserQuestion($id, $this->container, $em);
-        $share    = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion($id);
+        $share    = $this->container->get('ujm.exo_exercise')->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID    = -1;
 
@@ -470,7 +470,7 @@ class QuestionController extends Controller
                 ->findBy(array('interaction' => $interaction->getId()));
             $nbResponses = count($response);
 
-            $linkedCategory = $this->container->get('ujm.exercise_services')->getLinkedCategories();
+            $linkedCategory = $this->container->get('ujm.exo_exercise')->getLinkedCategories();
 
             if ($user->getId() != $interaction->getQuestion()->getUser()->getId()) {
                 $catID = $interaction->getQuestion()->getCategory()->getId();
@@ -693,7 +693,7 @@ class QuestionController extends Controller
     public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
+        $question = $this->container->get('ujm.exo_exercise')->controlUserQuestion($id, $this->container, $em);
 
         if (count($question) > 0) {
 
@@ -722,7 +722,7 @@ class QuestionController extends Controller
                 $pageNow -= 1;
             }
 
-            $interSer  = $this->container->get('ujm.' . $typeInter);
+            $interSer  = $this->container->get('ujm.exo_' . $typeInter);
             $interX    = $interSer->getInteractionX($interaction->getId());
 
             return $this->forward(
@@ -743,7 +743,7 @@ class QuestionController extends Controller
      */
     public function choixFormTypeAction()
     {
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.exo_exercise');
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
@@ -1929,7 +1929,7 @@ class QuestionController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.exo_exercise');
 
         $listInteractions = array();
         $actionQ = array();
@@ -2016,7 +2016,7 @@ class QuestionController extends Controller
                             ->getManager()
                             ->getRepository('UJMExoBundle:Interaction')
                             ->find($interID);
-        $service = $this->container->get('ujm.exercise_services');
+        $service = $this->container->get('ujm.exo_exercise');
 
         $em = $this->getDoctrine()->getManager();
         $question = $service->controlUserQuestion($interaction->getQuestion()->getId(), $this->container, $em);
@@ -2027,7 +2027,7 @@ class QuestionController extends Controller
         if ($exoID != -1) {
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
-            if ($this->container->get('ujm.exercise_services')
+            if ($this->container->get('ujm.exo_exercise')
                      ->isExerciseAdmin($exercise) === true) {
                 $allowToAccess = TRUE;
             }
@@ -2037,12 +2037,12 @@ class QuestionController extends Controller
             $typeInter = $interaction->getType();
             $handlerType = '\UJM\ExoBundle\Form\\' . $typeInter . 'Handler';
 
-            $interSer        = $this->container->get('ujm.' . $typeInter);
+            $interSer        = $this->container->get('ujm.exo_' . $typeInter);
             $interactionX    = $interSer->getInteractionX($interaction->getId());
 
             $interXHandler = new $handlerType(
                         NULL , NULL, $this->getDoctrine()->getManager(),
-                        $this->container->get('ujm.exercise_services'),
+                        $this->container->get('ujm.exo_exercise'),
                         $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
                         $this->get('translator')
                     );

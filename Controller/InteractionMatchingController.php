@@ -48,7 +48,7 @@ class InteractionMatchingController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionMatchingHandler(
                 $form, $this->get('request'), $this->getDoctrine()->getManager(),
-                $this->container->get('ujm.exercise_services'),
+                $this->container->get('ujm.exo_exercise'),
                 $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
                 $this->get('translator')
          );
@@ -95,7 +95,7 @@ class InteractionMatchingController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
             'locker' => $catLocker
             )
         );
@@ -137,7 +137,7 @@ class InteractionMatchingController extends Controller
         );
         $formHandler = new InteractionMatchingHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exercise_services'),
+            $this->container->get('ujm.exo_exercise'),
             $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator')
         );
@@ -209,7 +209,7 @@ class InteractionMatchingController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $res = $exerciseSer->responseMatching($request);
 
         $vars['score']            = $res['score'];

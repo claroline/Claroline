@@ -91,7 +91,7 @@ class TwigExtensions extends \Twig_Extension
      */
     public function getInterTwig($interId, $typeInter)
     {
-        $interSer        = $this->container->get('ujm.' . $typeInter);
+        $interSer        = $this->container->get('ujm.exo_' . $typeInter);
         $interactionX    = $interSer->getInteractionX($interId);
         $inter['question'] = $interactionX;
         $inter['maxScore'] = $interSer->maxScore($interactionX);
@@ -129,7 +129,7 @@ class TwigExtensions extends \Twig_Extension
      */
     public function roundUpOrDown($markToBeAdjusted)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         return $exerciseSer->roundUpDown($markToBeAdjusted);
     }
@@ -328,7 +328,7 @@ class TwigExtensions extends \Twig_Extension
      */
     private function getOpenScoreMax($interOpen)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         return $exerciseSer->openMaxScore($interOpen);
     }
@@ -344,7 +344,7 @@ class TwigExtensions extends \Twig_Extension
      */
     private function getHoleScoreMax($interHole)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         return $exerciseSer->holeMaxScore($interHole);
     }
@@ -360,7 +360,7 @@ class TwigExtensions extends \Twig_Extension
      */
     private function getGraphicScoreMax($interG)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         return $exerciseSer->graphicMaxScore($interG);
     }
@@ -376,7 +376,7 @@ class TwigExtensions extends \Twig_Extension
      */
     private function getMatchingScoreMax($interMatching)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         return $exerciseSer->matchingMaxScore($interMatching);
     }

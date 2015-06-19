@@ -87,7 +87,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $exoPath = $data['data'][0]['file']['path'];
         $exoTitle = $data['data'][0]['file']['title'];
 
-        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->razValues();
         $newExercise = $this->createExo($exoTitle, $qtiRepos->getQtiUser());
 
@@ -120,10 +120,10 @@ class ExoImporter extends Importer implements ConfigurationInterface
     public function export(Workspace $workspace, array &$files, $object)
     {
         $exoTitle = hash('sha1', $object->getTitle());
-        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI($exoTitle, $this->new);
         $this->new = FALSE;
-        $qtiServ = $this->container->get('ujm.qti_services');
+        $qtiServ = $this->container->get('ujm.exo_qti');
 
         $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
         $interactions = $interRepos->getExerciseInteraction(

@@ -43,7 +43,7 @@ class InteractionGraphicController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exercise_services'),
+            $this->container->get('ujm.exo_exercise'),
             $user, $exercise, $this->get('translator')
         );
 
@@ -97,7 +97,7 @@ class InteractionGraphicController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
             'locker' => $catLocker
             )
         );
@@ -143,7 +143,7 @@ class InteractionGraphicController extends Controller
 
         $formHandler = new InteractionGraphicHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exercise_services'),
+            $this->container->get('ujm.exo_exercise'),
             $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator')
         );
@@ -272,7 +272,7 @@ class InteractionGraphicController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $res = $exerciseSer->responseGraphic($request);
 
         $vars['point']   = $res['point']; // Score of the student without penalty

@@ -198,7 +198,7 @@ abstract class QtiExport
 
         $zip->close();
 
-        $qtiServ = $this->container->get('ujm.qti_services');
+        $qtiServ = $this->container->get('ujm.exo_qti');
         $response = $qtiServ->createZip($tmpFileName, $this->question->getId());
 
         return $response;

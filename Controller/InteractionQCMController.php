@@ -47,7 +47,7 @@ class InteractionQCMController extends Controller
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionQCMHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exercise_services'),
+            $this->container->get('ujm.exo_exercise'),
             $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
             $this->get('translator')
         );
@@ -95,7 +95,7 @@ class InteractionQCMController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exercise_services')->getLinkedCategories(),
+            'linkedCategory' =>  $this->container->get('ujm.exo_exercise')->getLinkedCategories(),
             'locker' => $catLocker
             )
         );
@@ -136,7 +136,7 @@ class InteractionQCMController extends Controller
         );
         $formHandler = new InteractionQCMHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
-            $this->container->get('ujm.exercise_services'),
+            $this->container->get('ujm.exo_exercise'),
             $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->get('translator')
         );

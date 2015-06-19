@@ -43,7 +43,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
 
         if ($exoAdmin === true) {
 
@@ -125,7 +125,7 @@ class ExerciseController extends Controller
      */
     public function openAction($exerciseId)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         $user = $this->container->get('security.token_storage')
                                 ->getToken()->getUser();
@@ -141,7 +141,7 @@ class ExerciseController extends Controller
 
         $published = 1;
         $allowToCompose = 0;
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
@@ -207,7 +207,7 @@ class ExerciseController extends Controller
                            ->find($exerciseid);
             $this->checkAccess($exercise);
 
-            $exoAdmin = $this->container->get('ujm.exercise_services')
+            $exoAdmin = $this->container->get('ujm.exo_exercise')
                                         ->isExerciseAdmin($exercise);
 
             if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE)) {
@@ -246,7 +246,7 @@ class ExerciseController extends Controller
                            ->find($exerciseid);
             $this->checkAccess($exercise);
 
-            $exoAdmin = $this->container->get('ujm.exercise_services')
+            $exoAdmin = $this->container->get('ujm.exo_exercise')
                                         ->isExerciseAdmin($exercise);
 
             $nbPapers = $em->getRepository('UJMExoBundle:Paper')
@@ -280,7 +280,7 @@ class ExerciseController extends Controller
 
         $this->checkAccess($exercise);
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')
+        $exoAdmin = $this->container->get('ujm.exo_exercise')
                                     ->isExerciseAdmin($exercise);
 
         if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE) ) {
@@ -320,7 +320,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
 
         $max = 10; // Max Per Page
         $request = $this->get('request');
@@ -346,7 +346,7 @@ class ExerciseController extends Controller
                     $questionWithResponse[$interaction->getId()] = 0;
                 }
 
-                $share = $this->container->get('ujm.exercise_services')->controlUserSharedQuestion(
+                $share = $this->container->get('ujm.exo_exercise')->controlUserSharedQuestion(
                         $interaction->getQuestion()->getId());
 
                 if ($user->getId() == $interaction->getQuestion()->getUser()->getId()) {
@@ -461,7 +461,7 @@ class ExerciseController extends Controller
                                 ->getToken()->getUser();
         $uid = $user->getId();
 
-        $services = $this->container->get('ujm.exercise_services');
+        $services = $this->container->get('ujm.exo_exercise');
 
         $exoAdmin = $services->isExerciseAdmin($exercise);
 
@@ -666,7 +666,7 @@ class ExerciseController extends Controller
 
         $this->checkAccess($exercise);
 
-        $exoAdmin = $this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise);
+        $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
 
         if ($exoAdmin === true) {
             $em = $this->getDoctrine()->getManager();
@@ -705,7 +705,7 @@ class ExerciseController extends Controller
      */
     public function exercisePaperAction($id)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
         $user = $this->container->get('security.token_storage')
                                 ->getToken()->getUser();
@@ -871,7 +871,7 @@ class ExerciseController extends Controller
         }
 
         //To record response
-        $paperSer = $this->container->get('ujm.paper_service');
+        $paperSer = $this->container->get('ujm.exo_paper');
         $ip = $paperSer->getIP($request);
         $interactionToValidatedID = $request->get('interactionToValidated');
         $response = $this->getDoctrine()
@@ -879,7 +879,7 @@ class ExerciseController extends Controller
             ->getRepository('UJMExoBundle:Response')
             ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
-        $interSer  = $this->container->get('ujm.' . $typeInterToRecorded);
+        $interSer  = $this->container->get('ujm.exo_' . $typeInterToRecorded);
         $res       = $interSer->response($request, $session->get('paper'));
 
         if (count($response) == 0) {
@@ -992,7 +992,7 @@ class ExerciseController extends Controller
 
         $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
 
-        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+        if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
 
             $workspace = $exercise->getResourceNode()->getWorkspace();
 
@@ -1087,7 +1087,7 @@ class ExerciseController extends Controller
         $session = $this->getRequest()->getSession();
         $tabOrderInter = $session->get('tabOrderInter');
 
-        $interSer       = $this->container->get('ujm.' .  $interactionToDisplay->getType());
+        $interSer       = $this->container->get('ujm.exo_' .  $interactionToDisplay->getType());
         $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
         $responseGiven  = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
 
@@ -1129,7 +1129,7 @@ class ExerciseController extends Controller
         $em->persist($paper);
         $em->flush();
 
-        $this->container->get('ujm.exercise_services')->manageEndOfExercise($paper);
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
 
         $session->remove('penalties');
 
@@ -1156,7 +1156,7 @@ class ExerciseController extends Controller
         $em->persist($paper);
         $em->flush();
 
-        $this->container->get('ujm.exercise_services')->manageEndOfExercise($paper);
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
 
         return $this->forward('UJMExoBundle:Exercise:exercisePaper', array('id' => $paper->getExercise()->getId()));
     }
@@ -1211,12 +1211,12 @@ class ExerciseController extends Controller
      */
     private function histoMark($exerciseId)
     {
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $em = $this->getDoctrine()->getManager();
         $maxY = 4;
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         if ($exercise->getNbQuestion() == 0) {
-            $exoScoreMax = $this->container->get('ujm.exercise_services')->getExerciseTotalScore($exerciseId);
+            $exoScoreMax = $this->container->get('ujm.exo_exercise')->getExerciseTotalScore($exerciseId);
         }
         $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'noteExo');
         $tabMarks = array();
@@ -1224,7 +1224,7 @@ class ExerciseController extends Controller
 
         foreach ($marks as $mark) {
             if ($exercise->getNbQuestion() > 0) {
-                $exoScoreMax = $this->container->get('ujm.paper_service')->getPaperTotalScore($mark['paper']);
+                $exoScoreMax = $this->container->get('ujm.exo_paper')->getPaperTotalScore($mark['paper']);
             }
             $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
@@ -1268,7 +1268,7 @@ class ExerciseController extends Controller
     private function histoSuccess($exerciseId, $eqs, $papers)
     {
         $em = $this->getDoctrine()->getManager();
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $questionsResponsesTab = array();
         $seriesResponsesTab = array();
         $seriesResponsesTab[0] = '';
@@ -1468,7 +1468,7 @@ class ExerciseController extends Controller
     private function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
         $em = $this->getDoctrine()->getManager();
-        $exerciseSer = $this->container->get('ujm.exercise_services');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
         $up = array();
         $down = array();
         $measureTab = array();
@@ -1514,7 +1514,7 @@ class ExerciseController extends Controller
         $responses = $em->getRepository('UJMExoBundle:Response')
                         ->getExerciseInterRsponsesWithCount($exerciseId, $interaction->getId());
         $typeInter = $interaction->getType();
-        $interSer  = $this->container->get('ujm.' . $typeInter);
+        $interSer  = $this->container->get('ujm.exo_' . $typeInter);
         $interX    = $em->getRepository('UJMExoBundle:' . $typeInter)
                         ->getInteractionQCM($interaction->getId());
         $scoreMax = $interSer->maxScore($interX);

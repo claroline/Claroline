@@ -33,8 +33,8 @@ class PaperController extends Controller
         $nbUserPaper = 0;
         $retryButton = false;
         $nbAttemptAllowed = -1;
-        $exerciseSer = $this->container->get('ujm.exercise_services');
-        $badgeExoSer = $this->container->get('ujm.badge_exo');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $badgeExoSer = $this->container->get('ujm.exo_badge');
 
         $arrayMarkPapers = array();
 
@@ -89,7 +89,7 @@ class PaperController extends Controller
         }
 
         foreach ($paper as $p) {
-            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_exercise')->getInfosPaper($p);
         }
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
@@ -146,8 +146,8 @@ class PaperController extends Controller
     {
         $nbAttemptAllowed = -1;
         $retryButton = false;
-        $exerciseSer = $this->container->get('ujm.exercise_services');
-        $badgeExoSer = $this->container->get('ujm.badge_exo');
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $badgeExoSer = $this->container->get('ujm.exo_badge');
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -159,7 +159,7 @@ class PaperController extends Controller
             $retryButton = true;
         }
 
-        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) {
+        if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($paper->getExercise())) {
             $admin = 1;
         } else {
             $admin = 0;
@@ -262,7 +262,7 @@ class PaperController extends Controller
             $em->persist($response);
             $em->flush();
 
-            $this->container->get('ujm.exercise_services')->manageEndOfExercise($response->getPaper());
+            $this->container->get('ujm.exo_exercise')->manageEndOfExercise($response->getPaper());
 
             return new Response($response->getId());
         } else {
@@ -312,7 +312,7 @@ class PaperController extends Controller
         }
 
         foreach ($papersUser as $p) {
-            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exercise_services')->getInfosPaper($p);
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_exercise')->getInfosPaper($p);
         }
 
         if(count($papersUser) > 0) {
@@ -356,7 +356,7 @@ class PaperController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
 
-        if ($this->container->get('ujm.exercise_services')->isExerciseAdmin($exercise)) {
+        if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
             $iterableResult = $this->getDoctrine()
                                    ->getManager()
                                    ->getRepository('UJMExoBundle:Paper')
@@ -365,7 +365,7 @@ class PaperController extends Controller
 
             while (false !== ($row = $iterableResult->next())) {
                 $rowCSV = array();
-                $infosPaper = $this->container->get('ujm.exercise_services')->getInfosPaper($row[0]);
+                $infosPaper = $this->container->get('ujm.exo_exercise')->getInfosPaper($row[0]);
                 $score = $infosPaper['scorePaper'] /  $infosPaper['maxExoScore'];
                 $score = $score * 20;
 
@@ -378,7 +378,7 @@ class PaperController extends Controller
                     $rowCSV[] = $this->get('translator')->trans('noFinish');
                 }
                 $rowCSV[] = $row[0]->getInterupt();
-                $rowCSV[] = $this->container->get('ujm.exercise_services')->roundUpDown($score);
+                $rowCSV[] = $this->container->get('ujm.exo_exercise')->roundUpDown($score);
 
                 fputcsv($handle, $rowCSV);
                 $em->detach($row[0]);
@@ -431,13 +431,13 @@ class PaperController extends Controller
     {
         $display = 'none';
 
-        if (($this->container->get('ujm.exercise_services')->isExerciseAdmin($paper->getExercise())) ||
+        if (($this->container->get('ujm.exo_exercise')->isExerciseAdmin($paper->getExercise())) ||
             ($user->getId() == $paper->getUser()->getId()) &&
             (($paper->getExercise()->getCorrectionMode() == 1) ||
             (($paper->getExercise()->getCorrectionMode() == 3) &&
             ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
             (($paper->getExercise()->getCorrectionMode() == 2) &&
-            ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exercise_services')->getNbPaper(
+            ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exo_exercise')->getNbPaper(
                 $user->getId(), $paper->getExercise()->getId()
             )
             ))

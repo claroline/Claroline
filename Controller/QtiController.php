@@ -26,7 +26,7 @@ class QtiController extends Controller {
             return $this->importError('qti format warning', $exoID);
         }
 
-        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->razValues();
         if ($this->extractFiles($qtiRepos) === false) {
 
@@ -168,9 +168,9 @@ class QtiController extends Controller {
        $exoID = $request->get('exoID');
        $search = array(' ', '/');
        $title = str_replace($search, '_', $request->get('exoName'));
-       $qtiServ = $this->container->get('ujm.qti_services');
+       $qtiServ = $this->container->get('ujm.exo_qti');
 
-       $qtiRepos = $this->container->get('ujm.qti_repository');
+       $qtiRepos = $this->container->get('ujm.exo_qti_repository');
        $qtiRepos->createDirQTI($title, TRUE);
 
        $em = $this->getDoctrine()->getManager();
@@ -220,7 +220,7 @@ class QtiController extends Controller {
        }
        $zip->close();
 
-       $qtiSer = $this->container->get('ujm.qti_services');
+       $qtiSer = $this->container->get('ujm.exo_qti');
        $response = $qtiSer->createZip($tmpFileName,$title);
 
        return $response;
@@ -237,9 +237,9 @@ class QtiController extends Controller {
     public function ExportAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $question = $this->container->get('ujm.exercise_services')->controlUserQuestion($id, $this->container, $em);
+        $question = $this->container->get('ujm.exo_exercise')->controlUserQuestion($id, $this->container, $em);
 
-        $qtiRepos = $this->container->get('ujm.qti_repository');
+        $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI();
 
         if (count($question) > 0) {

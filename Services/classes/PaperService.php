@@ -63,7 +63,7 @@ class PaperService {
 
         foreach ($interQuestionsTab as $interQuestion) {
             $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
-            $interSer        = $this->container->get('ujm.' . $interaction->getType());
+            $interSer        = $this->container->get('ujm.exo_' . $interaction->getType());
             $interactionX    = $interSer->getInteractionX($interaction->getId());
             $exercisePaperTotalScore += $interSer->maxScore($interactionX);
         }

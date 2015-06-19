@@ -100,7 +100,7 @@ class ExerciseServices
                                 ->getRepository('UJMExoBundle:Interaction')
                                 ->getInteraction($eq->getQuestion()->getId());
 
-            $interSer        = $this->container->get('ujm.' . $typeInter);
+            $interSer        = $this->container->get('ujm.exo_' . $typeInter);
             $interactionX    = $interSer->getInteractionX($interaction->getId());
             $scoreMax        = $interSer->maxScore($interactionX);
 
@@ -318,7 +318,7 @@ class ExerciseServices
      */
     public function getActionsAllQuestions($listInteractions, $userID, $em)
     {// service question
-        $interServ= $this->container->get('ujm.Interaction_general');
+        $interServ= $this->container->get('ujm.exo_Interaction_general');
 
         $allActions           = array();
         $actionQ              = array();
