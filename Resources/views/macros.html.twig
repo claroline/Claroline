@@ -32,7 +32,6 @@
                                 <tr id="row_{{ document.id }}" class="info">
                             {% endif %}
                             {# InnovaERV : Fin ajout : Affichage ... #}
-{#                                <td>{{ document.id }}</td> #}
                                 <td>
                                     {% if document.url is not null %}
                                         <a target="_blank"
@@ -45,6 +44,7 @@
                                 <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
 
                                 <td>
+                                    {# InnovaERV : #19 ajout de l'affichage de la date de dépôt du document et formatage #}
                                     {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
                                 </td>
 
