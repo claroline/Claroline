@@ -8,14 +8,6 @@ class AdditionalInsaller extends BaseInstaller
 {
     private $logger;
 
-    public function __construct()
-    {
-        $self = $this;
-        $this->logger = function ($message) use ($self) {
-            $self->log($message);
-        }
-    }
-
     public function preUpdate($currentVersion, $targetVersion)
     {
     }

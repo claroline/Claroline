@@ -4,7 +4,7 @@ namespace [[Vendor]]\[[Bundle]]Bundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
-use Claroline\BundleBundle\Installation\AdditionalInstaller;
+use [[Vendor]]\[[Bundle]]Bundle\Installation\AdditionalInstaller;
 
 /**
  * Bundle class.
