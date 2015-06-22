@@ -18,6 +18,7 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
+use Claroline\ForumBundle\Event\Log\ReadSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
@@ -92,7 +93,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'isModerator' => $isModerator,
             'categories' => $categories,
-            'hasSubscribed' => $hasSubscribed
+            'hasSubscribed' => $hasSubscribed,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -132,6 +134,27 @@ class ForumController extends Controller
         $isModerator = $this->authorization->isGranted('moderate', $collection) &&
             !$isAnon;
 
+        $logs = array();
+
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $logs = $this->manager->getSubjectsReadingLogs($user, $forum->getResourceNode());
+            }
+        }
+        $lastAccessDates = array();
+
+        foreach ($logs as $log) {
+            $details = $log->getDetails();
+            $subjectId = $details['subject']['id'];
+
+            if (!isset($lastAccessDates[$subjectId])) {
+                $lastAccessDates[$subjectId] = $log->getDateLog();
+            }
+        }
+
         return array(
             'pager' => $pager,
             '_resource' => $forum,
@@ -139,7 +162,10 @@ class ForumController extends Controller
             'isModerator' => $isModerator,
             'category' => $category,
             'max' => $max,
-            'lastMessages' => $lastMessages
+            'lastMessages' => $lastMessages,
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
+            'lastAccessDates' => $lastAccessDates,
+            'isAnon' => $isAnon
         );
     }
 
@@ -167,7 +193,8 @@ class ForumController extends Controller
         return array(
             '_resource' => $forum,
             'form' => $formSubject->createView(),
-            'category' => $category
+            'category' => $category,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -193,7 +220,8 @@ class ForumController extends Controller
 
         return array(
             '_resource' => $forum,
-            'form' => $formCategory->createView()
+            'form' => $formCategory->createView(),
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -283,7 +311,8 @@ class ForumController extends Controller
 
         return array(
             'form' => $form->createView(),
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -314,6 +343,17 @@ class ForumController extends Controller
         $canPost = $this->authorization->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
 
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $event = new ReadSubjectEvent($subject);
+                $event->setDoer($user);
+                $this->dispatch($event);
+            }
+        }
+
         return array(
             'subject' => $subject,
             'pager' => $pager,
@@ -322,7 +362,8 @@ class ForumController extends Controller
             'form' => $form->createView(),
             'category' => $subject->getCategory(),
             'max' => $max,
-            'canPost' => $canPost
+            'canPost' => $canPost,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -375,7 +416,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -415,7 +457,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -442,7 +485,8 @@ class ForumController extends Controller
         return array(
             'category' => $category,
             'form' => $form->createView(),
-            '_resource' => $category->getForum()
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -471,7 +515,7 @@ class ForumController extends Controller
             $this->manager->editCategory($category, $oldName, $newName);
 
             return new RedirectResponse(
-                $this->generateUrl('claro_forum_categories', array('forum' => $category->getForum()->getId()))
+                $this->generateUrl('claro_forum_categories', array('forum' => $forum->getId()))
             );
         }
     }
@@ -516,7 +560,13 @@ class ForumController extends Controller
     {
         $pager = $this->manager->searchPager($forum, $search, $page);
 
-        return array('pager' => $pager, '_resource' => $forum, 'search' => $search, 'page' => $page);
+        return array(
+            'pager' => $pager,
+            '_resource' => $forum,
+            'search' => $search,
+            'page' => $page,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
+        );
     }
 
      /**
@@ -534,7 +584,8 @@ class ForumController extends Controller
      */
     public function editSubjectFormAction(Subject $subject)
     {
-        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode())));
+        $forum = $subject->getCategory()->getForum();
+        $isModerator = $this->authorization->isGranted('moderate', new ResourceCollection(array($forum->getResourceNode())));
 
         if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $subject->getCreator()) {
             throw new AccessDeniedException();
@@ -545,8 +596,9 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             'subject' => $subject,
-            'forumId' => $subject->getCategory()->getForum()->getId(),
-            '_resource' => $subject->getCategory()->getForum()
+            'forumId' => $forum->getId(),
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -565,8 +617,9 @@ class ForumController extends Controller
      */
     public function editSubjectAction(Subject $subject)
     {
+        $forum = $subject->getCategory()->getForum();
         $isModerator = $this->authorization->isGranted(
-            'moderate', new ResourceCollection(array($subject->getCategory()->getForum()->getResourceNode()))
+            'moderate', new ResourceCollection(array($forum->getResourceNode()))
         );
 
         if (!$isModerator && $this->tokenStorage->getToken()->getUser() !== $subject->getCreator()) {
@@ -589,8 +642,9 @@ class ForumController extends Controller
         return array(
             'form' => $form->createView(),
             'subjectId' => $subject->getId(),
-            'forumId' => $subject->getCategory()->getForum()->getId(),
-            '_resource' => $subject->getCategory()->getForum()
+            'forumId' => $forum->getId(),
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -784,7 +838,8 @@ class ForumController extends Controller
             '_resource' => $forum,
             'categories' => $categories,
             'category' => $category,
-            'subject' => $subject
+            'subject' => $subject,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -813,7 +868,8 @@ class ForumController extends Controller
             'category' => $category,
             'subject' => $subject,
             'pager' => $pager,
-            'message' => $message
+            'message' => $message,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 
@@ -976,7 +1032,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
 
      }
@@ -1014,7 +1071,8 @@ class ForumController extends Controller
             'subject' => $subject,
             'form' => $form->createView(),
             'message' => $message,
-            '_resource' => $forum
+            '_resource' => $forum,
+            'workspace' => $forum->getResourceNode()->getWorkspace()
         );
     }
 

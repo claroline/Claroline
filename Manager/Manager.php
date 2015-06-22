@@ -657,4 +657,19 @@ class Manager
             }
         }
     }
+
+    public function getSubjectsReadingLogs(
+        User $user,
+        ResourceNode $node,
+        $orderedBy = 'id',
+        $order = 'DESC'
+    )
+    {
+        return $this->forumRepo->findSubjectsReadingLogs(
+            $user,
+            $node,
+            $orderedBy,
+            $order
+        );
+    }
 }
