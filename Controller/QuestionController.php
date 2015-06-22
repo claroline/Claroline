@@ -347,11 +347,10 @@ class QuestionController extends Controller
      *
      * @param integer $id id Question
      * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
-     * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id, $exoID, $form = null)
+    public function editAction($id, $exoID)
     {
         $services = $this->container->get('ujm.exo_question');
         $em = $this->getDoctrine()->getManager();
@@ -378,7 +377,7 @@ class QuestionController extends Controller
 
             $interSer  = $this->container->get('ujm.exo_' . $typeInter);
 
-            return $interSer->edit($interaction, $exoID, $catID, $user, $form);
+            return $interSer->edit($interaction, $exoID, $catID, $user);
 
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));

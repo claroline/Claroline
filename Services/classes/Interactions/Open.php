@@ -188,11 +188,10 @@ class Open extends Interaction {
       * @param integer $exoID
       * @param integer $catID
       * @param Claroline\Entity\User $user
-      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
       *
       * @return \Symfony\Component\HttpFoundation\Response
       */
-     public function edit($interaction, $exoID, $catID, $user, $form = null)
+     public function edit($interaction, $exoID, $catID, $user)
      {
          $em = $this->doctrine->getEntityManager();
          $interactionOpen = $this->doctrine

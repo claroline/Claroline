@@ -258,10 +258,9 @@ abstract class Interaction {
       * @param integer $exoID
       * @param integer $catID
       * @param Claroline\Entity\User $user
-      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
       *
       * @return \Symfony\Component\HttpFoundation\Response
       */
-     abstract public function edit($interaction, $exoID, $catID, $user, $form = null);
+     abstract public function edit($interaction, $exoID, $catID, $user);
 
 }

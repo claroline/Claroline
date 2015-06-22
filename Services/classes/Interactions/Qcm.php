@@ -194,11 +194,10 @@ class Qcm extends Interaction {
       * @param integer $exoID
       * @param integer $catID
       * @param Claroline\Entity\User $user
-      * @param \Symfony\Component\Form\FormBuilder $form if form is not valid (see the methods update in InteractionGraphicContoller, InteractionQCMConteroller ...)
       *
       * @return \Symfony\Component\HttpFoundation\Response
       */
-     public function edit($interaction, $exoID, $catID, $user, $form = null)
+     public function edit($interaction, $exoID, $catID, $user)
      {
          $em = $this->doctrine->getEntityManager();
          $interactionQCM = $this->doctrine
@@ -208,13 +207,10 @@ class Qcm extends Interaction {
          //fired a sort function
          $interactionQCM->sortChoices();
 
-         if ($form == null) {
-             $editForm = $this->formFactory->create(
-                 new InteractionQCMType($user, $catID), $interactionQCM
-             );
-         } else {
-             $editForm = $form;
-         }
+         $editForm = $this->formFactory->create(
+             new InteractionQCMType($user, $catID), $interactionQCM
+         );
+
          $typeQCM = $this->getTypeQCM();
 
          $linkedCategory = $this->questionService->getLinkedCategories();
