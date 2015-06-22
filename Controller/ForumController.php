@@ -18,6 +18,7 @@ use Claroline\ForumBundle\Form\MessageType;
 use Claroline\ForumBundle\Form\SubjectType;
 use Claroline\ForumBundle\Form\CategoryType;
 use Claroline\ForumBundle\Form\EditTitleType;
+use Claroline\ForumBundle\Event\Log\ReadSubjectEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
@@ -133,6 +134,27 @@ class ForumController extends Controller
         $isModerator = $this->authorization->isGranted('moderate', $collection) &&
             !$isAnon;
 
+        $logs = array();
+
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $logs = $this->manager->getSubjectsReadingLogs($user, $forum->getResourceNode());
+            }
+        }
+        $lastAccessDates = array();
+
+        foreach ($logs as $log) {
+            $details = $log->getDetails();
+            $subjectId = $details['subject']['id'];
+
+            if (!isset($lastAccessDates[$subjectId])) {
+                $lastAccessDates[$subjectId] = $log->getDateLog();
+            }
+        }
+
         return array(
             'pager' => $pager,
             '_resource' => $forum,
@@ -141,7 +163,9 @@ class ForumController extends Controller
             'category' => $category,
             'max' => $max,
             'lastMessages' => $lastMessages,
-            'workspace' => $forum->getResourceNode()->getWorkspace()
+            'workspace' => $forum->getResourceNode()->getWorkspace(),
+            'lastAccessDates' => $lastAccessDates,
+            'isAnon' => $isAnon
         );
     }
 
@@ -318,6 +342,17 @@ class ForumController extends Controller
         $collection = new ResourceCollection(array($forum->getResourceNode()));
         $canPost = $this->authorization->isGranted('post', $collection);
         $form = $this->get('form.factory')->create(new MessageType());
+
+        if (!$isAnon) {
+            $securityToken = $this->tokenStorage->getToken();
+
+            if (!is_null($securityToken)) {
+                $user = $securityToken->getUser();
+                $event = new ReadSubjectEvent($subject);
+                $event->setDoer($user);
+                $this->dispatch($event);
+            }
+        }
 
         return array(
             'subject' => $subject,

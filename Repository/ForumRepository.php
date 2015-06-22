@@ -11,6 +11,8 @@
 
 namespace Claroline\ForumBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Subject;
 use Claroline\ForumBundle\Entity\Category;
@@ -268,5 +270,29 @@ class ForumRepository extends EntityRepository
         $query->setParameter('forum', $forum);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSubjectsReadingLogs(
+        User $user,
+        ResourceNode $node,
+        $orderedBy = 'id',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT l
+            FROM Claroline\CoreBundle\Entity\Log\Log l
+            WHERE l.action = 'resource-claroline_forum-read_subject'
+            AND l.doer = :user
+            AND l.resourceNode = :node
+            ORDER BY l.{$orderedBy} {$order}
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('node', $node);
+
+        return $query->getResult();
+
     }
 }
