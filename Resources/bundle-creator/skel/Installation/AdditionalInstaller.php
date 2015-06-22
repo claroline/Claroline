@@ -2,7 +2,7 @@
 
 namespace [[Vendor]]\[[Bundle]]Bundle\Installation;
 
-use Claroline\InstalationBundle\Additional\AdditinalInstaller as BaseInstaller;
+use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
 class AdditionalInsaller extends BaseInstaller
 {
