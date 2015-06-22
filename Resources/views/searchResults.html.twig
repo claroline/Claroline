@@ -89,7 +89,17 @@
                         </td>
                         <td>
                             <div>
-                                <p class="message-content"> {{ message.getContent()|raw }} </p>
+                                <a href="{{ path('claro_forum_messages', {'subject': message.getSubject().getId()}) }}"
+                                   class="pull-right"
+                                   data-toggle="tooltip" 
+                                   data-placement="left" 
+                                   title="[{{ message.getSubject().getCategory().getName() }}] {{ message.getSubject().getTitle() }}"
+                                >
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                <p class="message-content">
+                                    {{ message.getContent()|raw }}
+                                </p>
                                 <p class="text-muted">{{ message.getCreationDate()| timeAgo }} </p>
                             </div>
                         </td>
