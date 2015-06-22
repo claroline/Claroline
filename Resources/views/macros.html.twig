@@ -45,7 +45,7 @@
                                 <td>{{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}</td>
 
                                 <td>
-                                    ----
+                                    {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
                                 </td>
 
 

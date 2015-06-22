@@ -9,6 +9,7 @@ namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass="Innova\CollecticielBundle\Repository\DocumentRepository")
@@ -51,6 +52,15 @@ class Document {
      * @ORM\Column(type="boolean", nullable=false)
      */
     protected $validate = false;
+
+    /**
+     * #19 InnovaERV. Ajout de la colonne DocumentDate qui correspond à la date de dépôt.
+     */
+    /**
+     * @ORM\Column(name="document_date", type="datetime", nullable=false)
+     * @Gedmo\Timestampable(on="create")
+     */
+    protected $documentDate;
 
 
     /**
@@ -216,5 +226,29 @@ class Document {
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set documentDate
+     *
+     * @param \DateTime $documentDate
+     *
+     * @return Document
+     */
+    public function setDocumentDate($documentDate)
+    {
+        $this->documentDate = $documentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get documentDate
+     *
+     * @return \DateTime
+     */
+    public function getDocumentDate()
+    {
+        return $this->documentDate;
     }
 }

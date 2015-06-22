@@ -208,6 +208,10 @@ class DocumentController extends DropzoneBaseController
             throw new \ErrorException();
         }
         $document->setResourceNode($node);
+
+        // #19. Ajout de la valorisation de la Date. InnovaERV.
+        $document->setDocumentDate(new \DateTime());
+
         $document->setDrop($drop);
 
         $em = $this->getDoctrine()->getManager();
