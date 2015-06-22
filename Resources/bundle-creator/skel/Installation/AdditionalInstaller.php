@@ -6,7 +6,7 @@ use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller
 
 class AdditionalInsaller extends BaseInstaller
 {
-    private $logger;
+    protected $logger;
 
     public function preUpdate($currentVersion, $targetVersion)
     {
