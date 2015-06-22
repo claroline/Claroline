@@ -4,7 +4,7 @@ portfolioApp
     .directive('widgetPicker', function () {
         var url = Routing.generate("icap_portfolio_internal_portfolio_widget_get");
         var data = {
-            multi: true
+            multiple: true
         };
         var successCallback = function(nodes) {
             console.log(nodes);
@@ -35,7 +35,7 @@ portfolioApp
                 };
 
                 // Initialize widget picker object
-                window.Claroline.WidgetPicker.configureBadgePicker(url, data, successCallback, closeCallback);
+                window.Claroline.WidgetPicker.configureWidgetPicker(url, data, successCallback, closeCallback);
 
                 $scope.widgetPickerOpen = function () {
                     window.Claroline.WidgetPicker.openWidgetPicker();

@@ -25,7 +25,7 @@ $(function(){
     widgetPicker.displayModal = function () {
         var settings = {
             url: this.url,
-            type: 'POST',
+            type: 'GET',
             data: $.extend({}, this.data)
         };
 
