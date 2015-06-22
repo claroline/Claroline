@@ -4,7 +4,7 @@ namespace [[Vendor]]\[[Bundle]]Bundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 
-class AdditionalInsaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller
 {
     protected $logger;
 
