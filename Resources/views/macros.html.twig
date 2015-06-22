@@ -50,10 +50,11 @@
 
 
                                 <td>
-                                    {# Si la document a été demandé en évaluation alors je ne peux plus le faire #}
+                                    {# Si le document a été demandé en évaluation alors je ne peux plus le faire #}
                                     {# Cf popup.js #}
+                                    {# Ajout de la classe document_validate pour la validation du document #}
                                     {% if not document.validate %}
-                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
                                     {% else %}
                                         <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
                                     {% endif %}

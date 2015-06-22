@@ -19,6 +19,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -408,6 +409,24 @@ class DocumentController extends DropzoneBaseController
      * @Template()
      */
     public function ajaxValidateDocumentAction(Document $document) {
-        die("AJAX-OK");
+
+        // Appel pour accés base         
+        $em = $this->getDoctrine()->getManager();
+
+        // Recherche en base des données du document à mettre à jour
+        $doc = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
+        
+        // Mise à jour du booléen de Validation de false à true
+        $doc->setvalidate(true);
+
+        // Mise à jour de la base de données
+        $em->persist($doc);
+        $em->flush();
+
+        return new JsonResponse(
+            array(
+            'docId' => $document->getId(),
+            )
+        );
     }
 }
