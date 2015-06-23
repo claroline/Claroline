@@ -74,7 +74,7 @@ class InteractionMatchingController extends Controller
 
         if ($matchingHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('infoDuplicateQuestion')
+                    $this->get('translator')->trans('info_duplicate_question')
                     ));
         }
 

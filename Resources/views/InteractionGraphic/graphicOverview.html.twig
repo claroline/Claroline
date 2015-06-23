@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'bank of questions' | trans,
+                    'name': 'bank_of_questions' | trans,
                     'href': path('ujm_question_index')
                 },
                 {
@@ -24,7 +24,7 @@
 {% else %}
     {% block resourceBreadcrumb %}
         <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-        <li class="active">{{ 'bank of questions' | trans }}</li>
+        <li class="active">{{ 'bank_of_questions' | trans }}</li>
     {% endblock %}
 {% endif %}
 
@@ -46,7 +46,7 @@
     <div class="panel-body">
         {% if exoID == -1 %}
             <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-                <i class="fa fa-arrow-left"></i> {{ 'back to the list' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back_to_the_list' | trans }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exoID }) }}">

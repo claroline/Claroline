@@ -60,7 +60,7 @@ function position(shape, color, i, prefix, value, size, points) {
     } else if (shape == 'square') {
         switch (color) {      
         case 'black' :
-            $('#img' + i).attr('src', prefix + 'circleblack.png');
+            $('#img' + i).attr('src', prefix + 'squareblack.png');
             break;
         case 'white' :
             $('#img' + i).attr('src', prefix + 'squarew.png');
@@ -91,7 +91,7 @@ function position(shape, color, i, prefix, value, size, points) {
             break;
  
         case 'brown' :
-            $('#img' + i).attr('src', prefix + 'circlebrown.png');
+            $('#img' + i).attr('src', prefix + 'squarebrown.png');
              break;
         default :
             $('#img' + i).attr('src', prefix + 'squareblack.png');

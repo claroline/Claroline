@@ -17,7 +17,7 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'nQuestion' | trans }}{{numQ}}</li>
+    <li class="active">{{ 'n_question' | trans }}{{numQ}}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -27,15 +27,15 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
             <span style="float:right;">
                 {% if(maxAttempsAllowed > 0) %}
-                    {{ "attempt info1" | trans }} {{ maxAttempsAllowed }}
+                    {{ "attempt_info1" | trans }} {{ maxAttempsAllowed }}
                     {% if(maxAttempsAllowed > 1) %}
-                        {{ "attempt info2plur" | trans }}
+                        {{ "attempt_info2plur" | trans }}
                     {% else %}
-                        {{ "attempt info2sing" | trans }}
+                        {{ "attempt_info2sing" | trans }}
                     {% endif %}
                      -
                 {% endif %}
-                {{ "attempt info3" | trans }} {{ numAttempt }}
+                {{ "attempt_info3" | trans }} {{ numAttempt }}
             </span>
         </h3>
     </div>
@@ -90,7 +90,7 @@
 
                     <h5>{{ "consignes" | trans }} :</h5>
                     <h6><em>{{ "position" | trans }}<br/>{{ "selection" | trans }}<br/>{{ "raz" | trans }}<br/>
-                        {{ "onlyOnce" | trans }}</em>
+                        {{ "only_once" | trans }}</em>
                     </h6>
     </div>
     <div style="margin-left: 30px;">
@@ -187,12 +187,10 @@
                     <input class="form-control" type="hidden" name="typeInteraction" value="InteractionMatching"/>
 
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-                    
-                    {% if interactionToDisplayed.typeMatching.code == 1%}
+
                         <div id="divReset">
                             <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans }}" class="btn btn-primary">
                         </div>
-                    {% endif %}
 
                     <div id="interMatchingResponse">
                         <input type="hidden" id="jsonResponse" name ="jsonResponse" />
@@ -390,7 +388,7 @@
             <li>
                 <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
                     {% for interactionID in tabOrderInter %}
-                        <option value="{{ loop.index }}">{{ 'nQuestion' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                        <option value="{{ loop.index }}">{{ 'n_question' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
                     {% endfor %}
                 </select>
             </li>
@@ -409,7 +407,7 @@
     {{ parent() }}
 
     <script type="text/javascript">
-        var mssg             = "{{ "exercise alert break" | trans }}";
+        var mssg             = "{{ "exercise_alert_break" | trans }}";
         var allowToInterrupt = "{{ dispButtonInterrupt }}";
         var interType        = "{{ interactionType }}";
     </script>

@@ -1,14 +1,9 @@
 # A
-#access my question bank: Accéder à ma banque de questions
-#addDoc: Ajouter un document
-#add user: Ajouter un utilisateur
-#administration: Administration
-#alreadyPlaced: Réponses déjà placées
 actions: Actions
 add: Ajouter
-add_a_new_picture: Ajouter une nouvelle image
 add_choice: Ajouter un choix
 add_label: Ajouter un label
+add_new_picture: Ajouter une nouvelle image
 add_proposal: Ajouter une proposition
 add_zone_answer: Ajouter une zone de réponse
 advanced_edition: Edition avancée
@@ -20,118 +15,107 @@ all_question: Toutes les questions
 already: Cette question est déjà partagée avec cet utilisateur
 already_answered: Vous avez déjà répondu à cet exercice
 already_exist: Ce nom existe déjà.
-alter category: Modifier cette catégorie
 answer_coched: Aucune réponse attendue n\'est cochée
-answer zone: Zone de réponse
-attempt info1: Vous avez droit à
-attempt info2sing: essai
-attempt info2plur: essais
-attempt info3: Essai N°
-attempt info4: Il vous reste
-attempt info5: afin d'améliorer votre note
-attempt info6: Il ne vous reste plus aucun essai
-at the end of assessment: A la fin du test
-at the same time that the correction: En même temps que la correction
-availability of correction: Disponibilité de la correction
-availability of score: Disponibilité de la note
+answer_zone: Zone de réponse
+attempt_info1: Vous avez droit à
+attempt_info2sing: essai
+attempt_info2plur: essais
+attempt_info3: Essai N°
+attempt_info4: Il vous reste
+attempt_info5: afin d'améliorer votre note
+attempt_info6: Il ne vous reste plus aucun essai
+at_the_end_of_assessment: A la fin du test
+at_the_same_time_that_the_correction: En même temps que la correction
+availability_of_correction: Disponibilité de la correction
+availability_of_score: Disponibilité de la note
 
 # B
-badgeObtained: Félicitation ! Vous avez obtenu le badge de connaissances
-badgeNoObtained: Vous n'avez pas encore obtenu le badge de connaissance
+badge_obtained: Félicitation ! Vous avez obtenu le badge de connaissances
+badge_no_obtained: Vous n'avez pas encore obtenu le badge de connaissance
 back: Retour
-back to the list: Retour à la liste
-bank of questions: Banque de questions
-briefSearch: Recherche rapide
+back_to_the_list: Retour à la liste
+bank_of_questions: Banque de questions
+brief_search: Recherche rapide
 
 # C
+calculation_measure_difficulty: Il se calcul avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants
 category: Catégorie
-calculationMeasureDifficulty: Il se calcul avec le nombre de candidats ayant répondu correctement divisé par le nombre total de répondants
+case_sensitive: Respecter la casse
 cercle: Cercle
 change: Changer
-changeName: Changer le nom du document
-changeOrder: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
+change_name: Changer le nom du document
+change_order: Pour changer l'ordre des questions, déplacez-les en utilisant le glisser/déposer
 choice: Choix
-choose: Choisir
 choose_image : Choisir une image
 choose_category : Choisir une catégorie
 choose_type: Choisir un type
-chooseType: Choisissez le type de document à afficher
-close: Fermer
 color: Couleur
 comment: Commentaire
 compose: Répondre
 consult_hint: Consulter l\'indice entraîne une pénalité de X points, voulez vous continuer
-containSearch: Dont la question contient
+contain_search: Dont la question contient
 correct: Correcte
 correction: Correction
-correction date: Date de la correction
-course_name: Nom du Cours
+correction_date: Date de la correction
 correspondence: correspondance
-correspondence empty: Vous avez réalisé aucune correspondance !
-correspondenceError: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
+correspondence_empty: Vous avez réalisé aucune correspondance !
+correspondence_error: Vous ne pouvez pas associer une même proposition avec plusieurs labels !
 create: Créer
-create a new category: Créer une nouvelle catégorie
-create a new entry: Créer une nouvelle question
-creationDate: Date de création
-create hole : Créer un trou
+create_a_new_category: Créer une nouvelle catégorie
+create_a_new_entry: Créer une nouvelle question
+creation_date: Date de création
+create_hole : Créer un trou
 
 # D
 date: Date
 default : Défaut
-delDocQuestion: Supprimer ce document ainsi que toutes les questions qui y sont liées
 delete: Supprimer
-delete document: Suppression de document
-delete hole: Supprimer le blanc
-delete of my bank: Supprimer de ma banque
-delete of my exercise: Supprimer de mon exercice
-delete papers: Supprimer les copies
+delete_of_my_bank: Supprimer de ma banque
+delete_of_my_exercise: Supprimer de mon exercice
+delete_papers: Supprimer les copies
 description: Description
-displayAllList: Afficher la liste complète
-display all on this page: Tout afficher sur cette page
-display pagination: Afficher la pagination
+display_all_list: Afficher la liste complète
+display_all_on_this_page: Tout afficher sur cette page
+display_pagination: Afficher la pagination
 docimology: Docimologie
-docManage: Gestion de mes documents
-docName: Nom du document
+doc_manage: Gestion de mes documents
 document: Document
-doNothing: Ne rien faire et revenir à la liste de mes documents
-drop category: Supprimer cette catégorie
+drop_category: Supprimer cette catégorie
 duplicate: Dupliquer
-duplicate this question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
+duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> fois cette question (10 maximum autorisé)
 duration: Durée
 
 # E
 edit: Editer
-edit a category: Editer cette catégorie
-edit a question: Editer une question
-end date: Date de fin
+edit_category: Editer cette catégorie
+edit_question: Editer une question
+end_date: Date de fin
 entry: Entrer
-erase: Pour effacer une zone de réponse, maintenez la touche 's' enfoncée et cliquez sur la croix permettant de la déplacer
 exercise: Exercice
-exercise alert break: Interuption non autorisée. Votre copie sera considérée comme terminée !
-exercise creation: Création d'un exercice
-exercise definition: Définition de l'exercice
-exercise edit: Modification de l'exercice
-exercice linked Question: Questions liées à l'exercice
+exercise_alert_break: Interuption non autorisée. Votre copie sera considérée comme terminée !
+exercise_definition: Définition de l'exercice
+exercise_edit: Modification de l'exercice
+exercice_linked_question: Questions liées à l'exercice
 exit: Quitter
-expected answer: Réponse attendue
-explainCoeffDis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
-explainCoeffDis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
-explainCoeffDis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
-explainCoeffDis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
-explainMeasureDifficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
-export CSV of results: Export CSV des résultats
-exportQTIExercise : Exporter les questions de l'exercice au format QTI
+expected_answer: Réponse attendue
+explain_coeff_dis0: Les copies doivent avoir les mêmes questions pour pouvoir calculer le coefficient de discrimination.
+explain_coeff_dis1: Analyse de la pertinence des questions, ce coefficient de corrélation varie de -1 à + 1.
+explain_coeff_dis2: Les questions dont le coefficient de discrimination se situe entre 0,35 et 0,65 maximisent la discrimination des étudiants.
+explain_coeff_dis3: Les questions ayant un indice négatif signalent une incohérence, les meilleurs candidats échouent à ces questions tandis que les plus faibles réussissent.
+explain_measure_difficulty: L'indice de difficulté équivaut à un pourcentage de réussite à la question
+export_csv_results: Export CSV des résultats
+export_qti_exercise : Exporter les questions de l'exercice au format QTI
 
 # F
 feedback: Feedback général
-findBy: Trouver par
-findIn: Trouver dans
-findLabel: Trouver un document avec un label spécifique
-findQuestion: Rechercher des questions
-findWhat: Ce que vous cherchez
-final mark: Note finale
+feedback_answer_check: Commentaire si la réponse est selectionnée(facultatif)
+find_by: Trouver par
+find_in: Trouver dans
+find_question: Rechercher des questions
+find_what: Ce que vous cherchez
+final_mark: Note finale
 finish: Terminer
-forTypeOf: pour une question de type
+for_type_of: pour une question de type
 frequency: Fréquence
 from: A partir du
 
@@ -142,239 +126,213 @@ graphic_edition: Edition d'une question graphique
 group: Groupe
 
 # H
-hide Instructions: Masquer les consignes
+hide_instructions: Masquer les consignes
 hint: Indice
 hints: Indices
-hint number: Num indice
-histoDiscrimination: Coefficient de discrimination
-histoMarks: Histogramme des notes
-histoMeasureOfDifficulty: Histogramme de l'indice de difficulté
-histoSuccess: Histogramme de réussite
-hole: Blancs
+histo_discrimination: Coefficient de discrimination
+histo_marks: Histogramme des notes
+histo_measure_difficulty: Histogramme de l'indice de difficulté
+histo_success: Histogramme de réussite
+hole: Texte à trous
 hole_creation: Création d'une question à trous
 hole_edition: Edition d'une question à trous
-home exercise: Accueil de l'exercice
+hole_selector: Proposer une liste
+home_exercise: Accueil de l'exercice
 
 # I
 infiny: Infini
-infoDuplicateQuestion: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
-infoExerciseNoPuplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
-infoExerciseNoPuplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
-infoMark: Les éventuelles pénalités sont à prendre en compte dans votre notation
-infoMeasureDifficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
+info_duplicate_question: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
+info_exercise_no_puplished: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées
+info_exercise_no_puplished2: Cet exercice n'est pas encore publié. Vous ne pouvez pas encore répondre.
+info_mark: Les éventuelles pénalités sont à prendre en compte dans votre notation
+info_measure_difficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
+inter_matching_shuffle: Ordre des propositions et des labels aléatoire
+interaction_feedback: Commentaire à afficher avec la correction (facultatif)
 interupt: Interrompre
 invite_question: L\'invite de la question doit être rempli
-isInterupt: Interrompu
+is_interupt: Interrompu
 image: Image
 import: Importer
-import QTI : Importer des questions au format QTI
-importQTIExercise: Importer un exercice au format QTI
-import questions: Importer des questions
-infoSearchType: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
-instruction add hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
-instruction matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
-inValidMark: Note invalide
-
-# I Intraction type (data in the DB)
-InteractionGraphic: Graphique
-InteractionHole: Texte à trous
-InteractionMatching: Association
-InteractionOpen: Ouverte
-InteractionQCM: QCM
-#InteractionMatching: A relier/ panier
+import_qti : Importer des questions au format QTI
+import_questions: Importer des questions
+info_search_type: Si vous voulez faire une recherche par type, vous devez utiliser les mots clés suivants
+instruction_add_hole : Pour créer un trou, sélectionnez le texte à trouer dans l'éditeur "Texte à trous", puis cliquez sur le bouton "Créer un trou".
+instruction_matching: Pour définir vos correspondances, choisissez dans la colonne "Correspondance" le numéro d'une ou plusieurs propositions à associer.
+in_valid_mark: Note invalide
 
 # K
+keep_same_question: Conserver les mêmes questions pour un même utilisateur
 key_word: Mot clé
-keys words: Mots clés
-kind of question: Quel type de question
+keys_words: Mots clés
+kind_question: Quel type de question
 
 # L
 label: Label
 label_empty: Les champs des réponses ne doivent pas être vides
 legend: Légende
-lessInformation: Moins d'informations
-linkedDoc: Attention, le document que vous essayez de supprimer est lié à des questions
-linkpaper: Liées à un test
-linkedQuestions: Questions liées
+less_information: Moins d'informations
 list: Liste
-list of exercises: Liste des exercices
-list of question: Liste des questions
-lock attempt: Verrouiller le test
+list_question: Liste des questions
+lock_attempt: Verrouiller le test
 long: Longue
 
 # M
-manageImg: Gérer mes documents
-mark: Score
-mark this question: Noter cette question
-markTooBigest: La note doit être inférieure ou égale à
+manage_img: Gérer mes documents
+mark: Note
+mark_question: Noter cette question
+mark_bigest: La note doit être inférieure ou égale à
 matching: Association
 matching_creation: Création d'une question associative
 matching_edition: Edition d'une question associative
-maximum number of tries: Nombre d'essai maximum
-meaningMeasureDifficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
+matching_value: Type de question associative
+maximum_tries: Nombre d'essai maximum
+meaning_measure_difficulty: Si l'indice est élevé, c'est que la question est facile ; Inversement, si un indice est faible, la question est difficile
 model: Modèle
-moreInformation: Plus d'informations
-multiple response: Réponse multiples
-my account: Mon compte
-my questions: Mes questions
-my shared questions: Questions qui m'ont été partagées
+more_info: Plus d'informations
+my_questions: Mes questions
+my_models: Mes modèles
 
 # N
-nameUser2Shared: Nom de l'utilisateur avec qui partager la question
+user_shared: Nom de l'utilisateur avec qui partager la question
 nb_hole: Il doit y avoir au moins un trou
 nbr_choices: Le nombre de choix doit être supérieur à deux
 nb_label: Il doit y avoir au moins un label
 nb_proposal: Il doit y avoir au moins une proposition
-need Correction: Les questions en rouge nécessitent une correction
+need_correction: Les questions en rouge nécessitent une correction
 never: Jamais
-newCategoryName: Nouveau nom de la catégorie
-newName: Nouveau nom du document
-newDoc: Nouveau document
+new_name: Nouveau nom du document
 next: Suivant
 no: Non
-no answer: Pas de réponse
-noAnswerZone: Vous n\'avez mis aucune zone de réponse
-noDocFound: Pas de document trouvé
-noFinish: Non terminé
-noHintShow: Indices non vus, pas de pénalité
-noImg: Vous devez télécharger une image
-noImgSelect: Vous devez sélectionner une image
-no label: Pas de labels associés
-noOne: Aucune
-noPaperFound: Aucune copie
-noQuestion: Vous ne posez aucune question
-noQuestionFound: Pas de question trouvée
-noRightAnswer: Aucune bonne réponse
-noRights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
-notAllowedModifyPaper: Vous ne pouvez plus modifier vos réponses !
-nothingToImport: Aucune question à importer n\'est cochée
-notImageMesssage: Le document doit être une image
-noTitle: La question n\'a pas de titre
-notEnoughtPapers: Pour afficher la docimologie, il doit y avoir au moins 12 copies
-not yet mark: Pas encore noté
-noUserFound: Pas d'utilisateur trouvé
-nQuestion: Question n°
-numberProposal: Numéro de la proposition
-number of papers: Nombre de copies
-number of questions: Nombre de questions
-number of questions to draw: Nombre de questions à tirer (0 pour toutes)
+no_answer: Pas de réponse
+no_answer_zone: Vous n\'avez mis aucune zone de réponse
+no_doc_found: Pas de document trouvé
+no_finish: Non terminé
+no_img: Vous devez télécharger une image
+no_img_select: Vous devez sélectionner une image
+no_label: Pas de labels associés
+none: Aucune
+no_paper_found: Aucune copie
+no_question: Vous ne posez aucune question
+no_question_found: Pas de question trouvée
+no_rights: Vous n'êtes pas propriétaire de cette question et elle ne vous est pas partagée
+not_allowed_modify_paper: Vous ne pouvez plus modifier vos réponses !
+no_thing_import: Aucune question à importer n\'est cochée
+not_image_messsage: Le document doit être une image
+not_enought_papers: Pour afficher la docimologie, il doit y avoir au moins 12 copies
+not_yet_mark: Pas encore noté
+no_user_found: Pas d'utilisateur trouvé
+n_question: Question n°
+number_proposal: Numéro de la proposition
+number_of_papers: Nombre de copies
+number_questions_draw: Nombre de questions à tirer (0 pour toutes)
 numerical: Numérique
 num_paper: Numéro de la copie
-my models: Mes modèles
 
 # O
-oneWord: Un mot
-onlyOnce: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
-only owner category: Seul le propriétaire peut changer la catégorie
-only owner graphic: Seul le propriétaire peut changer l'image
+only_once: => Les bonnes réponses ne sont comptabilisées qu'une seule fois.
+only_owner_graphic: Seul le propriétaire peut changer l'image
 open: Ouverte
 open_creation: Création d'une question ouverte
 open_edition: Edition d'une question ouverte
-order: Ordre
 orders: Consignes
+orthography: Autoriser les fautes d'orthographe
 
 # P
 paper: Passage
-paper exo: Passage d'un test
-paperLegend: Copies nécessitant une correction manuelle
-paper list: Liste des copies
+paper_legend: Copies nécessitant une correction manuelle
+paper_list: Liste des copies
 parameters: Paramètres
 partially: Partiellement correcte
 penalty: Pénalité
 percentage: Pourcentage
-picture name: Nom de l'image
-planning_Of_Groups: Planning des groupes
-point: Point
+picture_name: Nom de l'image
 points: Points
 point_answer: Vous devez assigner un point à la réponse attendue
 point_answers: Vous devez assigner un point à chaque réponse
-pointInstruction: Les points doivent être attribués avant le placement de chaque zone de réponse
-pointRightResponse: Points bonne réponse
 position: => Positionner le(s) pointeur(s) ci-dessous (croix rouge) sur l'image. La position du centre du pointeur défini votre réponse.
 preview: Aperçu
 previous: Précédent
-print paper: Imprimer la copie
+print_paper: Imprimer la copie
+proposal: Proposition
+position_force: Forcer cette position
 publish: Publier
 
 # Q
 qcm: QCM
 qcm_creation: Création d'une question QCM
 qcm_edition: Edition d'une question QCM
-qti can't open zip: Impossible d'ouvrir l'archive
-qti format warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
+qcm_shuffle: Ordre des choix aléatoire
+qti_format_warning: Vous devez importer une archiver zip contenant un fichier compatible IMS_QTI
 qti_import_title: Pas d'attribut "title" pour l'élément "assessmentItem"
-qti_import_qcm_prompt: Pas d'élément "prompt" dans l'élément "choiceInteraction"
-qti no questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il ait au moins une question dans votre exercice
-qti unsupported format: Format non compatible QTI ou non supporté
-qti xml not found: Schéma XML non trouvé
+qti_no_questions: Attention, pour pouvoir exporter l'exercice, il faut qu'il ait au moins une question dans votre exercice
+qti_unsupported_format: Format non compatible QTI ou non supporté
+qti_xml_not_found: Schéma XML non trouvé
 question: Question
 questions: Questions
-question graphic: Question Graphique
-question hole : Question à trous
-question open: Question à Réponse Ouverte
-question qcm: Question QCM
-questions: Questions
-question creation: Création d'une question
-questionSharedWith: Cette question est partagée avec les utilisateurs suivants
+question_creation: Création d'une question
+question_description: Description de la question (facultatif)
+question_model: Définir comme modèle
+question_title: Titre de la question
+question_shared_with: Cette question est partagée avec les utilisateurs suivants
 
 # R
-random order of questions: Ordre des questions aléatoire
+random_questions: Ordre des questions aléatoire
 raz: => Pour remettre à leurs position initiale tous les pointeurs, appuyez sur "c".
 square: Carré
-remove advanced edition: Edition simple
+remove_advanced_edition: Edition simple
 remove_question_confirm_message:  Êtes vous sûr de vouloir supprimer cette question ?
 reset: Réinitialiser
-resizeZone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
+resize_zone: Pour redimmensionner une image, placez votre souris sur son coin inférieur droit et, tout en maintenant le clic gauche, faites la glisser
 response: Réponse
-response number: Numéro de la réponse
 result: Résultats
-role: Rôle
+right_response: Points pour la bonne réponse
 
 # S
 save: Enregistrer
-saveNewOrder: Enregistrer le nouvel ordre
-sawHint: de pénalité pour indices vus
-score and list of question: Note et liste des questions
-scoreError: Attention, le score doit être un chiffre !
-scoreMax : Score maximum possible
+save_order: Enregistrer le nouvel ordre
+score: Score
+score_answer: Points pour cette réponse
+score_list_question: Note et liste des questions
+score_error: Attention, le score doit être un chiffre !
+score_max : Score maximum possible
+score_false_label: Résultat incorrect
+score_right_label: Résultat correct
+score_right_label_matching: Score de l'association
 search: Rechercher un document
-searchQuestion: Chercher des questions
-searchUserPaper: Rechercher les copies de l'utilisateur
-seeDoc: Voir les questions liées à ce document
-seeSharedWith: Question partagée avec des utilisateurs
+search_question: Chercher des questions
+search_user_paper: Rechercher les copies de l'utilisateur
+see_shared_with: Question partagée avec des utilisateurs
 select: Sélectionner
-selected Image: Image sélectionnée
 selection: => Pour répondre, utiliser la technique du glisser/déposer.
-selectZone: Pour définir et déplacer une zone de réponse, utilisez le glisser/déposer
 self: Vous ne pouvez pas partager une question avec vous-même
 shape: Forme
 share: Partager
-shared by: Partagée par
-sharedUser: Partage de question
-shared with: Partager avec
+shared_by: Partagée par
+shared_questions: Questions qui m'ont été partagées
+shared_user: Partage de question
+shared_with: Partager avec
 short: Courte
 show: Afficher
-show Instructions: Montrer les consignes
-start again: Recommencer
+show_instructions: Montrer les consignes
+size: Taille
+start_again: Recommencer
+start_date: Date de début
 sort: Trier les documents
-start date: Date de début
-subscription: Inscription
+
 
 # T
-temporary mark: Note temporaire
-test exit: Sortie du test
+temporary_mark: Note temporaire
+test_exit: Sortie du test
 title: Titre
-To drag: Panier
-To bind: A lier
-try: Tester
 type: Type
+type_qcm: Type du QCM
+type_question: Type de la question
 
 # U
-unique response: Réponse Unique
 unpublish: Dépublier
 upload: Télécharger
 uploading: Chargement en cours
-use date of end: Utiliser une date de fin
+use_date_end: Utiliser une date de fin
 user: Utilisateur
 users: Utilisateurs
 
@@ -385,143 +343,23 @@ validate: Valider
 warning: Êtes-vous sûr de vouloir supprimer ce document
 warning_change_type_q: Attention vous risquez de perdre vos données saisies, continuer
 warning_one_word: Vous avez choisi une question à un mot. Attention, il a des espaces dans votre réponse.
-whichAction: Quelle action souhaitez-vous réaliser
-with: Avec
-withResponse: Avec des réponses
+weight_choice: Attribuer les points par réponse
 wrong: Fausse
-wrongName: Le nom saisi est incorrect
-wrongPoint: La valeur saisie est incorrecte
+wrong_name: Le nom saisi est incorrect
+wrong_point: La valeur saisie est incorrecte
 
 # Y
 yes: Oui
-your answer: Votre réponse
+your_answer: Votre réponse
 
-
-#properties of entities
-At the end of assessment: A la fin du test
-At the same time that the correction: En même temps que la correction
-
-Category.value: Catégorie
-
-Choice.feedback: Commentaire si la réponse est selectionnée(facultatif)
-Choice.label: Réponse proposée
-Choice.positionForce: Forcer cette position
-Choice.rightResponse: Points pour la bonne réponse
-Choice.falseResponse : Points pour la mauvaise réponse
-Choice.weight: Points pour cette réponse
-
-Coords.color: Couleur
-Coords.score: Points pour la bonne réponse
-Coords.shape: Forme
-
-Document.label: Document
-
-Exercise.correctionMode: Mode de la correction
-Exercise.description: Description (facultatif)
-Exercise.dispButtonIterrupt: Autoriser l'interruption du test
-Exercise.doprint: Imprimer la copie à la fin du test
-Exercise.duration: Durée
-Exercise.end_date: Date de fin
-Exercise.keepSameQuestion: Conserver les mêmes questions pour un même utilisateur
-Exercise.lockAttempt: Verrouiller le test
-Exercise.markMode: Note disponible
-Exercise.maxAttemps: Nombre d'essais autorisés
-Exercise.nbQuestion: Nombre de question à tirer aléatoirement
-Exercise.nbQuestionPage: Nombre de questions par page
-Exercise.shuffle: Ordre des questions aléatoire
-Exercise.start_date: Date de début
-Exercise.title: Titre de l'exercice
-
-Exepertise.description: Description
-Exepertise.title_expertise: Titre de l'expertise
-
-From: A partir du
-
-Groupes.name: Nom du groupe
-
-Hole.orthography: Autoriser les fautes d'orthographe
-Hole.score: Points pour une bonne réponse
-Hole.selector: Proposer une liste
-Hole.size: Taille du blanc
-
-Hint.penalty: Pénalité
-Hint.value: Indice
-
-Interaction.feedback: Commentaire à afficher avec la correction (facultatif)
-Interaction.invite: Question
-
-Inter_Matching.shuffle: Ordre des propositions et des labels aléatoire
-
-Inter_Open.ScoreMaxLongResp: Points pour la bonne réponse
-
-Inter_QCM.ScoreRightResponse: Résultat correct
-Inter_QCM.ScoreFalseResponse: Résultat incorrect
-Inter_QCM.shuffle: Ordre des choix aléatoire
-Inter_QCM.weightChoice: Attribuer les points par réponse
-
-Inter_Hole.html: Texte à trous
-Inter_Hole.orthography: Autoriser les fautes d'orthographe
-Inter_Hole.score: Point
-Inter_Hole.size: Taille
-
-Label.value : Label
-Label.scoreRight: Score de l'association
-Label.positionForce: Forcer cette position
-
-LockAttempte.date: Date
-
+# Data in the DB
+InteractionGraphic: Graphique
+InteractionHole: Texte à trous
+InteractionMatching: Association
+InteractionOpen: Ouverte
+InteractionQCM: QCM
 Multiple response: Réponse multiples
-
-Never: jamais
-
-Planning.end_time: Date de fin
-Planning.start_time: Date de début
-Points: Points
-
-Proposal.value: Proposition
-Proposal.positionForce: Forcer cette position
-
-Question_creation: Création d'une question
-Question.description: Description de la question (facultatif)
-Question.model: Définir comme modèle
-Question.title: Titre de la question
-
-Roles.name: Nom du rôle
-
-Response.mark: Note
-Response.reponse: Réponse
-
-Subscription.admin: Donner les droits de gestionnaire (exercice)
-
-TypeMatching.value: Type de question associative
-
-TypeOpenQuestion.value: Type de la question
-
-TypeQCM.value: Type du QCM
-
+oneWord: Un mot
+To drag: Panier
+To bind: A lier
 Unique response: Réponse unique
-
-Unit.value: Unité
-
-User.firstName: Prénom
-User.mail: Adresse mail
-User.name: Nom
-User.password: Mot de passe
-User.username: Login utilisateur
-
-ujm_exobundle_interactiongraphictype_document: Documents
-ujm_exobundle_interactiongraphictype_interaction_hints: Indices
-ujm_exobundle_interactionopentype_interaction: Question ouverte
-ujm_exobundle_interactionopentype_interaction_hints: Indices
-ujm_exobundle_interactionmatchingtype_proposals: Réponse
-ujm_exobundle_interactionmatchingtype_labels: Question
-ujm_exobundle_interactionopentype_wordResponses: Mots clés
-ujm_exobundle_interactionqcmtype_choices: Choix
-ujm_exobundle_interactionqcmtype_interaction: QCM
-ujm_exobundle_interactionqcmtype_interaction_hints: Indices
-
-ujm_exobundle_categorytype_value: Nom de la nouvelle catégorie
-
-WordResonse.caseSensitive: Respecter la casse
-WordResponse.score: Points pour cette réponse
-WordResponse.response_value: Mot

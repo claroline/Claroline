@@ -29,9 +29,9 @@ class QuestionType extends AbstractType
         $builder
             ->add(
                 'title', 'text', array(
-                    'label' => 'Question.title',
+                    'label' => 'title',
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'Question.title')
+                    'attr'  => array( 'placeholder' => 'question_title')
                 )
             )
             ->add(
@@ -53,9 +53,9 @@ class QuestionType extends AbstractType
                 )
             )
             ->add('description', 'textarea', array(
-                    'label' => 'Question.description', 
+                    'label' => 'question_description', 
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'Question.description',
+                    'attr'  => array( 'placeholder' => 'question_description',
                                       'class'=> 'form-control',
                                       'data-new-tab' => 'yes'
                                     )                    
@@ -64,7 +64,7 @@ class QuestionType extends AbstractType
             ->add(
                 'model', 'checkbox', array(
                     'required' => false,
-                    'label' => 'Question.model'
+                    'label' => 'question_model'
                 )
             );
     }

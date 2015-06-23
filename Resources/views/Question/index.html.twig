@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'bank of questions' | trans,
+                    'name': 'bank_of_questions' | trans,
                     'href': ''
                 }
             ])
@@ -27,35 +27,35 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'bank of questions' | trans }} {% endblock %}
+{% block title %} {{ 'bank_of_questions' | trans }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'bank of questions' | trans }}</h3>
+        <h3 class="panel-title">{{ 'bank_of_questions' | trans }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_question_new') }}">
-            <i class="fa fa-plus"></i> {{ 'create a new entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
         </a>
-        <a class="btn btn-primary" title="{{ 'qti format warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}',  '-1');">
-            <i class="fa fa-upload"></i> {{ 'import QTI' | trans }}
+        <a class="btn btn-primary" title="{{ 'qti_format_warning' | trans }}" onClick="importQTI('{{ path('ujm_qti_import_form') }}',  '-1');">
+            <i class="fa fa-upload"></i> {{ 'import_qti' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_manage_doc') }}">
-            <i class="fa fa-file"></i> {{ 'manageImg' | trans }}
+            <i class="fa fa-file"></i> {{ 'manage_img' | trans }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_search_question') }}">
-            <i class="fa fa-question"></i> {{ 'searchQuestion' | trans }}
+            <i class="fa fa-question"></i> {{ 'search_question' | trans }}
         </a>
 
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index', { 'displayAll': 1 }) }} ">
-                    <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                    <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
                 </a>
             {% elseif displayAll == 1 %}
                 <a class="btn btn-primary" href="{{ path('ujm_question_index') }}">
-                    <i class="fa fa-minus-circle"></i> {{ 'display pagination' | trans }}
+                    <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans }}
                 </a>
             {% endif %}
         {% endif %}
@@ -69,7 +69,7 @@
 
         <form action="{{ path('ujm_question_briefSearch') }}" method="post" id='formBriefSearch'>
             <div class="input-group" style="width: 350px; margin-top: 20px;">
-                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'briefSearch'|trans }}" name="userSearch"
+                <input type="text" class="form-control" id="briefSearch" placeholder="{{ 'brief_search'|trans }}" name="userSearch"
                     onkeydown="if (event.keyCode == 13) {
                         //briefSearch('{#{ path('ujm_question_briefSearch') }#}', -1, 'index');
                         briefSearchSubmit();
@@ -92,13 +92,13 @@
             <br/>
             <div class="alert alert-info">
                 <p>
-                    {{ 'infoSearchType' | trans }} :
+                    {{ 'info_search_type' | trans }} :
                     <ul>
-                        <li style="list-style-type: circle">'qcm' {{ 'forTypeOf' | trans }} {{ 'InteractionQCM' | trans }},</li>
-                        <li style="list-style-type: circle">'graphic' {{ 'forTypeOf' | trans }} {{ 'InteractionGraphic' | trans }},</li>
-                        <li style="list-style-type: circle">'hole' {{ 'forTypeOf' | trans }} {{ 'InteractionHole' | trans }},</li>
-                        <li style="list-style-type: circle">'open' {{ 'forTypeOf' | trans }} {{ 'InteractionOpen' | trans }},</li>
-                        <li style="list-style-type: circle">'matching' {{ 'forTypeOf' | trans }} {{ 'InteractionMatching' |trans }}.</li>
+                        <li style="list-style-type: circle">'qcm' {{ 'for_type_of' | trans }} {{ 'qcm' | trans }},</li>
+                        <li style="list-style-type: circle">'graphic' {{ 'for_type_of' | trans }} {{ 'graphic' | trans }},</li>
+                        <li style="list-style-type: circle">'hole' {{ 'for_type_of' | trans }} {{ 'hole' | trans }},</li>
+                        <li style="list-style-type: circle">'open' {{ 'for_type_of' | trans }} {{ 'open' | trans }},</li>
+                        <li style="list-style-type: circle">'matching' {{ 'for_type_of' | trans }} {{ 'matching' |trans }}.</li>
                     </ul>
                 </p>
             </div>
@@ -110,7 +110,7 @@
     <div class="list-group">
         <div class="list-group-item">
             {% if QuestionsExo == 'false' %}
-                <h3 class="panel-title">{{ "my questions"|trans }} : </h3><br/>
+                <h3 class="panel-title">{{ 'my_questions'|trans }} : </h3><br/>
                 {% if interactions is not empty %}
 
                     {% set questionsList = 'my' %}
@@ -124,10 +124,10 @@
                         </div>
                     {% endif %}
                 {% else %}
-                    <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                    <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
                 {% endif %}
                 <hr/>
-                <h3 class="panel-title">{{ 'my shared questions' | trans }} : </h3><br/>
+                <h3 class="panel-title">{{ 'shared_questions' | trans }} : </h3><br/>
                     {% if sharedWithMe is not empty %}
                         {% set questionsList = 'share' %}
                         {% set interactions = sharedWithMe %}
@@ -141,14 +141,14 @@
                             </div>
                         {% endif %}
                     {% else %}
-                        <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                        <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
                     {% endif %}
             {% else %}
                 {% if interactions is not empty %}
                     {% set questionsList = 'exoList' %}
                     {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
                 {% else %}
-                    <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+                    <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
                 {% endif %}
             {% endif %}
         </div>

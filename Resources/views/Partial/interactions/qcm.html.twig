@@ -6,12 +6,12 @@
 </div>
 <!-- disabled -->
     <div id="scoreReponse">       
-        <label id="labelRightResponse" class="control-label col-md-1">{{'Inter_QCM.ScoreRightResponse' | trans }}</label>           
+        <label id="labelRightResponse" class="control-label col-md-1">{{'score_right_label' | trans }}</label>           
         <div class="col-md-2 {% if not form.scoreRightResponse.vars.valid %} has-error{% endif %}">
             {{ form_widget(form.scoreRightResponse) }}
             {{ form_errors(form.scoreRightResponse) }}
         </div>    
-        <label id="labelFalseResponse" class="control-label col-md-1">{{ 'Inter_QCM.ScoreFalseResponse' | trans }}</label>
+        <label id="labelFalseResponse" class="control-label col-md-1">{{ 'score_false_label' | trans }}</label>
         <div class="col-md-2 {% if not form.scoreFalseResponse.vars.valid %} has-error{% endif %}">
             {{ form_widget(form.scoreFalseResponse) }}
             {{ form_errors(form.scoreFalseResponse) }}

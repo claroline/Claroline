@@ -20,16 +20,16 @@
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upS"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downS"  style="display: none;"></i>
-                {{ 'start date' | trans }}
+                {{ 'start_date' | trans }}
             </th>
             <th class="classic" onclick="SortQuestions('endDate', 'UserArray');"
                 onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upE"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downE"  style="display: none;"></i>
-                {{ 'end date' | trans }}
+                {{ 'end_date' | trans }}
             </th>
-            <th class="classic">{{ 'isInterupt' | trans }}</th>
+            <th class="classic">{{ 'is_interupt' | trans }}</th>
             {% if display != 'none' %}
                 <th class="classic">{{ 'actions' | trans }}</th>
 
@@ -38,7 +38,7 @@
                 onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                 <i class="fa fa-chevron-up" id="upM"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="downM"  style="display: none;"></i>
-                {{ 'mark' | trans }}
+                {{ 'score' | trans }}
             </th>
             {% endif %}
         </tr>

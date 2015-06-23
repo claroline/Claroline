@@ -375,7 +375,7 @@ class PaperController extends Controller
                 if ($row[0]->getEnd()) {
                     $rowCSV[] = $row[0]->getEnd()->format('Y-m-d H:i:s');
                 } else {
-                    $rowCSV[] = $this->get('translator')->trans('noFinish');
+                    $rowCSV[] = $this->get('translator')->trans('no_finish');
                 }
                 $rowCSV[] = $row[0]->getInterupt();
                 $rowCSV[] = $this->container->get('ujm.exo_exercise')->roundUpDown($score);

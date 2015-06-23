@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/jquery-ui-smoothness.css') }}"/>
 {% endblock %}
 
-{% block title %} {{ 'edit a question' | trans }} {% endblock %}
+{% block title %} {{ 'edit_question' | trans }} {% endblock %}
 
 {% block section_content %}
 
@@ -39,8 +39,8 @@
 
     {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-    <form id="InterGraphForm" onsubmit="return Check( '{{ 'noQuestion' | trans }} ...','{{ 'noImg' | trans }} !',
-        '{{ 'noAnswerZone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
+    <form id="InterGraphForm" onsubmit="return Check( '{{ 'no_question' | trans }} ...','{{ 'no_img' | trans }} !',
+        '{{ 'no_answer_zone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
         action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
         <div class="panel-body">
@@ -91,7 +91,7 @@
 
     <script type="text/javascript">
         var translations = {
-            'tradWrongPoint' : '{{ 'wrongPoint' | trans }}',
+            'tradWrongPoint' : '{{ 'wrong_point' | trans }}',
             'tradCircle' : '{{ 'cercle' | trans }}',
             'tradSquare' : '{{ 'square' | trans }}'
         }

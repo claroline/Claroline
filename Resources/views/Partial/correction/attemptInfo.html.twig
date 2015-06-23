@@ -1,13 +1,13 @@
 {% if nbAttemptAllowed == 0 %}
-    <div class="alert alert-info">{{ 'attempt info6'|trans }}</div>
+    <div class="alert alert-info">{{ 'attempt_info6'|trans }}</div>
 {% elseif nbAttemptAllowed > 0 %}
     <div class="alert alert-info">
-        {{ 'attempt info4'|trans }} {{nbAttemptAllowed}}
+        {{ 'attempt_info4'|trans }} {{nbAttemptAllowed}}
         {% if nbAttemptAllowed > 1 %}
-            {{ 'attempt info2plur'|trans }}
+            {{ 'attempt_info2plur'|trans }}
         {% else %}
-            {{ 'attempt info2sing'|trans }}
+            {{ 'attempt_info2sing'|trans }}
         {% endif %}
-        {{ 'attempt info5'|trans }}
+        {{ 'attempt_info5'|trans }}
     </div>
 {% endif %}

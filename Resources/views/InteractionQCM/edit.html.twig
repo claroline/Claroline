@@ -27,7 +27,7 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'edit a question' | trans }} {% endblock %}
+{% block title %} {{ 'edit_question' | trans }} {% endblock %}
 
 {% block section_content %}
 
@@ -78,7 +78,7 @@
     {# add form choice #}
     <script type="text/javascript">
         $(document).ready(function() {
-            creationQCMEdit('{{ 'expected answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'Choice.positionForce' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans }}', {{ nbResponses }});
+            creationQCMEdit('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'position_force' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans }}', {{ nbResponses }});
             newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
         });
     </script>

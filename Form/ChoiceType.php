@@ -25,7 +25,7 @@ class ChoiceType extends AbstractType
                     'required' => true, 
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'expected answer'               
+                    'placeholder' => 'expected_answer'               
                     )
                 )
             )
@@ -33,7 +33,7 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false, 
                     'label' => ' ',
-                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'Choice.weight')
+                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'score_answer')
                 )
             )
             ->add(
@@ -41,7 +41,7 @@ class ChoiceType extends AbstractType
                    'required' => false, 'label' => ' ',
                    'attr' => array('class'=>'form-control',
                                    'data-new-tab' => 'yes',
-                                   'placeholder' => 'Choice.feedback',
+                                   'placeholder' => 'feedback_answer_check',
                                    'style' => 'height:34px;'
                        )
                   )

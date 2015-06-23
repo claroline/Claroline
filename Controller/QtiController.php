@@ -23,7 +23,7 @@ class QtiController extends Controller {
 
         if ($file->getMimeType() != 'application/zip') {
 
-            return $this->importError('qti format warning', $exoID);
+            return $this->importError('qti_format_warning', $exoID);
         }
 
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
@@ -183,7 +183,7 @@ class QtiController extends Controller {
        $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
        if ($qdirs == null) {
-           $mssg = 'qti no questions';
+           $mssg = 'qti_no_questions';
             return $this->forward('UJMExoBundle:Exercise:showQuestions',
                    array(
                        'id' => $exoID,

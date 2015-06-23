@@ -10,8 +10,8 @@
     {% endif %}
 
     {% if (inter.interaction.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
-       {{ 'not yet mark' | trans }}.
+       {{ 'not_yet_mark' | trans }}.
     {% else %}
-        {{ 'mark' | trans }} : <span id="score">{{ score }}.</span>
+        {{ 'score' | trans }} : <span id="score">{{ score }}.</span>
     {% endif %}
 </div>

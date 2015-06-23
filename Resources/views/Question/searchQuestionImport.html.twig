@@ -7,17 +7,17 @@
     <div class="panel-body">
         {% if listQuestions is not empty %}
             <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
-                {{ exoID }}, 1, '{{ 'nothingToImport' | trans }}');event.preventDefault();">
+                {{ exoID }}, 1, '{{ 'no_thing_import' | trans }}');event.preventDefault();">
                 <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans }}
             </a>
 
             {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
             <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
-                <i class="fa fa-plus-circle"></i> {{ 'display all on this page' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
             </button>
             {% elseif displayAll == 1 %}
                 <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
-                <i class="fa fa-plus-circle"></i> {{ 'display pagination' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans }}
             </button>
             {% endif %}
 
@@ -89,7 +89,7 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="alert alert-info">{{ 'noQuestionFound'|trans }} ...</div>
+            <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
         {% endif %}
     </div>
 </div>

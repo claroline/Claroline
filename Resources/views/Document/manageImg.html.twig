@@ -11,12 +11,12 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'docManage' | trans }} {% endblock %}
+{% block title %} {{ 'doc_manage' | trans }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'docManage' | trans }}</h3>
+        <h3 class="panel-title">{{ 'doc_manage' | trans }}</h3>
     </div>
 
     <div class="panel-body">
@@ -144,7 +144,7 @@
                         {% endif %}
                     </div>
                 {% else %}
-                    <div class="alert alert-info">{{ 'noDocFound'|trans }} ...</div>
+                    <div class="alert alert-info">{{ 'no_doc_found'|trans }} ...</div>
                 {% endif %}
             {% endif %}
         </div>

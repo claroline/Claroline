@@ -34,8 +34,8 @@
                     <h3 class="panel-title">{{ 'legend' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="questionList">
-                    <h4>{{ "number of papers" | trans }} : {{ nbPapers }}</h4>
-                    <h3 class="panel-title">{{ "list of question" | trans }}</h3>
+                    <h4>{{ "number_of_papers" | trans }} : {{ nbPapers }}</h4>
+                    <h3 class="panel-title">{{ "list_question" | trans }}</h3>
                     <ol>
                         {% for questionTitle in questionsList %}
                             <li>{{ questionTitle }}</li>
@@ -46,33 +46,33 @@
             {#--------------------------------------------------- Histogramm of marks ---------------------------------------------------------------------#}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ "histoMarks" | trans }}</h3>
+                    <h3 class="panel-title">{{ 'histo_marks' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="histoMarks"></div>
             </div>
             {#--------------------------------------------------- Histogramm of success -------------------------------------------------------------------#}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ "histoSuccess" | trans }}</h3>
+                    <h3 class="panel-title">{{ 'histo_success' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="histoSuccess"  style="margin-bottom: 100px;"></div>
             </div>
             {#--------------------------------------------------- Histogramm of discrimination -----------------------------------------------------------#}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ "histoDiscrimination" | trans }}</h3>
+                    <h3 class="panel-title">{{ 'histo_discrimination' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="histoDiscrimination"></div>
                 <div class="list-group">
                     <div class="list-group-item">
                         {% if coeffQ == 'none' %}
-                            {{ 'explainCoeffDis0' | trans }}
+                            {{ 'explain_coeff_dis0' | trans }}
 
                         {% endif %}
                         <p>
-                            {{ 'explainCoeffDis1' | trans }}
-                            {{ 'explainCoeffDis2' | trans }}
-                            {{ 'explainCoeffDis3' | trans }}
+                            {{ 'explain_coeff_dis1' | trans }}
+                            {{ 'explain_coeff_dis2' | trans }}
+                            {{ 'explain_coeff_dis3' | trans }}
                         </p>
                     </div>
                 </div>
@@ -80,22 +80,22 @@
             {#--------------------------------------------------- Histogramm of measure of diffculty -----------------------------------------------------#}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ "histoMeasureOfDifficulty" | trans }}</h3>
+                    <h3 class="panel-title">{{ 'histo_measure_difficulty' | trans }}</h3>
                 </div>
                 <div class="panel-body" id="histoMeasureOfDifficulty"></div>
                 <div class="list-group">
                     <div class="list-group-item">
                         <p>
-                        {{ 'explainMeasureDifficulty' | trans }}.
-                        {{ 'calculationMeasureDifficulty' | trans }}.
-                        {{ 'meaningMeasureDifficulty' | trans }}.
-                        {{ 'infoMeasureDifficulty' | trans }}.
+                        {{ 'explain_measure_difficulty' | trans }}.
+                        {{ 'calculation_measure_difficulty' | trans }}.
+                        {{ 'meaning_measure_difficulty' | trans }}.
+                        {{ 'info_measure_difficulty' | trans }}.
                         </p>
                     </div>
                 </div>
             </div>
         {% else %}
-            <div class="alert alert-info">{{ 'notEnoughtPapers'|trans }}.</div>
+            <div class="alert alert-info">{{ 'not_enought_papers'|trans }}.</div>
         {% endif %}
     <div>
 {% endblock %}
@@ -132,7 +132,7 @@
 
                     axes: {
                         xaxis: {
-                            label: '{{ 'mark'|trans }}',
+                            label: '{{ 'score'|trans }}',
                             labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                             labelOptions:{
                                 fontFamily:'Helvetica',
@@ -173,7 +173,7 @@
                     {% set i = i + 1 %}
                 {% endfor %}
 
-                plot3 = $.jqplot('histoSuccess', [{{ series }}], {
+                plot3 = $.jqplot('histo_success', [{{ series }}], {
 
                     stackSeries: true,
                     captureRightClick: true,
@@ -233,7 +233,7 @@
                         {label:'{{ 'correct'|trans }}', color: 'green'},
                         {label:'{{ 'partially'|trans }}', color: 'blue'},
                         {label:'{{ 'wrong'|trans }}', color: 'red'},
-                        {label:'{{ 'no answer'|trans }}', color: 'yellow'}
+                        {label:'{{ 'no_answer'|trans }}', color: 'yellow'}
                     ]
                 });
 
@@ -242,7 +242,7 @@
 
                     var s1 = [{{ coeffQ }}];
 
-                    $.jqplot('histoDiscrimination', [s1], {
+                    $.jqplot('histo_discrimination', [s1], {
 
                         stackSeries: true,
                         series:[{renderer:$.jqplot.BarRenderer}],
@@ -288,7 +288,7 @@
                 /*********************************histoMeasureOfDifficulty******************************************************/
                 var percent = [{{MeasureDifficulty}}];
 
-                $.jqplot('histoMeasureOfDifficulty', [percent], {
+                $.jqplot('histo_measure_difficulty', [percent], {
 
                     series:[{renderer:$.jqplot.BarRenderer}],
 
