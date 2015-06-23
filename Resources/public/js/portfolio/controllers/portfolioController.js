@@ -15,16 +15,14 @@ portfolioApp
         $scope.assetPath = assetPath;
 
         $scope.createWidget = function(type) {
-            console.log(type);
             var modalInstance = $modal.open({
                 animation: true,
                 templateUrl: 'widget_picker_modal.html',
                 controller: 'widgetPickerController',
                 size: 'lg',
                 resolve: {
-                    items: function () {
+                    portfolioWidgets: function () {
                         return widgetsManager.getAvailableWidgetsByTpe($scope.portfolio.id, type);
-                        return ['item1', 'item2', 'item3'];
                     }
                 }
             });

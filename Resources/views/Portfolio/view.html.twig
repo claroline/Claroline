@@ -95,17 +95,20 @@
                 {% endif %}
 
                 <script type="text/ng-template" id="widget_picker_modal.html">
-                    {% verbatim %}
                     <div class="modal-header">
-                        <h3 class="modal-title">I'm a modal!</h3>
+                        <h3 class="modal-title">{{ 'widget_selection' | trans({}, 'icap_portfolio') }}</h3>
                     </div>
+                    {% verbatim %}
                     <div class="modal-body">
-                        <ul>
-                            <li ng-repeat="item in items">
-                                <a ng-click="selected.item = item">{{ item }}</a>
+                        <ul class="list-unstyled">
+                            <li data-ng-repeat="portfolioWidget in portfolioWidgets">
+                                <span data-ng-click="selected.portfolioWidget = portfolioWidget"
+                                      data-ng-class="{'bold': selected.portfolioWidget == portfolioWidget}">
+                                    {{ portfolioWidget.widget.label }}
+                                </span>
                             </li>
                         </ul>
-                        Selected: <b>{{ selected.item }}</b>
+                        Selected: <b>{{ selected.portfolioWidget.widget.label }}</b>
                     </div>
                     {% endverbatim %}
                     <div class="modal-footer">

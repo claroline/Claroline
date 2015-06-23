@@ -87,4 +87,21 @@ class AbstractWidgetRepository extends EntityRepository
         return $executeQuery ? $query->getQuery()->getSingleResult(): $query->getQuery();
     }
 
+    /**
+     * @param string $type
+     * @param User   $user
+     * @param bool   $executeQuery
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]|Query
+     */
+    public function findByWidgetTypeAndUser($type, User $user, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('w')
+            ->andWhere('w INSTANCE OF ' . sprintf("IcapPortfolioBundle:Widget\%sWidget", ucfirst($type)))
+            ->andWhere('w.user = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $executeQuery ? $query->getQuery()->getResult(): $query->getQuery();
+    }
 }

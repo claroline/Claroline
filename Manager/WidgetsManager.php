@@ -244,24 +244,40 @@ class WidgetsManager
      */
     public function getWidgets(User $user, $type = null)
     {
-        $criteria = ['user' => $user];
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget");
 
         if ($type !== null) {
-            $criteria['widgetType'] = $type;
+            $widgets = $abstractWidgetRepository->findByWidgetTypeAndUser($type, $user);
+        }
+        else {
+            $widgets = $abstractWidgetRepository->findByUser($user);
         }
 
-        return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findBy($criteria);
+        return $widgets;
     }
 
     /**
-     * @param User   $user
-     * @param string $type
+     * @param Portfolio $portfolio
+     * @param User      $user
+     * @param string    $type
      *
      * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      */
-    public function getPortfolioWidgetsForWidgetPicker(User $user, $type)
+    public function getPortfolioWidgetsForWidgetPicker(Portfolio $portfolio, User $user, $type)
     {
         $portfolioWidgets = [];
+
+        $widgets = $this->getWidgets($user, $type);
+
+        foreach ($widgets as $widget) {
+            $portfolioWidget = new PortfolioWidget();
+            $portfolioWidget
+                ->setPortfolio($portfolio)
+                ->setWidget($widget)
+            ;
+            $portfolioWidgets[] = $portfolioWidget;
+        }
 
         return $portfolioWidgets;
     }

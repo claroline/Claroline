@@ -137,7 +137,6 @@ portfolioApp
                 var deferred = $q.defer();
                 $http.get(url)
                     .success(function(data) {
-                        console.log(data);
                         deferred.resolve(data);
                     }).error(function(msg, code) {
                         deferred.reject(msg);

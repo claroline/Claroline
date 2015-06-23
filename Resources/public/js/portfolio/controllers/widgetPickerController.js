@@ -1,13 +1,13 @@
 portfolioApp
-    .controller('widgetPickerController', ["$scope", "$modalInstance", "items", function ($scope, $modalInstance, items) {
+    .controller('widgetPickerController', ["$scope", "$modalInstance", "portfolioWidgets", function ($scope, $modalInstance, portfolioWidgets) {
 
-    $scope.items = items;
+    $scope.portfolioWidgets = portfolioWidgets;
     $scope.selected = {
-        item: $scope.items[0]
+        portfolioWidget: $scope.portfolioWidgets[0]
     };
 
     $scope.ok = function () {
-        $modalInstance.close($scope.selected.item);
+        $modalInstance.close($scope.selected.portfolioWidget);
     };
 
     $scope.cancel = function () {
