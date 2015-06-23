@@ -50,14 +50,6 @@ $(document).ready(function () {
         $(selector).prop('checked', true); // Cocher la case "Valider"
         $(selector).prop('disabled', true); // Ne pas pouvoir modifier cette ligne
 
-        // Fermeture de la modal
-        $('#validate-modal').modal('hide');
-    });
-
-    // InnovaERV
-    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
-    // Mise à jour de la colonne "validate"
-    $('.document_validate').on('click', function(event) {
         // Récupération de l'id du document
         var docId = $(this).attr("data-document_id");
 
@@ -75,6 +67,17 @@ $(document).ready(function () {
             done : function(data) {
             }
         });
+
+
+        // Fermeture de la modal
+        $('#validate-modal').modal('hide');
+
+    });
+
+    // InnovaERV
+    // Ajout pour le traitement de la demande de commentaire : mise à jour de la table Document
+    // Mise à jour de la colonne "validate"
+    $('.document_validate').on('click', function(event) {
     });
 
 });
