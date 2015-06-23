@@ -379,7 +379,8 @@ class DocumentController extends DropzoneBaseController
             or $document->getType() == 'resource'
             or $document->getType() == 'file'
         ) {
-            $this->get('claroline.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
+            /** Issue #27 "il se produit un plantage au niveau de "temporary_access_resource_manager" InnovaERV */
+            $this->get('innova.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
 
             $event = new LogDocumentOpenEvent($dropzone, $document->getDrop(), $document);
             $this->dispatch($event);
