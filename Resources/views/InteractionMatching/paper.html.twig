@@ -67,11 +67,9 @@
             <form action="{{ path('ujm_interactionmatching_response') }}" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
 
-                {% if interactionToDisplayed.typeMatching.code == 1 %}
                 <div id="divReset">
                     <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans }}" class="btn btn-primary">
                 </div>
-                {% endif %}
                 <center>
                     <table class="all">
                         <tr>
