@@ -1,7 +1,7 @@
 function cherche_type_ajax(exoID, displayFormType) {
     //"use strict";
 
-    var indice_type = $("#menu_type_question option:selected").index();
+    var indice_type = $("#menu_type_question").val();
 
     $.ajax({
         type: "POST",

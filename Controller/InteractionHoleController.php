@@ -50,6 +50,36 @@ class InteractionHoleController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:formNew'
+     * Parameters posted :
+     *     integer exoID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+       $attr = $this->get('request')->attributes;
+       $entity = new InteractionHole();
+       $form   = $this->createForm(
+           new InteractionHoleType(
+               $this->container->get('security.token_storage')
+                   ->getToken()->getUser()
+           ), $entity
+       );
+
+       return $this->container->get('templating')->renderResponse(
+                        'UJMExoBundle:InteractionHole:new.html.twig', array(
+                        'exoID'  => $attr->get('exoID'),
+                        'entity' => $entity,
+                        'form'   => $form->createView()
+                        )
+                    );
+    }
+
+    /**
      * Creates a new InteractionHole entity.
      *
      * @access public

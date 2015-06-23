@@ -291,16 +291,20 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-
-
+        $questSer = $this->container->get('ujm.exo_question');
+        $catSer = $this->container->get('ujm.exo_category');
         $variables = array(
-            'exoID' => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $this->getLockCategory(),
+            'exoID'          => $exoID,
+            'linkedCategory' => $questSer->getLinkedCategories(),
+            'locker'         => $catSer->getLockCategory(),
         );
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
+
+        $interactionType = $em->getRepository('UJMExoBundle:Interaction')
+                              ->getType();
+        $variables['interactionType'] = $interactionType;
 
         if ($exercise) {
             $variables['_resource'] = $exercise;
@@ -447,123 +451,18 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function choixFormTypeAction()
+    public function formNewAction()
     {
-        $services = $this->container->get('ujm.exo_exercise');
-        $request = $this->container->get('request');
+        $request  = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
-            $valType = 0;
 
             $valType = $request->request->get('indice_type');
-            $exoID = $request->request->get('exercise');
+            $exoID   = $request->request->get('exercise');
 
-            if ($valType != 0) {
-                //index 1 = Hole Question
-                if ($valType == 1) {
-                    $entity = new InteractionHole();
-                    $form   = $this->createForm(
-                        new InteractionHoleType(
-                            $this->container->get('security.token_storage')
-                                ->getToken()->getUser()
-                        ), $entity
+            return $this->forward(
+                       'UJMExoBundle:' . $valType . ':new', array('exoId' => $exoID)
                     );
-
-                    return $this->container->get('templating')->renderResponse(
-                        'UJMExoBundle:InteractionHole:new.html.twig', array(
-                        'exoID'  => $exoID,
-                        'entity' => $entity,
-                        'form'   => $form->createView()
-                        )
-                    );
-                }
-
-                //index 1 = QCM Question
-                if ($valType == 2) {
-                    $entity = new InteractionQCM();
-                    $form   = $this->createForm(
-                        new InteractionQCMType(
-                            $this->container->get('security.token_storage')
-                                ->getToken()->getUser()
-                        ), $entity
-                    );
-                    $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
-                    $typeQCM = $serviceQcm->getTypeQCM();
-
-                    return $this->container->get('templating')->renderResponse(
-                        'UJMExoBundle:InteractionQCM:new.html.twig', array(
-                        'exoID'   => $exoID,
-                        'entity'  => $entity,
-                        'typeQCM' => json_encode($typeQCM),
-                        'form'    => $form->createView()
-                        )
-                    );
-                }
-
-                //index 1 = Graphic Question
-                if ($valType == 3) {
-                    $entity = new InteractionGraphic();
-                    $form   = $this->createForm(
-                        new InteractionGraphicType(
-                            $this->container->get('security.token_storage')
-                                ->getToken()->getUser()
-                        ), $entity
-                    );
-
-                    return $this->container->get('templating')->renderResponse(
-                        'UJMExoBundle:InteractionGraphic:new.html.twig', array(
-                        'exoID'  => $exoID,
-                        'entity' => $entity,
-                        'form'   => $form->createView()
-                        )
-                    );
-                }
-
-                //index 1 = Open Question
-                if ($valType == 4) {
-                    $entity = new InteractionOpen();
-                    $form   = $this->createForm(
-                        new InteractionOpenType(
-                            $this->container->get('security.token_storage')
-                                ->getToken()->getUser()
-                        ), $entity
-                    );
-
-                    $interOpenSer = $this->container->get('ujm.exo_InteractionOpen');
-                    $typeOpen     = $interOpenSer->getTypeOpen();
-
-                    return $this->container->get('templating')->renderResponse(
-                        'UJMExoBundle:InteractionOpen:new.html.twig', array(
-                        'exoID'    => $exoID,
-                        'entity'   => $entity,
-                        'typeOpen' => json_encode($typeOpen),
-                        'form'     => $form->createView()
-                        )
-                    );
-                }
-
-                if ($valType == 5) {
-                    $entity = new InteractionMatching();
-                    $form   = $this->createForm(
-                        new InteractionMatchingType(
-                            $this->container->get('security.token_storage')
-                                ->getToken()->getUser()
-                        ), $entity
-                    );
-
-                    $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
-                    $typeMatching = $interMatchSer->getTypeMatching();
-
-                    return $this->container->get('templating')->renderResponse(
-                        'UJMExoBundle:InteractionMatching:new.html.twig', array(
-                        'exoID'    => $exoID,
-                        'entity'   => $entity,
-                        'typeMatching' => json_encode($typeMatching),
-                        'form'     => $form->createView()
-                        )
-                    );
-                }
-            }
         }
     }
 

@@ -51,6 +51,40 @@ class InteractionOpenController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:formNew'
+     * Parameters posted :
+     *     integer exoID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+       $attr = $this->get('request')->attributes;
+       $entity = new InteractionOpen();
+       $form   = $this->createForm(
+           new InteractionOpenType(
+               $this->container->get('security.token_storage')
+                   ->getToken()->getUser()
+           ), $entity
+       );
+
+       $interOpenSer = $this->container->get('ujm.exo_InteractionOpen');
+       $typeOpen     = $interOpenSer->getTypeOpen();
+
+       return $this->container->get('templating')->renderResponse(
+           'UJMExoBundle:InteractionOpen:new.html.twig', array(
+           'exoID'    => $attr->get('exoID'),
+           'entity'   => $entity,
+           'typeOpen' => json_encode($typeOpen),
+           'form'     => $form->createView()
+           )
+       );
+    }
+
+    /**
      * Creates a new InteractionOpen entity.
      *
      * @access public

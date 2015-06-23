@@ -47,6 +47,35 @@ class InteractionGraphicController extends Controller
 
         return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
     }
+    /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:formNew'
+     * Parameters posted :
+     *     integer exoID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+       $attr = $this->get('request')->attributes;
+       $entity = new InteractionGraphic();
+       $form   = $this->createForm(
+           new InteractionGraphicType(
+               $this->container->get('security.token_storage')
+                   ->getToken()->getUser()
+           ), $entity
+       );
+
+       return $this->container->get('templating')->renderResponse(
+           'UJMExoBundle:InteractionGraphic:new.html.twig', array(
+           'exoID'  => $attr->get('exoID'),
+           'entity' => $entity,
+           'form'   => $form->createView()
+           )
+       );
+    }
 
     /**
      * Creates a new InteractionGraphic entity.

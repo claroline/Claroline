@@ -43,8 +43,8 @@
     {% for key,value in linkedCategory %}
         {% set al = al ~ key ~ '/' ~ value ~ ';' %}
     {% endfor %}
-    {% if locker != "" %}        
-        <input type="hidden" id="locker" value="{{locker.value}}"> 
+    {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
     {% endif %}
     <input type="hidden" id="categoryArray" value="{{al}}"/>
 
@@ -70,17 +70,15 @@
                 <div class="col-md-9">
                     <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
                         <option selected="selected" disabled>{{ 'choose_type' | trans }}</option>
-                        <option value="1">{{ 'hole' | trans }}</option>
-                        <option value="2">{{ 'qcm' | trans }}</option>
-                        <option value="3">{{ 'graphic' | trans }}</option>
-                        <option value="4">{{ 'open' | trans }}</option>
-                        <option value="5">{{ 'matching' | trans }}</option>
+                        {% for type in interactionType %}
+                            <option value="{{ type['type'] }}">{{ type['type'] | trans }}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 </div>
             </form>
         </div>
-          
+
     </div>
     </div>{# end div of extend panel #}
     <div id="formulaire_interactions">
@@ -93,5 +91,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 {% endblock %}

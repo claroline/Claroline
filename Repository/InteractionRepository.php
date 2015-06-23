@@ -366,4 +366,20 @@ class InteractionRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    /**
+     *
+     * @access public
+     *
+     * @return String[]
+     */
+    public function getType()
+    {
+        $qb = $this->createQueryBuilder('i');
+
+        $qb->select('DISTINCT i.type')
+            ->addOrderBy('i.type', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
 }

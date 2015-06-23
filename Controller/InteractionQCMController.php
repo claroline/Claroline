@@ -56,6 +56,40 @@ class InteractionQCMController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:formNew'
+     * Parameters posted :
+     *     integer exoID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+       $attr = $this->get('request')->attributes;
+       $entity = new InteractionQCM();
+       $form   = $this->createForm(
+           new InteractionQCMType(
+               $this->container->get('security.token_storage')
+                   ->getToken()->getUser()
+           ), $entity
+       );
+       $serviceQcm = $this->container->get('ujm.exo_InteractionQCM');
+       $typeQCM = $serviceQcm->getTypeQCM();
+
+       return $this->container->get('templating')->renderResponse(
+           'UJMExoBundle:InteractionQCM:new.html.twig', array(
+           'exoID'   => $attr->get('exoID'),
+           'entity'  => $entity,
+           'typeQCM' => json_encode($typeQCM),
+           'form'    => $form->createView()
+           )
+       );
+    }
+
+
+    /**
      * Creates a new InteractionQCM entity.
      *
      * @access public

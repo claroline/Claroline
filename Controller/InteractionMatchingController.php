@@ -58,6 +58,40 @@ class InteractionMatchingController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:formNew'
+     * Parameters posted :
+     *     integer exoID
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function newAction()
+    {
+       $attr = $this->get('request')->attributes;
+       $entity = new InteractionMatching();
+       $form   = $this->createForm(
+           new InteractionMatchingType(
+               $this->container->get('security.token_storage')
+                   ->getToken()->getUser()
+           ), $entity
+       );
+
+       $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
+       $typeMatching = $interMatchSer->getTypeMatching();
+
+       return $this->container->get('templating')->renderResponse(
+           'UJMExoBundle:InteractionMatching:new.html.twig', array(
+           'exoID'    => $attr->get('exoID'),
+           'entity'   => $entity,
+           'typeMatching' => json_encode($typeMatching),
+           'form'     => $form->createView()
+           )
+       );
+    }
+
+    /**
      * Creates a new InteractionMatching entity.
      *
      * @access public

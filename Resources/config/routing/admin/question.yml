@@ -22,8 +22,8 @@ ujm_question_delete:
     defaults: { _controller: UJMExoBundle:Question:delete, pageNow: 1, maxPage: 10, nbItem: 1, lastPage: 1 }
 
 ujm_question_display_form_type:
-    pattern: /choixFormType
-    defaults: { _controller: UJMExoBundle:Question:choixFormType }
+    pattern: /formNew
+    defaults: { _controller: UJMExoBundle:Question:formNew }
     requirements:
       _method: POST
 
