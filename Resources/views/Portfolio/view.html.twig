@@ -94,11 +94,29 @@
                 </div>
                 {% endif %}
 
+                <script type="text/ng-template" id="widget_picker_modal.html">
+                    {% verbatim %}
+                    <div class="modal-header">
+                        <h3 class="modal-title">I'm a modal!</h3>
+                    </div>
+                    <div class="modal-body">
+                        <ul>
+                            <li ng-repeat="item in items">
+                                <a ng-click="selected.item = item">{{ item }}</a>
+                            </li>
+                        </ul>
+                        Selected: <b>{{ selected.item }}</b>
+                    </div>
+                    {% endverbatim %}
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" ng-click="ok()">{{ 'ok'|trans({}, 'platform') }}</button>
+                        <button class="btn btn-warning" ng-click="cancel()">{{ 'cancel'|trans({}, 'platform') }}</button>
+                    </div>
+                </script>
+
                 <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
                         {% if editMode %}
-                        {#<div data-ng-include="'templates/menu_widget-type.tpl.html'">#}
-                        {#</div>#}
                         <div class="add_widget" data-ng-init="isadding = false" data-ng-show="!isadding">
                             <div class="panel-body">
                                 <p class="add_widget_icon" data-ng-click="isadding = true">
@@ -115,7 +133,7 @@
                                 <ul class="list-inline widget_type_list">
                                     {% verbatim %}
                                     <li class="widget_type" data-ng-repeat="widgetType in widgetTypes"
-                                        data-ng-click="$parent.isadding = false" role="button" data-widget-picker="widgetPickerConfig" data-widget-type="{{ widgetType.name }}">
+                                        data-ng-click="$parent.isadding = false; createWidget(widgetType.name)" role="button" data-widget-type="{{ widgetType.name }}">
                                         <span class="fa fa-{{ widgetType.icon }}"></span>
                                         <span>{{ widgetType.name + '_title' | trans }}</span>
                                     </li>
@@ -219,9 +237,10 @@
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-0.13.0.js'
+            '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-tpls-0.13.0.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/javascript-detect-element-resize/jquery.resize.js'
             '@IcapPortfolioBundle/Resources/public/js/vendor/angular-gridster/angular-gridster.js'
-            '@IcapPortfolioBundle/Resources/public/js/widget_picker.js'
         %}
             <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}
@@ -232,6 +251,7 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/portfolioController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/commentController.js'
+            '@IcapPortfolioBundle/Resources/public/js/portfolio/controllers/widgetPickerController.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioFactory.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/portfolioManager.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/widgetsManager.js'
@@ -241,7 +261,6 @@
             '@IcapPortfolioBundle/Resources/public/js/portfolio/services/commentFactory.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/portfolioDirective.js'
-            '@IcapPortfolioBundle/Resources/public/js/portfolio/directives/widgetPickerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/loadingFormDirective.js'
             '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'

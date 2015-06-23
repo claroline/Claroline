@@ -1,20 +1,53 @@
 'use strict';
 
 portfolioApp
-    .controller("portfolioController", ["$scope", "$filter", "portfolioManager", "widgetsManager", "commentsManager", "$attrs", "widgetsConfig", "assetPath", "$timeout",
-                                function($scope, $filter, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $timeout) {
+    .controller(
+    "portfolioController", ["$scope", "portfolioManager", "widgetsManager", "commentsManager", "$attrs", "widgetsConfig",
+        "assetPath", "$modal", "$timeout",
+    function($scope, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $modal, $timeout) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {
             $scope.widgets  = widgetsManager.widgets;
             $scope.comments = commentsManager.comments;
         });
 
-        $scope.widgetTypes    = widgetsConfig.getTypes(true);
-        $scope.assetPath      = assetPath;
+        $scope.widgetTypes = widgetsConfig.getTypes(true);
+        $scope.assetPath = assetPath;
 
-        $scope.createWidget = function(type, column) {
+        $scope.createWidget = function(type) {
             console.log(type);
-            //widgetsManager.create(portfolioManager.portfolioId, type, column || 1);
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'widget_picker_modal.html',
+                controller: 'widgetPickerController',
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return widgetsManager.getAvailableWidgetsByTpe($scope.portfolio.id, type);
+                        return ['item1', 'item2', 'item3'];
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+                console.log('ok');
+            }, function () {
+                console.log('cancel');
+            });
+
+            /*
+            Small code to avoid https://github.com/angular-ui/bootstrap/issues/3633
+            Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
+             */
+            modalInstance.result.finally(function() {
+                $timeout(function() {
+                    $('.modal:last').trigger('$animate:close');
+                    $timeout(function() {
+                        $('.modal-backdrop:last').trigger('$animate:close');
+                    }, 100);
+                }, 100);
+            });
         };
 
         $scope.edit = function() {
@@ -68,12 +101,6 @@ portfolioApp
                         }
                     }
                 } // optional callback fired when item is finished dragging
-            }
-        };
-
-        $scope.widgetPickerConfig = {
-            successCallback: function (nodes) {
-                console.log('pouet');
             }
         };
     }]);

@@ -6,7 +6,7 @@ commentsApp
             comments: [],
             create: function(portfolioId, rawComment) {
                 var emptyComment = commentFactory.getComment(portfolioId);
-                var comment      = new emptyComment(rawComment);
+                var comment = new emptyComment(rawComment);
 
                 this.comments.push(comment);
                 this.save(comment);

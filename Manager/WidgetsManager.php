@@ -254,15 +254,16 @@ class WidgetsManager
     }
 
     /**
-     * @param array $parameters
+     * @param User   $user
+     * @param string $type
      *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      */
-    public function getWidgetsForWidgetPicker(array $parameters)
+    public function getPortfolioWidgetsForWidgetPicker(User $user, $type)
     {
-        $widgets = [];
+        $portfolioWidgets = [];
 
-        return $widgets;
+        return $portfolioWidgets;
     }
 }
  

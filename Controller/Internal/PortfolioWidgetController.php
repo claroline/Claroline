@@ -30,10 +30,10 @@ class PortfolioWidgetController extends BaseController
 
         $data = [];
 
-        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $widgets */
-        $widgets = $this->getWidgetsManager()->getWidgets($loggedUser, $type);
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets */
+        $portfolioWidgets = $this->getWidgetsManager()->getPortfolioWidgetsForWidgetPicker($loggedUser, $type);
 
-        foreach ($widgets as $widget) {
+        foreach ($portfolioWidgets as $widget) {
             $data[] = $this->getWidgetsManager()->getPortfolioWidgetData($widget);
         }
 
@@ -78,8 +78,7 @@ class PortfolioWidgetController extends BaseController
     }
 
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_portfolio_widget_put", defaults={"widgetId" = null})
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_put_id")
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_put", requirements={"widgetId" = "\d+"})
      * @Method({"PUT"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -107,8 +106,7 @@ class PortfolioWidgetController extends BaseController
     }
 
     /**
-     * @Route("/{type}", name="icap_portfolio_internal_portfolio_widget_delete", defaults={"widgetId" = null})
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_delete_id")
+     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_delete", requirements={"widgetId" = "\d+"})
      * @Method({"DELETE"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})

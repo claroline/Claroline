@@ -1,7 +1,7 @@
 'use strict';
 
 var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-    'mgcrea.ngStrap.popover', 'app.translation', 'app.interpolator', 'app.directives', 'gridster']);
+    'mgcrea.ngStrap.popover', 'app.translation', 'app.interpolator', 'app.directives', 'gridster', 'ui.bootstrap']);
 
 portfolioApp.config(["$httpProvider", function($http) {
     var elementToRemove = ['views', 'isUpdating', 'isDeleting', 'id', 'type', 'unreadComments', 'toSave'];

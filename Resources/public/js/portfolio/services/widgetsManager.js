@@ -1,7 +1,8 @@
 'use strict';
 
 portfolioApp
-    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", function($http, widgetsConfig, widgetFactory){
+    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", "$q", "urlInterpolator",
+        function($http, widgetsConfig, widgetFactory, $q, urlInterpolator){
         return {
             widgets: [],
             emptyWidgets: [],
@@ -129,6 +130,19 @@ portfolioApp
                 widget.$delete(success, failed).then(function() {
                     widget.isDeleting = false;
                 });
+            },
+            getAvailableWidgetsByTpe: function(portfolioId, type) {
+                var url = urlInterpolator.interpolate('/{{portfolioId}}/{{type}}', {portfolioId: portfolioId, type: type});
+
+                var deferred = $q.defer();
+                $http.get(url)
+                    .success(function(data) {
+                        console.log(data);
+                        deferred.resolve(data);
+                    }).error(function(msg, code) {
+                        deferred.reject(msg);
+                    });
+                return deferred.promise;
             }
         };
     }]);
