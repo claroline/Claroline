@@ -7,10 +7,6 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Form\InteractionOpenType;
-use UJM\ExoBundle\Form\ResponseType;
-
 class Open extends Interaction {
     /**
      * implement the abstract method
@@ -149,34 +145,6 @@ class Open extends Interaction {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
          return $responseGiven;
-     }
-
-     /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param mixed[] An array of parameters to pass to the view
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function show($interaction, $exoID, $vars)
-     {
-         $response = new Response();
-         $interactionOpen = $this->doctrine
-                                 ->getManager()
-                                 ->getRepository('UJMExoBundle:InteractionOpen')
-                                 ->getInteractionOpen($interaction->getId());
-
-         $form   = $this->formFactory->create(new ResponseType(), $response);
-
-         $vars['interactionToDisplayed'] = $interactionOpen;
-         $vars['form']            = $form->createView();
-         $vars['exoID']           = $exoID;
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
      }
 
      /**

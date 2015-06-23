@@ -17,6 +17,38 @@ class InteractionGraphicController extends Controller
 {
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:show'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     array vars
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $em = $this->get('doctrine')->getEntityManager();
+        $vars = $attr->get('vars');
+        
+        $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
+                               ->getInteractionGraphic($attr->get('interaction')->getId());
+
+        $repository = $em->getRepository('UJMExoBundle:Coords');
+
+        $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph));
+
+        $vars['interactionToDisplayed'] = $interactionGraph;
+        $vars['listeCoords']            = $listeCoords;
+        $vars['exoID']                  = $attr->get('exoID');
+
+        return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
+    }
+    
+    /**
      * Creates a new InteractionGraphic entity.
      *
      * @access public

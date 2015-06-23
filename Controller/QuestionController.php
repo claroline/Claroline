@@ -269,9 +269,10 @@ class QuestionController extends Controller
                 ->getInteraction($id);
 
             $typeInter = $interaction->getType();
-            $interSer  = $this->container->get('ujm.exo_' . $typeInter);
-
-            return $interSer->show($interaction, $exoID, $vars);
+            
+            return $this->forward(
+                        'UJMExoBundle:' . $typeInter . ':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars
+                            ));
 
         } else {
 

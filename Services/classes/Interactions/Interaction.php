@@ -9,13 +9,9 @@ namespace UJM\ExoBundle\Services\classes\Interactions;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactory;
-
 abstract class Interaction {
 
     protected $doctrine;
-    protected $formFactory;
 
     /**
      * Constructor
@@ -23,17 +19,14 @@ abstract class Interaction {
      * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
-     * @param \Symfony\Component\Form\FormFactory $formFactory
      *
      */
     public function __construct(
-        Registry $doctrine,
-        FormFactory $formFactory
+        Registry $doctrine
 
     )
     {
         $this->doctrine        = $doctrine;
-        $this->formFactory     = $formFactory;
     }
 
     /**
@@ -223,18 +216,5 @@ abstract class Interaction {
       *
       */
      abstract public function getResponseGiven($interId, $session, $interactionX);
-
-     /**
-      * abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param mixed[] An array of parameters to pass to the view
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     abstract public function show($interaction, $exoID, $vars);
 
 }

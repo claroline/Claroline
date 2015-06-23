@@ -6,7 +6,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 
 use UJM\ExoBundle\Entity\InteractionMatching;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\InteractionMatchingType;
+use UJM\ExoBundle\Form\ResponseType;
 use UJM\ExoBundle\Form\InteractionMatchingHandler;
 
 /**
@@ -16,6 +18,45 @@ use UJM\ExoBundle\Form\InteractionMatchingHandler;
 class InteractionMatchingController extends Controller
 {
 
+    /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:show'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     array vars
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $em   = $this->get('doctrine')->getEntityManager();
+        $vars = $attr->get('vars');
+        
+        $response = new Response();
+        $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
+                                  ->getInteractionMatching($attr->get('interaction')->getId());
+
+        if ($interactionMatching->getShuffle()) {
+            $interactionMatching->shuffleProposals();
+            $interactionMatching->shuffleLabels();
+        } else {
+            $interactionMatching->sortProposals();
+            $interactionMatching->sortLabels();
+        }
+
+        $form = $this->createForm(new ResponseType(), $response);
+
+        $vars['interactionToDisplayed'] = $interactionMatching;
+        $vars['form'] = $form->createView();
+        $vars['exoID'] = $attr->get('exoID');
+
+        return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
+    }
+    
     /**
      * Creates a new InteractionMatching entity.
      *

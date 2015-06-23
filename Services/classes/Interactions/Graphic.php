@@ -7,8 +7,6 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-use UJM\ExoBundle\Form\InteractionGraphicType;
-
 class Graphic extends Interaction {
 
     /**
@@ -179,37 +177,6 @@ class Graphic extends Interaction {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
          return $responseGiven;
-     }
-
-     /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param mixed[] An array of parameters to pass to the view
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function show($interaction, $exoID, $vars)
-     {
-         $interactionGraph = $this->doctrine
-                                  ->getManager()
-                                  ->getRepository('UJMExoBundle:InteractionGraphic')
-                                  ->getInteractionGraphic($interaction->getId());
-
-         $repository = $this->doctrine
-                            ->getManager()
-                            ->getRepository('UJMExoBundle:Coords');
-
-         $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph));
-
-         $vars['interactionToDisplayed'] = $interactionGraph;
-         $vars['listeCoords']        = $listeCoords;
-         $vars['exoID']              = $exoID;
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
      }
 
      /**

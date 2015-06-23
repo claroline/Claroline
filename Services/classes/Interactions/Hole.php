@@ -7,10 +7,6 @@
 
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-use UJM\ExoBundle\Entity\Response;
-use UJM\ExoBundle\Form\InteractionHoleType;
-use UJM\ExoBundle\Form\ResponseType;
-
 class Hole extends Interaction {
 
     /**
@@ -147,34 +143,6 @@ class Hole extends Interaction {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
 
          return $responseGiven;
-     }
-
-     /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param mixed[] An array of parameters to pass to the view
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function show($interaction, $exoID, $vars)
-     {
-         $response = new Response();
-         $interactionHole = $this->doctrine
-                                 ->getManager()
-                                 ->getRepository('UJMExoBundle:InteractionHole')
-                                 ->getInteractionHole($interaction->getId());
-
-         $form   = $this->formFactory->create(new ResponseType(), $response);
-
-         $vars['interactionToDisplayed'] = $interactionHole;
-         $vars['form']            = $form->createView();
-         $vars['exoID']           = $exoID;
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
      }
 
      /**

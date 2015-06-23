@@ -7,8 +7,10 @@ use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use UJM\ExoBundle\Entity\InteractionOpen;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\InteractionOpenType;
 use UJM\ExoBundle\Form\InteractionOpenHandler;
+use UJM\ExoBundle\Form\ResponseType;
 
 /**
  * InteractionOpen controller.
@@ -17,6 +19,37 @@ use UJM\ExoBundle\Form\InteractionOpenHandler;
 class InteractionOpenController extends Controller
 {
 
+    /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:show'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     array vars
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $em   = $this->get('doctrine')->getEntityManager();
+        $vars = $attr->get('vars');
+        
+        $response = new Response();
+        $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
+                              ->getInteractionOpen($attr->get('interaction')->getId());
+
+        $form   = $this->createForm(new ResponseType(), $response);
+
+        $vars['interactionToDisplayed'] = $interactionOpen;
+        $vars['form']            = $form->createView();
+        $vars['exoID']           = $attr->get('exoID');
+
+        return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
+    }
+    
     /**
      * Creates a new InteractionOpen entity.
      *

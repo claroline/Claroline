@@ -6,8 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 
 use UJM\ExoBundle\Entity\InteractionQCM;
+use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\InteractionQCMType;
 use UJM\ExoBundle\Form\InteractionQCMHandler;
+use UJM\ExoBundle\Form\ResponseType;
 
 /**
  * InteractionQCM controller.
@@ -15,6 +17,43 @@ use UJM\ExoBundle\Form\InteractionQCMHandler;
  */
 class InteractionQCMController extends Controller
 {
+    
+    /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:show'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     array vars
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $em = $this->get('doctrine')->getEntityManager();
+        $vars = $attr->get('vars');
+        
+        $response = new Response();
+        $interactionQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
+                             ->getInteractionQCM($attr->get('interaction')->getId());
+
+         if ($interactionQCM->getShuffle()) {
+             $interactionQCM->shuffleChoices();
+         } else {
+             $interactionQCM->sortChoices();
+         }
+
+         $form   = $this->createForm(new ResponseType(), $response);
+
+         $vars['interactionToDisplayed'] = $interactionQCM;
+         $vars['form']           = $form->createView();
+         $vars['exoID']          = $attr->get('exoID');
+
+         return $this->render('UJMExoBundle:InteractionQCM:paper.html.twig', $vars);
+    }
 
     /**
      * Creates a new InteractionQCM entity.
