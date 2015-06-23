@@ -1,36 +1,36 @@
 var responses = [];
 
-$(window).load( function() {
-    //for create source element for jsPlumb
-        $(".origin").each(function() {
-            jsPlumb.addEndpoint(this, {
-                anchor: 'RightMiddle',
-                cssClass: "endPoints",
-                isSource: true
-            });
-        });
-
-         //for create target element for jsPlumb
-        $(".droppable").each(function() {
-            jsPlumb.addEndpoint(this, {
-                anchor: 'LeftMiddle',
-                cssClass: "endPoints",
-                isTarget: true
-            });
-        });
-});
-
 $(function() {
 
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
+        
+        // for create source element for jsPlumb
+        $(".origin").each(function() {
+            jsPlumb.addEndpoint(this, {
+                anchor: 'RightMiddle',
+                cssClass: "endPoints",
+                isSource: true,
+                maxConnections: -1
+            });
+        });
+
+         // for create target element for jsPlumb
+        $(".droppable").each(function() {
+            jsPlumb.addEndpoint(this, {
+                anchor: 'LeftMiddle',
+                cssClass: "endPoints",
+                isTarget: true,
+                maxConnections: -1
+            });
+        });
 
         // for reset all connection
         $("#resetAll").click(function() {
             jsPlumb.detachEveryConnection();
         });
 
-        //defaults parameteres for all connections
+        // defaults parameteres for all connections
         jsPlumb.importDefaults({
             Anchors: ["RightMiddle", "LeftMiddle"],
             ConnectionsDetachable: false,
@@ -38,18 +38,17 @@ $(function() {
             DropOptions: {tolerance: "touch"},
             HoverPaintStyle: {strokeStyle: "red"},
             LogEnabled: true,
-            MaxConnections: -1,
             PaintStyle: {strokeStyle: "#777", lineWidth: 4}
         });
 
-        //if there are multiples same link
+        // if there are multiples same link
         jsPlumb.bind("beforeDrop", function(info) {
             var connection = jsPlumb.getConnections({
                 source: info["sourceId"],
                 target: info["targetId"]
             });
             if (connection.length !== 0) {
-                //if the connection is already makes
+                // if the connection is already makes
                 if (info["sourceId"] == connection[0].sourceId && info["targetId"] == connection[0].targetId) {
                     return false;
                 } else {
@@ -60,23 +59,23 @@ $(function() {
             }
         });
 
-        //for remove connections
+        // for remove connections
         jsPlumb.bind("click", function(connection) {
             jsPlumb.detach(connection);
         });
     });
 
-    //for check in connections
+    // for check in connections
     var formBalise = $("body").find("form");
     var idFormBalise = formBalise.attr("id");
-    // for validate in exercice
+    // validate in exercice
     if (idFormBalise == "formResponse") {
         $("#" + idFormBalise).submit(function() {
             $(".origin").each(function() {
                 checkIn($(this));
             });
         });
-        // for validate in test in banque question
+        // validate in test in banque question
     } else {
         $("#submit_response").click(function() {
             $(".origin").each(function() {
@@ -87,7 +86,7 @@ $(function() {
 });
 
 function placeProposal(idLabel, idProposal) {
-    //for exercice, if go on previous question, replace connections
+    // for exercice, if go on previous question, replace connections
     $(function() {
         jsPlumb.ready(function() {
             jsPlumb.connect({
@@ -98,7 +97,7 @@ function placeProposal(idLabel, idProposal) {
     });
 }
 
-//registration of relations
+// registration of relations
 function checkIn(divProposal) {
     var idProposal = divProposal.attr("id");
     var proposal = idProposal.replace('draggable_', '');
@@ -116,6 +115,7 @@ function checkIn(divProposal) {
 }
 
 function dragStop() {
+    // registration of responses in the html balise
     var resp = '';
     $.each(responses, function(key, value) {
         if (value) {

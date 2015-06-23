@@ -3,38 +3,61 @@ var balisesLiDropped = [];
 
 $(function() {
 
+    // for reset all connections
+    $("#resetAll").click(function() {
+        // initialise the part of proposal
+        $(".origin").each(function(){
+            if($(this).find('.draggable').attr('style')) {
+                $(this).find('.draggable').removeAttr('style');
+                $(this).find('.draggable').removeAttr('aria-disabled');
+                $(this).find('.draggable').draggable("enable");
+                var idProposal = $(this).attr("id");
+                // reset table of response
+                idProposal = idProposal.replace('div_', '');
+                responses[idProposal]= 'NULL';
+            }
+        });
+        // reset the part of label
+        $(".droppable").each(function(){
+            if($(this).find(".dragDropped").children()) {
+                $(this).removeClass('state-highlight');
+                $(this).find(".dragDropped").children().remove();
+            }
+        });
+        // reset response in jsonResponse balise
+        dragStop();
+    });
+
+    // for visual, extend gray rectangle for label
     if($(".draggable").width() > $(".droppable").width()) {
         var $widthDraggable = $(".draggable").width();
         var $widthDroppable = $widthDraggable;
         $(".droppable").width($widthDroppable * 1.5);
     }
 
+    // for active the draggable on each proposal
     $(".draggable").each(function() {
         activeDraggable($(this));
     });
 
     $(".droppable").each(function() {
-
-        //for exercice, if go on previous question
+        // in exercice, if go on previous question, just visual aspect
         if($(this).children().length > 2) {
-            childrens = $(this).children().length;
+            var childrens = $(this).children().length;
             var i=2;
-
-            //displacement of each li in ul
+            // replace proposal in the div dragDropped
             for(i=2; i<childrens; i++) {
                 $(this).children(".dragDropped").prepend($(this).children().last().clone());
                 $(this).children().last().remove();
             }
-
-            //active the css class when drag dropped
+            // active the css class when drag dropped
             $(this).addClass("state-highlight");
             $(this).children(".dragDropped").children().each(function() {
-
-                //add the image for delete drag
-                id = $(this).attr('id');
-                idNumber = id.replace('draggable_', '');
+                // add the image for delete drag
+                var id = $(this).attr('id');
+                var idNumber = id.replace('draggable_', '');
                 balisesLiDropped[idNumber] = $(this);
-                idDrag = $(this).attr('id');
+                var idDrag = $(this).attr('id');
                 $(this).append("<a class='fa fa-trash' id=reset"+idDrag+"></a>");
             });
         }
@@ -43,59 +66,56 @@ $(function() {
             activeClass: "state-hover",
             hoverClass: "state-active",
             drop: function(event, ui) {
-
-                idLabel = $(this).attr('id');
+                var idLabel = $(this).attr('id');
                 idLabel = idLabel.replace('droppable_', '');
-                idProposal = ui.draggable.attr("id");
+                var idProposal = ui.draggable.attr("id");
                 idProposal = idProposal.replace('draggable_', '');
-
+                // for register responses
                 if (idProposal) {
                     responses[idProposal] = idLabel;
                 }
-
                 idProposal = ui.draggable.attr("id");
                 $(this).addClass("state-highlight");
-
-                //clone the drag in drop
+                // clone the drag in drop
                 $(this).children(".dragDropped").append($(ui.helper).clone().removeClass("draggable ui-draggable ui-draggable-dragging")
                         .removeAttr('style').css("list-style-type","none").addClass(idProposal));
 
                 $("."+idProposal).attr('id', idProposal);
                 var idDrag = "#"+idProposal;
                 $(this).find(".dragDropped").children(idDrag).append("<a class='fa fa-trash' id=reset"+idDrag+"></a>");
-
-                //desactivate the drag like he is dropped
-                $(idDrag).draggable("disable");
-
                 // discolor the text
+                $(idDrag).draggable("disable");
                 $(idDrag).fadeTo(100, 0.3);
                 disableDrag(idDrag, $(this));
-            },
+            }
         });
     });
 
     $(".origin").each(function() {
-        //for exercice, if go on previous question
-        if($(this).children().children().length == 0) {
-            id = $(this).attr('id');
-            idNumber = id.replace('div_', '');
+        // for exercice, if go on previous question
+        if($(this).children().children().length === 0) {
+            var id = $(this).attr('id');
+            var idNumber = id.replace('div_', '');
 
-            //clones the li balise of draggable and takes the correct appearance like if is dropped
+            // make the right apprearence for colunmm of label and proposal
             $(this).children().append(balisesLiDropped[idNumber].clone());
             $(this).children().children().children("a").remove();
             $(this).children().children().removeClass();
             $(this).children().children().addClass("draggable ui-draggable ui-draggable-disabled ui-state-disabled");
-            idDrag = id.replace('div', 'draggable');
+            var idDrag = id.replace('div', 'draggable');
             idDrag = "#"+idDrag;
+            // discolor the text
             $(idDrag).fadeTo(100, 0.3);
-            droppable = balisesLiDropped[idNumber].parent().parent();
+            var droppable = balisesLiDropped[idNumber].parent().parent();
+            // option for draggable
             activeDraggable($(this).children().children());
-            $(idDrag).draggable("enable");
+            $(idDrag).draggable("disable");
+            // to remove a drag drapped
             disableDrag(idDrag, droppable);
         }
 
         $(this).droppable({
-            tolerance: "pointer",
+            tolerance: "pointer"
         });
     });
 });
@@ -106,32 +126,33 @@ function activeDraggable(draggable) {
         revert: 'invalid',
         helper: 'clone',
         stop: function(event, ui) {
-            //dump(responses);
+             // update response in the balise
             dragStop();
-        },
-    });
-}
-
-function disableDrag(idDrag, parent) {
-    var draggableDropped = parent.children(".dragDropped").children(idDrag);
-
-    //removes a drag dropped
-    parent.children(".dragDropped").children(idDrag).children().last().click(function() {
-        if(parent.children(".dragDropped").children().length <= 1) {
-            parent.removeClass("state-highlight");
         }
-        removeDrag(idDrag, draggableDropped);
     });
 }
 
-function removeDrag(idDrag, draggableDropped) {
-    idProposal = idDrag;
+function disableDrag(idDrag, idDrop) {
+    var draggableDropped = idDrop.children(".dragDropped").children(idDrag);
+
+    // removes a drag dropped
+    idDrop.children(".dragDropped").children(idDrag).children().last().click(function() {
+        if(idDrop.children(".dragDropped").children().length <= 1) {
+            idDrop.removeClass("state-highlight");
+        }
+        // update the response table
+        removeDragTable(idDrag, draggableDropped);
+    });
+}
+
+function removeDragTable(idDrag, draggableDropped) {
+    var idProposal = idDrag;
     idProposal = idProposal.replace('#draggable_', '');
     if (idProposal) {
         responses[idProposal] = 'NULL';
     }
+    // update response in the balise
     dragStop();
-
     draggableDropped.remove();
     // resets of draggable
     $(idDrag).draggable("enable");
@@ -151,13 +172,6 @@ function dragStop() {
 function placeProposal(idLabel, idProposal) {
     $("#draggable_" + idProposal).appendTo('#droppable_' + idLabel);
     responses[idProposal] = idLabel;
+    // update response in the balise
     dragStop();
-}
-
-function dump(obj) {
-    var out = '';
-    for (var i in obj) {
-        out += i + ": " + obj[i] + "\n";
-    }
-    alert(out);
 }

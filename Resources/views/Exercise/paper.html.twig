@@ -186,12 +186,10 @@
                     <input class="form-control" type="hidden" name="typeInteraction" value="InteractionMatching"/>
 
                     {% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
-                    
-                    {% if interactionToDisplayed.typeMatching.code == 1%}
+
                         <div id="divReset">
                             <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans }}" class="btn btn-primary">
                         </div>
-                    {% endif %}
 
                     <div id="interMatchingResponse">
                         <input type="hidden" id="jsonResponse" name ="jsonResponse" />
