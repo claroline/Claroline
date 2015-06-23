@@ -1,11 +1,3 @@
-/*
- * angular-ui-bootstrap
- * http://angular-ui.github.io/bootstrap/
-
- * Version: 0.13.0 - 2015-05-02
- * License: MIT
- */
-angular.module("ui.bootstrap", ["ui.bootstrap.collapse"]);
 angular.module('ui.bootstrap.collapse', [])
 
   .directive('collapse', ['$animate', function ($animate) {
