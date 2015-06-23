@@ -87,7 +87,7 @@
             </th>
             {% if (questionsList == 'share' or questionsList == 'importShare'
                     or questionsList == 'exoList' or questionsList == 'importExoList') %}
-                <th class="classic">{{ 'shared by' | trans }}</th>
+                <th class="classic">{{ 'shared_by' | trans }}</th>
             {% endif %}
             {% if (questionsList == 'importMy' or questionsList == 'importShare'
                     or questionsList == 'importExoList') %}
@@ -167,7 +167,7 @@
                 </a>
                 {# ham : fin  #}
                 {% else %}
-                    {{ 'noRights' | trans }}
+                    {{ 'no_rights' | trans }}
                 {% endif %}
                 {% if rights['allowEditQuestion'] %}
 
@@ -197,7 +197,7 @@
                     {% endif %}
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfMyBank'] and questionsList == 'share'%}
-                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}" id="delete-question"
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans }}" id="delete-question"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
                             'uid': app.user.id,
                             'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
@@ -206,13 +206,13 @@
                     </a>
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfMyBank'] and  ( (actionQ[interaction.question.id] is defined) and (actionQ[interaction.question.id] == 2) ) %}
-                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete of my bank' | trans }}"
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans }}"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id, 'uid': app.user.id, }) }}" id="delete-question">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfExercise'] %}
-                    <a class="btn btn-default" title="{{ 'delete of my exercise' | trans }}" data-toggle="tooltip"
+                    <a class="btn btn-default" title="{{ 'delete_of_my_exercise' | trans }}" data-toggle="tooltip"
                        href="{{ path('ujm_exercise_question_delete', {
                             'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,

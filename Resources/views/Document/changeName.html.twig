@@ -8,16 +8,16 @@
             </div>
 
             <div class="modal-body">
-                <h3 class="panel-title">{{ 'changeName' | trans }}</h3>
+                <h3 class="panel-title">{{ 'change_name' | trans }}</h3>
 
                 <form id="updateName" enctype="multipart/form-data" method="post" action="{{ path('ujm_question_name_update') }}">
 
-                    <p>{{ 'newName' | trans }} ?</p>
+                    <p>{{ 'new_name' | trans }} ?</p>
                     <input class="form-control" type="text" id='newlabel' name='newlabel' required="true"/>
 
                     <div class="modal-footer">
                         <input id="updateSubmit" type="submit" value="{{ 'change' | trans }} !"
-                            onclick="ValidName('{{ 'wrongName' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'already_exist' | trans }}', 'updateName');
+                            onclick="ValidName('{{ 'wrong_name' | trans }}','newlabel', '{{ path('ujm_Document_name_alreadyExist') }}', '{{ 'already_exist' | trans }}', 'updateName');
                                 return false;" class="btn btn-primary"/>
 
                         <input type="hidden" id="oldName" name="oldName" value="{{oldDocLabel}}"/>

@@ -21,7 +21,7 @@ class ProposalType extends AbstractType
                     'attr' => array(
                         'class'=>'form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'expected answer'
+                        'placeholder' => 'expected_answer'
                     )
                 )
             )

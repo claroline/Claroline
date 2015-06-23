@@ -20,7 +20,7 @@ class LabelType extends AbstractType
                     'label' => ' ', 'attr' => array(
                         'class' => 'labelVal form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'expected answer'
+                        'placeholder' => 'expected_answer'
                     )
                 )
             )

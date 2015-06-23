@@ -35,12 +35,12 @@
                 <div class="alert alert-warning">{{ qtiError }}</div>
             {% endif %}
         {% if is_granted('ADMINISTRATE', _resource) %}
-            {{ 'infoExerciseNoPuplished'|trans }} :
+            {{ 'info_exercise_no_puplished'|trans }} :
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
                 <i class="fa fa-check"></i> {{ 'publish' | trans }}
             </a>
         {% else %}
-            {{ 'infoExerciseNoPuplished2'|trans }}
+            {{ 'info_exercise_no_puplished2'|trans }}
         {% endif %}
     </div>
 
@@ -63,11 +63,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'start date' | trans }}</th>
+                        <th class="classic">{{ 'start_date' | trans }}</th>
                         <td class="classic">{{ entity.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'use date of end' | trans }}</th>
+                        <th class="classic">{{ 'use_date_end' | trans }}</th>
                         <td class="classic">
                             {% if entity.useDateEnd == 0 %}
                                 <i class="fa fa-times-circle"></i>
@@ -78,14 +78,14 @@
                     </tr>
                     {% if entity.useDateEnd != 0 %}
                         <tr>
-                            <th class="classic">{{ 'end date' | trans }}</th>
+                            <th class="classic">{{ 'end_date' | trans }}</th>
                             <td class="classic">{{ entity.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
                     {% endif %}
 
                     {% if is_granted('ADMINISTRATE', _resource) %}
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'random order of questions' | trans }}</th>
+                            <th class="classic">{{ 'random_questions' | trans }}</th>
                             <td class="classic">
                                 {% if entity.shuffle == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -95,7 +95,7 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'number of questions to draw' | trans }}</th>
+                            <th class="classic">{{ 'number_questions_draw' | trans }}</th>
                             <td class="classic">
                                 {% if entity.nbQuestion != 0 %}
                                     {{ entity.nbQuestion }}
@@ -106,7 +106,7 @@
                         </tr>
                        {#---not operational---#} 
                             {#<tr class="hiddencells">
-                            <th class="classic">{{ 'Exercise.keepSameQuestion' | trans }}</th>
+                            <th class="classic">{{ 'keep_same_question' | trans }}</th>
                             <td class="classic">
                                 {% if entity.keepSameQuestion == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -116,7 +116,7 @@
                             </td> #}
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'creationDate' | trans }}</th>
+                            <th class="classic">{{ 'creation_date' | trans }}</th>
                             <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
                         <tr style="display: none;">
@@ -125,12 +125,12 @@
                                 {% if entity.duration != 0 %}
                                     {{ entity.duration }}
                                 {% else %}
-                                    {{ 'noOne'|trans }}
+                                    {{ 'none'|trans }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'print paper' | trans }}</th>
+                            <th class="classic">{{ 'print_paper' | trans }}</th>
                             <td class="classic">
                                 {% if entity.doprint == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -140,7 +140,7 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'maximum number of tries' | trans }}</th>
+                            <th class="classic">{{ 'maximum_tries' | trans }}</th>
                             <td class="classic">
                                 {% if entity.maxAttempts != 0 %}
                                     {{ entity.maxAttempts }}
@@ -150,10 +150,10 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'availability of correction' | trans }}</th>
+                            <th class="classic">{{ 'availability_of_correction' | trans }}</th>
                             <td class="classic">
                                 {% if(entity.correctionMode == 1) %}
-                                    {{ 'at the end of assessment' | trans }}
+                                    {{ 'at_the_end_of_assessment' | trans }}
                                 {% elseif (entity.correctionMode == 2) %}
                                     {{ 'after_the_last_attempt' | trans }}
                                 {% elseif (entity.correctionMode == 3) %}
@@ -164,17 +164,17 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'availability of score' | trans }}</th>
+                            <th class="classic">{{ 'availability_of_score' | trans }}</th>
                             <td class="classic">
                                 {% if(entity.markMode == 1) %}
-                                    {{ 'at the same time that the correction' | trans }}
+                                    {{ 'at_the_same_time_that_the_correction' | trans }}
                                 {% else %}
-                                    {{ 'at the end of assessment' | trans }}
+                                    {{ 'at_the_end_of_assessment' | trans }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'test exit' | trans }}</th>
+                            <th class="classic">{{ 'test_exit' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.dispButtonInterrupt == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -184,7 +184,7 @@
                             </td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'lock attempt' | trans }}</th>
+                            <th class="classic">{{ 'lock_attempt' | trans }}</th>
                             <td class="classic">
                                 {% if  entity.lockAttempt == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -198,10 +198,10 @@
             </table>
             {% if is_granted('ADMINISTRATE', _resource) %}
                 <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
-                    <i class="fa fa-plus"></i> {{ 'moreInformation' | trans }}
+                    <i class="fa fa-plus"></i> {{ 'more_info' | trans }}
                 </button>
-                <button type="button" id="less" class="btn btn-primary" onclick="lessInformation();">
-                    <i class="fa fa-minus"></i> {{ 'lessInformation' | trans }}
+                <button type="button" id="less" class="btn btn-primary" onclick="less_information();">
+                    <i class="fa fa-minus"></i> {{ 'less_information' | trans }}
                 </button>
             {% endif %}
         </div>

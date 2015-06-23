@@ -6,12 +6,12 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'findQuestion' | trans }} {% endblock %}
+{% block title %} {{ 'find_question' | trans }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'findQuestion' | trans }}</h3>
+        <h3 class="panel-title">{{ 'find_question' | trans }}</h3>
     </div>
 
     <div class="panel-body">
@@ -34,7 +34,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findBy'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_by'|trans }}</h3>
                     </div>
                     <div class="panel-body">
                         <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans }}
@@ -43,7 +43,7 @@
                         &nbsp;&nbsp;|&nbsp;&nbsp;
                         <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'containSearch'|trans }} ...
+                        <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'contain_search'|trans }} ...
                         &nbsp;&nbsp;|&nbsp;&nbsp;
                         <input type="radio" name="QuestionSearch" value="All"/> {{ 'all'|trans }}
                     </div>
@@ -51,12 +51,12 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findIn'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_in'|trans }}</h3>
                     </div>
                     <div class="panel-body">
-                        <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my questions'|trans }}
+                        <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my_questions'|trans }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="WhereSearch" value="shared"/> {{ 'my shared questions'|trans }}
+                        <input type="radio" name="WhereSearch" value="shared"/> {{ 'shared_questions'|trans }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
                         <input type="radio" name="WhereSearch" value="all"/> {{ 'all'|trans }}
                     </div>
@@ -64,7 +64,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'findWhat'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_what'|trans }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="input-group">

@@ -8,8 +8,8 @@
         <h3 class="panel-title">{{ 'graphic_creation' | trans }}</h3>
     </div>
 
-    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'noQuestion' | trans }} ...',
-        '{{ 'noImg' | trans }} !', '{{ 'noAnswerZone' | trans }} ...',
+    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'no_question' | trans }} ...',
+        '{{ 'no_img' | trans }} !', '{{ 'no_answer_zone' | trans }} ...',
         '{{ form.interaction.invite.vars.id }}');" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
@@ -53,7 +53,7 @@
 
     <script type="text/javascript">
         var translations = {
-            'tradWrongPoint' : '{{ 'wrongPoint' | trans }}',
+            'tradWrongPoint' : '{{ 'wrong_point' | trans }}',
             'tradCircle' : '{{ 'cercle' | trans }}',
             'tradSquare' : '{{ 'square' | trans }}'
         }

@@ -34,16 +34,11 @@
 ##
 
 # A
-#access my question bank: Access to my questions bank
-#addDoc: Add a document
-#add user: Add user
-#administration: Administration
-#alreadyPlaced: Already placed answers.
 actions: Actions
 add: Add
-add_a_new_picture: Add a new picture
 add_choice: Add a choice
 add_label: Add a label
+add_new_picture: Add a new picture
 add_proposal: Add a proposal
 add_zone_answer: Add answer zone
 advanced_edition: Advenced edition
@@ -55,118 +50,106 @@ all_question: All the questions
 already: This question is already shared with this user
 already_answered: You have already answered at this exercise
 already_exist: This name exist already
-alter category: Alter this cataegory
 answer_coched: No response expected is checked
-answer zone: Answer zone
-attempt info1: You have
-attempt info2sing: attempt
-attempt info2plur: attempts
-attempt info3: Attempt N°
-attempt info4: You have
-attempt info5: in order to improve your score
-attempt info6: You do not have attempt
-at the end of assessment: At the end of assessment
-at the same time that the correction: At the same time that the correction
-availability of correction: Availability of correction
-availability of score: Availability of score
+answer_zone: Answer zone
+attempt_info1: You have
+attempt_info2sing: attempt
+attempt_info2plur: attempts
+attempt_info3: Attempt N°
+attempt_info4: You have
+attempt_info5: in order to improve your score
+attempt_info6: You do not have attempt
+at_the_end_of_assessment: At the end of assessment
+at_the_same_time_that_the_correction: At the same time that the correction
+availability_of_correction: Availability of correction
+availability_of_score: Availability of score
 
 # B
-badgeObtained: Congratulations ! You got the badge of knowledge
-badgeNoObtained: You have not yet received the badge of knowledge
+badge_obtained: Congratulations ! You got the badge of knowledge
+badge_no_obtained: You have not yet received the badge of knowledge
 back: Back
-back to the list: Back to the list
-bank of questions: Bank of questions
-briefSearch: Brief Search
+back_to_the_list: Back to the list
+bank_of_questions: Bank of questions
+brief_search: Brief Search
 
 # C
+calculation_measure_difficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
 category: Category
-calculationMeasureDifficulty: It's calculate with the number of applicant which have correctly reply divided by total number of applicants
+case_sensitive: Case sensitive
 cercle: Circle
 change: Change
-changeName: Change the name of the document
-changeOrder: To change questions order, move it by using drag and drop
+change_name: Change the name of the document
+change_order: To change questions order, move it by using drag and drop
 choice: Choice
-choose: Choose 
 choose_image : Choose an image
 choose_category : Choose a category
 choose_type: Choose type
-chooseType: Choose type of document to display
-close: Close
 color: Color
 comment: Comment
 compose: Answer
 consult_hint: Consult the hint results in a penalty of X points, do you want to continue
-containSearch: Whose question contains
+contain_search: Whose question contains
 correct: Correct
 correction: Correction
-correction date: Correction date
-course_name: Course name
+correction_date: Correction date
 correspondence: correspondence
-correspondence empty: You have no correspondence !
-correspondenceError: You can't associate the same proposal with several labels !
+correspondence_empty: You have no correspondence !
+correspondence_error: You can't associate the same proposal with several labels !
 create: Create
-create a new category: Create a new category
-create a new entry: Create a new question
-creationDate: Creation date
-create hole : Create hole
+create_a_new_category: Create a new category
+create_a_new_entry: Create a new question
+creation_date: Creation date
+create_hole : Create hole
 
 # D
 date: Date
 default : Default
-delDocQuestion: Delete this document and all the linked questions
 delete: Delete
-delete document: Deletion of document
-delete hole: Delete the hole
-delete of my bank: Delete of my bank
-delete of my exercise: Delete of my exercise
-delete papers: Delete the papers
+delete_of_my_bank: Delete of my bank
+delete_of_my_exercise: Delete of my exercise
+delete_papers: Delete the papers
 description: Description
-displayAllList: Display the whole list
-display all on this page: Display all on this page
-display pagination: Display with pagination
+display_all_list: Display the whole list
+display_all_on_this_page: Display all on this page
 docimology: Docimology
-docManage: Manage my documents
-docName: Document name
+doc_manage: Manage my documents
 document: Document
-doNothing: Do nothing and go back to my documents management
-drop category: Drop this category
+drop_category: Drop this category
 duplicate: Duplicate
-duplicate this question: <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
+duplicate_this_question: <input type ="text" name='nbq' value='0' size='2' /> time this question (10 maximum allowed)
 duration: Duration
 
 # E
 edit: Edit
-edit a category: Edit a category
-edit a question: Edit a question
-end date: End date
+edit_category: Edit a category
+edit_question: Edit a question
+end_date: End date
 entry: Entry
-erase: To erase an answer zone, maintain press 's' key and click on the cross which allows to move it
 exercise: Exercise
-exercise alert break: The interruption of this exercise is not allowed. Your paper will be considered finish !
-exercise definition: Exercise definition
-exercise creation: Exercise creation
-exercise edit: Exercise edit
-exercice linked Question: Questions linked to the exercise
+exercise_alert_break: The interruption of this exercise is not allowed. Your paper will be considered finish !
+exercise_definition: Exercise definition
+exercise_edit: Exercise edit
+exercice_linked_question: Questions linked to the exercise
 exit: Exit
-expected answer: Expected answer
-explainCoeffDis0: The copies must have the same questions to calculate the coefficient of discrimination.
-explainCoeffDis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
-explainCoeffDis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
-explainCoeffDis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
-explainMeasureDifficulty: The measure of difficulty is equal to the percentage of success to the question
-export CSV of results: Export CSV of results
-exportQTIExercise : Export questions of exercise in QTI format
+expected_answer: Expected answer
+explain_coeff_dis0: The copies must have the same questions to calculate the coefficient of discrimination.
+explain_coeff_dis1: Analysis of the relevance of the questions, this correlation coefficient ranges from -1 to +1.
+explain_coeff_dis2: The questions with a discrimination coefficient between 0.35 and 0.65 maximize the discrimination of students.
+explain_coeff_dis3: Questions which have a negative index signal a discrepancy, the best students fail these questions, the lowest pass these questions.
+explain_measure_difficulty: The measure of difficulty is equal to the percentage of success to the question
+export_csv_results: Export CSV of results
+export_qti_exercise : Export questions of exercise in QTI format
 
 # F
 feedback: Feedback general
-findBy: Find by
-findIn: Find in
-findLabel: Find a document with a specific label
-findQuestion: Find questions
-findWhat: What you're looking for
-final mark: Final mark
+feedback_answer_check: Feedback if this answer is checked (optional)
+find_by: Find by
+find_in: Find in
+find_question: Find questions
+find_what: What you're looking for
+final_mark: Final mark
 finish: Finish
-forTypeOf: for a question of type
+for_type_of: for a question of type
 frequency: Frequency
 from: From
 
@@ -177,239 +160,211 @@ graphic_edition: Graphic edition
 group: Group
 
 # H
-hide Instructions: Hide instructions
+hide_instructions: Hide instructions
 hint: Hint
 hints: Hints
-hint number: Hint number
-histoDiscrimination: Discrimination coefficient
-histoMarks: Marks' histogram
-histoMeasureOfDifficulty: Histogram of the measure of the difficulty
-histoSuccess: Success' histogram
-hole: Hole
+histo_discrimination: Discrimination coefficient
+histo_marks: Marks' histogram
+histo_measure_difficulty: Histogram of the measure of the difficulty
+histo_success: Success' histogram
+hole: Text with hole
 hole_creation: Hole creation
 hole_edition: Hole edition
-home exercise: Home exercise
+hole_selector: Submit a list
+home_exercise: Home exercise
 
 # I
 infiny: Indefinite
-infoDuplicateQuestion: To duplicate a question you must insert an integer number between 0 and 10.
-infoExerciseNoPuplished: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted
-infoExerciseNoPuplished2: This exercise is not yet published. You can't yet compose.
-infoMark: The potential penalties have to be count during your notation
-infoMeasureDifficulty: This measure doesn't count students that didn't saw the question
+info_duplicate_question: To duplicate a question you must insert an integer number between 0 and 10.
+info_exercise_no_puplished: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted
+info_exercise_no_puplished2: This exercise is not yet published. You can't yet compose.
+info_mark: The potential penalties have to be count during your notation
+info_measure_difficulty: This measure doesn't count students that didn't saw the question
+inter_matching_shuffle: Order of random selection
+interaction_feedback: Feedback to display with the correction (optional)
 interupt: Interupt
 invite_question: The prompt of question must be completed
-isInterupt: Interupted
+is_interupt: Interupted
 image: Image
 import: Import
-import QTI : Import questions in QTI format
-importQTIExercise: Import exercise in QTI format
-import questions: Import questions
-infoSearchType: If you want to do a search by type, you must used the following key words
-instruction add hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
-instruction matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
-inValidMark: Invalid score
-
-# I Intraction type (data in the DB)
-InteractionGraphic: Graphic
-InteractionHole: Hole
-InteractionMatching: Association
-InteractionOpen: Open
-InteractionQCM: QCM
-#InteractionMatching: To drag/ To bind
+import_qti : Import questions in QTI format
+import_questions: Import questions
+info_search_type: If you want to do a search by type, you must used the following key words
+instruction_add_hole : To add a blank, you must select the text in the editor "Text with hole", then click on the button "Create hole".
+instruction_matching: To set your correspondence, choose in the column "Correspondence" the number of one or more proposals to associate.
+in_valid_mark: Invalid score
 
 # K
+keep_same_question: Keep the same questions for a same user
 key_word: Key word
-keys words: Keys words
-kind of question: What kind of question
+keys_words: Keys words
+kind_question: What kind of question
 
 # L
 label: Label
 label_empty: Fields of the responses should not be empty
 legend: Legend
-lessInformation: Less information
-linkedDoc: Warning, the document you tried to delete is linked to questions
-linkpaper: Link to a test
-linkedQuestions: Linked Questions
+less_information: Less information
 list: List
-list of exercises: List of exercises
-list of question: List of question
-lock attempt: Lock attempt
+list_question: List of question
+lock_attempt: Lock attempt
 long: Long
 
 # M
-manageImg: Manage my documents
+manage_img: Manage my documents
 mark: Mark
-mark this question: Marked this question
-markTooBigest: The mark must be less than or equal to
+mark_question: Marked this question
+mark_bigest: The mark must be less than or equal to
 matching: Association
 matching_creation: Association creation
 matching_edition: Association edition
-maximum number of tries: Maximum number of tries
-meaningMeasureDifficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
+matching_value: Type of associative question
+maximum_tries: Maximum number of tries
+meaning_measure_difficulty: If the measure is hight, the question is easy ; In return, if the measure is low, the question is difficult
 model: Model
-moreInformation: More information
-multiple response: Multiple response
-my account: My account
-my questions: My questions
-my shared questions: Questions which was shared with me
+more_info: More information
+my_questions: My questions
+my_models: My models
 
 # N
-nameUser2Shared: Name of user to share the question
+user_shared: Name of user to share the question
 nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
 nb_label: It must have one choice of label
 nb_proposal: It must have one choice of proposal
-need Correction: The red questions need correction
 never: Never
-newCategoryName: New name of the category
-newName: New name of the document
-newDoc: New document
+new_name: New name of the document
 next: Next
 no: No
-no answer: No answer
-noAnswerZone: There is no answer zone
-noFinish: No finished
-noDocFound: No document found
-noHintShow: Hints not seen, no penalty
-noImg: You must upload a picture
-noImgSelect: You must select an image
-no label: No labels associated
-noOne: None
-noPaperFound: No paper found
-noQuestion: You ask for nothing
-noQuestionFound: No question found
-noRightAnswer: No right answer
-noRights: Your aren't the owner of this question and it's not shared with you
-notAllowedModifyPaper: You can't alter your answers anymore !
-nothingToImport: No question is checked for the import
-notImageMesssage: The document should be an image
-noTitle: The question has no title
-notEnoughtPapers: To display docimology, it must have at least 12 papers
-not yet mark: Not yet mark
-noUserFound: No user found
-nQuestion: Question n°
-numberProposal: Number of the proposal
-number of papers: Number of papers
-number of questions: Number of questions
-number of questions to draw: Number of questions to draw (0 for all)
+no_answer: No answer
+no_answer_zone: There is no answer zone
+no_finish: No finished
+no_doc_found: No document found
+no_img: You must upload a picture
+no_img_select: You must select an image
+no_label: No labels associated
+none: None
+no_paper_found: No paper found
+no_question: You ask for nothing
+no_question_found: No question found
+no_rights: Your aren't the owner of this question and it's not shared with you
+not_allowed_modify_paper: You can't alter your answers anymore !
+no_thing_import: No question is checked for the import
+not_image_messsage: The document should be an image
+not_enought_papers: To display docimology, it must have at least 12 papers
+not_yet_mark: Not yet mark
+no_user_found: No user found
+n_question: Question n°
+number_proposal: Number of the proposal
+number_of_papers: Number of papers
+number_questions_draw: Number of questions to draw (0 for all)
 numerical: Numerical
 num_paper: Paper's number
-my models: My models
 
 # O
-oneWord: One word
-onlyOnce: => The rights answers count only once.
-only owner category: Only the owner can change the category
-only owner graphic: Only the owner can change the picture
+only_once: => The rights answers count only once.
+only_owner_graphic: Only the owner can change the picture
 open: Open
 open_creation: Open creation
 open_edition: Open Edition
-order: Order
 orders: Instructions
+orthography: Allow misspellings
 
 # P
 paper: Paper
-paper exo:  paper test
-paperLegend: Papers which need manual correction
-paper list: Paper list
+paper_legend: Papers which need manual correction
+paper_list: Paper list
 parameters: Parameters
 partially: Partially correct
 penalty: Penalty
 percentage: Percentage
-picture name: Picture name
-planning_Of_Groups: Planning of groups
-point: Point
+picture_name: Picture name
 points: Points
 point_answer: You must assign a point to the correct answer
 point_answers: You must assign a point to each answer
-pointInstruction: Points must be assigned before positioning each answer zone
-pointRightResponse: Right answer points
 position: => Place pointers below (red cross) on the picture. The pointer's center defines your answer.
 preview: Preview
 previous: Previous
-print paper: Print paper
+print_paper: Print paper
+proposal: Proposition
+position_force: Forced position
 publish: Publish
 
 # Q
 qcm: QCM
 qcm_creation: QCM creation
 qcm_edition: QCM edition
-qti can't open zip: Unable to open archive
-qti format warning: You must import a zip archive with an IMS_QTI file
+qcm_shuffle: Order of random selection
+qti_format_warning: You must import a zip archive with an IMS_QTI file
 qti_import_title: No title attribut in the element assessmentItem
-qti_import_qcm_prompt: No prompt element in the choiceInteraction element.
-qti no questions: Becarefull, for export an exercise, you must have at least one question in your exercise
-qti unsupported format: Non-compliant QTI format or unsupported
-qti xml not found: XML schema not found
+qti_no_questions: Becarefull, for export an exercise, you must have at least one question in your exercise
+qti_unsupported_format: Non-compliant QTI format or unsupported
+qti_xml_not_found: XML schema not found
 question: Question
 questions: Questions
-question graphic: Graphic Question
-question hole: Hole Question
-question open: Open Question
-question qcm: QCM Question
-questions: Questions
-question creation: Question creation
-questionSharedWith: This question is shared with users below
+question_creation: Question creation
+question_description: Description of the question (optional)
+question_model: Set as model
+question_title: Question title
+question_shared_with: This question is shared with users below
 
 # R
-random order of questions: Random order of questions
+random_questions: Random order of questions
 raz: => To reset all pointers' position, press "c".
 square: square
-remove advanced edition: Simple edition
+remove_advanced_edition: Simple edition
 remove_question_confirm_message:  Are you sure you want to delete this question ?
 reset: Reset
-resizeZone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
+resize_zone: To re-size the picture, place your mouse on its bottom right corner, keep left mouse button down, and mouve your mouse
 response: Response
-response number: Response number
 result: Results
-role: Role
+right_response: Points for correct answer
 
 # S
 save: Save
-saveNewOrder: Save the new order
-sawHint: of penalty for seen hints
-score and list of question: Score and list of questions
-scoreError: Be careful, score must be a number
-scoreMax : Score maximum possible
+save_order: Save the new order
+score: Score
+score_answer: Points for this answer
+score_list_question: Score and list of questions
+score_error: Be careful, score must be a number
+score_max : Score maximum possible
+score_false_label: Wrong result
+score_right_label: Correct result
+score_right_label_matching: Score of the association
 search: Search
-searchQuestion: Search questions
-searchUserPaper: Search papers of user
-seeDoc: See linked questions to this document
-seeSharedWith: Question shared with users
+search_question: Search questions
+search_user_paper: Search papers of user
+see_shared_with: Question shared with users
 select: Select
-selected Image: Selected image
 selection: => To answer, use drag and drop.
-selectZone: To define and move an answer zone, use drag and drop
 self: You can't shared this question with yourself
 shape: Shape
 share: Share
-shared by: Shared by
-sharedUser: Share of questions
-shared with: Shared with
+shared_by: Shared by
+shared_questions: Questions which was shared with me
+shared_user: Share of questions
+shared_with: Shared with
 short: Short
 show: Show
-show Instructions: Show instructions
+show_instructions: Show instructions
+size: Size
+start_again: Start again
+start_date: Start date
 sort: Sort documents
-start again: Start again
-start date: Start date
-subscription: Subscription
 
 # T
-temporary mark: Temporary mark
-test exit: Test output
+temporary_mark: Temporary mark
+test_exit: Test output
 title: Title
-To drag: To drag
-To bind: To bind
-try: Try
 type: Type
+type_qcm: QCM type
+type_question: Question type
 
 # U
-unique response: Unique response
 unpublish: Unpublish
 upload: Upload
 uploading: Uploading
-use date of end: Use end date
+use_date_end: Use end date
 user: User
 users: Users
 
@@ -420,143 +375,24 @@ validate: Validate
 warning: Are you sure you want to delete this document
 warning_change_type_q: Warning you may lose your data entered continue
 warning_one_word: You chose a question word. Attention has spaces in your answer.
-whichAction: Which action would you like to do
-with: With
-withResponse: With answers
+weight_choice: Assign points by response
 wrong: Wrong
-wrongName: The input name is wrong
-wrongPoint: The input value is wrong
+wrong_name: The input name is wrong
+wrong_point: The input value is wrong
 
 # Y
 yes: Yes
-your answer: Your answer
+your_answer: Your answer
 
 
-#properties of entities
-At the end of assessment: At the end of assessment
-At the same time that the correction: At the same time that the correction
-
-Category.value: Category
-
-Choice.feedback: Feedback if this answer is checked (optional)
-Choice.label: Proposed answer
-Choice.positionForce: Forced position
-Choice.rightResponse: Correct answer
-Choice.falseResponse : Points for wrong answer
-Choice.weight: Points for this answer
-
-Coords.color: Color
-Coords.score: Points for correct answer
-Coords.shape: Shape
-
-Document.label: Document
-
-Exercise.correctionMode: Correction mode
-Exercise.description: Description (optional)
-Exercise.dispButtonIterrupt: Allow the test to be stopped
-Exercise.doprint: Print the copy at the end of the test
-Exercise.duration: Duration
-Exercise.end_date: End date
-Exercise.keepSameQuestion: Keep the same questions for a same user
-Exercise.lockAttempt: Lock the test
-Exercise.markMode: Availability of the notation
-Exercise.maxAttemps: Tries allowed
-Exercise.nbQuestion: Number of question
-Exercise.nbQuestionPage: Number of questions by page
-Exercise.shuffle: Random order of questions
-Exercise.start_date: Start date
-Exercise.title: Exercise title
-
-Exepertise.description: Description
-Exepertise.title_expertise: Expertise title
-
-From: From
-
-Groupes.name: Name of group
-
-Hole.orthography: Allow misspellings
-Hole.score: Points for correct answer
-Hole.selector: Submit a list
-Hole.size: Size of hole
-
-Hint.penalty: Penalty
-Hint.value: Hint
-
-Interaction.feedback: Feedback to display with the correction (optional)
-Interaction.invite: Question
-
-Inter_Matching.shuffle: Order of random selection
-
-Inter_Open.ScoreMaxLongResp: Points for correct answer
-
-Inter_QCM.ScoreRightResponse: Correct result
-Inter_QCM.ScoreFalseResponse: Wrong result
-Inter_QCM.shuffle: Order of random selection
-Inter_QCM.weightChoice: Assign points by response
-
-Inter_Hole.html: Text with hole
-Inter_Hole.orthography: Allow misspellings
-Inter_Hole.score: Score
-Inter_Hole.size: Size
-
-Label.value : Label
-Label.scoreRight: Score of the association
-Label.positionForce: Forced position
-
-LockAttempte.date: Date
-
+# Data in the DB
+InteractionGraphic: Graphic
+InteractionHole: Text with hole
+InteractionMatching: Matching
+InteractionOpen: Open
+InteractionQCM: QCM
 Multiple response: Multiple response
-
-Never: Never
-
-Planning.end_time: End Date
-Planning.start_time: Start date
-Points: Points
-
-Proposal.value: Proposition
-Proposal.positionForce: Forced position
-
-Question_creation: Question creation
-Question.description: Description of the question (optional)
-Question.model: Set as model
-Question.title: Question title
-
-Roles.name: Name of role
-
-Response.mark: Mark
-Response.reponse: Response
-
-Subscription.admin: Granted admin role (exercise)
-
-TypeMatching.value: Type of associative question
-
-TypeOpenQuestion.value: Question type
-
-TypeQCM.value: QCM type
-
+oneWord: One word
+To drag: To drag
+To bind: To bind
 Unique response: Unique response
-
-Unit.value: Unity
-
-User.firstName: First name
-User.mail: E-mail
-User.name: Name
-User.password: Password
-User.username: User name
-
-ujm_exobundle_interactiongraphictype_document: Documents
-ujm_exobundle_interactiongraphictype_interaction_hints: Hints
-ujm_exobundle_interactionopentype_interaction: Open question
-ujm_exobundle_interactionopentype_interaction_hints: Hints
-ujm_exobundle_interactionmatchingtype_proposals: Response
-ujm_exobundle_interactionmatchingtype_labels: Question
-ujm_exobundle_interactionopentype_wordResponses: Keywords
-ujm_exobundle_interactionqcmtype_choices: Choices
-ujm_exobundle_interactionqcmtype_interaction: QCM
-ujm_exobundle_interactionqcmtype_interaction_hints: Hints
-
-ujm_exobundle_categorytype_value: Name of the new category
-
-WordResonse.caseSensitive: Case sensitive
-WordResponse.score: Point to this response
-WordResponse.response_value: Word
