@@ -213,58 +213,6 @@ class Graphic extends Interaction {
      }
 
      /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param integer $catID
-      * @param Claroline\Entity\User $user
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function edit($interaction, $exoID, $catID, $user)
-     {
-         $em = $this->doctrine->getEntityManager();
-         $docID = -1;
-         $interactionGraph = $this->doctrine
-                                  ->getManager()
-                                  ->getRepository('UJMExoBundle:InteractionGraphic')
-                                  ->getInteractionGraphic($interaction->getId());
-
-         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
-             array('interactionGraphic' => $interactionGraph->getId()
-             )
-         );
-
-         if ($user->getId() != $interactionGraph->getInteraction()->getQuestion()->getUser()->getId()) {
-             $docID = $interactionGraph->getDocument()->getId();
-         }
-
-         $editForm = $this->formFactory->create(
-             new InteractionGraphicType($user, $catID, $docID), $interactionGraph
-                 );
-
-         $linkedCategory = $this->questionService->getLinkedCategories();
-
-         $variables['entity']         = $interactionGraph;
-         $variables['edit_form']      = $editForm->createView();
-         $variables['nbResponses']    = $this->getNbReponses($interaction);
-         $variables['linkedCategory'] = $linkedCategory;
-         $variables['position']       = $position;
-         $variables['exoID']          = $exoID;
-         $variables['locker']         = $this->categoryService->getLockCategory();
-
-         if ($exoID != -1) {
-             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-             $variables['_resource'] = $exercise;
-         }
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionGraphic:edit.html.twig', $variables);
-     }
-
-     /**
      * Graphic question : Check if the suggested answer zone isn't already right in order not to have points twice
      *
      * @access private

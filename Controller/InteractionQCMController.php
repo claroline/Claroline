@@ -102,6 +102,56 @@ class InteractionQCMController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:edit'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     integer catID
+     *     \Claroline\CoreBundle\Entity\User user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $qcmSer  = $this->container->get('ujm.exo_InteractionQCM');
+        $questSer = $this->container->get('ujm.exo_question');
+        $catSer = $this->container->get('ujm.exo_category');
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $interactionQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
+                             ->getInteractionQCM($attr->get('interaction')->getId());
+        //fired a sort function
+        $interactionQCM->sortChoices();
+
+        $editForm = $this->createForm(
+            new InteractionQCMType(
+        $attr->get('user'), $attr->get('catID')), $interactionQCM
+        );
+
+        $typeQCM = $qcmSer->getTypeQCM();
+        $linkedCategory = $questSer->getLinkedCategories();
+
+        $vars['entity']         = $interactionQCM;
+        $vars['edit_form']      = $editForm->createView();
+        $vars['nbResponses']    = $qcmSer->getNbReponses($attr->get('interaction'));
+        $vars['linkedCategory'] = $linkedCategory;
+        $vars['typeQCM'       ] = json_encode($typeQCM);
+        $vars['exoID']          = $attr->get('exoID');
+        $vars['locker']         = $catSer->getLockCategory();
+
+        if ($attr->get('exoID') != -1) {
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
+            $vars['_resource'] = $exercise;
+        }
+
+        return $this->render('UJMExoBundle:InteractionQCM:edit.html.twig', $vars);
+   }
+
+    /**
      * Edits an existing InteractionQCM entity.
      *
      * @access public

@@ -107,6 +107,48 @@ class InteractionHoleController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:edit'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     integer catID
+     *     \Claroline\CoreBundle\Entity\User user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $holeSer  = $this->container->get('ujm.exo_InteractionHole');
+        $questSer = $this->container->get('ujm.exo_question');
+        $catSer = $this->container->get('ujm.exo_category');
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
+                              ->getInteractionHole($attr->get('interaction')->getId());
+
+         $editForm = $this->createForm(
+             new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
+         );
+
+         $linkedCategory = $questSer->getLinkedCategories();
+
+         return $this->render(
+             'UJMExoBundle:InteractionHole:edit.html.twig', array(
+             'entity'         => $interactionHole,
+             'edit_form'      => $editForm->createView(),
+             'nbResponses'    => $holeSer->getNbReponses($attr->get('interaction')),
+             'linkedCategory' => $linkedCategory,
+             'exoID'          => $attr->get('exoID'),
+             'locker'         => $catSer->getLockCategory()
+             )
+         );
+    }
+
+    /**
      * Edits an existing InteractionHole entity.
      *
      * @access public

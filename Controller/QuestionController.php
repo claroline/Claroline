@@ -353,7 +353,6 @@ class QuestionController extends Controller
     public function editAction($id, $exoID)
     {
         $services = $this->container->get('ujm.exo_question');
-        $em = $this->getDoctrine()->getManager();
         $question = $services->controlUserQuestion($id);
         $share    = $services->controlUserSharedQuestion($id);
         $user     = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -375,10 +374,9 @@ class QuestionController extends Controller
                 $catID = $interaction->getQuestion()->getCategory()->getId();
             }
 
-            $interSer  = $this->container->get('ujm.exo_' . $typeInter);
-
-            return $interSer->edit($interaction, $exoID, $catID, $user);
-
+            return $this->forward(
+                        'UJMExoBundle:' . $typeInter . ':edit', array('interaction' => $interaction, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user
+                            ));
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }

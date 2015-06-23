@@ -178,43 +178,6 @@ class Hole extends Interaction {
      }
 
      /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param integer $catID
-      * @param Claroline\Entity\User $user
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function edit($interaction, $exoID, $catID, $user)
-     {
-         $interactionHole = $this->doctrine
-                                 ->getManager()
-                                 ->getRepository('UJMExoBundle:InteractionHole')
-                                 ->getInteractionHole($interaction->getId());
-
-         $editForm = $this->formFactory->create(
-             new InteractionHoleType($user, $catID), $interactionHole
-         );
-
-         $linkedCategory = $this->questionService->getLinkedCategories();
-
-         return $this->templating->renderResponse(
-             'UJMExoBundle:InteractionHole:edit.html.twig', array(
-             'entity'         => $interactionHole,
-             'edit_form'      => $editForm->createView(),
-             'nbResponses'    => $this->getNbReponses($interaction),
-             'linkedCategory' => $linkedCategory,
-             'exoID'          => $exoID,
-             'locker'         => $this->categoryService->getLockCategory()
-             )
-         );
-     }
-
-     /**
       *
       * @access private
       * @param \UJM\ExoBundle\Entity\InteractionHole $interHole

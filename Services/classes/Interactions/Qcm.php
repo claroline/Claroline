@@ -186,52 +186,6 @@ class Qcm extends Interaction {
      }
 
      /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param integer $catID
-      * @param Claroline\Entity\User $user
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function edit($interaction, $exoID, $catID, $user)
-     {
-         $em = $this->doctrine->getEntityManager();
-         $interactionQCM = $this->doctrine
-                                ->getManager()
-                                ->getRepository('UJMExoBundle:InteractionQCM')
-                                ->getInteractionQCM($interaction->getId());
-         //fired a sort function
-         $interactionQCM->sortChoices();
-
-         $editForm = $this->formFactory->create(
-             new InteractionQCMType($user, $catID), $interactionQCM
-         );
-
-         $typeQCM = $this->getTypeQCM();
-
-         $linkedCategory = $this->questionService->getLinkedCategories();
-
-         $vars['entity']         = $interactionQCM;
-         $vars['edit_form']      = $editForm->createView();
-         $vars['nbResponses']    = $this->getNbReponses($interaction);
-         $vars['linkedCategory'] = $linkedCategory;
-         $vars['typeQCM'       ] = json_encode($typeQCM);
-         $vars['exoID']          = $exoID;
-         $vars['locker']         = $this->categoryService->getLockCategory();
-
-         if ($exoID != -1) {
-             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-             $vars['_resource'] = $exercise;
-         }
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionQCM:edit.html.twig', $vars);
-     }
-
-     /**
       * Get the types of QCM, Multiple response, unique response
       *
       * @access public

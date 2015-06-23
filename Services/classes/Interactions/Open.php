@@ -180,55 +180,6 @@ class Open extends Interaction {
      }
 
      /**
-      * implements the abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param integer $catID
-      * @param Claroline\Entity\User $user
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     public function edit($interaction, $exoID, $catID, $user)
-     {
-         $em = $this->doctrine->getEntityManager();
-         $interactionOpen = $this->doctrine
-                                 ->getManager()
-                                 ->getRepository('UJMExoBundle:InteractionOpen')
-                                 ->getInteractionOpen($interaction->getId());
-
-         $editForm = $this->formFactory->create(
-             new InteractionOpenType($user, $catID), $interactionOpen
-         );
-
-         if ($exoID != -1) {
-             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-             $variables['_resource'] = $exercise;
-         }
-
-         $typeOpen     = $this->getTypeOpen();
-
-         $linkedCategory = $this->questionService->getLinkedCategories();
-
-         $variables['entity']         = $interactionOpen;
-         $variables['edit_form']      = $editForm->createView();
-         $variables['nbResponses']    = $this->getNbReponses($interaction);
-         $variables['linkedCategory'] = $linkedCategory;
-         $variables['typeOpen']       = json_encode($typeOpen);
-         $variables['exoID']          = $exoID;
-         $variables['locker']         = $this->categoryService->getLockCategory();
-
-         if ($exoID != -1) {
-             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-             $variables['_resource'] = $exercise;
-         }
-
-         return $this->templating->renderResponse('UJMExoBundle:InteractionOpen:edit.html.twig', $variables);
-     }
-
-     /**
      * Get the types of open question long, short, numeric, one word
      *
      * @access public

@@ -103,6 +103,76 @@ class InteractionMatchingController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:edit'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     integer catID
+     *     \Claroline\CoreBundle\Entity\User user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $matchSer = $this->container->get('ujm.exo_InteractionMatching');
+        $questSer = $this->container->get('ujm.exo_question');
+        $catSer = $this->container->get('ujm.exo_category');
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
+                                  ->getInteractionMatching($attr->get('interaction')->getId());
+
+        $correspondence = $matchSer->initTabRightResponse($interactionMatching);
+        foreach ($correspondence as $key => $corresp) {
+            $correspondence[$key] = explode('-', $corresp);
+        }
+        $tableLabel =  array();
+        $tableProposal = array();
+
+        $ind = 1;
+
+        foreach($interactionMatching->getLabels() as $label){
+            $tableLabel[$ind] = $label->getId();
+            $ind++;
+        }
+
+        $ind = 1;
+        foreach($interactionMatching->getProposals() as $proposal){
+            $tableProposal[$proposal->getId()] = $ind;
+            $ind++;
+        }
+
+        $editForm = $this->createForm(
+            new InteractionMatchingType($attr->get('user'),$attr->get('catID')), $interactionMatching
+        );
+
+        $typeMatching = $matchSer->getTypeMatching();
+        $linkedCategory = $questSer->getLinkedCategories();
+
+        $variables['entity']          = $interactionMatching;
+        $variables['edit_form']       = $editForm->createView();
+        $variables['nbResponses']     = $matchSer->getNbReponses($attr->get('interaction'));
+        $variables['linkedCategory']  = $linkedCategory;
+        $variables['typeMatching']    = json_encode($typeMatching);
+        $variables['exoID']           = $attr->get('exoID');
+        $variables['correspondence']  = json_encode($correspondence);
+        $variables['tableLabel']      = json_encode($tableLabel);
+        $variables['tableProposal']   = json_encode($tableProposal);
+        $variables['locker']          = $catSer->getLockCategory();
+
+        if ($attr->get('exoID') != -1) {
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
+            $variables['_resource'] = $exercise;
+        }
+
+        return $this->render('UJMExoBundle:InteractionMatching:edit.html.twig', $variables);
+   }
+
+    /**
      * Edits an existing InteractionMatching entity.
      *
      * @access public

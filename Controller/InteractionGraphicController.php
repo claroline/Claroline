@@ -104,6 +104,62 @@ class InteractionGraphicController extends Controller
     }
 
     /**
+     *
+     * @access public
+     *
+     * Forwarded by 'UJMExoBundle:Question:edit'
+     * Parameters posted :
+     *     \UJM\ExoBundle\Entity\Interaction interaction
+     *     integer exoID
+     *     integer catID
+     *     \Claroline\CoreBundle\Entity\User user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editAction()
+    {
+        $attr = $this->get('request')->attributes;
+        $graphSer  = $this->container->get('ujm.exo_InteractionGraphic');
+        $questSer = $this->container->get('ujm.exo_question');
+        $catSer = $this->container->get('ujm.exo_category');
+        $em = $this->get('doctrine')->getEntityManager();
+
+        $docID = -1;
+        $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
+                               ->getInteractionGraphic($attr->get('interaction')->getId());
+
+        $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
+            array('interactionGraphic' => $interactionGraph->getId()
+            )
+        );
+
+        if ($attr->get('user')->getId() != $interactionGraph->getInteraction()->getQuestion()->getUser()->getId()) {
+            $docID = $interactionGraph->getDocument()->getId();
+        }
+
+        $editForm = $this->createForm(
+            new InteractionGraphicType($attr->get('user'), $attr->get('catID'), $docID), $interactionGraph
+                );
+
+        $linkedCategory = $questSer->getLinkedCategories();
+
+        $variables['entity']         = $interactionGraph;
+        $variables['edit_form']      = $editForm->createView();
+        $variables['nbResponses']    = $graphSer->getNbReponses($attr->get('interaction'));
+        $variables['linkedCategory'] = $linkedCategory;
+        $variables['position']       = $position;
+        $variables['exoID']          = $attr->get('exoID');
+        $variables['locker']         = $catSer->getLockCategory();
+
+        if ($attr->get('exoID') != -1) {
+            $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
+            $variables['_resource'] = $exercise;
+        }
+
+        return $this->render('UJMExoBundle:InteractionGraphic:edit.html.twig', $variables);
+    }
+
+    /**
      * Edits an existing InteractionGraphic entity.
      *
      * @access public

@@ -2,7 +2,12 @@ ujm_interactionqcm_create:
     pattern:  /create
     defaults: { _controller: "UJMExoBundle:InteractionQCM:create" }
     requirements: { _method: post }
-    
+
+ujm_interactionqcm_edit:
+    pattern: /edit/{interaction}/{exoID}/{catID}/{user}
+    defaults: { _controller: "UJMExoBundle:InteractionQCM:edit" }
+    requirements: { _method: post }
+
 ujm_interactionqcm_response:
     pattern: /testQCM
     defaults: { _controller: "UJMExoBundle:InteractionQCM:responseQcm" }

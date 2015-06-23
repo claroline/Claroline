@@ -16,9 +16,6 @@ abstract class Interaction {
 
     protected $doctrine;
     protected $formFactory;
-    protected $templating;
-    protected $questionService;
-    protected $categoryService;
 
     /**
      * Constructor
@@ -27,25 +24,16 @@ abstract class Interaction {
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
      * @param \Symfony\Component\Form\FormFactory $formFactory
-     * @param \Symfony\Component\Form\FormFactory $templating
-     * @param \UJM\ExoBundle\Services\classe\QuestionService $questionService
-     * @param \UJM\ExoBundle\Services\classe\CategoryService $categoryService
      *
      */
     public function __construct(
         Registry $doctrine,
-        FormFactory $formFactory,
-        TwigEngine $templating,
-        \UJM\ExoBundle\Services\classes\QuestionService $questionService,
-        \UJM\ExoBundle\Services\classes\CategoryService $categoryService
+        FormFactory $formFactory
 
     )
     {
         $this->doctrine        = $doctrine;
         $this->formFactory     = $formFactory;
-        $this->templating      = $templating;
-        $this->questionService = $questionService;
-        $this->categoryService = $categoryService;
     }
 
     /**
@@ -168,12 +156,12 @@ abstract class Interaction {
      /**
       *
       *
-      * @access protected
+      * @access public
       * @param \UJM\ExoBundle\Entity\Interaction $interaction
       *
       * @return integer
       */
-     protected function getNbReponses($interaction)
+     public function getNbReponses($interaction)
      {
          $em = $this->doctrine->getEntityManager();
          $response = $em->getRepository('UJMExoBundle:Response')
@@ -248,19 +236,5 @@ abstract class Interaction {
       * @return \Symfony\Component\HttpFoundation\Response
       */
      abstract public function show($interaction, $exoID, $vars);
-
-     /**
-      * abstract method
-      *
-      * @access public
-      *
-      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-      * @param integer $exoID
-      * @param integer $catID
-      * @param Claroline\Entity\User $user
-      *
-      * @return \Symfony\Component\HttpFoundation\Response
-      */
-     abstract public function edit($interaction, $exoID, $catID, $user);
 
 }
