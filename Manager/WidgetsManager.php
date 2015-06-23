@@ -252,5 +252,17 @@ class WidgetsManager
 
         return $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findBy($criteria);
     }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgetsForWidgetPicker(array $parameters)
+    {
+        $widgets = [];
+
+        return $widgets;
+    }
 }
  

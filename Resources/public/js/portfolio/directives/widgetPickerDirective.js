@@ -2,7 +2,7 @@
 
 portfolioApp
     .directive('widgetPicker', function () {
-        var url = Routing.generate("icap_portfolio_internal_portfolio_widget_get");
+        var url = Routing.generate("icap_portfolio_widget_picker");
         var data = {
             multiple: true
         };
@@ -42,9 +42,7 @@ portfolioApp
                 };
                 element[0].onclick = function (event) {
                     event.preventDefault();
-                    console.log('pouet click');
-                    console.log(widgetType);
-                    //$scope.widgetPickerOpen();
+                    $scope.widgetPickerOpen();
                 };
             }
         };

@@ -1,0 +1,68 @@
+{% stylesheets debug=false filter='lessphp, cssmin' output='css/icapportfolio/widget_picker.css'
+  "@IcapPortfolioBundle/Resources/views/less/widget_picker.less"
+%}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+{% endstylesheets %}
+
+<div class="modal-dialog widget_picker_modal">
+    <form novalidate="novalidate" action="" id="resource-rename-form" class="modal-content">
+        <div class='modal-header'>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">{{ 'widget_selection' | trans({}, 'icap_portfolio') }}</h4>
+        </div>
+        <div class='modal-body'>
+            <ul class="list-inline widget_picker_list" data-multiple="{{ multiple }}">
+                {% for widget in widgets %}
+                    {% set isSelected = (widget.id in value) %}
+                <li class="widget_picker_item{% if isSelected %} selected{% endif %}">
+                    <input type="checkbox" name="widget_{{ widget.id }}" value="{{ widget.id }}"
+                        {% if isSelected %} checked="checked"{% endif %} class="hidden"
+                           data-icon="{{ asset(widget.webPath) }}"
+                           data-text="{{ widget.name }}"/>
+                    <img src="{{ asset(widget.webPath) }}" alt="{{ widget.name }}" class="widget_image" />
+                    <span>{{ widget.name }}</span>
+                </li>
+                {% else %}
+                <li>{{ 'no_widget_to_select'|trans({}, 'icap_portfolio') }}.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'cancel'|trans({}, 'platform') }}</button>
+            <button type="submit" class="btn btn-primary submit">{{ 'select'|trans({}, 'icap_portfolio') }}</button>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        var modalElement      = $(".widget_picker_modal");
+        var multipleSelection = $(".widget_picker_list").data('multiple');
+
+        $(".widget_picker_item").click(function (event) {
+            manageMultipleSelection(this);
+            toggleWidgetSelection(this);
+        });
+
+        function countSelectedWidget() {
+            return $("input[type=checkbox]:checked", modalElement).length;
+        }
+
+        function manageMultipleSelection(widget) {
+            if (!multipleSelection && !$(widget).hasClass('selected')) {
+                var selectedWidgets = $(".widget_picker_item.selected", modalElement);
+
+                var checkboxes = $('input[type=checkbox]', modalElement);
+                checkboxes.prop('checked', false);
+
+                selectedWidgets.removeClass('selected');
+            }
+        }
+
+        function toggleWidgetSelection(widget) {
+            $(widget).toggleClass('selected');
+            var checkbox = $('input[type=checkbox]', widget);
+            checkbox.prop('checked', !checkbox.prop('checked'));
+        }
+    });
+</script>
