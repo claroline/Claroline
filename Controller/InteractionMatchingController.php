@@ -35,7 +35,7 @@ class InteractionMatchingController extends Controller
         $attr = $this->get('request')->attributes;
         $em   = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
-        
+
         $response = new Response();
         $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
                                   ->getInteractionMatching($attr->get('interaction')->getId());
@@ -56,7 +56,7 @@ class InteractionMatchingController extends Controller
 
         return $this->render('UJMExoBundle:InteractionMatching:paper.html.twig', $vars);
     }
-    
+
     /**
      * Creates a new InteractionMatching entity.
      *

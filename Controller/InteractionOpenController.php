@@ -36,7 +36,7 @@ class InteractionOpenController extends Controller
         $attr = $this->get('request')->attributes;
         $em   = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
-        
+
         $response = new Response();
         $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
                               ->getInteractionOpen($attr->get('interaction')->getId());
@@ -49,7 +49,7 @@ class InteractionOpenController extends Controller
 
         return $this->render('UJMExoBundle:InteractionOpen:paper.html.twig', $vars);
     }
-    
+
     /**
      * Creates a new InteractionOpen entity.
      *

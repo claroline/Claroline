@@ -35,7 +35,7 @@ class InteractionHoleController extends Controller
         $attr = $this->get('request')->attributes;
         $em = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
-        
+
         $response = new Response();
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
                               ->getInteractionHole($attr->get('interaction')->getId());
@@ -48,7 +48,7 @@ class InteractionHoleController extends Controller
 
         return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
     }
-    
+
     /**
      * Creates a new InteractionHole entity.
      *

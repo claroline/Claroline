@@ -269,7 +269,7 @@ class QuestionController extends Controller
                 ->getInteraction($id);
 
             $typeInter = $interaction->getType();
-            
+
             return $this->forward(
                         'UJMExoBundle:' . $typeInter . ':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars
                             ));

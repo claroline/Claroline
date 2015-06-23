@@ -17,7 +17,7 @@ use UJM\ExoBundle\Form\ResponseType;
  */
 class InteractionQCMController extends Controller
 {
-    
+
     /**
      *
      * @access public
@@ -35,7 +35,7 @@ class InteractionQCMController extends Controller
         $attr = $this->get('request')->attributes;
         $em = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
-        
+
         $response = new Response();
         $interactionQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
                              ->getInteractionQCM($attr->get('interaction')->getId());

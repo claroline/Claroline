@@ -33,7 +33,7 @@ class InteractionGraphicController extends Controller
         $attr = $this->get('request')->attributes;
         $em = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
-        
+
         $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
                                ->getInteractionGraphic($attr->get('interaction')->getId());
 
@@ -47,7 +47,7 @@ class InteractionGraphicController extends Controller
 
         return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
     }
-    
+
     /**
      * Creates a new InteractionGraphic entity.
      *
