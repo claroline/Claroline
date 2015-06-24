@@ -35,13 +35,7 @@
     <div class="container container-dropzone">
 
         <h2>
-            <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
-            <!-- suivant si on est ADMIN ou pas -->
-            {% if admin == true %}
-                {{ 'Edit evaluation admin'|trans({}, 'innova_collecticiel') }}
-            {% else %}
-                {{ 'Edit evaluation user'|trans({}, 'innova_collecticiel') }}
-            {% endif %}
+            {{ dropzone.resourceNode.name }} (Collecticiel)
 
             <div class="btn-group pull-right">
                 <!-- Suivre cette ressource -->
