@@ -63,6 +63,7 @@ class PlatformConfiguration
     private $showHelpButton;
     private $helpUrl;
     private $registerButtonAtLogin;
+    private $sendMailAtWorkspaceRegistration;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -632,5 +633,15 @@ class PlatformConfiguration
     public function getUseRepositoryTest()
     {
         return $this->useRepositoryTest;
+    }
+
+    function getSendMailAtWorkspaceRegistration()
+    {
+        return $this->sendMailAtWorkspaceRegistration;
+    }
+
+    function setSendMailAtWorkspaceRegistration($sendMailAtWorkspaceRegistration)
+    {
+        $this->sendMailAtWorkspaceRegistration = $sendMailAtWorkspaceRegistration;
     }
 }
