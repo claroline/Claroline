@@ -48,15 +48,18 @@
                                     {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
                                 </td>
 
-
                                 <td>
                                     {# Si le document a été demandé en évaluation alors je ne peux plus le faire #}
                                     {# Cf popup.js #}
                                     {# Ajout de la classe document_validate pour la validation du document #}
                                     {% if not document.validate %}
-                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+                                        <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="form-control document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
                                     {% else %}
-                                        <input id="document_id_{{ document.id }}" value="actif" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
+                                        <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
+                                        {# #32 ajout de "Demande transmise #}
+                                        <button id="request_id_{{ document.id }}" class="btn btn-default btn-xs" type="button">
+                                            {{ 'Request sent'|trans({}, 'innova_collecticiel') }}
+                                        </button>
                                     {% endif %}
                                 </td>
 
@@ -95,10 +98,10 @@
             <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Confirmation de la validation</h4>
+                <h4 class="modal-title" id="myModalLabel">Demande de commentaire</h4>
             </div>
             <div class="modal-body">
-                Êtes-vous sûr de vouloir demander l'évaluation de ce document ?
+                Êtes-vous sûr de vouloir demander un commentaire pour ce document ?
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>

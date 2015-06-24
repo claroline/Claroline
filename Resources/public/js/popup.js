@@ -55,6 +55,9 @@ $(document).ready(function () {
 
         // Ajax : appel de la route qui va mettre à jour la base de données
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
+        var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
+        alert(req);
+
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
@@ -65,10 +68,13 @@ $(document).ready(function () {
                 documentId: docId
             },
             done : function(data) {
+                console.log("done");
+                $(req).show();
             }
         });
 
-
+                console.log("modal");
+                $(req).show();
         // Fermeture de la modal
         $('#validate-modal').modal('hide');
 
