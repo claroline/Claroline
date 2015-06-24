@@ -60,11 +60,12 @@
             {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
         </div>
 
+{# Issue #44 cacher cette partie. InnovaERV
         <h4>{{ 'Type of evaluation'|trans({}, 'innova_collecticiel') }}</h4>
         <p>{{ 'Select how copies will be corrected'|trans({}, 'innova_collecticiel') }}</p>
         <div class="form-group">
             {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
-{#            <div class="col-sm-offset-3 col-lg-9 peer-review-options">
+            <div class="col-sm-offset-3 col-lg-9 peer-review-options">
                 <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'innova_collecticiel')|raw }}">
                     <span class="fa fa-info-circle"></span> {{ 'Expected total correction'|trans({}, 'innova_collecticiel') }}
                 </div>
@@ -81,8 +82,8 @@
                 {{ form_row(form.allowCorrectionDeny, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
                 </div>
             </div>
-#}
         </div>
+#}
 
         <h4>{{ 'Rating'|trans({}, 'innova_collecticiel') }}</h4>
         <div class="form-group">

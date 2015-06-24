@@ -63,12 +63,17 @@ Suppression suite demande #251
             ->add('expectedTotalCorrection', 'integer', array('required' => true))
 */
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
-            ->add('diplayCorrectionsToLearners','checkbox', array('required' => false))
-            ->add('allowCorrectionDeny','checkbox',array('required'=>false))
-            ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
+/* Suppression suite demande #45
+           ->add('diplayCorrectionsToLearners','checkbox', array('required' => false)) */
+
+/* Suppression suite demande #45
+           ->add('allowCorrectionDeny','checkbox',array('required'=>false)) */
+           ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
+
             ->add('successMessage','tinymce',array('required' => false))
             ->add('failMessage','tinymce',array('required' => false))
             ->add('minimumScoreToPass', 'integer', array('required' => true))
+
 
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
