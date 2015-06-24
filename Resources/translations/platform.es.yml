@@ -845,7 +845,7 @@ self_registration: Auto-Inscripción
 send: Enviar
 send_mail: 'Enviar un correo electrónico'
 send_message: 'Enviar un mensaje'
-send_mail_at_workspace_registration: 'Send a mail when registering an user to a workspace'
+send_mail_at_workspace_registration: 'Enviar un email al registrarse un usuario a un espacio de trabajo'
 send_message_to_workspace: 'Enviar un mensaje a los usuarios de un espacio de trabajo.'
 send_message_to_workspace_info: send_message_to_workspace_info
 server: Servidor
