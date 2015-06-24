@@ -228,6 +228,15 @@ class GeneralType extends AbstractType
                     'required' => false,
                     'disabled' => isset($this->lockedParams['help_url'])
                 )
+            )
+            ->add(
+                'sendMailAtWorkspaceRegistration',
+                'checkbox',
+                array(
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
+                    'label' => 'send_mail_at_workspace_registration'
+                )
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){
