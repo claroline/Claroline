@@ -275,6 +275,7 @@ class WidgetsManager
             $portfolioWidget
                 ->setPortfolio($portfolio)
                 ->setWidget($widget)
+                ->setWidgetType($type)
             ;
             $portfolioWidgets[] = $portfolioWidget;
         }

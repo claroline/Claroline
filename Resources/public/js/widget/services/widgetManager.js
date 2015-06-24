@@ -43,7 +43,7 @@ widgetsApp
 
                 newWidget.isEditing = true;
 
-                this.widgets.push(newWidget);
+                this.portfolioWidgets.push(newWidget);
             },
             edit: function(widget) {
                 widget.copy = angular.copy(widget);
@@ -72,14 +72,14 @@ widgetsApp
                 widget.isEditing = false;
 
                 if (widget.isNew) {
-                    this.widgets.remove(widget);
+                    this.portfolioWidgets.remove(widget);
                 }
             },
             delete: function(widget) {
                 widget.isDeleting = true;
                 var self = this;
                 var success = function() {
-                    self.widgets.remove(widget);
+                    self.portfolioWidgets.remove(widget);
                 };
                 var failed = function(error) {
                     console.error('Error occured while deleting widget');

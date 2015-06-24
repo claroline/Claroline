@@ -153,7 +153,7 @@
                         {% endif %}
                         </p>
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
-                            <li data-gridster-item="widget" data-ng-repeat="widget in widgets | orderBy:'+row +col' track by widget.id">
+                            <li data-gridster-item="widget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.widget.id">
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
                         </ul>
@@ -309,7 +309,7 @@
                         }
                     };
 
-                    $scope.widgets = {{ widgets|json_encode()|raw }};
+                    $scope.portfolioWidgets = {{ widgets|json_encode()|raw }};
                 }]);
             })();
         </script>

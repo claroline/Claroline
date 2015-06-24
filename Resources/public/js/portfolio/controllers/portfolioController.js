@@ -7,7 +7,7 @@ portfolioApp
     function($scope, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $modal, $timeout) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {
-            $scope.widgets  = widgetsManager.widgets;
+            $scope.portfolioWidgets  = widgetsManager.portfolioWidgets;
             $scope.comments = commentsManager.comments;
         });
 
@@ -16,6 +16,7 @@ portfolioApp
 
         $scope.createWidget = function(type) {
             var modalInstance = $modal.open({
+                backdrop: false,
                 animation: true,
                 templateUrl: 'widget_picker_modal.html',
                 controller: 'widgetPickerController',
@@ -27,9 +28,10 @@ portfolioApp
                 }
             });
 
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
+            modalInstance.result.then(function (selectedWidget) {
+                widgetsManager.addWidget(selectedWidget);
                 console.log('ok');
+                console.log(selectedWidget);
             }, function () {
                 console.log('cancel');
             });
@@ -39,10 +41,13 @@ portfolioApp
             Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
              */
             modalInstance.result.finally(function() {
+                console.log('finally');
                 $timeout(function() {
                     $('.modal:last').trigger('$animate:close');
+                    console.log('pouet');
                     $timeout(function() {
                         $('.modal-backdrop:last').trigger('$animate:close');
+                        console.log('pouet');
                     }, 100);
                 }, 100);
             });
@@ -74,8 +79,8 @@ portfolioApp
                 start: function(event, $element, widget) {
                 }, // optional callback fired when resize is started,
                 stop: function(event, $element, widget) {
-                    for (var index = 0; index < $scope.widgets.length; index++) {
-                        var widget = $scope.widgets[index];
+                    for (var index = 0; index < $scope.portfolioWidgets.length; index++) {
+                        var widget = $scope.portfolioWidgets[index];
                         if (widget.toSave && !widget.isEditing()) {
                             widgetsManager.save(widget).then(function() {
                                 widget.toSave = false;
@@ -90,8 +95,8 @@ portfolioApp
                 start: function(event, $element, widget) {
                 }, // optional callback fired when drag is started,
                 stop: function(event, $element, widget) {
-                    for (var index = 0; index < $scope.widgets.length; index++) {
-                        var widget = $scope.widgets[index];
+                    for (var index = 0; index < $scope.portfolioWidgets.length; index++) {
+                        var widget = $scope.portfolioWidgets[index];
                         if (widget.toSave) {
                             widgetsManager.save(widget).then(function() {
                                 widget.toSave = false;

@@ -1,33 +1,33 @@
 <div {% if not viewMode %}data-widget="widget" {% endif %} class="panel panel-default widget-panel{% if not viewMode %} ng-cloak{% endif %}">
     <div class="panel-heading"{% if not viewMode %} {% verbatim %}data-ng-class="{draggable: gridsterOptions.draggable.enabled}"{% endverbatim %}
-        data-ng-show="!widget.isEditing"{% endif %}>
-        {% verbatim %}{{ widget.label }}{% endverbatim %}
+        data-ng-show="!portfolioWidget.isEditing"{% endif %}>
+        {% verbatim %}{{ portfolioWidget.widget.label }}{% endverbatim %}
         {% if editMode %}
-        <div class="widget-actions" data-ng-show="!widget.isNew && !widget.isUpdating">
+        <div class="widget-actions" data-ng-show="!portfolioWidget.isNew && !portfolioWidget.isUpdating">
             <button class="widget-action btn btn-xs btn-default draggable-handle">
                 <span class="fa fa-arrows"></span>
             </button>
             <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit();">
                 <span class="fa fa-pencil"></span>
             </button>
-            <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}" data-confirm-click="delete();">
-                <span class="fa fa-spinner fa-spin" data-ng-if="widget.isDeleting"></span>
-                <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
+            <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': portfolioWidget.isDeleting}" data-confirm-click="delete();">
+                <span class="fa fa-spinner fa-spin" data-ng-if="portfolioWidget.isDeleting"></span>
+                <span class="fa fa-trash-o" data-ng-if="!portfolioWidget.isDeleting"></span>
             </button>
         </div>
-        <span class="pull-right loading" data-ng-if="widget.isUpdating"></span>
+        <span class="pull-right loading" data-ng-if="portfolioWidget.isUpdating"></span>
         {% endif %}
     </div>
-    <div class="panel-body" data-ng-show="!widget.isEditing && !widget.views.form">
-        <div data-ng-bind-html="widget.views.view"></div>
+    <div class="panel-body" data-ng-show="!portfolioWidget.isEditing && !portfolioWidget.widget.views.form">
+        <div data-ng-bind-html="portfolioWidget.widget.views.view"></div>
     </div>
     {% if editMode %}
-    <div class="panel-heading" data-ng-show="widget.isEditing && widget.views.form">
-        <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="widget.label">
+    <div class="panel-heading" data-ng-show="portfolioWidget.isEditing && portfolioWidget.widget.views.form">
+        <input type="text" class="input-sm form-control" name="widget_label" data-ng-model="portfolioWidget.label">
     </div>
-    <div class="panel-body col-md-12 loading" data-ng-show="widget.isEditing && !widget.views.form"></div>
-    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.isEditing && widget.views.form">
-        <div class="panel-body" data-bind-html="widget.views.form"></div>
+    <div class="panel-body col-md-12 loading" data-ng-show="portfolioWidget.isEditing && !portfolioWidget.widget.views.form"></div>
+    <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="portfolioWidget.isEditing && portfolioWidget.widget.views.form">
+        <div class="panel-body" data-bind-html="portfolioWidget.widget.views.form"></div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
             <button type="button" class="btn btn-default" data-ng-click="cancelEdition()">{{ 'cancel'|trans({}, 'platform') }}</button>

@@ -40,9 +40,6 @@ portfolioApp
 
                     return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}", parameters);
                 };
-                widget.prototype.getType = function() {
-                    return this.type;
-                };
 
                 this.widgetResources[type] = widget;
 

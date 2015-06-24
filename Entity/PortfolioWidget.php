@@ -59,6 +59,13 @@ class PortfolioWidget
     protected $sizeY = 1;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="string", nullable=false)
+     */
+    protected $widgetType;
+
+    /**
      * @return Portfolio
      */
     public function getPortfolio()
@@ -179,6 +186,26 @@ class PortfolioWidget
     }
 
     /**
+     * @return string
+     */
+    public function getWidgetType()
+    {
+        return $this->widgetType;
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return PortfolioWidget
+     */
+    public function setWidgetType($widgetType)
+    {
+        $this->widgetType = $widgetType;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
@@ -186,6 +213,7 @@ class PortfolioWidget
         return [
             'portfolio_id' => $this->getPortfolio()->getId(),
             'widget_id' => $this->getWidget()->getId(),
+            'widget_type' => $this->getWidgetType(),
             'row' => $this->getRow(),
             'col' => $this->getColumn(),
             'sizeX' => $this->getSizeX(),
