@@ -27,7 +27,7 @@ class TypeOpenQuestion
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
-    
+
     /**
      * @var integer $code
      *
@@ -64,7 +64,7 @@ class TypeOpenQuestion
     {
         return $this->value;
     }
-    
+
     /**
      * Set code
      *
@@ -84,7 +84,7 @@ class TypeOpenQuestion
     {
         return $this->code;
     }
-    
+
     public function __toString()
     {
         return $this->value;

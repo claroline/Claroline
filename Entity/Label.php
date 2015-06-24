@@ -27,21 +27,21 @@ class Label
      * @ORM\Column(name="value", type="text")
      */
     private $value;
-    
+
     /**
      * @var float $scoreRightResponse
      *
      * @ORM\Column(name="score_right_response", type="float", nullable=true)
      */
     private $scoreRightResponse;
-    
+
     /**
      * @var boolean $positionForce
      *
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
     private $positionForce;
-    
+
      /**
      * @var integer $ordre
      *
@@ -84,7 +84,7 @@ class Label
     {
         return $this->value;
     }
-    
+
     /**
      * Set scoreRightResponse
      *
@@ -123,7 +123,7 @@ class Label
     {
         $this->interactionMatching = $interactionMatching;
     }
-    
+
     /**
      * Set positionForce
      *
@@ -141,7 +141,7 @@ class Label
     {
         return $this->positionForce;
     }
-    
+
     /**
      * Set ordre
      *

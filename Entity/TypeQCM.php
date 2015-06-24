@@ -27,7 +27,7 @@ class TypeQCM
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
-    
+
     /**
      * @var integer $code
      *
@@ -64,7 +64,7 @@ class TypeQCM
     {
         return $this->value;
     }
-    
+
     /**
      * Set code
      *

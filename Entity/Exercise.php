@@ -151,7 +151,7 @@ class Exercise extends AbstractResource
      * )
      */
     private $groupes;
-    
+
     /**
      * @var boolean $published
      *
@@ -550,7 +550,7 @@ class Exercise extends AbstractResource
     {
         $this->resourceNode = null;
     }
-    
+
     /**
      * Set published
      *
