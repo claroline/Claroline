@@ -1,10 +1,10 @@
 <!-- Item row -->
 <div data-nodrag="" class="tree-item" data-ng-class="{ 'active-step': pathSummaryShowCtrl.current.stepId == step.id || (!pathSummaryShowCtrl.current.stepId && 0 == step.lvl) }">
     <!-- Level indicator -->
-    <div class="lvl-indicator lvl lvl-{{ step.lvl }}"></div>
+    <div class="lvl-indicator lvl lvl-{{ step.lvl }} lvl-bg"></div>
 
     <!-- Step name -->
-    <div class="step" data-ng-class="{ 'lvl lvl-{{ step.lvl }}-text': pathSummaryShowCtrl.current.stepId == step.id }" data-ng-click="pathSummaryShowCtrl.goTo(step)">
+    <div class="step" data-ng-class="{ 'lvl lvl-{{ step.lvl }} lvl-text': pathSummaryShowCtrl.current.stepId == step.id }" data-ng-click="pathSummaryShowCtrl.goTo(step)">
         <!-- Collapse / Expand button -->
         <a class="step-toggle" href="" data-ng-click="toggle(this)" data-ng-show="0 != step.children.length" role="button">
             <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': collapsed, 'fa-caret-down': !collapsed }"></span>
@@ -28,6 +28,6 @@
     </span>
 </div>
 
-<ol class="step-children lvl lvl-{{ step.lvl }}-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
+<ol class="step-children lvl lvl-{{ step.lvl }} lvl-border" data-ui-tree-nodes="" data-ng-model="step.children" data-ng-hide="collapsed">
     <li data-ui-tree-node="" data-ng-repeat="step in step.children" data-ng-include="pathSummaryShowCtrl.webDir + 'bundles/innovapath/js/PathSummary/Partial/show-item.html'"></li>
 </ol>

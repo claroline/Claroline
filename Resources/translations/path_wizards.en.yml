@@ -23,6 +23,7 @@ modified: with pending changes
 # n
 name_help: Enter the name of the path
 next_step: Next step
+next_steps: See next steps
 no: Non
 no_primary_resource: There is no primary resource on this step.
 no_secondary_resources: There is no secondary resources on this step.
@@ -76,6 +77,7 @@ save: Save
 save_path_changes: You have unsaved changes. Are you sure you want to leave this page?
 secondary_resources: Secondary resources
 see_activity: See activity
+see_step_siblings: See siblings of the step
 select_activity: Select existing activity
 show_path_info: Show information o the Path
 sidebar_close: Close

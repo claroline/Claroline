@@ -23,6 +23,7 @@ modified: avec des modifications en attente
 # n
 name_help: Saisir le nom du parcours
 next_step: Etape suivante
+next_steps: Voir les étapes suivantes
 no: Non
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
 no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
@@ -76,6 +77,7 @@ save: Sauvegarder
 save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter cette page ?
 secondary_resources: Ressources complémentaires
 see_activity: Voir l'activité
+see_step_siblings: Voir les étapes soeurs
 select_activity: Sélectionner une activité existante
 show_path_info: Afficher les informations relatives au Parcours
 step_add_child: Ajouter une étape

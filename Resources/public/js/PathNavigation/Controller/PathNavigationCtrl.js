@@ -19,6 +19,7 @@ var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathS
 
         // The callback to execute
         function (newValue, oldValue) {
+            console.log('watch route');
             this.step = null;
 
             // Get step
@@ -34,9 +35,31 @@ var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathS
             if (angular.isDefined(this.step) && angular.isObject(this.step)) {
                 this.parents = this.pathService.getParents(this.step);
             }
+        }.bind(this)
+    , true);
 
-            // Get the next step
-            this.next = this.pathService.getNext(this.step);
+    $scope.$watch(
+        function () {
+            return this.step;
+        }.bind(this),
+
+        function (newValue, oldValue) {
+            console.log('watch step');
+            this.step = null;
+
+            // Get step
+            if (angular.isDefined(this.current) && angular.isDefined(this.current.stepId)) {
+                // Retrieve current step
+                this.step = this.pathService.getStep(this.current.stepId);
+            } else {
+                // Get the root
+                this.step = this.pathService.getRoot();
+            }
+
+            // Get parents of the step
+            if (angular.isDefined(this.step) && angular.isObject(this.step)) {
+                this.parents = this.pathService.getParents(this.step);
+            }
         }.bind(this)
     , true);
 
@@ -54,12 +77,6 @@ PathNavigationCtrl.prototype.current = {};
  * @type {object}
  */
 PathNavigationCtrl.prototype.step = {};
-
-/**
- * Next step
- * @type {object}
- */
-PathNavigationCtrl.prototype.next = null;
 
 /**
  * Parents of the current step

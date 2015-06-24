@@ -1,0 +1,23 @@
+(function () {
+    'use strict';
+
+    angular.module('PathNavigationModule').directive('pathNavigationItem', [
+        function PathNavigationDirective() {
+            return {
+                restrict: 'E',
+                replace: true,
+                controller: function PathNavigationItemCtrl() {
+                    console.log(this.parent);
+                },
+                controllerAs: 'pathNavigationItemCtrl',
+                templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/show-item.html',
+                scope: {
+                    parent:  '=?',
+                    element: '=',
+                    current: '='
+                },
+                bindToController: true
+            };
+        }
+    ]);
+})();
