@@ -312,7 +312,7 @@ class holeImport extends qtiImport
                     $keyWord->setScore($score);
                     $keyWord->setHole($hole);
                     $this->om->persist($keyWord);
-                    
+
                     $this->tabWrOpt[] = $keyWord;
                 }
             }
