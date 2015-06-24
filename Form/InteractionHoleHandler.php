@@ -296,5 +296,3 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
 
     }
 }
-
-?>

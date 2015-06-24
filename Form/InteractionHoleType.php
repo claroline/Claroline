@@ -52,7 +52,7 @@ class InteractionHoleType extends AbstractType
             )
         );
     }
-    
+
     public function getName()
     {
         return 'ujm_exobundle_interactionholetype';
