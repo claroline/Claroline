@@ -843,6 +843,7 @@ selected_workspaces_will_be_put_in_it: 'Selected workspaces will be put in it'
 self_registration: Auto-inscription
 send: Send
 send_mail: 'Send a mail'
+send_mail_at_workspace_registration: 'Send a mail when registering an user to a workspace'
 send_message: 'Send a message'
 send_message_to_workspace: 'Send a message'
 send_message_to_workspace_info: 'This list shows the workspaces of which you are the manager.'

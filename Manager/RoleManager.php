@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -44,6 +45,7 @@ class RoleManager
     private $om;
     private $container;
     private $translator;
+    private $configHandler;
 
     /**
      * Constructor.
@@ -52,14 +54,16 @@ class RoleManager
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "container"      = @DI\Inject("service_container"),
-     *     "translator"     = @DI\Inject("translator")
+     *     "translator"     = @DI\Inject("translator"),
+     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler")
      * })
      */
     public function __construct(
         ObjectManager $om,
         StrictDispatcher $dispatcher,
         Container $container,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        PlatformConfigurationHandler $configHandler
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -69,6 +73,7 @@ class RoleManager
         $this->dispatcher = $dispatcher;
         $this->container = $container;
         $this->translator = $translator;
+        $this->configHandler = $configHandler;
     }
 
     /**
@@ -243,8 +248,10 @@ class RoleManager
             $this->om->persist($ars);
             $this->om->endFlushSuite();
 
+            $withMail = $this->configHandler->getParameter('send_mail_at_workspace_registration');
+
             if ($sendMail) {
-                $this->sendInscriptionMessage($ars, $role);
+                $this->sendInscriptionMessage($ars, $role, $withMail);
             }
         }
     }
@@ -701,7 +708,7 @@ class RoleManager
         return $roleName;
     }
 
-    private function sendInscriptionMessage(AbstractRoleSubject $ars, Role $role)
+    private function sendInscriptionMessage(AbstractRoleSubject $ars, Role $role, $withMail = true)
     {
         //workspace registration
         if ($role->getWorkspace()) {
@@ -725,7 +732,7 @@ class RoleManager
         $this->dispatcher->dispatch(
             'claroline_message_sending',
             'SendMessage',
-            array($sender, $content, $object, $ars)
+            array($sender, $content, $object, $ars, array(), $withMail)
         );
     }
 

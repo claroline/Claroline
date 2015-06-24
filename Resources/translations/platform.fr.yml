@@ -844,6 +844,7 @@ selected_workspaces_will_be_put_in_it: 'Les espaces d''activités sélectionnés
 self_registration: Auto-inscription
 send: Envoyer
 send_mail: 'Envoyer un mail'
+send_mail_at_workspace_registration: 'Envoyer un mail lors de l''inscription d''un utilisateur à un espace d''activités'
 send_message: 'Envoyer un message'
 send_message_to_workspace: 'Envoyer un message'
 send_message_to_workspace_info: 'Cette liste reprend les espaces d''activités dont vous êtes le gestionnaire.'
