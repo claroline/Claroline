@@ -233,6 +233,7 @@ nb_hole: It must have at least one hole
 nbr_choices: The number of choices must be greater than two
 nb_label: It must have one choice of label
 nb_proposal: It must have one choice of proposal
+need_correction: Red questions requires a correction
 never: Never
 new_name: New name of the document
 next: Next

@@ -43,8 +43,8 @@
     {% for key,value in linkedCategory %}
         {% set al = al ~ key ~ '/' ~ value ~ ';' %}
     {% endfor %}
-    {% if locker != "" %}        
-        <input type="hidden" id="locker" value="{{locker.value}}"> 
+    {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
     {% endif %}
     <input type="hidden" id="categoryArray" value="{{al}}"/>
 
@@ -80,7 +80,7 @@
                 </div>
             </form>
         </div>
-          
+
     </div>
     </div>{# end div of extend panel #}
     <div id="formulaire_interactions">
@@ -93,5 +93,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/question.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/allQuestionsType.js') }}"></script>
 {% endblock %}

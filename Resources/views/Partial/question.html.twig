@@ -9,30 +9,30 @@
    <div id="categoryDiv" class="form-group row collapse">
          <label class="control-label col-md-1">{{ 'category' | trans }}</label>
         <div class="col-md-5">
-            {{ form_widget(form.interaction.question.category) }}    
-        </div> 
+            {{ form_widget(form.interaction.question.category) }}
+        </div>
         <a title="{{ 'edit_category' | trans }}" id="editCategory" style="display: none;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
         <a title="{{ 'create_a_new_category' | trans }}" id="addCategory" style="display: inline-block;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
         <a title="{{ 'drop_category' | trans }}" id="linkedCategory" style="display: none;" class="btn btn-primary" id="lien_category_drop" onclick="dropCategory();"><i class="fa fa-trash-o"></i></a>
    </div>
    <div id="descriptionDiv" class="form-group row collapse">
        <label class="col-md-1">{{ 'description' | trans }}</label>
-       <div class="col-md-7"> 
+       <div class="col-md-7">
            {{ form_widget(form.interaction.question.description) }}
        </div>
        <a id="buttonEdition" class="btn btn-primary" title="{{'advanced_edition' | trans }}" onClick="advancedEdition('interaction_question_description','buttonEdition',event);"><i class="fa fa-font"></i></a>
-   </div> 
-   <div class="form-group row {% if not form.interaction.invite.vars.valid %} has-error{% endif %}">     
+   </div>
+   <div class="form-group row {% if not form.interaction.invite.vars.valid %} has-error{% endif %}">
        <label class="control-label col-md-1">{{ 'question' | trans }}</label>
        <div class="control-label col-md-7">
            {{ form_widget(form.interaction.invite) }}
            {{ form_errors(form.interaction.invite) }}
-       </div>   
+       </div>
        <div id="divHint" >
            <div id="hintError"></div>
            <div id="tableHint" class="control-label col-md-4 {% if not form.interaction.hints.vars.valid %} has-error{% endif %}"></div>
            {{ form_widget(form.interaction.hints) }}
-           {{ form_errors(form.interaction.hints) }}                     
+           {{ form_errors(form.interaction.hints) }}
        </div>
    </div>
 

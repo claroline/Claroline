@@ -13,7 +13,7 @@
     <div id="qOpenOneWord" style="display: none;">
         <p>
             {{ form_widget(form.wordResponses) }}
-        <div id="openError" class="{% if not form.wordResponses.vars.valid %} alert alert-danger{% endif %}">           
+        <div id="openError" class="{% if not form.wordResponses.vars.valid %} alert alert-danger{% endif %}">
             {{ form_errors(form.wordResponses) }}
         </div>
         <table id="tablewr" class="table table-striped table-bordered table-condensed">

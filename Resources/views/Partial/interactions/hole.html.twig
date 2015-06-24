@@ -3,7 +3,7 @@
         <a class="close" onclick="HideInstruction();">&times;</a>
         <p>{{ 'instruction_add_hole' | trans }}</p>
     </div>
-    <label class="control-label col-md-1">{{ 'hole' | trans }}</label> 
+    <label class="control-label col-md-1">{{ 'hole' | trans }}</label>
     <div id="holeEditor" class="col-md-9">{{ form_widget(form.html) }}</div>
 </div>
 <div class="form-group">
@@ -11,7 +11,7 @@
         <a id="create_hole" class="btn btn-primary" onclick="createHole();"><i class="fa fa-plus"></i> {{ 'create_hole' | trans }}</a>
         <a class="btn btn-default" onclick="DisplayInstruction();" id="showInstruct"><i class="fa fa-question"></i></a>
         <a class="btn btn-default" onclick="HideInstruction();" id="hideInstruct"><i class="fa fa-question"></i></a>
-    </div>  
+    </div>
 </div>
 {#{ form_row(form.holes) }#}
 <div id="holeError" class="form-group {% if not form.holes.vars.valid %} has-error{% endif %}">
@@ -20,4 +20,3 @@
 <div id="tableHoles" class="form-group" >
      {{ form_widget(form.holes) }}
 </div>
-

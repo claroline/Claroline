@@ -23,9 +23,9 @@
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
         </a>
-        
+
         <br/>
-        
+
         <div id="searchDocuments" class="input-group" style="width: 350px; margin-top: 20px;">
             <input type="text" class="form-control" id="labelToFind" placeholder="{{ 'search'|trans({}, 'platform') }}"
                 onkeydown="if (event.keyCode == 13) { searchDoc('{{ path('ujm_question_searchDocuments') }}', 1);return false; }">
@@ -35,9 +35,9 @@
             <i class="fa fa-search"></i></button>
             </span>
         </div>
-        
+
         <hr/>
-        
+
         <div id="sorting">
             {% if divResultSearch is defined %}
                 {{ 'result' | trans }} :
@@ -127,7 +127,7 @@
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                         {% endif %}
-                                        
+
                                     </td>
                                 </tr>
                                 {% set i = i + 1 %}
