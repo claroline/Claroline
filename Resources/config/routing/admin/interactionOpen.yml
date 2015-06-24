@@ -2,7 +2,7 @@ ujm_interactionopen_create:
     pattern:  /create
     defaults: { _controller: "UJMExoBundle:InteractionOpen:create" }
     requirements: { _method: post }
-    
+
 ujm_interactionopen_response:
     pattern: /testOpen
     defaults: { _controller: "UJMExoBundle:InteractionOpen:responseOpen" }

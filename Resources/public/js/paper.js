@@ -71,7 +71,7 @@ function recordGraph() {
     var margin = $('#AnswerImg').css("margin-top"); // margin top of the answer image
 
     var taille = $('#nbpointer').val(); // number of total answer
-    
+
     for (var x = 1 ; x < taille ; x++) {
         var label = 'cursor' + x;
         var top = $('#' + label).css("top");

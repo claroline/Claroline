@@ -5,19 +5,19 @@ admin_category:
 admin_exercise:
     resource: "routing/admin/exercise.yml"
     prefix:   /admin/exercise
-    
+
 admin_interaction_graphic:
     resource: "routing/admin/interactionGraphic.yml"
     prefix:   /admin/interactiongraphic
 
 admin_interaction_hole:
     resource: "routing/admin/interactionHole.yml"
-    prefix:   /admin/interactionhole    
-    
+    prefix:   /admin/interactionhole
+
 admin_interaction_open:
     resource: "routing/admin/interactionOpen.yml"
     prefix:   /admin/interactionopen
-    
+
 admin_interaction_qcm:
     resource: "routing/admin/interactionQCM.yml"
     prefix:   /admin/interactionqcm
@@ -28,12 +28,12 @@ admin_interaction_matching:
 
 admin_paper:
     resource: "routing/admin/paper.yml"
-    prefix:   /admin/paper    
-    
+    prefix:   /admin/paper
+
 admin_question:
     resource: "routing/admin/question.yml"
     prefix:   /admin/question
-    
+
 all_exercise:
     resource: "routing/all/exercise.yml"
     prefix:   /all/exercise
@@ -45,7 +45,7 @@ all_hint:
 all_paper:
     resource: "routing/all/paper.yml"
     prefix:   /all/paper
-    
+
 all_qti:
     resource: "routing/all/qti.yml"
     prefix:   /all/qti

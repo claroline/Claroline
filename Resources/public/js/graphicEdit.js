@@ -10,7 +10,7 @@ window.onload = function () {
         var content = info[x].split(';');
         position(content[0], content[1], x, content[2], content[3], content[4], content[5]);
     }
-    
+
 };
 
 function position(shape, color, i, prefix, value, size, points) {
@@ -48,7 +48,7 @@ function position(shape, color, i, prefix, value, size, points) {
         case 'yellow' :
             $('#img' + i).attr('src', prefix + 'circley.png');
             break;
-            
+
         case 'brown' :
             $('#img' + i).attr('src', prefix + 'circlebrown.png');
             break;
@@ -58,7 +58,7 @@ function position(shape, color, i, prefix, value, size, points) {
         }
 
     } else if (shape == 'square') {
-        switch (color) {      
+        switch (color) {
         case 'black' :
             $('#img' + i).attr('src', prefix + 'squareblack.png');
             break;
@@ -89,7 +89,7 @@ function position(shape, color, i, prefix, value, size, points) {
         case 'yellow' :
             $('#img' + i).attr('src', prefix + 'squarey.png');
             break;
- 
+
         case 'brown' :
             $('#img' + i).attr('src', prefix + 'squarebrown.png');
              break;
@@ -154,7 +154,7 @@ function position(shape, color, i, prefix, value, size, points) {
 
 function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
 
-     
+
     var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
@@ -217,11 +217,11 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
     //Button delete
         $('#delete'+grade).click(function(e) {
         $(this).parent('td').parent('tr').remove();
-        var chiffre = $(this).attr('id').replace('delete', '');  
+        var chiffre = $(this).attr('id').replace('delete', '');
         $('#dragContainer'+chiffre).remove();
         setOrderAfterDel();
         e.preventDefault();
-    });  
+    });
     //Displays the array anwser
     $('#AlreadyPlacedArray').css({"display" : "inline"});
 }

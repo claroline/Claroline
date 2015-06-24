@@ -16,6 +16,3 @@ function HideInstruction() {
     $('#hideInstruct').css({"display" : "none"});
     $('#showInstruct').css({"display" : "inline-block"});
 }
-
-
-

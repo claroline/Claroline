@@ -6,5 +6,3 @@ document.addEventListener('DOMContentLoaded', function () {
     targets: '.ui-wrapper'
   });
 });
-
-

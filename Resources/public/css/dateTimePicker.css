@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : dateTimePicker
     Created on : 6 juin 2013, 17:02:22
     Author     : cindy
@@ -6,6 +6,6 @@
         Purpose of the stylesheet follows.
 */
 
-.bootstrap-datetimepicker-widget { 
+.bootstrap-datetimepicker-widget {
     z-index: 10000000;
 }

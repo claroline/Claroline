@@ -40,7 +40,7 @@ UJM\ExoBundle\Entity\WordResponse:
 #        category:
 #            - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~
 
-UJM\ExoBundle\Entity\Interaction: 
+UJM\ExoBundle\Entity\Interaction:
   properties:
         invite:
             - UJM\ExoBundle\Validator\Constraints\isNotEmpty: ~

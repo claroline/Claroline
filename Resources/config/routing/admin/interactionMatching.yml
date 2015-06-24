@@ -2,7 +2,7 @@ ujm_interactionmatching_create:
     pattern:  /create
     defaults: { _controller: "UJMExoBundle:InteractionMatching:create" }
     requirements: { _method: post }
-    
+
 ujm_interactionmatching_response:
     pattern: /testMatching
     defaults: { _controller: "UJMExoBundle:InteractionMatching:responseMatching" }

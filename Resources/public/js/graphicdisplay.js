@@ -19,7 +19,7 @@ $(function () {
                 var stoppos = $(this).position();
 
                 var marginTop = $('#AnswerImg').css("margin-top");
-              
+
                // var x = stoppos.left; for center image
                 var x =stoppos.left - $('#AnswerImg').position().left;
                 var y = stoppos.top - $('#AnswerImg').position().top - parseInt(marginTop);
