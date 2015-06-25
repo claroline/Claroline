@@ -161,12 +161,12 @@
             </div>
 
             {# Bloc Note attribuée #}
-            <div class="row">
+        {#    <div class="row">
                 <div class="text-muted col-md-4">{{ 'Grade attribuated'|trans({}, 'innova_collecticiel') }}</div>
                 <div class="col-md-8">{% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
                     /20
                 </div>
-            </div>
+            </div>#}
 
         {% else %}
             {# TODO InnovaERV : partie "Non admin" qui n'a pas été analysée #}
@@ -271,8 +271,8 @@
                 {% endif %}
             {% endif %}
         {% else %}
-            {% block dropzone_correct_content %}
-            {% endblock %}
+        {#    {% block dropzone_correct_content %}
+            {% endblock %}#}
         {% endif %}
     </div>
 
