@@ -31,7 +31,6 @@ portfolioApp
             modalInstance.result.then(function (selectedWidget) {
                 widgetsManager.addWidget(selectedWidget);
                 console.log('ok');
-                console.log(selectedWidget);
             }, function () {
                 console.log('cancel');
             });
@@ -41,13 +40,10 @@ portfolioApp
             Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
              */
             modalInstance.result.finally(function() {
-                console.log('finally');
                 $timeout(function() {
                     $('.modal:last').trigger('$animate:close');
-                    console.log('pouet');
                     $timeout(function() {
                         $('.modal-backdrop:last').trigger('$animate:close');
-                        console.log('pouet');
                     }, 100);
                 }, 100);
             });

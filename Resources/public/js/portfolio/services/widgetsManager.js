@@ -16,8 +16,8 @@ portfolioApp
             addWidget: function(portfolioWidget) {
                 var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type);
                 var newPortfolioWidget= new widget(portfolioWidget);
-                newPortfolioWidget.isNew = false;
                 this.portfolioWidgets.push(newPortfolioWidget);
+                this.save(newPortfolioWidget);
             },
             delete: function(portfolioWidget) {
                 portfolioWidget.isDeleting = true;
@@ -44,6 +44,44 @@ portfolioApp
                         deferred.reject(msg);
                     });
                 return deferred.promise;
+            },
+            save: function(widget) {
+                if (null == widget.row) {
+                    widget.row = 0;
+                }
+                if (null == widget.col) {
+                    widget.col = 0;
+                }
+
+                widget.isUpdating = true;
+                delete widget.copy;
+
+                var $this = this;
+                var success = function() {
+                    widget.isNew = false;
+                    $this.cancelEditing(widget);
+                    widget.isUpdating = false;
+                };
+                var failed = function(error) {
+                    console.error('Error occured while saving widget');
+                    console.log(error);
+                }
+
+                if (widget.isNew) {
+                    delete widget.id;
+                }
+
+                return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
+            },
+            cancelEditing: function(widget, rollback) {
+                if (rollback) {
+                    angular.copy(widget.copy, widget);
+                }
+                widget.isEditing = false;
+
+                if (widget.isNew) {
+                    this.portfolioWidgets.remove(widget);
+                }
             }
         };
     }]);
