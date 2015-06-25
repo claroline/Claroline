@@ -160,7 +160,8 @@ class ResourceManager
         ResourceNode $parent = null,
         ResourceIcon $icon = null,
         array $rights = array(),
-        $isPublished = true
+        $isPublished = true,
+        $createRights = true
     )
     {
         $this->om->startFlushSuite();
@@ -189,7 +190,10 @@ class ResourceManager
         }
 
         $resource->setResourceNode($node);
-        $this->setRights($node, $parent, $rights);
+
+        if ($createRights) {
+            $this->setRights($node, $parent, $rights);
+        }
         $this->om->persist($node);
         $this->om->persist($resource);
 

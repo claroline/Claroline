@@ -36,7 +36,9 @@
             'click a.open-picker': 'openPicker',
             'click a.add': 'add',
             'click .select-all-nodes': 'selectAll',
-            'click .list-view': 'listMode'
+            'click .list-view': 'listMode',
+            'click a.import': 'import',
+            'click a.export': 'export'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -268,6 +270,7 @@
             this.setButtonEnabledState(this.$('a.paste'), false);
             this.setButtonEnabledState(this.$('a.delete'), false);
             this.setButtonEnabledState(this.$('a.download'), false);
+            this.setButtonEnabledState(this.$('a.export'), false);
         },
         setButtonEnabledState: function (jqButton, isEnabled) {
             return isEnabled ? jqButton.removeClass('disabled') : jqButton.addClass('disabled');
@@ -280,6 +283,7 @@
             } else {
                 // enable download if selection is not empty
                 this.setButtonEnabledState(this.$('a.download'), isSelectionNotEmpty);
+                this.setButtonEnabledState(this.$('a.export'), isSelectionNotEmpty);
                 // other actions are only available on non-root directories
                 // (so they are available in search mode too, as roots are not displayed in that mode)
                 if (this.currentDirectoryId !== '0' || this.isSearchMode) {
@@ -365,6 +369,24 @@
             var mode = chk.is(':checked') ? 'list': 'default';
             this.displayMode = mode;
             this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode});
+        },
+        import: function () {
+            this.dispatcher.trigger(
+                'import',
+                {
+                    action: 'import',
+                    nodeId: this.currentDirectoryId,
+                    view: this.parameters.viewName
+                }
+            );
+        },
+        export: function (event) {
+            if (!this.$(event.currentTarget).hasClass('disabled')) {
+                this.dispatcher.trigger(
+                    'export',
+                    {ids: _.keys(this.checkedNodes.nodes)}
+                );
+            }
         }
     });
 })();

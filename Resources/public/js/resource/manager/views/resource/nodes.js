@@ -33,7 +33,8 @@
             'created-nodes': 'addNodes',
             'deleted-nodes': 'removeNodes',
             'renamed-node': 'renameNode',
-            'edited-node': 'editNode'
+            'edited-node': 'editNode',
+            'reload-page': 'reloadPage'
         },
         initialize: function (parameters, dispatcher) {
             this.parameters = parameters;
@@ -227,6 +228,9 @@
 
             view.render(node, true && this.directoryId !== '0');
             this.$el.append(view.$el);
+        },
+        reloadPage: function () {
+            window.location.reload();
         }
     });
 })();
