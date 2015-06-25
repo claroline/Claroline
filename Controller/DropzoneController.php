@@ -295,13 +295,14 @@ class DropzoneController extends DropzoneBaseController
                     $stayHere = $form->get('stayHere')->getData();
 
                     if ($stayHere == 1) {
+/* #53 Suppression du message de l'évaluation par les pairs InnovaERV
                         if ($dropzone->hasCriteria() === false) {
                             $this->getRequest()->getSession()->getFlashBag()->add(
                                 'warning',
                                 $this->get('translator')->trans('Warning your peer review offers no criteria on which to base correct copies', array(), 'innova_collecticiel')
                             );
                         }
-
+*/
                         $this->getRequest()->getSession()->getFlashBag()->add(
                             'success',
                             $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')

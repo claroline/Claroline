@@ -85,10 +85,14 @@
         </div>
 #}
 
+{#
         <h4>{{ 'Rating'|trans({}, 'innova_collecticiel') }}</h4>
+#}
         <div class="form-group">
+{#
             {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
             {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+#}
             <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
                 {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
@@ -103,38 +107,45 @@
             </div>
         </div>
 
+
         <h4>{{ 'Planning'|trans({}, 'innova_collecticiel') }}</h4>
         <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
         <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
 
-        {{ form_errors(form.manualPlanning) }}
+        <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
+
+{#      {{ form_errors(form.manualPlanning) }}
         <div class="radio">
             <label>
                 {{ form_widget(form.manualPlanning.0) }}
                 <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
             </label>
         </div>
+ #}
+
         <div id="planning_manual" class="form-group">
             <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
             {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
-        <label class="radio">
+{#        <label class="radio">
             {{ form_widget(form.manualPlanning.1) }}
             <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
         </label>
-
+#}
         <div id="planning_dates">
             <div class="row form-group">
                 <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
-                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+{#                     {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
+ #}
                 </div>
             </div>
-            <div class="  form-group">
+            <div class="form-group">
                 <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
-                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+{#                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
+#}
                 </div>
             </div>
 <!-- Mis en commentaire par issue #251 InnovaERV -->

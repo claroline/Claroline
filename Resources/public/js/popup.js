@@ -73,8 +73,9 @@ $(document).ready(function () {
             }
         });
 
-                console.log("modal");
-                $(req).show();
+        console.log("modal");
+        $(req).show();
+        
         // Fermeture de la modal
         $('#validate-modal').modal('hide');
 

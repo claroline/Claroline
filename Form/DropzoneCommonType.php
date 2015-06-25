@@ -37,7 +37,7 @@ class DropzoneCommonType extends AbstractType
             ->add('allowUrl', 'checkbox', array('required' => false))
             ->add('allowRichText', 'checkbox', array('required' => false))
 
-            ->add('peerReview', 'choice', array(
+/*            ->add('peerReview', 'choice', array(
                 'required' => true,
                 'choices' => array(
                     true => 'Standard evaluation'
@@ -47,7 +47,7 @@ class DropzoneCommonType extends AbstractType
                 'multiple' => false
             ))
 
-/*
+
             ->add('peerReview', 'choice',
                 array(
                 'required' => true,
@@ -61,19 +61,21 @@ class DropzoneCommonType extends AbstractType
 /*
 Suppression suite demande #251
             ->add('expectedTotalCorrection', 'integer', array('required' => true))
-*/
             ->add('displayNotationToLearners', 'checkbox', array('required' => false))
+*/
 /* Suppression suite demande #45
            ->add('diplayCorrectionsToLearners','checkbox', array('required' => false)) */
 
 /* Suppression suite demande #45
-           ->add('allowCorrectionDeny','checkbox',array('required'=>false)) */
+           ->add('allowCorrectionDeny','checkbox',array('required'=>false))
            ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
+*/
 
             ->add('successMessage','tinymce',array('required' => false))
             ->add('failMessage','tinymce',array('required' => false))
             ->add('minimumScoreToPass', 'integer', array('required' => true))
 
+/*
 
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
@@ -84,7 +86,7 @@ Suppression suite demande #251
                 'expanded' => true,
                 'multiple' => false
             ))
-
+*/
             ->add('manualState', 'choice', array(
                 'choices' => array(
                     'notStarted' => 'notStartedManualState',
@@ -106,9 +108,9 @@ Suppression suite demande #251
             ->add('endAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            */
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
+            */
             ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endReview', 'datetimepicker', $defaultDateTimeOptions);
 

@@ -57,7 +57,7 @@
                                     {% else %}
                                         <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="form-control" name="document_id_{{ document.id }}" disabled checked />
                                         {# #32 ajout de "Demande transmise #}
-                                        <button id="request_id_{{ document.id }}" class="btn btn-default btn-xs" type="button">
+                                        <button disabled id="request_id_{{ document.id }}" class="btn btn-default btn-xs" type="button">
                                             {{ 'Request sent'|trans({}, 'innova_collecticiel') }}
                                         </button>
                                     {% endif %}
