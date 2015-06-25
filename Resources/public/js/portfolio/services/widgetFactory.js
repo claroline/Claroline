@@ -41,6 +41,10 @@ portfolioApp
                     return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}", parameters);
                 };
 
+                widget.prototype.getId = function() {
+                    return this.portfolio_id + '-' + this.widget_id;
+                };
+
                 this.widgetResources[type] = widget;
 
                 return this.widgetResources[type];

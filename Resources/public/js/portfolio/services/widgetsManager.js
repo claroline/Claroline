@@ -16,6 +16,7 @@ portfolioApp
             addWidget: function(portfolioWidget) {
                 var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type);
                 var newPortfolioWidget= new widget(portfolioWidget);
+                newPortfolioWidget.isNew = true;
                 this.portfolioWidgets.push(newPortfolioWidget);
                 this.save(newPortfolioWidget);
             },
