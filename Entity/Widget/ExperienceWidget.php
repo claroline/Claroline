@@ -13,7 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ExperienceWidget extends AbstractWidget
 {
-    protected $widgetType = 'experience';
+    const WIDGET_TYPE = 'experience';
+    const SIZE_X = 4;
+    const SIZE_Y = 7;
+
+    protected $widgetType = self::WIDGET_TYPE;
 
     /**
      * @var string
@@ -56,12 +60,6 @@ class ExperienceWidget extends AbstractWidget
      * @ORM\Column(type="string", nullable=true)
      */
     protected $website;
-
-    public function __construct()
-    {
-        $this->sizeX = 4;
-        $this->sizeY = 7;
-    }
 
     /**
      * @return string

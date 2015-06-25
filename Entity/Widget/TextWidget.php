@@ -10,7 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TextWidget extends AbstractWidget
 {
-    protected $widgetType = 'text';
+    const WIDGET_TYPE = 'text';
+    const SIZE_X = 4;
+    const SIZE_Y = 4;
+
+    protected $widgetType = self::WIDGET_TYPE;
 
     /**
      * @var string
@@ -18,12 +22,6 @@ class TextWidget extends AbstractWidget
      * @ORM\Column(type="text", nullable=true)
      */
     protected $text;
-
-    public function __construct()
-    {
-        $this->sizeX = 4;
-        $this->sizeY = 4;
-    }
 
     /**
      * @param string $text

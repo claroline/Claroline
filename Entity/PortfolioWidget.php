@@ -206,6 +206,17 @@ class PortfolioWidget
     }
 
     /**
+     * @param array $position
+     *
+     * @return PortfolioWidget
+     */
+    public function setSize(array $position)
+    {
+        $this->setSizeX($position['sizeX']);
+        return $this->setSizeY($position['sizeY']);
+    }
+
+    /**
      * @return array
      */
     public function getData()

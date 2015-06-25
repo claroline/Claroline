@@ -276,11 +276,23 @@ class WidgetsManager
                 ->setPortfolio($portfolio)
                 ->setWidget($widget)
                 ->setWidgetType($type)
+                ->setSize($this->getWidgetSizeByType($type))
             ;
             $portfolioWidgets[] = $portfolioWidget;
         }
 
         return $portfolioWidgets;
+    }
+
+    public function getWidgetSizeByType($type)
+    {
+        $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($type) . 'Widget';
+        $position = [
+            'sizeX' => $classNamespace::SIZE_X,
+            'sizeY' => $classNamespace::SIZE_Y
+        ];
+
+        return $position;
     }
 }
  

@@ -13,7 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SkillsWidget extends AbstractWidget
 {
-    protected $widgetType = 'skills';
+    const WIDGET_TYPE = 'skills';
+    const SIZE_X = 4;
+    const SIZE_Y = 3;
+
+    protected $widgetType = self::WIDGET_TYPE;
 
     /**
      * @var SkillsWidgetSkill[]|\Doctrine\ORM\PersistentCollection
@@ -25,8 +29,6 @@ class SkillsWidget extends AbstractWidget
     public function __construct()
     {
         $this->skills = new ArrayCollection();
-        $this->sizeX  = 4;
-        $this->sizeY  = 3;
     }
 
     /**
