@@ -290,6 +290,7 @@ class AuthenticationController
             $data = $form->getData();
             $plainPassword = $data->getPlainPassword();
             $user->setPlainPassword($plainPassword);
+            $this->userManager->activateUser($user);
             $this->om->persist($user);
             $this->om->flush();
             $this->request->getSession()
