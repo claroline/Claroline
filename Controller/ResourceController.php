@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Controller;
 use \Exception;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +27,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -34,6 +38,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\LogManager;
+use Claroline\CoreBundle\Manager\TransfertManager;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -52,6 +57,8 @@ class ResourceController
     private $templating;
     private $logManager;
     private $fileManager;
+    private $transferManager;
+    private $formFactory;
 
     /**
      * @DI\InjectParams({
@@ -66,11 +73,12 @@ class ResourceController
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"      = @DI\Inject("templating"),
      *     "logManager"      = @DI\Inject("claroline.log.manager"),
-    *      "fileManager"     = @DI\Inject("claroline.manager.file_manager")
+    *      "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
+     *     "transferManager" = @DI\Inject("claroline.manager.transfert_manager"),
+     *     "formFactory"     = @DI\Inject("form.factory")
      * })
      */
-    public function __construct
-    (
+    public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
@@ -82,7 +90,9 @@ class ResourceController
         MaskManager $maskManager,
         TwigEngine $templating,
         LogManager $logManager,
-        FileManager $fileManager
+        FileManager $fileManager,
+        TransfertManager $transferManager,
+        FormFactory $formFactory
     )
     {
         $this->tokenStorage = $tokenStorage;
@@ -97,6 +107,8 @@ class ResourceController
         $this->templating = $templating;
         $this->logManager = $logManager;
         $this->fileManager = $fileManager;
+        $this->transferManager = $transferManager;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -932,6 +944,112 @@ class ResourceController
         $this->request->getSession()->set('resourceZoom', $zoom);
 
         return new Response(200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/export",
+     *     name="claro_resource_export",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "nodes",
+     *     class="ClarolineCoreBundle:Resource\ResourceNode",
+     *     options={"multipleIds" = true}
+     * )
+     *
+     * This function takes an array of parameters. Theses parameters are the ids
+     * of the resources which are going to be exported
+     * (query string: "ids[]=1&ids[]=2" ...).
+     *
+     * @param array $nodes
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function exportAction(array $nodes)
+    {
+        if (count($nodes) === 0) {
+            
+            throw new \Exception('No resource to export');
+        }
+            
+        $workspace = $nodes[0]->getWorkspace();
+        $archive = $this->transferManager->exportResources($workspace, $nodes);
+        $fileName = $workspace->getCode() . '.zip';
+
+        $mimeType = 'application/zip';
+        $response = new StreamedResponse();
+
+        $response->setCallBack(
+            function () use ($archive) {
+                readfile($archive);
+            }
+        );
+
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
+        $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Connection', 'close');
+
+        return $response;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{node}/import/form",
+     *     name="claro_resource_import_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:importModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function importFormAction(ResourceNode $node)
+    {
+        $form = $this->formFactory->create(new ImportResourcesType());
+
+        return array('form' => $form->createView(), 'directory' => $node);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{directory}/import",
+     *     name="claro_resource_import",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCoreBundle:Resource:importModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function importAction(ResourceNode $directory)
+    {
+        $form = $this->formFactory->create(new ImportResourcesType());
+        $form->handleRequest($this->request);
+
+        try {
+            if ($form->isValid()) {
+                $template = $form->get('file')->getData();
+                $config = Configuration::fromTemplate($template);
+                $user = $this->tokenStorage->getToken()->getUser();
+                $this->transferManager->importResources($config, $user, $directory);
+                $this->transferManager->importRichText();
+
+                return new JsonResponse(array());
+            } else {
+
+                return array('form' => $form->createView(), 'directory' => $directory);
+            }
+        } catch (\Exception $e) {
+            $errorMsg = $this->translator->trans(
+                'invalid_file',
+                array(),
+                'platform'
+            );
+            $form->addError(new FormError($errorMsg));
+
+            return array('form' => $form->createView(), 'directory' => $directory);
+        }
     }
 
     private function isUsurpatingWorkspaceRole(TokenInterface $token)

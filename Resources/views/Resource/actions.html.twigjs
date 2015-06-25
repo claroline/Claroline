@@ -45,6 +45,16 @@
                 <i class="fa fa-download"></i>
             </a>
         </li>
+        <li>
+            <a class="import" data-toggle="tooltip" data-placement="bottom" title="{{ 'import'|trans({}, 'platform') }}">
+                <i class="fa fa-sign-in"></i>
+            </a>
+        </li>
+        <li>
+            <a class="export disabled" data-toggle="tooltip" data-placement="bottom" title="{{ 'export'|trans({}, 'platform') }}">
+                <i class="fa fa-sign-out"></i>
+            </a>
+        </li>
         <li class="dropdown">
             <a class="dropdown-toggle zoom{% if isSearchMode == true %} disabled{% endif %}" data-toggle="dropdown">
                 <i class="fa fa-search-plus"></i>
