@@ -8,3 +8,14 @@ input.form-control {
     background: none repeat scroll 0 0 #F39C12;
     border-color: #F39C12;
     color: #FFFFFF;
+}
+    
+#delete_button_td {
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.del_btn_td {
+    margin: auto;
+}

@@ -35,19 +35,15 @@
     </td>
 
     {% if mode == 'complete' %}
-        <td>
+        <td id="delete_button_td">
         {# Si la document a été validé alors je ne peux pas le supprimer #}
         {% if not document.validate %}
             <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
-               class="btn btn-danger btn-sm pull-right launch-modal"
+               class="btn btn-danger btn-sm launch-modal del_btn_td"
                id="delete_{{ document.id }}" >
                 <span class="fa fa-trash-o"></span>
                 {{ 'Delete'|trans({}, 'innova_collecticiel') }}
             </a>
-        {% else %}
-            
-        ----
-
         {% endif %}
         </td>
     {% endif %}
