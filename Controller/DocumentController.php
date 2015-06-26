@@ -429,8 +429,13 @@ class DocumentController extends DropzoneBaseController
         $em->persist($doc);
         $em->flush();
 
-        $template = $this->get("templating")->render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig', array('document' => $document));
+        // Ajout afin d'afficher la partie du code avec "Demande transmise"
+        $template = $this->get("templating")->
+        render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
+                array('document' => $document)
+               );
 
+        // Retour du template actualisé à l'Ajax et non plus du Json.
         return new Response($template);
     }
 }

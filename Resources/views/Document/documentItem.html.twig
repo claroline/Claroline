@@ -25,6 +25,7 @@
         {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
     </td>
 
+    {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
     <td class={{ classArray }} id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>

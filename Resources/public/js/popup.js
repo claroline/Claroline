@@ -57,6 +57,8 @@ $(document).ready(function () {
         // Ajax : route "innova_collecticiel_validate_document" dans DocumentController
         var req = "#request_id_"+$(this).attr("data-document_id"); // Extract info from data-* attributes
 
+        // Ajout : vu avec Arnaud.
+        // Ajout de "complete" afin de mettre à jour la partie "HTML" qui va actualisé et afficher "Demande transmise"
         $.ajax({
             url: Routing.generate('innova_collecticiel_validate_document',
                 { documentId: docId
