@@ -1,0 +1,53 @@
+{# InnovaERV : Affichage de la ligne du tableau en fonction du type : admin ou pas #}
+{% if adminInnova %}
+    {% set classArray="warning" %}
+{% else %}
+    {% set classArray="info" %}
+{% endif %}
+
+{# InnovaERV : Fin ajout : Affichage ... #}
+<tr id="row_{{ document.id }}">
+    <td class={{ classArray }}>
+        {% if document.url is not null %}
+            <a target="_blank"
+               href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
+        {% else %}
+            <a target="_blank"
+               href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+        {% endif %}
+    </td>
+    <td class={{ classArray }}>
+        {{ (document.type~'_type')|trans({}, 'innova_collecticiel') }}
+    </td>
+
+    <td class={{ classArray }}>
+        {# InnovaERV : #19 ajout de l'affichage de la date de dépôt du document et formatage #}
+        {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+    </td>
+
+    <td class={{ classArray }} id="is-validate-{{ document.id }}">
+        {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
+    </td>
+
+    <td class={{ classArray }}>
+        ----
+    </td>
+
+    {% if mode == 'complete' %}
+        <td>
+        {# Si la document a été validé alors je ne peux pas le supprimer #}
+        {% if not document.validate %}
+            <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
+               class="btn btn-danger btn-sm pull-right launch-modal"
+               id="delete_{{ document.id }}" >
+                <span class="fa fa-trash-o"></span>
+                {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+            </a>
+        {% else %}
+            
+        ----
+
+        {% endif %}
+        </td>
+    {% endif %}
+</tr>

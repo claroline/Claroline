@@ -28,24 +28,18 @@
             {% endblock %}
 #}
 
-
-            <!-- Demandes adressées  -->
-            {% block collecticiel_espace_partage_edit_navTabs_criteria_block %}
-                <li class="hometab-element peer-review-options {% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %}active {% endblock %}">
-                    <a id="editDropsLink" href="
-                    {% block collecticiel_espace_partage_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
-                        Demandes adressées
-                    </a>
-                </li>
-            {% endblock %}
+            <!-- Demandes adressées -->
+            <li class="hometab-element {% block collecticiel_demandes_active %}{% endblock %}">
+                <a href="{% block collecticiel_demandes_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+            Demandes adressées
+                </a>
+            </li>
 
             <!-- Paramètres -->
-            <li class="hometab-element {% block dropzone_edit_navTabs_param_element_class %}active {% endblock %}">
-                <a href="{% block dropzone_edit_navTabs_param_link %}
+            <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
+                <a id="editParametresLink" href="{% block collecticiel_parametres_link %}
                         {{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
+                    {% endblock %}" >
                     {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                 </a>
             </li>
@@ -65,7 +59,6 @@
                 </li>
             {% endblock %}
             #}
-
 
             <!-- Vu avec Donovan : quand on est admin, on peut accéder à UN espace collecticiel d'UN étudiant -->
             <!-- Accès à un espace collecticiel -->

@@ -1,22 +1,10 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
-{% block dropzone_edit_navTabs_param_link %}
-    #
-{% endblock %}
+{% block collecticiel_demandes_active %}{% endblock %}
+{% block collecticiel_demandes_link %}{% endblock %}
 
-{# reset the default active tab#}
-{% block collecticiel_edit_navTabs_criteria_element_class %}
-{% endblock %}
-{% block dropzone_edit_navTabs_param_element_class %}
-{% endblock %}
-{% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}
-{% endblock %}
-
-{# seting the correct active tab#}
-{% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %}
-    active
-{% endblock %}
-
+{% block collecticiel_parametres_active %}active{% endblock %}
+{% block collecticiel_parametres_link %}#{% endblock %}
 
 {% block drop_zone_content_edit %}
 
@@ -25,7 +13,7 @@
     <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
 
     <!-- Copies terminées en attente de correction(s) -->
-    <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
+    <h3>bbb{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}

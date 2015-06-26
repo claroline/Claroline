@@ -1,23 +1,10 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
-{% form_theme form "ClarolineCoreBundle:Form:date_time_picker.html.twig" %}
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
-{% block dropzone_edit_navTabs_param_link %}
-    #
-{% endblock %}
 
-{# reset the default active tab#}
-{% block collecticiel_edit_navTabs_criteria_element_class %}
-{% endblock %}
-{% block collecticiel_espace_partage_edit_navTabs_criteria_element_class %}
-{% endblock %}
-{% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}
-{% endblock %}
+{% block collecticiel_parametres_active %}{% endblock %}
+{% block collecticiel_parametres_link %}{% endblock %}
 
-{# seting the correct active tab#}
-{% block dropzone_edit_navTabs_criteria_element_class %}
-    active
-{% endblock %}
 
 
 {% block drop_zone_content_edit %}
@@ -45,7 +32,7 @@
 
         <p>{{ 'common_explication'|trans({}, 'innova_collecticiel')|raw }}</p>
 
-        <h4>{{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
+        <h4>ici {{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
         <div class="form-group">
             {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>

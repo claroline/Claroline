@@ -20,6 +20,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class DocumentController extends DropzoneBaseController
 {
@@ -428,10 +429,8 @@ class DocumentController extends DropzoneBaseController
         $em->persist($doc);
         $em->flush();
 
-        return new JsonResponse(
-            array(
-            'docId' => $document->getId(),
-            )
-        );
+        $template = $this->get("templating")->render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig', array('document' => $document));
+
+        return new Response($template);
     }
 }
