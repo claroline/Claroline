@@ -24,8 +24,15 @@
                 <div class="panel-heading" data-ng-if="vm.menu.currentEditPageNode.new"><div class="panel-title">{{ 'create_page'|trans({}, 'icap_website') }}</div></div>
                 <div data-ng-class="{'panel-body new-page-body':vm.menu.currentEditPageNode.new}">
                     <h4 data-ng-if="!vm.menu.currentEditPageNode.new">{{ 'edit_page'|trans({}, 'icap_website') }}: <small class="text-primary">{{ '{{ vm.menu.currentEditPageNode.title }}' }}</small></h4>
+                    <h5 data-ng-if="!vm.menu.currentEditPageNode.new">
+                        {{ 'url'|trans({}, 'icap_website') }} :
+                        <small>
+                            <a data-ng-if="vm.menu.currentEditPageNode.isHomepage" href="{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}">{{ url('icap_website_force_view', {'websiteId': _resource.id}) }}</a>
+                            <a data-ng-if="!vm.menu.currentEditPageNode.isHomepage" data-ng-href="{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.menu.currentEditPageNode.id }}' }}">{{ url('icap_website_view', {'websiteId': _resource.id}) }}/{{ '{{ vm.menu.currentEditPageNode.id }}' }}</a>
+                        </small>
+                    </h5>
                     <div>
-                        <button class="btn btn-xs btn-success" data-ng-if="vm.menu.currentEditPageNode&&!vm.menu.currentEditPageNode.isHomepage" data-ng-click="vm.setAsHomepage()">{{ 'set_as_homepage'|trans({}, 'icap_website') }}</button>
+                        <button class="btn btn-xs btn-success" data-ng-if="vm.menu.currentEditPageNode&&!vm.menu.currentEditPageNode.isHomepage" data-ng-click="vm.setAsHomepage()"><i class="fa fa-home"></i> {{ 'set_as_homepage'|trans({}, 'icap_website') }}</button>
                     </div>
                     <form class="form" role="form">
                         <div class="form-group">

@@ -22,11 +22,20 @@ div.footer{
     height: {{ options.footerHeight|raw }}px;
 }
 
+div.website-content {
+    height: auto;
+}
+div.website-page-content {
+    padding: 10px;
+}
+
 {% if options.totalWidth > 200 %}
+@media (min-width:{{ options.totalWidth|raw }}px) {
     div.website-body {
         width: {{ options.totalWidth|raw }}px;
         margin: auto;
     }
+}
 {% endif %}
 
 {% if options.cssCode is not empty %}

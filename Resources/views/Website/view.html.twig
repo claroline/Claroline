@@ -24,7 +24,7 @@
                 </nav>
                 <ui-flexnav menu="menu" nav-style="options" options="flexnavOptions"></ui-flexnav>
             {% endif %}
-            <div class="website-content" ng-style="{height: contentHeight+'px'}">
+            <div class="website-content" ng-style="{'min-height': contentHeight+'px'}">
                 {% if options.menuOrientation == 'vertical' %}
                     <aside ng-if="false">
                         <nav>
@@ -49,6 +49,7 @@
                         {% endif %}
                     </div>
                 </div>
+                <div style="clear: both"></div>
             </div>
             {% if options.footerEnabled %}
                 <footer>
