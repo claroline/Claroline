@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\FacebookBundle\Security\Hwi;
+namespace Icap\OAuthBundle\Security\Hwi;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,7 +18,7 @@ use Buzz\Client\Curl;
 use HWI\Bundle\OAuthBundle\OAuth\RequestDataStorage\SessionStorage;
 
 /**
- * @DI\Service("claroline.hwi.facebook_owner_factory")
+ * @DI\Service("icap.oauth.hwi.facebook_owner_factory")
  */
 class ResourceOwnerFactory
 {

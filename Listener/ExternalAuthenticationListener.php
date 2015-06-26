@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\FacebookBundle\Listener;
+namespace Icap\OAuthBundle\Listener;
 
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
@@ -17,7 +17,7 @@ class ExternalAuthenticationListener
     /**
      * @DI\InjectParams({
      *     "templating"      = @DI\Inject("templating"),
-     *     "facebookManager" = @Di\Inject("claroline.manager.facebook_manager")
+     *     "facebookManager" = @Di\Inject("icap.auth.manager.facebook")
      * })
      */
     public function __construct($templating, $facebookManager)
@@ -36,7 +36,7 @@ class ExternalAuthenticationListener
     {
         if ($this->facebookManager->isActive()) {
             $content = $this->templating->render(
-                'ClarolineFacebookBundle:Facebook:button.html.twig',
+                'IcapOAuthBundle:Facebook:button.html.twig',
                 array()
             );
 
@@ -54,7 +54,7 @@ class ExternalAuthenticationListener
     {
         if ($this->facebookManager->isActive()) {
             $content = $this->templating->render(
-                'ClarolineFacebookBundle:Facebook:javascript_layout.html.twig',
+                'IcapOAuthBundle:Facebook:javascript_layout.html.twig',
                 array()
             );
 

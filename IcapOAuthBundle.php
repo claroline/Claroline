@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\FacebookBundle;
+namespace Icap\OAuthBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\BundleBundle\Installation\AdditionalInstaller;
-use Claroline\FacebookBundle\DependencyInjection\Compiler\DynamicConfigPass;
+use Icap\OAuthBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
@@ -15,7 +15,7 @@ use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
  * Bundle class.
  * Uncomment if necessary.
  */
-class ClarolineFacebookBundle extends PluginBundle  implements AutoConfigurableInterface, ConfigurationProviderInterface
+class IcapOAuthBundle extends PluginBundle  implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
     public function build(ContainerBuilder $container)
     {

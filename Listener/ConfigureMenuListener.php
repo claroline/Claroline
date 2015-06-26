@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\FacebookBundle\Listener;
+namespace Icap\OAuthBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
 use JMS\DiExtraBundle\Annotation as DI;

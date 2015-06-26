@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\FacebookBundle\Twig;
+namespace Icap\OAuthBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -45,7 +45,7 @@ class FacebookExtension extends \Twig_Extension
 
     public function isFacebookAvailable()
     {
-        return $this->container->get('claroline.manager.facebook_manager')->isFacebookAvailable();
+        return $this->container->get('icap.oauth.manager.facebook')->isFacebookAvailable();
     }
 
     public function getAppIp()

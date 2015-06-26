@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\FacebookBundle\Manager;
+namespace Icap\OAuthBundle\Manager;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\CacheManager;
-use Claroline\FacebookBundle\Model\Configuration;
+use Icap\OAuthBundle\Model\Configuration;
 
 /**
- * @DI\Service("claroline.manager.facebook_manager")
+ * @DI\Service("icap.oauth.manager.facebook")
  */
 class FacebookManager
 {

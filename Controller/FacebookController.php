@@ -1,11 +1,11 @@
 <?php
 
-namespace Claroline\FacebookBundle\Controller;
+namespace Icap\OAuthBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\FacebookBundle\Form\FacebookType;
+use Icap\OAuthBundle\Form\FacebookType;
 use Symfony\Component\Form\FormError;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 
@@ -23,7 +23,7 @@ class FacebookController extends Controller
     private $request;
     /** @DI\Inject("claroline.manager.cache_manager") */
     private $cacheManager;
-    /** @DI\Inject("claroline.manager.facebook_manager") */
+    /** @DI\Inject("icap.auth.manager.facebook") */
     private $facebookManager;
     /** @DI\Inject("translator") */
     private $translator;
@@ -45,7 +45,7 @@ class FacebookController extends Controller
     /**
      * @EXT\Route("/oauth/facebook/submit", name="claro_admin_facebook_form_submit")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineFacebookBundle:Facebook:facebookForm.html.twig")
+     * @EXT\Template("IcapOAuthBundle:Facebook:facebookForm.html.twig")
      *
      * Displays the administration section index.
      *

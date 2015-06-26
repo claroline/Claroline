@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\FacebookBundle\Installation;
+namespace Icap\OAuthBundle\Installation;
 
 use Claroline\InstalationBundle\Additional\AdditinalInstaller as BaseInstaller;
 

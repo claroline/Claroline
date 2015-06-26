@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\FacebookBundle\DependencyInjection\Compiler;
+namespace Icap\OAuthBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -33,7 +33,7 @@ class DynamicConfigPass implements CompilerPassInterface
         $facebook = new Definition();
         $facebook->setClass('FacebookResourceOwner');
         $facebook->setFactory(array(
-            new Reference('claroline.hwi.facebook_owner_factory'),
+            new Reference('icap.oauth.hwi.facebook_owner_factory'),
             'getFacebookResourceOwner'
         ));
         $container->removeDefinition('hwi_oauth.resource_owner.facebook');

@@ -10,7 +10,7 @@
  */
 
 
-namespace Claroline\FacebookBundle\Model;
+namespace Icap\OAuthBundle\Model;
 
 
 class Configuration

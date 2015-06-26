@@ -1,5 +1,5 @@
 facebook_controller:
-    resource: "@ClarolineFacebookBundle/Controller/FacebookController.php"
+    resource: "@IcapOAuthBundle/Controller/FacebookController.php"
     type: annotation
     prefix: /
 

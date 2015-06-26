@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\FacebookBundle\Security;
+namespace Icap\OAuthBundle\Security;
 
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * @Service("claroline.facebook_provider")
+ * @Service("icap.oauth.facebook_provider")
  */
 class FacebookProvider implements OAuthAwareUserProviderInterface, UserProviderInterface
 {

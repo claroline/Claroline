@@ -1,6 +1,6 @@
 {
-    "name": "claroline/facebook-bundle",
-    "keywords": ["Claroline", "Plugin"],
+    "name": "icap/oauth-bundle",
+    "keywords": ["Icap", "OAuth", "Facebook", "Twitter", "Google"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
@@ -10,7 +10,7 @@
         "hwi/oauth-bundle": "0.4.*@dev"
     },
     "autoload": {
-        "psr-0": { "Claroline\\Facebook": "" }
+        "psr-0": { "Icap\\OAuth": "" }
     },
-    "target-dir": "Claroline/FacebookBundle"
+    "target-dir": "Icap/OAuthBundle"
 }
