@@ -27,14 +27,14 @@ class Proposal
      * @ORM\Column(name="value", type="text")
      */
     private $value;
-    
+
     /**
      * @var boolean $positionForce
      *
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
     private $positionForce;
-    
+
      /**
      * @var integer $ordre
      *
@@ -131,7 +131,7 @@ class Proposal
     {
         $this->associatedLabel = NULL;
     }
-    
+
     /**
      * Set positionForce
      *
@@ -149,7 +149,7 @@ class Proposal
     {
         return $this->positionForce;
     }
-    
+
     /**
      * Set ordre
      *

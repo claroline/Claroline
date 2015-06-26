@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class InteractionMatchingRepository extends EntityRepository
 {
-    
+
     /**
      * Get InteractionMatching linked with an interaction
      *

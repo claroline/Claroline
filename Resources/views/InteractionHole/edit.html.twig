@@ -59,8 +59,8 @@
                     <a class="btn btn-default" href="{{ path('ujm_exercise_questions', {'id': exoID}) }}">{{ 'cancel' | trans({}, "platform") }}</a>
                 {% endif %}
             </div>
-            {% if locker != "" %}        
-        <input type="hidden" id="locker" value="{{locker.value}}"> 
+            {% if locker != "" %}
+        <input type="hidden" id="locker" value="{{locker.value}}">
     {% endif %}
         </form>
         <div id="prototypes" style="display:none"></div>

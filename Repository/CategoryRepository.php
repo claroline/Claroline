@@ -31,10 +31,10 @@ class CategoryRepository extends EntityRepository
         //request used by a form, queryBuilder must be given and not an array
         return $qb;
     }
-    
+
     /**
      * Create an array of user's category
-     * 
+     *
      * @param integer $uid
      * @return array Category
      */
@@ -44,7 +44,7 @@ class CategoryRepository extends EntityRepository
         $listCategory = $qb->getQuery()->getResult();
         return  $listCategory;
     }
-    
+
     public function getCategoryLocker($uid)
     {
         $qb = $this->createQueryBuilder('c');
@@ -55,5 +55,5 @@ class CategoryRepository extends EntityRepository
         $locker=$qb->getQuery()->getResult();
         return $locker;
     }
-     
+
 }

@@ -22,16 +22,16 @@ class ChoiceType extends AbstractType
             ->add(
                 'label', 'textarea', array(
                     'label' => ' ',
-                    'required' => true, 
+                    'required' => true,
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'expected_answer'               
+                    'placeholder' => 'expected_answer'
                     )
                 )
             )
             ->add(
                 'weight', 'text', array(
-                    'required' => false, 
+                    'required' => false,
                     'label' => ' ',
                     'attr' => array('class' => 'col-md-1', 'placeholder' => 'score_answer')
                 )

@@ -39,8 +39,8 @@ class QuestionType extends AbstractType
                     'class' => 'UJM\\ExoBundle\\Entity\\Category',
                     'label' => 'Category.value',
                     'required' => false,
-                    'empty_value' => 'choose_category', 
-    
+                    'empty_value' => 'choose_category',
+
                     'query_builder' => function (CategoryRepository $cr) use ($uid) {
                         if ($this->catID === -1) {
                             return $cr->getUserCategory($uid);
@@ -53,12 +53,12 @@ class QuestionType extends AbstractType
                 )
             )
             ->add('description', 'textarea', array(
-                    'label' => 'question_description', 
+                    'label' => 'question_description',
                     'required' => false,
                     'attr'  => array( 'placeholder' => 'question_description',
                                       'class'=> 'form-control',
                                       'data-new-tab' => 'yes'
-                                    )                    
+                                    )
                 )
             )
             ->add(

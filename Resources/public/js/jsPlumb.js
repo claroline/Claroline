@@ -10,7 +10,7 @@ function target() {
     jsPlumb.makeTarget($(".droppable"), {
         anchor: "Left",
         cssClass: "endPoints",
-        isTarget: true        
+        isTarget: true
     });
 }
 
@@ -70,7 +70,7 @@ function replaceConnections() {
     jsPlumb.unmakeEveryTarget();
     source();
     target();
-    
+
     for(var i = 0; i < connections.length; i++) {
         jsPlumb.connect({
             source:connections[i].sourceId,

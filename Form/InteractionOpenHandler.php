@@ -24,9 +24,9 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
             if ( $this->form->isValid() ) {
                     $this->onSuccessAdd($this->form->getData());
                     return true;
-            } 
+            }
         }
-        
+
         return false;
     }
 

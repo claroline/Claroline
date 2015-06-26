@@ -581,7 +581,7 @@ window.onload = function () {
 function searchUserPaper(path, exoID) {
 
     var userName = $('#nameUser').val();
-    
+
     // Send theses informations to the controller to have the matching questions and display it
     $.ajax({
         type: 'GET',

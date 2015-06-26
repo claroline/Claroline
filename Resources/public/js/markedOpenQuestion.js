@@ -10,11 +10,11 @@ function openMark(url) {
 }
 
 function markPop(data) {
-    
+
     $('body').append(data);
-    
+
 }
 
-$(document.body).on('hidden.bs.modal', function () { 
+$(document.body).on('hidden.bs.modal', function () {
     $('#modalopenmark').remove();
 });

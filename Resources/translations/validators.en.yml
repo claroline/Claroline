@@ -1,1 +1,2 @@
 is_not_empty : You must fill in the fields
+is_valid_qcm_mark : The mark "%string%" is not a valid mark

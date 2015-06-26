@@ -93,13 +93,13 @@
         {% include "UJMExoBundle:Partial:correction/attemptInfo.html.twig" %}
 
         <h6 style="color: red; text-align: right;">({{ 'paper_legend' | trans }}).</h6>
-        
+
         <div id="resultSearch">
             {% if divResultSearch is defined %}
                 {{ divResultSearch | raw }}
             {% else %}
                 {% if papers is not empty %}
-                    
+
                     {% include "UJMExoBundle:Partial:paper/list.html.twig" %}
 
                     {% if pager.haveToPaginate %}

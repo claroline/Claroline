@@ -18,7 +18,7 @@ class HoleType extends AbstractType
                 'size', 'text', array(
                 'attr'  => array( 'size' => '4')
                 )
-                
+
             )
             //->add('position', 'text')
             ->add(

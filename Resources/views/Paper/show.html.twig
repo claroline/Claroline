@@ -61,7 +61,7 @@
                 </div>
 
     {#------------------------------------------------- Graphic ------------------------------------------------------#}
-    
+
             {% elseif(interactions[p].type == 'InteractionGraphic') %}
 
                 {% set interInfo = getInterTwig(interactions[p].id, 'InteractionGraphic') %}
@@ -72,7 +72,7 @@
 
 
                 {% if (display == 'all') %}
-    
+
                 <div class="panel-body">
                     {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}
                 </div>
@@ -108,7 +108,7 @@
                                 {% set abscissa   = 'a' %}
                                 {% set ordoninate = 'a' %}
                             {% endif %}
-                            
+
                             <script type="text/javascript">
                                     whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
                                     '{{abscissa}}', '{{ordoninate}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
@@ -121,7 +121,7 @@
                      </div>
                     <div style="margin: 10px" class="panel-body">
                     {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
-                    
+
                 {% else %}
                     {% set x = 0 %}
 
@@ -131,7 +131,7 @@
                     {% endfor %}
 
                 {% endif %}
-                
+
 
     {#--------------------------------------------------- Hole -------------------------------------------------------#}
 

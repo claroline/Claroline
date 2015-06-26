@@ -4,7 +4,7 @@ $(function() {
 
     jsPlumb.ready(function() {
         jsPlumb.setContainer($("body"));
-        
+
         // for create source element for jsPlumb
         $(".origin").each(function() {
             jsPlumb.addEndpoint(this, {

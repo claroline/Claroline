@@ -170,6 +170,3 @@ function checkFormOpen() {
         return true;
     }
 }
-
-
-
