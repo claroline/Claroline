@@ -1129,3 +1129,5 @@ refresh_explanation: refresh_explanation
 platform_refresh_confirm: platform_refresh_confirm
 is_not_writable_recursive: is_not_writable_recursive
 test_repository_activated: 'test_repository_activated'
+not_managed_by_claroline_repository: 'Estado indisponible'
+update_impossible: 'Actualización imposible'
