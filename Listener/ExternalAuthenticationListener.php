@@ -17,7 +17,7 @@ class ExternalAuthenticationListener
     /**
      * @DI\InjectParams({
      *     "templating"      = @DI\Inject("templating"),
-     *     "facebookManager" = @Di\Inject("icap.auth.manager.facebook")
+     *     "facebookManager" = @Di\Inject("icap.oauth.manager.facebook")
      * })
      */
     public function __construct($templating, $facebookManager)

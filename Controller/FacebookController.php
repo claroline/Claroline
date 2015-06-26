@@ -23,7 +23,7 @@ class FacebookController extends Controller
     private $request;
     /** @DI\Inject("claroline.manager.cache_manager") */
     private $cacheManager;
-    /** @DI\Inject("icap.auth.manager.facebook") */
+    /** @DI\Inject("icap.oauth.manager.facebook") */
     private $facebookManager;
     /** @DI\Inject("translator") */
     private $translator;
