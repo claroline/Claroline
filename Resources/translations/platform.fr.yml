@@ -1132,3 +1132,5 @@ refresh_explanation: |
 platform_refresh_confirm: Êtes-vous sûr de vouloir raffraîchir les fichiers de la plateforme ?
 is_not_writable_recursive: 'et ses sous dossiers ne sont pas accessibles en écriture'
 test_repository_activated: 'Les dépôts de test sont activés'
+not_managed_by_claroline_repository: 'Etat indisponible'
+update_impossible: 'Mise à jour impossible'

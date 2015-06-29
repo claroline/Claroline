@@ -199,10 +199,14 @@
                                     <span class="badge alert-success">
                                         {{ 'up_to_date'|trans({}, 'platform') }}
                                     </span>
+                                {% else %}
+                                    <span class="badge alert-danger">
+                                        {{ 'update_impossible'|trans({}, 'platform') }}
+                                    </span>
                                 {% endif %}
                             {% else %}
                                 <span class="badge alert-danger">
-                                    {{ 'outdated'|trans({}, 'platform') }}
+                                    {{ 'not_managed_by_claroline_repository'|trans({}, 'platform') }}
                                 </span>
                             {% endif %}
                         {% else %}
