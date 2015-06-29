@@ -44,7 +44,7 @@ class LdapManager
     public function connect($server, $user = null, $password = null)
     {
         if ($server && isset($server['host'])) {
-            if (isset($server['port']) && is_long($server['port'])) {
+            if (isset($server['port']) && is_numeric($server['port'])) {
                 $this->connect = ldap_connect($server['host'], $server['port']);
             } else {
                 $this->connect = ldap_connect($server['host']);
