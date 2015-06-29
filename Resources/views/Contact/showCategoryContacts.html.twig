@@ -138,15 +138,21 @@
                         <td>{{ contact.getPhone() }}</td>
                     {% endif %}
                     <td>
-                        <span class="btn btn-danger remove-contact"
-                              data-contact-id="{{ contact.getId() }}"
-                              data-category-id="{{ categoryId }}"
-                              data-toggle="tooltip"
-                              data-placement="left"
-                              title="{{ 'remove_contact_from_category'|trans({}, 'platform') }}"
-                        >
-                            <i class="fa fa-times-circle"></i>
-                        </span>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <span class="btn btn-danger remove-contact"
+                                      data-contact-id="{{ contact.getId() }}"
+                                      data-category-id="{{ categoryId }}"
+                                      data-toggle="tooltip"
+                                      data-placement="left"
+                                      title="{{ 'remove_contact_from_category'|trans({}, 'platform') }}"
+                                >
+                                    <i class="fa fa-times-circle"></i>
+                                </span>
+                            </div>
+                            {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                            {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                        </div>
                     </td>
                 </tr>
             {% endfor %}

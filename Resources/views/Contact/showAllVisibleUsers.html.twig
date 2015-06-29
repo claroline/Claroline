@@ -96,6 +96,9 @@
                         </a>
                     </th>
                 {% endif %}
+                <th>
+                    {{ 'actions'|trans({}, 'platform') }}
+                </th>
             </tr>
 
             {% for user in users %}
@@ -129,7 +132,12 @@
                     {% if options['show_phone'] is not defined or options['show_phone'] %}
                         <td>{{ user.getPhone() }}</td>
                     {% endif %}
-
+                    <td>
+                        <div class="btn-toolbar">
+                            {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': user} ) %}
+                            {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
         </table>

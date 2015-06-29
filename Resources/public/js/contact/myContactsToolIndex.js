@@ -106,6 +106,12 @@
             }
         });
     });
+    
+    $('#all-my-contacts-content-body').on('click', '.contact-additional-action', function (event) {
+        var child = $(this).children('.contact-action');
+        var url = child.data('url');
+        window.location = url;
+    });
 
     $('#all-my-contacts-content-body').on('change', '#max-select', function() {
         var max = $(this).val();
@@ -154,6 +160,12 @@
             }
         });
     });
+    
+    $('#all-visible-users-content-body').on('click', '.contact-additional-action', function (event) {
+        var child = $(this).children('.contact-action');
+        var url = child.data('url');
+        window.location = url;
+    });
 
     $('#all-visible-users-content-body').on('change', '#max-select', function() {
         var max = $(this).val();
@@ -181,6 +193,12 @@
                 $('#category-content-body-' + categoryId).html(datas);
             }
         });
+    });
+    
+    $('.category-content-body').on('click', '.contact-additional-action', function (event) {
+        var child = $(this).children('.contact-action');
+        var url = child.data('url');
+        window.location = url;
     });
     
     $('.category-content-body').on('change', '#max-select', function () {

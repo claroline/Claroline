@@ -133,14 +133,28 @@
                         <td>{{ contact.getPhone() }}</td>
                     {% endif %}
                     <td>
-                        <span class="btn btn-danger delete-contact"
-                              data-contact-id="{{ contact.getId() }}"
-                              data-toggle="tooltip"
-                              data-placement="left"
-                              title="{{ 'delete_contact'|trans({}, 'platform') }}"
-                        >
-                            <i class="fa fa-times-circle"></i>
-                        </span>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <span class="btn btn-default add-contact-to-category "
+                                      data-contact-id="{{ contact.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="left"
+                                      title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
+                                >
+                                    <i class="fa fa-bars"></i>
+                                </span>
+                                <span class="btn btn-danger delete-contact"
+                                      data-contact-id="{{ contact.getId() }}"
+                                      data-toggle="tooltip"
+                                      data-placement="left"
+                                      title="{{ 'delete_contact'|trans({}, 'platform') }}"
+                                >
+                                    <i class="fa fa-times-circle"></i>
+                                </span>
+                            </div>
+                            {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                            {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
