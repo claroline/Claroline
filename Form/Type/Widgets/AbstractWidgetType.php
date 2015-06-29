@@ -9,7 +9,7 @@ class AbstractWidgetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label',  'text');
+        $builder->add('label', 'text');
     }
 
     /**
