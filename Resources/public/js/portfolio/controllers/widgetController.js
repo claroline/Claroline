@@ -18,15 +18,14 @@ portfolioApp
             widgetsManager.delete($scope.portfolioWidget);
         };
 
-        $scope.$watchGroup(['portfolioWidget.row','portfolioWidget.column','portfolioWidget.sizeX','portfolioWidget.sizeY'], function(newValue, oldValue) {
+        $scope.$watchGroup(['portfolioWidget.row','portfolioWidget.col','portfolioWidget.sizeX','portfolioWidget.sizeY'], function(newValue, oldValue) {
             if (null == newValue[0]) {
                 $scope.portfolioWidget.row = oldValue[0];
             }
 
             if (null == newValue[1]) {
-                $scope.portfolioWidget.column = oldValue[1];
+                $scope.portfolioWidget.col = oldValue[1];
             }
-
             if (newValue !== oldValue) {
                 $scope.portfolioWidget.toSave = true;
             }

@@ -76,7 +76,7 @@ class PortfolioWidgetType extends AbstractType
                 },
                 'property_path' => 'widget'
             ])
-            ->add('column', 'integer')
+            ->add('col', 'integer')
             ->add('row', 'integer')
             ->add('sizeX', 'integer')
             ->add('sizeY', 'integer')

@@ -20,7 +20,7 @@ class PortfolioWidgetRepository extends EntityRepository
             ->andWhere('pw.portfolio = :portfolio')
             ->setParameter('portfolio', $portfolio)
             ->orderBy('pw.row', 'ASC')
-            ->addOrderBy('pw.column', 'ASC')
+            ->addOrderBy('pw.col', 'ASC')
         ;
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();

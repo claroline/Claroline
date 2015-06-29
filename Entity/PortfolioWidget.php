@@ -35,7 +35,7 @@ class PortfolioWidget
      *
      * @ORM\Column(name="col", type="integer", options={"default" = 0})
      */
-    protected $column;
+    protected $col;
 
     /**
      * @var integer
@@ -108,19 +108,19 @@ class PortfolioWidget
     /**
      * @return int
      */
-    public function getColumn()
+    public function getCol()
     {
-        return $this->column;
+        return $this->col;
     }
 
     /**
-     * @param int $column
+     * @param int $col
      *
      * @return PortfolioWidget
      */
-    public function setColumn($column)
+    public function setCol($col)
     {
-        $this->column = $column;
+        $this->col = $col;
 
         return $this;
     }
@@ -226,7 +226,7 @@ class PortfolioWidget
             'widget_id' => $this->getWidget()->getId(),
             'widget_type' => $this->getWidgetType(),
             'row' => $this->getRow(),
-            'column' => $this->getColumn(),
+            'col' => $this->getCol(),
             'sizeX' => $this->getSizeX(),
             'sizeY' => $this->getSizeY()
         ];
