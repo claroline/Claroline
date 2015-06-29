@@ -721,16 +721,21 @@ class ExerciseController extends Controller
            ) {
             $session = $this->getRequest()->getSession();
 
-            $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
-                . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
-            $query = $em->createQuery($dql);
-            $maxNumPaper = $query->getResult();
+            if ($uid != 'anonymous') {
+                $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
+                    . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
+                $query = $em->createQuery($dql);
+                $maxNumPaper = $query->getSingleResult();
 
-            //Verify if it exists a not finished paper
-            $paper = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Paper')
-                ->getPaper($uid, $id);
+                //Verify if it exists a not finished paper
+                $paper = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Paper')
+                    ->getPaper($uid, $id);
+            } else {
+                $maxNumPaper[1] = 0;
+                $paper = array();
+            }
 
             //if not exist a paper no finished
             if (count($paper) == 0) {
@@ -739,9 +744,11 @@ class ExerciseController extends Controller
                 }
 
                 $paper = new Paper();
-                $paper->setNumPaper((int) $maxNumPaper[0][1] + 1);
+                $paper->setNumPaper((int) $maxNumPaper[1] + 1);
                 $paper->setExercise($exercise);
-                $paper->setUser($uid);
+                if ($uid != 'anonymous') {
+                    $paper->setUser($user);
+                }
                 $paper->setStart(new \Datetime());
                 $paper->setArchive(0);
                 $paper->setInterupt(1);

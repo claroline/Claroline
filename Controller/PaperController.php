@@ -89,7 +89,7 @@ class PaperController extends Controller
         }
 
         foreach ($paper as $p) {
-            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_exercise')->getInfosPaper($p);
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_paper')->getInfosPaper($p);
         }
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
@@ -148,6 +148,7 @@ class PaperController extends Controller
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $badgeExoSer = $this->container->get('ujm.exo_badge');
+        $paperSer    = $this->container->get('ujm.exo_paper');
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
@@ -173,7 +174,7 @@ class PaperController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $infosPaper = $exerciseSer->getInfosPaper($paper);
+        $infosPaper = $paperSer->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
             ->getManager()

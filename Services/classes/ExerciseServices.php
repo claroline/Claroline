@@ -173,7 +173,7 @@ class ExerciseServices
                        ->getExerciseUserPapers($userId, $exoId);
 
         foreach ($papers as $paper) {
-            $infosPaper = $this->getInfosPaper($paper);
+            $infosPaper = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
             $tabScoresUser[$i]['score']       = $infosPaper['scorePaper'];
             $tabScoresUser[$i]['maxExoScore'] = $infosPaper['maxExoScore'];
             $tabScoresUser[$i]['scoreTemp']   = $infosPaper['scoreTemp'];
@@ -194,7 +194,7 @@ class ExerciseServices
      */
     public function manageEndOfExercise(Paper $paper)
     {
-        $paperInfos = $this->getInfosPaper($paper);
+        $paperInfos = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
 
         if (!$paperInfos['scoreTemp']) {
             $event = new LogExerciseEvaluatedEvent($paper->getExercise(), $paperInfos);

@@ -129,9 +129,9 @@ class TwigExtensions extends \Twig_Extension
      */
     public function roundUpOrDown($markToBeAdjusted)
     {
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $paperSer = $this->container->get('ujm.exo_paper');
 
-        return $exerciseSer->roundUpDown($markToBeAdjusted);
+        return $paperSer->roundUpDown($markToBeAdjusted);
     }
 
     /**
