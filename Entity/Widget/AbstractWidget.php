@@ -59,7 +59,7 @@ abstract class AbstractWidget
      *
      * @ORM\OneToMany(targetEntity="Icap\PortfolioBundle\Entity\PortfolioWidget", mappedBy="widget")
      */
-    protected $portfolioWidget;
+    protected $portfolioWidgets;
 
     /**
      * @var \Claroline\CoreBundle\Entity\User

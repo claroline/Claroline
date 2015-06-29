@@ -232,11 +232,11 @@ class PortfolioManager
         $data = array(
             'id' => $portfolio->getId(),
             'title' => $portfolio->getTitle(),
-            'widgets' => []
+            'portfolioWidgets' => []
         );
 
         foreach ($portfolioWidgets as $portfolioWidget) {
-            $data['widgets'][] = $this->widgetsManager->getPortfolioWidgetData($portfolioWidget);
+            $data['portfolioWidgets'][] = $this->widgetsManager->getPortfolioWidgetData($portfolioWidget);
         }
 
         $commentsDatas = array();
