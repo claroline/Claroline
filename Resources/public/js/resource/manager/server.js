@@ -36,7 +36,8 @@
             'get-url': 'get',
             'get-workspace-list': 'getWorkspaces',
             'get-tab-list': 'getVisibleTabsForWorkspace',
-            'get-widget-list': 'getVisibleWidgetsForTabAndWorkspace'
+            'get-widget-list': 'getVisibleWidgetsForTabAndWorkspace',
+            'export': 'export'
         };
         _.each(this.outerEvents, function (method, event) {
             this.dispatcher.on(event, this[method], this);
@@ -280,5 +281,11 @@
 
     server.prototype.listMode = function (event) {
         this.dispatcher.trigger('list-mode-' + event.viewName, {mode: event.mode});
-    }
+    };
+
+    server.prototype.export = function (event) {
+        var route = Routing.generate('claro_resource_export', {});
+        var ids = event.ids || [event.nodeId];
+        window.location = route + '?' + $.param({ ids: ids });
+    };
 })();

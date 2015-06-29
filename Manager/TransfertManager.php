@@ -21,6 +21,7 @@ use Symfony\Component\Config\Definition\Dumper\YamlReferenceDumper;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
@@ -328,6 +329,51 @@ class TransfertManager
         return $archPath;
     }
 
+    public function exportResources(Workspace $workspace, array $resourceNodes)
+    {
+        foreach ($this->listImporters as $importer) {
+            $importer->setListImporters($this->listImporters);
+        }
+        $data = array();
+        $files = array();
+        $tool = array(
+            'type' => 'resource_manager',
+            'translation' => 'resource_manager',
+            'roles' => array()
+        );
+        $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
+        $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
+        $data['tools'] = array(0 => array('tool' => $tool));
+
+        $files = $this->container->get('claroline.importer.rich_text_formatter')
+            ->setPlaceHolders($files);
+        //throw new \Exception();
+        //generate the archive in a temp dir
+        $content = Yaml::dump($data, 10);
+        //zip and returns the archive
+        $archDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();
+        $archPath = $archDir . DIRECTORY_SEPARATOR . 'archive.zip';
+        mkdir($archDir);
+        $manifestPath = $archDir . DIRECTORY_SEPARATOR . 'manifest.yml';
+        file_put_contents($manifestPath, $content);
+        $archive = new \ZipArchive();
+        $success = $archive->open($archPath, \ZipArchive::CREATE);
+
+        if ($success === true) {
+            $archive->addFile($manifestPath, 'manifest.yml');
+
+            foreach ($files as $uid => $file) {
+                $archive->addFile($file, $uid);
+            }
+
+            $archive->close();
+        } else {
+            throw new \Exception('Unable to create archive . ' . $archPath . ' (error ' . $success . ')');
+        }
+
+        return $archPath;
+    }
+
     /**
      * Inject the rootPath
      *
@@ -370,5 +416,38 @@ class TransfertManager
         $string .= $dumper->dump($this->getImporterByName('forum'));
 
         return $string;
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @param User $owner
+     */
+    public function importResources(
+        Configuration $configuration,
+        User $owner,
+        ResourceNode $directory
+    )
+    {
+        $configuration->setOwner($owner);
+        $data = $configuration->getData();
+        $this->data = $data;
+        $this->workspace = $directory->getWorkspace();
+        $this->om->startFlushSuite();
+        $this->setImporters($configuration, $data);
+
+        $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
+
+        if (isset($data['tools']) && is_array($data['tools'])) {
+
+            foreach ($data['tools'] as $dataTool) {
+                $tool = $dataTool['tool'];
+
+                if ($tool['type'] === 'resource_manager') {
+                    $resourceImporter->importResources($tool, $this->workspace, $directory);
+                    break;
+                }
+            }
+        }
+        $this->om->endFlushSuite();
     }
 }

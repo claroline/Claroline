@@ -36,6 +36,10 @@
             'custom-action-form': {
                 route: 'claro_resource_action',
                 onSuccess: 'custom-action-done'
+            },
+            'import': {
+                route: 'claro_resource_import_form',
+                onSuccess: 'reload-page'
             }
         },
         initialize: function (dispatcher) {
