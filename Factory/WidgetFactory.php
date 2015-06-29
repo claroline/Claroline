@@ -3,6 +3,7 @@
 namespace Icap\PortfolioBundle\Factory;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
 use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -51,6 +52,28 @@ class WidgetFactory
         }
 
         throw new \InvalidArgumentException("Unknown type of widget.");
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     *
+     * @param string    $type
+     *
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget
+     */
+    public function createPortfolioWidget(Portfolio $portfolio, $type)
+    {
+        if (!$this->widgetTypeManager->isWidgetTypeExists($type)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $portfolioWidget = new PortfolioWidget();
+        $portfolioWidget
+            ->setPortfolio($portfolio)
+            ->setWidgetType($type)
+        ;
+
+        return $portfolioWidget;
     }
 }
  

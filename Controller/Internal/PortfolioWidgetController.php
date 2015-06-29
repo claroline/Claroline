@@ -53,19 +53,19 @@ class PortfolioWidgetController extends BaseController
     {
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
-        $response      = new JsonResponse();
+        $response = new JsonResponse();
         $widgetManager = $this->getWidgetsManager();
         $widgetsConfig = $widgetManager->getWidgetsConfig();
-        $data          = array();
-        $statusCode    = Response::HTTP_BAD_REQUEST;
+        $data = array();
+        $statusCode = Response::HTTP_BAD_REQUEST;
 
         if (isset($widgetsConfig[$type])) {
             if (!$widgetsConfig[$type]['isUnique'] || (
                     $widgetsConfig[$type]['isUnique']
                     && null === $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio)
                 )) {
-                $newWidget  = $widgetManager->getNewWidget($portfolio, $type);
-                $data       = $widgetManager->handle($newWidget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
+                $newWidget = $widgetManager->getNewPortfolioWidget($portfolio, $type);
+                $data = $widgetManager->handlePortfolioWidget($newWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
                 $statusCode = Response::HTTP_CREATED;
             }
         }

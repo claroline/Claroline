@@ -50,8 +50,8 @@ portfolioApp
                 if (null == widget.row) {
                     widget.row = 0;
                 }
-                if (null == widget.col) {
-                    widget.col = 0;
+                if (null == widget.column) {
+                    widget.column = 0;
                 }
 
                 widget.isUpdating = true;

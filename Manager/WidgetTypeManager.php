@@ -26,11 +26,11 @@ class WidgetTypeManager
     }
 
     /**
-     * @return array
+     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType[]
      */
     public function getWidgetsTypes()
     {
-        $widgetTypes       = $this->widgetTypeRepository->findAllInArray();
+        $widgetTypes = $this->widgetTypeRepository->findAllInArray();
         $sortedWidgetTypes = array();
 
         foreach ($widgetTypes as $widgetType) {
@@ -45,14 +45,7 @@ class WidgetTypeManager
      */
     public function getWidgetsConfig()
     {
-        $widgetTypes       = $this->widgetTypeRepository->findAllInArray();
-        $sortedWidgetTypes = array();
-
-        foreach ($widgetTypes as $widgetType) {
-            $sortedWidgetTypes[$widgetType['name']] = $widgetType;
-        }
-
-        return $sortedWidgetTypes;
+        return $this->getWidgetsTypes();
     }
 
     /**

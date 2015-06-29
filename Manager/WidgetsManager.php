@@ -96,6 +96,16 @@ class WidgetsManager
     }
 
     /**
+     * @param PortfolioWidget $portfolioWidget
+     *
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
+     */
+    public function getPortfolioWidgetForm(PortfolioWidget $portfolioWidget)
+    {
+        return $this->formFactory->create('icap_portfolio_portfolio_widget_form', $portfolioWidget);
+    }
+
+    /**
      * @param AbstractWidget $widget
      * @param string         $type
      * @param array          $parameters
@@ -146,6 +156,41 @@ class WidgetsManager
     }
 
     /**
+     * @param PortfolioWidget $porfolioWidget
+     * @param array           $parameters
+     * @param string          $env
+     *
+     * @return array
+     */
+    public function handlePortfolioWidget(PortfolioWidget $porfolioWidget, array $parameters, $env = 'prod')
+    {
+        $data = array();
+
+        $form = $this->getPortfolioWidgetForm($porfolioWidget);
+        $form->submit($parameters);
+
+        if ($form->isValid()) {
+            $this->entityManager->persist($porfolioWidget);
+            $this->entityManager->flush();
+
+            $data = $this->getPortfolioWidgetData($porfolioWidget);
+
+            return $data;
+        }
+
+        if ('dev' === $env) {
+            echo "<pre>";
+            foreach ($form->getErrors(true, false) as $formError) {
+                var_dump($formError->getMessage());
+                var_dump($formError->getMessageParameters());
+            }
+            echo "</pre>" . PHP_EOL;
+        }
+
+        throw new \InvalidArgumentException();
+    }
+
+    /**
      * @param string $type
      * @param User   $user
      *
@@ -159,6 +204,17 @@ class WidgetsManager
             ->setUser($user);
 
         return $widget;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param string    $type
+     *
+     * @return PortfolioWidget
+     */
+    public function getNewPortfolioWidget(Portfolio $portfolio, $type)
+    {
+        return $this->widgetFactory->createPortfolioWidget($portfolio, $type);
     }
 
     /**

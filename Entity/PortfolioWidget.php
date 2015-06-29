@@ -226,7 +226,7 @@ class PortfolioWidget
             'widget_id' => $this->getWidget()->getId(),
             'widget_type' => $this->getWidgetType(),
             'row' => $this->getRow(),
-            'col' => $this->getColumn(),
+            'column' => $this->getColumn(),
             'sizeX' => $this->getSizeX(),
             'sizeY' => $this->getSizeY()
         ];
