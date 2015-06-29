@@ -353,22 +353,28 @@
                                                         <td>{{ contact.getPhone() }}</td>
                                                     {% endif %}
                                                     <td>
-                                                        <span class="btn btn-default add-contact-to-category"
-                                                              data-contact-id="{{ contact.getId() }}"
-                                                              data-toggle="tooltip"
-                                                              data-placement="left"
-                                                              title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
-                                                        >
-                                                            <i class="fa fa-bars"></i>
-                                                        </span>
-                                                        <span class="btn btn-danger delete-contact"
-                                                              data-contact-id="{{ contact.getId() }}"
-                                                              data-toggle="tooltip"
-                                                              data-placement="left"
-                                                              title="{{ 'delete_contact'|trans({}, 'platform') }}"
-                                                        >
-                                                            <i class="fa fa-times-circle"></i>
-                                                        </span>
+                                                        <div class="btn-toolbar">
+                                                            <div class="btn-group">
+                                                                <span class="btn btn-default add-contact-to-category "
+                                                                      data-contact-id="{{ contact.getId() }}"
+                                                                      data-toggle="tooltip"
+                                                                      data-placement="left"
+                                                                      title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
+                                                                >
+                                                                    <i class="fa fa-bars"></i>
+                                                                </span>
+                                                                <span class="btn btn-danger delete-contact"
+                                                                      data-contact-id="{{ contact.getId() }}"
+                                                                      data-toggle="tooltip"
+                                                                      data-placement="left"
+                                                                      title="{{ 'delete_contact'|trans({}, 'platform') }}"
+                                                                >
+                                                                    <i class="fa fa-times-circle"></i>
+                                                                </span>
+                                                            </div>
+                                                            {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                                                            {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -551,15 +557,21 @@
                                                             <td>{{ contact.getPhone() }}</td>
                                                         {% endif %}
                                                         <td>
-                                                            <span class="btn btn-danger remove-contact"
-                                                                  data-contact-id="{{ contact.getId() }}"
-                                                                  data-category-id="{{ categoryId }}"
-                                                                  data-toggle="tooltip"
-                                                                  data-placement="left"
-                                                                  title="{{ 'remove_contact_from_category'|trans({}, 'platform') }}"
-                                                            >
-                                                                <i class="fa fa-times-circle"></i>
-                                                            </span>
+                                                            <div class="btn-toolbar">
+                                                                <div class="btn-group">
+                                                                    <span class="btn btn-danger remove-contact"
+                                                                          data-contact-id="{{ contact.getId() }}"
+                                                                          data-category-id="{{ categoryId }}"
+                                                                          data-toggle="tooltip"
+                                                                          data-placement="left"
+                                                                          title="{{ 'remove_contact_from_category'|trans({}, 'platform') }}"
+                                                                    >
+                                                                        <i class="fa fa-times-circle"></i>
+                                                                    </span>
+                                                                </div>
+                                                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                                                                {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 {% endfor %}
@@ -655,6 +667,9 @@
                                                             </a>
                                                         </th>
                                                     {% endif %}
+                                                    <th>
+                                                        {{ 'actions'|trans({}, 'platform') }}
+                                                    </th>
                                                 </tr>
 
                                                 {% for user in users %}
@@ -688,7 +703,12 @@
                                                         {% if options['show_phone'] is not defined or options['show_phone'] %}
                                                             <td>{{ user.getPhone() }}</td>
                                                         {% endif %}
-
+                                                        <td>
+                                                            <div class="btn-toolbar">
+                                                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': user} ) %}
+                                                                {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                 {% endfor %}
                                             </table>
@@ -803,22 +823,28 @@
                                             <td>{{ contact.getPhone() }}</td>
                                         {% endif %}
                                         <td>
-                                            <span class="btn btn-default add-contact-to-category"
-                                                  data-contact-id="{{ contact.getId() }}"
-                                                  data-toggle="tooltip"
-                                                  data-placement="left"
-                                                  title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
-                                            >
-                                                <i class="fa fa-bars"></i>
-                                            </span>
-                                            <span class="btn btn-danger delete-contact"
-                                                  data-contact-id="{{ contact.getId() }}"
-                                                  data-toggle="tooltip"
-                                                  data-placement="left"
-                                                  title="{{ 'delete_contact'|trans({}, 'platform') }}"
-                                            >
-                                                <i class="fa fa-times-circle"></i>
-                                            </span>
+                                            <div class="btn-toolbar">
+                                                <div class="btn-group">
+                                                    <span class="btn btn-default add-contact-to-category "
+                                                          data-contact-id="{{ contact.getId() }}"
+                                                          data-toggle="tooltip"
+                                                          data-placement="left"
+                                                          title="{{ 'add_contact_to_category'|trans({}, 'platform') }}"
+                                                    >
+                                                        <i class="fa fa-bars"></i>
+                                                    </span>
+                                                    <span class="btn btn-danger delete-contact"
+                                                          data-contact-id="{{ contact.getId() }}"
+                                                          data-toggle="tooltip"
+                                                          data-placement="left"
+                                                          title="{{ 'delete_contact'|trans({}, 'platform') }}"
+                                                    >
+                                                        <i class="fa fa-times-circle"></i>
+                                                    </span>
+                                                </div>
+                                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:contactActionsMenu', [], {'user': contact} ) %}
+                                                {{ knp_menu_render(menu, {}, 'contact_additional_actions') }}
+                                            </div>
                                         </td>
                                     </tr>
                                 {% endfor %}

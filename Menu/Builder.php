@@ -251,6 +251,20 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function contactActionsMenu(FactoryInterface $factory, array $options)
+    {
+        $user = $options['user'];
+        $menu = $factory->createItem($user->getUsername())
+            ->setChildrenAttribute('class', 'btn-group menu contact-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_contact_additional_action',
+            new ContactAdditionalActionEvent($factory, $menu, $user)
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)
