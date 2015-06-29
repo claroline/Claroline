@@ -94,6 +94,7 @@ class ExerciseServices
             $interaction = $this->om
                                 ->getRepository('UJMExoBundle:Interaction')
                                 ->getInteraction($eq->getQuestion()->getId());
+            $typeInter = $interaction->getType();
 
             $interSer        = $this->container->get('ujm.exo_' . $typeInter);
             $interactionX    = $interSer->getInteractionX($interaction->getId());
@@ -283,6 +284,39 @@ class ExerciseServices
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @access public
+     *
+     * @return Claroline\CoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
+
+        return $user;
+
+    }
+
+    /**
+     *
+     * @access public
+     *
+     * @return integer or String
+     */
+    public function getUserId()
+    {
+        $user = $this->getUser();
+        if (is_object($user)) {
+            $uid = $user->getId();
+        } else {
+            $uid = 'anonymous';
+        }
+
+        return $uid;
     }
 
 }
