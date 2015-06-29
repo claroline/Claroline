@@ -149,8 +149,8 @@ class ExerciseController extends Controller
             throw $this->createNotFoundException('Unable to find Exercise entity.');
         }
 
-        if (is_object($user) && ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-            && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+        if ($exerciseSer->allowToOpen($exercise) && ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
+            && ($exerciseSer->controlMaxAttemps($exercise, $uid, $exoAdmin) === true)
             && ( ($exercise->getPublished() === true) || ($exoAdmin === true) )
         ) {
             $allowToCompose = 1;
@@ -158,7 +158,7 @@ class ExerciseController extends Controller
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
 
-        if (is_object($user)) {
+        if ($exerciseSer->allowToOpen($exercise)) {
             $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
                                                     $exercise->getId());
         } else {
@@ -710,13 +710,13 @@ class ExerciseController extends Controller
 
         $user = $this->container->get('security.token_storage')
                                 ->getToken()->getUser();
-        if (!is_object($user)) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
-        }
-        $uid = $user->getId();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+        if (!$exerciseSer->allowToOpen($exercise)) {
+            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+        }
+        $uid = $user->getId();
 
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
         $this->checkAccess($exercise);
@@ -741,7 +741,7 @@ class ExerciseController extends Controller
 
             //if not exist a paper no finished
             if (count($paper) == 0) {
-                if ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === false) {
+                if ($exerciseSer->controlMaxAttemps($exercise, $uid, $exoAdmin) === false) {
                    return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
                 }
 

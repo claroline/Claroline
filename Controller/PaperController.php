@@ -93,7 +93,7 @@ class PaperController extends Controller
         }
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-            && ($exerciseSer->controlMaxAttemps($exercise, $user, $exoAdmin) === true)
+            && ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true)
             && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
         ) {
             $retryButton = true;
@@ -155,7 +155,7 @@ class PaperController extends Controller
         $exercise = $paper->getExercise();
 
         if ($exerciseSer->controlMaxAttemps($exercise,
-                $user, $exerciseSer->isExerciseAdmin($exercise))) {
+                $user->getId(), $exerciseSer->isExerciseAdmin($exercise))) {
             $retryButton = true;
         }
 

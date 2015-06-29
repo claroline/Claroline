@@ -207,15 +207,15 @@ class ExerciseServices
      * @access public
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
-     * @param \UJM\ExoBundle\Entity\User $user
+     * @param integer $uid
      * @param boolean $exoAdmin
      *
      * @return boolean
      */
-    public function controlMaxAttemps($exercise, $user, $exoAdmin)
+    public function controlMaxAttemps($exercise, $uid, $exoAdmin)
     {
         if (($exoAdmin === false) && ($exercise->getMaxAttempts() > 0)
-            && ($exercise->getMaxAttempts() <= $this->getNbPaper($user->getId(),
+            && ($exercise->getMaxAttempts() <= $this->getNbPaper($uid,
             $exercise->getId(), true))
         ) {
             return false;
@@ -263,6 +263,25 @@ class ExerciseServices
             if ($this->isExerciseAdmin($exercise)) {
                 $this->setExerciseQuestion($exercise, $inter);
             }
+        }
+    }
+
+    /**
+     * To know if an user is allowed to open an exercise
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Exercise $exercise
+     *
+     * @return boolean
+     */
+    public function allowToOpen($exercise)
+    {
+        $collection = new ResourceCollection(array($exercise->getResourceNode()));
+        if ($this->authorizationChecker->isGranted('OPEN', $collection)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
