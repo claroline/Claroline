@@ -1,34 +1,5 @@
-irreversible_action: 'This action cannot be undone'
-preview: Preview
-error_occured: 'An error occurred'
 6_parameters_min_msg: 'The csv file must contain 6 elements per line.'
 7_parameters_min_msg: 'The csv file must contain 7 elements per line.'
-none: None
-choose_from_resource_manager: 'Or choose an existing file from resource manager'
-recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
-workspace_activity_overview: 'Overview of recent activities in %workspaceName%'
-your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
-meta_tag_paste: 'Paste here the meta tag provides by Google Webmaster'
-powered_by: 'Powered by'
-see_all: 'See all'
-language_select: 'Select a language'
-show: Show
-show_actions: 'Show actions'
-show_name_in_top_bar: 'Show the name of the platform in the top bar'
-term_of_service: 'Terms of service'
-invalid_form: 'The form is not valid'
-placeholder_first_name_message: 'This placeholder is optional and will be replaced by the author first name'
-placeholder_last_name_message: 'This placeholder is optional and will be replaced by the author last name'
-placeholder_platform_name_message: 'This placeholder is optional and will be replaced by your platform name'
-placeholder_mail_content_message: 'This placeholder is required and will be replaced by the actual mail content'
-placeholder_platform_name_message: 'This variable is optional and will be replaced by your platform name'
-placeholder_platform_mail_content_message: 'This variable is required and will be replaced by the actual mail content'
-upload_file: 'Upload a file'
-registration_mail_content_override: 'You can redefine the content of the registration mail here'
-mail_layout_message_override: 'You can redefine the layout used when a mail is sent'
-variable_available_message: 'You can use the following variables in your form'
-fullscreen_text_editor: 'You can use the full screen version of the text editor to include HTML'
-saved_changes: 'Your changes have been saved'
 accept: Accept
 accessible_from: 'Accessible from'
 accessible_until: 'Accessible until'
@@ -173,8 +144,10 @@ category_explanations_2: 'Select a category to manage its subcategories.'
 category_root: 'Root categories'
 category_structure: 'Category structure'
 change_view: 'Change the display'
+choose_from_resource_manager: 'Or choose an existing file from resource manager'
 choose_logo: 'Choose a logo'
 choose_resource_form_type: 'Resource type'
+claroline_bundle_missing: 'The bundle %bundle% is not installed. Please install it before going further.'
 classify_my_workspaces: 'Classify my workspaces'
 classify_workspaces: 'Classify workspaces'
 classroom: Classroom
@@ -352,6 +325,7 @@ end_maintenance: 'End maintenance mode'
 enter_tag_name_message: 'Please enter a tag name'
 entries_per_day: 'Entries per day'
 error: Error
+error_occured: 'An error occurred'
 evaluation: Evaluation
 evaluation-automatic: Automatic
 evaluation-manual: Manual
@@ -361,6 +335,7 @@ excel_export: 'Excel export'
 expiration_date: 'Expiration date'
 export: Export
 exportable: Exportable
+ext_php_missing: 'The php extension %ext% is missing'
 external_pdo_database: 'External database (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Provided credentials are not valid.'
@@ -385,6 +360,7 @@ forgot_password: 'Forgot your password?'
 form_role: Role
 from: From
 from_message: From
+fullscreen_text_editor: 'You can use the full screen version of the text editor to include HTML'
 general: General
 general_parameters: 'General parameters'
 general_parameters_portfolio_url_help: 'start with http://'
@@ -478,16 +454,21 @@ invalid_driver: 'This driver is not valid'
 invalid_email: 'This email address is not valid'
 invalid_encryption: 'Invalid authentication mode'
 invalid_file: 'Invalid file'
+invalid_form: 'The form is not valid'
 invalid_syntax: 'Invalid syntax'
 invalid_transport: 'Invalid transport'
 invalid_url: 'This url is not valid'
 ip_address: 'IP address'
+irreversible_action: 'This action cannot be undone'
 is_already_in_category: 'is already in category'
 is_already_in_use: 'is already in use'
 is_mail_displayed: 'Display email?'
+is_not_writable: 'is not writable'
+is_not_writable_recursive: 'is not writable recursively'
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Keep me logged in'
 language: Language
+language_select: 'Select a language'
 lastName: 'Last name'
 last_30_days_activity: 'Activity over the last 30 days'
 last_action: '{1} Last action|[1,Inf] Last %logAmount% actions'
@@ -525,6 +506,7 @@ mail_click: 'Click on this link to reset your password'
 mail_config_problem: 'Please contact your administrator platform to reinitialize your password.'
 mail_invalid: 'Mail format is not valid'
 mail_layout: 'Mail layout.'
+mail_layout_message_override: 'You can redefine the layout used when a mail is sent'
 mail_login: 'Your Claroline''s login'
 mail_message: 'You received this message because you asked for a new password. Please click on the link below to reset it. If you did not ask to reset your password please ignore this message.'
 mail_not_available: 'The mail function is not available.'
@@ -564,6 +546,7 @@ messages_received_removed: 'Messages received removed'
 messages_removed: 'Messages removed'
 messages_sent: 'Messages sent'
 messages_sent_removed: 'Messages sent removed'
+meta_tag_paste: 'Paste here the meta tag provides by Google Webmaster'
 method_of_work: 'Method of work'
 misc: Miscellaneous
 missing_%content%: 'The variable %content% is missing for "%language%".'
@@ -607,7 +590,7 @@ new_message_alert: 'You have %count% new message(s)'
 new_password: 'New password'
 new_role_message: 'You received the role %name%'
 new_role_message_object: 'Your permissions on the platform have changed'
-no: 'No'
+'no': 'No'
 no_action_found: 'No action found.'
 no_activity_in_workspace: 'There are currently no activities in this workspace.'
 no_category: 'There is no category'
@@ -631,6 +614,7 @@ none: None
 not_allowed_message: 'You are not allowed to perform this action.'
 not_attempted: 'Not attempted'
 not_blank_expected: 'This value should not be blank'
+not_managed_by_claroline_repository: 'State unavailable'
 note: Note
 notification_activated: 'Notifications activated.'
 notification_deactivated: 'Notifications deactivated.'
@@ -658,9 +642,11 @@ owner_s: Owner(s)
 package_install: 'Package install'
 package_install_auto_reload: 'This page will be reload automatically once an operation is done'
 package_install_confirm: 'Do you really want to install %bundle% %version% ?'
+package_update_danger: 'This functionnality is not stable yet and can crash your platform. Please backup your data before going further.'
 package_update_impossible: 'Package update impossible on this page. please contact the administrator.'
 package_upgrade_all_warning: 'Warning, this will update all packages on the platform. This operation can not be canceled. It is recommended to make a backup of the files and the database before performing this operation.'
 packages: Packages
+packages_permissions_error: 'Please fix these errors before starting any update.'
 packages_upgrade_info_message: 'Warning, this page allows you to update the platform.'
 parameters: Parameters
 parameters_save_error: 'An error occured while saving parameters.'
@@ -683,12 +669,19 @@ personal_workspaces_only: 'Personal workspaces only'
 phone: Phone
 picture: 'User picture'
 picture_profile: 'Picture profile'
+placeholder_first_name_message: 'This placeholder is optional and will be replaced by the author first name'
+placeholder_last_name_message: 'This placeholder is optional and will be replaced by the author last name'
+placeholder_mail_content_message: 'This placeholder is required and will be replaced by the actual mail content'
+placeholder_platform_mail_content_message: 'This variable is required and will be replaced by the actual mail content'
+placeholder_platform_name_message: 'This placeholder is optional and will be replaced by your platform name'
 platform_appearance: 'Platform appearance'
 platform_expiration_date: 'Platform expiration date'
 platform_icon: 'Platform icon'
 platform_init_date: 'Platform activation date'
 platform_parameters: 'Platform parameters'
 platform_plugins: 'Platform plugins'
+platform_refresh: 'Refresh platform files'
+platform_refresh_confirm: 'Do you really want to refresh the platform files ?'
 platform_role: 'Platform role'
 platform_widgets: 'Platform widgets'
 please_validate_your_account: 'An email was sent for you to activate your account'
@@ -698,7 +691,9 @@ port: Port
 portfolio_url: 'Portfolio tool''s access url'
 position: Position
 positive_number_expected: 'This value should be a positive number'
+powered_by: 'Powered by'
 preferences: Preferences
+preview: Preview
 private: Private
 profil_edition: 'User profile edition'
 profile_management: 'Profile Management'
@@ -722,9 +717,13 @@ public_workspaces: 'Public workspaces'
 publish: Publish
 publish_resource: 'Publish resource'
 published: Published
+put_back_permissions_after_update: 'Don''t forget to put your original permissions after an update.'
 receiver: Receiver(s)
+recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 redirect_after_login: 'Redirect to last visited page'
+refresh: refresh
+refresh_explanation: "Some issues can be cause because javascript and css aren't properly generated. </br>\nIf you want to try to solve them, please click on \"refresh\" </br>\nYou can also try to empty your app/cache directory before this operation.\n"
 register: Register
 register_to_a_public_workspace: 'Register to a public workspace'
 register_to_a_workspace: 'Register to a workspace'
@@ -733,6 +732,7 @@ registered_groups: 'Registered groups'
 registered_user_amount: 'Number of subscriber(s)'
 registered_users: 'Registered users'
 registration: Registration
+registration_mail_content_override: 'You can redefine the content of the registration mail here'
 registration_to_workspaces: 'Registration to workspaces'
 registration_validation: 'Registration validation'
 remove: Remove
@@ -770,6 +770,13 @@ rename_category: 'Rename category'
 rename_tool: 'Rename tool'
 rename_widget_instance: 'Rename widget'
 repeat_password: 'Repeat the password'
+replace_first_name_display_message: 'will display the user first name'
+'replace_last_name_display_message''': 'replace_last_name_display_message'''
+replace_password_display: 'will display the password'
+replace_platform_name_display_message: 'will be replaced by your platform name'
+replace_username_display_message: 'will display the username'
+requirement_failed_for_install: 'Requirements failed for install'
+requirement_failed_for_update: 'Requirements failed for update'
 reset: Reset
 reset_password: 'Reset password'
 reset_password_message: 'Are you sure you want to reinitialize password?'
@@ -813,6 +820,7 @@ roles_management: 'Roles management'
 save: Save
 save_as_template: 'Save as template'
 save_workspace_as_template: 'Save workspace as template'
+saved_changes: 'Your changes have been saved'
 score: Score
 search: Search
 search_group: 'Search for a group'
@@ -824,6 +832,7 @@ security_token_delete_confirm_title: 'Delete security token'
 security_token_list: 'Security token list'
 security_tokens_management: 'Security tokens management'
 see: See
+see_all: 'See all'
 see_more: 'See more'
 see_public_profile: 'See my public profile'
 select_a_filter_type: 'Select a filter type'
@@ -866,6 +875,7 @@ settings: Settings
 sharable: Sharable
 share: Share
 show: Show
+show_actions: 'Show actions'
 show_all_my_contacts: 'Show "All my contacts"'
 show_all_visible_users: 'Show "All visible users"'
 show_as: 'Show as'
@@ -873,6 +883,7 @@ show_as_admin: 'Show as admin'
 show_as_user: 'Show as user'
 show_help_button: 'Show help button'
 show_mail: 'Show mail'
+show_name_in_top_bar: 'Show the name of the platform in the top bar'
 show_phone: 'Show phone'
 show_picture: 'Show picture'
 show_profile: 'Show profile'
@@ -880,12 +891,12 @@ show_profile_for_anonymous: 'Profil public access for anonymous.'
 show_register_button_in_login_page: 'Show register button in login page'
 show_username: 'Show username'
 simple: Simple
+size: Size
 start_date: 'Start date'
 start_maintenance: 'Start maintenance mode'
 statistics: Statistics
 statistics_data: 'number of workspaces and users'
 status: Status
-size: Size
 steal_session: 'Steal the session'
 storage_limit_exceeded: 'You don''t have enough storage left (%storageLeft%) on your workspace. Your file size is %fileSize%.'
 storage_type: 'Storage type'
@@ -913,9 +924,11 @@ tags_organization: 'Tags organization'
 teacher: Teacher
 technical: Technical
 technical_data: 'URL, Version, primary language, IP and email support'
+term_of_service: 'Terms of service'
 term_of_service_activation_message: 'Activate the terms of service in the platform'
 terms_enabled_but_empty: 'Terms of service can only be enabled if the text is provided in at least one language.'
 terms_of_service_acceptance: 'I accept the terms of service'
+test_repository_activated: 'Test repositories are activated'
 text: Text
 the_following_users_were_not_imported: 'The following users were not imported.'
 the_workspace: Workspace
@@ -994,12 +1007,16 @@ up: Up
 up_to_date: 'Up to date'
 update: Update
 update_available: 'Update available'
+update_impossible: 'Update impossible'
 updated_by: 'Last update: %modificationDate%'
 upgrade: Upgrade
 upload: Upload
 upload_denied: 'Permission denied'
 upload_fail: 'Upload failed'
+upload_file: 'Upload a file'
 url_invalid: 'the code is not correct, do no try to change the url'
+use_stable_repo: 'Use the stable repository'
+use_test_repo: 'Use the testing repository'
 user: User
 user_accounts: 'User accounts'
 user_creation: 'User creation'
@@ -1035,6 +1052,7 @@ users_registration_in_workspace: 'Users registration in workspace'
 users_visits: 'Users'' connections'
 validate: Validate
 validation: Validation
+variable_available_message: 'You can use the following variables in your form'
 verification: Verification
 view: See
 view_category_hierarchy: 'View category hierarchy'
@@ -1045,6 +1063,7 @@ visible_facet_form_explanation: 'The field "Visible" allows you to set the eleme
 visitor: Visitor
 warning_user_impersonation: 'You are connected as %user%.'
 warning_workspace_impersonation: 'You are connected as %role% from the workspace %workspace%.'
+warnings: Warnings
 widget: Widget
 widget_configuration: 'Widget configuration'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
@@ -1054,16 +1073,12 @@ widget_visible_actions: 'Choose visible actions in the widget'
 widget_workspace_pick: 'Choose workspaces displayed in the widget'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
-replace_platform_name_display_message: 'will be replaced by your platform name'
-replace_password_display: 'will display the password'
-replace_first_name_display_message: 'will display the user first name'
-replace_last_name_display_message: 'will display the user last name'
-replace_username_display_message: 'will display the username'
 with_role: 'with role'
 with_tutor: Tutored
 workspace: Workspace
 workspace.create: 'Create a new workspace'
 workspace.name_not_blank: 'The workspace''s name is required.'
+workspace_activity_overview: 'Overview of recent activities in %workspaceName%'
 workspace_administration: Administration
 workspace_classification: 'Workspace classification'
 workspace_code_invalid: 'The code %code% is already used (line %line%).'
@@ -1107,30 +1122,9 @@ workspaces_per_page: 'Workspace per page'
 wrong_captcha: 'The code does not match the picture'
 ws_creator: 'Workspace creator'
 ws_most_viewed: 'Most viewed workspaces'
-yes: 'Yes'
+'yes': 'Yes'
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'
-is_not_writable: 'is not writable'
-packages_permissions_error: 'Please fix these errors before starting any update.'
-put_back_permissions_after_update: 'Don''t forget to put your original permissions after an update.'
-warnings: Warnings
-requirement_failed_for_update: Requirements failed for update
-requirement_failed_for_install: Requirements failed for install
-ext_php_missing: The php extension %ext% is missing
-claroline_bundle_missing: The bundle %bundle% is not installed. Please install it before going further.
-package_update_danger: This functionnality is not stable yet and can crash your platform. Please backup your data before going further.
-use_stable_repo: Use the stable repository
-use_test_repo: Use the testing repository
-platform_refresh: Refresh platform files
-refresh: refresh
-refresh_explanation: |
-    Some issues can be cause because javascript and css aren't properly generated. </br>
-    If you want to try to solve them, please click on "refresh" </br>
-    You can also try to empty your app/cache directory before this operation.
-platform_refresh_confirm: Do you really want to refresh the platform files ?
-is_not_writable_recursive: 'is not writable recursively'
-test_repository_activated: 'Test repositories are activated'
-not_managed_by_claroline_repository: 'State unavailable'
-update_impossible: 'Update impossible'

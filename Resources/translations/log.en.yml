@@ -125,6 +125,7 @@ log_workspace-delete_filter: 'Workspace deletion'
 log_workspace-delete_sentence: 'has deleted workspace %workspace%'
 log_workspace-delete_shortname: Delete
 log_workspace-delete_title: 'Workspace deletion'
+log_workspace-enter_filter: log_workspace-enter_filter
 log_workspace-enter_sentence: 'accessed workspace %workspace%'
 log_workspace-enter_shortname: Open
 log_workspace-enter_title: 'Access a workspace'
@@ -133,6 +134,7 @@ log_workspace-role-change_right_sentence: 'has updated the rights of role %role%
 log_workspace-role-change_right_shortname: 'Change rights'
 log_workspace-role-change_right_title: 'Change rights for a workspace role'
 log_workspace-role-create_filter: 'Create a role for a workspace'
+log_workspace-role-create_sentence: log_workspace-role-create_sentence
 log_workspace-role-create_shortname: Creation
 log_workspace-role-create_title: 'Create a role for a workspace'
 log_workspace-role-delete_filter: 'Delete a role for a workspace'
@@ -159,10 +161,10 @@ log_workspace-role-update_filter: 'Update a role for a workspace'
 log_workspace-role-update_sentence: 'has updated a role for workspace %workspace%'
 log_workspace-role-update_shortname: Update
 log_workspace-role-update_title: 'Update a role for a workspace'
-log_workspace-tool_read_filter: 'Workspace tool open'
-log_workspace-tool_read_sentence: 'has opened the tool %tool% in the workspace %workspace%'
-log_workspace-tool_read_shortname: Open
-log_workspace-tool_read_title: 'Workspace tool opened'
+log_workspace-tool-read_filter: log_workspace-tool-read_filter
+log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
+log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
+log_workspace-tool-read_title: log_workspace-tool-read_title
 log_workspace-update_filter: 'Workspace update'
 log_workspace-update_shortname: Update
 log_workspace-update_title: 'Workspace update'

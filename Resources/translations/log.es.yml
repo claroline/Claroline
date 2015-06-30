@@ -59,6 +59,7 @@ log_resource-create_filter: 'Creación de un recurso'
 log_resource-create_sentence: 'ha creado %resource%'
 log_resource-create_shortname: Creación
 log_resource-create_title: 'Creación de un recurso'
+log_resource-custom_action_filter: log_resource-custom_action_filter
 log_resource-delete_filter: 'Supresión de un recurso'
 log_resource-delete_sentence: 'ha suprimido %resource%'
 log_resource-delete_shortname: Suprimir
@@ -89,6 +90,8 @@ log_resource-update_shortname: Modificar
 log_resource-update_title: 'Modificación de un recurso'
 log_resource_owner: 'Propietario del recurso'
 log_role: 'Acción de un rol'
+log_role-subscribe_group_filter: log_role-subscribe_group_filter
+log_role-subscribe_user_filter: log_role-subscribe_user_filter
 log_see_details: 'Ver detalles'
 log_shortcut: Atajo
 log_subscribe_group: 'Inscripción a un grupo'
@@ -122,6 +125,7 @@ log_workspace-delete_filter: 'Supresión de un espacio de trabajo'
 log_workspace-delete_sentence: 'ha suprimido el espacio de trabajo %workspace%'
 log_workspace-delete_shortname: Suprimir
 log_workspace-delete_title: 'Supresión de un espacio de trabajo'
+log_workspace-enter_filter: log_workspace-enter_filter
 log_workspace-enter_sentence: 'ha visitado del espacio de trabajo %workspace%'
 log_workspace-enter_shortname: Abrir
 log_workspace-enter_title: 'Visita del espacio de trabajo'
@@ -130,6 +134,7 @@ log_workspace-role-change_right_sentence: 'ha modificado los derechos de acceso 
 log_workspace-role-change_right_shortname: 'Modificación de derechos de acceso'
 log_workspace-role-change_right_title: 'Cambiar los derechos de acceso a un rol de un espacio de trabajo'
 log_workspace-role-create_filter: 'Crear un rol para un espacio de trabajo'
+log_workspace-role-create_sentence: log_workspace-role-create_sentence
 log_workspace-role-create_shortname: Creación
 log_workspace-role-create_title: 'Crear un rol para un espacio de trabajo'
 log_workspace-role-delete_filter: 'Suprimir un rol de un espacio de trabajo'
@@ -156,10 +161,10 @@ log_workspace-role-update_filter: 'Modificar un rol de un espacio de trabajo'
 log_workspace-role-update_sentence: 'ha modificado un rol del espacio de trabajo %workspace%'
 log_workspace-role-update_shortname: Modificación
 log_workspace-role-update_title: 'Modificar un rol de un espacio de trabajo'
-log_workspace-tool_read_filter: 'Abrir una herramienta de un espacio de trabajo'
-log_workspace-tool_read_sentence: 'ha abierto la herramienta %tool% en el espacio de trabajo %workspace%'
-log_workspace-tool_read_shortname: Abrir
-log_workspace-tool_read_title: 'Abrir una herramienta de un espacio de trabajo'
+log_workspace-tool-read_filter: log_workspace-tool-read_filter
+log_workspace-tool-read_sentence: log_workspace-tool-read_sentence
+log_workspace-tool-read_shortname: log_workspace-tool-read_shortname
+log_workspace-tool-read_title: log_workspace-tool-read_title
 log_workspace-update_filter: 'Modificar un espacio de trabajo'
 log_workspace-update_shortname: Modificación
 log_workspace-update_title: 'Modificar un espacio de trabajo'

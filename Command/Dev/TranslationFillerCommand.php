@@ -100,7 +100,7 @@ class TranslationFillerCommand extends ContainerAwareCommand
         $mainFile = $this->getContainer()->get('kernel')->locateResource($mainShortPath);
         $filledFile = $this->getContainer()->get('kernel')->locateResource($filledShortPath);
 
-        if ($input->getOption('fill')) $this->fill($mainFile, $filledFile);
+        if ($input->getOption('fill')) $this->fill($mainFile, $filledFile, $output);
         $this->showUntranslated($filledFile, $output, $locale);
     }
 
@@ -126,10 +126,12 @@ class TranslationFillerCommand extends ContainerAwareCommand
         }
     }
 
-    private function fill($mainFile, $filledFile)
+    private function fill($mainFile, $filledFile, $output)
     {
+        $output->writeln("<comment> Filling the translation file {$filledFile} </comment>");
         $mainTranslations = Yaml::parse($mainFile);
         $translations = Yaml::parse($filledFile);
+        if (!$translations) $translations = array();
 
         //add missing keys
         foreach (array_keys($mainTranslations) as $requiredKey) {
@@ -159,6 +161,12 @@ class TranslationFillerCommand extends ContainerAwareCommand
             ),
             'es' => array(
                 'dsn'
+            ),
+            'nl' => array(
+
+            ),
+            'de' => array(
+
             )
         );
     }

@@ -1,34 +1,5 @@
-irreversible_action: 'Esta acción es irreversible'
-preview: Prévisualizar
-error_occured: 'Ha ocurrido un error'
 6_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 6 elementos por línea.'
 7_parameters_min_msg: 'El archivo csv  debe incluir, al menos, 7 elementos por línea.'
-none: Ninguno
-choose_from_resource_manager: 'O escoja un archivo existente en el administrador de recursos'
-recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
-workspace_activity_overview: 'Resumen de las actividades recientes en %workspaceName%'
-your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
-meta_tag_paste: 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
-powered_by: 'Desarrollado por'
-see_all: 'Ver totdos'
-language_select: 'Seleccione un idioma'
-show: Show
-show_actions: 'Ver las acciones'
-show_name_in_top_bar: 'Mostrar el nombre de la plataforma en la barra superior'
-term_of_service: 'Condiciones de servicio'
-invalid_form: 'El formulario no es valido'
-placeholder_first_name_message: 'Esta variable es opcional y será reemplazada por el nombre del autor'
-placeholder_last_name_message: 'Esta variable es opcional y será reemplazada por el apellido del autor'
-placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
-placeholder_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
-placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
-placeholder_platform_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
-upload_file: 'Subir un archivo'
-registration_mail_content_override: 'Usted puede definir el contenido del correo electrónico de inscripción aquí'
-mail_layout_message_override: 'Usted puede definir aquí el modelo usado cuando se envía un correo'
-variable_available_message: 'Usted puede usar las siguientes variables en su formulario'
-fullscreen_text_editor: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
-saved_changes: 'Sus cambios han sido guardados'
 accept: Aceptar
 accessible_from: 'Accesible desde'
 accessible_until: accessible_until
@@ -104,7 +75,6 @@ administration: Administración
 administrative_code: 'Código administrativo'
 advanced: Avanzado
 advanced_parameters: advanced_parameters
-size: Tamaño
 agreeing: 'Al estar de acuerdo para enviar los datos, podrá disfrutar de un mejor servicio que contribuirá a mejorar la plataforma Claroline Connect que usted está instalando.'
 all: Todos
 all_available_workspaces: 'Todos los espacios de trabajo disponibles'
@@ -174,8 +144,10 @@ category_explanations_2: 'Seleccione una categoría para la gestión de sus subc
 category_root: 'Categorías de la raíz'
 category_structure: 'Estructura de las categorías'
 change_view: 'Cambiar la visualización'
+choose_from_resource_manager: 'O escoja un archivo existente en el administrador de recursos'
 choose_logo: 'Escoger un logo'
 choose_resource_form_type: 'Tipo de recurso'
+claroline_bundle_missing: claroline_bundle_missing
 classify_my_workspaces: 'Clasificar mis espacios de trabajo'
 classify_workspaces: 'Clasificar espacios de trabajo'
 classroom: Aula
@@ -353,6 +325,7 @@ end_maintenance: 'Terminar el modo de mantenimiento'
 enter_tag_name_message: 'Por favor ingrese el nombre de la etiqueta'
 entries_per_day: 'Entradas por día'
 error: Error
+error_occured: 'Ha ocurrido un error'
 evaluation: Evaluación
 evaluation-automatic: Automático
 evaluation-manual: Manual
@@ -362,6 +335,7 @@ excel_export: 'Excel exportación'
 expiration_date: expiration_date
 export: Exportar
 exportable: Exportable
+ext_php_missing: ext_php_missing
 external_pdo_database: 'Base de datos externa (PDO)'
 facebook: Facebook
 facebook_application_validation_error: 'Las credenciales proporcionadas no son válidos.'
@@ -376,7 +350,7 @@ file: Archivos
 files: Archivos
 filter: Filtro
 filter_actions: 'Acciones de filtrado'
-filters: 'Filtros'
+filters: Filtros
 find_workspaces: 'Espacios de trabajo publicos'
 firstName: Nombre
 first_name: Apellido
@@ -386,6 +360,7 @@ forgot_password: '¿Ha olvidado su contraseña?'
 form_role: Rol
 from: De
 from_message: De
+fullscreen_text_editor: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
 general: General
 general_parameters: 'Parámetros generales'
 general_parameters_portfolio_url_help: general_parameters_portfolio_url_help
@@ -479,16 +454,21 @@ invalid_driver: 'Este controlador no es válido'
 invalid_email: 'Este correo electrónico no es valido'
 invalid_encryption: 'Modo de autenticación no válido'
 invalid_file: 'Archivo no valido'
+invalid_form: 'El formulario no es valido'
 invalid_syntax: invalid_syntax
 invalid_transport: 'Transporte no válido'
 invalid_url: 'Esta URL no es válida'
 ip_address: 'Dirección IP'
+irreversible_action: 'Esta acción es irreversible'
 is_already_in_category: 'ya está en la categoría'
 is_already_in_use: is_already_in_use
 is_mail_displayed: is_mail_displayed
+is_not_writable: is_not_writable
+is_not_writable_recursive: is_not_writable_recursive
 jqplot_date_output_format: '%m/%d/%Y'
 keep_me_logged_in: 'Mantenerme conectado'
 language: Idioma
+language_select: 'Seleccione un idioma'
 lastName: Apellido
 last_30_days_activity: 'Actividad de los últimos 30 días'
 last_action: '{1} ultima acción|[1,Inf] ultima %logAmount% acción'
@@ -526,6 +506,7 @@ mail_click: 'Haga clic en este enlace para restablecer tu contraseña'
 mail_config_problem: 'Por favor, póngase en contacto con el administrador de la plataforma para reiniciar su contraseña.'
 mail_invalid: 'Formato de correo electrónico invalido'
 mail_layout: mail_layout
+mail_layout_message_override: 'Usted puede definir aquí el modelo usado cuando se envía un correo'
 mail_login: 'Su identificación de conexión'
 mail_message: 'Usted recibido este mensaje porque usted pidió una nueva contraseña. Por favor, haga clic en el enlace de abajo para restablecerla. Si usted no pidió restablecer su contraseña, por favor ignore este mensaje.'
 mail_not_available: 'La función de correo electrónico no está disponible.'
@@ -565,6 +546,7 @@ messages_received_removed: 'Mensajes recibidos suprimidos'
 messages_removed: 'Mensajes suprimidos'
 messages_sent: 'Mensajes enviados'
 messages_sent_removed: 'Mensajes enviados suprimidos'
+meta_tag_paste: 'Pegue aquí la meta etiqueta proporcionada por Google Webmaster'
 method_of_work: 'Modo de trabajo'
 misc: Diverso
 missing_%content%: 'La variable %content% falta en la lengua "%language%".'
@@ -608,7 +590,7 @@ new_message_alert: 'Usted tiene %count% nuevo(s) mensaje(s)'
 new_password: 'Nueva contraseña'
 new_role_message: 'Usted a recivido el rol %name%'
 new_role_message_object: 'Sus derechos de acceso en la plataforma han cambiado'
-no: 'No'
+'no': 'No'
 no_action_found: 'No hay acciones.'
 no_activity_in_workspace: 'No hay actividad'
 no_category: 'No hay categorías'
@@ -632,6 +614,7 @@ none: Ninguno
 not_allowed_message: 'Usted no puede realizar esta acción.'
 not_attempted: 'No intentado'
 not_blank_expected: 'Este valor no debe estar vacío'
+not_managed_by_claroline_repository: 'Estado indisponible'
 note: Note
 notification_activated: 'Notificaciones activas.'
 notification_deactivated: 'Notificaciones desacivadas.'
@@ -659,9 +642,11 @@ owner_s: Propietario(s)
 package_install: package_install
 package_install_auto_reload: package_install_auto_reload
 package_install_confirm: package_install_confirm
+package_update_danger: package_update_danger
 package_update_impossible: package_update_impossible
 package_upgrade_all_warning: 'Advertencia, esto actualizará todos los paquetes de la plataforma. Esta operación no puede ser cancelada. Se recomienda  hacer una copia de seguridad de los archivos y de la base de datos antes de realizar esta operación.'
 packages: Packages
+packages_permissions_error: packages_permissions_error
 packages_upgrade_info_message: 'Advertencia, esta es la página de administración de las actualizaciones.'
 parameters: Parámetros
 parameters_save_error: parameters_save_error
@@ -684,12 +669,19 @@ personal_workspaces_only: 'Solamente los espacios de trabajo personales'
 phone: Teléfono
 picture: picture
 picture_profile: 'Foto de perfil'
+placeholder_first_name_message: 'Esta variable es opcional y será reemplazada por el nombre del autor'
+placeholder_last_name_message: 'Esta variable es opcional y será reemplazada por el apellido del autor'
+placeholder_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+placeholder_platform_mail_content_message: 'Esta variable es requerido y será reemplazada por el correo electrónico actual'
+placeholder_platform_name_message: 'Esta variable es opcional y será reemplazada por el nombre de la plataforma'
 platform_appearance: 'Apariencia de la plataforma'
 platform_expiration_date: 'Fecha de vencimiento de la plataforma'
 platform_icon: platform_icon
 platform_init_date: 'Fecha de activación de la plataforma'
 platform_parameters: 'Parámetros de la plataforma'
 platform_plugins: 'Plugins de la plataforma'
+platform_refresh: platform_refresh
+platform_refresh_confirm: platform_refresh_confirm
 platform_role: 'Roles de la plataforma'
 platform_widgets: 'Widgets de la plataforma'
 please_validate_your_account: please_validate_your_account
@@ -699,7 +691,9 @@ port: Puerto
 portfolio_url: portfolio_url
 position: posición
 positive_number_expected: 'Este valor debería ser un número positivo'
+powered_by: 'Desarrollado por'
 preferences: Preferencias
+preview: Prévisualizar
 private: Privado
 profil_edition: profil_edition
 profile_management: 'Gestión de perfiles'
@@ -723,9 +717,13 @@ public_workspaces: 'Espacios de trabajo públicos'
 publish: Publicado
 publish_resource: 'Publicar el recurso'
 published: Publicado
+put_back_permissions_after_update: put_back_permissions_after_update
 receiver: Destinatarios
+recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
 recursive_dir_action: 'Aplicar en el contenido de la carpeta y la subcarpeta'
 redirect_after_login: 'Redirigir a la ultima página visitada'
+refresh: refresh
+refresh_explanation: refresh_explanation
 register: Inscribirse
 register_to_a_public_workspace: 'Inscribirse a un espacio de trabajo publico'
 register_to_a_workspace: 'Inscribirse a un espacio de trabajo'
@@ -734,6 +732,7 @@ registered_groups: 'Grupos inscritos'
 registered_user_amount: registered_user_amount
 registered_users: 'Usuarios inscritos'
 registration: Inscripción
+registration_mail_content_override: 'Usted puede definir el contenido del correo electrónico de inscripción aquí'
 registration_to_workspaces: 'Inscripción a un espacio de trabajo'
 registration_validation: registration_validation
 remove: Retirar
@@ -771,6 +770,13 @@ rename_category: 'Renombrar categoría'
 rename_tool: 'Renombrar herramienta'
 rename_widget_instance: 'Renombrar widget'
 repeat_password: 'Repita la contraseña'
+replace_first_name_display_message: 'va a mostrar el nombre del usuario'
+'replace_last_name_display_message''': 'replace_last_name_display_message'''
+replace_password_display: 'va a mostrar la contraseña'
+replace_platform_name_display_message: 'va a ser remplazado por el nombre de su plataforma'
+replace_username_display_message: 'va a mostrar el nombre de usuario'
+requirement_failed_for_install: requirement_failed_for_install
+requirement_failed_for_update: requirement_failed_for_update
 reset: Reinicializar
 reset_password: 'Reinicializar contraseña'
 reset_password_message: '¿Está seguro que desea reinicializar su contraseña?'
@@ -814,6 +820,7 @@ roles_management: 'Gestión de roles'
 save: Guardar
 save_as_template: 'Guardar como una plantilla'
 save_workspace_as_template: 'Guardar el espacio de trabajo como una plantilla'
+saved_changes: 'Sus cambios han sido guardados'
 score: Puntaje
 search: Buscar
 search_group: 'Buscar un grupo'
@@ -825,6 +832,7 @@ security_token_delete_confirm_title: 'Eliminar token de seguridad'
 security_token_list: 'Lista de tokens de seguridad '
 security_tokens_management: 'Gestión de tokens de seguridad'
 see: Ver
+see_all: 'Ver totdos'
 see_more: 'Ver más'
 see_public_profile: see_public_profile
 select_a_filter_type: 'Seleccione un tipo de filtro'
@@ -846,8 +854,8 @@ selected_workspaces_will_be_put_in_it: 'Los espacios de trabajo seleccionados se
 self_registration: Auto-Inscripción
 send: Enviar
 send_mail: 'Enviar un correo electrónico'
-send_message: 'Enviar un mensaje'
 send_mail_at_workspace_registration: 'Enviar un email al registrarse un usuario a un espacio de trabajo'
+send_message: 'Enviar un mensaje'
 send_message_to_workspace: 'Enviar un mensaje a los usuarios de un espacio de trabajo.'
 send_message_to_workspace_info: send_message_to_workspace_info
 server: Servidor
@@ -866,7 +874,8 @@ session_lifetime: 'Duración de la sesión'
 settings: Configuración
 sharable: Compartible
 share: Compartir
-show: Mostrar
+show: Show
+show_actions: 'Ver las acciones'
 show_all_my_contacts: 'Mostrar "Todos mis contactos"'
 show_all_visible_users: 'Mostrar "Todos los usuarios visibles"'
 show_as: 'Mostrar como'
@@ -874,6 +883,7 @@ show_as_admin: 'Mostrar como administrador'
 show_as_user: 'Mostrar como usuario'
 show_help_button: 'Mostrar el botón de ayuda'
 show_mail: 'Mostrar la dirección de correo electrónico'
+show_name_in_top_bar: 'Mostrar el nombre de la plataforma en la barra superior'
 show_phone: 'Mostrar el núnero de teléfono '
 show_picture: 'Mostrar la foto'
 show_profile: 'Mostrar perfil'
@@ -881,6 +891,7 @@ show_profile_for_anonymous: 'Profil public access for anonymous.'
 show_register_button_in_login_page: 'Mostrar el botón de inscripción en la página de inicio de sesión'
 show_username: 'Mostrar el nombre de usuario'
 simple: Simple
+size: Tamaño
 start_date: 'Fecha de inicio'
 start_maintenance: 'Lanzar el modo de mantenimiento'
 statistics: Estadísticos
@@ -913,9 +924,11 @@ tags_organization: 'Organización de las etiquetas'
 teacher: Profesor
 technical: Técnicos
 technical_data: 'URL, versión, idioma principal, IP y correo electrónico de soporte'
+term_of_service: 'Condiciones de servicio'
 term_of_service_activation_message: 'Activar las Condiciones del servicio de la plataforma'
 terms_enabled_but_empty: 'Las condiciones de servicio sólo se pueden habilitar si el texto está proporcionado al menos una lengua.'
 terms_of_service_acceptance: 'Acepto los Condiciones del servicio'
+test_repository_activated: test_repository_activated
 text: Texto
 the_following_users_were_not_imported: 'Los siguientes usuarios no han sido importados.'
 the_workspace: 'Espacio de trabajo'
@@ -994,12 +1007,16 @@ up: Arriva
 up_to_date: up_to_date
 update: update
 update_available: update_available
+update_impossible: 'Actualización imposible'
 updated_by: updated_by
 upgrade: Modernización
 upload: Subir
 upload_denied: 'Permiso denegado'
 upload_fail: 'Subir un archivo'
+upload_file: 'Subir un archivo'
 url_invalid: 'El código no es correcto, no intente cambiar la URL'
+use_stable_repo: use_stable_repo
+use_test_repo: use_test_repo
 user: Usuario
 user_accounts: 'Cuentas de usuario'
 user_creation: 'Creación de un usuario'
@@ -1035,6 +1052,7 @@ users_registration_in_workspace: 'Usuarios inscritos en un espacio de trabajo'
 users_visits: 'Conexiones del Usuarios'
 validate: Validar
 validation: Validación
+variable_available_message: 'Usted puede usar las siguientes variables en su formulario'
 verification: 'Repita su contraseña'
 view: ver
 view_category_hierarchy: 'Mostrar la jerarquía de la categoría'
@@ -1045,6 +1063,7 @@ visible_facet_form_explanation: 'El campo "Visible" permite de especificar si el
 visitor: Visitante
 warning_user_impersonation: 'Usted esta conectado como %user%.'
 warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio de trabajo %workspace%.'
+warnings: warnings
 widget: Widget
 widget_configuration: 'Configuración del Widget'
 widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
@@ -1054,16 +1073,12 @@ widget_visible_actions: 'Escoger una acción visible en el widget'
 widget_workspace_pick: 'Escoger un espacio de trabajo visible en el widget'
 widgets: Widgets
 widgets_configuration: 'Configuración del Widget'
-replace_platform_name_display_message: 'va a ser remplazado por el nombre de su plataforma'
-replace_password_display: 'va a mostrar la contraseña'
-replace_first_name_display_message: 'va a mostrar el nombre del usuario'
-replace_last_name_display_message: 'va a mostrar el apellido del usuario'
-replace_username_display_message: 'va a mostrar el nombre de usuario'
 with_role: with_role
 with_tutor: Tutelado
 workspace: 'Espacio de trabajo'
 workspace.create: 'Crear un espacio de trabajo'
 workspace.name_not_blank: 'El nombre del espacio de trabajo es obligatorio.'
+workspace_activity_overview: 'Resumen de las actividades recientes en %workspaceName%'
 workspace_administration: Administración
 workspace_classification: 'Clasificación de espacio de trabajo'
 workspace_code_invalid: 'El código %code% ha sido utilizado en la línea %line%'
@@ -1107,27 +1122,9 @@ workspaces_per_page: 'Espacios de trabajo por página'
 wrong_captcha: wrong_captcha
 ws_creator: 'Creador de espacios de trabajo'
 ws_most_viewed: 'Espacio de trabajo mas visto'
-yes: Si
+'yes': Si
 yesterday_activity: 'Actividades de ayer'
 your_current_url: your_current_url
 your_username: 'Su nombre de usuario es '
+your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
 404: 'Page Not found'
-is_not_writable: is_not_writable
-packages_permissions_error: packages_permissions_error
-put_back_permissions_after_update: put_back_permissions_after_update
-warnings: warnings
-requirement_failed_for_update: requirement_failed_for_update
-requirement_failed_for_install: requirement_failed_for_install
-ext_php_missing: ext_php_missing
-claroline_bundle_missing: claroline_bundle_missing
-package_update_danger: package_update_danger
-use_stable_repo: use_stable_repo
-use_test_repo: use_test_repo
-platform_refresh: platform_refresh
-refresh: refresh
-refresh_explanation: refresh_explanation
-platform_refresh_confirm: platform_refresh_confirm
-is_not_writable_recursive: is_not_writable_recursive
-test_repository_activated: 'test_repository_activated'
-not_managed_by_claroline_repository: 'Estado indisponible'
-update_impossible: 'Actualización imposible'

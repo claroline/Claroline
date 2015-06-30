@@ -1,0 +1,6 @@
+core_resource_logger: core_resource_logger
+my_workspaces: my_workspaces
+simple_text: simple_text
+widget_configuration_copy_warning: widget_configuration_copy_warning
+widget_instance_form_name: widget_instance_form_name
+widget_instance_form_widget: widget_instance_form_widget
