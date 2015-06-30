@@ -109,7 +109,7 @@ class PaperService {
         $interactionsSorted = $this->sortInteractions($interactions, $paper->getOrdreQuestion());
         $infosPaper['interactions'] = $interactionsSorted;
 
-        $responses = $this->getResponses($paper->getUser()->getId(), $paper->getId());
+        $responses = $this->getResponses($paper->getId());
         $responsesSorted = $this->sortResponses($responses, $paper->getOrdreQuestion());
         $infosPaper['responses'] = $responsesSorted;
 
@@ -217,17 +217,16 @@ class PaperService {
      *
      * @access private
      *
-     * @param integer $userId
      * @param integer $paperId
      *
      * Return \UJM\ExoBundle\Entity\Interaction[]
      */
-    private function getResponses($userId, $paperId)
+    private function getResponses($paperId)
     {
         $em = $this->doctrine->getManager();
 
         $responses = $em->getRepository('UJMExoBundle:Response')
-                        ->getPaperResponses($userId, $paperId);
+                        ->getPaperResponses($paperId);
 
         return $responses;
     }
@@ -247,4 +246,5 @@ class PaperService {
 
         return $orderFormated;
     }
+
 }

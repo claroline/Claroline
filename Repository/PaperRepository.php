@@ -74,7 +74,7 @@ class PaperRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('p');
         $qb->join('p.exercise', 'e')
-            ->join('p.user', 'u')
+            ->leftJoin('p.user', 'u')
             ->where($qb->expr()->in('e.id', $exerciseID))
             ->orderBy('u.lastName', 'ASC')
             ->addOrderBy('u.firstName', 'ASC')
