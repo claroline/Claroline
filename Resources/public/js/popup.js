@@ -35,7 +35,7 @@ $(document).ready(function () {
       modal.find('#modal_confirm').attr("data-document_id", documentId); //TODO change this to use data() instead of attr()
       //documentId
       //
-    })
+    });
 
     // InnovaERV
     // Ajout pour le traitement du clic sur le bouton "Oui, valider"

@@ -175,7 +175,7 @@
                 }
             });
 
-            if ($('#innova_collecticiel_document_file_form_file').val() != '') {
+            if ($('#innova_collecticiel_document_file_form_file').val() !== '') {
                 $('.please-wait').show();
                 $(this).parents('form').submit();
             }
@@ -207,7 +207,7 @@
                                 Claroline.ResourceManager.picker('dropPicker');
 
                                 $('#modal-picker').on('hidden.bs.modal', function () {
-                                    if (resourceNodeId == null) {
+                                    if (resourceNodeId === null) {
                                         $('.cancel-inline').trigger('click');
                                     }
                                 });
@@ -225,7 +225,7 @@
                 e.preventDefault();
                 Claroline.ResourceManager.picker('dropPicker');
                 $('#modal-picker').unbind('hidden.bs.modal').on('hidden.bs.modal', function () {
-                    if (resourceNodeId == null) {
+                    if (resourceNodeId === null) {
                         //$('.cancel-inline').trigger('click');
                     }
                 });
@@ -239,7 +239,7 @@
                 var url = $('#innova_collecticiel_document_file_form_url').val();
                 var file = $('#innova_collecticiel_document_file_form_url').val();
                 var validate = $('#innova_collecticiel_document_file_form_validate').val();
-                if ((text != '' && text != '<p></p>') || (url != '') || (file != '')) {
+                if ((text !== '' && text !== '<p></p>') || (url !== '') || (file !== '')) {
                     fieldEmpty = false;
                 }
 
@@ -249,7 +249,7 @@
                     $('.modal-warning').hide();
                 }
 
-            })
+            });
         });
     </script>
 {% endblock %}
