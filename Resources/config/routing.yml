@@ -136,7 +136,7 @@ claro_admin:
     resource: "@ClarolineCoreBundle/Controller/AdministrationController.php"
     prefix: admin
     type: annotation
-    
+
 claro_admin_desktop_configuration:
     resource: "@ClarolineCoreBundle/Controller/Administration/DesktopConfigurationController.php"
     prefix: admin
@@ -266,10 +266,15 @@ claro_admin_facet:
     prefix: admin/facet
     type: annotation
 
+claro_admin_i18n:
+    resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
+    prefix: admin/i18n
+    type: annotation
+
 claro_api:
     resource: "@ClarolineCoreBundle/Controller/API"
     type: annotation
-    
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact

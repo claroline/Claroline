@@ -64,6 +64,7 @@ class PlatformConfiguration
     private $helpUrl;
     private $registerButtonAtLogin;
     private $sendMailAtWorkspaceRegistration;
+    private $locales;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -635,13 +636,23 @@ class PlatformConfiguration
         return $this->useRepositoryTest;
     }
 
-    function getSendMailAtWorkspaceRegistration()
+    public function getSendMailAtWorkspaceRegistration()
     {
         return $this->sendMailAtWorkspaceRegistration;
     }
 
-    function setSendMailAtWorkspaceRegistration($sendMailAtWorkspaceRegistration)
+    public function setSendMailAtWorkspaceRegistration($sendMailAtWorkspaceRegistration)
     {
         $this->sendMailAtWorkspaceRegistration = $sendMailAtWorkspaceRegistration;
+    }
+
+    public function setLocales($locales)
+    {
+        $this->locales = $locales;
+    }
+
+    public function getLocales()
+    {
+        return $this->locales;
     }
 }
