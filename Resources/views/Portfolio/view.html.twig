@@ -120,23 +120,26 @@
                 <div class="main-content col-md-10 col-md-offset-1"{% if viewMode %} data-ng-controller="viewCtrl"{% endif %}>
                     {% if not viewMode %}
                         {% if editMode %}
-                        <div class="add_widget" data-ng-init="isadding = false" data-ng-show="!isadding">
+                        <div class="add_widget" data-ng-show="!isAdding">
                             <div class="panel-body">
-                                <p class="add_widget_icon" data-ng-click="isadding = true">
+                                <p class="add_widget_icon" data-ng-click="setAddingMode(true)" data-ng-show="!isFetching">
                                     <span class="fa-stack fa-lg">
                                         <i class="fa fa-circle-o fa-stack-2x"></i>
                                         <i class="fa fa-plus fa-stack-1x"></i>
                                     </span>
                                 </p>
+                                <p class="add_widget_icon" data-ng-show="isFetching">
+                                    <span class="fa fa-2x fa-spinner fa-pulse"></span>
+                                </p>
                             </div>
                         </div>
-                        <div class="add_widget" data-ng-show="isadding">
+                        <div class="add_widget" data-ng-show="isAdding">
                             <div class="panel-body">
-                                <span class="fa fa-close pull-right" data-ng-click="isadding = false" role="button"></span>
+                                <span class="fa fa-close pull-right" data-ng-click="setAddingMode(false)" role="button"></span>
                                 <ul class="list-inline widget_type_list">
                                     {% verbatim %}
                                     <li class="widget_type" data-ng-repeat="widgetType in widgetTypes"
-                                        data-ng-click="$parent.isadding = false; createWidget(widgetType.name)" role="button" data-widget-type="{{ widgetType.name }}">
+                                        data-ng-click="createWidget(widgetType.name)" role="button" data-widget-type="{{ widgetType.name }}">
                                         <span class="fa fa-{{ widgetType.icon }}"></span>
                                         <span>{{ widgetType.name + '_title' | trans }}</span>
                                     </li>

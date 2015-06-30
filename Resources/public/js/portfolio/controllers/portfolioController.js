@@ -13,8 +13,20 @@ portfolioApp
 
         $scope.widgetTypes = widgetsConfig.getTypes(true);
         $scope.assetPath = assetPath;
+        $scope.isAdding = false;
+        $scope.isFetching = false;
+
+        $scope.setAddingMode = function(addingMode) {
+            $scope.isAdding = addingMode;
+        };
+        $scope.setFetchingMode = function(fetchingMode) {
+            $scope.isFetching = fetchingMode;
+        };
 
         $scope.createWidget = function(type) {
+            $scope.setAddingMode(false);
+            $scope.setFetchingMode(true);
+
             var modalInstance = $modal.open({
                 backdrop: false,
                 animation: true,
@@ -31,13 +43,17 @@ portfolioApp
                 }
             });
 
+            modalInstance.opened.then(function() {
+                $scope.setFetchingMode(false);
+            });
+
             modalInstance.result.then(function (selectedWidget) {
                 widgetsManager.addWidget(selectedWidget);
             });
 
             /*
-            Small code to avoid https://github.com/angular-ui/bootstrap/issues/3633
-            Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
+             Small code to avoid https://github.com/angular-ui/bootstrap/issues/3633
+             Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
              */
             modalInstance.result.finally(function() {
                 $timeout(function() {
