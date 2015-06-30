@@ -70,10 +70,11 @@
     %}<script type="text/javascript" src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{% javascripts debug=false filter='jsmin' output='js/translation/translations.js'
+{% javascripts debug=false
     'bundles/bazingajstranslation/js/translator.min.js'
-    'js/translations/config.js'
-    'js/translations/*/*.js'
+    'js/translations/resource/*.js'
+    'js/translations/home/*.js'
+    'js/translations/platform/*.js'
     %}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
