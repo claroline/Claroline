@@ -28,8 +28,7 @@ portfolioApp
                 $scope.portfolioWidget.widget_id = selectedWidget.widget_id;
                 widgetsManager.save($scope.portfolioWidget);
             }, function () {
-                console.log('cancel');
-                widgetsManager.cancelEditing($scope.portfolioWidget, true);
+                widgetsManager.cancelEditing($scope.portfolioWidget);
             });
 
             /*

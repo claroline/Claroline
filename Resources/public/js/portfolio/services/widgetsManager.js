@@ -55,7 +55,6 @@ portfolioApp
                 }
 
                 widget.isUpdating = true;
-                delete widget.copy;
 
                 var $this = this;
                 var success = function() {
@@ -73,10 +72,7 @@ portfolioApp
                 }
                 return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             },
-            cancelEditing: function(widget, rollback) {
-                if (rollback) {
-                    angular.copy(widget.copy, widget);
-                }
+            cancelEditing: function(widget) {
                 widget.isEditing = false;
 
                 if (widget.isNew) {
@@ -84,10 +80,7 @@ portfolioApp
                 }
             },
             edit: function(widget) {
-                widget.copy = angular.copy(widget);
-                if (!widget.isEditing) {
-                    widget.isEditing = true;
-                }
+                widget.isEditing = true;
             }
         };
     }]);
