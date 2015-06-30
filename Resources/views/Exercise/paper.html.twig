@@ -42,7 +42,7 @@
     <div class="panel-body">
         <form action="{{ path('ujm_exercise_paper_nav') }}" method="post" name="formResponse" id="formResponse">
             <input type="hidden" name="numQuestionToDisplayed" id="numQuestionToDisplayed" value=""/>
-                {% include "UJMExoBundle:Partial:Exercice/#{interactionType}.html.twig" %}         
+                {% include "UJMExoBundle:Partial:exercise/#{interactionType}.html.twig" %}         
         </form>
     </div>
     {#--------------------------------------------------- Pagination ----------------------------------------------------#}
