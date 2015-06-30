@@ -17,6 +17,9 @@ portfolioApp
                 resolve: {
                     portfolioWidgets: function () {
                         return widgetsManager.getAvailableWidgetsByTpe($scope.portfolioWidget.portfolio_id, $scope.portfolioWidget.widget_type);
+                    },
+                    selectedPortfolioWidget: function() {
+                        return $scope.portfolioWidget;
                     }
                 }
             });

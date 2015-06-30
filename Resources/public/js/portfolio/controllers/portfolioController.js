@@ -24,6 +24,9 @@ portfolioApp
                 resolve: {
                     portfolioWidgets: function () {
                         return widgetsManager.getAvailableWidgetsByTpe($scope.portfolio.id, type);
+                    },
+                    selectedPortfolioWidget: function() {
+                        return null;
                     }
                 }
             });

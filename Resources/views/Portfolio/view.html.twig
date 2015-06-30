@@ -102,13 +102,13 @@
                     <div class="modal-body">
                         <ul class="list-unstyled">
                             <li data-ng-repeat="portfolioWidget in portfolioWidgets">
-                                <span data-ng-click="selected.portfolioWidget = portfolioWidget"
-                                      data-ng-class="{'bold': selected.portfolioWidget == portfolioWidget}">
+                                <span data-ng-click="selectPortfolioWidget(portfolioWidget)"
+                                      data-ng-class="{'bold': selectedPortfolioWidget.widget_id == portfolioWidget.widget_id}">
                                     {{ portfolioWidget.widget.label }}
                                 </span>
                             </li>
                         </ul>
-                        Selected: <b>{{ selected.portfolioWidget.widget.label }}</b>
+                        Selected: <b>{{ selectedPortfolioWidget.widget.label }}</b>
                     </div>
                     {% endverbatim %}
                     <div class="modal-footer">
