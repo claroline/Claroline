@@ -60,14 +60,9 @@ class PortfolioWidgetController extends BaseController
         $statusCode = Response::HTTP_BAD_REQUEST;
 
         if (isset($widgetsConfig[$type])) {
-            if (!$widgetsConfig[$type]['isUnique'] || (
-                    $widgetsConfig[$type]['isUnique']
-                    && null === $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget')->findOneByTypeAndPortfolio($type, $portfolio)
-                )) {
-                $newWidget = $widgetManager->getNewPortfolioWidget($portfolio, $type);
-                $data = $widgetManager->handlePortfolioWidget($newWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
-                $statusCode = Response::HTTP_CREATED;
-            }
+            $newWidget = $widgetManager->getNewPortfolioWidget($portfolio, $type);
+            $data = $widgetManager->handlePortfolioWidget($newWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
+            $statusCode = Response::HTTP_CREATED;
         }
 
         $response
@@ -78,26 +73,23 @@ class PortfolioWidgetController extends BaseController
     }
 
     /**
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_put", requirements={"widgetId" = "\d+"})
+     * @Route("/{type}/{portfolioWidgetId}", name="icap_portfolio_internal_portfolio_widget_put", requirements={"portfolioWidgetId" = "\d+"})
      * @Method({"PUT"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function putAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
+    public function putAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $portfolioWidgetId)
     {
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
-        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
-        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget $portfolioWidget */
+        $portfolioWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:PortfolioWidget')->findOneBy([
+            'id' => $portfolioWidgetId,
+            'widgetType' => $type,
+            'portfolio' => $portfolio
+        ]);
 
-        if (null === $widgetId) {
-            $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
-        }
-        else {
-            $widget = $abstractWidgetRepository->find($widgetId);
-        }
-
-        $data = $this->getWidgetsManager()->handle($widget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
+        $data = $this->getWidgetsManager()->handlePortfolioWidget($portfolioWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
 
         $response = new JsonResponse();
         $response->setData($data);

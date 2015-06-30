@@ -10,7 +10,7 @@ portfolioApp
             getPortfolio: function(portfolioId) {
                 this.portfolioId = portfolioId;
                 this.portfolio   = portfolioFactory.get({portfolioId: this.portfolioId}, function(portfolio) {
-                    widgetsManager.init(portfolioId, portfolio.portfolioWidgets);
+                    widgetsManager.init(portfolio.portfolioWidgets);
                     commentsManager.init(portfolioId, portfolio.comments);
                 });
 

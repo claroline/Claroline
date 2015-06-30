@@ -13,9 +13,17 @@ use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 class PortfolioWidget
 {
     /**
+     * @var integer
+     *
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
      * @var Portfolio
      *
-     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Portfolio", inversedBy="portfolioWidgets")
      * @ORM\JoinColumn(name="portfolio_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
@@ -24,7 +32,6 @@ class PortfolioWidget
     /**
      * @var AbstractWidget
      *
-     * @ORM\Id()
      * @ORM\ManyToOne(targetEntity="Icap\PortfolioBundle\Entity\Widget\AbstractWidget", inversedBy="portfolioWidgets")
      * @ORM\JoinColumn(name="widget_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
@@ -64,6 +71,14 @@ class PortfolioWidget
      * @ORM\Column(type="string", nullable=false)
      */
     protected $widgetType;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return Portfolio
@@ -222,6 +237,7 @@ class PortfolioWidget
     public function getData()
     {
         return [
+            'id' => $this->getId(),
             'portfolio_id' => $this->getPortfolio()->getId(),
             'widget_id' => $this->getWidget()->getId(),
             'widget_type' => $this->getWidgetType(),

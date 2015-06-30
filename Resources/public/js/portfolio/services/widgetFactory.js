@@ -29,21 +29,9 @@ portfolioApp
                         remove: { method: "DELETE"}
                     }
                 );
-                widget.prototype.type = type;
                 widget.prototype.isUpdating = false;
                 widget.prototype.isDeleting = false;
                 widget.prototype.toSave = false;
-
-                widget.prototype.generateUrl = function(parameters) {
-                    parameters.portfolioId = portfolioId;
-                    parameters.type = type;
-
-                    return urlInterpolator.interpolate("/{{portfolioId}}/{{type}}", parameters);
-                };
-
-                widget.prototype.getId = function() {
-                    return this.portfolio_id + '-' + this.widget_id;
-                };
 
                 this.widgetResources[type] = widget;
 

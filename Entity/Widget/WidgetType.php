@@ -25,13 +25,6 @@ class WidgetType
     protected $name;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(type="boolean", name="is_unique")
-     */
-    protected $isUnique = false;
-
-    /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $icon;
@@ -62,26 +55,6 @@ class WidgetType
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * @param boolean $isUnique
-     *
-     * @return WidgetType
-     */
-    public function setIsUnique($isUnique)
-    {
-        $this->isUnique = $isUnique;
-
-        return $this;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function getIsUnique()
-    {
-        return $this->isUnique;
     }
 
     /**

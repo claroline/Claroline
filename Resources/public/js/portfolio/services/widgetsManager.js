@@ -5,18 +5,21 @@ portfolioApp
         function($http, widgetsConfig, widgetFactory, $q, urlInterpolator){
         return {
             portfolioWidgets: [],
-            init: function(portfolioId, portfolioWidgets) {
+            init: function(portfolioWidgets) {
                 angular.forEach(portfolioWidgets, function(rawWidget) {
-                    var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
+                    console.log(rawWidget);
+                    var widget = widgetFactory.getWidget(rawWidget.portfolio_id, rawWidget.widget_type, rawWidget.widget_id);
                     var newPortfolioWidget= new widget(rawWidget);
                     newPortfolioWidget.isNew = false;
                     this.portfolioWidgets.push(newPortfolioWidget);
                 }, this);
             },
             addWidget: function(portfolioWidget) {
-                var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type);
+                //console.log(portfolioWidget);
+                var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type, portfolioWidget.widget_id);
                 var newPortfolioWidget= new widget(portfolioWidget);
                 newPortfolioWidget.isNew = true;
+                console.log(newPortfolioWidget);
                 this.portfolioWidgets.push(newPortfolioWidget);
                 this.save(newPortfolioWidget);
             },
@@ -71,7 +74,7 @@ portfolioApp
                 if (widget.isNew) {
                     delete widget.id;
                 }
-
+                console.log('pouet');
                 return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             cancelEditing: function(widget, rollback) {

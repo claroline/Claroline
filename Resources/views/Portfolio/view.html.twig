@@ -154,7 +154,7 @@
                         </p>
                         <ul class="list-unstyled" data-gridster="gridsterOptions">
                             {% verbatim %}
-                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.getId()">
+                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.id">
                                 {% endverbatim %}
                                 {% include 'IcapPortfolioBundle:templates:widget.html.twig' %}
                             </li>
