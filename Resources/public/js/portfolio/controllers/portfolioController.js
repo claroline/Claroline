@@ -33,8 +33,6 @@ portfolioApp
 
             modalInstance.result.then(function (selectedWidget) {
                 widgetsManager.addWidget(selectedWidget);
-            }, function () {
-                //console.log('cancel');
             });
 
             /*
