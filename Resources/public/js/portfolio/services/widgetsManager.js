@@ -7,7 +7,6 @@ portfolioApp
             portfolioWidgets: [],
             init: function(portfolioWidgets) {
                 angular.forEach(portfolioWidgets, function(rawWidget) {
-                    console.log(rawWidget);
                     var widget = widgetFactory.getWidget(rawWidget.portfolio_id, rawWidget.widget_type, rawWidget.widget_id);
                     var newPortfolioWidget= new widget(rawWidget);
                     newPortfolioWidget.isNew = false;
@@ -82,6 +81,12 @@ portfolioApp
 
                 if (widget.isNew) {
                     this.portfolioWidgets.remove(widget);
+                }
+            },
+            edit: function(widget) {
+                widget.copy = angular.copy(widget);
+                if (!widget.isEditing) {
+                    widget.isEditing = true;
                 }
             }
         };

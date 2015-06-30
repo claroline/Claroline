@@ -1,9 +1,46 @@
 'use strict';
 
 portfolioApp
-    .controller("widgetController", ["$scope", "widgetsManager", function($scope, widgetsManager) {
+    .controller("widgetController", ["$scope", "widgetsManager", "$modal", "$timeout", function($scope, widgetsManager, $modal, $timeout) {
         $scope.edit = function() {
             widgetsManager.edit($scope.portfolioWidget);
+            $scope.editWidget();
+        };
+
+        $scope.editWidget = function() {
+            var modalInstance = $modal.open({
+                backdrop: false,
+                animation: true,
+                templateUrl: 'widget_picker_modal.html',
+                controller: 'widgetPickerController',
+                size: 'lg',
+                resolve: {
+                    portfolioWidgets: function () {
+                        return widgetsManager.getAvailableWidgetsByTpe($scope.portfolioWidget.portfolio_id, $scope.portfolioWidget.widget_type);
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedWidget) {
+                $scope.portfolioWidget.widget_id = selectedWidget.widget_id;
+                widgetsManager.save($scope.portfolioWidget);
+            }, function () {
+                console.log('cancel');
+                widgetsManager.cancelEditing($scope.portfolioWidget, true);
+            });
+
+            /*
+            Small code to avoid https://github.com/angular-ui/bootstrap/issues/3633
+            Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
+             */
+            modalInstance.result.finally(function() {
+                $timeout(function() {
+                    $('.modal:last').trigger('$animate:close');
+                    $timeout(function() {
+                        $('.modal-backdrop:last').trigger('$animate:close');
+                    }, 100);
+                }, 100);
+            });
         };
 
         $scope.cancelEdition = function() {

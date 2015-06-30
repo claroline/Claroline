@@ -31,6 +31,7 @@ portfolioApp
                 );
                 widget.prototype.isUpdating = false;
                 widget.prototype.isDeleting = false;
+                widget.prototype.isEditing = false;
                 widget.prototype.toSave = false;
 
                 this.widgetResources[type] = widget;
