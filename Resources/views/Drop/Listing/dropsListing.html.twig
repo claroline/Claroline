@@ -20,110 +20,24 @@
         {% endif %} -->
         <!-- Colonne supprimée : 'Outils' -->
         <!-- <th>{{ 'tools'|trans({},'innova_collecticiel') }}</th> -->
-        <!-- Colonne ajoutée "Commentaires non lus" -->
-        <th>{{ 'No read comments'|trans({},'innova_collecticiel') }}</th>
-        <!-- Colonne ajoutée "Devoirs à corriger" -->
-        <th>{{ 'To be corrected documents'|trans({},'innova_collecticiel') }}</th>
-        <!-- Colonne ajoutée "Voir" -->
-        <th>{{ 'See collecticiel'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
+        <th>{{ 'Document'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
+        <th>{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
+        <th>{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
         </thead>
         <tbody>
 
+        {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
         {% for drop in pager.currentPageResults %}
             {% for document in drop.documents %}
-                <tr>
-                    <!-- Colonne supprimée : 'Copie rendue le' -->
-                    <!-- -->
-                    <td>
-                        {{ drop.user.lastName|upper }}
-                    </td>
-                    <td>
-                        {{ drop.user.firstName|capitalize }}
-                    </td>
-                    <td>
-                        {{ drop.user.userName|capitalize }}
-                    </td>
-                    <td>
-                        {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
-                    </td>
-                    <td>
-                        <!-- Afficher ici la valeur "Commentaires non lus" -->
-                        {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}
-                    </td>
-                    <td>
-                        <!-- Afficher ici la valeur "Devoirs à corriger" -->
-                        {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
-                    </td>
-                    <td> <!-- Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. -->
-                        <div class="btn-group ">
-                            <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-sm">
-                                {{ 'To See'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </div>
-                    </td>
-                    <!-- Colonnes supprimées : -->
-                    <!-- 'Dernière correction le' -->
-                    <!-- 'Note' -->
-                    <!-- 'Corr.' -->
-                    <!--
-                    <td>
-                        {% include 'InnovaCollecticielBundle:Drop:dropsLastCorrectionDate.html.twig' %}
-                        {% if drop.getHasDeniedCorrection %}
-                            <span class="fa fa-exclamation-triangle" data-toggle="tooltip" title=""
-                                  data-original-title="{{ 'This copy contain a denied correction'|trans({}, 'innova_collecticiel') }}"></span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% include 'InnovaCollecticielBundle:Drop:dropsTotalGrade.html.twig' %}
-                    </td>
-                    {% if AwaitingMode is defined and  AwaitingMode == true %}
-                        <td>
-                            {% include 'InnovaCollecticielBundle:Drop:dropsNbCorrections.html.twig' %}
-                        </td>
-                    {% endif %}
-                    -->
-                    <!-- Colonne supprimée : 'Outils'
-                    <td>
-                        <div class="btn-group ">
-
-                            {% if AwaitingMode is defined and  AwaitingMode == true %}
-                                <a href="{{ path('innova_collecticiel_drops_detail_add_correction', {'resourceId': dropzone.id, 'dropId': drop.id}) }}"
-                                   type="button"
-                                   class="btn btn-default btn-xs">{{ 'Add a correction'|trans({}, 'innova_collecticiel') }}</a>
-                                {#  --------------- UNLOCKED BUTTON ---------------- #}
-                                {# if the dropzone is finished, show unlock buttons #}
-                                {% if dropzone.isFinished %}
-                                    {% if drop.corrections|length == 0 %}
-                                        <a href="#" class="btn btn-default btn-xs disabled" data-toggle="tooltip"
-                                           data-placement="left"
-                                           title="{{ 'You need at least one correction on the copy to unlock it'|trans({}, 'innova_collecticiel') }}">{{ 'Unlock copy'|trans({}, 'innova_collecticiel') }}</a>
-                                    {% else %}
-                                        {% if(drop.unlockedDrop) %}
-                                            <a href="#"
-                                               class="btn btn-default btn-xs disabled">{{ 'Unlocked copy'|trans({}, 'innova_collecticiel') }}</a>
-                                        {% else %}
-                                            <a href="{{ path('innova_collecticiel_unlock_drop', {'dropId':drop.id}) }}"
-                                               type="button"
-                                               class="btn btn-default btn-xs" data-placement="left" data-toggle="tooltip"
-                                               title="{{ "Allow student to see his copy whereas the copy didn't received the expected number of correction."|trans({}, 'innova_collecticiel') }}">{{ 'Unlock copy'|trans({}, 'innova_collecticiel') }}</a>
-
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-                                {#  --------------- END UNLOCKED BUTTON  --------------- #}
-                            {% endif %}
-                            <a href="{{ path('innova_collecticiel_drops_delete', {'resourceId': dropzone.id, 'dropId': drop.id, 'tab': 0, 'page': pager.currentPage}) }}"
-                               class="btn btn-danger btn-xs launch-modal"><span
-                                        class="fa fa-trash-o"></span> {{ 'Delete copy'|trans({}, 'innova_collecticiel') }}
-                            </a>
-                        </div>
-                    </td>
-                    -->
-                </tr>
+                {# Séparation de l'affichage de la vue. InnovaERV #}
+                {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
             {% endfor %}
         {% endfor %}
         </tbody>
     </table>
 </div>
 
-<script src="{{ asset('bundles/icapdropzone/js/tooltip.js') }}"></script>
+<script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>
