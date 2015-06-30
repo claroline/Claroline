@@ -1,7 +1,6 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
-
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}"><span
                     class=" fa fa-bars"></span>  {{ dropzone.resourceNode.name }}</a></li>
@@ -27,7 +26,6 @@
 {% endblock %}
 
 {% block drop_zone_content_edit %}
-
 
     <form id="global_form" class="form-horizontal" method="POST"
           action="{{ path('innova_collecticiel_edit_criteria', {'resourceId': dropzone.id}) }}"

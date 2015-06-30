@@ -1,4 +1,3 @@
-
 {#
             {% block dropzone_edit_navTabs_criteria_block %}
                 <li class="hometab-element peer-review-options {% block dropzone_edit_navTabs_criteria_element_class %} {% endblock %}">
@@ -10,14 +9,28 @@
                     </a>
                 </li>
             {% endblock %}
+
+            <li class="hometab-element {% block drops_completed_active %}{% endblock %}">
+                <a href="{% block drops_completed_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}  {% endblock %}">
+                    Demandes ICAP
+                </a>
+            </li>
+            <li class="hometab-element {% block drops_awaiting_active %}{% endblock %}">
+                <a href="{% block drops_awaiting_link %}{{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }} {% endblock %}">
+                    Paramètres ICAP
+                </a>
+            </li>
 #}
 
+            <!-- Demandes adressées -->
+            <li class="hometab-element {% block collecticiel_demandes_active %} active {% endblock %}">
+                <a href="{% block collecticiel_demandes_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+            Demandes adressées
+                </a>
+            </li>
 
-{#
-            Espaces partagés
-            A priori, c'est pour la V2
             {% block collecticiel_demande_edit_navTabs_criteria_block %}
-                <li class="hometab-element peer-review-options {% block collecticiel_demande_edit_navTabs_criteria_element_class %} {% endblock %}">
+                <li class="hometab-element {% block collecticiel_demande_edit_navTabs_criteria_element_class %} active {% endblock %}">
                     <a id="editCriteriaLink" href="
                     {% block collecticiel_demande_edit_navTabs_criteria_element_link %}
                         {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
@@ -26,14 +39,6 @@
                     </a>
                 </li>
             {% endblock %}
-#}
-
-            <!-- Demandes adressées -->
-            <li class="hometab-element {% block collecticiel_demandes_active %}{% endblock %}">
-                <a href="{% block collecticiel_demandes_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
-            Demandes adressées
-                </a>
-            </li>
 
             <!-- Paramètres -->
             <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
@@ -43,6 +48,9 @@
                     {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                 </a>
             </li>
+
+
+
 
             <!-- ne pas toucher : bloc d'origine qui sert d'exemple -->
             <!-- Critères d'évaluation par l'enseignant -->
