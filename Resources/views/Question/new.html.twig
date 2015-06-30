@@ -71,7 +71,9 @@
                     <select class="form-control" name="menu_type_question" id="menu_type_question" onchange="cherche_type('{{ 'warning_change_type_q' | trans }} ?', '{{ exoID }}', '{{ path('ujm_question_display_form_type')}}' )">
                         <option selected="selected" disabled>{{ 'choose_type' | trans }}</option>
                         {% for type in interactionType %}
-                            <option value="{{ type['type'] }}">{{ type['type'] | trans }}</option>
+                            {% for value in type %}
+                                <option value="{{ type[loop.index0] }}">{{ type[loop.index0] | trans }}</option>
+                            {% endfor %}
                         {% endfor %}
                     </select>
                 </div>

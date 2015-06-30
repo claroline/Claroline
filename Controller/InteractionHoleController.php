@@ -98,13 +98,7 @@ class InteractionHoleController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
-        if (empty($Locker)) {
-            $catLocker = "";
-        } else {
-            $catLocker = $Locker[0];
-        }
+        $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionHoleHandler(
@@ -163,8 +157,8 @@ class InteractionHoleController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $catLocker
+            'linkedCategory' =>  $catSer->getLinkedCategories(),
+            'locker' => $catSer->getLockCategory()
             )
         );
     }
@@ -186,7 +180,6 @@ class InteractionHoleController extends Controller
     {
         $attr = $this->get('request')->attributes;
         $holeSer  = $this->container->get('ujm.exo_InteractionHole');
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -197,7 +190,7 @@ class InteractionHoleController extends Controller
              new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
          );
 
-         $linkedCategory = $questSer->getLinkedCategories();
+         $linkedCategory = $catSer->getLinkedCategories();
 
          return $this->render(
              'UJMExoBundle:InteractionHole:edit.html.twig', array(

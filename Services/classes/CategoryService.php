@@ -53,4 +53,34 @@ class CategoryService {
 
         return $catLocker;
     }
+    
+     /**
+     * Get information if these categories are linked to questions, allow to know if a category can be deleted or not
+     *
+     * @access public
+     *
+     * @return boolean[]
+     */
+    public function getLinkedCategories()
+    {
+        $em = $this->doctrine->getEntityManager();
+        $linkedCategory = array();
+        $repositoryCategory = $em->getRepository('UJMExoBundle:Category');
+
+        $repositoryQuestion = $em->getRepository('UJMExoBundle:Question');
+
+        $categoryList = $repositoryCategory->findAll();
+
+
+        foreach ($categoryList as $category) {
+          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
+          if (!$questionLink) {
+              $linkedCategory[$category->getId()] = 0;
+          } else {
+              $linkedCategory[$category->getId()] = 1;
+          }
+        }
+
+        return $linkedCategory;
+    }
 }

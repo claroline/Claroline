@@ -1,0 +1,21 @@
+<input class="form-control" type="hidden" name="interactionHoleToValidated" value="{{ interactionToDisplayed.id }}"/>
+<input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+<input class="form-control" type="hidden" name="typeInteraction" value="InteractionHole"/>
+
+{% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+<div id="interHoleResponse">
+    {{ interactionToDisplayed.htmlWithoutValue | raw }}
+    {% if response != '' %}
+        <script type="text/javascript">
+            $(document).ready(function () {
+                paperResponseHole('{{ response|raw }}');
+            });
+        </script>
+    {% endif %}
+</div>
+
+{% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+
+<input type="hidden" name="testQCM" value="testQCM" />
+<input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
