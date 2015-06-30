@@ -60,7 +60,7 @@ services:
 
     ujm.exo_paper:
         class: UJM\ExoBundle\Services\classes\PaperService
-        arguments: [@doctrine]
+        arguments: [@doctrine, @service_container]
 
     ujm.exo_qti_export_InteractionQCM:
         class: UJM\ExoBundle\Services\classes\QTI\QcmExport

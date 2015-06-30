@@ -50,7 +50,11 @@
     {% for paper in papers %}
         <tr>
             <td class="classic">
-                {{ paper.user.firstname }} {{ paper.user.lastName }}
+                {% if paper.user is not null %}
+                    {{ paper.user.firstname }} {{ paper.user.lastName }}
+                {% else %}
+                    {{ 'anonymous'|trans }}
+                {% endif %}
             </td>
             <td class="classic">
                 {{ paper.numpaper }}

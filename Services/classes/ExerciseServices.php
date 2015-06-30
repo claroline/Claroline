@@ -94,6 +94,7 @@ class ExerciseServices
             $interaction = $this->om
                                 ->getRepository('UJMExoBundle:Interaction')
                                 ->getInteraction($eq->getQuestion()->getId());
+            $typeInter = $interaction->getType();
 
             $interSer        = $this->container->get('ujm.exo_' . $typeInter);
             $interactionX    = $interSer->getInteractionX($interaction->getId());
@@ -172,7 +173,7 @@ class ExerciseServices
                        ->getExerciseUserPapers($userId, $exoId);
 
         foreach ($papers as $paper) {
-            $infosPaper = $this->getInfosPaper($paper);
+            $infosPaper = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
             $tabScoresUser[$i]['score']       = $infosPaper['scorePaper'];
             $tabScoresUser[$i]['maxExoScore'] = $infosPaper['maxExoScore'];
             $tabScoresUser[$i]['scoreTemp']   = $infosPaper['scoreTemp'];
@@ -193,7 +194,7 @@ class ExerciseServices
      */
     public function manageEndOfExercise(Paper $paper)
     {
-        $paperInfos = $this->getInfosPaper($paper);
+        $paperInfos = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
 
         if (!$paperInfos['scoreTemp']) {
             $event = new LogExerciseEvaluatedEvent($paper->getExercise(), $paperInfos);
@@ -283,6 +284,39 @@ class ExerciseServices
         } else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @access public
+     *
+     * @return Claroline\CoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        $user = $this->container->get('security.token_storage')
+                                ->getToken()->getUser();
+
+        return $user;
+
+    }
+
+    /**
+     *
+     * @access public
+     *
+     * @return integer or String
+     */
+    public function getUserId()
+    {
+        $user = $this->getUser();
+        if (is_object($user)) {
+            $uid = $user->getId();
+        } else {
+            $uid = 'anonymous';
+        }
+
+        return $uid;
     }
 
 }

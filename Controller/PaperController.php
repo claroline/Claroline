@@ -83,13 +83,13 @@ class PaperController extends Controller
         }
 
         if (count($paper) > 0) {
-            $display = $this->ctrlDisplayPaper($user, $paper[0]);
+            $display = $this->ctrlDisplayPaper($paper[0]);
         } else {
             $display = 'all';
         }
 
         foreach ($paper as $p) {
-            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_exercise')->getInfosPaper($p);
+            $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_paper')->getInfosPaper($p);
         }
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
@@ -148,14 +148,16 @@ class PaperController extends Controller
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $badgeExoSer = $this->container->get('ujm.exo_badge');
+        $paperSer    = $this->container->get('ujm.exo_paper');
 
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $exerciseSer->getUser();
+        $uid  = $exerciseSer->getUserId();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
         $exercise = $paper->getExercise();
 
-        if ($exerciseSer->controlMaxAttemps($exercise,
-                $user->getId(), $exerciseSer->isExerciseAdmin($exercise))) {
+        if ( ($uid == 'anonymous') || ($exerciseSer->controlMaxAttemps($exercise,
+                $uid, $exerciseSer->isExerciseAdmin($exercise))) ) {
             $retryButton = true;
         }
 
@@ -167,13 +169,13 @@ class PaperController extends Controller
 
         $worspace = $paper->getExercise()->getResourceNode()->getWorkspace();
 
-        $display = $this->ctrlDisplayPaper($user, $paper);
+        $display = $this->ctrlDisplayPaper($paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
         }
 
-        $infosPaper = $exerciseSer->getInfosPaper($paper);
+        $infosPaper = $paperSer->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
             ->getManager()
@@ -183,7 +185,7 @@ class PaperController extends Controller
         $nbMaxQuestion = count($infosPaper['interactions']);
 
         $badgesInfoUser = $badgeExoSer->badgesInfoUser(
-        $user->getId(), $exercise->getResourceNode()->getId(),
+        $uid, $exercise->getResourceNode()->getId(),
         $this->container->getParameter('locale'));
 
         if ($exercise->getMaxAttempts() > 0) {
@@ -279,8 +281,6 @@ class PaperController extends Controller
      */
     public function searchUserPaperAction()
     {
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
         $papersOneUser   = array();
         $papersUser      = array();
         $arrayMarkPapers = array();
@@ -316,7 +316,7 @@ class PaperController extends Controller
         }
 
         if(count($papersUser) > 0) {
-            $display = $this->ctrlDisplayPaper($user, $papersUser[0]);
+            $display = $this->ctrlDisplayPaper($papersUser[0]);
         }
 
         $divResultSearch = $this->render(
@@ -422,29 +422,30 @@ class PaperController extends Controller
      *
      * @access private
      *
-     * @param \Claroline\CoreBundle\Entity\User $user user connected
      * @param \UJM\ExoBundle\Entity\Paper $paper paper to display
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function ctrlDisplayPaper($user, $paper)
+    private function ctrlDisplayPaper($paper)
     {
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $uid = $exerciseSer->getUserId();
         $display = 'none';
 
         if (($this->container->get('ujm.exo_exercise')->isExerciseAdmin($paper->getExercise())) ||
-            ($user->getId() == $paper->getUser()->getId()) &&
+            ( ( $uid == 'anonymous' && $paper->getUser() == null ) || ( $uid == $paper->getUser()->getId() ) ) &&
             (($paper->getExercise()->getCorrectionMode() == 1) ||
             (($paper->getExercise()->getCorrectionMode() == 3) &&
             ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
             (($paper->getExercise()->getCorrectionMode() == 2) &&
             ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exo_exercise')->getNbPaper(
-                $user->getId(), $paper->getExercise()->getId()
+                $uid, $paper->getExercise()->getId()
             )
             ))
             )
         ) {
             $display = 'all';
-        } else if (($user->getId() == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
+        } else if (($uid == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
             $display = 'score';
         }
 

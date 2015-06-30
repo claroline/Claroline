@@ -127,13 +127,7 @@ class ExerciseController extends Controller
     {
         $exerciseSer = $this->container->get('ujm.exo_exercise');
 
-        $user = $this->container->get('security.token_storage')
-                                ->getToken()->getUser();
-        if (is_object($user)) {
-            $uid = $user->getId();
-        } else {
-            $uid = 'anonymous';
-        }
+        $uid = $exerciseSer->getUserId();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
@@ -158,8 +152,8 @@ class ExerciseController extends Controller
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
 
-        if ($exerciseSer->allowToOpen($exercise)) {
-            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
+        if ($exerciseSer->allowToOpen($exercise) && $uid != 'anonymous') {
+            $nbUserPaper = $exerciseSer->getNbPaper($uid,
                                                     $exercise->getId());
         } else {
             $nbUserPaper = 0;
@@ -708,15 +702,14 @@ class ExerciseController extends Controller
     {
         $exerciseSer = $this->container->get('ujm.exo_exercise');
 
-        $user = $this->container->get('security.token_storage')
-                                ->getToken()->getUser();
+        $user = $exerciseSer->getUser();
+        $uid  = $exerciseSer->getUserId();
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         if (!$exerciseSer->allowToOpen($exercise)) {
             return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
         }
-        $uid = $user->getId();
 
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
         $this->checkAccess($exercise);
@@ -728,16 +721,21 @@ class ExerciseController extends Controller
            ) {
             $session = $this->getRequest()->getSession();
 
-            $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
-                . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
-            $query = $em->createQuery($dql);
-            $maxNumPaper = $query->getResult();
+            if ($uid != 'anonymous') {
+                $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
+                    . 'WHERE p.exercise='.$id.' AND p.user='.$uid;
+                $query = $em->createQuery($dql);
+                $maxNumPaper = $query->getSingleResult();
 
-            //Verify if it exists a not finished paper
-            $paper = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Paper')
-                ->getPaper($user->getId(), $id);
+                //Verify if it exists a not finished paper
+                $paper = $this->getDoctrine()
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Paper')
+                    ->getPaper($uid, $id);
+            } else {
+                $maxNumPaper[1] = 0;
+                $paper = array();
+            }
 
             //if not exist a paper no finished
             if (count($paper) == 0) {
@@ -746,9 +744,11 @@ class ExerciseController extends Controller
                 }
 
                 $paper = new Paper();
-                $paper->setNumPaper((int) $maxNumPaper[0][1] + 1);
+                $paper->setNumPaper((int) $maxNumPaper[1] + 1);
                 $paper->setExercise($exercise);
-                $paper->setUser($user);
+                if ($uid != 'anonymous') {
+                    $paper->setUser($user);
+                }
                 $paper->setStart(new \Datetime());
                 $paper->setArchive(0);
                 $paper->setInterupt(1);
@@ -757,7 +757,7 @@ class ExerciseController extends Controller
                     $papers = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Paper')
-                        ->getExerciseUserPapers($user->getId(), $id);
+                        ->getExerciseUserPapers($uid, $id);
                     if(count($papers) == 0) {
                         $tab = $this->prepareInteractionsPaper($id, $exercise);
                         $interactions  = $tab['interactions'];

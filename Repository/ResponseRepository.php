@@ -63,18 +63,16 @@ class ResponseRepository extends EntityRepository
      *
      * @access public
      *
-     * @param integer $uid id User
      * @param integer $paperID id paper
      *
      * Return array[Response]
      */
-    public function getPaperResponses($uid, $paperID)
+    public function getPaperResponses($paperID)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->join('r.paper', 'p')
-            ->join('p.user', 'u')
-            ->where($qb->expr()->in('p.id', $paperID))
-            ->andWhere($qb->expr()->in('u.id', $uid));
+           ->leftJoin('p.user', 'u')
+           ->where($qb->expr()->in('p.id', $paperID));
 
         return $qb->getQuery()->getResult();
     }

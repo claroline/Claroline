@@ -8,10 +8,13 @@
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 
 class PaperService {
 
     private $doctrine;
+    private $container;
 
 
     /**
@@ -20,11 +23,13 @@ class PaperService {
      * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @param \Symfony\Component\DependencyInjection\Container $container
      *
      */
-    public function __construct(Registry $doctrine)
+    public function __construct(Registry $doctrine, Container $container)
     {
         $this->doctrine = $doctrine;
+        $this->container = $container;
     }
 
     /**
@@ -104,7 +109,7 @@ class PaperService {
         $interactionsSorted = $this->sortInteractions($interactions, $paper->getOrdreQuestion());
         $infosPaper['interactions'] = $interactionsSorted;
 
-        $responses = $this->getResponses($paper->getUser()->getId(), $paper->getId());
+        $responses = $this->getResponses($paper->getId());
         $responsesSorted = $this->sortResponses($responses, $paper->getOrdreQuestion());
         $infosPaper['responses'] = $responsesSorted;
 
@@ -212,17 +217,16 @@ class PaperService {
      *
      * @access private
      *
-     * @param integer $userId
      * @param integer $paperId
      *
      * Return \UJM\ExoBundle\Entity\Interaction[]
      */
-    private function getResponses($userId, $paperId)
+    private function getResponses($paperId)
     {
         $em = $this->doctrine->getManager();
 
         $responses = $em->getRepository('UJMExoBundle:Response')
-                        ->getPaperResponses($userId, $paperId);
+                        ->getPaperResponses($paperId);
 
         return $responses;
     }
@@ -242,4 +246,5 @@ class PaperService {
 
         return $orderFormated;
     }
+
 }
