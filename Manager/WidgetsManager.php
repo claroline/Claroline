@@ -220,7 +220,7 @@ class WidgetsManager
     /**
      * @param PortfolioWidget $portfolioWidget
      */
-    public function deleteWidget(PortfolioWidget $portfolioWidget)
+    public function deletePortfolioWidget(PortfolioWidget $portfolioWidget)
     {
         $this->entityManager->remove($portfolioWidget);
         $this->entityManager->flush();

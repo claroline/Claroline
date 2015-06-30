@@ -15,11 +15,9 @@ portfolioApp
                 }, this);
             },
             addWidget: function(portfolioWidget) {
-                //console.log(portfolioWidget);
                 var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type, portfolioWidget.widget_id);
                 var newPortfolioWidget= new widget(portfolioWidget);
                 newPortfolioWidget.isNew = true;
-                console.log(newPortfolioWidget);
                 this.portfolioWidgets.push(newPortfolioWidget);
                 this.save(newPortfolioWidget);
             },
@@ -74,7 +72,6 @@ portfolioApp
                 if (widget.isNew) {
                     delete widget.id;
                 }
-                console.log('pouet');
                 return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             },
             cancelEditing: function(widget, rollback) {

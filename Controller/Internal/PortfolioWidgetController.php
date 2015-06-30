@@ -98,29 +98,26 @@ class PortfolioWidgetController extends BaseController
     }
 
     /**
-     * @Route("/{type}/{widgetId}", name="icap_portfolio_internal_portfolio_widget_delete", requirements={"widgetId" = "\d+"})
+     * @Route("/{type}/{portfolioWidgetId}", name="icap_portfolio_internal_portfolio_widget_delete", requirements={"portfolioWidgetId" = "\d+"})
      * @Method({"DELETE"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function deleteAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $widgetId)
+    public function deleteAction(Request $request, User $loggedUser, Portfolio $portfolio, $type, $portfolioWidgetId)
     {
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
-        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
-        $abstractWidgetRepository = $this->getDoctrine()->getRepository('IcapPortfolioBundle:Widget\AbstractWidget');
-
-        if (null === $widgetId) {
-            $widget = $abstractWidgetRepository->findOneByTypeAndPortfolio($type, $portfolio);
-        }
-        else {
-            $widget = $abstractWidgetRepository->find($widgetId);
-        }
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget $portfolioWidget */
+        $portfolioWidget = $this->getDoctrine()->getRepository('IcapPortfolioBundle:PortfolioWidget')->findOneBy([
+            'id' => $portfolioWidgetId,
+            'widgetType' => $type,
+            'portfolio' => $portfolio
+        ]);
 
         $response = new JsonResponse();
 
         try {
-            $this->getWidgetsManager()->deleteWidget($widget);
+            $this->getWidgetsManager()->deletePortfolioWidget($portfolioWidget);
 
         } catch(\Exception $exception){
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
