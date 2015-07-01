@@ -34,7 +34,7 @@ class BaseProfileType extends AbstractType
         array $facets = array()
     )
     {
-        $this->langs          = $localeManager->getAvailableLocales();
+        $this->langs          = $localeManager->retrieveAvailableLocales();
         $this->termsOfService = $termsOfService;
         $this->facets         = $facets;
         $this->translator     = $translator;

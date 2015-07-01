@@ -168,8 +168,8 @@ class UsersController extends Controller
             }
         }
         $profileType = new ProfileCreationType(
+            $this->localeManager,
             array($roleUser),
-            $this->localeManager->getAvailableLocales(),
             $isAdmin,
             $this->authenticationManager->getDrivers()
         );
@@ -207,8 +207,8 @@ class UsersController extends Controller
         $isAdmin = ($this->authorization->isGranted('ROLE_ADMIN')) ? true : false;
 
         $profileType = new ProfileCreationType(
+            $this->localeManager,
             array($roleUser),
-            $this->localeManager->getAvailableLocales(),
             $isAdmin,
             $this->authenticationManager->getDrivers()
         );

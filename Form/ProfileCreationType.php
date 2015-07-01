@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Claroline\CoreBundle\Manager\LocaleManager;
 
 class ProfileCreationType extends AbstractType
 {
@@ -23,6 +24,7 @@ class ProfileCreationType extends AbstractType
     private $langs;
     private $isAdmin;
     private $authenticationDrivers;
+    private $localeMnanager;
 
      /**
       * Constructor.
@@ -31,16 +33,15 @@ class ProfileCreationType extends AbstractType
       * @param array   $langs
       * @param boolean $isAdmin
       */
-    public function __construct(array $platformRoles, array $langs, $isAdmin = false, $authenticationDrivers = null)
+    public function __construct(
+        $localeManager,
+        array $platformRoles,
+        $isAdmin = false,
+        $authenticationDrivers = null
+    )
     {
         $this->platformRoles = new ArrayCollection($platformRoles);
-
-        if (!empty($langs)) {
-            $this->langs = $langs;
-        } else {
-            $this->langs = array('en' => 'en', 'fr' => 'fr');
-        }
-
+        $this->langs = $localeManager->retrieveAvailableLocales();
         $this->isAdmin = $isAdmin;
         $this->authenticationDrivers = $authenticationDrivers;
     }

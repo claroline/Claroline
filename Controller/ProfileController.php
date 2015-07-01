@@ -222,10 +222,10 @@ class ProfileController extends Controller
 
         $form = $this->createForm(
             new ProfileType(
+                $this->localeManager,
                 $roles,
                 $isAdmin,
                 $isGrantedUserAdmin,
-                $this->localeManager->getAvailableLocales(),
                 $accesses,
                 $this->authenticationManager->getDrivers()
             ),
