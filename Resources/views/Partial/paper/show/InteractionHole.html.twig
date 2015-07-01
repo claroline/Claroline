@@ -1,0 +1,17 @@
+{% set interInfo = getInterTwig(interactions[p].id, 'InteractionHole') %}
+{% set inter =  interInfo['question'] %}
+
+<div class="panel-body">
+
+    {% if (display == 'all') %}
+        {% include "UJMExoBundle:Partial:correction/hole.html.twig" %}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                responseHole('{{ responses[p].response|raw }}');
+            });
+        </script>
+
+        {% include "UJMExoBundle:Partial:correction/interactionScore.html.twig" %}
+
+    {% endif %}
+</div>
