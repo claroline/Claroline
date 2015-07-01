@@ -25,4 +25,9 @@ class ClarolineCursusBundle extends PluginBundle
     {
         return new AdditionalInstaller();
     }
+
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
+    }
 }
