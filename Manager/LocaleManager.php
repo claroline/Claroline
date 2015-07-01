@@ -61,7 +61,14 @@ class LocaleManager
      */
     public function retrieveAvailableLocales($path = '/../Resources/translations/')
     {
-        return $this->configHandler->getParameter('locales');
+        $locales = array();
+        $data = $this->configHandler->getParameter('locales');
+
+        foreach ($data as $locale) {
+            $locales[$locale] = $locale;
+        }
+
+        return $locales;
     }
 
     /**
