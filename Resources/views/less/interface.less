@@ -304,6 +304,19 @@ body {
     .portfolio_widget_selector:hover {
         text-decoration: underline;
     }
+    input[type='radio'] {
+        position: absolute;
+        opacity: 0;
+    }
+    input[type='radio'] + label:before {
+        font-family: Fontawesome;
+        font-size: 20px;
+        content: "\f10c"; /* Radio Button Unchecked */
+    }
+
+    input[type="radio"]:checked + label:before {
+      content: "\f05d"; /* Radio Button Checked */
+    }
 }
 
 .ng-cloak {
