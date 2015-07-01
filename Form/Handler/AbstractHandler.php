@@ -31,7 +31,7 @@ abstract class AbstractHandler
     /**
      * Set current request
      * @param  \Symfony\Component\HttpFoundation\Request   $request
-     * @return \Innova\PathBundle\Form\Handler\PathHandler
+     * @return \Innova\PathBundle\Form\Handler\AbstractHandler
      */
     public function setRequest(Request $request = null)
     {
@@ -52,7 +52,7 @@ abstract class AbstractHandler
     /**
      * Set current form
      * @param  \Symfony\Component\Form\FormInterface $form
-     * @return \Innova\PathBundle\Form\Handler\PathHandler
+     * @return \Innova\PathBundle\Form\Handler\AbstractHandler
      */
     public function setForm(FormInterface $form)
     {

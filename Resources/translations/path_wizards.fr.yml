@@ -23,6 +23,7 @@ modified: avec des modifications en attente
 # n
 name_help: Saisir le nom du parcours
 next_step: Etape suivante
+next_steps: Voir les étapes suivantes
 no: Non
 no_primary_resource: Il n'y a aucune ressource principale sur cette étape.
 no_secondary_resources: Il n'y a aucune ressources complémentaires sur cette étape.
@@ -34,7 +35,7 @@ open_summary: Ouvrir le sommaire
 open_templates: Ouvrir les modèles
 
 # p
-path_breadcrumbs: Afficher le fils d'Ariane ?
+path_breadcrumbs: Afficher le fil d'Ariane ?
 path_description: Description
 path_init_structure: Créer une nouvelle structure vide
 path_init_structure_template: Créer une structure à partir d'un modèle
@@ -47,8 +48,8 @@ path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 preview: Retour au Parcours
 preview_with_pending_changes_button: Prévisualiser la dernière version publiée
-preview_with_pending_changes_message: Le Parcours a des modifications non sauvegardées ou non publiées.<br/><br/> Si vous le visualisez sans sauvegarde/publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
-preview_with_pending_changes_title: Modifications non publiées/sauvegardées
+preview_with_pending_changes_message: Le Parcours a des modifications non publiées.<br/><br/> Si vous le visualisez sans publication préalable, les changements effectués ne seront pas visibles.<br/><br/> Voulez-vous continuer et voir la dernière version publiée du Parcours ?
+preview_with_pending_changes_title: Modifications non publiées
 previous_step: Etape précédente
 primary_resource: Ressource principale
 properties: Propriétés
@@ -69,19 +70,20 @@ resource_show: Voir la ressource
 resource_show_parent: Afficher dans cette étape
 resources_browse: Ajouter une ressource
 resources_replace: Remplacer
-root_default_name: <sans nom>
+root_default_name: sans nom
 
 # s
 save: Sauvegarder
 save_path_changes: Vous avez des modifications non sauvegardées. Voulez-vous vraiment quitter cette page ?
 secondary_resources: Ressources complémentaires
 see_activity: Voir l'activité
+see_step_siblings: Voir les étapes soeurs
 select_activity: Sélectionner une activité existante
 show_path_info: Afficher les informations relatives au Parcours
 step_add_child: Ajouter une étape
 step_copy: Copier
 step_delete: Supprimer l'étape
-step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape ?
+step_delete_confirm: Êtes-vous sur de vouloir supprimer cette étape (ainsi que toutes les étapes enfants associées) ?
 step_delete_title: <span class="trash-o"></span> Suppression de l'étape : <strong>&lt;%stepName%&gt;</strong>
 step_description: Description
 step_drag: Déplacer l'élément
@@ -109,6 +111,11 @@ toggle_summary: Afficher/Masquer le sommaire
 # u
 undo: Annuler
 unsaved: Non sauvegardé
+user_progression_step_seen: Vous avez déjà vu cette étape
+user_progression_step_unseen: Vous n'avez pas encore vu cette étape
+user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire
+user_progression_step_done: Vous avez marqué cette étape comme étant terminée
+user_progression_step_to_review: Vous avez marqué cette étape comme étant à refaire
 
 # w
 with_tutor: Tutoré

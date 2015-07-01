@@ -39,8 +39,8 @@ class Step implements \JsonSerializable
      * Parameters for this step
      * @var \Claroline\CoreBundle\Entity\Activity\ActivityParameters
      *
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"persist"})
-     * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"all"})
+     * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $parameters;
 

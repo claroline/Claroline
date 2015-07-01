@@ -6,13 +6,6 @@ services:
         calls:
             - [setRequest, [@request]]
 
-    # Path handler
-    innova_path.form.handler.path:
-        class: %innova_path.form.handler.path.class%
-        parent: innova_path.form.handler.abstract
-        arguments: [@innova_path.manager.path]
-        scope: request
-
     # PathTemplate handler
     innova_path.form.handler.path_template:
         class: %innova_path.form.handler.path_template.class%

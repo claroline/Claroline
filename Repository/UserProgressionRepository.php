@@ -8,9 +8,15 @@ use Innova\PathBundle\Entity\Path\Path;
 
 class UserProgressionRepository extends EntityRepository
 {
+    /**
+     * Get the progression of the User into the Path
+     * @param Path $path
+     * @param User $user
+     * @return array
+     */
     public function findByPathAndUser(Path $path, User $user)
     {
-        return $this->createQueryBuilder('up')
+        $query = $this->createQueryBuilder('up')
             ->join('up.step', 's')
 
             // Progression of the current User
@@ -18,6 +24,20 @@ class UserProgressionRepository extends EntityRepository
 
             // Only for the Steps of the needed Path
             ->andWhere('s.path = :path')->setParameter('path', $path)
+
+            // Generate SQL query
+            ->getQuery()
         ;
+
+        // Get results of the query
+        $results = $query->getResult();
+
+        $progression = array ();
+
+        foreach ($results as $result) {
+            $progression[$result->getStep()->getId()] = $result;
+        }
+
+        return $progression;
     }
 }

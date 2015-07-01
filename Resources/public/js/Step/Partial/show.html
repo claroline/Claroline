@@ -11,7 +11,7 @@
         <resources-secondary-show data-resources="stepShowCtrl.step.resources" data-inherited="stepShowCtrl.inheritedResources" data-excluded="stepShowCtrl.step.excludedResources"></resources-secondary-show>
 
         <div class="panel panel-default">
-            <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }}">&nbsp;</div>
+            <div class="lvl-indicator lvl lvl-{{ stepShowCtrl.step.lvl }} lvl-bg">&nbsp;</div>
 
             <div class="panel-body">
                 <div class="panel-step-heading row">
@@ -44,9 +44,9 @@
                 <resources-primary-show data-resources="stepShowCtrl.step.primaryResource"></resources-primary-show>
             </div>
 
-<!--            <div class="panel-footer">
+            <div class="panel-footer">
                 <div class="row">
-                    &lt;!&ndash; Previous step button &ndash;&gt;
+                    <!-- Previous step button -->
                     <div class="col-md-1 col-sm-2 col-xs-2 text-left">
                         <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.previous)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.previous" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.previous.name }}">
                             <span class="fa fa-arrow-left"></span>
@@ -54,41 +54,29 @@
                         </button>
                     </div>
 
-
                     <div class="col-md-8 col-md-offset-1 col-sm-8 col-xs-8 text-center">
-                        &lt;!&ndash;<select class="form-control">
-                            <option value="">A faire</option>
-                            <option value="">Terminée</option>
-                            <option value="">A revoir</option>
-                        </select>&ndash;&gt;
-
-                        &lt;!&ndash;<button type="button" class="btn btn-default">
-                            Save my progression
-                        </button>&ndash;&gt;
-
-                        &lt;!&ndash; Seen &ndash;&gt;
-                        <button type="button" class="btn btn-default active">
-                            <span class="fa fa-fw fa-eye"></span>
-                            <span class="sr-only"></span>
-                        </button>
+                        <!--My progression :
 
                         &lt;!&ndash; To do &ndash;&gt;
+                        <button type="button" class="btn  btn-warning btn-default">
+                            <span class="fa fa-fw fa-square-o"></span>
+                            To do
+                        </button>
 
                         &lt;!&ndash; Done &ndash;&gt;
-                        <button type="button" class="btn btn-default">
+                        <button type="button" class="btn  btn-success btn-default">
                             <span class="fa fa-fw fa-check-square-o"></span>
-                            <span class="sr-only"></span>
+                            Done
                         </button>
-
 
                         &lt;!&ndash; Redo &ndash;&gt;
-                        <button type="button" class="btn btn-default">
+                        <button type="button" class="btn  btn-info btn-default">
                             <span class="fa fa-fw fa-retweet"></span>
-                            <span class="sr-only"></span>
-                        </button>
+                            To review
+                        </button>-->
                     </div>
 
-                    &lt;!&ndash; Next step button &ndash;&gt;
+                    <!-- Next step button -->
                     <div class="col-md-1 col-md-offset-1 col-sm-2 col-xs-2 text-right">
                         <button type="button" data-ng-click="stepShowCtrl.goTo(stepShowCtrl.next)" class="btn btn-block btn-default" data-ng-disabled="null == stepShowCtrl.next" data-placement="top" data-toggle="tooltip" data-original-title="{{ stepShowCtrl.next.name }}">
                             <span class="sr-only">{{ 'next_step'|trans:{}:'path_wizards' }}</span>
@@ -96,7 +84,7 @@
                         </button>
                     </div>
                 </div>
-            </div>-->
+            </div>
         </div>
     </div>
 </div>

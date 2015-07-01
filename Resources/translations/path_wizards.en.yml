@@ -23,6 +23,7 @@ modified: with pending changes
 # n
 name_help: Enter the name of the path
 next_step: Next step
+next_steps: See next steps
 no: Non
 no_primary_resource: There is no primary resource on this step.
 no_secondary_resources: There is no secondary resources on this step.
@@ -47,7 +48,7 @@ path_template_save_error: An error occurred while saving template.
 path_template_save_success: The template has been successfully saved.
 preview: Back to Path
 preview_with_pending_changes_button: Preview the last published version
-preview_with_pending_changes_message: Path has changes which are not published or not saved.<br/><br/> If you display it without saving/publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
+preview_with_pending_changes_message: Path has changes which are not published.<br/><br/> If you display it without publishing, modifications will not be shown.<br/><br/> Do you want to continue and see the last published version of the Path ?
 preview_with_pending_changes_title: Pending modifications
 previous_step: Previous step
 primary_resource: Primary resource
@@ -69,20 +70,21 @@ resource_show: Show resource
 resource_show_parent: Display in this step
 resources_browse: Add resource
 resources_replace: Replace
-root_default_name: <untitled>
+root_default_name: untitled
 
 # s
 save: Save
 save_path_changes: You have unsaved changes. Are you sure you want to leave this page?
 secondary_resources: Secondary resources
 see_activity: See activity
+see_step_siblings: See siblings of the step
 select_activity: Select existing activity
 show_path_info: Show information o the Path
 sidebar_close: Close
 step_add_child: Add a step
 step_copy: Copy
 step_delete: Delete step
-step_delete_confirm: Are you sure you want to delete this step ?
+step_delete_confirm: Are you sure you want to delete this step (and all its associated children) ?
 step_delete_title: <span class="trash-o"></span> Delete step : <strong>&lt;%stepName%&gt;</strong>
 step_description: Description
 step_drag: Move item
@@ -109,6 +111,11 @@ toggle_summary: Display/Hide summary
 # u
 undo: Undo
 unsaved: Not saved
+user_progression_step_seen: You have seen this step
+user_progression_step_unseen: You have not seen this step
+user_progression_step_to_do: You have marked this step as to do
+user_progression_step_done: You have marked this step as done
+user_progression_step_to_review: You have marked this step as to review
 
 # w
 with_tutor: Tutored

@@ -49,6 +49,21 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    public function onAdministrate(CustomActionResourceEvent $event)
+    {
+        $path = $event->getResource();
+
+        $route = $this->container->get('router')->generate(
+            'innova_path_editor_wizard',
+            array (
+                'id' => $path->getId(),
+            )
+        );
+
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
     /**
      * Fired when the form to create a new ResourceNode is displayed
      * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
@@ -106,21 +121,6 @@ class PathListener extends ContainerAware
             $event->setErrorFormContent($content);
         }
         
-        $event->stopPropagation();
-    }
-
-    public function onAdministrate(CustomActionResourceEvent $event)
-    {
-        $path = $event->getResource();
-
-        $route = $this->container->get('router')->generate(
-            'innova_path_editor_wizard',
-            array (
-                'id' => $path->getId(),
-            )
-        );
-
-        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 

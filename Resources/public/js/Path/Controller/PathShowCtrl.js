@@ -3,7 +3,7 @@
  * @returns {PathShowCtrl}
  * @constructor
  */
-var PathShowCtrl = function PathShowCtrl($route, PathService, UserProgressionService) {
+var PathShowCtrl = function PathShowCtrl($window, $route, $routeParams, PathService, UserProgressionService) {
     // Call parent constructor
     PathBaseCtrl.apply(this, arguments);
 
@@ -41,5 +41,9 @@ PathShowCtrl.prototype.edit = function () {
         id: this.id
     });
 
-    window.open(url);
+    if (angular.isObject(this.currentStep) && angular.isDefined(this.currentStep.stepId)) {
+        url += '#/' + this.currentStep.stepId;
+    }
+
+    this.window.location.href = url;
 };

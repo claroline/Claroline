@@ -22,28 +22,46 @@
         'PathNavigationModule',
         'PathModule',
         'StepModule',
-        'TemplateModule'
+        'TemplateModule',
+        'UserProgressionModule'
     ];
 
     // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
     var resolveFunctions = {
+        /**
+         * Get the current Step from route params
+         */
         step: [
+            '$q',
             '$route',
             'PathService',
-            function ($route, PathService) {
+            function getCurrentStep($q, $route, PathService) {
+                var defer = $q.defer();
+
                 var step = null;
+
                 // Retrieve the step from route ID
                 if ($route.current.params && $route.current.params.stepId) {
                     step = PathService.getStep($route.current.params.stepId);
                 }
 
-                return step;
+                if (angular.isDefined(step) && angular.isObject(step)) {
+                    defer.resolve(step);
+                } else {
+                    defer.reject('step_not_found');
+                }
+
+                return defer.promise;
             }
         ],
+
+        /**
+         * Get inherited resources for the current Step
+         */
         inheritedResources: [
             '$route',
             'PathService',
-            function ($route, PathService) {
+            function getCurrentInheritedResources($route, PathService) {
                 var inherited = [];
 
                 var step = PathService.getStep($route.current.params.stepId);
@@ -61,15 +79,22 @@
 
     // Get the Root step and its resources
     var resolveRootFunctions = {
+        /**
+         * Get the Root step of the Path
+         */
         step: [
             'PathService',
-            function (PathService) {
+            function getRootStep(PathService) {
                 return PathService.getRoot();
             }
         ],
+
+        /**
+         * Get inherited resources for the Root step
+         */
         inheritedResources: [
             'PathService',
-            function (PathService) {
+            function getRootInheritedResources(PathService) {
                 var inherited = [];
 
                 var path = PathService.getPath();
@@ -82,6 +107,19 @@
             }
         ]
     };
+
+    var appRun = [
+        '$rootScope',
+        '$location',
+        function appRun($rootScope, $location) {
+            $rootScope.$on("$routeChangeError", function handleRouteChangeError(evt, current, previous, rejection) {
+                // If step not found, redirect user to rhe Root step
+                if ('step_not_found' == rejection) {
+                    $location.path('/');
+                }
+            });
+        }
+    ];
 
     angular
         // Path Editor application
@@ -108,8 +146,10 @@
                         redirectTo: '/:stepId?'
                     });
             }
-        ]);
+        ])
 
+        // Bind run function
+        .run(appRun);
 
     angular
         // Path Player application
@@ -137,5 +177,8 @@
                         redirectTo: '/:stepId?'
                     });
             }
-        ]);
+        ])
+
+        // Bind run function
+        .run(appRun);
 })();
