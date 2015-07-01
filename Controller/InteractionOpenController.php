@@ -101,17 +101,10 @@ class InteractionOpenController extends Controller
             ), $interOpen
         );
 
-        $exoID = $this->container->get('request')->request->get('exercise');
-
+        $exoID = $this->container->get('request')->request->get('exercice');
         //Get the lock category
-        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
-        if (empty($Locker)) {
-            $catLocker = "";
-        } else {
-            $catLocker = $Locker[0];
-        }
-
+        $catSer = $this->container->get('ujm.exo_category');
+        
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionOpenHandler(
             $form, $this->get('request'), $this->getDoctrine()->getManager(),
@@ -162,8 +155,8 @@ class InteractionOpenController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $catLocker
+            'linkedCategory' =>  $catSer->getLinkedCategories(),
+            'locker' => $catSer->getLockCategory()
             )
         );
     }
@@ -185,7 +178,6 @@ class InteractionOpenController extends Controller
     {
         $attr = $this->get('request')->attributes;
         $openSer  = $this->container->get('ujm.exo_InteractionOpen');
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -202,7 +194,7 @@ class InteractionOpenController extends Controller
         }
 
         $typeOpen       = $openSer->getTypeOpen();
-        $linkedCategory = $questSer->getLinkedCategories();
+        $linkedCategory = $catSer->getLinkedCategories();
 
         $variables['entity']         = $interactionOpen;
         $variables['edit_form']      = $editForm->createView();

@@ -1,0 +1,83 @@
+{% if interactionToDisplayed.typeMatching.code == 2 %}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaydrag.js') }}"></script>
+    <link href="{{ asset('bundles/ujmexo/css/matchingDrag.css') }}"  type="text/css" rel="stylesheet"/>
+{% else %}
+    <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/matchingdisplaybind.js') }}"></script>
+    <link href="{{ asset('bundles/ujmexo/css/matchingBind.css') }}"  type="text/css" rel="stylesheet"/>
+{% endif %}
+<!--<div class="panel-body">-->
+<input class="form-control" type="hidden" name="interactionMatchingToValidated" value="{{ interactionToDisplayed.id }}"/>
+<input class="form-control" type="hidden" name="interactionToValidated" value="{{ interactionToDisplayed.interaction.id }}"/>
+<input class="form-control" type="hidden" name="typeInteraction" value="InteractionMatching"/>
+
+{% include "UJMExoBundle:Partial:interactionPaper.html.twig" %}
+
+<div id="divReset">
+    <input type="button" name="resetAll"  id="resetAll" value="{{ "reset" | trans }}" class="btn btn-primary">
+</div>
+
+<div id="interMatchingResponse">
+    <input type="hidden" id="jsonResponse" name ="jsonResponse" />
+    <center>
+        <table>
+            <tr>
+                {% if interactionToDisplayed.typeMatching.code == 2 %}
+                    <td>
+                        {% for proposal in interactionToDisplayed.proposals %}
+                            <div id="div_{{ proposal.id }}" class="origin">
+                                <ul>
+                                    <li id="draggable_{{ proposal.id }}" class="draggable"> {{ proposal.value | raw }} </li>
+                                </ul>
+                            </div>
+                        {% endfor%}
+                    </td>
+                    <td style='padding: 20px;'>
+                    </td>
+                    <td>
+                        {% for label in interactionToDisplayed.labels %}
+                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                <ul>
+                                    <li class="lidroppable">{{ label.value | raw }}</li>
+                                </ul>
+                                <ul class="dragDropped">
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </td>
+                {% else %}
+                    <td>
+                        {% for proposal in interactionToDisplayed.proposals %}
+                            <div id="draggable_{{ proposal.id }}" class="origin" >
+                                {{ proposal.value | raw }}
+                            </div>
+                        {% endfor%}
+                    </td>
+                    <td style='padding: 50px;'>
+                    </td>
+                    <td>
+                        {% for label in interactionToDisplayed.labels %}
+                            <div id="droppable_{{ label.id }}" class="droppable" style="text-align: right;">
+                                {{ label.value | raw }}
+                            </div>
+                        {% endfor %}
+                    </td>
+                {% endif %}
+            </tr>
+        </table>
+    </center>
+    {% if response != '' %}
+        {% for key, val in response %}
+            {% set resp = explodeString('-', val) %}
+            {% for r in resp %}
+                <script type="text/javascript">
+                    placeProposal({{ key }}, {{ r }});
+                </script>
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+    {% include "UJMExoBundle:Partial:hintPaper.html.twig" %}
+
+</div>
+
+    <input type="hidden" name="interaction" value="{{ interactionToDisplayed.id }}"/>
+    

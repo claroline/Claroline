@@ -110,15 +110,9 @@ class InteractionMatchingController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
-
+        
         //Get the lock category
-        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
-        if (empty($Locker)) {
-            $catLocker = "";
-        } else {
-            $catLocker = $Locker[0];
-        }
+        $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionMatchingHandler(
@@ -139,6 +133,7 @@ class InteractionMatchingController extends Controller
                     )
                 );
             } else {
+               
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
                         'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
@@ -170,8 +165,8 @@ class InteractionMatchingController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $catLocker
+            'linkedCategory' =>  $catSer->getLinkedCategories(),
+            'locker' => $catSer->getLockCategory()
             )
         );
 
@@ -194,7 +189,6 @@ class InteractionMatchingController extends Controller
     {
         $attr = $this->get('request')->attributes;
         $matchSer = $this->container->get('ujm.exo_InteractionMatching');
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -226,7 +220,7 @@ class InteractionMatchingController extends Controller
         );
 
         $typeMatching = $matchSer->getTypeMatching();
-        $linkedCategory = $questSer->getLinkedCategories();
+        $linkedCategory = $catSer->getLinkedCategories();
 
         $variables['entity']          = $interactionMatching;
         $variables['edit_form']       = $editForm->createView();

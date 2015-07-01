@@ -109,13 +109,7 @@ class InteractionQCMController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-        $user = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user);
-        if (empty($Locker)) {
-            $catLocker = "";
-        } else {
-            $catLocker = $Locker[0];
-        }
+        $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionQCMHandler(
@@ -168,8 +162,8 @@ class InteractionQCMController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $catLocker
+            'linkedCategory' =>  $catSer->getLinkedCategories(),
+            'locker' => $catSer->getLockCategory()
             )
         );
     }
@@ -191,7 +185,6 @@ class InteractionQCMController extends Controller
     {
         $attr = $this->get('request')->attributes;
         $qcmSer  = $this->container->get('ujm.exo_InteractionQCM');
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -206,7 +199,7 @@ class InteractionQCMController extends Controller
         );
 
         $typeQCM = $qcmSer->getTypeQCM();
-        $linkedCategory = $questSer->getLinkedCategories();
+        $linkedCategory = $catSer->getLinkedCategories();
 
         $vars['entity']         = $interactionQCM;
         $vars['edit_form']      = $editForm->createView();

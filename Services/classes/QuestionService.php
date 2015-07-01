@@ -11,6 +11,7 @@ namespace UJM\ExoBundle\Services\classes;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use \Symfony\Component\Yaml\Parser;
 
 class QuestionService {
 
@@ -53,36 +54,6 @@ class QuestionService {
                         ->getControlSharedQuestion($user->getId(), $questionID);
 
         return $questions;
-    }
-
-    /**
-     * Get information if these categories are linked to questions, allow to know if a category can be deleted or not
-     *
-     * @access public
-     *
-     * @return boolean[]
-     */
-    public function getLinkedCategories()
-    {
-        $em = $this->doctrine->getEntityManager();
-        $linkedCategory = array();
-        $repositoryCategory = $em->getRepository('UJMExoBundle:Category');
-
-        $repositoryQuestion = $em->getRepository('UJMExoBundle:Question');
-
-        $categoryList = $repositoryCategory->findAll();
-
-
-        foreach ($categoryList as $category) {
-          $questionLink = $repositoryQuestion->findOneBy(array('category' => $category->getId()));
-          if (!$questionLink) {
-              $linkedCategory[$category->getId()] = 0;
-          } else {
-              $linkedCategory[$category->getId()] = 1;
-          }
-        }
-
-        return $linkedCategory;
     }
 
     /**
@@ -228,6 +199,16 @@ class QuestionService {
         $actionsS[2] = $questionWithResponse;
 
         return $actionsS;
+    }
+    
+    /**
+     * Browse the file where are stored the various typical of interaction
+     * @return array of type Interaction
+     */
+    public function getTypes(){
+        $yaml= new Parser();
+        $interactionType=$yaml->parse(file_get_contents('/var/www/Claroline/vendor/ujm/exo-bundle/UJM/ExoBundle/Resources/config/interaction.yml'));
+        return $interactionType;
     }
 
 }

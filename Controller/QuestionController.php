@@ -150,7 +150,10 @@ class QuestionController extends Controller
                         ->getManager()
                         ->getRepository('UJMExoBundle:Exercise')
                         ->getExerciseAdmin($uid);
-
+        
+        
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
+        
         $vars['pagerMy']              = $pagerfantaMy;
         $vars['pagerShared']          = $pagerfantaShared;
         $vars['interactions']         = $interactionsPager;
@@ -162,6 +165,7 @@ class QuestionController extends Controller
         $vars['listExo']              = $listExo;
         $vars['idExo']                = -1;
         $vars['QuestionsExo']         = 'false';
+        $vars['interactionType'] = $interactionType;
 
         if ($request->get("qtiError")) {
             $vars['qtiError'] = $request->get("qtiError");
@@ -291,19 +295,17 @@ class QuestionController extends Controller
      */
     public function newAction($exoID)
     {
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $variables = array(
             'exoID'          => $exoID,
-            'linkedCategory' => $questSer->getLinkedCategories(),
+            'linkedCategory' => $catSer->getLinkedCategories(),
             'locker'         => $catSer->getLockCategory(),
         );
 
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
-        $interactionType = $em->getRepository('UJMExoBundle:Interaction')
-                              ->getType();
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $variables['interactionType'] = $interactionType;
 
         if ($exercise) {

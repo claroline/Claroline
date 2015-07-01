@@ -94,12 +94,7 @@ class InteractionGraphicController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-        $Locker = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Category')->getCategoryLocker($user->getId());
-        if (empty($Locker)) {
-            $catLocker = "";
-        } else {
-            $catLocker = $Locker[0];
-        }
+       $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(
@@ -158,8 +153,8 @@ class InteractionGraphicController extends Controller
             'UJMExoBundle:Question:new.html.twig', array(
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $catLocker
+            'linkedCategory' =>  $catSer->getLinkedCategories(),
+            'locker' => $catSer->getLockCategory()
             )
         );
     }
@@ -181,7 +176,6 @@ class InteractionGraphicController extends Controller
     {
         $attr = $this->get('request')->attributes;
         $graphSer  = $this->container->get('ujm.exo_InteractionGraphic');
-        $questSer = $this->container->get('ujm.exo_question');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -202,7 +196,7 @@ class InteractionGraphicController extends Controller
             new InteractionGraphicType($attr->get('user'), $attr->get('catID'), $docID), $interactionGraph
                 );
 
-        $linkedCategory = $questSer->getLinkedCategories();
+        $linkedCategory = $catSer->getLinkedCategories();
 
         $variables['entity']         = $interactionGraph;
         $variables['edit_form']      = $editForm->createView();
