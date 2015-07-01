@@ -320,30 +320,30 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function createAction()
-    {
-        $entity  = new Question();
-        $request = $this->getRequest();
-        $form    = $this->createForm(new QuestionType(), $entity);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('question_show', array('id' => $entity->getId())));
-        }
-
-        return $this->render(
-            'UJMExoBundle:Question:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
-            'locker' => $this->getLockCategory(),
-            )
-        );
-    }
+//    public function createAction()
+//    {
+//        $entity  = new Question();
+//        $request = $this->getRequest();
+//        $form    = $this->createForm(new QuestionType(), $entity);
+//        $form->handleRequest($request);
+//
+//        if ($form->isValid()) {
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($entity);
+//            $em->flush();
+//
+//            return $this->redirect($this->generateUrl('question_show', array('id' => $entity->getId())));
+//        }
+//
+//        return $this->render(
+//            'UJMExoBundle:Question:new.html.twig', array(
+//            'entity' => $entity,
+//            'form'   => $form->createView(),
+//            'linkedCategory' =>  $this->container->get('ujm.exo_question')->getLinkedCategories(),
+//            'locker' => $this->getLockCategory(),
+//            )
+//        );
+//    }
 
     /**
      * Displays a form to edit an existing Question entity.
