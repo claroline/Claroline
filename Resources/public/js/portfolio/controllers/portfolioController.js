@@ -93,7 +93,7 @@ portfolioApp
                 stop: function(event, $element, widget) {
                     for (var index = 0; index < $scope.portfolioWidgets.length; index++) {
                         var widget = $scope.portfolioWidgets[index];
-                        if (widget.toSave && !widget.isEditing()) {
+                        if (widget.toSave && !widget.isEditing) {
                             widgetsManager.save(widget).then(function() {
                                 widget.toSave = false;
                             });
