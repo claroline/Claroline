@@ -22,7 +22,8 @@
         'PathNavigationModule',
         'PathModule',
         'StepModule',
-        'TemplateModule'
+        'TemplateModule',
+        'UserProgressionModule'
     ];
 
     // Resolve functions (it's the same between Editor and Player as we navigate in the same way in the 2 apps)
@@ -111,7 +112,8 @@
         '$rootScope',
         '$location',
         function appRun($rootScope, $location) {
-            $rootScope.$on("$routeChangeError", function handleRouteChangeError(evt, current, previous, rejection){
+            $rootScope.$on("$routeChangeError", function handleRouteChangeError(evt, current, previous, rejection) {
+                // If step not found, redirect user to rhe Root step
                 if ('step_not_found' == rejection) {
                     $location.path('/');
                 }

@@ -111,6 +111,11 @@ toggle_summary: Display/Hide summary
 # u
 undo: Undo
 unsaved: Not saved
+user_progression_step_seen: You have seen this step
+user_progression_step_unseen: You have not seen this step
+user_progression_step_to_do: You have marked this step as to do
+user_progression_step_done: You have marked this step as done
+user_progression_step_to_review: You have marked this step as to review
 
 # w
 with_tutor: Tutored

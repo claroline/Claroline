@@ -41,9 +41,10 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/",
-     *     name    = "innova_path_progression_create",
-     *     options = { "expose" = true }
+     *     "/step/{id}",
+     *     name         = "innova_path_progression_create",
+     *     requirements = {"id" = "\d+"},
+     *     options      = { "expose" = true }
      * )
      * @Method("POST")
      */
@@ -61,8 +62,9 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/",
+     *     "/step/{id}",
      *     name         = "innova_path_progression_update",
+     *     requirements = {"id" = "\d+"},
      *     options      = { "expose" = true }
      * )
      * @Method("PUT")

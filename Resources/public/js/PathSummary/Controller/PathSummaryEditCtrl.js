@@ -30,7 +30,6 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
             $('.angular-ui-tree-handle').tooltip('enable');
 
             // Recalculate step levels
-            console.log('cpucou');
             this.pathService.reorderSteps(this.structure);
         }.bind(this)
     };

@@ -6,9 +6,7 @@
             return {
                 restrict: 'E',
                 replace: true,
-                controller: function PathNavigationItemCtrl() {
-                    console.log(this.parent);
-                },
+                controller: function PathNavigationItemCtrl() {},
                 controllerAs: 'pathNavigationItemCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/innovapath/js/PathNavigation/Partial/show-item.html',
                 scope: {

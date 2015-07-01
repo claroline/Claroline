@@ -111,6 +111,11 @@ toggle_summary: Afficher/Masquer le sommaire
 # u
 undo: Annuler
 unsaved: Non sauvegardé
+user_progression_step_seen: Vous avez déjà vu cette étape
+user_progression_step_unseen: Vous n'avez pas encore vu cette étape
+user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire
+user_progression_step_done: Vous avez marqué cette étape comme étant terminée
+user_progression_step_to_review: Vous avez marqué cette étape comme étant à refaire
 
 # w
 with_tutor: Tutoré
