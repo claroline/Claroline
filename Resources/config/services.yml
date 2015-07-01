@@ -156,3 +156,15 @@ services:
         scope: request
         tags:
             - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmmark }
+            
+    ujm.listener.exercise_player_listener:
+        class: UJM\ExoBundle\Listener\Resource\ExercisePlayerListener
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: kernel.event_listener, event: create_form_ujm_exercise_player, method: onCreateForm }
+            - { name: kernel.event_listener, event: create_ujm_exercise_player, method: onCreate }
+            - { name: kernel.event_listener, event: open_ujm_exercise_player, method: onOpen }
+            - { name: kernel.event_listener, event: delete_ujm_exercise_player, method: onDelete }
+            - { name: kernel.event_listener, event: copy_ujm_exercise_player, method: onCopy }
+            - { name: kernel.event_listener, event: ujm_exercise_player_administrate_ujm_exercise_player, method: onAdministrate }

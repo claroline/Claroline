@@ -8,6 +8,14 @@ plugin:
           icon: res_exo.png
           activity_rules:
             - action: resource-ujm_exercise-exercise_evaluated
+        - class: UJM\ExoBundle\Entity\Player\ExercisePlayer
+          name: ujm_exercise_player
+          is_exportable: false
+          icon: res_exo.png
+          actions:
+            - name: administrate
+              menu_name: ujm_exercise_player_administrate
+          
 
     tools:
         - name: ujm_questions

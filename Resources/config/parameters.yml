@@ -4,3 +4,6 @@
 parameters:
     ujm.param.exo_directory: "%claroline.param.uploads_directory%/ujmexo"
     ujm.param.qti_directory: "%ujm.param.exo_directory%/qti"
+    
+    # Form Types
+    ujm_exo_bundle.form.type.exercise_player_type.class:   UJM\ExoBundle\Form\Player\ExercisePlayerType
