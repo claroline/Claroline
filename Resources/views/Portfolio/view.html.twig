@@ -99,18 +99,31 @@
                         <h3 class="modal-title">{{ 'widget_selection' | trans({}, 'icap_portfolio') }}</h3>
                     </div>
                     {% verbatim %}
-                    <div class="modal-body">
-                        <ul class="list-unstyled">
-                            <li data-ng-repeat="portfolioWidget in portfolioWidgets">
-                                <span data-ng-click="selectPortfolioWidget(portfolioWidget)"
-                                      data-ng-class="{'bold': selectedPortfolioWidget.widget_id == portfolioWidget.widget_id}">
-                                    {{ portfolioWidget.widget.label }}
-                                </span>
-                            </li>
-                        </ul>
-                        Selected: <b>{{ selectedPortfolioWidget.widget.label }}</b>
-                    </div>
+                    <div class="modal-body portfolio_widget_selection_panel">
+                        <div class="panel-group" id="data_widget_list" role="tablist" data-ng-show="portfolioWidgets.length">
+                            <div class="panel panel-default" data-ng-repeat="portfolioWidget in portfolioWidgets">
+                                <div class="panel-heading clearfix" role="tab" id="heading-widget{{ portfolioWidget.id }}">
+                                    <h4 class="panel-title pull-left" id="collapsible-widget{{ portfolioWidget.id }}">
+                                        <input type="radio" name="portfolioWidget" id="portfolioWidget{{ portfolioWidget.widget_id }}"
+                                               data-ng-model="$parent.selectedPortfolioWidget" data-ng-value="portfolioWidget">
+                                        <span class="fa"
+                                              data-ng-class="{ 'fa-caret-right': portfolioWidget.isCollapsed, 'fa-caret-down': !portfolioWidget.isCollapsed }"></span>
+                                        <span class="portfolio_widget_selector" data-ng-click="portfolioWidget.isCollapsed = !portfolioWidget.isCollapsed">
+                                            {{ portfolioWidget.widget.label }}
+                                        </span>
+                                    </h4>
+                                </div>
+                                <div class="panel-collapse" role="tabpanel" collapse="portfolioWidget.isCollapsed">
+                                    <div class="panel-body" data-ng-bind-html="portfolioWidget.widget.views.view">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     {% endverbatim %}
+                        <p class="no-data well ng-cloak" data-ng-show="!portfolioWidgets.length">
+                            {{ 'no_available_widget'|trans({}, 'icap_portfolio') }}
+                        </p>
+                    </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" ng-click="ok()">{{ 'ok'|trans({}, 'platform') }}</button>
                         <button class="btn btn-warning" ng-click="cancel()">{{ 'cancel'|trans({}, 'platform') }}</button>
@@ -163,20 +176,20 @@
                             </li>
                         </ul>
                     {% else %}
-                            <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="widgets.length">
-                                <li data-gridster-item="widget" data-ng-repeat="widget in widgets | orderBy:'+row +col' track by widget.id">
-                                    <div class="panel panel-default widget-panel">
-                                        <div class="panel-heading">
-                                            {% verbatim %}{{ widget.label }}{% endverbatim %}
-                                        </div>
-                                        <div class="panel-body">
-                                            <div data-ng-bind-html="widget.views.view"></div>
-                                        </div>
+                        <ul class="list-unstyled ng-cloak" data-gridster="gridsterOptions" data-ng-show="portfolioWidgets.length">
+                            <li data-gridster-item="portfolioWidget" data-ng-repeat="portfolioWidget in portfolioWidgets | orderBy:'+row +col' track by portfolioWidget.id">
+                                <div class="panel panel-default widget-panel">
+                                    <div class="panel-heading">
+                                        {% verbatim %}{{ portfolioWidget.label }}{% endverbatim %}
                                     </div>
-                                </li>
-                            </ul>
-                            <p class="no-data well ng-cloak" data-ng-show="!widgets.length">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
-                            <div class="well" data-ng-show="!widgets"><p class="loading loading_view"></p></div>
+                                    <div class="panel-body">
+                                        <div data-ng-bind-html="portfolioWidget.widget.views.view"></div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <p class="no-data well ng-cloak" data-ng-show="!portfolioWidgets.length">{{ 'portfolio_empty'|trans({}, 'icap_portfolio') }}</p>
+                        <div class="well" data-ng-show="!portfolioWidgets"><p class="loading loading_view"></p></div>
                     {% endif %}
                 </div>
             </section>
