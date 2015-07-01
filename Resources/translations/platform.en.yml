@@ -1005,7 +1005,7 @@ unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
 up_to_date: 'Up to date'
-update: Update
+update: Update to %version%
 update_available: 'Update available'
 update_impossible: 'Update impossible'
 updated_by: 'Last update: %modificationDate%'

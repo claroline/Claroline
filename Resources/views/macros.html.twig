@@ -186,7 +186,7 @@
                                             data-package-name="{{ package.name }}"
                                             data-package-version="{{ foundPkg.version }}"
                                         >
-                                            {{ 'update'|trans({}, 'platform') }}
+                                            {{ 'update'|trans({'%version%': foundPkg.version}, 'platform') }}
                                         </a>
                                     {% else %}
                                         {% set displayUpgradePerms = true %}

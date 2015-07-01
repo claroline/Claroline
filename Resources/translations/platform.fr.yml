@@ -1005,7 +1005,7 @@ unregistered_users: 'Utilisateurs non enregistrés'
 unwritable_file_exception: 'Vous n''avez pas la permission d''écrire dans le fichier %path%.'
 up: Monter
 up_to_date: 'À jour'
-update: 'Mettre à jour'
+update: 'Mettre à jour vers %version%'
 update_available: 'Mise à jour disponible'
 update_impossible: 'Mise à jour impossible'
 updated_by: 'Dernière màj: %modificationDate%'
