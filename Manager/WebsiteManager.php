@@ -129,7 +129,7 @@ class WebsiteManager {
                 $entityWebsitePage->importFromArray($websitePage, $rootPath);
                 if ($websitePage['is_root']) {
                     $website->setRoot($entityWebsitePage);
-                    $this->em->persist($website);
+                    //$this->em->persist($website);
                     $this->websitePageRepository->persistAsFirstChild($entityWebsitePage);
                 } else {
                     $entityWebsitePageParent = $websitePagesMap[$websitePage['parent_id']];
@@ -142,7 +142,7 @@ class WebsiteManager {
 
                 $websitePagesMap[$websitePage['id']] = $entityWebsitePage;
             }
-            $this->em->flush();
+            //$this->em->flush();
             $websiteOptions->importFromArray(
                 $websiteData['options'],
                 $rootPath

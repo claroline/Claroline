@@ -103,7 +103,7 @@ class WebsitePage{
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\WebsiteBundle\Entity\Website", cascade={"remove"})
-     * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="website_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      * @JMS\Exclude
      */
     protected $website;
@@ -521,5 +521,10 @@ class WebsitePage{
                 $this->resourceNodeType = $pageArray['resource_node_type'];
             }
         }
+    }
+
+    public function __toString()
+    {
+        return $this->getTitle();
     }
 }
