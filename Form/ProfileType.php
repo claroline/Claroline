@@ -47,7 +47,7 @@ class ProfileType extends AbstractType
         $this->accesses = $accesses;
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
-        $this->isGrantedUserAdministration = $isGrantedUserAdministration;{
+        $this->isGrantedUserAdministration = $isGrantedUserAdministration;
         $this->langs = $localeManager->retrieveAvailableLocales();
         $this->authenticationDrivers = $authenticationDrivers;
     }
