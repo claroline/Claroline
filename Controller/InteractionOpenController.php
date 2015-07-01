@@ -101,7 +101,7 @@ class InteractionOpenController extends Controller
             ), $interOpen
         );
 
-        $exoID = $this->container->get('request')->request->get('exercice');
+        $exoID = $this->container->get('request')->request->get('exercise');
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
         

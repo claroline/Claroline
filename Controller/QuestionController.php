@@ -463,7 +463,7 @@ class QuestionController extends Controller
             $exoID   = $request->request->get('exercise');
 
             return $this->forward(
-                       'UJMExoBundle:' . $valType . ':new', array('exoId' => $exoID)
+                       'UJMExoBundle:' . $valType . ':new', array('exoID' => $exoID)
                     );
         }
     }
