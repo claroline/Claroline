@@ -101,13 +101,15 @@
                     {% verbatim %}
                     <div class="modal-body portfolio_widget_selection_panel">
                         <div class="panel-group" id="data_widget_list" role="tablist" data-ng-show="portfolioWidgets.length">
-                            <div class="panel panel-default" data-ng-repeat="portfolioWidget in portfolioWidgets">
+                            <div class="panel" data-ng-repeat="portfolioWidget in portfolioWidgets"
+                                 data-ng-class="{'panel-default': $parent.selectedPortfolioWidget.widget_id != portfolioWidget.widget_id,
+                                 'panel-primary': $parent.selectedPortfolioWidget.widget_id == portfolioWidget.widget_id}">
                                 <div class="panel-heading clearfix" role="tab" id="heading-widget{{ portfolioWidget.id }}">
                                     <h4 class="panel-title pull-left" id="collapsible-widget{{ portfolioWidget.id }}">
                                         <input type="radio" name="portfolioWidget" id="portfolioWidget{{ portfolioWidget.widget_id }}"
                                                data-ng-model="$parent.selectedPortfolioWidget" data-ng-value="portfolioWidget">
                                         <span class="fa"
-                                              data-ng-class="{ 'fa-caret-right': portfolioWidget.isCollapsed, 'fa-caret-down': !portfolioWidget.isCollapsed }"></span>
+                                              data-ng-class="{'fa-caret-right': portfolioWidget.isCollapsed, 'fa-caret-down': !portfolioWidget.isCollapsed}"></span>
                                         <span class="portfolio_widget_selector" data-ng-click="portfolioWidget.isCollapsed = !portfolioWidget.isCollapsed">
                                             {{ portfolioWidget.widget.label }}
                                         </span>
