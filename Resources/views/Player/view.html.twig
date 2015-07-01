@@ -1,0 +1,38 @@
+{% extends "UJMExoBundle:Player:layout.html.twig" %}
+
+
+
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+ 
+    <div class="activity-player" data-ng-app="ExercisePlayerPlayerApp" data-ng-cloak="">
+        <page-show></page-show>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_exo_player_player.js'
+
+        '@UJMExoBundle/Resources/public/js/player/player.module.js'
+
+        '@UJMExoBundle/Resources/public/js/player/Page/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Directives/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/player/player.module.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+   
+{% endblock %}

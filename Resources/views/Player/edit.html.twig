@@ -1,0 +1,19 @@
+{% extends "UJMExoBundle:Player:layout.html.twig" %}
+
+
+
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+
+
+{% block content %}
+
+     <div class="activity-player" data-ng-app="ExercisePlayerEditorApp" data-ng-cloak="">
+        <page-show></page-show>
+    </div>
+
+{% endblock %}
+
+
