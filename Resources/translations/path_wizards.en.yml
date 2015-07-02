@@ -27,7 +27,7 @@ next_steps: See next steps
 no: Non
 no_primary_resource: There is no primary resource on this step.
 no_secondary_resources: There is no secondary resources on this step.
-no_step_selected: There is no selected step. Please slect one the summary of the Path.
+no_step_selected: There is no selected step. Please select one the summary of the Path.
 no_templates: There is not template available.
 
 # o
@@ -113,6 +113,10 @@ undo: Undo
 unsaved: Not saved
 user_progression_step_seen: You have seen this step
 user_progression_step_unseen: You have not seen this step
+user_progression_step_to_do: You have marked this step as to do
+user_progression_step_done: You have marked this step as done
+user_progression_step_to_review: You have marked this step as to review
+
 user_progression_step_to_do: You have marked this step as to do
 user_progression_step_done: You have marked this step as done
 user_progression_step_to_review: You have marked this step as to review
