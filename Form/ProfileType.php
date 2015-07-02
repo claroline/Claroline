@@ -36,7 +36,7 @@ class ProfileType extends AbstractType
      * @param string[] $langs
      */
     public function __construct(
-        $this->localeManager,
+        $localeManager,
         array $platformRoles,
         $isAdmin,
         $isGrantedUserAdministration,
@@ -47,8 +47,8 @@ class ProfileType extends AbstractType
         $this->accesses = $accesses;
         $this->platformRoles = new ArrayCollection($platformRoles);
         $this->isAdmin = $isAdmin;
-        $this->isGrantedUserAdministration = $isGrantedUserAdministration;{
-        $this->langs = $this->localeManager->retrieveAvailableLocales();
+        $this->isGrantedUserAdministration = $isGrantedUserAdministration;
+        $this->langs = $localeManager->retrieveAvailableLocales();
         $this->authenticationDrivers = $authenticationDrivers;
     }
 
