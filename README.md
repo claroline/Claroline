@@ -23,8 +23,7 @@ is a (non-exhaustive) list of their dedicated repositories:
 Project setup
 -------------
 
-### Minimum equirements
-
+### Minimum requirements
 - PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
@@ -41,6 +40,7 @@ Project setup
   ([supported timezones][9]).
 
 ### Recommended requirements
+ - A *nix OS (the dev is done on debian)
  - PHP >= 5.5
  - PHP extensions:
     - fileinfo (for mime type detection)
