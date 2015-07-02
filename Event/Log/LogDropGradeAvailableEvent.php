@@ -4,7 +4,7 @@ namespace Innova\CollecticielBundle\Event\Log;
 
 use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Icap\NotificationBundle\Entity\NotifiableInterface;
+use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Innova\CollecticielBundle\Entity\Document;
 use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
