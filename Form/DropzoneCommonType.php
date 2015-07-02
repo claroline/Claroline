@@ -76,7 +76,6 @@ Suppression suite demande #251
             ->add('minimumScoreToPass', 'integer', array('required' => true))
 
 /*
-
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
                 'choices' => array(
@@ -89,14 +88,16 @@ Suppression suite demande #251
 */
             ->add('manualState', 'choice', array(
                 'choices' => array(
-                    'notStarted' => 'notStartedManualState',
                     'allowDrop' => 'allowDropManualState',
-/* issue #251 InnovaERV
+                    'finished' => 'finishedManualState',
+/* InnovaERV : il ne reste que 2 états : ouvert et fermé
+                    'notStarted' => 'notStartedManualState',
+issue #251 InnovaERV
                     'peerReview' => 'peerReviewManualState',
                     'allowDropAndPeerReview' => 'allowDropAndPeerReviewManualState',
 */
-                    'finished' => 'finishedManualState',
                 ),
+                'data' => 'allowDrop', /* Par afficher par défaut #59 InnovaERV */
                 'expanded' => true,
                 'multiple' => false
             ))

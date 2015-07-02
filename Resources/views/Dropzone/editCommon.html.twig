@@ -5,10 +5,8 @@
 {% block drops_awaiting_active %}active{% endblock %}
 {% block drops_awaiting_link %} # {% endblock %}
 
-
 {% block  drops_completed_active %} active {% endblock %}
 {% block drops_completed_link %} # {% endblock %}
-
 
 {% block drop_zone_content_edit %}
     {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
@@ -35,7 +33,7 @@
 
         <p>{{ 'common_explication'|trans({}, 'innova_collecticiel')|raw }}</p>
 
-        <h4>ici3222 {{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
+        <h4>{{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
         <div class="form-group">
             {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>
@@ -97,7 +95,6 @@
             </div>
         </div>
 
-
         <h4>{{ 'Planning'|trans({}, 'innova_collecticiel') }}</h4>
         <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
         <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
@@ -111,7 +108,7 @@
                 <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
             </label>
         </div>
- #}
+#}
 
         <div id="planning_manual" class="form-group">
             <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
@@ -133,7 +130,7 @@
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
-{#                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+{#                    {{ form_row(form.endAllowDrop, {'label_attr': 'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
 #}
                 </div>
