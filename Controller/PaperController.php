@@ -156,7 +156,7 @@ class PaperController extends Controller
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
         $exercise = $paper->getExercise();
 
-        if ( ($uid == 'anonymous') || ($exerciseSer->controlMaxAttemps($exercise,
+        if ( ($uid == 'anonymous') || ($exerciseSer->controlMaxAttemps($exercise,
                 $uid, $exerciseSer->isExerciseAdmin($exercise))) ) {
             $retryButton = true;
         }
