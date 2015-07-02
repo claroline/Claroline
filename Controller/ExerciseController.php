@@ -1469,7 +1469,7 @@ class ExerciseController extends Controller
     private function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
         $em = $this->getDoctrine()->getManager();
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $paperSer = $this->container->get('ujm.exo_paper');
         $up = array();
         $down = array();
         $measureTab = array();
@@ -1486,7 +1486,7 @@ class ExerciseController extends Controller
 
         for ($i = 0; $i < $stop; $i++) {
 
-            $measureTab[$i] = $exerciseSer->roundUpDown(($up[$i] / $down[$i]) * 100);
+            $measureTab[$i] = $paperSer->roundUpDown(($up[$i] / $down[$i]) * 100);
         }
 
         $measure = implode(",", $measureTab);
