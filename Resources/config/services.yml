@@ -141,7 +141,7 @@ services:
 
     ujm.exo_question:
         class: UJM\ExoBundle\Services\classes\QuestionService
-        arguments: [@doctrine, @security.token_storage]
+        arguments: [@doctrine, @security.token_storage, @kernel]
 
     ujm.exo_validator_isvalidqcmglobalmark:
         class: UJM\ExoBundle\Validator\Constraints\isValidQCMGlobalMarkValidator

@@ -10,13 +10,15 @@ namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use \Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Parser;
 
 class QuestionService {
 
     private $doctrine;
     private $tokenStorage;
+    private $kernel;
 
     /**
      * Constructor
@@ -29,11 +31,13 @@ class QuestionService {
      */
     public function __construct(
             Registry $doctrine,
-            TokenStorageInterface $tokenStorage
+            TokenStorageInterface $tokenStorage,
+            Kernel $kernel
     )
     {
         $this->doctrine     = $doctrine;
         $this->tokenStorage = $tokenStorage;
+        $this->kernel       = $kernel;
     }
 
     /**
@@ -200,14 +204,16 @@ class QuestionService {
 
         return $actionsS;
     }
-    
+
     /**
      * Browse the file where are stored the various typical of interaction
      * @return array of type Interaction
      */
-    public function getTypes(){
+    public function getTypes()
+    {
+        $path = $this->kernel->locateResource('@UJMExoBundle');
         $yaml= new Parser();
-        $interactionType=$yaml->parse(file_get_contents('/var/www/Claroline/vendor/ujm/exo-bundle/UJM/ExoBundle/Resources/config/interaction.yml'));
+        $interactionType=$yaml->parse(file_get_contents($path . 'Resources/config/interaction.yml'));
         return $interactionType;
     }
 
