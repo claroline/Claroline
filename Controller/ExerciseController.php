@@ -1212,7 +1212,7 @@ class ExerciseController extends Controller
      */
     private function histoMark($exerciseId)
     {
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
+        $paperSer = $this->container->get('ujm.exo_paper');
         $em = $this->getDoctrine()->getManager();
         $maxY = 4;
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
@@ -1229,7 +1229,7 @@ class ExerciseController extends Controller
             }
             $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
 
-            $score = $exerciseSer->roundUpDown($scoreU);
+            $score = $paperSer->roundUpDown($scoreU);
 
             if (isset($tabMarks[(string) $score])) {
                 $tabMarks[(string) $score] += 1;
@@ -1513,11 +1513,10 @@ class ExerciseController extends Controller
         $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
 
         $responses = $em->getRepository('UJMExoBundle:Response')
-                        ->getExerciseInterRsponsesWithCount($exerciseId, $interaction->getId());
+                        ->getExerciseInterResponsesWithCount($exerciseId, $interaction->getId());
         $typeInter = $interaction->getType();
         $interSer  = $this->container->get('ujm.exo_' . $typeInter);
-        $interX    = $em->getRepository('UJMExoBundle:' . $typeInter)
-                        ->getInteractionQCM($interaction->getId());
+        $interX = $interSer->getInteractionX($interaction->getId());          
         $scoreMax = $interSer->maxScore($interX);
         $responsesTab = $this->responseStatus($responses, $scoreMax);
 
