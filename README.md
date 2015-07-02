@@ -23,25 +23,36 @@ is a (non-exhaustive) list of their dedicated repositories:
 Project setup
 -------------
 
-### Requirements
+### Minimum equirements
 
 - PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
     - mcrypt
-    - Optionaly:
-        - [gd][1] (for simple icon creation)
-        - [ffmpeg][2] (for video thumbnail creation)
-    - If you use PHP 5.5, you need to install the following extensions manually:
-        - php5-json
-        - php5-intl
-- A RDBMS like MySQL (>=5.0, recommended)
+- MySQL >=5.0 (MariaDB should work aswell)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
 
 ##### Configuration of php.ini
 - The *memory_limit* must be >= 256Mb (also in cli).
+- Be sure that you have a correct configuration of time zone
+  ([supported timezones][9]).
+
+### Recommended requirements
+ - PHP >= 5.5
+ - PHP extensions:
+    - fileinfo (for mime type detection)
+    - curl (for facebook authentication)
+    - mcrypt
+    - [gd][1] (for simple icon creation)
+    - [ffmpeg][2] (for video thumbnail creation)
+    - php5-json
+    - php5-intl
+
+##### Configuration of php.ini
+- The *memory_limit* must be >= 512mb (for the webserver).
+- The *memory_limit* must be >= 4096mb (for the cli: composer updates consume a lot of ram) 
 - Be sure that you have a correct configuration of time zone
   ([supported timezones][9]).
 
