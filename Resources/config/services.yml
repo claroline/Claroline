@@ -20,12 +20,29 @@ services:
             tags:
                 - { name: kernel.event_listener, event: create_log_details_resource-ujm_exercise-exercise_evaluated, method: onCreateLogDetails }
 
-    twig.extension.twigExtensions:
-        class: UJM\ExoBundle\Services\twig\TwigExtensions
-        arguments: [@doctrine, @service_container]
+    twig.extension.Interaction:
+        class: UJM\ExoBundle\Services\twig\Interaction
+        arguments: [@service_container]
+        tags:
+            - { name: twig.extension }
+            
+    twig.extension.InteractionGraphic:
+        class: UJM\ExoBundle\Services\twig\InteractionGraphic
+        arguments: [@doctrine]
         tags:
             - { name: twig.extension }
 
+    twig.extension.InteractionMatching:
+        class: UJM\ExoBundle\Services\twig\InteractionMatching
+        arguments: [@doctrine, @service_container]
+        tags:
+            - { name: twig.extension }
+            
+    twig.extension.InteractionOpen:
+        class: UJM\ExoBundle\Services\twig\InteractionOpen
+        arguments: [@doctrine]
+        tags:
+            - { name: twig.extension }
     ujm.exo_badge:
         class: UJM\ExoBundle\Services\classes\BadgeExoService
         arguments: [@doctrine]
