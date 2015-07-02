@@ -17,11 +17,12 @@ class BadgeController extends Controller
         /** @var \Icap\BadgeBundle\Entity\Badge[] $workspaceBadges */
         $workspaceBadges = $this->getDoctrine()->getManager()->getRepository('IcapBadgeBundle:Badge')->findByWorkspace($workspace);
 
-        $ownedBadges      = array();
-        $finishedBadges   = array();
+        $ownedBadges = array();
+        /** @var \Icap\BadgeBundle\Entity\Badge[] $finishedBadges */
+        $finishedBadges = array();
         $inProgressBadges = array();
-        $availableBadges  = array();
-        $displayedBadges  = array();
+        $availableBadges = array();
+        $displayedBadges = array();
 
         foreach ($workspaceBadges as $workspaceBadge) {
             $isOwned = false;
@@ -33,8 +34,8 @@ class BadgeController extends Controller
             }
 
             if (!$isOwned) {
-                $nbBadgeRules      = count($workspaceBadge->getRules());
-                $validatedRules    = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
+                $nbBadgeRules = count($workspaceBadge->getRules());
+                $validatedRules = $badgeRuleValidator->validate($workspaceBadge, $loggedUser);
 
                 if(0 < $nbBadgeRules && 0 < $validatedRules['validRules']) {
                     if ($validatedRules['validRules'] >= $nbBadgeRules) {
@@ -58,10 +59,19 @@ class BadgeController extends Controller
             );
         }
 
+        $claimedBadges = [];
+
+        if (count($finishedBadges) > 0) {
+            /** @var \Icap\BadgeBundle\Manager\BadgeClaimManager $badgeClaimManager */
+            $badgeClaimManager = $this->get('icap_badge.manager.badge_claim');
+            /** @var \Icap\badgeBundle\Entity\BadgeClaim $claimedBadges */
+            $claimedBadges = $badgeClaimManager->getByUser($loggedUser);
+        }
+
         foreach ($finishedBadges as $finishedBadge) {
             $badgeType = 'finished';
 
-            if($loggedUser->hasClaimedFor($finishedBadge)) {
+            if(isset($claimedBadges[$finishedBadge->getId()])) {
                 $badgeType = 'claimed';
             }
 

@@ -325,18 +325,19 @@ class AdministrationController extends Controller
         }
 
         /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
-        $translator     = $this->get('translator');
+        $translator = $this->get('translator');
         $successMessage = $translator->trans('badge_reject_award_success_message', array(), 'icap_badge');
-        $errorMessage   = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
+        $errorMessage = $translator->trans('badge_reject_award_error_message', array(), 'icap_badge');
 
         try {
             if ($validate) {
                 $successMessage = $translator->trans('badge_validate_award_success_message', array(), 'icap_badge');
                 $errorMessage   = $translator->trans('badge_validate_award_error_message', array(), 'icap_badge');
 
-                /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
+                /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
                 $badgeManager = $this->get('icap_badge.manager.badge');
                 $awardedBadge = $badgeManager->addBadgeToUser($badgeClaim->getBadge(), $badgeClaim->getUser());
+
                 if (!$awardedBadge) {
                     $successMessage = $translator->trans('badge_already_award_info_message', array(), 'icap_badge');
                 }
