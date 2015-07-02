@@ -40,7 +40,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      *
      * @ORM\Column(name="breadcrumbs", type="boolean")
      */
-    protected $breadcrumbs = false;
+    protected $breadcrumbs = true;
 
     /**
      * Steps linked to the path
