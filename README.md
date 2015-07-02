@@ -30,6 +30,7 @@ Project setup
     - fileinfo (for mime type detection)
     - curl (for facebook authentication)
     - mcrypt
+
 - MySQL >=5.0 (MariaDB should work aswell)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
@@ -49,6 +50,10 @@ Project setup
     - [ffmpeg][2] (for video thumbnail creation)
     - php5-json
     - php5-intl
+
+- MySQL >=5.0 (MariaDB should work aswell)
+- A web server like Apache or Nginx
+- A global installation of [composer][3] (for dependency management)
 
 ##### Configuration of php.ini
 - The *memory_limit* must be >= 512mb (for the webserver).
