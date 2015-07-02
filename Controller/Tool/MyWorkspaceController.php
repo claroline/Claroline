@@ -64,8 +64,8 @@ class MyWorkspaceController extends Controller
             $flashBag   = $this->get('session')->getFlashBag();
             $translator = $this->get('translator');
 
-            /** @var \Claroline\CoreBundle\Manager\BadgeManager $badgeManager */
-            $badgeManager = $this->get('claroline.manager.badge');
+            /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
+            $badgeManager = $this->get('icap_badge.manager.badge');
             $badgeManager->makeClaim($badge, $user);
 
             $flashBag->add('success', $translator->trans('badge_claim_success_message', array(), 'icap_badge'));
