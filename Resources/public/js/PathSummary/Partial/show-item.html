@@ -22,39 +22,39 @@
             <span data-ng-switch-when="seen" class="fa fa-eye" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_seen'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is done -->
-            <span data-ng-switch-when="to_do" class="fa fa-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_do'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="to_do" class="text-warning fa fa-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_do'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is done -->
-            <span data-ng-switch-when="done" class="fa fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_done'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="done" class="text-success fa fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_done'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is to review -->
-            <span data-ng-switch-when="to_review" class="fa fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="to_review" class="text-info fa fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
 
-            <!--<span class="caret"></span>-->
+            <span class="caret"></span>
         </a>
 
-        <!--<ul class="dropdown-menu" aria-labelledby="step-progression-{{ step.id }}">
+        <ul class="dropdown-menu" aria-labelledby="step-progression-{{ step.id }}">
             <li>
-                <a href="#">
+                <a href="" class="link-progression link-progression-to_do" data-ng-click="pathSummaryShowCtrl.updateProgression(step, 'to_do')">
                     <span class="fa fa-fw fa-square-o"></span>
-                    To do
+                    {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
                 </a>
             </li>
 
             <li>
-                <a href="#">
+                <a href="" class="link-progression link-progression-done" data-ng-click="pathSummaryShowCtrl.updateProgression(step, 'done')">
                     <span class="fa fa-fw fa-check-square-o"></span>
-                    Done
+                    {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
                 </a>
             </li>
 
             <li>
-                <a href="#">
+                <a href="" class="link-progression link-progression-to_review" data-ng-click="pathSummaryShowCtrl.updateProgression(step, 'to_review')">
                     <span class="fa fa-fw fa-retweet"></span>
-                    To review
+                    {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
                 </a>
             </li>
-        </ul>-->
+        </ul>
     </div>
 </div>
 

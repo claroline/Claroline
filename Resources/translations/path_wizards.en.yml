@@ -19,6 +19,7 @@ hide_path_info: Hide information of the Path
 
 # m
 modified: with pending changes
+my_progression: My progression :
 
 # n
 name_help: Enter the name of the path
@@ -120,6 +121,10 @@ user_progression_step_to_review: You have marked this step as to review
 user_progression_step_to_do: You have marked this step as to do
 user_progression_step_done: You have marked this step as done
 user_progression_step_to_review: You have marked this step as to review
+
+user_progression_step_to_do_label: To do
+user_progression_step_done_label: Done
+user_progression_step_to_review_label: To review
 
 # w
 with_tutor: Tutored

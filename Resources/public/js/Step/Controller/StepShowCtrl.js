@@ -38,3 +38,7 @@ StepShowCtrl.prototype.userProgressionService = {};
  * @type {null}
  */
 StepShowCtrl.prototype.progression = {};
+
+StepShowCtrl.prototype.updateProgression = function (newStatus) {
+    this.userProgressionService.update(this.step, newStatus);
+};

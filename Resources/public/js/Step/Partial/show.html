@@ -55,25 +55,25 @@
                     </div>
 
                     <div class="col-md-8 col-md-offset-1 col-sm-8 col-xs-8 text-center">
-                        <!--My progression :
+                        {{ 'my_progression'|trans:{}:'path_wizards' }}
 
-                        &lt;!&ndash; To do &ndash;&gt;
-                        <button type="button" class="btn  btn-warning btn-default">
+                        <!-- To do -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_do')" data-ng-class="{'active btn-warning': 'to_do' == stepShowCtrl.progression.status}">
                             <span class="fa fa-fw fa-square-o"></span>
-                            To do
+                            {{ 'user_progression_step_to_do_label'|trans:{}:'path_wizards' }}
                         </button>
 
-                        &lt;!&ndash; Done &ndash;&gt;
-                        <button type="button" class="btn  btn-success btn-default">
+                        <!-- Done -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('done')" data-ng-class="{'active btn-success': 'done' == stepShowCtrl.progression.status}">
                             <span class="fa fa-fw fa-check-square-o"></span>
-                            Done
+                            {{ 'user_progression_step_done_label'|trans:{}:'path_wizards' }}
                         </button>
 
-                        &lt;!&ndash; Redo &ndash;&gt;
-                        <button type="button" class="btn  btn-info btn-default">
+                        <!-- Redo -->
+                        <button type="button" class="btn btn-default" data-ng-click="stepShowCtrl.updateProgression('to_review')" data-ng-class="{'active btn-info': 'to_review' == stepShowCtrl.progression.status}">
                             <span class="fa fa-fw fa-retweet"></span>
-                            To review
-                        </button>-->
+                            {{ 'user_progression_step_to_review_label'|trans:{}:'path_wizards' }}
+                        </button>
                     </div>
 
                     <!-- Next step button -->

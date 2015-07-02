@@ -187,6 +187,24 @@
             padding: @padding-base-vertical @padding-base-horizontal;
             color: @text-color;
         }
+
+        .link-progression {
+            &:hover {
+                background-color: darken(@dropdown-bg, 5%);
+            }
+
+            &.link-progression-to_do {
+                color: @brand-warning;
+            }
+
+            &.link-progression-done {
+                color: @brand-success;
+            }
+
+            &.link-progression-to_review {
+                color: @brand-info;
+            }
+        }
     }
 }
 

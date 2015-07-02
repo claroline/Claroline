@@ -19,6 +19,7 @@ hide_path_info: Masquer les informations relatives au Parcours
 
 # m
 modified: avec des modifications en attente
+my_progression: Ma progression :
 
 # n
 name_help: Saisir le nom du parcours
@@ -116,6 +117,10 @@ user_progression_step_unseen: Vous n'avez pas encore vu cette étape
 user_progression_step_to_do: Vous avez marqué cette étape comme étant à faire
 user_progression_step_done: Vous avez marqué cette étape comme étant terminée
 user_progression_step_to_review: Vous avez marqué cette étape comme étant à refaire
+
+user_progression_step_to_do_label: A faire
+user_progression_step_done_label: Fait
+user_progression_step_to_review_label: A refaire
 
 # w
 with_tutor: Tutoré

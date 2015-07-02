@@ -49,13 +49,20 @@
                 /**
                  * Create a new Progression for the Step
                  * @param step
+                 * @param [status]
                  * @returns {object}
                  */
-                create: function create(step) {
+                create: function create(step, status) {
                     var deferred = $q.defer();
 
+                    var params = { id: step.resourceId };
+
+                    if (typeof status !== 'undefined' && null !== status && status.length !== 0) {
+                        params.status = status;
+                    }
+
                     $http
-                        .post(Routing.generate('innova_path_progression_create', { id: step.resourceId }))
+                        .post(Routing.generate('innova_path_progression_create', params))
 
                         .success(function (response) {
                             // Store step progression in the Path progression array
@@ -79,7 +86,29 @@
                  * @param status
                  */
                 update: function update(step, status) {
+                    var deferred = $q.defer();
 
+                    $http
+                        .put(Routing.generate('innova_path_progression_update', { id: step.resourceId, status: status }))
+
+                        .success(function (response) {
+                            // Store step progression in the Path progression array
+                            if (!angular.isObject(progression[response.stepId])) {
+                                progression[response.stepId] = response;
+                            } else {
+                                progression[response.stepId].status = response.status;
+                            }
+
+                            deferred.resolve(response.status);
+                        })
+
+                        .error(function (response) {
+                            AlertService.addAlert('error', Translator.trans('progression_save_error', {}, 'path_wizards'));
+
+                            deferred.reject(response);
+                        });
+
+                    return deferred.promise;
                 }
             }
         }
