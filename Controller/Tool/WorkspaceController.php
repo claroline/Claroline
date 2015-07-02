@@ -358,7 +358,7 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @Route("/claim/manage/{id}/{validate}", name="claro_workspace_tool_manage_claim")
+     * @Route("/claim/manage/{id}/{validate}", name="icap_badge_workspace_tool_manage_claim")
      * @ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
