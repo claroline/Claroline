@@ -10,7 +10,8 @@
         "innova/angular-ui-tinymce-bundle" : "~5.0",
         "innova/angular-ui-translation-bundle" : "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
-        "innova/angular-ui-sortable-bundle" : "~5.0"
+        "innova/angular-ui-sortable-bundle" : "~5.0",
+        "innova/angular-ui-pageslide-bundle" : "~5.0"
     },
     "autoload": {
         "psr-0": { "UJM\\ExoBundle": "" }
