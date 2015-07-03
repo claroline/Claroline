@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('Page').controller('PageShowController', [
+    angular.module('Page').controller('PageShowCtrl', [
         'PageService',
         function (PageService) {
             

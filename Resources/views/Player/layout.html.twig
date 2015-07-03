@@ -5,7 +5,7 @@
     {{ parent() }}
 
     {# Exercise Player styles #}
-    {% stylesheets debug=false filter='lessphp, cssmin' output='vendor/ujmexo/exercise-player.css'
+    {% stylesheets debug=false filter='lessphp, cssmin' output='bundles/ujmexo/css/exercise-player.css'
         '@UJMExoBundle/Resources/public/less/exercise-player.less'
     %}
     <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo_player' }) }}"></script>
 
     {# Angular JS #}
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/angular-js.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-js.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-route.min.js'
@@ -35,12 +35,13 @@
     {% endjavascripts %}
 
     {# Angular UI #}
-    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/angular-ui.js'
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-angular-ui.js'
         '@InnovaAngularUIBootstrapBundle/Resources/public/js/*'
-        '@InnovaAngularUIPageslideBundle/Resources/public/js/*'
         '@InnovaAngularUITinyMCEBundle/Resources/public/js/*'
         '@InnovaAngularUITranslationBundle/Resources/public/js/*'
         '@InnovaAngularUIResourcePickerBundle/Resources/public/js/*'
+        '@InnovaAngularUIPageSlideBundle/Resources/public/js/*'
+        '@InnovaAngularUISortableBundle/Resources/public/js/*'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -55,10 +56,6 @@
         AngularApp.webDir        = "{{ asset('') }}";
         AngularApp.locale        = "{{ app.request.locale ~ '_' ~ app.request.locale|upper }}";
 
-        AngularApp.resourceIcons = {
-            {% for resourceIcon in resourceIcons %}
-            "{{ resourceIcon.mimeType }}" : "{{ asset(resourceIcon.relativeUrl) }}"{% if loop.last != true %},{% endif %}
-            {% endfor %}
-        };
+        
     </script>
 {% endblock %}
