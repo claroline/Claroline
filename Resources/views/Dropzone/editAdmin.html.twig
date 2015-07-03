@@ -9,38 +9,28 @@
                     </a>
                 </li>
             {% endblock %}
-
-            <li class="hometab-element {% block drops_completed_active %}{% endblock %}">
-                <a href="{% block drops_completed_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}  {% endblock %}">
-                    Demandes ICAP
-                </a>
-            </li>
-            <li class="hometab-element {% block drops_awaiting_active %}{% endblock %}">
-                <a href="{% block drops_awaiting_link %}{{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }} {% endblock %}">
-                    Paramètres ICAP
-                </a>
-            </li>
 #}
 
-            <!-- Demandes adressées -->
+            {# Demandes adressées #}
             <li class="hometab-element {% block collecticiel_demandes_active %} active {% endblock %}">
                 <a href="{% block collecticiel_demandes_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
-            Demandes adressées
+                    {{ 'Requests'|trans({}, 'innova_collecticiel') }}
                 </a>
             </li>
 
+            {# Espaces partagés #}
             {% block collecticiel_demande_edit_navTabs_criteria_block %}
                 <li class="hometab-element {% block collecticiel_demande_edit_navTabs_criteria_element_class %} active {% endblock %}">
                     <a id="editCriteriaLink" href="
                     {% block collecticiel_demande_edit_navTabs_criteria_element_link %}
                         {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
                     {% endblock %}" class="hometab-link">
-                        Espaces partagés
+                        {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </li>
             {% endblock %}
 
-            <!-- Paramètres -->
+            {# Paramètres #}
             <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
                 <a id="editParametresLink" href="{% block collecticiel_parametres_link %}
                         {{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}
@@ -49,11 +39,8 @@
                 </a>
             </li>
 
-
-
-
-            <!-- ne pas toucher : bloc d'origine qui sert d'exemple -->
-            <!-- Critères d'évaluation par l'enseignant -->
+            {# ne pas toucher : bloc d'origine qui sert d'exemple
+            Critères d'évaluation par l'enseignant #}
             {#
             {% block collecticiel_edit_navTabs_criteria_block %}
                 <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
@@ -68,8 +55,8 @@
             {% endblock %}
             #}
 
-            <!-- Vu avec Donovan : quand on est admin, on peut accéder à UN espace collecticiel d'UN étudiant -->
-            <!-- Accès à un espace collecticiel -->
+            {# Vu avec Donovan : quand on est admin, on peut accéder à UN espace collecticiel d'UN étudiant
+            Accès à un espace collecticiel #}
 {#          Finalement, on enlève cet onglet mais je laisse le code car il servira ailleurs
             {% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
                 <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}active {% endblock %}">
