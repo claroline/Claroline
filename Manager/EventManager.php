@@ -241,7 +241,7 @@ class EventManager
                 $genericEvent = ('all' == $genericEvent) ? 'resource' : $genericEvent;
 
                 if ($sortedKey !== 'all') {
-                    $sortedEvents[$resourceTrans][$keyTrans][$logTrans] = '[[' . $sortedKey . ']]' . $genericEvent;
+                    $sortedEvents[$resourceTrans][$keyTrans][$keyTrans . ': ' . $logTrans] = '[[' . $sortedKey . ']]' . $genericEvent;
                 } else {
                     $sortedEvents[$resourceTrans][$allTranslatedText][$logTrans] = $genericEvent;
                 }
