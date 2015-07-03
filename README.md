@@ -1,6 +1,6 @@
 # PathBundle
 
-![SensioLabs Insight][1]
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/717ec409-89d6-483b-ad4e-26e1ddb5edbc/small.png)](https://insight.sensiolabs.com/projects/717ec409-89d6-483b-ad4e-26e1ddb5edbc)
 
 ## Installation
 
@@ -46,4 +46,3 @@ Publish a specific Path.
 * Arnaud Bey (arnaudbey)
 * Eric Vincent (ericvincenterv)
 * Nicolas Dufour (eldoniel)
-[1]: https://insight.sensiolabs.com/projects/91c3195e-8056-40e9-b1d3-e5cc10230e4f/small.png
