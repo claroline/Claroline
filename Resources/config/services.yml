@@ -168,3 +168,9 @@ services:
             - { name: kernel.event_listener, event: delete_ujm_exercise_player, method: onDelete }
             - { name: kernel.event_listener, event: copy_ujm_exercise_player, method: onCopy }
             - { name: kernel.event_listener, event: ujm_exercise_player_administrate_ujm_exercise_player, method: onAdministrate }
+            
+    ujm_exo_bundle.manager.exercise_player:
+        class: UJM\ExoBundle\Manager\Player\ExercisePlayerManager 
+        arguments:
+            entityManager:  @doctrine.orm.entity_manager
+            translator:     @translator

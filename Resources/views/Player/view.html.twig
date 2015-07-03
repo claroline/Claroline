@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="activity-player" data-ng-app="ExercisePlayerPlayerApp" data-ng-cloak="">
-        <page-show></page-show>
+    <div class="exercise-player-container" data-ng-app="ExercisePlayerPlayerApp" data-ng-cloak="">
+        <page-show class="exercise-player-page" data-name="billy" data-page=""></page-show>
     </div>
 {% endblock %}
 
@@ -20,8 +20,6 @@
 
 
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_exo_player_player.js'
-
-        '@UJMExoBundle/Resources/public/js/player/player.module.js'
 
         '@UJMExoBundle/Resources/public/js/player/Page/*'
         '@UJMExoBundle/Resources/public/js/player/Page/Controllers/*'

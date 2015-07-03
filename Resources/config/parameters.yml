@@ -7,3 +7,6 @@ parameters:
     
     # Form Types
     ujm_exo_bundle.form.type.exercise_player_type.class:   UJM\ExoBundle\Form\Player\ExercisePlayerType
+    
+    # Managers
+    ujm_exo_bundle.manager.exercise_player.class:    UJM\ExoBundle\Manager\Player\ExercisePlayerManager
