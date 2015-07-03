@@ -142,13 +142,13 @@ class QtiController extends Controller {
         if($exoID == -1) {
             return $this->forward('UJMExoBundle:Question:index',
                     array('qtiError' =>
-                        $this->get('translator')->trans($mssg))
+                        $this->get('translator')->trans($mssg, array(), 'ujm_exo'))
                     );
         } else {
             return $this->forward('UJMExoBundle:Exercise:showQuestions',
                     array(
                         'id' => $exoID,
-                        'qtiError' => $this->get('translator')->trans($mssg),
+                        'qtiError' => $this->get('translator')->trans($mssg, array(), 'ujm_exo'),
                         'pageNow'=> 0,
                         'categoryToFind'=> 'z',
                         'titleToFind'=> 'z',
@@ -187,7 +187,7 @@ class QtiController extends Controller {
             return $this->forward('UJMExoBundle:Exercise:showQuestions',
                    array(
                        'id' => $exoID,
-                       'qtiError' => $this->get('translator')->trans($mssg),
+                       'qtiError' => $this->get('translator')->trans($mssg, array(), 'ujm_exo'),
                        'pageNow'=> 0,
                        'categoryToFind'=> 'z',
                        'titleToFind'=> 'z',

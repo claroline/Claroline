@@ -6,23 +6,23 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'find_question' | trans }} {% endblock %}
+{% block title %} {{ 'find_question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'find_question' | trans }}</h3>
+        <h3 class="panel-title">{{ 'find_question' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
 
         {% if exoID == -1 %}
             <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exoID }) }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
     </div>
@@ -34,37 +34,37 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'find_by'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_by'|trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
-                        <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans }}
+                        <input type="radio" name="QuestionSearch" value="Category" checked/> {{ 'category'|trans({}, 'ujm_exo') }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="QuestionSearch" value="Type"/> {{ 'type'|trans }}
+                        <input type="radio" name="QuestionSearch" value="Type"/> {{ 'type'|trans({}, 'ujm_exo') }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans }}
+                        <input type="radio" name="QuestionSearch" value="Title"/> {{ 'title'|trans({}, 'ujm_exo') }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'contain_search'|trans }} ...
+                        <input type="radio" name="QuestionSearch" value="Contain"/> {{ 'contain_search'|trans({}, 'ujm_exo') }} ...
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="QuestionSearch" value="All"/> {{ 'all'|trans }}
+                        <input type="radio" name="QuestionSearch" value="All"/> {{ 'all'|trans({}, 'ujm_exo') }}
                     </div>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'find_in'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_in'|trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
-                        <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my_questions'|trans }}
+                        <input type="radio" name="WhereSearch" value="my" checked/> {{ 'my_questions'|trans({}, 'ujm_exo') }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="WhereSearch" value="shared"/> {{ 'shared_questions'|trans }}
+                        <input type="radio" name="WhereSearch" value="shared"/> {{ 'shared_questions'|trans({}, 'ujm_exo') }}
                         &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <input type="radio" name="WhereSearch" value="all"/> {{ 'all'|trans }}
+                        <input type="radio" name="WhereSearch" value="all"/> {{ 'all'|trans({}, 'ujm_exo') }}
                     </div>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'find_what'|trans }}</h3>
+                        <h3 class="panel-title">{{ 'find_what'|trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="input-group">

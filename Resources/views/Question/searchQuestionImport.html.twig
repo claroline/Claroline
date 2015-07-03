@@ -2,22 +2,22 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'result' | trans }}</h3>
+        <h3 class="panel-title">{{ 'result' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
         {% if listQuestions is not empty %}
             <a class="btn btn-primary" href="#" onclick="importQuestion('{{ path('ujm_exercise_validate_import') }}',
-                {{ exoID }}, 1, '{{ 'no_thing_import' | trans }}');event.preventDefault();">
-                <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans }}
+                {{ exoID }}, 1, '{{ 'no_thing_import' | trans({}, 'ujm_exo') }}');event.preventDefault();">
+                <i class="fa fa-arrow-circle-o-down"></i> {{ 'import' | trans({}, 'ujm_exo') }}
             </a>
 
             {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
             <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
-                <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
             </button>
             {% elseif displayAll == 1 %}
                 <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
-                <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans }}
+                <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
             </button>
             {% endif %}
 
@@ -31,30 +31,30 @@
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                             <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
                             <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
-                            {{ 'category' | trans }}
+                            {{ 'category' | trans({}, 'ujm_exo') }}
                         </th>
                         <th class="classic" onclick="SortQuestions('Title', 'QuestionArrayMy');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                             <i class="fa fa-chevron-up" id="upTi"  style="display: none;"></i>
                             <i class="fa fa-chevron-down" id="downTi"  style="display: none;"></i>
-                            {{ 'title' | trans }}
+                            {{ 'title' | trans({}, 'ujm_exo') }}
                         </th>
                         <th class="classic" onclick="SortQuestions('Type', 'QuestionArrayMy');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                             <i class="fa fa-chevron-up" id="upTy"  style="display: none;"></i>
                             <i class="fa fa-chevron-down" id="downTy"  style="display: none;"></i>
-                            {{ 'type' | trans }}
+                            {{ 'type' | trans({}, 'ujm_exo') }}
                         </th>
                         <th class="classic" onclick="SortQuestions('Invite', 'QuestionArrayMy');"
                             onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                             onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                             <i class="fa fa-chevron-up" id="upI"  style="display: none;"></i>
                             <i class="fa fa-chevron-down" id="downI"  style="display: none;"></i>
-                            {{ 'question' | trans }}
+                            {{ 'question' | trans({}, 'ujm_exo') }}
                         </th>
-                        <th class="classic">{{ 'import' | trans }}</th>
+                        <th class="classic">{{ 'import' | trans({}, 'ujm_exo') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +66,7 @@
                                 {{ interaction.question.title }}
                             </a>
                         </td>
-                        <td class="classic">{{ interaction.type|trans }}</td>
+                        <td class="classic">{{ interaction.type|trans({}, 'ujm_exo') }}</td>
                         <td class="classic">{{ interaction.invite|raw }}</td>
                         <td class="classic">
                             <ul class="list-unstyled">
@@ -89,7 +89,7 @@
                 {% endif %}
             </div>
         {% else %}
-            <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
+            <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
         {% endif %}
     </div>
 </div>

@@ -6,17 +6,17 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'shared_user' | trans }} {% endblock %}
+{% block title %} {{ 'shared_user' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'shared_user' | trans }}</h3>
+        <h3 class="panel-title">{{ 'shared_user' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
     </div>
 
@@ -25,11 +25,11 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ 'shared_with' | trans }} ...</h3>
+                    <h3 class="panel-title">{{ 'shared_with' | trans({}, 'ujm_exo') }} ...</h3>
                 </div>
 
                 <div class="panel-body">
-                    {{ 'user_shared' | trans }} :
+                    {{ 'user_shared' | trans({}, 'ujm_exo') }} :
                     <div class="panel-body">
                         <div class="input-group">
                             <input class="form-control" type="text" id="search-user-txt" placeholder="{{ 'search'|trans({}, 'platform') }}"

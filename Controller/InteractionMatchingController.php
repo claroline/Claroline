@@ -144,7 +144,7 @@ class InteractionMatchingController extends Controller
 
         if ($matchingHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question')
+                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
 

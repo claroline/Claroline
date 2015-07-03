@@ -11,44 +11,44 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'list_question' | trans }} {% endblock %}
+{% block title %} {{ 'list_question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'my_questions' | trans }}</li>
+    <li class="active">{{ 'my_questions' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'my_questions' | trans }}</h3>
+        <h3 class="panel-title">{{ 'my_questions' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,
             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults }) }}">
-            <i class="fa fa-download"></i> {{ 'import_questions' | trans }}
+            <i class="fa fa-download"></i> {{ 'import_questions' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_question_new', { 'exoID': exerciseID }) }}">
-            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans }}
+            <i class="fa fa-plus"></i> {{ 'create_a_new_entry' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_qti_export_exercise_questions', { 'exoID': exerciseID, 'exoName': _resource.getResourceNode().getName()  }) }}">
-            <i class="fa fa-save"></i> {{ 'export_qti_exercise' | trans }}
+            <i class="fa fa-save"></i> {{ 'export_qti_exercise' | trans({}, 'ujm_exo') }}
         </a>
     </div>
 
     <div class="list-group">
         <div class="list-group-item">
             {% if interactions is not empty %}
-                <p>{{ 'change_order' | trans }}.</p>
+                <p>{{ 'change_order' | trans({}, 'ujm_exo') }}.</p>
                 {% if pagerQuestion.getNbResults > pagerQuestion.maxPerPage and displayAll == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID, 'displayAll': 1 }) }} ">
-                        <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
+                        <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
                     </a>
                 {% elseif displayAll == 1 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': exerciseID }) }} ">
-                        <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans }}
+                        <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
                     </a>
                 {% endif %}
             {% endif %}
@@ -57,7 +57,7 @@
                 <button type="button" class="btn btn-danger"
                     onclick="SaveNewOrder('{{ path('ujm_exercise_question_order') }}', {{exerciseID}},
                                            {{pagerQuestion.getCurrentPage}}, {{pagerQuestion.maxPerPage}});">
-                    {{ 'save_order' | trans }}
+                    {{ 'save_order' | trans({}, 'ujm_exo') }}
                 </button>
             </div>
             <br/><br/>
@@ -71,7 +71,7 @@
                 {% include "UJMExoBundle:Partial:question/questionsList.html.twig" %}
 
             {% else %}
-                <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
+                <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
             {% endif %}
         </div>
     </div>

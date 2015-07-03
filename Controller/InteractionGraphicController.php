@@ -134,7 +134,7 @@ class InteractionGraphicController extends Controller
 
          if ($graphicHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question')
+                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
 

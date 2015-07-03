@@ -134,7 +134,7 @@ class InteractionOpenController extends Controller
 
         if ($openHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question')
+                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
 

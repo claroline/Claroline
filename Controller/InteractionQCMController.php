@@ -141,7 +141,7 @@ class InteractionQCMController extends Controller
 
         if ($qcmHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
-                    $this->get('translator')->trans('info_duplicate_question')
+                    $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
 

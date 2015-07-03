@@ -4,11 +4,11 @@
 
     {% if pagerSearch.getNbResults > pagerSearch.maxPerPage and displayAll == 0 %}
     <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 1);">
-        <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans }}
+        <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
     </button>
     {% elseif displayAll == 1 %}
         <button class="btn btn-primary" onclick="displayAllQuestionInSearch('{{ path('ujm_question_searchQuestion') }}', {{ exoID }}, 0);">
-        <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans }}
+        <i class="fa fa-plus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
     </button>
     {% endif %}
 
@@ -22,35 +22,35 @@
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="fa fa-chevron-up" id="upC"  style="display: none;"></i>
                     <i class="fa fa-chevron-down" id="downC"  style="display: none;"></i>
-                    {{ 'category' | trans }}
+                    {{ 'category' | trans({}, 'ujm_exo') }}
                 </th>
                 <th class="classic" onclick="SortQuestions('Title', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="fa fa-chevron-up" id="upTi"  style="display: none;"></i>
                     <i class="fa fa-chevron-down" id="downTi"  style="display: none;"></i>
-                    {{ 'title' | trans }}
+                    {{ 'title' | trans({}, 'ujm_exo') }}
                 </th>
                 <th class="classic" onclick="SortQuestions('Type', 'QuestionArray');"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="fa fa-chevron-up" id="upTy"  style="display: none;"></i>
                     <i class="fa fa-chevron-down" id="downTy"  style="display: none;"></i>
-                    {{ 'type' | trans }}
+                    {{ 'type' | trans({}, 'ujm_exo') }}
                 </th>
                 <th class="classic" onclick="SortQuestions('Invite', 'QuestionArray')"
                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                     <i class="fa fa-chevron-up" id="upI"  style="display: none;"></i>
                     <i class="fa fa-chevron-down" id="downI"  style="display: none;"></i>
-                    {{ 'question' | trans }}
+                    {{ 'question' | trans({}, 'ujm_exo') }}
                 </th>
 
                 {% if canDisplay == 'shared' %}
-                    <th class="classic">{{ 'shared_by' | trans }}</th>
+                    <th class="classic">{{ 'shared_by' | trans({}, 'ujm_exo') }}</th>
                 {% endif %}
                 {% if canDisplay == 'my' %}
-                    <th class="classic">{{ 'actions' | trans }}</th>
+                    <th class="classic">{{ 'actions' | trans({}, 'ujm_exo') }}</th>
                     <th class="classic"><i class="fa fa-share"></th>
                 {% endif %}
             </tr>
@@ -60,29 +60,29 @@
             <tr>
                 <td class="classic">{{ FindQuestion.question.category.value }}</td>
                 <td class="classic"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.question.id }) }}">{{ FindQuestion.question.title }}</a></td>
-                <td class="classic">{{ FindQuestion.type|trans }}</td>
+                <td class="classic">{{ FindQuestion.type|trans({}, 'ujm_exo') }}</td>
                 <td class="classic">{{ FindQuestion.invite|raw }}</td>
                 {% if canDisplay == 'my' %}
                     <td class="classic">
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}"
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans({}, 'ujm_exo') }}"
                            href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">
                             <i class="fa fa-share"></i>
                         </a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': FindQuestion.id }) }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'interID': FindQuestion.id }) }}">
                             <i class="fa fa-repeat"></i>
                         </a>
                         {% if(questionWithResponse[FindQuestion.id] == 0) %}
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
                                href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">
                                 <i class="fa fa-pencil"></i>
                             </a>
 
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans }}"
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans({}, 'ujm_exo') }}"
                                href="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}" id="delete-question">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         {% else %}
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
                                href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}"
                                style="color: red;">
                                 <i class="fa fa-pencil"></i>
@@ -91,7 +91,7 @@
                     </td>
                     {% if(alreadyShared[FindQuestion.question.id] == 1) %}
                         <td class="classic">
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans({}, 'ujm_exo') }}"
                                 href="{{ path('ujm_see_shared', { 'id': FindQuestion.question.id }) }}">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -123,7 +123,7 @@
         </div>
     {% endif %}
 {% else %}
-    <div class="alert alert-info">{{ 'no_question_found'|trans }} ...</div>
+    <div class="alert alert-info">{{ 'no_question_found'|trans({}, 'ujm_exo') }} ...</div>
 {% endif %}
 
 <input type="hidden" id="type" value="{{ type }}"/>

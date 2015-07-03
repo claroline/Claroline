@@ -151,7 +151,7 @@ abstract class InteractionHandler
     protected function checkCategory()
     {
         $data = $this->form->getData()->getInteraction()->getQuestion();
-        $default = $this->translator->trans('default');
+        $default = $this->translator->trans('default', array(), 'ujm_exo');
         $uid=$this->user->getId();
         $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
 
