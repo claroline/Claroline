@@ -7,19 +7,19 @@
 
 {% for hv in hintViewed %}
     {% if( hv.hint.interaction.id == interactions[p].id ) %}
-        {{ 'penalty' | trans }} : {{ hv.hint.penalty }}
+        {{ 'penalty' | trans({}, 'ujm_exo') }} : {{ hv.hint.penalty }}
         <br/><hr/>
     {% endif %}
 {% endfor %}
 
 {% if (inter.interaction.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}
-        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
         {% set exoMark = exoMark + responses[p].mark %}
     {% else %}
-        {{ 'score' | trans }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not_yet_mark' | trans }}</span>
+        {{ 'score' | trans({}, 'ujm_exo') }} : <span id="open_mark_value_{{ responses[p].id }}">{{ 'not_yet_mark' | trans({}, 'ujm_exo') }}</span>
         {% set temporaryMark = true %}
     {% endif %}
 {% else %}
-    {{ 'score' | trans }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
+    {{ 'score' | trans({}, 'ujm_exo') }} : {{ responses[p].mark }} / {{ interInfo['maxScore'] }}
 {% endif %}

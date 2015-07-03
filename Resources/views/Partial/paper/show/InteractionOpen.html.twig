@@ -18,7 +18,7 @@
                 <a id="open_mark_{{ responses[p].id }}"
                     onmouseover="body.style.cursor = 'pointer';" onmouseout="body.style.cursor = 'default';"
                     onClick="openMark('{{ url }}');"
-                >{{ 'mark_question' | trans }}</a>
+                >{{ 'mark_question' | trans({}, 'ujm_exo') }}</a>
             {% endif %}
         {% endif %}
 

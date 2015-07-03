@@ -47,7 +47,7 @@
                 <i class="fa fa-chevron-up" id="{{ chevronUpId }}"  style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="{{ chevronDownId }}"  style="display: none;"></i>
 
-                {{ 'category' | trans }}
+                {{ 'category' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic"
                 {% if questionsList != 'exercise' %}
@@ -59,7 +59,7 @@
                 <i class="fa fa-chevron-up" id="{{ chevronUpTiId }}" style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="{{ chevronDownTiId }}" style="display: none;"></i>
 
-                {{ 'title' | trans }}
+                {{ 'title' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic"
                 {% if questionsList != 'exercise' %}
@@ -71,7 +71,7 @@
                 <i class="fa fa-chevron-up" id="{{ chevronUpTyId }}" style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="{{ chevronDownTyId }}" style="display: none;"></i>
 
-                {{ 'type' | trans }}
+                {{ 'type' | trans({}, 'ujm_exo') }}
             </th>
             <th class="classic"
                 {% if questionsList != 'exercise' %}
@@ -83,17 +83,17 @@
                 <i class="fa fa-chevron-up" id="{{ chevronUpInvId }}" style="display: none;"></i>
                 <i class="fa fa-chevron-down" id="{{ chevronDownInvId }}" style="display: none;"></i>
 
-                {{ 'question' | trans }}
+                {{ 'question' | trans({}, 'ujm_exo') }}
             </th>
             {% if (questionsList == 'share' or questionsList == 'importShare'
                     or questionsList == 'exoList' or questionsList == 'importExoList') %}
-                <th class="classic">{{ 'shared_by' | trans }}</th>
+                <th class="classic">{{ 'shared_by' | trans({}, 'ujm_exo') }}</th>
             {% endif %}
             {% if (questionsList == 'importMy' or questionsList == 'importShare'
                     or questionsList == 'importExoList') %}
-                <th class="classic">{{ 'import' | trans }}</th>
+                <th class="classic">{{ 'import' | trans({}, 'ujm_exo') }}</th>
             {% endif %}
-            <th class="classic">{{ 'actions' | trans }}</th>
+            <th class="classic">{{ 'actions' | trans({}, 'ujm_exo') }}</th>
             {% if (questionsList == 'my' or questionsList == 'exoList') %}
                 <th class="classic"><i class="fa fa-share"></th>
             {% endif %}
@@ -130,7 +130,7 @@
         <tr>
             <td class="classic">{{ interaction.question.category.value }}</td>
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">{{ interaction.question.title }}</a></td>
-            <td class="classic">{{ interaction.type|trans }}</td>
+            <td class="classic">{{ interaction.type|trans({}, 'ujm_exo') }}</td>
             <td class="classic">{{ interaction.invite|raw }}</td>
             {% if rights['dispSharedBy'] %}
                 <td class="classic">
@@ -152,44 +152,44 @@
             {% endif %}
             <td class="classic">
                 {% if rights['allowShareQuestion'] %}
-                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_share', { 'questionID': interaction.question.id }) }}">
                         <i class="fa fa-share"></i>
                     </a>
                 {% endif %}
                 {% if rights['allowDuplicateQuestion'] %}
-                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
+                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'interID': interaction.id, 'exoID': exerciseID }) }}">
                     <i class="fa fa-repeat"></i>
                 </a>
                 {# ham : Export Question button  #}
-                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans }}" href="{{ path('ujm_qti_export', {
+                <a class="btn btn-default" data-toggle="tooltip" title="{{ 'Export' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_qti_export', {
                 'id': interaction.question.id }) }}">
                     <i class="fa fa-save"></i>
                 </a>
                 {# ham : fin  #}
                 {% else %}
-                    {{ 'no_rights' | trans }}
+                    {{ 'no_rights' | trans({}, 'ujm_exo') }}
                 {% endif %}
                 {% if rights['allowEditQuestion'] %}
 
                     {% if (questionWithResponse[interaction.id] == 0) %}
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}">
                             <i class="fa fa-pencil"></i>
                         </a>
                         {% if rights['allowDeleteQuestion'] %}
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" id="delete-question" href="{{ path('ujm_question_delete', {
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}" id="delete-question" href="{{ path('ujm_question_delete', {
                             'id': interaction.question.id, 'pageNow': pagerMy.getCurrentPage, 'maxPage': pagerMy.maxPerPage,
                             'nbItem': pagerMy.getNbResults, 'lastPage': pagerMy.getNbPages }) }}">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         {% endif %}
                         {% if ( (questionsList == 'exoList') and (actionQ[interaction.question.id] == 1) ) %}
-                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}" href="{{ path('ujm_question_delete', {
+                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_delete', {
                             'id': interaction.question.id }) }}" id="delete-question">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         {% endif %}
                     {% else %}
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
                            href="{{ path('ujm_question_edit', { 'id': interaction.question.id, 'exoID': exerciseID }) }}"
                            style="color: red;">
                             <i class="fa fa-pencil"></i>
@@ -197,7 +197,7 @@
                     {% endif %}
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfMyBank'] and questionsList == 'share'%}
-                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans }}" id="delete-question"
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans({}, 'ujm_exo') }}" id="delete-question"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id,
                             'uid': app.user.id,
                             'pageNow': pagerShared.currentPage, 'maxPage': pagerShared.maxPerPage,
@@ -206,13 +206,13 @@
                     </a>
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfMyBank'] and  ( (actionQ[interaction.question.id] is defined) and (actionQ[interaction.question.id] == 2) ) %}
-                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans }}"
+                    <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans({}, 'ujm_exo') }}"
                        href="{{ path('ujm_delete_shared_question', { 'qid': interaction.question.id, 'uid': app.user.id, }) }}" id="delete-question">
                         <i class="fa fa-trash-o"></i>
                     </a>
                 {% endif %}
                 {% if rights['allowDeleteQuestionOfExercise'] %}
-                    <a class="btn btn-default" title="{{ 'delete_of_my_exercise' | trans }}" data-toggle="tooltip"
+                    <a class="btn btn-default" title="{{ 'delete_of_my_exercise' | trans({}, 'ujm_exo') }}" data-toggle="tooltip"
                        href="{{ path('ujm_exercise_question_delete', {
                             'exoID': exerciseID, 'qid': interaction.question.id, 'pageNow': pagerQuestion.getCurrentPage,
                             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
@@ -224,7 +224,7 @@
             {% if rights['allowShareQuestion'] %}
                 {% if ( (alreadyShared[interaction.question.id] is defined) and (alreadyShared[interaction.question.id] == 1) ) %}
                     <td class="classic">
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans }}"
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans({}, 'ujm_exo') }}"
                            href="{{ path('ujm_see_shared', { 'id': interaction.question.id }) }}">
                             <i class="fa fa-eye"></i>
                         </a>
