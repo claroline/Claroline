@@ -11,17 +11,17 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'doc_manage' | trans }} {% endblock %}
+{% block title %} {{ 'doc_manage' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'doc_manage' | trans }}</h3>
+        <h3 class="panel-title">{{ 'doc_manage' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
     <div class="panel-body">
         <a href="{{ path('ujm_question_index') }}" class="btn btn-primary">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
 
         <br/>
@@ -40,7 +40,7 @@
 
         <div id="sorting">
             {% if divResultSearch is defined %}
-                {{ 'result' | trans }} :
+                {{ 'result' | trans({}, 'ujm_exo') }} :
                 {{ divResultSearch | raw }}
             {% else %}
 
@@ -53,17 +53,17 @@
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                                     <i class="fa fa-chevron-up" id="upT" style="display: none;"></i>
                                     <i class="fa fa-chevron-down" id="downT" style="display: none;"></i>
-                                    {{ 'type' | trans }}
+                                    {{ 'type' | trans({}, 'ujm_exo') }}
                                 </th>
-                                <th class="classic">{{ "preview" | trans }}</th>
+                                <th class="classic">{{ "preview" | trans({}, 'ujm_exo') }}</th>
                                 <th class="classic" onclick="SortQuestions('Label', 'table');"
                                     onmouseover="this.style.color = '#0099FF'; body.style.cursor = 'pointer';"
                                     onmouseout="this.style.color = 'black'; body.style.cursor = 'default';">
                                     <i class="fa fa-chevron-up" id="upL" style="display: none;"></i>
                                     <i class="fa fa-chevron-down" id="downL" style="display: none;"></i>
-                                    {{ 'label' | trans }}
+                                    {{ 'label' | trans({}, 'ujm_exo') }}
                                 </th>
-                                <th class="classic">{{ 'actions' | trans }}</th>
+                                <th class="classic">{{ 'actions' | trans({}, 'ujm_exo') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,7 +89,7 @@
                                             or myDoc.type == ".jpg" or myDoc.type == ".gif" or myDoc.type == ".bmp" %}
                                             <img src="{{ asset(myDoc.url) }}" width="100px" height="100px"/>
                                         {% elseif myDoc.type == ".mp3" or myDoc.type == ".wav" %}
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans({}, 'ujm_exo') }}"
                                                href="{{ asset(myDoc.url) }}" onclick="window.open(this.href, 'ListenSong',
                                                 'height=200, width=300, toolbar=no, menubar=no, location=no, resizable=yes, scrollbars=no, status=no');
                                                 return false;">
@@ -97,12 +97,12 @@
                                             </a>
                                         {% elseif myDoc.type == ".avi" or myDoc.type == ".mpeg"
                                             or myDoc.type == ".wmv" or myDoc.type == ".flv" or myDoc.type == ".mov" %}
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans }}"
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'play' | trans({}, 'ujm_exo') }}"
                                                href="{{ asset(myDoc.url) }}">
                                                 <i class="fa fa-play"></i>
                                             </a>
                                         {% else %}
-                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans }}"
+                                            <a class="btn btn-default" data-toggle="tooltip" title="{{ 'download' | trans({}, 'ujm_exo') }}"
                                                href="{{ asset(myDoc.url) }}">
                                                 <i class="fa fa-download"></i>
                                             </a>
@@ -114,13 +114,13 @@
                                     </td>
 
                                     <td class="classic">
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans }}"
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
                                             onclick="ChangeName('{{ path('ujm_document_change_name') }}', '{{ i }}');">
                                             <i class="fa fa-pencil"></i>
                                         </a>
 
                                         {% if allowToDel[myDoc.id] %}
-                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans }}"
+                                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete' | trans({}, 'ujm_exo') }}"
                                            id="delete_document"
                                            href="{{ path('ujm_document_del', { 'idDoc': myDoc.id }) }}"
                                            >
@@ -144,7 +144,7 @@
                         {% endif %}
                     </div>
                 {% else %}
-                    <div class="alert alert-info">{{ 'no_doc_found'|trans }} ...</div>
+                    <div class="alert alert-info">{{ 'no_doc_found'|trans({}, 'ujm_exo') }} ...</div>
                 {% endif %}
             {% endif %}
         </div>
@@ -158,6 +158,6 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/manageDoc.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/sortAndSearch.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/ext/malsup.js') }}"></script>
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
     {% include "UJMExoBundle:Partial:modal/confirmDelDoc.html.twig" %}
 {% endblock %}

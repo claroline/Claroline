@@ -6,7 +6,7 @@
                 </br>
             </div>
             <div class="modal-body">
-                <h3 class="panel-title">{{'category'|trans}}</h3>
+                <h3 class="panel-title">{{'category'|trans({}, 'ujm_exo')}}</h3>
                 <input class="form-control" type="text" required="required" id='category' name="category" />
                 <input type="hidden" value="{{ edit }}" id="edit" />
 
@@ -26,7 +26,7 @@
         var nom_cat = $("#category").val();
 
         if (nom_cat == '') {
-            alert('{{ 'wrong_name'|trans }}');
+            alert('{{ 'wrong_name'|trans({}, 'ujm_exo') }}');
             return false;
         }
 
@@ -40,7 +40,7 @@
         });
 
         if (exists) {
-            alert('{{ 'already_exist'|trans }}');
+            alert('{{ 'already_exist'|trans({}, 'ujm_exo') }}');
         } else {
             if ($('#edit').val() == 0) {
                 $.ajax({

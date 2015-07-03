@@ -2,4 +2,4 @@
 
 {# no transchoice filter in twigjs... #}
 
-{{ 'warning_one_word'|trans({}, 'messages') }}
+{{ 'warning_one_word'|trans({}, 'ujm_exo') }}

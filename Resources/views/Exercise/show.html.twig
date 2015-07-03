@@ -11,21 +11,21 @@
     <link href="{{ asset('bundles/ujmexo/css/tableLayout.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'exercise' | trans }} : {{ entity.title }} {% endblock %}
+{% block title %} {{ 'exercise' | trans({}, 'ujm_exo') }} : {{ entity.title }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise'|trans }} : {{ entity.title }}</h3>
+        <h3 class="panel-title">{{ 'exercise'|trans({}, 'ujm_exo') }} : {{ entity.title }}</h3>
     </div>
     <div class="panel-body">
         {% if isDesktop() %}
             <a class="btn btn-primary" href="{{ path('claro_desktop_open_tool', { 'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) ~ "#resources/" ~ _resource.getResourceNode().getParent().getId() }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('claro_workspace_open_tool', { 'toolName': 'resource_manager', 'workspaceId': workspace.getId() }) ~ "#resources/" ~ _resource.getResourceNode().getParent().getId() }}">
-                <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+                <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
     </div>
@@ -35,12 +35,12 @@
                 <div class="alert alert-warning">{{ qtiError }}</div>
             {% endif %}
         {% if is_granted('ADMINISTRATE', _resource) %}
-            {{ 'info_exercise_no_puplished'|trans }} :
+            {{ 'info_exercise_no_puplished'|trans({}, 'ujm_exo') }} :
             <a id="btPublish" class="btn btn-primary" onclick="publish('{{ path('ujm_exercise_publish') }}', {{ entity.id }})">
-                <i class="fa fa-check"></i> {{ 'publish' | trans }}
+                <i class="fa fa-check"></i> {{ 'publish' | trans({}, 'ujm_exo') }}
             </a>
         {% else %}
-            {{ 'info_exercise_no_puplished2'|trans }}
+            {{ 'info_exercise_no_puplished2'|trans({}, 'ujm_exo') }}
         {% endif %}
     </div>
 
@@ -49,11 +49,11 @@
             <table class="record_properties table table-striped table-bordered table-condensed">
                 <tbody>
                     <tr>
-                        <th class="classic">{{ 'title' | trans }}</th>
+                        <th class="classic">{{ 'title' | trans({}, 'ujm_exo') }}</th>
                         <td class="classic">{{ entity.title }}</td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'description' | trans }}</th>
+                        <th class="classic">{{ 'description' | trans({}, 'ujm_exo') }}</th>
                         <td class="classic">
                             {% if entity.description is not empty %}
                                 {{ entity.description|raw }}
@@ -63,11 +63,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'start_date' | trans }}</th>
+                        <th class="classic">{{ 'start_date' | trans({}, 'ujm_exo') }}</th>
                         <td class="classic">{{ entity.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                     </tr>
                     <tr>
-                        <th class="classic">{{ 'use_date_end' | trans }}</th>
+                        <th class="classic">{{ 'use_date_end' | trans({}, 'ujm_exo') }}</th>
                         <td class="classic">
                             {% if entity.useDateEnd == 0 %}
                                 <i class="fa fa-times-circle"></i>
@@ -78,14 +78,14 @@
                     </tr>
                     {% if entity.useDateEnd != 0 %}
                         <tr>
-                            <th class="classic">{{ 'end_date' | trans }}</th>
+                            <th class="classic">{{ 'end_date' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">{{ entity.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
                     {% endif %}
 
                     {% if is_granted('ADMINISTRATE', _resource) %}
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'random_questions' | trans }}</th>
+                            <th class="classic">{{ 'random_questions' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.shuffle == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -95,18 +95,18 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'number_questions_draw' | trans }}</th>
+                            <th class="classic">{{ 'number_questions_draw' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.nbQuestion != 0 %}
                                     {{ entity.nbQuestion }}
                                 {% else %}
-                                    {{ 'all_question'|trans }}
+                                    {{ 'all_question'|trans({}, 'ujm_exo') }}
                                 {% endif %}
                             </td>
                         </tr>
                        {#---not operational---#}
                             {#<tr class="hiddencells">
-                            <th class="classic">{{ 'keep_same_question' | trans }}</th>
+                            <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.keepSameQuestion == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -116,21 +116,21 @@
                             </td> #}
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'creation_date' | trans }}</th>
+                            <th class="classic">{{ 'creation_date' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">{{ entity.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'duration' | trans }}</th>
+                            <th class="classic">{{ 'duration' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.duration != 0 %}
                                     {{ entity.duration }}
                                 {% else %}
-                                    {{ 'none'|trans }}
+                                    {{ 'none'|trans({}, 'ujm_exo') }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'print_paper' | trans }}</th>
+                            <th class="classic">{{ 'print_paper' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.doprint == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -140,41 +140,41 @@
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'maximum_tries' | trans }}</th>
+                            <th class="classic">{{ 'maximum_tries' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if entity.maxAttempts != 0 %}
                                     {{ entity.maxAttempts }}
                                 {% else %}
-                                    {{ 'infiny'|trans }}
+                                    {{ 'infiny'|trans({}, 'ujm_exo') }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'availability_of_correction' | trans }}</th>
+                            <th class="classic">{{ 'availability_of_correction' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if(entity.correctionMode == 1) %}
-                                    {{ 'at_the_end_of_assessment' | trans }}
+                                    {{ 'at_the_end_of_assessment' | trans({}, 'ujm_exo') }}
                                 {% elseif (entity.correctionMode == 2) %}
-                                    {{ 'after_the_last_attempt' | trans }}
+                                    {{ 'after_the_last_attempt' | trans({}, 'ujm_exo') }}
                                 {% elseif (entity.correctionMode == 3) %}
-                                    {{ 'from' | trans }} : {{ entity.dateCorrection|date('d/m/Y \\- H\\hi\\ms\\s') }}
+                                    {{ 'from' | trans({}, 'ujm_exo') }} : {{ entity.dateCorrection|date('d/m/Y \\- H\\hi\\ms\\s') }}
                                 {% elseif (entity.correctionMode == 4) %}
-                                    {{ 'never' | trans }}
+                                    {{ 'never' | trans({}, 'ujm_exo') }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'availability_of_score' | trans }}</th>
+                            <th class="classic">{{ 'availability_of_score' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if(entity.markMode == 1) %}
-                                    {{ 'at_the_same_time_that_the_correction' | trans }}
+                                    {{ 'at_the_same_time_that_the_correction' | trans({}, 'ujm_exo') }}
                                 {% else %}
-                                    {{ 'at_the_end_of_assessment' | trans }}
+                                    {{ 'at_the_end_of_assessment' | trans({}, 'ujm_exo') }}
                                 {% endif %}
                             </td>
                         </tr>
                         <tr class="hiddencells">
-                            <th class="classic">{{ 'test_exit' | trans }}</th>
+                            <th class="classic">{{ 'test_exit' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if  entity.dispButtonInterrupt == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -184,7 +184,7 @@
                             </td>
                         </tr>
                         <tr style="display: none;">
-                            <th class="classic">{{ 'lock_attempt' | trans }}</th>
+                            <th class="classic">{{ 'lock_attempt' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if  entity.lockAttempt == 0 %}
                                     <i class="fa fa-times-circle"></i>
@@ -198,10 +198,10 @@
             </table>
             {% if is_granted('ADMINISTRATE', _resource) %}
                 <button type="button" id="more" class="btn btn-primary" onclick="moreInformation();">
-                    <i class="fa fa-plus"></i> {{ 'more_info' | trans }}
+                    <i class="fa fa-plus"></i> {{ 'more_info' | trans({}, 'ujm_exo') }}
                 </button>
                 <button type="button" id="less" class="btn btn-primary" onclick="less_information();">
-                    <i class="fa fa-minus"></i> {{ 'less_information' | trans }}
+                    <i class="fa fa-minus"></i> {{ 'less_information' | trans({}, 'ujm_exo') }}
                 </button>
             {% endif %}
         </div>
@@ -209,28 +209,28 @@
             {% if allowToCompose == 1 and nbQuestion > 0 %}
                 {% if nbUserPaper == 0 %}
                     <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': entity.id }) }}">
-                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
+                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }}
                     </a>
                 {% else %}
                     <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans }}
+                        <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }}
                     </a>
                 {% endif %}
             {% endif %}
             {% if is_granted('ADMINISTRATE', _resource) %}
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_edit', { 'id': entity.id }) }}">
-                    <i class="fa fa-pencil"></i> {{ 'parameters' | trans }}
+                    <i class="fa fa-pencil"></i> {{ 'parameters' | trans({}, 'ujm_exo') }}
                 </a>
                 <a class="btn btn-primary" href="{{ path('ujm_exercise_questions', { 'id': entity.id }) }} " >
-                    <i class="fa fa-question"></i> {{ 'questions' | trans }}
+                    <i class="fa fa-question"></i> {{ 'questions' | trans({}, 'ujm_exo') }}
                 </a>
                 <span id='spanUnpublish' style='display:none'><a id="btUnpublish" class="btn btn-primary" onclick="unpublish('{{ path('ujm_exercise_unpublish') }}', {{ entity.id }})">
-                    <i class="fa fa-times"></i> {{ 'unpublish' | trans }}
+                    <i class="fa fa-times"></i> {{ 'unpublish' | trans({}, 'ujm_exo') }}
                     </a></span>
             {% endif %}
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <a class="btn btn-primary" href="{{ path('ujm_paper_list', { 'exoID': entity.id }) }}">
-                    <i class="fa fa-list"></i> {{ 'result' | trans }}
+                    <i class="fa fa-list"></i> {{ 'result' | trans({}, 'ujm_exo') }}
                 </a>
             {% endif %}
         </div>

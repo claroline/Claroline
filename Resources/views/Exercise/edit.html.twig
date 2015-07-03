@@ -7,7 +7,7 @@
 
 {% extends layout %}
 
-{% block title %} {{ 'exercise_edit' | trans }} {% endblock %}
+{% block title %} {{ 'exercise_edit' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -17,16 +17,16 @@
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">{{ entity.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'exercise_edit' | trans }}</li>
+    <li class="active">{{ 'exercise_edit' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'exercise_edit' | trans }}</h3>
+        <h3 class="panel-title">{{ 'exercise_edit' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
-            <i class="fa fa-arrow-left"></i> {{ 'back' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
     </div>
 
@@ -36,7 +36,7 @@
                 {#--------------------------------------------- Definition of the exercise -----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'exercise_definition' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'exercise_definition' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         {{ form_row(edit_form.title) }}
@@ -66,7 +66,7 @@
                 {#--------------------------------------------- Questions -----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'questions' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'questions' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group row">
@@ -83,7 +83,7 @@
                 {#--------------------------------------------- End of Assessment ----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'at_the_end_of_assessment' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'at_the_end_of_assessment' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group row" style="display: none;">
@@ -105,7 +105,7 @@
                 {#--------------------------------------------- Passage ----------------------------------------------#}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'paper' | trans }}</h3>
+                        <h3 class="panel-title">{{ 'paper' | trans({}, 'ujm_exo') }}</h3>
                     </div>
                     <div class="panel-body">
                         <div class="form-group" style="display: none;">
@@ -128,7 +128,7 @@
             </div>
         </div>
         <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ "save" | trans }}</button>
+            <button type="submit" class="btn btn-primary">{{ "save" | trans({}, 'ujm_exo') }}</button>
             <a class="btn btn-default" href="{{ path('claro_resource_open', { 'resourceType': entity.resourceNode.resourceType.name(), 'node': entity.resourceNode.id }) }}">
                 {{ 'cancel' | trans({}, 'platform') }}
             </a>

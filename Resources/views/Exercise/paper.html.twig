@@ -13,11 +13,11 @@
     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'paper' | trans }} {% endblock %}
+{% block title %} {{ 'paper' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'n_question' | trans }}{{numQ}}</li>
+    <li class="active">{{ 'n_question' | trans({}, 'ujm_exo') }}{{numQ}}</li>
 {% endblock %}
 
 {% block section_content %}
@@ -27,15 +27,15 @@
         <h3 class="panel-title">{{ _resource.getResourceNode().getName() }}
             <span style="float:right;">
                 {% if(maxAttempsAllowed > 0) %}
-                    {{ "attempt_info1" | trans }} {{ maxAttempsAllowed }}
+                    {{ "attempt_info1" | trans({}, 'ujm_exo') }} {{ maxAttempsAllowed }}
                     {% if(maxAttempsAllowed > 1) %}
-                        {{ "attempt_info2plur" | trans }}
+                        {{ "attempt_info2plur" | trans({}, 'ujm_exo') }}
                     {% else %}
-                        {{ "attempt_info2sing" | trans }}
+                        {{ "attempt_info2sing" | trans({}, 'ujm_exo') }}
                     {% endif %}
                      -
                 {% endif %}
-                {{ "attempt_info3" | trans }} {{ numAttempt }}
+                {{ "attempt_info3" | trans({}, 'ujm_exo') }} {{ numAttempt }}
             </span>
         </h3>
     </div>
@@ -95,13 +95,13 @@
             {% if dispButtonInterrupt %}
                 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 <li>
-                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                 </li>
             {% endif %}
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
             {% if numQ == indexMax %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}', '{{ 'alert_ending' | trans }}');"
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}', '{{ 'alert_ending' | trans({}, 'ujm_exo') }}');"
                         class="btn btn-primary"/>
                 </li>
             {% endif %#}
@@ -119,16 +119,16 @@
 
             {% if numQ == indexMax and numQ == 1 %}
                 <li>
-                    <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
+                    <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
                         class="btn btn-primary"/>
                 </li>
             {% else %}
 
                 {% if numQ == 1 %}
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}</a></li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -136,13 +136,13 @@
                 {% if numQ == indexMax %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                         </a>
                     </li>
-                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
+                    <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                     <li>
-                        <input type="button" value="{{ "finish" | trans }}" onClick="finish('{{ interactionType }}');"
+                        <input type="button" value="{{ "finish" | trans({}, 'ujm_exo') }}" onClick="finish('{{ interactionType }}');"
                             class="btn btn-primary"/>
                     </li>
                 {% endif %}
@@ -150,12 +150,12 @@
                 {% if numQ != indexMax and numQ != 1 %}
                     <li>
                         <a href="#" onClick="submitForm({{ numQ-1 }}, '{{ interactionType }}');">
-                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                            <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                         </a>
                     </li>
                     <li>
                         <a href="#" onClick="submitForm({{ numQ+1 }}, '{{ interactionType }}');">
-                            {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                            {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                         </a>
                     </li>
                 {% endif %}
@@ -164,7 +164,7 @@
             {% if dispButtonInterrupt %}
                 <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 <li>
-                    <input type="button" value="{{ "interupt" | trans }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
+                    <input type="button" value="{{ "interupt" | trans({}, 'ujm_exo') }}" onClick="interupt('{{ interactionType }}');" class="btn btn-primary"/>
                 </li>
             {% endif %}
             <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
@@ -172,7 +172,7 @@
             <li>
                 <select id="Qnumber" onchange="submitForm(this.options[this.selectedIndex].value, '{{ interactionType }}');">
                     {% for interactionID in tabOrderInter %}
-                        <option value="{{ loop.index }}">{{ 'n_question' | trans }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
+                        <option value="{{ loop.index }}">{{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ tabOrderInter | length }}</option>
                     {% endfor %}
                 </select>
             </li>
@@ -190,10 +190,10 @@
 
     {{ parent() }}
     
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'messages' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
 
     <script type="text/javascript">
-        var mssg             = "{{ "exercise_alert_break" | trans }}";
+        var mssg             = "{{ "exercise_alert_break" | trans({}, 'ujm_exo') }}";
         var allowToInterrupt = "{{ dispButtonInterrupt }}";
         var interType        = "{{ interactionType }}";
     </script>
