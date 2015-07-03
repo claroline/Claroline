@@ -2,10 +2,10 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'qcm_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'qcm_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nbr_choices' | trans }}', '{{ 'answer_coched' | trans }}', '{{ 'label_empty' | trans }}', '{{ 'point_answers' | trans }}', '{{ 'point_answer' | trans }}', '{{ 'invite_question' | trans }}');"
+    <form onsubmit="return check_form('{{ 'nbr_choices' | trans({}, 'ujm_exo') }}', '{{ 'answer_coched' | trans({}, 'ujm_exo') }}', '{{ 'label_empty' | trans({}, 'ujm_exo') }}', '{{ 'point_answers' | trans({}, 'ujm_exo') }}', '{{ 'point_answer' | trans({}, 'ujm_exo') }}', '{{ 'invite_question' | trans({}, 'ujm_exo') }}');"
           action="{{ path('ujm_interactionqcm_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
@@ -17,7 +17,7 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary" onclick="setOrder();">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>
 </div>
@@ -31,12 +31,12 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        creationQCMEdit('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'position_force' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans }}', 0);
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        creationQCMEdit('{{ 'expected_answer' | trans({}, 'ujm_exo') }}', '{{ 'response' | trans({}, 'ujm_exo') }}', '{{ 'points' | trans({}, 'ujm_exo') }}', '{{ 'comment' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'add_choice' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}', '{{ typeQCM|raw }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}', 0);
+        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        creationQCM('{{ 'expected_answer' | trans }}', '{{ 'response' | trans }}', '{{ 'points' | trans }}', '{{ 'comment' | trans }}', '{{ 'position_force' | trans }}', '{{ 'add_choice' | trans }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}' ,'{{ typeQCM|raw }}');
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        creationQCM('{{ 'expected_answer' | trans({}, 'ujm_exo') }}', '{{ 'response' | trans({}, 'ujm_exo') }}', '{{ 'points' | trans({}, 'ujm_exo') }}', '{{ 'comment' | trans({}, 'ujm_exo') }}', '{{ 'position_force' | trans({}, 'ujm_exo') }}', '{{ 'add_choice' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}','{{ 'advanced_edition' | trans({}, 'ujm_exo') }}' ,'{{ typeQCM|raw }}');
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% endif %}

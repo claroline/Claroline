@@ -2,10 +2,10 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'hole_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'hole_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form onsubmit="return check_form('{{ 'nb_hole' | trans }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
+    <form onsubmit="return check_form('{{ 'nb_hole' | trans({}, 'ujm_exo') }}')" action="{{ path('ujm_interactionhole_create') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {% include "UJMExoBundle:Partial:question.html.twig" %}
             {% include "UJMExoBundle:Partial:interactions/hole.html.twig" %}
@@ -15,7 +15,7 @@
         </div>
         <div class="panel-footer">
             <input type="hidden" name="exercise" value="{{ exoID }}" />
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>
     <div id="prototypes" style="display:none"></div>
@@ -31,19 +31,19 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-        addFormHoleEdit("{{ 'response' | trans }}", "{{ 'size' | trans }}",
-        "{{ 'orthography' | trans }}", "{{ 'delete' | trans }}",
-        "{{ 'hole_selector' | trans }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-        "{{ 'key_word' | trans }}", "{{ 'points' | trans  }}");
-        newHintEdit("{{ 'hint' | trans }}", "{{ 'penalty' | trans }}", "{{ 'hint' | trans }}", "{{ 'delete' | trans }}");
+        addFormHoleEdit("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size' | trans({}, 'ujm_exo') }}",
+        "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
+        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
+        "{{ 'key_word' | trans({}, 'ujm_exo') }}", "{{ 'points' | trans({}, 'ujm_exo')  }}");
+        newHintEdit("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
     </script>
 {% else %}
     <script type="text/javascript">
-        addFormHole("{{ 'response' | trans }}", "{{ 'size'| trans }}",
-        "{{ 'orthography' | trans }}", "{{ 'delete' | trans }}",
-        "{{ 'hole_selector' | trans }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
-        "{{ 'key_word' | trans  }}", "{{ 'points' | trans  }}");
+        addFormHole("{{ 'response' | trans({}, 'ujm_exo') }}", "{{ 'size'| trans({}, 'ujm_exo') }}",
+        "{{ 'orthography' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}",
+        "{{ 'hole_selector' | trans({}, 'ujm_exo') }}", "{{ asset('bundles/ujmexo/images/ajouter_ligne.jpeg') }}",
+        "{{ 'key_word' | trans({}, 'ujm_exo')  }}", "{{ 'points' | trans({}, 'ujm_exo')  }}");
 
-    newHint("{{ 'hint' | trans }}", "{{ 'penalty' | trans }}", "{{ 'hint' | trans }}", "{{ 'delete' | trans }}");
+    newHint("{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'penalty' | trans({}, 'ujm_exo') }}", "{{ 'hint' | trans({}, 'ujm_exo') }}", "{{ 'delete' | trans({}, 'ujm_exo') }}");
     </script>
 {% endif %}

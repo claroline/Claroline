@@ -11,7 +11,7 @@
                     'href': path('claro_desktop_open')
                 },
                 {
-                    'name': 'graphic_edition' | trans,
+                    'name': 'graphic_edition' | trans({}, 'ujm_exo'),
                     'href': ''
                 }
             ])
@@ -27,20 +27,20 @@
     <link rel="stylesheet" href="{{ asset('bundles/ujmexo/js/ext/jquery-ui-smoothness.css') }}"/>
 {% endblock %}
 
-{% block title %} {{ 'edit_question' | trans }} {% endblock %}
+{% block title %} {{ 'edit_question' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block section_content %}
 
     <div class="panel-heading">
         <div class="panel-heading">
-            <h3 class="panel-title">{{ 'graphic_edition'|trans }}</h3>
+            <h3 class="panel-title">{{ 'graphic_edition'|trans({}, 'ujm_exo') }}</h3>
         </div>
     </div>
 
     {% include "UJMExoBundle:Partial:question/linkToBack.html.twig" %}
 
-    <form id="InterGraphForm" onsubmit="return Check( '{{ 'no_question' | trans }} ...','{{ 'no_img' | trans }} !',
-        '{{ 'no_answer_zone' | trans }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
+    <form id="InterGraphForm" onsubmit="return Check( '{{ 'no_question' | trans({}, 'ujm_exo') }} ...','{{ 'no_img' | trans({}, 'ujm_exo') }} !',
+        '{{ 'no_answer_zone' | trans({}, 'ujm_exo') }} ...', '{{ edit_form.interaction.invite.vars.id }}');"
         action="{{ path('ujm_interactiongraphic_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
 
         <div class="panel-body">
@@ -54,7 +54,7 @@
         </div>
 
         <div class="panel-footer">
-            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans }}</button>
+            <button type="submit" id="button_submit" class="btn btn-primary">{{ 'save' | trans({}, 'ujm_exo') }}</button>
             {% if exoID == -1 %}
                 <a class="btn btn-default" href="{{ path('ujm_question_index') }}">{{ "cancel" | trans({}, "platform") }}</a>
             {% else %}
@@ -85,15 +85,15 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+            newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
         });
     </script>
 
     <script type="text/javascript">
         var translations = {
-            'tradWrongPoint' : '{{ 'wrong_point' | trans }}',
-            'tradCircle' : '{{ 'cercle' | trans }}',
-            'tradSquare' : '{{ 'square' | trans }}'
+            'tradWrongPoint' : '{{ 'wrong_point' | trans({}, 'ujm_exo') }}',
+            'tradCircle' : '{{ 'cercle' | trans({}, 'ujm_exo') }}',
+            'tradSquare' : '{{ 'square' | trans({}, 'ujm_exo') }}'
         }
     </script>
 {% endblock %}

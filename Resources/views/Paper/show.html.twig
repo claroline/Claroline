@@ -13,27 +13,27 @@
     <link href="{{ asset('bundles/ujmexo/css/graphic.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 
-{% block title %} {{ 'correction' | trans }} {% endblock %}
+{% block title %} {{ 'correction' | trans({}, 'ujm_exo') }} {% endblock %}
 
 {% block resourceBreadcrumb %}
     <li><a href="{{ path('claro_resource_open', { 'resourceType': _resource.resourceNode.resourceType.name(), 'node': _resource.resourceNode.id }) }}">{{ _resource.getResourceNode().getName() }}</a></li>
-    <li class="active">{{ 'paper' | trans }}</li>
+    <li class="active">{{ 'paper' | trans({}, 'ujm_exo') }}</li>
 {% endblock %}
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'correction' | trans }} </h3>
+        <h3 class="panel-title">{{ 'correction' | trans({}, 'ujm_exo') }} </h3>
     </div>
     <div class="panel-body">
         <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
-            <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans }}
+            <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans({}, 'ujm_exo') }}
         </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
-            <i class="fa fa-list"></i> {{ 'paper_list' | trans }}
+            <i class="fa fa-list"></i> {{ 'paper_list' | trans({}, 'ujm_exo') }}
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
-                <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans }}
+                <i class="fa fa-check-square-o"></i> {{ 'start_again' | ({}, 'ujm_exo') }}
             </a>
         {% endif %}
 
@@ -50,7 +50,7 @@
         {% if p == -2 or p == -1%}
             {% if p == -1 %}
                 <script type="text/javascript">
-                    alert('{{ 'not_allowed_modify_paper' | trans}}');
+                    alert('{{ 'not_allowed_modify_paper' | trans({}, 'ujm_exo') }}');
                 </script>
             {% endif %}
             <hr/>
@@ -59,9 +59,9 @@
                 {% set scoreFinal = scoreFinal * 20 %}
                 <h3 id="finalLabel">
                     {% if scoreTemp == true %}
-                        {{ "temporary_mark" | trans }} :
+                        {{ "temporary_mark" | trans({}, 'ujm_exo') }} :
                     {% else %}
-                        {{ 'final_mark' | trans }} :
+                        {{ 'final_mark' | trans({}, 'ujm_exo') }} :
                     {% endif %}
                     {% set scoreFinal = roundUpOrDown(scoreFinal) %}
                     <span id="paperFinalScore">{{ scoreFinal }} / 20</span>
@@ -72,7 +72,7 @@
             {% endif %}
 
             {% set needLegend = false %}
-            <h3 class="panel-title">{{ 'list_question' | trans }} :</h3>
+            <h3 class="panel-title">{{ 'list_question' | trans({}, 'ujm_exo') }} :</h3>
                 <ol>
                     {% set i = 0 %}
                     {% for interaction in interactions %}
@@ -102,7 +102,7 @@
 
                 {% if needLegend == true %}
                     <hr/>
-                    <h6 style="color: red;">( {{ 'need_correction' | trans }} ).</h6>
+                    <h6 style="color: red;">( {{ 'need_correction' | trans({}, 'ujm_exo') }} ).</h6>
                 {% endif %}
 
         {% endif %}
@@ -115,7 +115,7 @@
             {#% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score_list_question' |trans }}
+                        {{ 'score_list_question' |trans({}, 'ujm_exo') }}
                     </a>
                 </li>
             {% endif %}
@@ -187,7 +187,7 @@
                     <li>
                         <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -1 }) }}"
                            class="btn btn-primary" style="background-color: #428BCA;">
-                            {{ 'final_mark' |trans }}
+                            {{ 'final_mark' |trans({}, 'ujm_exo') }}
                         </a>
                     </li>
                 {% endif %}
@@ -207,34 +207,34 @@
             {% if p != -2 %}
                 <li>
                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': -2 }) }}" class="btn btn-primary" style="background-color: #428BCA;">
-                        {{ 'score_list_question' |trans }}
+                        {{ 'score_list_question' |trans({}, 'ujm_exo') }}
                     </a>
                 </li>
 
                 {% if (display == 'all') %}
                     {% if p == 0 %}
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}</a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();"><i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}</a></li>
                             <li>
                                 <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                    {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                                    {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                                 </a>
                         </li>
                     {% elseif p == indexMax - 1 %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                             </a>
                         </li>
-                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
+                        <li class="disabled"><a href="#" onclick="event.preventDefault();">{{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i></a></li>
                     {% else %}
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p - 1 }) }}">
-                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans }}
+                                <i class="fa fa-chevron-left"></i> &nbsp; {{ 'previous' | trans({}, 'ujm_exo') }}
                             </a>
                         </li>
                         <li>
                             <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': p + 1 }) }}">
-                                {{ 'next' | trans }} &nbsp; <i class="fa fa-chevron-right"></i>
+                                {{ 'next' | trans({}, 'ujm_exo') }} &nbsp; <i class="fa fa-chevron-right"></i>
                             </a>
                         </li>
                     {% endif %}
@@ -246,23 +246,23 @@
                             {% for interaction in interactions %}
                                 {% if interaction.type == 'InteractionOpen' %}
                                     <option value="{{ loop.index }}" style="color: purple;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionQCM' %}
                                     <option value="{{ loop.index }}" style="color: green;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionGraphic' %}
                                     <option value="{{ loop.index }}" style="color: black;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionHole' %}
                                     <option value="{{ loop.index }}" style="color: blue;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% elseif interaction.type == 'InteractionMatching' %}
                                     <option value="{{ loop.index }}" style="color: orange;" href="{{ path('ujm_paper_show', { 'id': paperID, 'p': loop.index - 1 }) }}">
-                                        {{ 'n_question' | trans }}{{ loop.index }} / {{ interactions | length }}
+                                        {{ 'n_question' | trans({}, 'ujm_exo') }}{{ loop.index }} / {{ interactions | length }}
                                     </option>
                                 {% endif %}
 

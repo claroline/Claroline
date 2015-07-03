@@ -5,11 +5,11 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'graphic_creation' | trans }}</h3>
+        <h3 class="panel-title">{{ 'graphic_creation' | trans({}, 'ujm_exo') }}</h3>
     </div>
 
-    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'no_question' | trans }} ...',
-        '{{ 'no_img' | trans }} !', '{{ 'no_answer_zone' | trans }} ...',
+    <form name="InterGraphForm" id="InterGraphForm" onsubmit="return Check('{{ 'no_question' | trans({}, 'ujm_exo') }} ...',
+        '{{ 'no_img' | trans({}, 'ujm_exo') }} !', '{{ 'no_answer_zone' | trans({}, 'ujm_exo') }} ...',
         '{{ form.interaction.invite.vars.id }}');" action="{{ path('ujm_interactiongraphic_create') }}" method="post" {{ form_enctype(form) }}>
 
         <div class="panel-body">
@@ -23,7 +23,7 @@
         </div>
 
         <div class="panel-footer">
-            <button type="submit"  id="button_submit" class="btn btn-primary">{{ 'create' | trans }}</button>
+            <button type="submit"  id="button_submit" class="btn btn-primary">{{ 'create' | trans({}, 'ujm_exo') }}</button>
         </div>
     </form>
 </div>
@@ -44,18 +44,18 @@
 
 {% if error is defined %}
     <script type="text/javascript">
-        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        newHintEdit('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
+        newHint('{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'penalty' | trans({}, 'ujm_exo') }}', '{{ 'hint' | trans({}, 'ujm_exo') }}', '{{ 'delete' | trans({}, 'ujm_exo') }}');
     </script>
 
     <script type="text/javascript">
         var translations = {
-            'tradWrongPoint' : '{{ 'wrong_point' | trans }}',
-            'tradCircle' : '{{ 'cercle' | trans }}',
-            'tradSquare' : '{{ 'square' | trans }}'
+            'tradWrongPoint' : '{{ 'wrong_point' | trans({}, 'ujm_exo') }}',
+            'tradCircle' : '{{ 'cercle' | trans({}, 'ujm_exo') }}',
+            'tradSquare' : '{{ 'square' | trans({}, 'ujm_exo') }}'
         }
     </script>
 {% endif %}

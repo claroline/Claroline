@@ -6,8 +6,8 @@
                 </br>
             </div>
             <div class="modal-body">
-                <h3 class="panel-title">{{'mark'|trans}}</h3>
-                <p>{{ 'info_mark'|trans }}.</p>
+                <h3 class="panel-title">{{'mark'|trans({}, 'ujm_exo') }}</h3>
+                <p>{{ 'info_mark'|trans({}, 'ujm_exo') }}.</p>
                 <input class="form-control" type="text" required="required" id='mark' name="mark" />
                 <input class="form-control" type="hidden" id="respid" value="{{ respid }}" name="respid" />
                 <input class="form-control" type="hidden" id="maxScore" value="{{ maxScore }}" name="maxScore" />
@@ -34,9 +34,9 @@
         var scoreFinal;
 
         if (mark != parseFloat(mark)) {
-            alert('{{ "in_valid_mark" | trans }}');
+            alert('{{ "in_valid_mark" | trans({}, 'ujm_exo') }}');
         } else if (parseFloat(mark) > parseFloat(maxScore)) {
-            alert('{{ "mark_bigest" | trans }} : '+maxScore);
+            alert('{{ "mark_bigest" | trans({}, 'ujm_exo') }} : '+maxScore);
         }else {
 
             if(currentOpenMark == -1) {
