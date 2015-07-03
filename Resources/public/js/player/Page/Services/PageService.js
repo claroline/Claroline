@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    angular.module('PageModule').factory('PageService', [
+    angular.module('Page').factory('PageService', [
         '$http',
         function PageService($http) {
             /**

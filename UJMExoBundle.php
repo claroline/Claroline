@@ -30,8 +30,8 @@ class UJMExoBundle extends PluginBundle {
             'Innova\AngularUITranslationBundle\InnovaAngularUITranslationBundle',
             'Innova\AngularUIResourcePickerBundle\InnovaAngularUIResourcePickerBundle',
             'Innova\AngularUITinyMCEBundle\InnovaAngularUITinyMCEBundle',
-            'Innova\AngularUITreeBundle\InnovaAngularUITreeBundle',
             'Innova\AngularUIPageslideBundle\InnovaAngularUIPageslideBundle',
+            'Innova\AngularUISortableBundle\AngularUISortableBundle',
         );
         if (in_array($bundleClass, $emptyConfigs)) {
             return $config;
