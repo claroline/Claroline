@@ -45,7 +45,7 @@
         h2 {
             font-size: 17px;
             margin: 0;
-            padding: 0 floor(@grid-gutter-width / 2);
+            padding: 0 @grid-gutter-width 0 floor(@grid-gutter-width / 2);
             position: absolute;
             top: 0;
             left: 0;
@@ -53,6 +53,10 @@
             height: @navbar-height;
             line-height: @navbar-height;
             z-index: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
         }
 
         em {
