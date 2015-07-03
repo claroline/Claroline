@@ -40,7 +40,7 @@ class WSRestController extends Controller
         $fileUp  = $request->files->get('picture');
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
-            $userDir = $this->container->getParameter('ujm.param.exo_directory') . '/users_documents/'.$this->container->get('security.context')
+            $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.token_storage')
                 ->getToken()->getUser()->getUsername();
 
             if (!is_dir($this->container->getParameter('ujm.param.exo_directory'))) {
@@ -65,9 +65,8 @@ class WSRestController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 $document = new Document();
 
-                $BDDPath = str_replace("/var/www/Claroline/app/../web", ".", $userDir);
                 $document->setLabel(trim($request->get('label')));
-                $document->setUrl($BDDPath.'/images/'. $file);
+                $document->setUrl($userDir.'/images/'. $file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.token_storage')->getToken()->getUser());
 
