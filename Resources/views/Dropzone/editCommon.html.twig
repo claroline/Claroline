@@ -178,8 +178,15 @@
 
             <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'innova_collecticiel') }}</a>
 
-            <button id="submitAndGotoCriteriaButton" type="submit"
-                    class="btn btn-primary submit_button">{% if dropzone.peerReview %}{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}{% else %}{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}{% endif %}</button>
+            {# fix #60 Enlever un bouton InnovaERV
+            <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
+            {% if dropzone.peerReview %}
+                {{ 'Save and continue'|trans({}, 'innova_collecticiel') }}
+            {% else %}
+                {{ 'Save and finished'|trans({}, 'innova_collecticiel') }}
+            {% endif %}
+            </button>
+            #}
         </div>
         {{ form_rest(form) }}
     </form>
