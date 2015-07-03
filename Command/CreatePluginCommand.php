@@ -418,7 +418,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     {
         $config['plugin']['themes'][] = array(
             'name' => $theme . ' theme',
-            'path' => 'less/theme/theme.html.twig'
+            'path' => 'less/theme/' . $theme .'theme/theme.html.twig'
         );
     }
 
