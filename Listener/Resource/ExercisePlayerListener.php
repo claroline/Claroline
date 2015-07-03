@@ -59,7 +59,12 @@ class ExercisePlayerListener extends ContainerAware {
         $form->submit($request);
         if ($form->isValid()) {
             $resource = $form->getData();
-            $event->setResources(array($resource));
+            
+            $ep = $this->container->get('ujm_exo_bundle.manager.exercise_player')->createFirstAndLastPage($resource);
+            
+            $event->setResources(array($ep));
+            
+            
         } else {
             $content = $this->container->get('templating')->render(
                     'ClarolineCoreBundle:Resource:createForm.html.twig', array(
@@ -99,7 +104,7 @@ class ExercisePlayerListener extends ContainerAware {
     public function onDelete(DeleteResourceEvent $event) {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resource = $event->getResource();
-        $em->remove($$resource);
+        $em->remove($resource);
         $event->stopPropagation();
     }
 

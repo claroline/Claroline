@@ -7,26 +7,51 @@
     angular.module('Page').factory('PageService', [
         '$http',
         function PageService($http) {
-            /**
-             * Page object
-             * @constructor
-             */
-            var Page = function Page(name) {
-               this.name = name;
-            };
-
            
+           /**
+             * ExercisePlayer Id
+             * @type {Number}
+             */
+            var id = null;
+            
+            /**
+             * current page properties
+             * @type object
+             */
+            var page = {
+                title: 'new page'
+            };
 
             return {
                 /**
                  * Test method
                  *
-                 * @param   {object} [parentStep]
-                 * @returns {Step}
+                 * @param   {string} [name]
+                 * @returns {string}
                  */
-                hello: function () {
-                    return this.name;
+                hello: function (name) {
+                    return 'Hello ' + name;
                 },
+                setPlayerId: function (value){
+                    id = value;
+                },                
+                /**
+                 * Get exercise player ID
+                 * @returns {Number}
+                 */
+                getPlayerId: function(){
+                    return id;
+                },
+                setPage: function(value){
+                    page = value;
+                },
+                /**
+                 * 
+                 * @returns {Object} page
+                 */
+                getPage: function(){
+                    return page;
+                }
             };
         }
     ]);

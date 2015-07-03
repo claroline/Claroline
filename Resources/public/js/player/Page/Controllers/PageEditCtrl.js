@@ -1,7 +1,20 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+(function () {
+    'use strict';
 
+    angular.module('Page').controller('PageEditCtrl', [
+        'PageService',
+        function (PageService) {
+            
 
+            this.sayHello = function (name) {            
+                // console.log(PageService.hello(name));
+            };
+            
+            this.getPage = function (){
+                //console.log('called');
+                //console.log(PageService.getPage());
+                return PageService.getPage();
+            };
+        }
+    ]);
+})();

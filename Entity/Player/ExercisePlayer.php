@@ -5,6 +5,8 @@ namespace UJM\ExoBundle\Entity\Player;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use UJM\ExoBundle\Entity\Player\Page;
 
 /**
  * ExercisePlayer Entity
@@ -12,7 +14,7 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
  * @ORM\Table(name="ujm_exercise_player")
  * @ORM\Entity
  */
-class ExercisePlayer extends AbstractResource {
+class ExercisePlayer extends AbstractResource implements \JsonSerializable {
 
     /**
      * @var integer
@@ -36,23 +38,35 @@ class ExercisePlayer extends AbstractResource {
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
+    protected $description;
 
-   
+    /**
+     * @var datetime $creationDate
+     *
+     * @ORM\Column(name="creation", type="datetime")
+     */
+    protected $creationDate;
+
+    /**
+     * @var datetime $modificationDate
+     *
+     * @ORM\Column(name="modification", type="datetime")
+     */
+    protected $modificationDate;
 
     /**
      * @var datetime $startDate
      *
      * @ORM\Column(name="start_date", type="datetime")
      */
-    private $startDate;
+    protected $startDate;
 
     /**
      * @var datetime $endDate
      *
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
-    private $endDate;
+    protected $endDate;
 
     /**
      * @var boolean
@@ -68,10 +82,20 @@ class ExercisePlayer extends AbstractResource {
      */
     protected $modified;
 
+    /**
+     * Pages associated with ExercisePlayer
+     * @var pages
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Player\Page", cascade={"remove", "persist"}, mappedBy="exercisePlayer") 
+     */
+    protected $pages;
+
     public function __construct() {
         $this->published = false;
         $this->modified = false;
         $this->startDate = new \DateTime();
+        $this->creationDate = new \DateTime();
+        $this->modificationDate = new \DateTime();
+        $this->pages = new ArrayCollection();
     }
 
     /**
@@ -83,9 +107,37 @@ class ExercisePlayer extends AbstractResource {
     }
 
     /**
+     * 
+     * @param Page $p
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
+     */
+    public function addPage(Page $p) {
+        $this->pages[] = $p;
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Page $p
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
+     */
+    public function removePage(Page $p) {
+        $this->pages->removeElement($p);
+        return $this;
+    }
+
+    /**
+     * 
+     * @return ArrayCollection
+     */
+    public function getPages() {
+        return $this->pages;
+    }
+
+    /**
      * Set player name
      * @param string $name
-     * @return \UJM\ExoBundle\Entity\Player
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setName($name) {
         $this->name = $name;
@@ -104,7 +156,7 @@ class ExercisePlayer extends AbstractResource {
      * Set player startDate
      *
      * @param datetime $startDate
-     * @return \UJM\ExoBundle\Entity\Player
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setStartDate($startDate) {
         $this->startDate = $startDate;
@@ -124,7 +176,7 @@ class ExercisePlayer extends AbstractResource {
      * Set player endDate
      *
      * @param datetime $endDate
-     *  @return \UJM\ExoBundle\Entity\Player
+     *  @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setEndDate($endDate) {
         $this->endDate = $endDate;
@@ -141,10 +193,50 @@ class ExercisePlayer extends AbstractResource {
     }
 
     /**
+     * Set player creation date
+     *
+     * @param datetime $date
+     *  @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
+     */
+    public function setCreationDate($date) {
+        $this->creationDate = $date;
+        return $this;
+    }
+
+    /**
+     * Get player creation date
+     *
+     * @return datetime
+     */
+    public function getCreationDate() {
+        return $this->creationDate;
+    }
+
+    /**
+     * Set player modification date
+     *
+     * @param datetime $date
+     *  @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
+     */
+    public function setModificationDate($date) {
+        $this->modificationDate = $date;
+        return $this;
+    }
+
+    /**
+     * Get player modification date
+     *
+     * @return datetime
+     */
+    public function getModificationDate() {
+        return $this->modificationDate;
+    }
+
+    /**
      * Set player description
      *
      * @param text $description
-     * @return \UJM\ExoBundle\Entity\Player
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setDescription($description) {
         $this->description = $description;
@@ -161,28 +253,9 @@ class ExercisePlayer extends AbstractResource {
     }
 
     /**
-     * Set player shuffle property
-     *
-     * @param boolean $shuffle
-     * @return \UJM\ExoBundle\Entity\Player
-     */
-    public function setShuffle($shuffle) {
-        $this->shuffle = $shuffle;
-        return $this;
-    }
-
-    /**
-     * Get player shuffle property
-     * @return boolean
-     */
-    public function getShuffle() {
-        return $this->shuffle;
-    }
-
-    /**
      * Set player published property
      * @param boolean $published
-     * @return \UJM\ExoBundle\Entity\Player
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setPublished($published) {
         $this->published = $published;
@@ -200,7 +273,7 @@ class ExercisePlayer extends AbstractResource {
     /**
      * Set player modified property
      * @param boolean $modified
-     * @return \UJM\ExoBundle\Entity\Player
+     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
      */
     public function setModified($modified) {
         $this->modified = $modified;
@@ -213,6 +286,21 @@ class ExercisePlayer extends AbstractResource {
      */
     public function getModified() {
         return $this->modified;
+    }
+
+    public function jsonSerialize() {
+        // TODO serialize Pages arraycollection
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'start' => $this->startDate,
+            'end' => $this->endDate,
+            'creation' => $this->creationDate,
+            'modification' => $this->modificationDate,
+            'published' => $this->published,
+            'pages' => $this->pages
+        );
     }
 
 }

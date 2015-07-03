@@ -1,19 +1,35 @@
 {% extends "UJMExoBundle:Player:layout.html.twig" %}
 
-
-
 {% block breadcrumb %}
     {{ parent() }}
 {% endblock %}
 
-
-
-{% block content %}
-
-     <div class="activity-player" data-ng-app="ExercisePlayerEditorApp" data-ng-cloak="">
-        <page-show></page-show>
+{% block content %} 
+    <div class="exercise-player-container" data-ng-app="ExercisePlayerEditorApp" data-ng-cloak="">
+        <page-edit class="exercise-player-page" data-player="{{_resource | json_encode() }}" data-page="{title:'hello page'}"></page-edit>
     </div>
+{% endblock %}
 
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_exo_player_editor.js'
+
+        '@UJMExoBundle/Resources/public/js/player/Page/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Directives/*'
+        '@UJMExoBundle/Resources/public/js/player/Page/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/player/editor.module.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+   
 {% endblock %}
 
 

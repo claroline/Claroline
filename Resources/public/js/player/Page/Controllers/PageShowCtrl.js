@@ -6,8 +6,8 @@
         function (PageService) {
             
 
-            this.sayHello = function () {
-                console.log(PageService.hello());
+            this.sayHello = function (name) {            
+                console.log(PageService.hello(name));
             };
         }
     ]);

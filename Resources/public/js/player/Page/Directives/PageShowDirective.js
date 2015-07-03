@@ -14,10 +14,12 @@
                 controllerAs: 'pageShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/show.html',
                 scope: {
-                    activity: '@'
+                    page: '=',
+                    name: '@',
+                    player: '='
                 },
                 link: function (scope, element, attr, pageShowCtrl) {
-                    pageShowCtrl.sayHello();
+                    
                 }
             };
         }
