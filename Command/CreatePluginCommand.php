@@ -410,15 +410,15 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     public function addTheme($rootDir, $vendor, $bundle, $theme, &$config)
     {
-        $this->addThemeConfig($theme);
+        $this->addThemeConfig($theme, $config);
         $this->addCssFile($rootDir, $theme);
     }
 
-    public function addThemeConfig($theme)
+    public function addThemeConfig($theme, &$config)
     {
         $config['plugin']['themes'][] = array(
             'name' => $theme . ' theme',
-            'path' => 'less/theme/' . $theme .'theme/theme.html.twig'
+            'path' => 'less/theme/theme.html.twig'
         );
     }
 
