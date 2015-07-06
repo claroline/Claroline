@@ -173,7 +173,7 @@
                     {% set i = i + 1 %}
                 {% endfor %}
 
-                plot3 = $.jqplot('histo_success', [{{ series }}], {
+                plot3 = $.jqplot('histoSuccess', [{{ series }}], {
 
                     stackSeries: true,
                     captureRightClick: true,
@@ -242,7 +242,7 @@
 
                     var s1 = [{{ coeffQ }}];
 
-                    $.jqplot('histo_discrimination', [s1], {
+                    $.jqplot('histoDiscrimination', [s1], {
 
                         stackSeries: true,
                         series:[{renderer:$.jqplot.BarRenderer}],
@@ -288,7 +288,7 @@
                 /*********************************histoMeasureOfDifficulty******************************************************/
                 var percent = [{{MeasureDifficulty}}];
 
-                $.jqplot('histo_measure_difficulty', [percent], {
+                $.jqplot('histoMeasureOfDifficulty', [percent], {
 
                     series:[{renderer:$.jqplot.BarRenderer}],
 
