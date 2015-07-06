@@ -42,7 +42,7 @@ class Updater050002 extends Updater
             $rowPortfolioTitles = $this->connection->query('SELECT * FROM icap__portfolio_widget_title');
 
             foreach ($rowPortfolioTitles as $rowPortfolioTitle) {
-                $abstractWidgets = $this->connection->query('SELECT aw.portfolio_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
+                $abstractWidgets = $this->connection->query('SELECT aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
                 foreach ($abstractWidgets as $abstractWidget) {
                     $this->connection->update('icap__portfolio',
                         [
@@ -50,7 +50,7 @@ class Updater050002 extends Updater
                             'slug' => $rowPortfolioTitle['slug']
                         ],
                         [
-                            'id' => $abstractWidget['portfolio_id']
+                            'id' => $abstractWidget['user_id']
 
                         ]);
                 }
