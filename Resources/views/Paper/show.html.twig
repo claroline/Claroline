@@ -33,7 +33,7 @@
         </a>
         {% if retryButton %}
             <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exoId }) }}">
-                <i class="fa fa-check-square-o"></i> {{ 'start_again' | ({}, 'ujm_exo') }}
+                <i class="fa fa-check-square-o"></i> {{ 'start_again' | trans({}, 'ujm_exo') }}
             </a>
         {% endif %}
 
