@@ -42,17 +42,25 @@ class Updater050002 extends Updater
             $rowPortfolioTitles = $this->connection->query('SELECT * FROM icap__portfolio_widget_title');
 
             foreach ($rowPortfolioTitles as $rowPortfolioTitle) {
-                $abstractWidgets = $this->connection->query('SELECT aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
-                foreach ($abstractWidgets as $abstractWidget) {
+                $rowAbstractWidgets = $this->connection->query('SELECT aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
+                foreach ($rowAbstractWidgets as $rowAbstractWidget) {
+                    $portfolioId = $rowAbstractWidget['user_id'];
                     $this->connection->update('icap__portfolio',
                         [
                             'title' => $rowPortfolioTitle['title'],
                             'slug' => $rowPortfolioTitle['slug']
                         ],
                         [
-                            'id' => $abstractWidget['user_id']
+                            'id' => $portfolioId
 
                         ]);
+
+                    $this->connection->query(sprintf("UPDATE icap__portfolio_abstract_widget aw
+                        SET aw.user_id = (
+                            SELECT p.user_id
+                            FROM icap__portfolio p
+                            WHERE p.id = %d
+                        )", $portfolioId));
                 }
 
                 $this->connection->delete('icap__portfolio_abstract_widget',
@@ -69,6 +77,11 @@ class Updater050002 extends Updater
                 }
             }
             $this->log(sprintf('  %d portfolio processed', $totalPortfolioProcessed + $nbPortfolioProcessed));
+
+            $this->connection->delete('icap__portfolio_widget_type',
+                [
+                    'name' => 'title'
+                ]);
 
             $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_title');
         }
