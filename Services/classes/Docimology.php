@@ -363,6 +363,16 @@ class Docimology {
         return $responsesTab;
     }
 
+    /**
+     * Docimology
+     * To get array of marks for an exercise
+     *
+     * @access private
+     *
+     * @param UJM\ExoBundle\Entity\Exercise $exercise
+     *
+     * @return float[]
+     */
     private function getArrayMarks($exercise)
     {
         $paperSer = $this->container->get('ujm.exo_paper');
