@@ -216,33 +216,12 @@ class Docimology {
      */
     public function histoMark($exerciseId)
     {
-        $paperSer = $this->container->get('ujm.exo_paper');
         $em = $this->doctrine->getManager();
-        $maxY = 4;
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
-        if ($exercise->getNbQuestion() == 0) {
-            $exoScoreMax = $this->container->get('ujm.exo_exercise')->getExerciseTotalScore($exerciseId);
-        }
-        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'noteExo');
-        $tabMarks = array();
+        $maxY = 4;
+        $tabMarks = $this->getArrayMarks($exercise);
         $histoMark = array();
 
-        foreach ($marks as $mark) {
-            if ($exercise->getNbQuestion() > 0) {
-                $exoScoreMax = $this->container->get('ujm.exo_paper')->getPaperTotalScore($mark['paper']);
-            }
-            $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
-
-            $score = $paperSer->roundUpDown($scoreU);
-
-            if (isset($tabMarks[(string) $score])) {
-                $tabMarks[(string) $score] += 1;
-            } else {
-                $tabMarks[(string) $score] = 1;
-            }
-        }
-
-        ksort($tabMarks);
         $scoreList = implode(",", array_keys($tabMarks));
 
         if (max($tabMarks) > 4) {
@@ -382,6 +361,34 @@ class Docimology {
         $responsesTab = $this->responseStatus($responses, $scoreMax);
 
         return $responsesTab;
+    }
+
+    private function getArrayMarks($exercise)
+    {
+        $paperSer = $this->container->get('ujm.exo_paper');
+        $em = $this->doctrine->getManager();
+        if ($exercise->getNbQuestion() == 0) {
+            $exoScoreMax = $this->container->get('ujm.exo_exercise')->getExerciseTotalScore($exercise->getId());
+        }
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exercise->getId(), 'noteExo');
+        foreach ($marks as $mark) {
+            if ($exercise->getNbQuestion() > 0) {
+                $exoScoreMax = $this->container->get('ujm.exo_paper')->getPaperTotalScore($mark['paper']);
+            }
+            $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+
+            $score = $paperSer->roundUpDown($scoreU);
+
+            if (isset($tabMarks[(string) $score])) {
+                $tabMarks[(string) $score] += 1;
+            } else {
+                $tabMarks[(string) $score] = 1;
+            }
+        }
+
+        ksort($tabMarks);
+
+        return $tabMarks;
     }
 
 }
