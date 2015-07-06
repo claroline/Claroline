@@ -176,17 +176,19 @@
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
                class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
 
-            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>{{ 'Save'|trans({}, 'innova_collecticiel') }}</a>
+            {# fix #60 Enlever un bouton InnovaERV #}
+            {# fix #60 Mise en commentaire car un bouton s'affiche via le JS #}
+{#            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>1{{ 'Save'|trans({}, 'innova_collecticiel') }}</a> #}
 
-            {# fix #60 Enlever un bouton InnovaERV
+            {# fix #60 Enlever un bouton InnovaERV #}
             <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
-            {% if dropzone.peerReview %}
-                {{ 'Save and continue'|trans({}, 'innova_collecticiel') }}
-            {% else %}
-                {{ 'Save and finished'|trans({}, 'innova_collecticiel') }}
-            {% endif %}
+                {# fix #60 Mise en commentaire car ce test ne sert plus à rien #}
+                {# {% if dropzone.peerReview %}
+                    {{ 'Save'|trans({}, 'innova_collecticiel') }}
+                {% else %} #}
+                    {{ 'Save'|trans({}, 'innova_collecticiel') }}
+                {# {% endif %} #}
             </button>
-            #}
         </div>
         {{ form_rest(form) }}
     </form>
@@ -281,7 +283,7 @@
                     $('#innova_collecticiel_common_form_manualState_3').parent().show();
                     $('#innova_collecticiel_common_form_diplayCorrectionsToLearners').show();
                     $('#dropzone_notification_part').hide();
-                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}');
+/*                    $('.submit_button').html('{{ 'Save and continue'|trans({}, 'innova_collecticiel') }}'); */
                 } else {
                     // hide the peerReview options
                     $('.peer-review-options').hide();
@@ -301,7 +303,7 @@
 
                     $('#dropzone_notification_part').show();
 
-                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}');
+                    $('.submit_button').html('{{ 'Save and finished'|trans({}, 'innova_collecticiel') }}'); 
 
                 }
                 manageCorrectionVisibility(peerReviewEnabled);
