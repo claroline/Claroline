@@ -50,6 +50,10 @@ services:
     ujm.exo_category:
         class: UJM\ExoBundle\Services\classes\CategoryService
         arguments: [@doctrine, @security.token_storage]
+        
+    ujm.exo_docimology:
+        class: UJM\ExoBundle\Services\classes\Docimology
+        arguments: [@doctrine, @service_container]
 
     ujm.exo_exercise:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
