@@ -1,0 +1,6 @@
+plugin:
+    has_options: false
+
+    admin_tools:
+        - name: formalibre_presence_admin_tool
+          class: check-square-o
