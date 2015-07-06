@@ -101,7 +101,7 @@ issue #251 InnovaERV
                 'expanded' => true,
                 'multiple' => false
             ))
-            ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false))
+/*            ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false)) */
             ->add('notifyOnDrop', 'checkbox', array('required' => false))
             /*
              *
@@ -111,9 +111,10 @@ issue #251 InnovaERV
             ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
-            */
             ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions);
+            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions)
+            */
+            ;
 
     }
 
