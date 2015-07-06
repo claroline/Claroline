@@ -150,15 +150,16 @@ class InteractionHoleController extends Controller
 
             )
         );
-
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-            'UJMExoBundle:Question:new.html.twig', array(
-            'formWithError' => $formWithError,
-            'exoID'  => $exoID,
-            'linkedCategory' =>  $catSer->getLinkedCategories(),
-            'locker' => $catSer->getLockCategory()
+                'UJMExoBundle:Question:new.html.twig', array(
+                'formWithError' => $formWithError,
+                'exoID'  => $exoID,
+                'linkedCategory' =>  $catSer->getLinkedCategories(),
+                'locker' => $catSer->getLockCategory(),
+                'interactionType' => $interactionType
             )
         );
     }

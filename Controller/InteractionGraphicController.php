@@ -137,24 +137,25 @@ class InteractionGraphicController extends Controller
                     $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
-
+        
         $formWithError = $this->render(
             'UJMExoBundle:InteractionGraphic:new.html.twig', array(
             'entity' => $interGraph,
             'form'   => $form->createView(),
             'error'  => true,
-            'exoID'  => $exoID
+            'exoID'  => $exoID,
             )
         );
-
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
-            'UJMExoBundle:Question:new.html.twig', array(
-            'formWithError' => $formWithError,
-            'exoID'  => $exoID,
-            'linkedCategory' =>  $catSer->getLinkedCategories(),
-            'locker' => $catSer->getLockCategory()
+                'UJMExoBundle:Question:new.html.twig', array(
+                'formWithError' => $formWithError,
+                'exoID'  => $exoID,
+                'linkedCategory' =>  $catSer->getLinkedCategories(),
+                'locker' => $catSer->getLockCategory(),
+                'interactionType' => $interactionType
             )
         );
     }

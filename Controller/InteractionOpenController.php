@@ -148,7 +148,7 @@ class InteractionOpenController extends Controller
             'typeOpen' => json_encode($typeOpen)
             )
         );
-
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
         $formWithError = substr($formWithError, strrpos($formWithError, 'GMT') + 3);
 
         return $this->render(
@@ -156,7 +156,8 @@ class InteractionOpenController extends Controller
             'formWithError' => $formWithError,
             'exoID'  => $exoID,
             'linkedCategory' =>  $catSer->getLinkedCategories(),
-            'locker' => $catSer->getLockCategory()
+            'locker' => $catSer->getLockCategory(),
+            'interactionType' => $interactionType
             )
         );
     }
