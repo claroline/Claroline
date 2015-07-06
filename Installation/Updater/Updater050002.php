@@ -30,6 +30,7 @@ class Updater050002 extends Updater
     public function postUpdate()
     {
         $this->restorePortfolioTitle();
+        $this->restoreUserIdForAbstractWidget();
     }
 
     public function restorePortfolioTitle()
@@ -42,25 +43,17 @@ class Updater050002 extends Updater
             $rowPortfolioTitles = $this->connection->query('SELECT * FROM icap__portfolio_widget_title');
 
             foreach ($rowPortfolioTitles as $rowPortfolioTitle) {
-                $rowAbstractWidgets = $this->connection->query('SELECT aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
+                $rowAbstractWidgets = $this->connection->query('SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw WHERE id = ' . $rowPortfolioTitle['id']);
                 foreach ($rowAbstractWidgets as $rowAbstractWidget) {
-                    $portfolioId = $rowAbstractWidget['user_id'];
                     $this->connection->update('icap__portfolio',
                         [
                             'title' => $rowPortfolioTitle['title'],
                             'slug' => $rowPortfolioTitle['slug']
                         ],
                         [
-                            'id' => $portfolioId
+                            'id' => $rowAbstractWidget['user_id']
 
                         ]);
-
-                    $this->connection->query(sprintf("UPDATE icap__portfolio_abstract_widget aw
-                        SET aw.user_id = (
-                            SELECT p.user_id
-                            FROM icap__portfolio p
-                            WHERE p.id = %d
-                        )", $portfolioId));
                 }
 
                 $this->connection->delete('icap__portfolio_abstract_widget',
@@ -85,5 +78,34 @@ class Updater050002 extends Updater
 
             $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_title');
         }
+    }
+
+    public function restoreUserIdForAbstractWidget()
+    {
+        $this->log('Restoring widgets...');
+
+        $totalWidgetProcessed = 0;
+        $nbWidgetProcessed = 0;
+
+        $rowAbstractWidgets = $this->connection->query('SELECT aw.id, aw.user_id FROM icap__portfolio_abstract_widget aw');
+        foreach ($rowAbstractWidgets as $rowAbstractWidget) {
+            $this->connection->query(sprintf("UPDATE icap__portfolio_abstract_widget aw
+                SET aw.user_id = (
+                    SELECT p.user_id
+                    FROM icap__portfolio p
+                    WHERE p.id = %d
+                )
+                WHERE aw.id = %d", $rowAbstractWidget['user_id'], $rowAbstractWidget['id']));
+
+            $nbWidgetProcessed++;
+
+            if ($nbWidgetProcessed >= 10) {
+                $totalWidgetProcessed += $nbWidgetProcessed;
+                $nbWidgetProcessed = 0;
+                $this->log('    processing widget...');
+            }
+        }
+
+        $this->log(sprintf('  %d widget processed', $totalWidgetProcessed + $nbWidgetProcessed));
     }
 }
