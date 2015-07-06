@@ -201,35 +201,10 @@
         </div>
     </div>
 #}
-    <div id="autoClosePrompt" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <a class="close" data-dismiss="modal">×</a>
 
-                    <h4>{{ 'People will not be able to drop anymore'|trans({},'innova_collecticiel') }}</h4>
-                </div>
-                <div class="modal-body">
+{% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
 
 
-                    <p>{{ 'Do you want to valid all drop started but not validated yet ?'|trans({},'innova_collecticiel') }}</p>
-
-                    <div class="panel panel-default">
-                        <div class="panel-body"><p class="text-muted">
-                                <span class="fa fa-info-circle"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'innova_collecticiel') }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default"
-                       data-dismiss="modal">{{ 'Do nothing'|trans({},'innova_collecticiel') }}</a>
-                    <a id="acitvate_manualStateAutoClose" href="#"
-                       class="btn btn-success">{{ 'Validate copies'|trans({},'innova_collecticiel') }}</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
 
 {% endblock %}
@@ -402,16 +377,14 @@
             var val = $radio.val();
             $('#innova_collecticiel_common_form_autoCloseForManualStates').val(0);
             if(val == 'finished' || val == 'peerReview' ) {
-                $('#autoClosePrompt').modal('show'); // call the modal dialog.
+                $('#modal-content').modal('show'); // call the modal dialog.
                 $('#acitvate_manualStateAutoClose').unbind('click').click(function(e) {
                     e.preventDefault();
                     $('#innova_collecticiel_common_form_autoCloseForManualStates').val(1);
-                    $('#autoClosePrompt').modal('hide');
+                    $('#modal-content').modal('hide');
                 });
             }
         }
-
-
 
     </script>
 {% endblock %}

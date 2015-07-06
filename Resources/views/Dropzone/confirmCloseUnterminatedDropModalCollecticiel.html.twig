@@ -1,0 +1,26 @@
+{# Déclaration de la modale d'information lors du clic sur "Fermer" le collecticiel. InnovaERV #}
+{# Appel dans la vue editCommon.html.twig . InnovaERV #}
+<div id="modal-content" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">×</a>
+                <h4>{{ 'People will not be able to drop anymore'|trans({},'innova_collecticiel') }}</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>{{ 'Are you sure to want to close this collecticiel'|trans({},'innova_collecticiel') }}</p>
+                <div class="panel panel-default">
+                    <div class="panel-body"><p class="text-muted">
+                            <span class="fa fa-info-circle"></span> {{ 'dropzone_startedNotValidatedYet_infos'|trans({},'innova_collecticiel') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-default"
+                   data-dismiss="modal">{{ 'OK'|trans({},'innova_collecticiel') }}</a>
+            </div>
+        </div>
+    </div>
+</div>
