@@ -37,4 +37,4 @@ services:
         class: %innova_path.manager.user_progression.class%
         arguments:
             objectManager: @doctrine.orm.entity_manager
-            securityToken:   @security.token_storage
+            securityToken: @security.token_storage

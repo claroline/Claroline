@@ -165,8 +165,8 @@ class PathListener extends ContainerAware
             $step->activityId = null;
 
             // Duplicate primary resources
-            if (!empty($step->primaryResource)) {
-                $processedNodes = $this->copyResource($step->primaryResource, $parent, $processedNodes);
+            if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
+                $processedNodes = $this->copyResource($step->primaryResource[0], $parent, $processedNodes);
             }
 
             // Duplicate secondary resources
@@ -183,10 +183,8 @@ class PathListener extends ContainerAware
         $event->stopPropagation();
     }
 
-    private function copyResource($resource, ResourceNode $newParent, array $processedNodes = array ())
+    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = array ())
     {
-        // TODO : move into a manager
-
         // Get current User
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 

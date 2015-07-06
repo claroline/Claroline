@@ -4,6 +4,7 @@ namespace Innova\PathBundle\Controller\Wizard;
 
 use Innova\PathBundle\Manager\PathManager;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -249,7 +250,7 @@ class EditorController
      * @param $form
      * @return array
      */
-    private function getFormErrors($form)
+    private function getFormErrors(FormInterface $form)
     {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {
