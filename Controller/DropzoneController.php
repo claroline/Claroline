@@ -305,7 +305,7 @@ class DropzoneController extends DropzoneBaseController
 */
                         $this->getRequest()->getSession()->getFlashBag()->add(
                             'success',
-                            $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
+                            $this->get('translator')->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel')
                         );
                     } else {
                         return $this->redirect(
@@ -320,7 +320,7 @@ class DropzoneController extends DropzoneBaseController
                 } else {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'success',
-                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
+                        $this->get('translator')->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel')
                     );
                 }
             }
@@ -454,7 +454,7 @@ class DropzoneController extends DropzoneBaseController
                 if ($goBack == 0) {
                     $this->getRequest()->getSession()->getFlashBag()->add(
                         'success',
-                        $this->get('translator')->trans('The evaluation has been successfully saved', array(), 'innova_collecticiel')
+                        $this->get('translator')->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel')
                     );
                 } else {
                     return $this->redirect(
