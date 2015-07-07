@@ -181,7 +181,6 @@ class PostController extends Controller
                         $post->unpublish();
                     }
 
-                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $entityManager->persist($post);
                     $entityManager->flush();
 
