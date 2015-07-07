@@ -42,7 +42,7 @@ class SurveyAnswer
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
      */
     protected $user;
 
@@ -94,7 +94,7 @@ class SurveyAnswer
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
     }
