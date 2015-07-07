@@ -45,24 +45,16 @@ class Docimology {
     public function histoSuccess($exerciseId, $eqs, $papers)
     {
         $em = $this->doctrine->getManager();
-        $questionsResponsesTab = array();
         $seriesResponsesTab = array();
         $seriesResponsesTab[0] = '';
         $seriesResponsesTab[1] = '';
         $seriesResponsesTab[2] = '';
         $seriesResponsesTab[3] = '';
-        $questionList = array();
         $histoSuccess = array();
         $maxY = 4;
 
-        foreach ($eqs as $eq) {
-            $questionList[] = $eq->getQuestion()->getTitle();
-
-            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em);
-
-            $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
-
-        }
+        $questionList = $this->getQuestionsTitle($eqs);
+        $questionsResponsesTab = $this->getQuestionsCorrectAnswer($eqs, $exerciseId);
 
         //no response
         foreach ($papers as $paper) {
@@ -118,85 +110,18 @@ class Docimology {
      * @param doctrine collection $eqs questions linked with the exercise
      * @param doctrine collection $papers papers linked with the exercise
      *
-     * @return array
+     * @return float[]
      */
     public function histoDiscrimination($exerciseId, $eqs, $papers)
     {
-        $em = $this->doctrine->getManager();
-        $tabScoreExo = array();
-        $tabScoreQ = array();
-        $tabScoreAverageQ = array();
-        $productMarginMark = array();
-        $tabCoeffQ = array();
         $histoDiscrimination = array();
-        $scoreAverageExo = 0;
-        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'paper');
 
-        //Array of exercise's scores
-        foreach ($marks as $mark) {
-            $tabScoreExo[] = $mark["noteExo"];
-        }
-
-        //Average exercise's score
-        foreach ($tabScoreExo as $se) {
-            $scoreAverageExo += (float) $se;
-        }
-
-        $scoreAverageExo = $scoreAverageExo / count($tabScoreExo);
-
-        //Array of each question's score
-        foreach ($eqs as $eq) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
-            $responses = $em->getRepository('UJMExoBundle:Response')
-                            ->getExerciseInterResponses($exerciseId, $interaction->getId());
-            foreach ($responses as $response) {
-                $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
-            }
-
-            while ((count($tabScoreQ[$eq->getQuestion()->getId()])) < (count($papers))) {
-                $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
-            }
-        }
-
-        //Array of average of each question's score
-        foreach ($eqs as $eq) {
-            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
-            $sm = 0;
-            foreach ($allScoreQ as $sq) {
-                $sm += $sq;
-            }
-            $sm = $sm / count($papers);
-            $tabScoreAverageQ[$eq->getQuestion()->getId()] = $sm;
-        }
-
-        //Array of (x-Mx)(y-My)
-        foreach ($eqs as $eq) {
-            $i = 0;
-            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
-            foreach ($allScoreQ as $sq) {
-                $productMarginMark[$eq->getQuestion()->getId()][] = ($sq - $tabScoreAverageQ[$eq->getQuestion()->getId()]) * ($tabScoreExo[$i] - $scoreAverageExo);
-                $i++;
-            }
-        }
-
-        foreach ($eqs as $eq) {
-            $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
-            $sumPenq = 0;
-            $standardDeviationQ = null;
-            $standardDeviationE = $this->sd($tabScoreExo);
-            $n = count($productMarginMarkQ);
-            foreach ($productMarginMarkQ as $penq) {
-                $sumPenq += $penq;
-            }
-            $sumPenq = round($sumPenq, 3);
-            $standardDeviationQ = $this->sd($tabScoreQ[$eq->getQuestion()->getId()]);
-            $nSxSy = $n * $standardDeviationQ * $standardDeviationE;
-            if ($nSxSy != 0) {
-                $tabCoeffQ[] = round($sumPenq / ($nSxSy), 3);
-            } else {
-                $tabCoeffQ[] = 0;
-            }
-        }
+        $tabScoreExo = $this->getScoreByExercise($exerciseId);
+        $scoreAverageExo = $this->getExerciseScoreAverage($tabScoreExo);
+        $tabScoreQ = $this->getScoreByQuestion($exerciseId, $eqs, $papers);
+        $tabScoreAverageQ = $this->getQuestionsScoreAverage($eqs, $tabScoreQ, count($papers));
+        $productMarginMark = $this->getProductsMarginMark($eqs, $tabScoreQ, $tabScoreAverageQ, $tabScoreExo, $scoreAverageExo);
+        $tabCoeffQ = $this->getCoeffOfDiscrimination($eqs, $productMarginMark, $tabScoreExo, $tabScoreQ);
 
         $coeffQ = implode(",", $tabCoeffQ);
         $histoDiscrimination['coeffQ'] = $coeffQ;
@@ -250,7 +175,6 @@ class Docimology {
      */
     public function histoMeasureOfDifficulty($exerciseId, $eqs)
     {
-        $em = $this->doctrine->getManager();
         $paperSer = $this->container->get('ujm.exo_paper');
         $up = array();
         $down = array();
@@ -258,7 +182,7 @@ class Docimology {
 
         foreach ($eqs as $eq) {
 
-            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq, $em);
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq);
 
             $up[] = $responsesTab['correct'];
             $down[] = (int) $responsesTab['correct'] + (int) $responsesTab['partiallyRight'] + (int) $responsesTab['wrong'];
@@ -342,11 +266,10 @@ class Docimology {
      *
      * @param integer $exerciseId
      * @param doctrine collection $eqs questions linked with the exercise
-     * @param Doctrine Entity manager $em
      *
      * @return array
      */
-    private function getCorrectAnswer($exerciseId, $eq, $em)
+    private function getCorrectAnswer($exerciseId, $eq)
     {
         $em = $this->doctrine->getManager();
 
@@ -399,6 +322,206 @@ class Docimology {
         ksort($tabMarks);
 
         return $tabMarks;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param integer $exerciseId
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param UJM\ExoBundle\Entity\Paper $papers papers linked with the exercise
+     *
+     * @return float[][] Array of each question's score
+     */
+    private function getScoreByQuestion($exerciseId, $eqs, $papers)
+    {
+        $em = $this->doctrine->getManager();
+        $tabScoreQ = array();
+        foreach ($eqs as $eq) {
+            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
+            $responses = $em->getRepository('UJMExoBundle:Response')
+                            ->getExerciseInterResponses($exerciseId, $interaction->getId());
+            foreach ($responses as $response) {
+                $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
+            }
+
+            while ((count($tabScoreQ[$eq->getQuestion()->getId()])) < (count($papers))) {
+                $tabScoreQ[$eq->getQuestion()->getId()][] = 0;
+            }
+        }
+
+        return $tabScoreQ;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param integer $exerciseId
+     *
+     * @return float[] Array of score for an exercise
+     */
+    private function getScoreByExercise($exerciseId)
+    {
+        $em = $this->doctrine->getManager();
+        $marks = $em->getRepository('UJMExoBundle:Response')->getExerciseMarks($exerciseId, 'paper');
+        $tabScoreExo = array();
+
+        foreach ($marks as $mark) {
+            $tabScoreExo[] = $mark["noteExo"];
+        }
+
+        return $tabScoreExo;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param float[] $tabScoreExo
+     *
+     * @return float score average for an exercise
+     */
+    private function getExerciseScoreAverage($tabScoreExo)
+    {
+        $scoreAverageExo = 0;
+        //Average exercise's score
+        foreach ($tabScoreExo as $se) {
+            $scoreAverageExo += (float) $se;
+        }
+
+        $scoreAverageExo = $scoreAverageExo / count($tabScoreExo);
+
+        return $scoreAverageExo;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param float[] $tabScoreExo
+     * @param integer $nbPapers
+     *
+     * @return float[] Array of average of each question's score
+     */
+    private function getQuestionsScoreAverage($eqs, $tabScoreQ, $nbPapers)
+    {
+        $tabScoreAverageQ = array();
+        foreach ($eqs as $eq) {
+            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
+            $sm = 0;
+            foreach ($allScoreQ as $sq) {
+                $sm += $sq;
+            }
+            $sm = $sm / $nbPapers;
+            $tabScoreAverageQ[$eq->getQuestion()->getId()] = $sm;
+        }
+
+        return $tabScoreAverageQ;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param float[][] $tabScoreQ Array of each question's score
+     * @param float[] $tabScoreAverageQ Array of average of each question's score
+     * @param float[] $tabScoreExo Array of score for an exercise
+     * @param float $scoreAverageExo score average for an exercise
+     *
+     * @return float[][] Array of (x-Mx)(y-My) by questions
+     */
+    private function getProductsMarginMark($eqs, $tabScoreQ, $tabScoreAverageQ, $tabScoreExo, $scoreAverageExo)
+    {
+        $productMarginMark = array();
+        foreach ($eqs as $eq) {
+            $i = 0;
+            $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
+            foreach ($allScoreQ as $sq) {
+                $productMarginMark[$eq->getQuestion()->getId()][] = ($sq - $tabScoreAverageQ[$eq->getQuestion()->getId()]) * ($tabScoreExo[$i] - $scoreAverageExo);
+                $i++;
+            }
+        }
+
+        return $productMarginMark;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param float[][] Array of (x-Mx)(y-My) by questions  $productMarginMark
+     * @param float[] $tabScoreExo Array of score for an exercise
+     * @param float[][] $tabScoreQ Array of each question's score
+     *
+     * @return float[] array of coefficient of discrimination for each questions
+     */
+    private function getCoeffOfDiscrimination($eqs, $productMarginMark, $tabScoreExo, $tabScoreQ)
+    {
+        $tabCoeffQ = array();
+        foreach ($eqs as $eq) {
+            $productMarginMarkQ = $productMarginMark[$eq->getQuestion()->getId()];
+            $sumPenq = 0;
+            $standardDeviationQ = null;
+            $standardDeviationE = $this->sd($tabScoreExo);
+            $n = count($productMarginMarkQ);
+            foreach ($productMarginMarkQ as $penq) {
+                $sumPenq += $penq;
+            }
+            $sumPenq = round($sumPenq, 3);
+            $standardDeviationQ = $this->sd($tabScoreQ[$eq->getQuestion()->getId()]);
+            $nSxSy = $n * $standardDeviationQ * $standardDeviationE;
+            if ($nSxSy != 0) {
+                $tabCoeffQ[] = round($sumPenq / ($nSxSy), 3);
+            } else {
+                $tabCoeffQ[] = 0;
+            }
+        }
+
+        return $tabCoeffQ;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param doctrine collection $eqs questions linked with the exercise
+     *
+     * @return String[] array of title of each question of an exercise
+     */
+    private function getQuestionsTitle($eqs)
+    {
+        $questionList = array();
+        foreach ($eqs as $eq) {
+            $questionList[] = $eq->getQuestion()->getTitle();
+        }
+
+        return $questionList;
+    }
+
+    /**
+     *
+     * @access private
+     *
+     * @param doctrine collection $eqs questions linked with the exercise
+     * @param integer $exerciseId
+     *
+     * @return mixed[] array correcte response for each questions for an exercise
+     */
+    private function getQuestionsCorrectAnswer($eqs, $exerciseId)
+    {
+        $questionsResponsesTab = array();
+        foreach ($eqs as $eq) {
+            $responsesTab = $this->getCorrectAnswer($exerciseId, $eq);
+            $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
+
+        }
+
+        return $questionsResponsesTab;
     }
 
 }
