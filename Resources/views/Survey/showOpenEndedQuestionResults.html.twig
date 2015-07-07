@@ -31,8 +31,12 @@
             {% set user = answer.getQuestionAnswer().getSurveyAnswer().getUser() %}
             <tr>
                 <td>
-                    {{ user.getFirstName() }}
-                    {{ user.getLastName() }}
+                    {% if user is empty %}
+                        -
+                    {% else %}
+                        {{ user.getFirstName() }}
+                        {{ user.getLastName() }}
+                    {% endif %}
                 </td>
                 <td>
                     {{ answer.getContent()|raw }}
@@ -73,11 +77,17 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h1 class="panel-title">
-                                    {{ answer.getQuestionAnswer().getSurveyAnswer().getUser().getUsername() }}
+                                    {% set user = answer.getQuestionAnswer().getSurveyAnswer().getUser() %}
+                                    
+                                    {% if user is empty %}
+                                        {{ 'anonymous'|trans({}, 'platform') }}
+                                    {% else %}
+                                        {{ user.getUsername() }}
+                                    {% endif %}
                                 </h1>
                             </div>
                             <div class="panel-body">
-                            {{ answer.getContent()|raw }}
+                                {{ answer.getContent()|raw }}
                             </div>
                         </div>
                     </li>

@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -51,6 +52,7 @@ class SurveyController extends Controller
     private $authorization;
     private $surveyManager;
     private $templating;
+    private $tokenStorage;
     private $translator;
 
     /**
@@ -63,6 +65,7 @@ class SurveyController extends Controller
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "surveyManager"   = @DI\Inject("claroline.manager.survey_manager"),
      *     "templating"      = @DI\Inject("templating"),
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "translator"      = @DI\Inject("translator")
      * })
      */
@@ -75,6 +78,7 @@ class SurveyController extends Controller
         AuthorizationCheckerInterface $authorization,
         SurveyManager $surveyManager,
         TwigEngine $templating,
+        TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
     )
     {
@@ -86,6 +90,7 @@ class SurveyController extends Controller
         $this->authorization = $authorization;
         $this->surveyManager = $surveyManager;
         $this->templating = $templating;
+        $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
 
@@ -94,33 +99,39 @@ class SurveyController extends Controller
      *     "/{survey}",
      *     name="claro_survey_index"
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @param Survey $survey
      * @return array
      */
-    public function indexAction(Survey $survey, User $user)
+    public function indexAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'OPEN');
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = ($user === 'anon.');
         $canEdit = $this->hasSurveyRight($survey, 'EDIT');
         $this->surveyManager->updateSurveyStatus($survey);
         $status = $this->computeStatus($survey);
-        $surveyAnswer = $this->surveyManager
-            ->getSurveyAnswerBySurveyAndUser($survey, $user);
-        $hasAnswered = !is_null($surveyAnswer);
 
-        if ($canEdit) {
-            $params = array();
-            $params['_controller'] = 'ClarolineSurveyBundle:Survey:surveyManagement';
-            $params['survey'] = $survey;
-            $subRequest = $this->request
-                ->getCurrentRequest()
-                ->duplicate(array(), null, $params);
-            $response = $this->httpKernel
-                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        if ($isAnon) {
+            $hasAnswered = false;
+        } else {
+            $surveyAnswer = $this->surveyManager
+                ->getSurveyAnswerBySurveyAndUser($survey, $user);
+            $hasAnswered = !is_null($surveyAnswer);
 
-            return $response;
+            if ($canEdit) {
+                $params = array();
+                $params['_controller'] = 'ClarolineSurveyBundle:Survey:surveyManagement';
+                $params['survey'] = $survey;
+                $subRequest = $this->request
+                    ->getCurrentRequest()
+                    ->duplicate(array(), null, $params);
+                $response = $this->httpKernel
+                    ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
+                return $response;
+            }
         }
         $currentDate = new \DateTime();
 
@@ -128,7 +139,8 @@ class SurveyController extends Controller
             'survey' => $survey,
             'status' => $status,
             'currentDate' => $currentDate,
-            'hasAnswered' => $hasAnswered
+            'hasAnswered' => $hasAnswered,
+            'isAnon' => $isAnon
         );
     }
 
@@ -1036,20 +1048,22 @@ class SurveyController extends Controller
      *     "/survey/{survey}/answer/form",
      *     name="claro_survey_answer_form"
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyAnswerFormAction(Survey $survey, User $user)
+    public function surveyAnswerFormAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $status = $this->computeStatus($survey);
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = ($user === 'anon.');
         $questionViews = array();
         $errors = array();
 
-        $surveyAnswer = $this->surveyManager
-            ->getSurveyAnswerBySurveyAndUser($survey, $user);
+        $surveyAnswer = $isAnon ?
+            null :
+            $this->surveyManager->getSurveyAnswerBySurveyAndUser($survey, $user);
         $answersDatas = array();
         $canEdit = $status === 'published' &&
             (is_null($surveyAnswer) || $survey->getAllowAnswerEdition());
@@ -1129,7 +1143,8 @@ class SurveyController extends Controller
             'questionRelations' => $questionRelations,
             'questionViews' => $questionViews,
             'canEdit' => $canEdit,
-            'errors' => $errors
+            'errors' => $errors,
+            'isAnon' => $isAnon
         );
     }
 
@@ -1138,23 +1153,25 @@ class SurveyController extends Controller
      *     "/survey/{survey}/answer",
      *     name="claro_survey_answer"
      * )
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineSurveyBundle:Survey:surveyAnswerForm.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function surveyAnswerAction(Survey $survey, User $user)
+    public function surveyAnswerAction(Survey $survey)
     {
         $this->checkSurveyRight($survey, 'OPEN');
         $status = $this->computeStatus($survey);
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = ($user === 'anon.');
 
         if ($status === 'published') {
             $postDatas = $this->request->getCurrentRequest()->request->all();
             $errors = $this->validateSurveyAnswer($survey, $postDatas);
 
             if (count($errors) > 0) {
-                $surveyAnswer = $this->surveyManager
-                    ->getSurveyAnswerBySurveyAndUser($survey, $user);
+                $surveyAnswer = $isAnon ?
+                    null :
+                    $this->surveyManager->getSurveyAnswerBySurveyAndUser($survey, $user);
                 $canEdit = is_null($surveyAnswer) ||
                     $survey->getAllowAnswerEdition();
                 $answersDatas = array();
@@ -1219,18 +1236,23 @@ class SurveyController extends Controller
                     'questionRelations' => $questionRelations,
                     'questionViews' => $questionViews,
                     'canEdit' => $canEdit,
-                    'errors' => $errors
+                    'errors' => $errors,
+                    'isAnon' => $isAnon
                 );
             }
 
-            $surveyAnswer = $this->surveyManager
-                ->getSurveyAnswerBySurveyAndUser($survey, $user);
+            $surveyAnswer = $isAnon ?
+                null :
+                $this->surveyManager->getSurveyAnswerBySurveyAndUser($survey, $user);
             $isNewAnswer = true;
 
             if (is_null($surveyAnswer)) {
                 $surveyAnswer = new SurveyAnswer();
                 $surveyAnswer->setSurvey($survey);
-                $surveyAnswer->setUser($user);
+
+                if (!$isAnon) {
+                    $surveyAnswer->setUser($user);
+                }
                 $surveyAnswer->setNbAnswers(1);
                 $surveyAnswer->setAnswerDate(new \DateTime());
                 $this->surveyManager->persistSurveyAnswer($surveyAnswer);
@@ -1401,10 +1423,9 @@ class SurveyController extends Controller
                 }
             }
 
-            $event = new LogSurveyAnswer(
-                $survey,
-                $user
-            );
+            $event = $isAnon ?
+                new LogSurveyAnswer($survey) :
+                new LogSurveyAnswer($survey, $user);
             $this->eventDispatcher->dispatch('log', $event);
         }
 
