@@ -289,7 +289,14 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
     }
 
     public function jsonSerialize() {
+        
         // TODO serialize Pages arraycollection
+        /*$pages = array();
+        $temp = $this->getPages();
+        foreach ($temp as $p){
+            $pages[]= $p->jsonSerialize();
+        }*/
+        
         return array(
             'id' => $this->id,
             'name' => $this->name,
@@ -299,7 +306,7 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
             'creation' => $this->creationDate,
             'modification' => $this->modificationDate,
             'published' => $this->published,
-            'pages' => $this->pages
+           // 'pages' => $pages
         );
     }
 

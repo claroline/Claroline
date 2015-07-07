@@ -10,3 +10,4 @@ parameters:
     
     # Managers
     ujm_exo_bundle.manager.exercise_player.class:    UJM\ExoBundle\Manager\Player\ExercisePlayerManager
+    ujm_exo_bundle.manager.pages.class:    UJM\ExoBundle\Manager\Player\PageManager

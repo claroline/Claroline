@@ -27,26 +27,28 @@ class ExercisePlayerManager {
     }
 
     public function createFirstAndLastPage(ExercisePlayer $ep) {
-        
-        //var_dump($ep->getPages());
+
         // add first page
         $first = new Page();
         $first->setIsFirstPage(true);
+        $first->setPosition(1);
+        $first->setDescription('<h1>This is the first Page</h1>');
         $first->setExercisePlayer($ep);
         $ep->addPage($first);
-        //$this->em->persist($ep);
 
         // add last page
         $last = new Page();
         $last->setIsLastPage(true);
+        $last->setPosition(2);
+        $last->setDescription('<h1>This is the last Page</h1>');
         $last->setExercisePlayer($ep);
         $ep->addPage($last);
-        
-        //var_dump($ep->getPages());die;
         
         $this->em->persist($ep);
         $this->em->flush();
         return $ep;
     }
+    
+   
 
 }
