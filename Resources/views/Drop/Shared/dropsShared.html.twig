@@ -1,0 +1,43 @@
+<!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+        <!-- Colonne supprimée : 'Copie rendue le' -->
+        <!-- <th>{{ 'Established on'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- Colonne modifiée de "Rendue par" par "Etudiant" -->
+        <th>{{ 'Name'|trans({},'innova_collecticiel') }}</th>
+        <th>{{ 'First name'|trans({},'innova_collecticiel') }}</th>
+        <th>{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+        <th>{{ 'Dated'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonnes supprimées : -->
+        <!-- 'Dernière correction le' -->
+        <!-- 'Note' -->
+        <!-- 'Corr.' -->
+        <!-- <th>{{ 'Last correction'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- <th>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</th> -->
+        <!-- {% if AwaitingMode is defined and  AwaitingMode == true %}
+            <th> {{ 'Corr.'|trans({}, 'innova_collecticiel') }} </th>
+        {% endif %} -->
+        <!-- Colonne supprimée : 'Outils' -->
+        <!-- <th>{{ 'tools'|trans({},'innova_collecticiel') }}</th> -->
+        <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
+        <th>{{ 'Document'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
+        <th>{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+        <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
+        <th>{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
+        </thead>
+        <tbody>
+
+        {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
+        {% for drop in pager.currentPageResults %}
+            {% for document in drop.documents %}
+                {# Séparation de l'affichage de la vue. InnovaERV #}
+                {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListingList.html.twig' %}
+            {% endfor %}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>

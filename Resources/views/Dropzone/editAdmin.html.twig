@@ -23,7 +23,7 @@
                 <li class="hometab-element {% block collecticiel_demande_edit_navTabs_criteria_element_class %} active {% endblock %}">
                     <a id="editCriteriaLink" href="
                     {% block collecticiel_demande_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
+                        {{ path('innova_collecticiel_shared_spaces',{'resourceId':dropzone.id}) }}
                     {% endblock %}" class="hometab-link">
                         {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
                     </a>

@@ -1006,4 +1006,91 @@ class DropController extends DropzoneBaseController
         );
     }
 
+
+    /**
+     * @Route(
+     *      "/{resourceId}/shared/spaces",
+     *      name="innova_collecticiel_shared_spaces",
+     *      requirements={"resourceId" = "\d+"},
+     *      defaults={"page" = 1}
+     * )
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @Template()
+     */
+    public function sharedSpacesAction($dropzone, $page)
+    {
+
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
+
+        // dropsQuery : finished à TRUE et unlocked_drop à FALSE
+        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
+
+        $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
+
+        // Déclarations des nouveaux tableaux, qui seront passés à la vue
+        $userToCommentCount = array();
+        $userNbTextToRead = array();
+
+        foreach ($dropzone->getDrops() as $drop) {
+            /** InnovaERV : ajout pour calculer les 2 zones **/
+
+            // Nombre de commentaires non lus/ Repo : Comment
+            $nbCommentsPerUser = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Comment')
+                                ->countCommentNotRead($drop->getUser());
+
+            // Nombre de devoirs à corriger/ Repo : Document
+            $nbTextToRead = $this->getDoctrine()
+                                ->getRepository('InnovaCollecticielBundle:Document')
+                                ->countTextToRead($drop->getUser());
+
+            // Affectations des résultats dans les tableaux
+            $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
+            $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
+        }
+
+        $adapter = new DoctrineORMAdapter($dropsQuery);
+        $pager = new Pagerfanta($adapter);
+        $pager->setMaxPerPage(DropzoneBaseController::DROP_PER_PAGE);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            if ($page > 0) {
+                return $this->redirect(
+                    $this->generateUrl(
+                        'innova_collecticiel_drops_awaiting_paginated',
+                        array(
+                            'resourceId' => $dropzone->getId(),
+                            'page' => $pager->getNbPages()
+                        )
+                    )
+                );
+            } else {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        $adminInnova = false;
+        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+            $adminInnova = true;
+        }
+
+        $dataToView = $this->addDropsStats($dropzone, array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'unterminated_drops' => $countUnterminatedDrops,
+            'pager' => $pager,
+            'nbCommentNotRead' => $userToCommentCount,
+            'userNbTextToRead' => $userNbTextToRead,
+            'adminInnova' => $adminInnova,
+        ));
+
+        return $dataToView;
+    }
+
+
 }
