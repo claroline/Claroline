@@ -218,7 +218,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setCreationDate($creationDate)
+    public function setCreationDate(\DateTime $creationDate)
     {
         $this->creationDate = $creationDate;
 
@@ -242,7 +242,7 @@ class Post extends Statusable
      *
      * @return Post
      */
-    public function setModificationDate($modificationDate)
+    public function setModificationDate(\DateTime $modificationDate)
     {
         $this->modificationDate = $modificationDate;
 
@@ -262,11 +262,11 @@ class Post extends Statusable
     /**
      * Set publicationDate
      *
-     * @param  \DateTime $publicationDate
+     * @param \DateTime $publicationDate
      *
      * @return Post
      */
-    public function setPublicationDate($publicationDate)
+    public function setPublicationDate(\DateTime $publicationDate)
     {
         $this->publicationDate = $publicationDate;
 

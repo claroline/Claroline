@@ -122,12 +122,9 @@ class PostController extends Controller
         $post
             ->setBlog($blog)
             ->setAuthor($this->getUser())
+            ->setPublicationDate(new \DateTime())
             ->setStatus($postStatus)
         ;
-
-        if ($postStatus === Post::STATUS_PUBLISHED) {
-            $post->setPublicationDate(new \DateTime());
-        }
 
         $translator = $this->get('translator');
 
@@ -184,6 +181,7 @@ class PostController extends Controller
                         $post->unpublish();
                     }
 
+                    die("FFFFFUUUUUCCCCCKKKKK" . PHP_EOL);
                     $entityManager->persist($post);
                     $entityManager->flush();
 
