@@ -6,7 +6,7 @@
 
 {% block content %} 
     <div class="exercise-player-container" data-ng-app="ExercisePlayerEditorApp" data-ng-cloak="">
-        <page-edit class="exercise-player-page" data-player="{{_resource | json_encode() }}" data-page="{title:'hello page'}"></page-edit>
+        <page-edit class="exercise-player-page" data-player="{{ _resource | json_encode() }}" data-first="{{ first | json_encode() }}" data-last="{{ last | json_encode() }}" data-pages="{{ pages | json_encode() }}"></page-edit>
     </div>
 {% endblock %}
 

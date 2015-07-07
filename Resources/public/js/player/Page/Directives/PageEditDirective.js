@@ -14,15 +14,23 @@
                 controllerAs: 'pageEditCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/edit.html',
                 scope: {
-                    page: '=',
+                    pages: '=',
+                    first: '=',
+                    last: '=',
                     player: '='                    
                 },
                 link: function (scope, element, attr, pageEditCtrl) {
-                    /*pageEditCtrl.sayHello(scope.name);
-                    console.log('page ' + scope.page.title);
-                    console.log('player id ' + scope.player.id);
-                    console.log('player name ' + scope.player.name);
-                    console.log('player description ' + scope.player.description);*/
+                    // set current page to first page
+                    console.log('directive link method called');
+                    pageEditCtrl.setCurrentPage(scope.first);
+                    pageEditCtrl.setPages(scope.pages);
+                    
+                    /*
+                    console.log(scope.player);
+                    console.log(scope.last);
+                    console.log(scope.first);
+                    console.log(scope.pages);
+                    */
                 }
             };
         }

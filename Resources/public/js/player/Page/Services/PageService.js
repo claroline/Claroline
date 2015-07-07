@@ -1,5 +1,5 @@
 /**
- * Step Service
+ * Page Service
  */
 (function () {
     'use strict';

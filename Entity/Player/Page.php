@@ -14,7 +14,7 @@ use UJM\ExoBundle\Entity\Player\ExercisePlayer;
  * @ORM\Table(name="ujm_exercise_page")
  * @ORM\Entity
  */
-class Page extends AbstractResource implements \JsonSerializable{
+class Page implements \JsonSerializable{
 
     /**
      * @var integer
@@ -24,9 +24,16 @@ class Page extends AbstractResource implements \JsonSerializable{
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+    
+    /**
+     * @var description
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    protected $description;
 
     /**
-     * Page position / order in the ExercisePlayer sequence     * 
+     * Page position / order in the ExercisePlayer sequence 
      * first and last page are note ordered
      * 
      * @var Number $position
@@ -79,6 +86,20 @@ class Page extends AbstractResource implements \JsonSerializable{
      */
     public function getId() {
         return $this->id;
+    }
+    
+    public function getDescription(){
+        return $this->description;
+    }
+    
+    /**
+     * 
+     * @param string $description
+     * @return \UJM\ExoBundle\Entity\Player\Page
+     */
+    public function setDescription($description){
+        $this->description = $description;
+        return $this;
     }
     
     /**
@@ -179,7 +200,8 @@ class Page extends AbstractResource implements \JsonSerializable{
             'position'      => $this->position,
             'shuffle'       => $this->shuffle,
             'isFirst'       => $this->isFirstPage,
-            'isLast'        => $this->isLastPage
+            'isLast'        => $this->isLastPage,
+            'description'   => $this->description
         );
     }
 

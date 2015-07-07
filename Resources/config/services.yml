@@ -195,3 +195,9 @@ services:
         arguments:
             entityManager:  @doctrine.orm.entity_manager
             translator:     @translator
+            
+    ujm_exo_bundle.manager.page:
+        class: UJM\ExoBundle\Manager\Player\PageManager 
+        arguments:
+            entityManager:  @doctrine.orm.entity_manager
+            translator:     @translator

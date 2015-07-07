@@ -30,6 +30,7 @@ class ExercisePlayerController extends Controller{
         if (false === $this->container->get('security.context')->isGranted('OPEN', $resource->getResourceNode())) {
             throw new AccessDeniedException();
         }
+       
         return $this->render('UJMExoBundle:Player:view.html.twig', array(
                     '_resource' => $resource
             )
@@ -46,9 +47,28 @@ class ExercisePlayerController extends Controller{
         if (false === $this->container->get('security.context')->isGranted('ADMINISTRATE', $resource->getResourceNode())) {
             throw new AccessDeniedException();
         }
+        
+        $firstPage = $this->get('ujm_exo_bundle.manager.page')->getFirstPage($resource);
+        $lastPage = $this->get('ujm_exo_bundle.manager.page')->getLastPage($resource);
+        $pages = $this->get('ujm_exo_bundle.manager.page')->getPages($resource);
+        
         return $this->render('UJMExoBundle:Player:edit.html.twig', array(
-                    '_resource' => $resource
+                    '_resource' => $resource,
+                    'pages' => $pages,
+                    'last' => $lastPage,
+                    'first' => $firstPage 
             )
         );
+    }
+    
+    /**
+     * update an exercise player
+     * @Route("/update/{id}", requirements={"id" = "\d+"}, name="ujm_player_update")
+     * @Method("PUT")
+     * @ParamConverter("ExercisePlayer", class="UJMExoBundle:Player\ExercisePlayer")
+     * 
+     */
+    public function updateAction(ExercisePlayer $resource){
+        die ('update called');
     }
 }

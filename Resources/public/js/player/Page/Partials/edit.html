@@ -1,19 +1,45 @@
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">You are editing player : {{player.name}}</h3>
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title pull-left">You are editing player : {{player.name}}</h3>
+        <div class="btn-group pull-right">
+            <button class="btn btn-default fa fa-plus"></button>
+            <button class="btn btn-default fa fa-minus"></button>
+            <button class="btn btn-default fa fa-save"></button>
+        </div>
     </div>
-    <div class="panel-body">        
+    <div class="panel-body">
+        <!-- Exercise Player row -->
         <div class="row">
             <div class="col-md-12">
                 player name : {{player.name}}
             </div>
         </div>
         <hr/>
-        <div class="row">
-            <div class="col-md-12">
-                player name : {{player.name}}
+        <!-- Pages list row -->
+        <div class="row center-text">
+            <div class="col-md-1">
+                <button class="btn btn-default fa fa-arrow-left" data-ng-click="pageEditCtrl.getPreviousPage()"></button>
+            </div>
+            <div class="col-md-10">
+                <ul class="page-list list-unstyled" data-ui-sortable="pageEditCtrl.sortableOptions" data-ng-model="pageEditCtrl.pages">
+                    <li class="page-list-item" data-ng-repeat="page in pageEditCtrl.pages| orderBy:'position'" data-ng-class="{ 'active' : pageEditCtrl.currentPage == page }">
+                        <a href="" data-ng-click="pageEditCtrl.setCurrentPage(page)" data-toggle="tooltip" data-container="body" title="{{ page.position}}">
+                            {{ page.position}}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-1">
+                <button class="btn btn-default fa fa-arrow-right" data-ng-click="pageEditCtrl.getNextPage()"></button>       
+
             </div>
         </div>
         <hr/>
+        <!-- Current page details row -->
+        <div class="row">
+            <div class="col-md-12">
+                <textarea data-ui-tinymce="pageEditCtrl.tinymceOptions" class="form-control" name="ujm_page_description" id="page_description" data-ng-model="pageEditCtrl.currentPage.description"></textarea>
+            </div>
+        </div>
     </div>
 </div>
