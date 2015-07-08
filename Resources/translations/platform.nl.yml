@@ -352,8 +352,8 @@ filter: filter
 filter_actions: filter_actions
 filters: filters
 find_workspaces: find_workspaces
-firstName: firstName
-first_name: first_name
+firstName: Voornaam
+first_name: voornaam
 footer: footer
 for_period: for_period
 forgot_password: forgot_password
@@ -469,7 +469,7 @@ jqplot_date_output_format: jqplot_date_output_format
 keep_me_logged_in: keep_me_logged_in
 language: language
 language_select: language_select
-lastName: lastName
+lastName: Naam
 last_30_days_activity: last_30_days_activity
 last_action: last_action
 last_attempt_date: last_attempt_date
@@ -653,7 +653,7 @@ parameters_save_error: parameters_save_error
 parameters_save_success: parameters_save_success
 passed: passed
 passing_score: passing_score
-password: password
+password: Password
 password_mismatch: password_mismatch
 password_ok: password_ok
 paste: paste
@@ -666,7 +666,7 @@ personal_workspace: personal_workspace
 personal_workspace_management: personal_workspace_management
 personal_workspace_tools_management: personal_workspace_tools_management
 personal_workspaces_only: personal_workspaces_only
-phone: phone
+phone: telefoon
 picture: picture
 picture_profile: picture_profile
 placeholder_first_name_message: placeholder_first_name_message
@@ -692,7 +692,7 @@ portfolio_url: portfolio_url
 position: position
 positive_number_expected: positive_number_expected
 powered_by: powered_by
-preferences: preferences
+preferences: Instellingen
 preview: preview
 private: private
 profil_edition: profil_edition
@@ -1035,7 +1035,7 @@ user_public_profile_not_visible: user_public_profile_not_visible
 user_removed: user_removed
 user_selector: user_selector
 user_visit: user_visit
-username: username
+username: Gebruikersnaam
 username_and_email_from_two_different_users: username_and_email_from_two_different_users
 username_found_at: username_found_at
 username_or_email: username_or_email
