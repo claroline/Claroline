@@ -6,8 +6,8 @@
     <!-- ERV/Suppression "Aide sur le mode d'évaluation par les pairs" -->
     <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
 
-    <!-- Copies terminées en attente de correction(s) -->
-    <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
+    <!-- Liste des espaces collecticiel -->
+    <h3>{{ 'Shared list'|trans({}, 'innova_collecticiel') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}
@@ -25,7 +25,7 @@
 
     <!-- InnovaERV : ici, appel à la vue qui traite l'affichage de la liste -->
     {% set AwaitingMode = true %}
-    {% include 'InnovaCollecticielBundle:Drop:Listing/dropsListing.html.twig' %}
+    {% include 'InnovaCollecticielBundle:Drop:Shared/dropsShared.html.twig' %}
 
     {% if pager.nbResults == 0 %}
         <div class="row">

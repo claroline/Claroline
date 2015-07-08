@@ -1092,5 +1092,4 @@ class DropController extends DropzoneBaseController
         return $dataToView;
     }
 
-
 }

@@ -1,4 +1,4 @@
-{# Affichage du tableau de l'onglet "Demandes adressées" #}
+{# Affichage du tableau de l'onglet "Espaces partagés" #}
 <tr>
     <td>{{ drop.user.lastName|upper }}</td>
     <td>{{ drop.user.firstName|capitalize }}</td>
@@ -20,27 +20,6 @@
             </a>
         </div>
     </td>
-    <!-- Colonnes supprimées : -->
-    <!-- 'Dernière correction le' -->
-    <!-- 'Note' -->
-    <!-- 'Corr.' -->
-    <!--
-    <td>
-        {% include 'InnovaCollecticielBundle:Drop:dropsLastCorrectionDate.html.twig' %}
-        {% if drop.getHasDeniedCorrection %}
-            <span class="fa fa-exclamation-triangle" data-toggle="tooltip" title=""
-                  data-original-title="{{ 'This copy contain a denied correction'|trans({}, 'innova_collecticiel') }}"></span>
-        {% endif %}
-    </td>
-    <td>
-        {% include 'InnovaCollecticielBundle:Drop:dropsTotalGrade.html.twig' %}
-    </td>
-    {% if AwaitingMode is defined and  AwaitingMode == true %}
-        <td>
-            {% include 'InnovaCollecticielBundle:Drop:dropsNbCorrections.html.twig' %}
-        </td>
-    {% endif %}
-    -->
     <!-- Colonne supprimée : 'Outils'
     <td>
         <div class="btn-group ">
