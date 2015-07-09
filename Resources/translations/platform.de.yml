@@ -352,8 +352,8 @@ filter: Filtrer
 filter_actions: 'Filtrer les actions'
 filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
-firstName: Prénom
-first_name: Prénom
+firstName: 'Vorname'
+first_name: 'vorname'
 footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
@@ -581,7 +581,7 @@ my_public_documents: 'Mes documents publics'
 my_resources: 'Mes ressources'
 my_workspace: 'Espace personnel'
 my_workspaces: 'Mes espaces d''activités'
-name: Nom
+name: Name
 name_required: 'Nom requis'
 new: Nouveau
 new_folder_in_current_ws: 'Nouveau répertoire dans l''espace d''activité courant'
@@ -653,7 +653,7 @@ parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des param�
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 passed: Réussi
 passing_score: 'Score pour réussir'
-password: 'Mot de passe'
+password: 'Password'
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
@@ -1035,7 +1035,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
-username: 'Nom d''utilisateur'
+username: 'User Name'
 username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
