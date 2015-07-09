@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Manager\LocaleManager;
 
 /**
  * @DI\Service("claroline.form.datepicker")
@@ -23,6 +24,18 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class DatePickerType extends AbstractType
 {
+    /**
+     * @DI\InjectParams({
+     *     "localeManager" = @DI\Inject("claroline.common.locale_manager"),
+     *     "container"     = @DI\Inject("service_container")
+     * })
+     */
+    public function __construct(LocaleManager $localeManager, $container)
+    {
+        $this->localeManager = $localeManager;
+        $this->container = $container;
+    }
+
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['component'] = $options['component'];
@@ -40,7 +53,7 @@ class DatePickerType extends AbstractType
                 'widget'             => 'single_text',
                 'component'          => false,
                 'autoclose'          => false,
-                'language'           => 'en'
+                'language'           => $this->localeManager->getUserLocale($this->container->get('request'))
             )
         );
     }

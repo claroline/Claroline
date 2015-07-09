@@ -62,6 +62,12 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default external authentication for the plugin'
         );
+        $this->addOption(
+            'theme',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a default config for the theme'
+        );
         //todo admin tool
         //todo top bar shortcut
 
@@ -136,6 +142,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $tType = $input->getOption('tool');
         $wType = $input->getOption('widget');
         $eAuth = $input->getOption('external_authentication');
+        $theme = $input->getOption('theme');
 
         $config = array(
             'plugin' => array(
@@ -147,6 +154,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($tType) $this->addTool($rootDir, $ivendor, $ibundle, $tType, $config);
         if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
         if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
+        if ($theme) $this->addTheme($rootDir, $ivendor, $ibundle, $theme, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -398,6 +406,34 @@ class CreatePluginCommand extends ContainerAwareCommand
         $this->addAuthenticationListener($rootDir, $vendor, $bundle, $eAuth);
         $this->addAuthenticationController($rootDir, $vendor, $bundle, $eAuth);
         $this->addAuthenticationManager($rootDir, $vendor, $bundle, $eAuth);
+    }
+
+    public function addTheme($rootDir, $vendor, $bundle, $theme, &$config)
+    {
+        $this->addThemeConfig($theme, $config);
+        $this->addCssFile($rootDir, $theme);
+    }
+
+    public function addThemeConfig($theme, &$config)
+    {
+        $config['plugin']['themes'][] = array(
+            'name' => $theme . ' theme',
+            'path' => 'less/theme/theme.html.twig'
+        );
+    }
+
+    public function addCssFile($rootDir, $theme)
+    {
+        $fs = new FileSystem();
+        $themedir = $rootDir . '/Resources/views/less/theme';
+        $fs->mkdir($themedir);
+        $tempthemedir = $this->getContainer()->getParameter('claroline.param.plugin_template_theme_directory');
+        $fileList = array('common.less', 'theme.html.twig', 'theme.less', 'variables.less');
+
+        foreach ($fileList as $file) {
+            copy($tempthemedir . '/' . $file, $themedir . '/' . $file);
+        }
+
     }
 
     private function getNewRoutingFile($rootDir)
