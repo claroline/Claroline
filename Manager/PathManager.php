@@ -248,4 +248,33 @@ class PathManager
 
         return $this;
     }
+
+    public function export(Workspace $workspace, array &$files, Path $path)
+    {
+        $data = array ();
+
+        // Get path data
+        $data['breadcrumbs'] = $path->hasBreadcrumbs();
+        $data['structure']   = $path->getStructure();
+        $data['modified']    = $path->isModified();
+
+        // Get Steps if Path is published
+        $data['steps'] = array ();
+
+        if ($path->isPublished()) {
+            // Export each step
+            foreach ($path->getSteps() as $step) {
+
+            }
+        }
+
+        return $data;
+    }
+
+    public function import(array $data)
+    {
+        $path = new Path();
+
+        return $path;
+    }
 }

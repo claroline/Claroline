@@ -72,7 +72,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function __construct()
     {
         $this->steps = new ArrayCollection();
-        $this->published = false;
         $this->modified = false;
     }
     

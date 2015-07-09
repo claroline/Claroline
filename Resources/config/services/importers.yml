@@ -1,0 +1,8 @@
+services:
+    # Path importer
+    innova_path.importer.importer:
+        class: %innova_path.importer.importer.class%
+        # arguments:
+        #    pathManager: @innova_path.manager.path
+        tags:
+            - { name: claroline.importer }

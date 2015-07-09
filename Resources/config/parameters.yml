@@ -24,3 +24,6 @@ parameters:
 
     # Listeners
     innova_path.listener.path.class:               Innova\PathBundle\EventListener\Resource\PathListener
+
+    # Importers
+    innova_path.importer.importer.class:           Innova\PathBundle\Transfer\PathImporter
