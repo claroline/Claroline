@@ -179,7 +179,6 @@ class EventManager
     public function getSortedEventsForFilter($restriction = null)
     {
         $textEvents = $this->getEvents($restriction);
-
         $allTranslatedText = $this->translator->trans('all', array(), 'log');
         $sortedEvents = array();
         $genericResourceEvents = array();
@@ -195,7 +194,7 @@ class EventManager
             if ($explodeTextEvents[0] === 'resource') {
                 $tempResourceEvents['all'][$allTranslatedText] = $explodeTextEvents[0];
             } else {
-                $sortedEvents[$eventTrans][$allTranslatedText] = $explodeTextEvents[0];
+                $sortedEvents[$eventTrans][$explodeTextEvents[0].': '.$allTranslatedText] = $explodeTextEvents[0];
             }
 
             if ($explodeTextEvents[0] === 'resource') {
@@ -238,12 +237,12 @@ class EventManager
                         'log'
                     );
 
-                $genericEvent = ('all' == $genericEvent) ? 'resource' : $genericEvent;
+                $genericEvent = ('all' === $genericEvent) ? 'resource' : $genericEvent;
 
                 if ($sortedKey !== 'all') {
-                    $sortedEvents[$resourceTrans][$keyTrans][$logTrans] = '[[' . $sortedKey . ']]' . $genericEvent;
+                    $sortedEvents[$resourceTrans][$keyTrans][$keyTrans . ': ' . $logTrans] = '[[' . $sortedKey . ']]' . $genericEvent;
                 } else {
-                    $sortedEvents[$resourceTrans][$allTranslatedText][$logTrans] = $genericEvent;
+                    $sortedEvents[$resourceTrans][$allTranslatedText]['resource: '.$logTrans] = $genericEvent;
                 }
             }
 
@@ -254,8 +253,10 @@ class EventManager
                 }
             }
         }
-
+        //var_dump($sortedEvents);
+        //die();
         return $sortedEvents;
+        //return array('all' => 'Tous','group' => 'Group');
     }
 
     /**

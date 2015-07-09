@@ -511,7 +511,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     public function getEntityRoles($areGroupsIncluded = true)
     {
-        $roles = $this->roles->toArray();
+        $roles = array();
+        if ($this->roles) $roles = $this->roles->toArray();
 
         if ($areGroupsIncluded) {
             foreach ($this->getGroups() as $group) {

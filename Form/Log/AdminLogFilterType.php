@@ -48,8 +48,6 @@ class AdminLogFilterType extends AbstractType
                     'attr'               => array('class' => 'input-sm'),
                     'choices'            => $actionChoices,
                     'choices_as_values'  => true,
-                    'empty_value'        => 'all',
-                    'empty_data'         => null,
                     'theme_options' => array('label_width' => 'col-md-3')
                 )
             )
