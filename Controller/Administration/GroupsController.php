@@ -382,7 +382,7 @@ class GroupsController extends Controller
     public function settingsFormAction(Group $group)
     {
         $roles = $group->getPlatformRole();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $roles), $group);
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => true, 'roles' => $roles), $group);
         $unavailableRoles = [];
         $roles = $this->roleManager->getAllPlatformRoles();
 
@@ -418,7 +418,7 @@ class GroupsController extends Controller
     public function updateSettingsAction(Group $group)
     {
         $oldRoles = $group->getPlatformRoles();
-        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => $isAdmin, 'roles' => $oldRoles), $group);
+        $form = $this->formFactory->create(FormFactory::TYPE_GROUP_SETTINGS, array('isAdmin' => true, 'roles' => $oldRoles), $group);
         $form->handleRequest($this->request);
         $unavailableRoles = [];
         $roles = $form['platformRoles']->getData();
