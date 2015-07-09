@@ -1,23 +1,23 @@
-activity: activity
-administrate: administrate
-compose: compose
-copy: copy
-delete: delete
-directory: directory
-download: download
-edit: edit
-edit-properties: edit-properties
-edit-rights: edit-rights
-empty: empty
-export: export
-file: file
-insert: insert
-open: open
-open-tracking: open-tracking
-rename: rename
-resource_copy_warning: resource_copy_warning
-resource_name_form_name: resource_name_form_name
-resource_shortcut: resource_shortcut
-text: text
-update_file: update_file
-write: write
+activity: Activité
+administrate: Administrer
+compose: Composer
+copy: Copier
+delete: Supprimer
+directory: Répertoire
+download: Télécharger
+edit: Editer
+edit-properties: 'Editer les propriétés'
+edit-rights: 'Editer les droits'
+empty: Vide
+export: Exporter
+file: Fichier
+insert: Insérer
+open: Ouvrir
+open-tracking: 'Voir le suivi de l''objet'
+rename: Renommer
+resource_copy_warning: 'Une erreur est survenue lors de la copie de la ressource <%resourceName%>'
+resource_name_form_name: 'Nom de la ressource'
+resource_shortcut: Raccourcis
+text: Texte
+update_file: 'Mettre à jour le fichier'
+write: Ecrire

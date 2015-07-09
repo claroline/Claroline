@@ -1,22 +1,22 @@
-agenda: agenda
-analytics: analytics
-desktop_and_home: desktop_and_home
-desktop_tools: desktop_tools
-home: home
-home_tabs: home_tabs
-learning_outcomes: learning_outcomes
-learning_profil: learning_profil
-logs: logs
-my_contacts: my_contacts
-parameters: parameters
-platform_analytics: platform_analytics
-platform_logs: platform_logs
-platform_packages: platform_packages
-platform_parameters: platform_parameters
-platform_plugins: platform_plugins
-registration_to_workspace: registration_to_workspace
-resource_manager: resource_manager
-roles_management: roles_management
-user_management: user_management
-users: users
-workspace_management: workspace_management
+agenda: Agenda
+analytics: 'Tableau de bord'
+desktop_and_home: 'Bureau et accueil'
+desktop_tools: 'Outils du bureau'
+home: Accueil
+home_tabs: 'Onglets de la page d''accueil'
+learning_outcomes: 'Référentiel de compétences'
+learning_profil: 'Profil d''apprentissage'
+logs: Suivi
+my_contacts: 'Mes contacts'
+parameters: Paramètres
+platform_analytics: 'Statistiques de la plateforme'
+platform_logs: 'Suivi de la plateforme'
+platform_packages: 'Paquets de la plateforme'
+platform_parameters: 'Paramètres de la plateforme'
+platform_plugins: 'Plugins de la plateforme'
+registration_to_workspace: 'Inscription à des espaces d''activités'
+resource_manager: Ressources
+roles_management: 'Gestion des rôles'
+user_management: 'Gestion des utilisateurs'
+users: Utilisateurs
+workspace_management: 'Gestion des espaces d''activités'
