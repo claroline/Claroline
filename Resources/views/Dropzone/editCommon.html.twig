@@ -2,11 +2,8 @@
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
 
-{% block drops_awaiting_active %}active{% endblock %}
-{% block drops_awaiting_link %} # {% endblock %}
-
-{% block  drops_completed_active %} active {% endblock %}
-{% block drops_completed_link %} # {% endblock %}
+{% block collecticiel_parametres_active %}active{% endblock %}
+{% block collecticiel_parametres_link %}#{% endblock %}
 
 {% block drop_zone_content_edit %}
     {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
@@ -202,9 +199,8 @@
     </div>
 #}
 
+{# InnovaERV : déclaration de la modal dans un temptale dédié, à part #}
 {% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
-
-
 
 
 {% endblock %}

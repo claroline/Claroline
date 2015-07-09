@@ -1,5 +1,8 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
+{% block collecticiel_demandes_active %}active{% endblock %}
+{% block collecticiel_demandes_link %}#{% endblock %}
+
 {% block drop_zone_content_edit %}
 
     <!-- ERV/La conformation de la suppression est à demander -->
@@ -7,7 +10,7 @@
     <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
 
     <!-- Copies terminées en attente de correction(s) -->
-    <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
+    <h3>aa{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}

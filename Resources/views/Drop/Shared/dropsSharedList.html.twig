@@ -3,12 +3,15 @@
     <td>{{ drop.user.lastName|upper }}</td>
     <td>{{ drop.user.firstName|capitalize }}</td>
     <td>{{ drop.user.userName|capitalize }}</td>
-    <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
     <td>
-        <!-- Afficher ici la valeur "Devoirs à corriger" modifiée en "Etat" -->
-        {% include 'InnovaCollecticielBundle:Document:documentsNbTextToRead.html.twig' %}
+        {# Afficher ici la valeur "Documents déposés" #}
+        {% include 'InnovaCollecticielBundle:Document:documentsNbDocDropped.html.twig' %}
     </td>
-    <td> <!-- Appel de la vue "Vue d'un fichier" où seront affichés les différents commentaires. -->
+    <td>
+        {# Afficher ici la valeur "Demandes adressées" #}
+        {% include 'InnovaCollecticielBundle:Document:documentsNbAddressedRequests.html.twig' %}
+    </td>
+    <td> {# Appel de la vue "Espaces collecticiel". #}
         <div class="btn-group ">
             <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id}) }}" type="button" class="btn btn-default btn-sm">
                 {{ 'To display'|trans({}, 'innova_collecticiel') }}
