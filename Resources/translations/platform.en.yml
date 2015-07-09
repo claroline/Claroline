@@ -178,6 +178,7 @@ copy: Copy
 core_packages: 'Core packages'
 count_resources: 'Amount of resources'
 create: Create
+create_account: Create account
 create_and_update: 'Create and update'
 create_category: 'Create a category'
 create_facet: 'Create a facet'
@@ -1054,6 +1055,7 @@ validate: Validate
 validation: Validation
 variable_available_message: 'You can use the following variables in your form'
 verification: Verification
+verify_your_password: 'Re-enter your password'
 view: See
 view_category_hierarchy: 'View category hierarchy'
 views: Views
@@ -1126,5 +1128,6 @@ ws_most_viewed: 'Most viewed workspaces'
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
 your_username: 'Your username is '
+your_platform_id: 'Your platform login'
 your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'

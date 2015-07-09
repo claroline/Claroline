@@ -8,8 +8,10 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 var choices = {{form.vars['choices']|json_encode()|raw}};
+                console.log(choices);
                 var choicesTree = {};
                 var preselectedValuePath = buildChoicesTree(choices, choicesTree, [], "{{form.vars['data']}}");
+                console.log(choicesTree);
                 if (preselectedValuePath == null) {
                     preselectedValuePath = [choices[0]['label']];
                 }
@@ -23,17 +25,19 @@
             {
                 var preselectedValuePath = null;
                 for (var key in choices) {
+                    var label = choices[key].label.replace(/[A-Z-a-z]+: /g, "");
+                    console.log(choices[key].label+"=>"+label);
                     if (!choices[key].choices) {
-                        choicesTree[choices[key].label] = choices[key].value;
+                        choicesTree[label] = choices[key].value;
                         if (preselectedValue == choices[key].data) {
                             preselectedValuePath = pathToNode.slice();
-                            preselectedValuePath.push(choices[key].label);
+                            preselectedValuePath.push(label);
                         }
                     } else {
-                        choicesTree[choices[key].label] = {};
+                        choicesTree[label] = {};
                         var newPathToNode = pathToNode.slice();
                         newPathToNode.push(key);
-                        var tempPreselectedPath = buildChoicesTree(choices[key].choices, choicesTree[choices[key].label], newPathToNode, preselectedValue);
+                        var tempPreselectedPath = buildChoicesTree(choices[key].choices, choicesTree[label], newPathToNode, preselectedValue);
                         if (tempPreselectedPath != null) {
                             preselectedValuePath = tempPreselectedPath;
                         }
