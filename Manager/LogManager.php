@@ -302,9 +302,12 @@ class LogManager
                 $userSearch = $decodeFilter->user;
             }
         } else {
-            $action = isset($data['action']) ? $data['action']: null;
-            $range = isset($data['range']) ?$dateRangeToTextTransformer->reverseTransform($data['range']):null;
-            $userSearch = isset($data['user'])?$data['user']:null;
+            $tmpForm = $this->container->get('form.factory')->create($logFilterFormType);
+            $tmpForm->submit($request);
+            $formData = $tmpForm->getData();
+            $action = isset($formData['action']) ? $formData['action']: null;
+            $range = isset($formData['range']) ?$formData['range']:null;
+            $userSearch = isset($formData['user'])?$formData['user']:null;
         }
 
         if ($range == null) {
