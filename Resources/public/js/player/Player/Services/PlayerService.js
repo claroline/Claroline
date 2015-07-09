@@ -8,47 +8,37 @@
         '$http',
         '$filter',
         '$q',
-        function PlayerService($http, $filter, $q) {
-           
+        function PlayerService($http, $filter, $q) {       
            
 
             return {
-                /**
-                 * Test method
-                 *
-                 * @param   {string} [name]
-                 * @returns {string}
-                 */
-                hello: function (name) {
-                    return 'Hello ' + name;
-                },
+               
                 /**
                  * Update the player
-                 * @param {type} player
-                 * @returns {undefined}
+                 * @param player
+                 * @returns 
                  */
                 update : function (player){
-                    var deferred = $q.defer();
-                    
+                    var deferred = $q.defer();                    
                     // player constructor
                     function Player(player){
                         var ujm_player = {
-                            name:player.name,
+                            name: player.name,
                             description: player.description,
-                            startDate: player.startDate,
-                            endDate: player.endDate,
-                            modification: new Date()
+                            startDate: new Date(player.startDate),
+                            endDate: new Date(player.endDate)
                         };
                         
                         return ujm_player;
                     }
                     
                     var updated = new Player(player);
+                   
                     $http
                         .put(
-                            Routing.generate('ujm_player_update', { playerId : player.id }),
+                            Routing.generate('ujm_player_update', { id : player.id }),
                             {
-                                player: updated
+                                exercise_player_type: updated
                             }
                         )
                         .success(function (response){

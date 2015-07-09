@@ -6,7 +6,8 @@
 
 {% block content %} 
     <div class="exercise-player-container" data-ng-app="ExercisePlayerEditorApp" data-ng-cloak="">
-        <page-edit class="exercise-player-page" data-player="{{ _resource | json_encode() }}" data-first="{{ first | json_encode() }}" data-last="{{ last | json_encode() }}" data-pages="{{ pages | json_encode() }}"></page-edit>
+        <player-edit class="player-container" data-player="{{ _resource | json_encode() }}"></player-edit>
+        <page-edit class="page-container" data-pages="{{ pages | json_encode() }}"></page-edit>
     </div>
 {% endblock %}
 
@@ -15,9 +16,12 @@
     {# Load Claroline JS #}
     {{ parent() }}
 
-
-
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_exo_player_editor.js'
+         
+        '@UJMExoBundle/Resources/public/js/player/Player/*'
+        '@UJMExoBundle/Resources/public/js/player/Player/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/player/Player/Directives/*'
+        '@UJMExoBundle/Resources/public/js/player/Player/Services/*'
 
         '@UJMExoBundle/Resources/public/js/player/Page/*'
         '@UJMExoBundle/Resources/public/js/player/Page/Controllers/*'

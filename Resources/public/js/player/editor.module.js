@@ -8,6 +8,7 @@
         'ui.tinymce',
         'ui.translation',
         'ui.resourcePicker',
-        'Page'
+        'Page',
+        'Player'
     ]);
 })();

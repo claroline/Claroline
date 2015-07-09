@@ -1,0 +1,19 @@
+# e
+exercise_player_type_name : Nom du player
+exercise_player_type_description : Description du player
+exercise_player_start_date: Date de début
+exercise_player_end_date: Date de fin
+exercise_player_name : Nom
+exercise_player_description : Description
+exercise_player_page_description: Description
+exercise_player_page_shuffle: Aléatoire
+exercise_player_page_previous: Page précédente
+exercise_player_page_next: Page suivante
+exercise_player_page_view: Voir la page
+exercise_player_pages_save: Sauvegarder les pages du player
+exercise_player_page_add: Ajouter une page
+exercise_player_page_remove: Supprimer une page
+exercise_player_panel_hide: Cacher / Montrer les informations du player
+exercise_player_panel_title: Player
+exercise_player_save: Sauvegarder le player
+exercise_player_page_panel_title: Pages

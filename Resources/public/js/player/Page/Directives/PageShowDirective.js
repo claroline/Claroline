@@ -12,11 +12,9 @@
                 replace: true,
                 controller: 'PageShowCtrl',
                 controllerAs: 'pageShowCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/show.html',
+                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/page.show.html',
                 scope: {
-                    page: '=',
-                    name: '@',
-                    player: '='
+                    pages: '='
                 },
                 link: function (scope, element, attr, pageShowCtrl) {
                     

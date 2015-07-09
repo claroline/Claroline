@@ -6,51 +6,50 @@
 
     angular.module('Page').factory('PageService', [
         '$http',
-        function PageService($http) {
+        '$filter',
+        '$q',
+        function PageService($http, $filter, $q) {
            
-           /**
-             * ExercisePlayer Id
-             * @type {Number}
-             */
-            var id = null;
-            
-            /**
-             * current page properties
-             * @type object
-             */
-            var page = {
-                title: 'new page'
-            };
-
             return {
-                /**
-                 * Test method
-                 *
-                 * @param   {string} [name]
-                 * @returns {string}
-                 */
-                hello: function (name) {
-                    return 'Hello ' + name;
+                
+                
+                addPage : function(){
+                   function Page(){
+                        var ujm_player = {
+                            name: player.name,
+                            description: player.description,
+                            startDate: new Date(player.startDate),
+                            endDate: new Date(player.endDate)
+                        };
+                        
+                        return ujm_player;
+                    }
+                    
+                    var updated = new Player(player);
                 },
-                setPlayerId: function (value){
-                    id = value;
-                },                
+               
                 /**
-                 * Get exercise player ID
-                 * @returns {Number}
+                 * Update exercise player pages
+                 * @param player
+                 * @returns 
                  */
-                getPlayerId: function(){
-                    return id;
-                },
-                setPage: function(value){
-                    page = value;
-                },
-                /**
-                 * 
-                 * @returns {Object} page
-                 */
-                getPage: function(){
-                    return page;
+                update : function (pages){
+                    var deferred = $q.defer(); 
+                    var playerId = pages[0].playerId;
+                    $http
+                        .post(
+                            Routing.generate('ujm_pages_update', { id : playerId}), {pages: pages}
+                        )
+                        .success(function (response){
+                            deferred.resolve(response);
+                        })
+                        .error(function(data, status){
+                            console.log('Page service, update method error');
+                            console.log(status);
+                            console.log(data);
+                        });
+                        
+                     return deferred.promise;
                 }
             };
         }

@@ -12,13 +12,28 @@ class ExercisePlayerType extends AbstractType
     {
         $builder
             ->add(
-                'name', 'text', array(
-                    'data' => 'exercise'
-                )
+                'name', 'text'
             )
             ->add('description', 'tinymce', array(
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'Description', 'required' => false
+                )
+            )
+            ->add('startDate', 'datetime', array(
+                    'data' => new \DateTime(),
+                    'attr'=>array('style'=>'display:none;'),
+                    'widget' => 'single_text',                    
+                    'label' => ' ',
+                    'input' => 'datetime'
+                )
+            )
+            ->add('endDate', 'datetime', array(        
+                    'data' => null,
+                    'attr'=>array('style'=>'display:none;'),
+                    'label' => ' ',
+                    'widget' => 'single_text',
+                    'required' => false ,
+                    'input' => 'datetime'
                 )
             );
     }
@@ -28,6 +43,7 @@ class ExercisePlayerType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Player\ExercisePlayer',
+                'translation_domain' => 'exercise_player',
             )
         );
     }

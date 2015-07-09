@@ -201,7 +201,8 @@ class Page implements \JsonSerializable{
             'shuffle'       => $this->shuffle,
             'isFirst'       => $this->isFirstPage,
             'isLast'        => $this->isLastPage,
-            'description'   => $this->description
+            'description'   => $this->description,
+            'playerId'      => $this->exercisePlayer->getId()
         );
     }
 
