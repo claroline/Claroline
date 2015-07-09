@@ -43,12 +43,16 @@ class ExercisePlayerManager {
         $last->setDescription('<h1>This is the last Page</h1>');
         $last->setExercisePlayer($ep);
         $ep->addPage($last);
-        
+
         $this->em->persist($ep);
         $this->em->flush();
         return $ep;
     }
-    
-   
+
+    public function update(ExercisePlayer $ep) {
+        $this->em->persist($ep);
+        $this->em->flush();
+        return $ep;
+    }
 
 }

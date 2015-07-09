@@ -4,24 +4,24 @@
     angular.module('Page').controller('PageEditCtrl', [
         'PageService',
         function (PageService) {
-            
-            this.currentPage = {};
+
             this.pages = {};
-            
+            this.currentPageIndex = 0;
+
             this.sortableOptions = {
                 placeholder: "placeholder",
                 stop: function (e, ui) {
-                   this.updateActivitiesOrder();
+                    this.updateActivitiesOrder();
                 }.bind(this),
                 cancel: ".unsortable",
                 items: "li:not(.unsortable)"
             };
-            
+
             // Tiny MCE options
             this.tinymceOptions = {
                 relative_urls: false,
                 theme: 'modern',
-                browser_spellcheck : true,
+                browser_spellcheck: true,
                 autoresize_min_height: 100,
                 autoresize_max_height: 500,
                 plugins: [
@@ -43,51 +43,88 @@
                     }
                 }
             };
-            
-            this.addPage = function(){
-                
-            };
-            
-            this.removePage = function(){
-                
-            };
-            
-            this.update = function(){
-                
+
+            // Page constructor
+            var my = this;
+            var Page = function () {
+                var ujm_page = {
+                    description: '<h1>New page default description</h1>',
+                    position: my.pages.length,
+                    shuffle: false,
+                    playerId: my.pages[0].playerId,
+                    isLast: false,
+                    isFirst: false
+                };
+                return ujm_page;
             };
 
-            this.getNextPage = function () {            
-                var index = this.pages.indexOf(this.currentPage);
-                if (false !== index && this.pages[index + 1]) {
-                    this.setCurrentPage(this.pages[index + 1]);
-                } else {
-                    this.setCurrentPage(this.pages[0]);
+            this.addPage = function () {
+                // create a new page
+                var page = new Page();
+                // update last page position
+                var last = this.pages[this.pages.length - 1];
+                last.position = page.position + 1;
+                // add new page at the right index in pages array
+                this.pages.splice(this.pages.length - 1, 0, page);
+            };
+
+            this.removePage = function () {
+                var current = this.pages[this.currentPageIndex];
+                console.log(current);
+                if (current && !current.isLast && !current.isFirst) {
+                    var index = this.pages.indexOf(current);
+                    // update positions...
+                    for (var i = index; i < this.pages.length; i++) {
+                        var p = this.pages[i];
+                        p.position = p.position - 1;
+                    }
+                    // remove page
+                    this.pages.splice(index, 1);
                 }
             };
-            
-            this.getPreviousPage = function(){
-                 var index = this.pages.indexOf(this.currentPage);
-                if (false !== index && this.pages[index - 1]) {
-                    this.setCurrentPage(this.pages[index - 1]);
+
+            this.update = function () {
+                var promise = PageService.update(this.pages);
+                promise.then(function (result) {
+                    console.log('result');
+                    console.log(result);
+                }, function (error) {
+                    console.log('error');
+                    console.log(error);
+                });
+
+            };
+
+            this.getNextPage = function () {
+                var newIndex = this.currentPageIndex + 1;
+                if (this.pages[newIndex]) {
+                    this.currentPageIndex = newIndex;
                 } else {
-                    this.setCurrentPage(this.pages[this.pages.length - 1]);
+                    this.currentPageIndex = 0;
                 }
             };
-            
-            this.setPages = function(pages){
+
+            this.getPreviousPage = function () {
+                var newIndex = this.currentPageIndex - 1;
+                if (this.pages[newIndex]) {
+                    this.currentPageIndex = newIndex;
+                } else {
+                    this.currentPageIndex = this.pages.length - 1;
+                }
+            };
+
+
+            this.setPages = function (pages) {
                 this.pages = pages;
             };
-            
-            this.getPages = function(){
+
+            this.getPages = function () {
                 return this.pages;
-            }
-            
-            this.setCurrentPage = function(page){
-                this.currentPage = page;
             };
-            
-            this.getCurrentPage = function (){
-                return currentPage;
+
+            this.setCurrentPage = function (page) {
+                var index = this.pages.indexOf(page);
+                this.currentPageIndex = index;
             };
         }
     ]);

@@ -38,21 +38,7 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    protected $description;
-
-    /**
-     * @var datetime $creationDate
-     *
-     * @ORM\Column(name="creation", type="datetime")
-     */
-    protected $creationDate;
-
-    /**
-     * @var datetime $modificationDate
-     *
-     * @ORM\Column(name="modification", type="datetime")
-     */
-    protected $modificationDate;
+    protected $description;   
 
     /**
      * @var datetime $startDate
@@ -68,19 +54,7 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
      */
     protected $endDate;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    protected $published;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="modified", type="boolean")
-     */
-    protected $modified;
+   
 
     /**
      * Pages associated with ExercisePlayer
@@ -89,12 +63,8 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
      */
     protected $pages;
 
-    public function __construct() {
-        $this->published = false;
-        $this->modified = false;
+    public function __construct() {       
         $this->startDate = new \DateTime();
-        $this->creationDate = new \DateTime();
-        $this->modificationDate = new \DateTime();
         $this->pages = new ArrayCollection();
     }
 
@@ -192,46 +162,7 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
         return $this->endDate;
     }
 
-    /**
-     * Set player creation date
-     *
-     * @param datetime $date
-     *  @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
-     */
-    public function setCreationDate($date) {
-        $this->creationDate = $date;
-        return $this;
-    }
-
-    /**
-     * Get player creation date
-     *
-     * @return datetime
-     */
-    public function getCreationDate() {
-        return $this->creationDate;
-    }
-
-    /**
-     * Set player modification date
-     *
-     * @param datetime $date
-     *  @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
-     */
-    public function setModificationDate($date) {
-        $this->modificationDate = $date;
-        return $this;
-    }
-
-    /**
-     * Get player modification date
-     *
-     * @return datetime
-     */
-    public function getModificationDate() {
-        return $this->modificationDate;
-    }
-
+    
     /**
      * Set player description
      *
@@ -252,61 +183,14 @@ class ExercisePlayer extends AbstractResource implements \JsonSerializable {
         return $this->description;
     }
 
-    /**
-     * Set player published property
-     * @param boolean $published
-     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
-     */
-    public function setPublished($published) {
-        $this->published = $published;
-        return $this;
-    }
-
-    /**
-     * Get player published property
-     * @return boolean
-     */
-    public function getPublished() {
-        return $this->published;
-    }
-
-    /**
-     * Set player modified property
-     * @param boolean $modified
-     * @return \UJM\ExoBundle\Entity\Player\ExercisePlayer
-     */
-    public function setModified($modified) {
-        $this->modified = $modified;
-        return $this;
-    }
-
-    /**
-     * Get player modified property
-     * @return boolean
-     */
-    public function getModified() {
-        return $this->modified;
-    }
-
     public function jsonSerialize() {
-        
-        // TODO serialize Pages arraycollection
-        /*$pages = array();
-        $temp = $this->getPages();
-        foreach ($temp as $p){
-            $pages[]= $p->jsonSerialize();
-        }*/
         
         return array(
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'start' => $this->startDate,
-            'end' => $this->endDate,
-            'creation' => $this->creationDate,
-            'modification' => $this->modificationDate,
-            'published' => $this->published,
-           // 'pages' => $pages
+            'startDate' => !empty($this->startDate) ? $this->startDate->format('Y-m-d'): null,
+            'endDate' => !empty($this->endDate) ? $this->endDate->format('Y-m-d'): null
         );
     }
 

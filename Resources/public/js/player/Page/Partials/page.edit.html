@@ -1,0 +1,49 @@
+<form method="post" class="form">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{ 'exercise_player_page_panel_title'|trans:{}:'exercise_player' }} {{ pageEditCtrl.currentPageIndex + 1}} / {{ pageEditCtrl.pages.length}}</h3>
+            <div class="btn-group pull-right">
+                <button type="button" role="button" class="btn btn-default fa fa-plus" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_add'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.addPage()"></button>
+                <button type="button" role="button" class="btn btn-default fa fa-minus" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_remove'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.removePage()"></button>
+                <button type="button" role="button" class="btn btn-default fa fa-save" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_pages_save'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.update()"></button>
+            </div>
+        </div>
+        <div class="panel-body">       
+            <!-- Pages list row -->
+            <div class="row center-text">
+                <div class="col-md-1">
+                    <button type="button" role="button" class="btn btn-default fa fa-arrow-left" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_previous'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.getPreviousPage()"></button>
+                </div>
+                <div class="col-md-10">
+                    <ul class="page-list list-unstyled" data-ui-sortable="pageEditCtrl.sortableOptions" data-ng-model="pageEditCtrl.pages">
+                        <li class="page-list-item" data-ng-repeat="page in pageEditCtrl.pages| orderBy:'position'" data-ng-class="{ 'active' : pageEditCtrl.currentPage == page }">
+                            <a href="" data-ng-click="pageEditCtrl.setCurrentPage(page)" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_view'|trans:{}:'exercise_player' }}: {{ page.position}}">
+                                {{ page.position}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" role="button" class="btn btn-default fa fa-arrow-right" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_next'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.getNextPage()"></button>       
+
+                </div>
+            </div>
+            <hr/>
+            <!-- Current page details row -->
+            <!-- Shuffle questions (only if not first page or last page) -->
+            <div ng-hide="pageEditCtrl.pages[pageEditCtrl.currentPageIndex].isFirst || pageEditCtrl.pages[pageEditCtrl.currentPageIndex].isLast">
+                <div class="checkbox">                
+                    <label>
+                        <input id="page_shuffle" type="checkbox" data-ng-model="pageEditCtrl.pages[pageEditCtrl.currentPageIndex].shuffle"> {{ 'exercise_player_page_shuffle'|trans:{}:'exercise_player' }}
+                    </label>
+                </div>
+                <hr/>
+            </div>
+            <!-- Page Description -->
+            <div class="form-group">
+                <label for="page_description">{{ 'exercise_player_page_description'|trans:{}:'exercise_player' }}</label>
+                <textarea data-ui-tinymce="pageEditCtrl.tinymceOptions" id="page_description" class="form-control" name="description" data-ng-model="pageEditCtrl.pages[pageEditCtrl.currentPageIndex].description"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

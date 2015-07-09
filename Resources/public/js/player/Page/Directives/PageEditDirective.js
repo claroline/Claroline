@@ -12,19 +12,19 @@
                 replace: true,
                 controller: 'PageEditCtrl',
                 controllerAs: 'pageEditCtrl',
-                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/edit.html',
+                templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/player/Page/Partials/page.edit.html',
                 scope: {
-                    pages: '=',
-                    first: '=',
-                    last: '=',
-                    player: '='                    
+                    pages: '='
                 },
                 link: function (scope, element, attr, pageEditCtrl) {
                     // set current page to first page
-                    console.log('directive link method called');
-                    pageEditCtrl.setCurrentPage(scope.first);
+                    console.log('page edit directive link method called');
+                    //pageEditCtrl.setCurrentPage(scope.pages[0]);
                     pageEditCtrl.setPages(scope.pages);
+                    //console.log(scope.pages[0].description);
                     
+                    //pageEditCtrl.setPlayer(scope.player);
+
                     /*
                     console.log(scope.player);
                     console.log(scope.last);
@@ -36,5 +36,3 @@
         }
     ]);
 })();
-
-

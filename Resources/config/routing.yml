@@ -54,3 +54,9 @@ exercise_player:
     resource: "@UJMExoBundle/Controller/Player/ExercisePlayerController.php"
     type: annotation
     prefix: /player
+    
+   
+exercise_pages:
+    resource: "@UJMExoBundle/Controller/Player/ExercisePlayerPageController.php"
+    type: annotation
+    prefix: /page
