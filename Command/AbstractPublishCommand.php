@@ -2,37 +2,40 @@
 
 namespace Innova\PathBundle\Command;
 
-use Innova\PathBundle\Entity\Path\Path;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractPublishCommand extends ContainerAwareCommand
+use Doctrine\Common\Persistence\ObjectManager;
+use Innova\PathBundle\Manager\PublishingManager;
+use Innova\PathBundle\Entity\Path\Path;
+
+abstract class AbstractPublishCommand extends Command
 {
     /**
-     * @var \Innova\PathBundle\Repository\PathRepository
+     * Object Manager
+     * @var \Doctrine\Common\Persistence\ObjectManager
      */
-    protected $pathRepo;
+    protected $objectManager;
 
     /**
-     * @var \Claroline\CoreBundle\Repository\WorkspaceRepository
-     */
-    protected $workspaceRepo;
-
-    /**
+     * Publishing Manager
      * @var \Innova\PathBundle\Manager\PublishingManager
      */
-    protected $pathPublishing;
+    protected $publishingManager;
 
-    public function setContainer(ContainerInterface $container = null)
+    /**
+     * Class constructor
+     * @param \Doctrine\Common\Persistence\ObjectManager $objectManager
+     * @param \Innova\PathBundle\Manager\PublishingManager $publishingManager
+     */
+    public function __construct(
+        ObjectManager     $objectManager,
+        PublishingManager $publishingManager)
     {
-        parent::setContainer($container);
-
-        if (null !== $container) {
-            $this->pathRepo       = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path');
-            $this->workspaceRepo  = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-            $this->pathPublishing = $this->getContainer()->get('innova_path.manager.publishing');
-        }
+        parent::__construct();
+        
+        $this->objectManager     = $objectManager;
+        $this->publishingManager = $publishingManager;
     }
 
     protected function publish(array $paths, OutputInterface $output)
@@ -53,7 +56,7 @@ abstract class AbstractPublishCommand extends ContainerAwareCommand
         $datePublished = date('H:i:s');
 
         try {
-            if ($this->pathPublishing->publish($path)) {
+            if ($this->publishingManager->publish($path)) {
                 $output->writeln('<comment>'.$datePublished.'</comment> <info>[ok]</info> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');
             } else {
                 $output->writeln('<comment>'.$datePublished.'</comment> <error>[error]</error> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');

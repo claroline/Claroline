@@ -1,0 +1,19 @@
+services:
+    innova_path.command.abstract:
+        abstract: true
+        class: %innova_path.command.abstract.class%
+        arguments:
+            objectManager:     @doctrine.orm.entity_manager
+            publishingManager: @innova_path.manager.publishing
+
+    innova_path.command.publish:
+        class: %innova_path.command.publish.class%
+        parent: innova_path.command.abstract
+        tags:
+            - { name: console.command }
+
+    innova_path.command.republish:
+        class: %innova_path.command.republish.class%
+        parent: innova_path.command.abstract
+        tags:
+            - { name: console.command }
