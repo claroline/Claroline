@@ -15,17 +15,14 @@
                     <button type="button" role="button" class="btn btn-default fa fa-arrow-left" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_previous'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.getPreviousPage()"></button>
                 </div>
                 <div class="col-md-10">
-                    <ul class="page-list list-unstyled" data-ui-sortable="pageEditCtrl.sortableOptions" data-ng-model="pageEditCtrl.pages">
-                        <li class="page-list-item" data-ng-repeat="page in pageEditCtrl.pages| orderBy:'position'" data-ng-class="{ 'active' : pageEditCtrl.currentPage == page }">
-                            <a href="" data-ng-click="pageEditCtrl.setCurrentPage(page)" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_view'|trans:{}:'exercise_player' }}: {{ page.position}}">
-                                {{ page.position}}
-                            </a>
+                    <ul class="page-list" data-ui-sortable="pageEditCtrl.sortableOptions" data-ng-model="pageEditCtrl.pages">
+                        <li class="page-list-item" data-ng-click="pageEditCtrl.setCurrentPage(page)" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_view'|trans:{}:'exercise_player' }}" data-ng-repeat="page in pageEditCtrl.pages| orderBy:'position'" data-ng-class="{ 'active' : pageEditCtrl.pages[pageEditCtrl.currentPageIndex] == page , 'unsortable' : page.isFirst || page.isLast}">
+                            <div>{{ page.position }}</div>
                         </li>
                     </ul>
                 </div>
                 <div class="col-md-1">
-                    <button type="button" role="button" class="btn btn-default fa fa-arrow-right" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_next'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.getNextPage()"></button>       
-
+                    <button type="button" role="button" class="btn btn-default fa fa-arrow-right" data-toggle="tooltip" data-container="body" title="{{ 'exercise_player_page_next'|trans:{}:'exercise_player' }}" data-ng-click="pageEditCtrl.getNextPage()"></button> 
                 </div>
             </div>
             <hr/>

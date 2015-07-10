@@ -10,8 +10,18 @@
 
             this.sortableOptions = {
                 placeholder: "placeholder",
+                axis: 'x',
+               /* start: function (e, ui){
+                    console.log('start');
+                    var item = ui.item.scope().page;
+                    var fromIndex = ui.item.sortable.index; 
+                    console.log('start', item, fromIndex);
+                }.bind(this),*/
                 stop: function (e, ui) {
-                    this.updateActivitiesOrder();
+                    /*var item = ui.item.scope().page;  
+                    var toIndex = ui.item.sortable.dropindex;
+                    item.position = toIndex + 1;*/
+                    this.updatePagesOrder();
                 }.bind(this),
                 cancel: ".unsortable",
                 items: "li:not(.unsortable)"
@@ -86,11 +96,9 @@
             this.update = function () {
                 var promise = PageService.update(this.pages);
                 promise.then(function (result) {
-                    console.log('result');
-                    console.log(result);
+                    console.log('ok');
                 }, function (error) {
                     console.log('error');
-                    console.log(error);
                 });
 
             };
@@ -112,6 +120,16 @@
                     this.currentPageIndex = this.pages.length - 1;
                 }
             };
+            
+            // on dragg end
+            this.updatePagesOrder = function(){
+                console.log('dragg end');
+                var index = 0;
+                for(index; index < this.pages.length; index++){
+                    var p = this.pages[index];
+                    p.position = index + 1;
+                }
+            }
 
 
             this.setPages = function (pages) {
