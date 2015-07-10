@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\EventListener\Resource;
 
+use Innova\PathBundle\Entity\Step;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -154,33 +155,52 @@ class PathListener extends ContainerAware
         $parent = $event->getParent();
         $structure = json_decode($pathToCopy->getStructure());
 
+        // Process steps
         $processedNodes = array ();
-
-        // Removes Step IDs from structure
         foreach ($structure->steps as $step) {
-            // Remove reference to Step Entity
-            $step->resourceId = null;
-
-            // Remove references to Activity
-            $step->activityId = null;
-
-            // Duplicate primary resources
-            if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
-                $processedNodes = $this->copyResource($step->primaryResource[0], $parent, $processedNodes);
-            }
-
-            // Duplicate secondary resources
-            if (!empty($step->resources)) {
-                foreach ($step->resources as $resource) {
-                    $processedNodes = $this->copyResource($resource, $parent, $processedNodes);
-                }
-            }
+            $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
         }
 
+        // Store the new structure of the Path
         $path->setStructure(json_encode($structure));
 
         $event->setCopy($path);
+
+        // Force the unpublished state (the publication will recreate the correct links, and create new Activities)
+        // If we directly copy all the published Entities we can't remap some relations
+        $event->setPublish(false);
+
         $event->stopPropagation();
+    }
+
+    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = array ())
+    {
+        // Remove reference to Step Entity
+        $step->resourceId = null;
+
+        // Remove references to Activity
+        $step->activityId = null;
+
+        // Duplicate primary resources
+        if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
+            $processedNodes = $this->copyResource($step->primaryResource[0], $newParent, $processedNodes);
+        }
+
+        // Duplicate secondary resources
+        if (!empty($step->resources)) {
+            foreach ($step->resources as $resource) {
+                $processedNodes = $this->copyResource($resource, $newParent, $processedNodes);
+            }
+        }
+
+        // Process step children
+        if (!empty($step->children)) {
+            foreach ($step->children as $child) {
+                $processedNodes = $this->copyStepContent($child, $newParent, $processedNodes);
+            }
+        }
+
+        return $processedNodes;
     }
 
     private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = array ())
