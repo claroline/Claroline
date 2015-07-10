@@ -157,21 +157,25 @@ class matchingImport extends qtiImport {
             $identifiant = $simpleProposal->getAttribute("identifier");
             $proposal->setInteractionMatching($this->interactionMatching);
             $this->om->persist($proposal);
-            $rightLabel = 0;
+            $rightLabels = [];
+            $i=0;
             //compare all relations to the proposal selected
             foreach ($allRelations as $relation) {
                 if (stripos($relation, $identifiant) !== false) {
-                    $rightLabel = $relation;
-                    $rightLabel = str_replace($identifiant, '', $rightLabel);
-                    $rightLabel = str_replace(' ', '', $rightLabel);
+                    $rightLabels[$i] = $relation;
+                    $rightLabels[$i] = str_replace($identifiant, '', $rightLabels[$i]);
+                    $rightLabels[$i] = str_replace(' ', '', $rightLabels[$i]);
                 }
+                $i++;
             }
             // foreach label of the export file, compare to the right relation
             foreach ($labels as $key => $label) {
-                if ($key == $rightLabel) {
-                    $proposal->addAssociatedLabel($label);
-                    $proposal->setInteractionMatching($this->interactionMatching);
-                    $this->om->persist($proposal);
+                foreach ($rightLabels as $rightLabel) {
+                    if ($key == $rightLabel) {
+                        $proposal->addAssociatedLabel($label);
+                        $proposal->setInteractionMatching($this->interactionMatching);
+                        $this->om->persist($proposal);
+                    }
                 }
             }
             $ordre++;
