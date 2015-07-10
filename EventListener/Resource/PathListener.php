@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\EventListener\Resource;
 
-use Innova\PathBundle\Entity\Step;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
