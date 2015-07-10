@@ -450,6 +450,7 @@ class DropzoneController extends DropzoneBaseController
                     //$this->generateUrl('innova_collecticiel_edit_add_criterion',array('resourceId'=>$dropzone->getId(),'page'=>$page));
                 }
 
+
                 $goBack = $form->get('goBack')->getData();
                 if ($goBack == 0) {
                     $this->getRequest()->getSession()->getFlashBag()->add(

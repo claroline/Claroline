@@ -31,21 +31,22 @@
             {% if adminInnova %}
                 {# Demandes adressées #}
                 <li class="hometab-element {% block collecticiel_demandes_active %}{% endblock %}">
-                    <a href="{% block collecticiel_demandes_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
+                    <a href="{% block collecticiel_demandes_link %}
+                        {{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}
+                        {% endblock %}">
                         {{ 'Requests'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </li>
 
                 {# Espaces partagés #}
-                {% block collecticiel_demande_edit_navTabs_criteria_block %}
-                    <li class="hometab-element {% block collecticiel_shared_active %}{% endblock %}">
-                        <a id="editCriteriaLink" href="{% block collecticiel_shared_link %}
-                            {{ path('innova_collecticiel_shared_spaces',{'resourceId':dropzone.id}) }}
-                        {% endblock %}" class="hometab-link">
-                            {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
-                        </a>
-                    </li>
-                {% endblock %}
+                {# #63 : suppression de l'id car mauvaise navigation #}
+                <li class="hometab-element {% block collecticiel_shared_active %}{% endblock %}">
+                    <a href="{% block collecticiel_shared_link %}
+                        {{ path('innova_collecticiel_shared_spaces',{'resourceId':dropzone.id}) }}
+                        {% endblock %}">
+                        {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
+                    </a>
+                </li>
 
                 {# Paramètres #}
                 <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
@@ -55,7 +56,6 @@
                         {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </li>
-
             {% else %}
                 <!-- (Mon) Espace collecticiel -->
                 {% include "InnovaCollecticielBundle:Dropzone:editNotAdmin.html.twig" %}

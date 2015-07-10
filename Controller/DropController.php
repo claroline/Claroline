@@ -1006,7 +1006,6 @@ class DropController extends DropzoneBaseController
         );
     }
 
-
     /**
      * @Route(
      *      "/{resourceId}/shared/spaces",

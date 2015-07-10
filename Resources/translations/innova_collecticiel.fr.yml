@@ -301,7 +301,7 @@ You need at least one correction on the copy to unlock it: "Il faut au moins une
 Allow student to see his copy whereas the copy didn't received the expected number of correction.: "Faire que l'étudiant puisse voir son document même si celle ci n'as pas reçue le nombre de correction requises."
 Drop have been unlocked: 'Le document a été débloqué'
 This copy has been unlocked by admin.(it did not received the expected number of correction):  "Ce document a été débloqué par un administrateur. ( Elle n'a pas reçu le nombre de corrections attendues )."
-No copy waiting for correction: 'Aucun document en attente de correction'
+No copy waiting for correction: 'Aucun document en attente de traitement'
 Notify on drop: "Nofifier les administrateurs de l'évaluation quand quelqu'un dépose un document."
 Notifications: "Notifications"
 unterminated drops: 'document(s) non terminée(s)'
@@ -378,7 +378,7 @@ Requests: 'Demandes adressées'
 Shared spaces: 'Espaces partagés'
 OK: 'OK'
 Are you sure to want to close this collecticiel: 'Êtes-vous sûr de vouloir fermer ce collecticiel ?'
-The collecticiel has been successfully saved: 'Le collecticiel a été correctement sauvegardé'
+The collecticiel has been successfully saved: 'Le collecticiel a été correctement sauvegardéeee'
 Shared list: 'Liste des espaces collecticiel'
 Spaces collecticiel: 'Espaces collecticiel'
 Submissions: 'Documents déposés'
