@@ -1,5 +1,6 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
+{# Gestion des onglets #}
 {% block collecticiel_shared_active %}active{% endblock %}
 {% block collecticiel_shared_link %}#{% endblock %}
 
@@ -10,7 +11,7 @@
     <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
 
     <!-- Liste des espaces collecticiel -->
-    <h3>bbb{{ 'Shared list'|trans({}, 'innova_collecticiel') }}</h3>
+    <h3>{{ 'Shared list'|trans({}, 'innova_collecticiel') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}

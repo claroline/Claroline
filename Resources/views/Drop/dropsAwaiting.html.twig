@@ -1,5 +1,6 @@
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
+{# Gestion des onglets #}
 {% block collecticiel_demandes_active %}active{% endblock %}
 {% block collecticiel_demandes_link %}#{% endblock %}
 
@@ -10,7 +11,7 @@
     <!-- {% include 'InnovaCollecticielBundle:Drop:peerReviewHelper.html.twig' %} -->
 
     <!-- Copies terminées en attente de correction(s) -->
-    <h3>aa{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
+    <h3>{{ 'Awaiting for correction copies'|trans({}, 'innova_collecticiel') }}</h3>
 
     <div class="container row">
         {% if pager.haveToPaginate %}
