@@ -772,6 +772,10 @@ class ResourceManager
 
             $copy = $event->getCopy();
             $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
+
+            // Set the published state
+            $newNode->setPublished($event->getPublish());
+
             $copy->setResourceNode($newNode);
 
             if ($node->getResourceType()->getName() == 'directory' &&

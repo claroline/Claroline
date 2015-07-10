@@ -27,6 +27,12 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     private $isPopulated = false;
 
     /**
+     * If true the copy will be published
+     * @var bool
+     */
+    private $publish = false;
+
+    /**
      * Constructor.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
@@ -36,6 +42,11 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     {
         $this->resource = $resource;
         $this->parent   = $parent;
+
+        // By default, use the same published state as the copied node
+        if ($this->resource->getResourceNode()) {
+            $this->publish = $this->resource->getResourceNode()->isPublished();
+        }
     }
 
     /**
@@ -81,5 +92,19 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     public function isPopulated()
     {
         return $this->isPopulated;
+    }
+
+    /**
+     * Is the copied resource need to be published or not ?
+     * @return bool
+     */
+    public function getPublish()
+    {
+        return $this->publish;
+    }
+
+    public function setPublish($publish)
+    {
+        $this->publish = $publish;
     }
 }
