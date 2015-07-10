@@ -1,3 +1,22 @@
+{% macro renderPager(pager, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'formalibre_support_index',
+                'routeParams': {
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
 {% macro sortUrl(orderedBy, order) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
@@ -16,6 +35,7 @@
     }}
 {% endmacro %}
 
+{% from _self import renderPager %}
 {% from _self import sortUrl %}
 
 {% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
@@ -44,34 +64,34 @@
         </div>
         <div class="panel-body">
             {% if tickets|length > 0 %}
+        
+                {% if tickets.getNbPages() > 1 %}
+                    {{ renderPager(tickets, search, orderedBy, order, max) }}
+                {% endif %}
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th class="col-md-1">
+                            <th>
                                 <a href="{{ sortUrl('num', order) }}">
                                     #
                                 </a>
                             </th>
-                            <th class="col-md-6">
+                            <th>
                                 <a href="{{ sortUrl('title', order) }}">
                                     {{ 'title'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th class="col-md-1">
-                                <a href="{{ sortUrl('status', order) }}">
-                                    {{ 'status'|trans({}, 'platform') }}
+                            <th>
+                                <a href="{{ sortUrl('type', order) }}">
+                                    {{ 'type'|trans({}, 'platform') }}
                                 </a>
                             </th>
-                            <th class="col-md-1">
-                                <a href="{{ sortUrl('priority', order) }}">
-                                    {{ 'priority'|trans({}, 'support') }}
-                                </a>
+                            <th>
+                                {{ 'contact'|trans({}, 'platform') }}
                             </th>
-                            <th class="col-md-1">
+                            <th>
                             </th>
-                            <th class="col-md-1">
-                            </th>
-                            <th class="col-md-1">
+                            <th>
                             </th>
                         </tr>
                         
@@ -79,57 +99,79 @@
                             {% set ticketId = ticket.getId() %}
                             {% set ticketDescription = ticket.getDescription() %}
                             <tr id="row-ticket-{{ ticketId }}">
-                                <td class="col-md-1">
+                                <td>
                                     #{{ ticket.getNum() }}
                                 </td>
-                                <td class="col-md-6">
-                                    <b class="pointer-hand"
-                                       data-toggle="popover"
-                                       data-container="body" 
-                                       data-placement="right"
-                                       data-content="{{ ticketDescription|raw }}"
-                                    >
-                                        {{ ticket.getTitle() }}
-                                    </b>
+                                <td>
+                                    <a href="">
+                                        <b class="pointer-hand"
+                                           data-toggle="tooltip"
+                                           data-container="body" 
+                                           data-placement="right"
+                                           data-html="true" 
+                                           title="{{ ticketDescription|raw }}"
+                                        >
+                                            {{ ticket.getTitle() }}
+                                        </b>
+                                    </a>
                                     <p>
                                         {{ 'created_on'|trans({}, 'support') }}
                                         {{ ticket.getCreationDate()|intl_date_format }}
                                     </p>
                                 </td>
-                                <td class="col-md-1">
-                                    {{ 'status'|trans({}, 'platform') }}:
-                                    {{ ticket.getStatus() }}
+                                <td>
+                                    {{ ticket.getType().getName()|trans({}, 'support') }}
+                                </td>
+                                <td>
+                                    <i class="fa fa-envelope-o"></i> :
+                                    {{ ticket.getContactMail() }}
                                     <p>
-                                        [{{ ticket.getStatusDate()|intl_date_format }}]
+                                        <i class="fa fa-phone"></i> :
+                                        {{ ticket.getContactPhone() }}
                                     </p>
                                 </td>
-                                <td class="col-md-1">
-                                    {{ 'priority'|trans({}, 'support') }}:
-                                    {{ ticket.getPriority() }}
+                                <td class="text-center">
+                                    <i class="fa fa-comments-o"></i>
+                                    {{ ticket.getComments()|length }}
+                                    
+                                    {% if lastStatus[ticket.getId()] is defined %}
+                                        {% set status = lastStatus[ticket.getId()] %}
+                                        <p>
+                                            <span class="label label-success"
+                                                  data-toggle="tooltip"
+                                                  data-container="body" 
+                                                  data-placement="left"
+                                                  title="{{ status.getName()|trans({}, 'support') }}"
+                                            >
+                                                {{ status.getCode() }}
+                                            </span>
+                                        </p>
+                                    {% endif %}
                                 </td>
-                                <td class="col-md-1">
-                                    <i class="fa fa-comment-o"></i>
-                                </td>
-                                <td class="col-md-1">
-                                    <i class="fa fa-clock-o"></i>
-                                    {{ ticket.getSpentTime() }}
-                                </td>
-                                <td class="col-md-1">
-                                    <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticketId}) }}"
-                                       class="btn btn-sm btn-default"
-                                    >
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <span class="btn btn-sm btn-danger delete-ticket-btn"
-                                          data-ticket-id="{{ ticketId }}"
-                                    >
-                                        <i class="fa fa-trash"></i>
-                                    </span>
+                                <td class="pull-right">
+                                    {% if ticket.getInterventions()|length == 0 %}
+                                        <div class="btn-group">
+                                            <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticket.getId()}) }}"
+                                               class="btn btn-default btn-sm"
+                                            >
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-danger delete-ticket-btn btn-sm"
+                                                    data-ticket-id="{{ ticket.getId() }}"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
                     </table>
                 </div>
+        
+                {% if tickets.getNbPages() > 1 %}
+                    {{ renderPager(tickets, search, orderedBy, order, max) }}
+                {% endif %}
             {% else %}
                 <div class="alert alert-warning">
                     {{ 'no_ticket'|trans({}, 'support') }}

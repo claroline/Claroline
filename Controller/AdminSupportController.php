@@ -28,15 +28,38 @@ class AdminSupportController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/admin/support/management",
+     *     "/admin/support/management/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
      *     name="formalibre_admin_support_management",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="statusDate","order"="DESC"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function adminSupportManagementAction()
+    public function adminSupportManagementAction(
+        $search = '',
+        $page = 1,
+        $max = 50,
+        $orderedBy = 'statusDate',
+        $order = 'DESC'
+    )
     {
-        return array();
+        $tickets = $this->supportManager->getAllTickets(
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
+
+        return array(
+            '$search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'tickets' => $tickets
+        );
     }
 }

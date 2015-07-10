@@ -2,6 +2,7 @@
 
 namespace FormaLibre\SupportBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -23,17 +24,43 @@ class TicketType extends AbstractType
             'description',
             'tinymce',
             array(
-                'required' => false,
+                'required' => true,
                 'label' => 'description',
                 'translation_domain' => 'platform'
             )
         );
         $builder->add(
-            'priority',
-            'choice',
+            'type',
+            'entity',
             array(
-                'choices' => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                'label' => 'priority'
+                'label' => 'type',
+                'class' => 'FormaLibreSupportBundle:Type',
+                'translation_domain' => 'support',
+                'choice_translation_domain' => true,
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('t')
+                        ->orderBy('t.name', 'ASC');
+                },
+                'property' => 'name',
+                'expanded' => false,
+                'multiple' => false,
+                'required' => true
+            )
+        );
+        $builder->add(
+            'contactMail',
+            'email',
+            array(
+                'required' => true,
+                'label' => 'contact_email'
+            )
+        );
+        $builder->add(
+            'contactPhone',
+            'text',
+            array(
+                'required' => true,
+                'label' => 'contact_phone'
             )
         );
     }

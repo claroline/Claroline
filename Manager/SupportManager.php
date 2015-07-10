@@ -3,8 +3,8 @@
 namespace FormaLibre\SupportBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use FormaLibre\SupportBundle\Entity\AdminTicket;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -14,19 +14,20 @@ use JMS\DiExtraBundle\Annotation as DI;
 class SupportManager
 {
     private $om;
-    private $adminTicketRepo;
+    private $pagerFactory;
+
     private $ticketRepo;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
      * })
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
     {
         $this->om = $om;
-        $this->adminTicketRepo =
-            $om->getRepository('FormaLibreSupportBundle:AdminTicket');
+        $this->pagerFactory = $pagerFactory;
         $this->ticketRepo =
             $om->getRepository('FormaLibreSupportBundle:Ticket');
     }
@@ -40,18 +41,6 @@ class SupportManager
     public function deleteTicket(Ticket $ticket)
     {
         $this->om->remove($ticket);
-        $this->om->flush();
-    }
-
-    public function persistAdminTicket(AdminTicket $adminTicket)
-    {
-        $this->om->persist($adminTicket);
-        $this->om->flush();
-    }
-
-    public function deleteAdminTicket(AdminTicket $adminTicket)
-    {
-        $this->om->remove($adminTicket);
         $this->om->flush();
     }
 
@@ -72,47 +61,40 @@ class SupportManager
      * Access to TicketRepository methods *
      **************************************/
 
-    public function getAllTickets($orderedBy = 'creationDate', $order = 'DESC')
-    {
-        return $this->ticketRepo->findAllTickets($orderedBy, $order);
-    }
-
-    public function getTicketsByUser(User $user, $orderedBy = 'num', $order = 'ASC')
-    {
-        return $this->ticketRepo->findTicketsByUser($user, $orderedBy, $order);
-    }
-
-    public function getAllNonAdminTickets($orderedBy = 'creationDate', $order = 'DESC')
-    {
-        return $this->ticketRepo->findAllNonAdminTickets($orderedBy, $order);
-    }
-
-    public function getAllNonAdminTicketsByUser(
-        User $user,
+    public function getAllTickets(
+        $search = '',
         $orderedBy = 'creationDate',
-        $order = 'DESC'
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
     )
     {
-        return $this->ticketRepo->findAllNonAdminTicketsByUser($user, $orderedBy, $order);
+        $tickets = empty($search) ?
+            $this->ticketRepo->findAllTickets($orderedBy, $order) :
+            $this->ticketRepo->findAllSearchedTickets($search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
     }
 
-
-    /*******************************************
-     * Access to AdminTicketRepository methods *
-     *******************************************/
-
-    public function getAllAdminTickets($orderedBy = 'statusDate', $order = 'DESC')
+    public function getTicketsByUser(
+        User $user,
+        $search = '',
+        $orderedBy = 'num',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
     {
-        return $this->adminTicketRepo->findAllAdminTickets($orderedBy, $order);
-    }
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsByUser($user, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketByUser($user, $search, $orderedBy, $order);
 
-    public function getAdminTicketsByUser(User $user, $orderedBy = 'id', $order = 'ASC')
-    {
-        return $this->adminTicketRepo->findAdminTicketsByUser($user, $orderedBy, $order);
-    }
-
-    public function getAdminTicketByTicket(Ticket $ticket)
-    {
-        return $this->adminTicketRepo->findAdminTicketByTicket($ticket);
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
     }
 }

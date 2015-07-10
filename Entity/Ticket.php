@@ -3,11 +3,12 @@
 namespace FormaLibre\SupportBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="formalibre_ticket")
+ * @ORM\Table(name="formalibre_support_ticket")
  * @ORM\Entity(repositoryClass="FormaLibre\SupportBundle\Repository\TicketRepository")
  */
 class Ticket
@@ -20,13 +21,14 @@ class Ticket
     protected $id;
 
     /**
-     * @ORM\Column(nullable=false)
+     * @ORM\Column()
      * @Assert\NotBlank()
      */
     protected $title;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank()
      */
     protected $description;
 
@@ -39,39 +41,67 @@ class Ticket
     protected $user;
 
     /**
-     * @ORM\Column(name="creation_date", type="datetime", nullable=false)
+     * @ORM\Column(name="contact_mail")
+     * @Assert\NotBlank()
+     * @Assert\Email(checkMX = false)
+     */
+    protected $contactMail;
+
+    /**
+     * @ORM\Column(name="contact_phone")
+     * @Assert\NotBlank()
+     */
+    protected $contactPhone;
+
+    /**
+     * @ORM\Column(name="creation_date", type="datetime")
      */
     protected $creationDate;
 
     /**
-     * @ORM\Column(name="ticket_status", type="integer", nullable=false)
+     * @ORM\Column(type="integer")
      */
-    protected $status;
+    protected $num;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\ManyToOne(
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Type"
+     * )
+     * @ORM\JoinColumn(name="type_id", onDelete="CASCADE")
      */
-    protected $priority;
+    protected $type;
 
     /**
-     * @ORM\Column(name="spent_time", type="integer", nullable=false)
+     * @ORM\Column(name="level", type="integer")
      */
-    protected $spentTime;
+    protected $level = 1;
 
     /**
-     * @ORM\Column(name="status_date", type="datetime", nullable=false)
+     * @ORM\OneToMany(
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Comment",
+     *     mappedBy="ticket"
+     * )
      */
-    protected $statusDate;
+    protected $comments;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Intervention",
+     *     mappedBy="ticket"
+     * )
+     */
+    protected $interventions;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
      */
     protected $details;
 
-    /**
-     * @ORM\Column(type="integer", nullable=false)
-     */
-    protected $num;
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -113,36 +143,6 @@ class Ticket
         $this->user = $user;
     }
 
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function getPriority()
-    {
-        return $this->priority;
-    }
-
-    public function setPriority($priority)
-    {
-        $this->priority = $priority;
-    }
-
-    public function getSpentTime()
-    {
-        return $this->spentTime;
-    }
-
-    public function setSpentTime($spentTime)
-    {
-        $this->spentTime = $spentTime;
-    }
-
     public function getCreationDate()
     {
         return $this->creationDate;
@@ -153,14 +153,64 @@ class Ticket
         $this->creationDate = $creationDate;
     }
 
-    public function getStatusDate()
+    public function getNum()
     {
-        return $this->statusDate;
+        return $this->num;
     }
 
-    public function setStatusDate($statusDate)
+    public function setNum($num)
     {
-        $this->statusDate = $statusDate;
+        $this->num = $num;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType(Type $type)
+    {
+        $this->type = $type;
+    }
+
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
+
+    public function getComments()
+    {
+        return $this->comments->toArray();
+    }
+
+    public function getInterventions()
+    {
+        return $this->interventions->toArray();
+    }
+
+    public function getContactMail()
+    {
+        return $this->contactMail;
+    }
+
+    public function setContactMail($contactMail)
+    {
+        $this->contactMail = $contactMail;
+    }
+
+    public function getContactPhone()
+    {
+        return $this->contactPhone;
+    }
+
+    public function setContactPhone($contactPhone)
+    {
+        $this->contactPhone = $contactPhone;
     }
 
     public function getDetails()
@@ -171,15 +221,5 @@ class Ticket
     public function setDetails($details)
     {
         $this->details = $details;
-    }
-
-    public function getNum()
-    {
-        return $this->num;
-    }
-
-    public function setNum($num)
-    {
-        $this->num = $num;
     }
 }
