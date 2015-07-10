@@ -217,6 +217,7 @@ class QuestionController extends Controller
         $questionWithResponse = $allActions[1];
         $alreadyShared = $allActions[2];
         $shareRight = $allActions[4];
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
 
         $listExo = $this->getDoctrine()
                         ->getManager()
@@ -232,6 +233,7 @@ class QuestionController extends Controller
         $vars['listExo']              = $listExo;
         $vars['idExo']                = $idExo;
         $vars['QuestionsExo']         = 'true';
+        $vars['interactionType'] = $interactionType;
 
         return $this->render('UJMExoBundle:Question:index.html.twig', $vars);
     }
@@ -1537,7 +1539,7 @@ class QuestionController extends Controller
         $request = $this->get('request');
 
         $services = $this->container->get('ujm.exo_question');
-
+        
         $listInteractions = array();
         $actionQ = array();
         $questionWithResponse = array();
@@ -1572,6 +1574,7 @@ class QuestionController extends Controller
         $questionWithResponse = $allActions[1];
         $alreadyShared = $allActions[2];
         $shareRight = $allActions[4];
+        $interactionType = $this->container->get('ujm.exo_question')->getTypes();
 
         $listExo = $this->getDoctrine()
                     ->getManager()
@@ -1587,6 +1590,7 @@ class QuestionController extends Controller
         $vars['idExo']                = -1;
         $vars['displayAll']           = 0;
         $vars['QuestionsExo']         = 'true';
+        $vars['interactionType'] = $interactionType;
 
         if ($where == 'index') {
 
