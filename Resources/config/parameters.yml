@@ -27,3 +27,8 @@ parameters:
 
     # Importers
     innova_path.importer.importer.class:           Innova\PathBundle\Transfer\PathImporter
+
+    # Commands
+    innova_path.command.abstract.class:            Innova\PathBundle\Command\AbstractPublishCommand
+    innova_path.command.publish.class:             Innova\PathBundle\Command\PublishCommand
+    innova_path.command.republish.class:           Innova\PathBundle\Command\RepublishCommand

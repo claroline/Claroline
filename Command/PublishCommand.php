@@ -2,20 +2,15 @@
 
 namespace Innova\PathBundle\Command;
 
-use Innova\PathBundle\Entity\Path\Path;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PathCommand extends ContainerAwareCommand
+/**
+ * Publish Path into the Application
+ */
+class PublishCommand extends AbstractPublishCommand
 {
-    private $pathRepo;
-
-    private $workspaceRepo;
-
-    private $pathPublishing;
-
     protected function configure()
     {
         $this
@@ -30,10 +25,6 @@ class PathCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->pathRepo       = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path');
-        $this->workspaceRepo  = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('ClarolineCoreBundle:Workspace\Workspace');
-        $this->pathPublishing = $this->getContainer()->get('innova_path.manager.publishing');
-
         $force = $input->getOption('force');
 
         $text = $force ? 'Publishing Paths into application with <info>force</info> option' : 'Publishing Paths into application';
@@ -41,7 +32,7 @@ class PathCommand extends ContainerAwareCommand
 
         if ($pathId = $input->getOption('path')) {
             // Need to publish a specific Path
-            $path = $this->pathRepo->find($pathId);
+            $path = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->find($pathId);
             if (!empty($path)) {
                 // Path found => publish it
                 if (!$path->isPublished() || $path->isModified() || $force) {
@@ -61,45 +52,21 @@ class PathCommand extends ContainerAwareCommand
 
             if ($workspaceId = $input->getOption('workspace')) {
                 // Need to publish Paths for a specific Workspace
-                $workspace = $this->workspaceRepo->find($workspaceId);
+                $workspace = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace')->find($workspaceId);
                 if (!empty($workspace)) {
                     // Workspace found => retrieve Paths
-                    $paths = $this->pathRepo->findWorkspacePaths($workspace, !$force);
+                    $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findWorkspacePaths($workspace, !$force);
                 } else {
                     // Workspace not found
                     $output->writeln('<error>Unable to find Workspace referenced by ID : '.$workspaceId.'</error>');
                 }
             } else {
                 // Need to publish all Paths
-                $paths = $this->pathRepo->findPlatformPaths(!$force);
+                $paths = $this->objectManager->getRepository('InnovaPathBundle:Path\Path')->findPlatformPaths(!$force);
             }
 
-            if (empty($paths)) {
-                // No paths to publish
-                $output->writeln('Nothing to publish.');
-            } else {
-                // Loop through paths to publish them
-                foreach ($paths as $path) {
-                    $this->publishPath($path, $output);
-                }
-            }
-        }
-
-        return $this;
-    }
-
-    private function publishPath(Path $path, OutputInterface $output)
-    {
-        $datePublished = date('H:i:s');
-
-        try {
-            if ($this->pathPublishing->publish($path)) {
-                $output->writeln('<comment>'.$datePublished.'</comment> <info>[ok]</info> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');
-            } else {
-                $output->writeln('<comment>'.$datePublished.'</comment> <error>[error]</error> '.$path->getResourceNode()->getName().' (ID = '.$path->getId().')');
-            }
-        } catch (\Exception $e) {
-            $output->writeln('<error>'.$e->getMessage().'</error>');
+            // Publish selected path
+            $this->publish($paths, $output);
         }
 
         return $this;

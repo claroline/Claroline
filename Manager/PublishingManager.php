@@ -116,7 +116,7 @@ class PublishingManager
      */
     public function publish(Path $path)
     {
-        // TODO : publish all linked resources if needed
+        // We need to publish all linked resources to have a full working Path
 
         // Start Publishing
         $this->start($path);
@@ -131,7 +131,7 @@ class PublishingManager
         // Clean steps to remove
         $this->cleanSteps($publishedSteps, $existingSteps);
 
-        // flush alls steps
+        // flush all steps
         $this->om->flush();
 
         // replace ids
