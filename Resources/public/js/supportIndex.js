@@ -16,7 +16,16 @@
         );
     });
     
-    $('[data-toggle="popover"]').popover({html: true});
+    $('#support-tool').on('click', '.view-comments-btn', function () {
+        var ticketId = $(this).data('ticket-id');
+        
+        window.Claroline.Modal.fromUrl(
+            Routing.generate(
+                'formalibre_ticket_comments_view',
+                {'ticket': ticketId}
+            )
+        );
+    });
     
     var removeTicketRow = function (event, ticketId) {
         $('#row-ticket-' + ticketId).remove();

@@ -74,7 +74,7 @@ class Ticket
     /**
      * @ORM\Column(name="level", type="integer")
      */
-    protected $level = 1;
+    protected $level = 0;
 
     /**
      * @ORM\OneToMany(

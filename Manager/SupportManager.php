@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
+use FormaLibre\SupportBundle\Entity\Type;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -18,6 +19,7 @@ class SupportManager
     private $pagerFactory;
 
     private $ticketRepo;
+    private $typeRepo;
 
     /**
      * @DI\InjectParams({
@@ -29,8 +31,8 @@ class SupportManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
-        $this->ticketRepo =
-            $om->getRepository('FormaLibreSupportBundle:Ticket');
+        $this->ticketRepo = $om->getRepository('FormaLibreSupportBundle:Ticket');
+        $this->typeRepo = $om->getRepository('FormaLibreSupportBundle:Type');
     }
 
     public function persistTicket(Ticket $ticket)
@@ -66,6 +68,18 @@ class SupportManager
     public function deleteComment(Comment $comment)
     {
         $this->om->remove($comment);
+        $this->om->flush();
+    }
+
+    public function persistType(Type $type)
+    {
+        $this->om->persist($type);
+        $this->om->flush();
+    }
+
+    public function deleteType(Type $type)
+    {
+        $this->om->remove($type);
         $this->om->flush();
     }
 
@@ -109,5 +123,107 @@ class SupportManager
         return $withPager ?
             $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
             $tickets;
+    }
+
+    public function getTicketsByLevel(
+        Type $type,
+        $level,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsByLevel($type, $level, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketsByLevel($type, $level, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
+    public function getTicketsByInterventionUser(
+        Type $type,
+        User $user,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsByInterventionUser($type, $user, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketsByInterventionUser($type, $user, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
+    public function getTicketsWithoutIntervention(
+        Type $type,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsWithoutIntervention($type, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketsWithoutIntervention($type, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
+    public function getTicketsByInterventionStatus(
+        Type $type,
+        $status,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsByInterventionStatus($type, $status, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketsByInterventionStatus($type, $status, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
+
+    /************************************
+     * Access to TypeRepository methods *
+     ************************************/
+
+    public function getAllTypes(
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = false,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $types = empty($search) ?
+            $this->typeRepo->findAllTypes($orderedBy, $order) :
+            $this->typeRepo->findAllSearchedTypes($search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($types, $page, $max) :
+            $types;
     }
 }

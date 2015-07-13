@@ -17,7 +17,7 @@
     }}
 {% endmacro %}
 
-{% macro sortUrl(orderedBy, order) %}
+{% macro sortUrl(search, orderedBy, order, max) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
     {% else %}
@@ -28,8 +28,10 @@
         path(
             'formalibre_support_index',
             {
+                'search': search,
                 'orderedBy': orderedBy,
-                'order': newOrder
+                'order': newOrder,
+                'max': max
             }
         )
     }}
@@ -72,12 +74,12 @@
                     <table class="table">
                         <tr>
                             <th>
-                                <a href="{{ sortUrl('num', order) }}">
+                                <a href="{{ sortUrl(search, 'num', order, max) }}">
                                     #
                                 </a>
                             </th>
                             <th>
-                                <a href="{{ sortUrl('title', order) }}">
+                                <a href="{{ sortUrl(search, 'title', order, max) }}">
                                     {{ 'title'|trans({}, 'platform') }}
                                 </a>
                             </th>
@@ -104,10 +106,11 @@
                                         </b>
                                     </a>
                                     <i class="fa fa-info-circle pointer-hand"
-                                       data-toggle="popover"
+                                       data-toggle="tooltip"
                                        data-container="body"
                                        data-placement="right"
-                                       data-content="{{ ticketDescription|raw }}"
+                                       data-html="true"
+                                       title="{{ ticketDescription }}"
                                     >
                                     </i>
                                     <p>
@@ -124,8 +127,12 @@
                                     </p>
                                 </td>
                                 <td class="text-center">
-                                    <i class="fa fa-comments-o"></i>
-                                    {{ ticket.getComments()|length }}
+                                    <span class="view-comments-btn pointer-hand"
+                                          data-ticket-id="{{ ticket.getId() }}"
+                                    >
+                                        <i class="fa fa-comments-o"></i>
+                                        {{ ticket.getComments()|length }}
+                                    </span>
                                     
                                     {% if lastStatus[ticket.getId()] is defined %}
                                         {% set status = lastStatus[ticket.getId()] %}

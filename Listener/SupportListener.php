@@ -39,7 +39,7 @@ class SupportListener
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:adminSupportManagement';
+        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:adminSupportIndex';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

@@ -1,0 +1,37 @@
+<div class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'comments'|trans({}, 'support') }}
+                <small>
+                    [{{ ticket.getTitle() }}]
+                </small>
+            </h3>
+        </div>
+        <div class="modal-body">
+            {% set comments = ticket.getComments() %}
+            
+            {% if comments|length > 0 %}
+                {% for comment in comments %}
+                    {{ comment.getContent()|raw }}
+
+                    {% if not loop.last %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    {{ 'no_comment'|trans({}, 'support') }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default pull-right" data-dismiss="modal">
+                {{ 'close'|trans({}, 'platform') }}
+            </span>
+        </div>
+    </div>
+</div>

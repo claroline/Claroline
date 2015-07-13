@@ -1,0 +1,50 @@
+{% macro renderPager(pager, typeId, level, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'formalibre_admin_support_level',
+                'routeParams': {
+                    'type': typeId,
+                    'level': level,
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% macro sortUrl(typeId, level, search, orderedBy, order, max) %}
+    {% if order == 'ASC' %}
+        {% set newOrder = 'DESC' %}
+    {% else %}
+        {% set newOrder = 'ASC' %}
+    {% endif %}
+
+    {{ 
+        path(
+            'formalibre_admin_support_level',
+            {
+                'type': typeId,
+                'level': level,
+                'search': search,
+                'orderedBy': orderedBy,
+                'order': newOrder,
+                'max': max
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from _self import sortUrl %}
+
+{% extends 'FormaLibreSupportBundle:AdminSupport:adminSupportMenu.html.twig' %}
+
+{% block adminSupport %}
+{% endblock %}

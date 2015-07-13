@@ -78,7 +78,6 @@ class SupportController extends Controller
         $order = 'DESC'
     )
     {
-        $this->checkSupportToolAccess();
         $tickets = $this->supportManager->getTicketsByUser(
             $authenticatedUser,
             $search,
@@ -126,7 +125,6 @@ class SupportController extends Controller
      */
     public function ticketCreateFormAction(User $authenticatedUser)
     {
-        $this->checkSupportToolAccess();
         $ticket = new Ticket();
         $ticket->setUser($authenticatedUser);
         $ticket->setContactMail($authenticatedUser->getMail());
@@ -151,7 +149,6 @@ class SupportController extends Controller
      */
     public function ticketCreateAction(User $authenticatedUser)
     {
-        $this->checkSupportToolAccess();
         $ticket = new Ticket();
         $ticket->setUser($authenticatedUser);
         $form = $this->formFactory->create(new TicketType(), $ticket);
@@ -184,7 +181,6 @@ class SupportController extends Controller
      */
     public function ticketEditFormAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
         $form = $this->formFactory->create(new TicketType(), $ticket);
 
@@ -205,7 +201,6 @@ class SupportController extends Controller
      */
     public function ticketEditAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
         $form = $this->formFactory->create(new TicketType(), $ticket);
         $form->handleRequest($this->request);
@@ -235,7 +230,6 @@ class SupportController extends Controller
      */
     public function ticketDeleteAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
         $this->supportManager->deleteTicket($ticket);
 
@@ -253,7 +247,6 @@ class SupportController extends Controller
      */
     public function ticketOpenAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketAccess($authenticatedUser, $ticket);
         $currentStatus = null;
         $interventions = $ticket->getInterventions();
@@ -286,7 +279,6 @@ class SupportController extends Controller
      */
     public function ticketCommentCreateFormAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketAccess($authenticatedUser, $ticket);
         $form = $this->formFactory->create(new CommentType(), new Comment());
 
@@ -304,7 +296,6 @@ class SupportController extends Controller
      */
     public function ticketCommentCreateAction(User $authenticatedUser, Ticket $ticket)
     {
-        $this->checkSupportToolAccess();
         $this->checkTicketAccess($authenticatedUser, $ticket);
         $comment = new Comment();
         $form = $this->formFactory->create(new CommentType(), $comment);
@@ -324,6 +315,22 @@ class SupportController extends Controller
         }
     }
 
+    /**
+     * @EXT\Route(
+     *     "ticket/{ticket}/comments/view",
+     *     name="formalibre_ticket_comments_view",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:ticketCommentsModalView.html.twig")
+     */
+    public function ticketCommentsViewAction(User $authenticatedUser, Ticket $ticket)
+    {
+        $this->checkTicketAccess($authenticatedUser, $ticket);
+
+        return array('ticket' => $ticket);
+    }
+
     private function checkTicketAccess(User $user, Ticket $ticket)
     {
         if ($user->getId() !== $ticket->getUser()->getId()) {
@@ -337,16 +344,6 @@ class SupportController extends Controller
         $interventions = $ticket->getInterventions();
 
         if ($user->getId() !== $ticket->getUser()->getId() || count($interventions) > 0) {
-
-            throw new AccessDeniedException();
-        }
-    }
-
-    private function checkSupportToolAccess()
-    {
-        $tool = $this->toolManager->getOneToolByName('formalibre_support_tool');
-
-        if (!$this->authorization->isGranted('OPEN', $tool)) {
 
             throw new AccessDeniedException();
         }
