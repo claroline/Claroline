@@ -675,9 +675,9 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}",
+     *      "/{resourceId}/drops/detail/correction/{state}/{correctionId}/document/{documentId}",
      *      name="innova_collecticiel_drops_detail_comment",
-     *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
+     *      requirements={"documentId" = "\d+", "resourceId" = "\d+", "correctionId" = "\d+", "state" = "show|edit|preview"},
      *      defaults={"page" = 1}
      * )
      * @Route(
@@ -686,6 +686,7 @@ class CorrectionController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+", "correctionId" = "\d+", "page" = "\d+", "state" = "show|edit|preview"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
@@ -694,8 +695,12 @@ class CorrectionController extends DropzoneBaseController
      * })
      * @Template()
      */
-    public function dropsDetailCommentAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
+    public function dropsDetailCommentAction(Dropzone $dropzone, $state, $correctionId, $page, User $user, Document $document)
     {
+
+        $documentOri = new Document();
+        $documentOri = $document;
+
         $em = $this->getDoctrine()->getManager();
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
@@ -708,61 +713,64 @@ class CorrectionController extends DropzoneBaseController
 
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
-            $documentId = $document->getId();
+            if ($document->getId() == $documentOri->getId())
+            {
+                $documentId = $document->getId();
 
-            // Ajout pour avoir les commentaires et qui les a lu.
-            // Lire les commentaires et les passer à la vue
-            $comments = $this
-                    ->getDoctrine()
-                    ->getRepository('InnovaCollecticielBundle:Comment')
-                    ->findBy(
-                        array(
-                            'document' => $documentId,
-//                            'user' =>$correction->getUser()->getId()
-                             )
-                        );
-
-            // Parcours des commentaires des documents sélectionnés
-            foreach ($comments as $comment) {
-                $commentId = $comment->getId();
-//                echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
-
-                $comments_read = $this
+                // Ajout pour avoir les commentaires et qui les a lu.
+                // Lire les commentaires et les passer à la vue
+                $comments = $this
                         ->getDoctrine()
-                        ->getRepository('InnovaCollecticielBundle:CommentRead')
+                        ->getRepository('InnovaCollecticielBundle:Comment')
                         ->findBy(
                             array(
-                                'comment' =>$commentId,
-                                'user' =>$correction->getUser()->getId()
-                                )
+                                'document' => $documentId,
+    //                            'user' =>$correction->getUser()->getId()
+                                 )
                             );
 
-                // Nombre de lectures du commentaire pour cet utilisateur pour ce commentaire du document
-                $countCommentRead = count($comments_read);
+                // Parcours des commentaires des documents sélectionnés
+                foreach ($comments as $comment) {
+                    $commentId = $comment->getId();
+    //                echo "Comment = " . $commentId . " - " . $correction->getUser()->getId();
 
-                $countCommentRead = 0; // Pour les tests, à enlever
-                // Ce commentaire n'avait pas été lu.
-                // Donc, maintenant, il va l'être,
-                // je dois donc insérer une occurrence dans la table CommentRead";
-                if (($countCommentRead) == 0)
-                {
-                    $comment_read_add = new CommentRead();
-                    $comment_read_add->setComment($comment);
-                    $comment_read_add->setUser($user);
+                    $comments_read = $this
+                            ->getDoctrine()
+                            ->getRepository('InnovaCollecticielBundle:CommentRead')
+                            ->findBy(
+                                array(
+                                    'comment' =>$commentId,
+                                    'user' =>$correction->getUser()->getId()
+                                    )
+                                );
 
-                    $em->persist($comment_read_add);
+                    // Nombre de lectures du commentaire pour cet utilisateur pour ce commentaire du document
+                    $countCommentRead = count($comments_read);
 
-                    $unitOfWork = $em->getUnitOfWork();
-                    $unitOfWork->computeChangeSets();
-                    $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+                    $countCommentRead = 0; // Pour les tests, à enlever
+                    // Ce commentaire n'avait pas été lu.
+                    // Donc, maintenant, il va l'être,
+                    // je dois donc insérer une occurrence dans la table CommentRead";
+                    if (($countCommentRead) == 0)
+                    {
+                        $comment_read_add = new CommentRead();
+                        $comment_read_add->setComment($comment);
+                        $comment_read_add->setUser($user);
 
-                    $event = new LogCommentReadCreateEvent($dropzone, $dropzoneChangeSet, $comment_read_add);
+                        $em->persist($comment_read_add);
 
-                    $this->dispatch($event);
+                        $unitOfWork = $em->getUnitOfWork();
+                        $unitOfWork->computeChangeSets();
+                        $dropzoneChangeSet = $unitOfWork->getEntityChangeSet($dropzone);
+
+                        $event = new LogCommentReadCreateEvent($dropzone, $dropzoneChangeSet, $comment_read_add);
+
+                        $this->dispatch($event);
+                    }
                 }
-            }
-            $em->flush();
-            // Fin ajout.
+                $em->flush();
+                // Fin ajout.
+            }    
         }
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
@@ -915,7 +923,7 @@ class CorrectionController extends DropzoneBaseController
                     'admin' => true,
                     'edit' => $edit,
                     'state' => $state,
-                    'document' => $document,
+                    'document' => $documentOri,
                     'comments' => $comments,
                     'user' => $user,
                 )
@@ -1068,11 +1076,12 @@ class CorrectionController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/{resourceId}/drops/detail/{dropId}/add/comments",
+     *      "/{resourceId}/drops/detail/{dropId}/add/comments/document/{documentId}",
      *      name="innova_collecticiel_drops_detail_add_comments_innova",
-     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     *      requirements={"resourceId" = "\d+", "dropId" = "\d+", "documentId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
@@ -1082,7 +1091,7 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @Template()
      */
-    public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop)
+    public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop, $document)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -1108,6 +1117,7 @@ class CorrectionController extends DropzoneBaseController
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
+                    'documentId' => $document->getId(),
                 )
             )
         );
@@ -2053,6 +2063,7 @@ class CorrectionController extends DropzoneBaseController
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
+                    'documentId' => $document->getId(),
                 )
             )
         );
