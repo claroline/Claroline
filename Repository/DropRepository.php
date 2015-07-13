@@ -304,8 +304,9 @@ class DropRepository extends EntityRepository
             ->createQueryBuilder('drop')
             ->select('drop, document, correction, user')
             ->andWhere('drop.dropzone = :dropzone')
-            ->andWhere('drop.finished = true')
-            ->andWhere('drop.unlockedDrop = false')
+            // #65 InnovaERV : commentaire car critères ne sont pas utiles. 
+            // ->andWhere('drop.finished = true')
+            // ->andWhere('drop.unlockedDrop = false')
             ->join('drop.user', 'user')
             ->leftJoin('drop.documents', 'document')
             ->leftJoin('drop.corrections', 'correction')
