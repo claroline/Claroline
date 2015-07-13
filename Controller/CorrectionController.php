@@ -773,6 +773,7 @@ class CorrectionController extends DropzoneBaseController
             }    
         }
 
+
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
             if ($correction->getDrop()->getUser()->getId() != $userId) {
@@ -783,6 +784,7 @@ class CorrectionController extends DropzoneBaseController
         }
         //$this->checkUserGradeAvailable($dropzone);
 
+        /*
         if (!$dropzone->getPeerReview()) {
             return $this->redirect(
                 $this->generateUrl(
@@ -795,6 +797,7 @@ class CorrectionController extends DropzoneBaseController
                 )
             );
         }
+        */
 
         /** @var Correction $correction */
 
@@ -905,6 +908,7 @@ class CorrectionController extends DropzoneBaseController
                 }
             }
         }
+
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
@@ -1109,6 +1113,8 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
 
+echo "drops";
+
         // L'URL est déclarée dans le controlleur. InnovaERV.
         return $this->redirect(
             $this->generateUrl(
@@ -1117,7 +1123,7 @@ class CorrectionController extends DropzoneBaseController
                     'resourceId' => $dropzone->getId(),
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
-                    'documentId' => $document->getId(),
+                    'documentId' => $document->getId()
                 )
             )
         );

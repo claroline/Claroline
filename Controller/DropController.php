@@ -151,6 +151,10 @@ class DropController extends DropzoneBaseController
             $adminInnova = true;
         }
         
+
+        // Déclarations des nouveaux tableaux, qui seront passés à la vue
+        $userNbTextToRead = array();
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -165,6 +169,7 @@ class DropController extends DropzoneBaseController
             'resourceTypes' => $resourceTypes,
             'dropzoneProgress' => $dropzoneProgress,
             'adminInnova' => $adminInnova,
+            'userNbTextToRead' => $userNbTextToRead,
         );
     }
 

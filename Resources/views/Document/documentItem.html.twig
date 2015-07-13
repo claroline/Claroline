@@ -30,8 +30,8 @@
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>
 
-    <td class={{ classArray }}>
-        ----
+    <td class="{{ classArray }}">
+        {{ document.comments|length }}
     </td>
 
     {% if mode == 'complete' %}
