@@ -30,6 +30,7 @@ use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @Service
@@ -165,6 +166,9 @@ class ActivityListener
         $activity = $event->getResource();
         $params = $activity->getParameters();
         $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user === 'anon.') throw new AccessDeniedException();
+
         $evaluation =
             $this->activityManager->getEvaluationByUserAndActivityParams($user, $params) ?:
             $this->activityManager->createBlankEvaluation($user, $params);
