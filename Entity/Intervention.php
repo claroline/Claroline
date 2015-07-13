@@ -28,7 +28,8 @@ class Intervention
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="FormaLibre\SupportBundle\Entity\Ticket"
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Ticket",
+     *     inversedBy="interventions"
      * )
      * @ORM\JoinColumn(name="ticket_id", onDelete="CASCADE")
      */

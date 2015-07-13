@@ -82,11 +82,6 @@
                                 </a>
                             </th>
                             <th>
-                                <a href="{{ sortUrl('type', order) }}">
-                                    {{ 'type'|trans({}, 'platform') }}
-                                </a>
-                            </th>
-                            <th>
                                 {{ 'contact'|trans({}, 'platform') }}
                             </th>
                             <th>
@@ -103,24 +98,22 @@
                                     #{{ ticket.getNum() }}
                                 </td>
                                 <td>
-                                    <a href="">
-                                        <b class="pointer-hand"
-                                           data-toggle="tooltip"
-                                           data-container="body" 
-                                           data-placement="right"
-                                           data-html="true" 
-                                           title="{{ ticketDescription|raw }}"
-                                        >
+                                    <a href="{{ path('formalibre_ticket_open', {'ticket': ticket.getId()}) }}">
+                                        <b>
                                             {{ ticket.getTitle() }}
                                         </b>
                                     </a>
+                                    <i class="fa fa-info-circle pointer-hand"
+                                       data-toggle="popover"
+                                       data-container="body"
+                                       data-placement="right"
+                                       data-content="{{ ticketDescription|raw }}"
+                                    >
+                                    </i>
                                     <p>
                                         {{ 'created_on'|trans({}, 'support') }}
                                         {{ ticket.getCreationDate()|intl_date_format }}
                                     </p>
-                                </td>
-                                <td>
-                                    {{ ticket.getType().getName()|trans({}, 'support') }}
                                 </td>
                                 <td>
                                     <i class="fa fa-envelope-o"></i> :

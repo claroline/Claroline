@@ -41,7 +41,7 @@ class TicketType extends AbstractType
                     return $er->createQueryBuilder('t')
                         ->orderBy('t.name', 'ASC');
                 },
-                'property' => 'name',
+                'property' => 'formName',
                 'expanded' => false,
                 'multiple' => false,
                 'required' => true

@@ -45,4 +45,9 @@ class Type
     {
         $this->name = $name;
     }
+
+    public function getFormName()
+    {
+        return $this->name . '_form_msg';
+    }
 }

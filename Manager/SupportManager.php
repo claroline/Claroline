@@ -5,6 +5,7 @@ namespace FormaLibre\SupportBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -54,6 +55,18 @@ class SupportManager
         }
 
         return $num;
+    }
+
+    public function persistComment(Comment $comment)
+    {
+        $this->om->persist($comment);
+        $this->om->flush();
+    }
+
+    public function deleteComment(Comment $comment)
+    {
+        $this->om->remove($comment);
+        $this->om->flush();
     }
 
 

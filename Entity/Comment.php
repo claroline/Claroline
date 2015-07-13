@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_support_comment")
@@ -19,6 +20,12 @@ class Comment
     protected $id;
 
     /**
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank()
+     */
+    protected $content;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
@@ -28,7 +35,8 @@ class Comment
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="FormaLibre\SupportBundle\Entity\Ticket"
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Ticket",
+     *     inversedBy="comments"
      * )
      * @ORM\JoinColumn(name="ticket_id", onDelete="CASCADE")
      */
@@ -44,6 +52,11 @@ class Comment
      */
     protected $editionDate;
 
+    /**
+     * @ORM\Column(name="is_admin", type="boolean")
+     */
+    protected $isAdmin = false;
+
     public function getId()
     {
         return $this->id;
@@ -52,6 +65,16 @@ class Comment
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content)
+    {
+        $this->content = $content;
     }
 
     public function getUser()
@@ -92,5 +115,15 @@ class Comment
     public function setEditionDate(\DateTime $editionDate = null)
     {
         $this->editionDate = $editionDate;
+    }
+
+    public function getIsAdmin()
+    {
+        return $this->isAdmin;
+    }
+
+    public function setIsAdmin($isAdmin)
+    {
+        $this->isAdmin = $isAdmin;
     }
 }
