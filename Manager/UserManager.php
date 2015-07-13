@@ -255,11 +255,11 @@ class UserManager
      *
      * @return \Claroline\CoreBundle\Entity\User
      */
-    public function createUserWithRole(User $user, $roleName)
+    public function createUserWithRole(User $user, $roleName, $sendMail = true)
     {
         $this->objectManager->startFlushSuite();
         $role = $this->roleManager->getRoleByName($roleName);
-        $this->createUser($user, true, array($role));
+        $this->createUser($user, $sendMail, array($role));
         $this->objectManager->endFlushSuite();
 
         return $user;

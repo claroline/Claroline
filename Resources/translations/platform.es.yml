@@ -178,6 +178,7 @@ copy: Copiar
 core_packages: 'Core packages'
 count_resources: count_resources
 create: Crear
+create_account: Crear la cuenta
 create_and_update: 'Crear y actualizar'
 create_category: 'Crear una categoría'
 create_facet: 'Crear una faceta'
@@ -1054,6 +1055,7 @@ validate: Validar
 validation: Validación
 variable_available_message: 'Usted puede usar las siguientes variables en su formulario'
 verification: 'Repita su contraseña'
+verify_your_password: 'Vuelva a repetir su contraseña'
 view: ver
 view_category_hierarchy: 'Mostrar la jerarquía de la categoría'
 views: Mostrar

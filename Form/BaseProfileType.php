@@ -49,18 +49,28 @@ class BaseProfileType extends AbstractType
 
         $builder->add('firstName', 'text', array('label' => 'first_name'))
             ->add('lastName', 'text', array('label' => 'last_name'))
-            ->add('username', 'text', array('label' => 'User name'))
+            ->add('username', 'text', array(
+                'label' =>  'username',
+                'attr'  =>  array(
+                    'placeholder' => 'your_platform_id'
+                )
+            ))
             ->add(
                 'plainPassword',
                 'repeated',
                 array(
                     'type' => 'password',
                     'first_options' => array('label' => 'password'),
-                    'second_options' => array('label' => 'verification')
+                    'second_options' => array(
+                        'label' => 'verification',
+                        'attr'  =>  array(
+                            'placeholder' => 'verify_your_password'
+                        )
+                    )
                 )
             )
             ->add('mail', 'email', array('label' => 'email'))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'Language'));
+            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'));
 
         $content = $this->termsOfService->getTermsOfService(false);
 
@@ -105,7 +115,7 @@ class BaseProfileType extends AbstractType
                                     'attr'      => $attr,
                                     'autoclose' => true,
                                     'mapped'    => false,
-                                    'attr' => $facet->getName()
+                                    'attr' => array('facet' => $facet->getName())
                                 )
                             );
                             break;
@@ -117,7 +127,7 @@ class BaseProfileType extends AbstractType
                                     'label'  => $this->translator->trans($field->getName(), array(), 'platform'),
                                     'mapped' => false,
                                     'required' => false,
-                                    'attr' => $facet->getName()
+                                    'attr' => array('facet' => $facet->getName())
                                 )
                             );
                             break;

@@ -1,12 +1,12 @@
-bootstrap_designed: bootstrap_designed
-create_new_theme: create_new_theme
-delete_theme_confirm: delete_theme_confirm
-edit_theme: edit_theme
-if_doubt_on_gui_message: if_doubt_on_gui_message
-more_options: more_options
-new_theme: new_theme
-read_boostrap_doc: read_boostrap_doc
-theme_folder_permissions_warning: theme_folder_permissions_warning
-theme_generator: theme_generator
-theme_name: theme_name
-theme_parameters: theme_parameters
+bootstrap_designed: 'Nos thèmes ont été conçus à l''aide Bootstrap'
+create_new_theme: 'Créer un nouveau thème'
+delete_theme_confirm: 'Etes-vous sûr de vouloir supprimer ce thème?'
+edit_theme: 'Modifier thème'
+if_doubt_on_gui_message: 'si vous avez un doute sur le nom d''un élément de l''interface graphique'
+more_options: 'plus d''options'
+new_theme: 'Nouveau thème'
+read_boostrap_doc: 'veuillez lire la documentation de Bootstrap 3'
+theme_folder_permissions_warning: 'Vous pourriez ne pas être autorisé à écrire dans le dossier des thèmes'
+theme_generator: 'Générateur de thèmes'
+theme_name: 'Nom du thème'
+theme_parameters: 'Paramètres du thème'

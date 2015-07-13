@@ -178,6 +178,7 @@ copy: Copier
 core_packages: 'Paquets du noyau'
 count_resources: 'Nombre de ressource'
 create: Créer
+create_account: Créer le compte
 create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
 create_facet: 'Créer une facette'
@@ -1035,7 +1036,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
-username: 'Nom d''utilisateur'
+username: 'Identifiant'
 username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
@@ -1054,6 +1055,7 @@ validate: Valider
 validation: Validation
 variable_available_message: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 verification: Vérification
+verify_your_password: 'Veuillez retaper votre mot de passe'
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
@@ -1125,6 +1127,7 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 'yes': Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
+your_platform_id: 'Votre identifiant sur la plateforme'
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'

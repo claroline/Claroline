@@ -1,3 +1,3 @@
-insufficient_permissions: insufficient_permissions
-invalid_move: invalid_move
-recursivity_not_supported: recursivity_not_supported
+insufficient_permissions: 'Permissions insuffisantes.'
+invalid_move: 'Vous ne pouvez pas déplacer un répertoire dans lui-même.'
+recursivity_not_supported: 'La récursion n''est pas supportée.'

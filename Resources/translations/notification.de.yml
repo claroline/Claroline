@@ -1,10 +1,10 @@
-badge-award: badge-award
-registration-decline: registration-decline
-role-change_right: role-change_right
-role-subscribe: role-subscribe
-role-subscribe_group: role-subscribe_group
-role-subscribe_user: role-subscribe_user
-workspace-registration-decline: workspace-registration-decline
-workspace-role-change_right: workspace-role-change_right
-workspace-role-subscribe_group: workspace-role-subscribe_group
-workspace-role-subscribe_user: workspace-role-subscribe_user
+badge-award: Badges
+registration-decline: 'Refus d''inscription'
+role-change_right: 'Accès ressource'
+role-subscribe: 'Nouvelle inscription'
+role-subscribe_group: 'vous a attribué le rôle ''%role%'''
+role-subscribe_user: 'vous a attribué le rôle ''%role%'''
+workspace-registration-decline: 'a refusé votre demande d''inscription dans l''espace d''activités'
+workspace-role-change_right: 'vous donne accès à la ressource %resource% dans l''espace d''activités %workspace%'
+workspace-role-subscribe_group: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'
+workspace-role-subscribe_user: 'vous a attribué le rôle ''%role%'' dans l''espace d''activités %workspace%'

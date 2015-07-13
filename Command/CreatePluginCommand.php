@@ -410,11 +410,11 @@ class CreatePluginCommand extends ContainerAwareCommand
 
     public function addTheme($rootDir, $vendor, $bundle, $theme, &$config)
     {
-        $this->addThemeConfig($theme);
+        $this->addThemeConfig($theme, $config);
         $this->addCssFile($rootDir, $theme);
     }
 
-    public function addThemeConfig($theme)
+    public function addThemeConfig($theme, &$config)
     {
         $config['plugin']['themes'][] = array(
             'name' => $theme . ' theme',
@@ -425,7 +425,7 @@ class CreatePluginCommand extends ContainerAwareCommand
     public function addCssFile($rootDir, $theme)
     {
         $fs = new FileSystem();
-        $themedir = $rootDir . '/Resources/views/less/' . $theme . 'theme';
+        $themedir = $rootDir . '/Resources/views/less/theme';
         $fs->mkdir($themedir);
         $tempthemedir = $this->getContainer()->getParameter('claroline.param.plugin_template_theme_directory');
         $fileList = array('common.less', 'theme.html.twig', 'theme.less', 'variables.less');

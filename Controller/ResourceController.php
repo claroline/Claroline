@@ -592,7 +592,7 @@ class ResourceController
                 if ($user !== 'anon.') {
                     if ($item['creator_username'] === $user->getUsername()
                         && !$this->isUsurpatingWorkspaceRole($this->tokenStorage->getToken()) ) {
-                        $item['mask'] = 1023;
+                        $item['mask'] = 32767;
                     }
                 }
 
