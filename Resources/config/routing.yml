@@ -277,8 +277,14 @@ claro_admin_i18n:
     type: annotation
 
 claro_api:
-    resource: "@ClarolineCoreBundle/Controller/API"
+    resource: "@ClarolineCoreBundle/Controller/API/ApiController.php"
+    prefix: api
     type: annotation
+
+claro_user_api:
+    resource: "@ClarolineCoreBundle/Controller/API/UserController.php"
+    type: rest
+    prefix: api
 
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"

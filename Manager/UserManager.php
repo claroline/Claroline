@@ -525,6 +525,13 @@ class UserManager
     }
 
     /**
+     */
+    public function getAll()
+    {
+        return $this->userRepo->findAll();
+    }
+
+    /**
      * @param integer $page
      * @param integer $max
      * @param string  $orderedBy

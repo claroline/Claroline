@@ -214,24 +214,8 @@ class UsersController extends Controller
         );
         $form = $this->formFactory->create($profileType);
         $form->handleRequest($this->request);
-
-        $unavailableRoles = [];
-
-        foreach ($form->get('platformRoles')->getData() as $role) {
-            $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
-
-            if (!$isAvailable) {
-                $unavailableRoles[] = $role;
-            }
-        }
-
-        $isAvailable = $this->roleManager->validateRoleInsert(new User(), $roleUser);
-
-        if (!$isAvailable) {
-            $unavailableRoles[] = $roleUser;
-        }
-
-        $unavailableRoles = array_unique($unavailableRoles);
+        $roles = $form->get('platformRoles')->getData();
+        $unavailableRoles = $this->roleManager->validateNewUserRolesInsert($roles);
 
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();

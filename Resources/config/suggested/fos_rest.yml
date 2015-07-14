@@ -1,1 +1,8 @@
-fos_rest: ~
+fos_rest:
+    view:
+        view_response_listener: force
+    format_listener:
+        rules:
+            priorities: ['json']
+            fallback_format: json
+            prefer_extension: true
