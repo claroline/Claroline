@@ -48,135 +48,142 @@
 
 {% block adminSupport %}
     
-    {% if tickets.getNbPages() > 1 %}
-        {{ renderPager(tickets, type.getId(), level, search, orderedBy, order, max) }}
-    {% endif %}
-    <div class="table-responsive" id="level-ticket-tab">
-        <table class="table">
-            <tr>
-                <th>
-                    <a href="{{ sortUrl(type.getId(), level, search, 'title', order, max) }}">
-                        {{ 'title'|trans({}, 'platform') }}
-                    </a>
-                </th>
-                <th>
-                    <a href="{{ sortUrl(type.getId(), level, search, 'user', order, max) }}">
-                        {{ 'contact'|trans({}, 'platform') }}
-                    </a>
-                </th>
-                <th>
-                    <a href="{{ sortUrl(type.getId(), level, search, 'creationDate', order, max) }}">
-                        {{ 'creation_date'|trans({}, 'platform') }}
-                    </a>
-                </th>
-                <th>
-                </th>
-                <th>
-                </th>
-            </tr>
-                        
-            {% for ticket in tickets %}
-                {% set ticketId = ticket.getId() %}
-                {% set ticketDescription = ticket.getDescription() %}
-                {% set comments = ticket.getComments() %}
-                {% set interventions = ticket.getInterventions() %}
-                <tr id="row-ticket-{{ ticketId }}">
-                    <td>
-                        <a href="{{ path('formalibre_admin_ticket_new_open', {'ticket': ticketId}) }}">
-                            <b>
-                                {{ ticket.getTitle() }}
-                            </b>
+    {% if tickets|length > 0 %}
+    
+        {% if tickets.getNbPages() > 1 %}
+            {{ renderPager(tickets, type.getId(), level, search, orderedBy, order, max) }}
+        {% endif %}
+        <div class="table-responsive" id="level-ticket-tab">
+            <table class="table">
+                <tr>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(), level, search, 'title', order, max) }}">
+                            {{ 'title'|trans({}, 'platform') }}
                         </a>
-                        <i class="fa fa-info-circle pointer-hand"
-                           data-toggle="tooltip"
-                           data-container="body"
-                           data-placement="right"
-                           data-html="true"
-                           title="{{ ticketDescription }}"
-                        >
-                        </i>
-                    </td>
-                    <td>
-                        {% set user = ticket.getUser() %}
-                        {{ user.getFirstName() }}
-                        {{ user.getLastName() }}
-                        <br>
-                        <i class="fa fa-envelope-o"></i> :
-                        {{ ticket.getContactMail() }}
-                        <br>
-                        <i class="fa fa-phone"></i> :
-                        {{ ticket.getContactPhone() }}
-                    </td>
-                    <td>
-                        {{ ticket.getCreationDate()|intl_date_format }}
-                    </td>
-                    <td class="text-center">
-                        <span class="view-comments-btn pointer-hand"
-                              data-ticket-id="{{ ticketId }}"
-                              {% if comments|length > 0 %}
-                                  {% set lastComment = comments|last %}
-                                  {% set lastCommenter = lastComment.getUser() %}
-                                  data-toggle="tooltip"
-                                  data-container="body" 
-                                  data-placement="left"
-                                  data-html="true"
-                                  title="{{ lastCommenter.getFirstName() }} {{ lastCommenter.getLastName() }} :<br>{{ lastComment.getContent()|raw }}"
-                              {% endif %}
-                        >
-                            <i class="fa fa-comments-o"></i>
-                            {{ comments|length }}
-                        </span>
-                        
-                        {% if interventions|length > 0 %}
-                            {% set lastIntervention = interventions|last %}
-                            {% set lastIntervenant = lastIntervention.getUser() %}
-                                    
-                            {% if lastStatus[ticketId] is defined %}
-                                {% set status = lastStatus[ticketId] %}
-                                <br>
-                                <span class="label label-success"
+                    </th>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(), level, search, 'user', order, max) }}">
+                            {{ 'contact'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ sortUrl(type.getId(), level, search, 'creationDate', order, max) }}">
+                            {{ 'creation_date'|trans({}, 'platform') }}
+                        </a>
+                    </th>
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+
+                {% for ticket in tickets %}
+                    {% set ticketId = ticket.getId() %}
+                    {% set ticketDescription = ticket.getDescription() %}
+                    {% set comments = ticket.getComments() %}
+                    {% set interventions = ticket.getInterventions() %}
+                    <tr id="row-ticket-{{ ticketId }}">
+                        <td>
+                            <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticketId}) }}">
+                                <b>
+                                    {{ ticket.getTitle() }}
+                                </b>
+                            </a>
+                            <i class="fa fa-info-circle pointer-hand"
+                               data-toggle="tooltip"
+                               data-container="body"
+                               data-placement="right"
+                               data-html="true"
+                               title="{{ ticketDescription }}"
+                            >
+                            </i>
+                        </td>
+                        <td>
+                            {% set user = ticket.getUser() %}
+                            {{ user.getFirstName() }}
+                            {{ user.getLastName() }}
+                            <br>
+                            <i class="fa fa-envelope-o"></i> :
+                            {{ ticket.getContactMail() }}
+                            <br>
+                            <i class="fa fa-phone"></i> :
+                            {{ ticket.getContactPhone() }}
+                        </td>
+                        <td>
+                            {{ ticket.getCreationDate()|intl_date_format }}
+                        </td>
+                        <td class="text-center">
+                            <span class="view-comments-btn pointer-hand"
+                                  data-ticket-id="{{ ticketId }}"
+                                  {% if comments|length > 0 %}
+                                      {% set lastComment = comments|last %}
+                                      {% set lastCommenter = lastComment.getUser() %}
                                       data-toggle="tooltip"
                                       data-container="body" 
                                       data-placement="left"
-                                      title="{{ status.getName()|trans({}, 'support') }}"
-                                >
-                                    {{ status.getCode() }}
-                                </span>
-                            {% endif %}
-                            <br>
-                            <span class="view-interventions-btn pointer-hand"
-                                  data-ticket-id="{{ ticketId }}"
-                                  data-toggle="tooltip"
-                                  data-container="body" 
-                                  data-placement="left"
-                                  data-html="true"
-                                  {% if lastIntervention.getEndDate() is empty %}
-                                      title="{{ 'ongoing_intervention'|trans({}, 'support') }} [{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }}]"
-                                  {% elseif lastIntervention.getInternalComment() is not empty %}
-                                      title="{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }} :<br>{{ lastIntervention.getInternalComment()|raw }}"
+                                      data-html="true"
+                                      title="{{ lastCommenter.getFirstName() }} {{ lastCommenter.getLastName() }} :<br>{{ lastComment.getContent()|raw }}"
                                   {% endif %}
                             >
-                                <i class="fa fa-wrench"></i>
-                                {{ interventions|length }}
+                                <i class="fa fa-comments-o"></i>
+                                {{ comments|length }}
                             </span>
-                        {% endif %}
-                    </td>
-                    <td class="pull-right">
-                        <div class="btn-group">
-                            <button class="btn btn-danger delete-ticket-btn btn-sm"
-                                    data-ticket-id="{{ ticketId }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
 
-    {% if tickets.getNbPages() > 1 %}
-        {{ renderPager(tickets, type.getId(), level, search, orderedBy, order, max) }}
+                            {% if interventions|length > 0 %}
+                                {% set lastIntervention = interventions|last %}
+                                {% set lastIntervenant = lastIntervention.getUser() %}
+
+                                {% if lastStatus[ticketId] is defined %}
+                                    {% set status = lastStatus[ticketId] %}
+                                    <br>
+                                    <span class="label label-success"
+                                          data-toggle="tooltip"
+                                          data-container="body" 
+                                          data-placement="left"
+                                          title="{{ status.getName()|trans({}, 'support') }}"
+                                    >
+                                        {{ status.getCode() }}
+                                    </span>
+                                {% endif %}
+                                <br>
+                                <span class="view-interventions-btn pointer-hand"
+                                      data-ticket-id="{{ ticketId }}"
+                                      data-toggle="tooltip"
+                                      data-container="body" 
+                                      data-placement="left"
+                                      data-html="true"
+                                      {% if lastIntervention.getEndDate() is empty %}
+                                          title="{{ 'ongoing_intervention'|trans({}, 'support') }} [{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }}]"
+                                      {% elseif lastIntervention.getInternalComment() is not empty %}
+                                          title="{{ lastIntervenant.getFirstName() }} {{ lastIntervenant.getLastName() }} :<br>{{ lastIntervention.getInternalComment()|raw }}"
+                                      {% endif %}
+                                >
+                                    <i class="fa fa-wrench"></i>
+                                    {{ interventions|length }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="pull-right">
+                            <div class="btn-group">
+                                <button class="btn btn-danger delete-ticket-btn btn-sm"
+                                        data-ticket-id="{{ ticketId }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {% if tickets.getNbPages() > 1 %}
+            {{ renderPager(tickets, type.getId(), level, search, orderedBy, order, max) }}
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            {{ 'no_ticket'|trans({}, 'support') }}
+        </div>
     {% endif %}
 {% endblock %}
 

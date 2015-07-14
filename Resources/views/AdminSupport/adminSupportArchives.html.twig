@@ -45,4 +45,11 @@
 {% extends 'FormaLibreSupportBundle:AdminSupport:adminSupportMenu.html.twig' %}
 
 {% block adminSupport %}
+    {% if tickets|length > 0 %}
+    
+    {% else %}
+        <div class="alert alert-info">
+            {{ 'no_ticket'|trans({}, 'support') }}
+        </div>
+    {% endif %}
 {% endblock %}

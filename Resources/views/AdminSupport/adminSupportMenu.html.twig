@@ -40,13 +40,7 @@
         
         <br>
         <div>
-            {% if tickets|length > 0 %}
-                {% block adminSupport %}{% endblock %}
-            {% else %}
-                <div class="alert alert-info">
-                    {{ 'no_ticket'|trans({}, 'support') }}
-                </div>
-            {% endif %}
+            {% block adminSupport %}{% endblock %}
         </div>
     </div>
 {% endblock %}

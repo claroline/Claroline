@@ -367,6 +367,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
      */
     public function adminTicketOpenAction(Ticket $ticket)
     {
