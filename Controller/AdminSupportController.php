@@ -12,8 +12,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -22,17 +24,28 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class AdminSupportController extends Controller
 {
+    private $formFactory;
+    private $request;
     private $router;
     private $supportManager;
 
     /**
      * @DI\InjectParams({
+     *     "formFactory"    = @DI\Inject("form.factory"),
+     *     "requestStack"   = @DI\Inject("request_stack"),
      *     "router"         = @DI\Inject("router"),
      *     "supportManager" = @DI\Inject("formalibre.manager.support_manager")
      * })
      */
-    public function __construct(RouterInterface $router, SupportManager $supportManager)
+    public function __construct(
+        FormFactory $formFactory,
+        RequestStack $requestStack,
+        RouterInterface $router,
+        SupportManager $supportManager
+    )
     {
+        $this->formFactory = $formFactory;
+        $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->supportManager = $supportManager;
     }
@@ -371,11 +384,7 @@ class AdminSupportController extends Controller
      */
     public function adminTicketOpenAction(Ticket $ticket)
     {
-        return array(
-            'ticket' => $ticket,
-            'type' => $ticket->getType(),
-            'supportName' => 'level_' . $ticket->getLevel()
-        );
+        return array('ticket' => $ticket);
     }
 
     /**
@@ -401,7 +410,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentCreateForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentCreateForm.html.twig")
      */
     public function adminTicketCommentCreateAction(User $authenticatedUser, Ticket $ticket)
     {
