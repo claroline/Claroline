@@ -78,7 +78,7 @@
                 {% set ticketDescription = ticket.getDescription() %}
                 <tr id="row-ticket-{{ ticketId }}">
                     <td>
-                        <a href="#">
+                        <a href="{{ path('formalibre_admin_ticket_new_open', {'ticket': ticketId}) }}">
                             <b>
                                 {{ ticket.getTitle() }}
                             </b>

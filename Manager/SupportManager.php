@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\SupportBundle\Entity\Comment;
+use FormaLibre\SupportBundle\Entity\Intervention;
+use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -18,6 +20,7 @@ class SupportManager
     private $om;
     private $pagerFactory;
 
+    private $statusRepo;
     private $ticketRepo;
     private $typeRepo;
 
@@ -31,6 +34,7 @@ class SupportManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->statusRepo = $om->getRepository('FormaLibreSupportBundle:Status');
         $this->ticketRepo = $om->getRepository('FormaLibreSupportBundle:Ticket');
         $this->typeRepo = $om->getRepository('FormaLibreSupportBundle:Type');
     }
@@ -81,6 +85,38 @@ class SupportManager
     {
         $this->om->remove($type);
         $this->om->flush();
+    }
+
+    public function persistIntervention(Intervention $intervention)
+    {
+        $this->om->persist($intervention);
+        $this->om->flush();
+    }
+
+    public function deleteIntervention(Intervention $intervention)
+    {
+        $this->om->remove($intervention);
+        $this->om->flush();
+    }
+
+    public function startTicket(Ticket $ticket, User $user)
+    {
+        $this->om->startFlushSuite();
+        $ticket->setLevel(1);
+        $this->persistTicket($ticket);
+        $startStatus = $this->getStatusByType(Status::STATUS_MANDATORY_START);
+        $now = new \DateTime();
+
+        foreach ($startStatus as $status) {
+            $intervention = new Intervention();
+            $intervention->setTicket($ticket);
+            $intervention->setUser($user);
+            $intervention->setStatus($status);
+            $intervention->setStartDate($now);
+            $intervention->setEndDate($now);
+            $this->persistIntervention($intervention);
+        }
+        $this->om->endFlushSuite();
     }
 
 
@@ -225,5 +261,15 @@ class SupportManager
         return $withPager ?
             $this->pagerFactory->createPagerFromArray($types, $page, $max) :
             $types;
+    }
+
+
+    /**************************************
+     * Access to StatusRepository methods *
+     **************************************/
+
+    public function getStatusByType($type, $orderedBy = 'order', $order = 'ASC')
+    {
+        return $this->statusRepo->findStatusByType($type, $orderedBy, $order);
     }
 }

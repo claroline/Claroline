@@ -3,7 +3,6 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use FormaLibre\SupportBundle\Manager\SupportManager;
@@ -12,6 +11,8 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -19,15 +20,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class AdminSupportController extends Controller
 {
+    private $router;
     private $supportManager;
 
     /**
      * @DI\InjectParams({
+     *     "router"         = @DI\Inject("router"),
      *     "supportManager" = @DI\Inject("formalibre.manager.support_manager")
      * })
      */
-    public function __construct(SupportManager $supportManager)
+    public function __construct(RouterInterface $router, SupportManager $supportManager)
     {
+        $this->router = $router;
         $this->supportManager = $supportManager;
     }
 
@@ -303,5 +307,40 @@ class AdminSupportController extends Controller
         $this->supportManager->deleteTicket($ticket);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/new/open",
+     *     name="formalibre_admin_ticket_new_open",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminNewTicketOpenAction(User $authenticatedUser, Ticket $ticket)
+    {
+        if ($ticket->getLevel() === 0) {
+            $this->supportManager->startTicket($ticket, $authenticatedUser);
+        }
+
+        return new RedirectResponse(
+            $this->router->generate('formalibre_support_index')
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/open",
+     *     name="formalibre_admin_ticket_open",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketOpenAction(Ticket $ticket)
+    {
+        return array(
+            'ticket' => $ticket,
+            'supportName' => 'level_' . $ticket->getLevel()
+        );
     }
 }
