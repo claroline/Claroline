@@ -37,12 +37,13 @@
                 'formalibre_ticket_edit_modal_form',
                 {'ticket': ticketId}
             ),
-            refreshPage,
+            refreshPageAfterEdition,
             function() {}
         );
     });
 
-    var refreshPage = function () {
+    var refreshPageAfterEdition = function () {
+        $('#ticket_form_description').html('');
         window.location.reload();
     };
 })();
