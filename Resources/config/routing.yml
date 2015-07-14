@@ -266,6 +266,11 @@ claro_admin_facet:
     prefix: admin/facet
     type: annotation
 
+claro_admin_oauth:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"
+    prefix: admin/oauth
+    type: annotation
+
 claro_admin_i18n:
     resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
     prefix: admin/i18n
