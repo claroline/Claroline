@@ -3,8 +3,10 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
+use FormaLibre\SupportBundle\Form\CommentType;
 use FormaLibre\SupportBundle\Manager\SupportManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -181,11 +183,27 @@ class AdminSupportController extends Controller
             $page,
             $max
         );
+        $lastStatus = array();
+
+        foreach ($tickets as $ticket) {
+            $interventions = $ticket->getInterventions();
+            $reverseInterventions = array_reverse($interventions);
+
+            foreach ($reverseInterventions as $intervention) {
+                $status = $intervention->getStatus();
+
+                if (!is_null($status)) {
+                    $lastStatus[$ticket->getId()] = $status;
+                    break;
+                }
+            }
+        }
 
         return array(
             'tickets' => $tickets,
             'type' => $type,
             'level' => $level,
+            'lastStatus' => $lastStatus,
             'supportName' => 'level_' . $level,
             'search' => $search,
             'page' => $page,
@@ -296,6 +314,20 @@ class AdminSupportController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/admin/ticket/{ticket}/interventions/view",
+     *     name="formalibre_admin_ticket_interventions_view",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketInterventionsModalView.html.twig")
+     */
+    public function adminTicketInterventionsViewAction(Ticket $ticket)
+    {
+        return array('ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/admin/ticket/{ticket}/delete",
      *     name="formalibre_admin_ticket_delete",
      *     options={"expose"=true}
@@ -340,7 +372,109 @@ class AdminSupportController extends Controller
     {
         return array(
             'ticket' => $ticket,
+            'type' => $ticket->getType(),
             'supportName' => 'level_' . $ticket->getLevel()
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/comment/create/form",
+     *     name="formalibre_admin_ticket_comment_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketCommentCreateFormAction(Ticket $ticket)
+    {
+        $form = $this->formFactory->create(new CommentType(), new Comment());
+
+        return array('form' => $form->createView(), 'ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/comment/create",
+     *     name="formalibre_admin_ticket_comment_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentCreateForm.html.twig")
+     */
+    public function adminTicketCommentCreateAction(User $authenticatedUser, Ticket $ticket)
+    {
+        $comment = new Comment();
+        $form = $this->formFactory->create(new CommentType(), $comment);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $comment->setTicket($ticket);
+            $comment->setUser($authenticatedUser);
+            $comment->setIsAdmin(true);
+            $comment->setCreationDate(new \DateTime());
+            $this->supportManager->persistComment($comment);
+
+            return new JsonResponse('success', 201);
+        } else {
+
+            return array('form' => $form->createView(), 'ticket' => $ticket);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/comment/{comment}/edit/form",
+     *     name="formalibre_admin_ticket_comment_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentEditModalForm.html.twig")
+     */
+    public function adminTicketCommentEditFormAction(Comment $comment)
+    {
+        $form = $this->formFactory->create(new CommentType(), $comment);
+
+        return array('form' => $form->createView(), 'comment' => $comment);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/comment/{comment}/edit",
+     *     name="formalibre_admin_ticket_comment_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentEditModalForm.html.twig")
+     */
+    public function adminTicketCommentEditAction(Comment $comment)
+    {
+        $form = $this->formFactory->create(new CommentType(), $comment);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $comment->setEditionDate(new \DateTime());
+            $this->supportManager->persistComment($comment);
+
+            return new JsonResponse('success', 204);
+        } else {
+
+            return array('form' => $form->createView(), 'comment' => $comment);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/comment/{comment}/delete",
+     *     name="formalibre_admin_ticket_comment_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketCommentDeleteAction(Comment $comment)
+    {
+        $this->supportManager->deleteComment($comment);
+
+        return new JsonResponse('success', 200);
     }
 }

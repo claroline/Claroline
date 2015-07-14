@@ -96,14 +96,12 @@
                         {% set user = ticket.getUser() %}
                         {{ user.getFirstName() }}
                         {{ user.getLastName() }}
-                        <p>
-                            <i class="fa fa-envelope-o"></i> :
-                            {{ ticket.getContactMail() }}
-                        </p>
-                        <p>
-                            <i class="fa fa-phone"></i> :
-                            {{ ticket.getContactPhone() }}
-                        </p>
+                        <br>
+                        <i class="fa fa-envelope-o"></i> :
+                        {{ ticket.getContactMail() }}
+                        <br>
+                        <i class="fa fa-phone"></i> :
+                        {{ ticket.getContactPhone() }}
                     </td>
                     <td>
                         {{ ticket.getCreationDate()|intl_date_format }}

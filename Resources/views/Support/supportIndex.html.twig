@@ -113,18 +113,16 @@
                                        title="{{ ticketDescription }}"
                                     >
                                     </i>
-                                    <p>
-                                        {{ 'created_on'|trans({}, 'support') }}
-                                        {{ ticket.getCreationDate()|intl_date_format }}
-                                    </p>
+                                    <br>
+                                    {{ 'created_on'|trans({}, 'support') }}
+                                    {{ ticket.getCreationDate()|intl_date_format }}
                                 </td>
                                 <td>
                                     <i class="fa fa-envelope-o"></i> :
                                     {{ ticket.getContactMail() }}
-                                    <p>
-                                        <i class="fa fa-phone"></i> :
-                                        {{ ticket.getContactPhone() }}
-                                    </p>
+                                    <br>
+                                    <i class="fa fa-phone"></i> :
+                                    {{ ticket.getContactPhone() }}
                                 </td>
                                 <td class="text-center">
                                     <span class="view-comments-btn pointer-hand"
@@ -136,16 +134,15 @@
                                     
                                     {% if lastStatus[ticketId] is defined %}
                                         {% set status = lastStatus[ticketId] %}
-                                        <p>
-                                            <span class="label label-success"
-                                                  data-toggle="tooltip"
-                                                  data-container="body" 
-                                                  data-placement="left"
-                                                  title="{{ status.getName()|trans({}, 'support') }}"
-                                            >
-                                                {{ status.getCode() }}
-                                            </span>
-                                        </p>
+                                        <br>
+                                        <span class="label label-success"
+                                              data-toggle="tooltip"
+                                              data-container="body" 
+                                              data-placement="left"
+                                              title="{{ status.getName()|trans({}, 'support') }}"
+                                        >
+                                            {{ status.getCode() }}
+                                        </span>
                                     {% endif %}
                                 </td>
                                 <td class="pull-right">

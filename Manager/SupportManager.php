@@ -114,6 +114,7 @@ class SupportManager
             $intervention->setStatus($status);
             $intervention->setStartDate($now);
             $intervention->setEndDate($now);
+            $intervention->setDuration(0);
             $this->persistIntervention($intervention);
         }
         $this->om->endFlushSuite();

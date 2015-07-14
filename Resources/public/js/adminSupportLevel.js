@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     
-    $('#new-ticket-tab').on('click', '.delete-ticket-btn', function () {
+    $('#level-ticket-tab').on('click', '.delete-ticket-btn', function () {
         var ticketId = $(this).data('ticket-id');
         
         window.Claroline.Modal.confirmRequest(
@@ -16,12 +16,23 @@
         );
     });
     
-    $('#new-ticket-tab').on('click', '.view-comments-btn', function () {
+    $('#level-ticket-tab').on('click', '.view-comments-btn', function () {
         var ticketId = $(this).data('ticket-id');
         
         window.Claroline.Modal.fromUrl(
             Routing.generate(
                 'formalibre_admin_ticket_comments_view',
+                {'ticket': ticketId}
+            )
+        );
+    });
+    
+    $('#level-ticket-tab').on('click', '.view-interventions-btn', function () {
+        var ticketId = $(this).data('ticket-id');
+        
+        window.Claroline.Modal.fromUrl(
+            Routing.generate(
+                'formalibre_admin_ticket_interventions_view',
                 {'ticket': ticketId}
             )
         );
