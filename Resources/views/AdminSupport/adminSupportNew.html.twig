@@ -110,7 +110,7 @@
                     </td>
                     <td class="text-center">
                         <span class="view-comments-btn pointer-hand"
-                              data-ticket-id="{{ ticket.getId() }}"
+                              data-ticket-id="{{ ticketId }}"
                         >
                             <i class="fa fa-comments-o"></i>
                             {{ ticket.getComments()|length }}
@@ -119,7 +119,7 @@
                     <td class="pull-right">
                         <div class="btn-group">
                             <button class="btn btn-danger delete-ticket-btn btn-sm"
-                                    data-ticket-id="{{ ticket.getId() }}"
+                                    data-ticket-id="{{ ticketId }}"
                             >
                                 <i class="fa fa-trash"></i>
                             </button>

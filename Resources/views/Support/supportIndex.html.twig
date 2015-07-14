@@ -100,7 +100,7 @@
                                     #{{ ticket.getNum() }}
                                 </td>
                                 <td>
-                                    <a href="{{ path('formalibre_ticket_open', {'ticket': ticket.getId()}) }}">
+                                    <a href="{{ path('formalibre_ticket_open', {'ticket': ticketId}) }}">
                                         <b>
                                             {{ ticket.getTitle() }}
                                         </b>
@@ -128,14 +128,14 @@
                                 </td>
                                 <td class="text-center">
                                     <span class="view-comments-btn pointer-hand"
-                                          data-ticket-id="{{ ticket.getId() }}"
+                                          data-ticket-id="{{ ticketId }}"
                                     >
                                         <i class="fa fa-comments-o"></i>
                                         {{ ticket.getComments()|length }}
                                     </span>
                                     
-                                    {% if lastStatus[ticket.getId()] is defined %}
-                                        {% set status = lastStatus[ticket.getId()] %}
+                                    {% if lastStatus[ticketId] is defined %}
+                                        {% set status = lastStatus[ticketId] %}
                                         <p>
                                             <span class="label label-success"
                                                   data-toggle="tooltip"
@@ -151,13 +151,13 @@
                                 <td class="pull-right">
                                     {% if ticket.getInterventions()|length == 0 %}
                                         <div class="btn-group">
-                                            <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticket.getId()}) }}"
+                                            <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticketId}) }}"
                                                class="btn btn-default btn-sm"
                                             >
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                             <button class="btn btn-danger delete-ticket-btn btn-sm"
-                                                    data-ticket-id="{{ ticket.getId() }}"
+                                                    data-ticket-id="{{ ticketId }}"
                                             >
                                                 <i class="fa fa-trash"></i>
                                             </button>

@@ -11,6 +11,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -287,5 +288,20 @@ class AdminSupportController extends Controller
     public function adminTicketCommentsViewAction(Ticket $ticket)
     {
         return array('ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/delete",
+     *     name="formalibre_admin_ticket_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketDeleteAction(Ticket $ticket)
+    {
+        $this->supportManager->deleteTicket($ticket);
+
+        return new JsonResponse('success', 200);
     }
 }

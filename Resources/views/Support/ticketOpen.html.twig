@@ -24,12 +24,16 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
+    <div class="panel-heading" id="ticket-open-head">
         {% if ticket.getInterventions()|length == 0 %}
-            <i class="fa fa-edit ticket-edit-btn pull-right pointer-hand"></i>
+            <i class="fa fa-edit pull-right pointer-hand"
+               id="ticket-edit-btn"
+               data-ticket-id="{{ ticket.getId() }}"
+            >
+            </i>
         {% endif %}
         <h3 class="panel-title">
-            #{{ ticket.getNum() }}
+            #{{ ticket.getNum() }} -
             {{ ticket.getTitle() }}
         </h3>
     </div>

@@ -177,7 +177,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketEditForm.html.twig")
+     * @EXT\Template()
      */
     public function ticketEditFormAction(User $authenticatedUser, Ticket $ticket)
     {
@@ -211,6 +211,54 @@ class SupportController extends Controller
             return new RedirectResponse(
                 $this->router->generate('formalibre_support_index')
             );
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'ticket' => $ticket
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "ticket/{ticket}/edit/modal/form",
+     *     name="formalibre_ticket_edit_modal_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function ticketEditModalFormAction(User $authenticatedUser, Ticket $ticket)
+    {
+        $this->checkTicketEditionAccess($authenticatedUser, $ticket);
+        $form = $this->formFactory->create(new TicketType(), $ticket);
+
+        return array(
+            'form' => $form->createView(),
+            'ticket' => $ticket
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "ticket/{ticket}/edit/modal",
+     *     name="formalibre_ticket_edit_modal",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:ticketEditModalForm.html.twig")
+     */
+    public function ticketEditModalAction(User $authenticatedUser, Ticket $ticket)
+    {
+        $this->checkTicketEditionAccess($authenticatedUser, $ticket);
+        $form = $this->formFactory->create(new TicketType(), $ticket);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistTicket($ticket);
+
+            return new JsonResponse('success', 200);
         } else {
 
             return array(
