@@ -18,8 +18,7 @@
             success: function(data, textStatus, jqXHR) {
                 switch (jqXHR.status) {
                     case 201:
-                        $('#comment_form_content').html('');
-                        window.location.reload();
+                        reloadCommentsPage();
                         break;
                     default:
                         $('#ticket-comment-form-box').html(data);
@@ -36,7 +35,7 @@
                 'formalibre_admin_ticket_comment_edit_form',
                 {'comment': commentId}
             ),
-            refreshPageAfterEdition,
+            reloadCommentsPage,
             function() {}
         );
     });
@@ -56,7 +55,8 @@
         );
     });
 
-    var refreshPageAfterEdition = function () {
+    var reloadCommentsPage = function () {
+        $('#comment_form_content').html('');
         $('#comment_edit_form_content').html('');
         window.location.reload();
     };

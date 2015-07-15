@@ -390,6 +390,34 @@ class AdminSupportController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/admin/ticket/{ticket}/open/comments",
+     *     name="formalibre_admin_ticket_open_comments",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketOpenCommentsAction(Ticket $ticket)
+    {
+        return array('ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/open/interventions",
+     *     name="formalibre_admin_ticket_open_interventions",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketOpenInterventionsAction(Ticket $ticket)
+    {
+        return array('ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/admin/ticket/{ticket}/comment/create/form",
      *     name="formalibre_admin_ticket_comment_create_form",
      *     options={"expose"=true}

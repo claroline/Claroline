@@ -1,7 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% set type = ticket.getType() %}
-{% set ticketUser = ticket.getUser() %}
 {% set comments = ticket.getComments() %}
 {% set interventions = ticket.getInterventions() %}
 
@@ -49,8 +48,8 @@
     </div>
     <div class="panel-body">
         <ul class="nav nav-tabs">
-            <li role="presentation" class="active">
-                <a href="#">
+            <li role="presentation">
+                <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticket.getId()}) }}">
                     {{ 'informations'|trans({}, 'platform') }}
                 </a>
             </li>
@@ -60,49 +59,32 @@
                     <span class="badge">{{ comments|length }}</span>
                 </a>
             </li>
-            <li role="presentation">
-                <a href="{{ path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()}) }}">
+            <li role="presentation" class="active">
+                <a href="#">
                     {{ 'interventions'|trans({}, 'support') }}
                     <span class="badge">{{ interventions|length }}</span>
                 </a>
             </li>
         </ul>
         <br>
-        <br>
-        <div id="informations-box">
-            <div class="table-responsive">
-                <table class="table">
-                    <tr>
-                        <th>{{ 'creator'|trans({}, 'platform') }}</th>
-                        <td>
-                            {{ ticketUser.getFirstName() }}
-                            {{ ticketUser.getLastName() }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{{ 'contact'|trans({}, 'platform') }}</th>
-                        <td>
-                            <i class="fa fa-envelope-o"></i> :
-                            {{ ticket.getContactMail() }}
-                            <br>
-                            <i class="fa fa-phone"></i> :
-                            {{ ticket.getContactPhone() }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{{ 'creation_date'|trans({}, 'platform') }}</th>
-                        <td>
-                            {{ ticket.getCreationDate()|intl_date_format }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{{ 'description'|trans({}, 'platform') }}</th>
-                        <td>
-                            {{ ticket.description()|raw }}
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <br>    
+        <div id="interventions-box">
+
+            {% for intervention in interventions %}
+
+            {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/formalibresupport/js/adminTicketOpenInterventions.js') }}'
+            type="text/javascript"
+    >
+    </script>
 {% endblock %}
