@@ -221,6 +221,26 @@ class SupportManager
             $tickets;
     }
 
+    public function getTicketsWithoutInterventionByLevel(
+        $level,
+        Type $type,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findTicketsWithoutInterventionByLevel($level, $type, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedTicketsWithoutInterventionByLevel($level, $type, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
     public function getTicketsByInterventionStatus(
         Type $type,
         $status,

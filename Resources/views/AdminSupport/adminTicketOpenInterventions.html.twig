@@ -69,10 +69,104 @@
         <br>
         <br>    
         <div id="interventions-box">
-
-            {% for intervention in interventions %}
-
-            {% endfor %}
+            
+            {% if interventions|length > 0 %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th class="text-center">
+                                {{ 'time'|trans({}, 'support') }}
+                            </th>
+                            <th>
+                                {{ 'intervenant'|trans({}, 'support') }}
+                            </th>
+                            <th>
+                                {{ 'status'|trans({}, 'platform') }}
+                            </th>
+                            <th>
+                                {{ 'message'|trans({}, 'platform') }}
+                            </th>
+                            <th></th>
+                        </tr>
+                        
+                        {% for intervention in interventions %}
+                            {% set interventionId = intervention.getId() %}
+                            {% set endDate = intervention.getEndDate() %}
+                            {% set duration = intervention.getDuration() %}
+                            {% set intervenant = intervention.getUser() %}
+                            {% set status = intervention.getStatus() %}
+                            {% set externalComment = intervention.getExternalComment() %}
+                            {% set internalComment = intervention.getInternalComment() %}
+                            
+                            <tr id="row-intervention-{{ interventionId }}">
+                                <td class="text-center">
+                                    {{ intervention.getStartDate()|intl_date_format }}
+                                    <i class="fa fa-long-arrow-right"></i>
+                                    
+                                    {% if endDate is empty %}
+                                        ...
+                                    {% else %}
+                                        {{ endDate|intl_date_format }}
+                                    {% endif %}
+                                    
+                                    {% if duration is not empty %}
+                                        <br>
+                                        <i class="fa fa-clock-o"></i>
+                                        {{ duration }} s
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ intervenant.getFirstName() }}
+                                    {{ intervenant.getLastName() }}
+                                </td>
+                                <td>
+                                    {% if status is not empty %}
+                                        <span class="label label-success"
+                                              data-toggle="tooltip"
+                                              data-container="body" 
+                                              data-placement="left"
+                                              title="{{ status.getName()|trans({}, 'support') }}"
+                                        >
+                                            {{ status.getCode() }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if externalComment is not empty %}
+                                        <b>{{ 'client_message'|trans({}, 'support') }}</b>
+                                        <br>
+                                        {{ externalComment|raw }}
+                                        
+                                        {% if externalComment is not empty %}
+                                            <hr>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {% if internalComment is not empty %}
+                                        <b>{{ 'internal_message'|trans({}, 'support') }}</b>
+                                        <br>
+                                        {{ internalComment|raw }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="#"
+                                           class="btn btn-default btn-sm"
+                                        >
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-danger delete-intervention-btn btn-sm"
+                                                data-intervention-id="{{ interventionId }}"
+                                        >
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

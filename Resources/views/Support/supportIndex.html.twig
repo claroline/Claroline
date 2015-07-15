@@ -146,7 +146,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="pull-right">
-                                    {% if ticket.getInterventions()|length == 0 %}
+                                    {% if ticket.getInterventions()|length == 0 and ticket.getLevel() == 0 %}
                                         <div class="btn-group">
                                             <a href="{{ path('formalibre_ticket_edit_form', {'ticket': ticketId}) }}"
                                                class="btn btn-default btn-sm"

@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use FormaLibre\SupportBundle\Entity\Comment;
+use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use FormaLibre\SupportBundle\Form\CommentEditType;
@@ -82,7 +83,8 @@ class AdminSupportController extends Controller
         $supportName
     )
     {
-        $newTickets = $this->supportManager->getTicketsWithoutIntervention(
+        $newTickets = $this->supportManager->getTicketsWithoutInterventionByLevel(
+            0,
             $type,
             '',
             'creationDate',
@@ -145,7 +147,8 @@ class AdminSupportController extends Controller
         $order = 'DESC'
     )
     {
-        $tickets = $this->supportManager->getTicketsWithoutIntervention(
+        $tickets = $this->supportManager->getTicketsWithoutInterventionByLevel(
+            0,
             $type,
             $search,
             $orderedBy,
@@ -513,6 +516,21 @@ class AdminSupportController extends Controller
     public function adminTicketCommentDeleteAction(Comment $comment)
     {
         $this->supportManager->deleteComment($comment);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/delete",
+     *     name="formalibre_admin_ticket_intervention_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketInterventionDeleteAction(Intervention $intervention)
+    {
+        $this->supportManager->deleteIntervention($intervention);
 
         return new JsonResponse('success', 200);
     }

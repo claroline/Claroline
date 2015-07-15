@@ -391,7 +391,9 @@ class SupportController extends Controller
     {
         $interventions = $ticket->getInterventions();
 
-        if ($user->getId() !== $ticket->getUser()->getId() || count($interventions) > 0) {
+        if ($user->getId() !== $ticket->getUser()->getId() ||
+            count($interventions) > 0 ||
+            $ticket->getLevel() !== 0) {
 
             throw new AccessDeniedException();
         }

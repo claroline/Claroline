@@ -269,6 +269,73 @@ class TicketRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findTicketsWithoutInterventionByLevel(
+        $level,
+        Type $type,
+        $orderedBy = 'creationDate',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM FormaLibre\SupportBundle\Entity\Ticket t
+            WHERE t.type = :type
+            AND t.level = :level
+            AND NOT EXISTS (
+                SELECT i
+                FROM FormaLibre\SupportBundle\Entity\Intervention i
+                WHERE i.ticket = t
+            )
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('level', $level);
+
+        return $query->getResult();
+    }
+
+    public function findSearchedTicketsWithoutInterventionByLevel(
+        $level,
+        Type $type,
+        $search,
+        $orderedBy = 'creationDate',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM FormaLibre\SupportBundle\Entity\Ticket t
+            JOIN t.user u
+            WHERE t.type = :type
+            AND t.level = :level
+            AND NOT EXISTS (
+                SELECT i
+                FROM FormaLibre\SupportBundle\Entity\Intervention i
+                WHERE i.ticket = t
+            )
+            AND (
+                UPPER(t.title) LIKE :search
+                OR UPPER(t.description) LIKE :search
+                OR UPPER(t.contactMail) LIKE :search
+                OR UPPER(t.contactPhone) LIKE :search
+                OR UPPER(u.username) LIKE :search
+                OR UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR CONCAT(UPPER(u.firstName), CONCAT(\' \', UPPER(u.lastName))) LIKE :search
+                OR CONCAT(UPPER(u.lastName), CONCAT(\' \', UPPER(u.firstName))) LIKE :search
+            )
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('level', $level);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
     public function findTicketsByInterventionStatus(
         Type $type,
         $status,

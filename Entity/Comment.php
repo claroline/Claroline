@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_support_comment")
- * @ORM\Entity(repositoryClass="FormaLibre\SupportBundle\Repository\CommentRepository")
+ * @ORM\Entity
  */
 class Comment
 {
