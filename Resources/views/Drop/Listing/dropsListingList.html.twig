@@ -6,7 +6,13 @@
     {# En date du #}
     <td>{{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}</td>
     <td>
-        <a target="_blank" href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+        <a target="_blank" href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">
+            {# fix68 : Problème d'affichage du nom du document #}
+            {% if document.resourceNode is not null %}
+                {{ document.resourceNode.name }}</a>
+            {% else %}
+                {{ document.url }}</a>
+            {% endif %}
         {#  Afficher ici la valeur "Commentaires non lus"
         {% include 'InnovaCollecticielBundle:Drop:dropsNbComments.html.twig' %}  #}
     </td>
