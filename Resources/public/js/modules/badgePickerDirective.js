@@ -33,10 +33,10 @@ angular.module('ui.badgePicker', [])
                 };
 
                 // Initialize badge picker object
-                window.Claroline.BadgePicker.configureWidgetPicker(url, data, successCallback, closeCallback);
+                window.Claroline.BadgePicker.configureBadgePicker(url, data, successCallback, closeCallback);
 
                 $scope.badgePickerOpen = function () {
-                    window.Claroline.BadgePicker.openWidgetPicker();
+                    window.Claroline.BadgePicker.openBadgePicker();
                 };
 
                 element[0].onclick = function (event) {
