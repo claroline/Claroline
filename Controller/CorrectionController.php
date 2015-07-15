@@ -747,7 +747,7 @@ class CorrectionController extends DropzoneBaseController
                     // Nombre de lectures du commentaire pour cet utilisateur pour ce commentaire du document
                     $countCommentRead = count($comments_read);
 
-                    $countCommentRead = 0; // Pour les tests, à enlever
+//                    $countCommentRead = 0; // Pour les tests, à enlever
                     // Ce commentaire n'avait pas été lu.
                     // Donc, maintenant, il va l'être,
                     // je dois donc insérer une occurrence dans la table CommentRead";
