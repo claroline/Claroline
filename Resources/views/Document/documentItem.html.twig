@@ -32,6 +32,10 @@
 
     <td class="{{ classArray }}">
         {{ document.comments|length }}
+        {{ document.getUnReadComments() }}
+                <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
+                (nouveau)
+                </a>
     </td>
 
     {% if mode == 'complete' %}

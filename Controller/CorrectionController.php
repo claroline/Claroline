@@ -773,6 +773,8 @@ class CorrectionController extends DropzoneBaseController
             }    
         }
 
+        echo "drops .lll....";die();
+
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
@@ -1097,8 +1099,11 @@ class CorrectionController extends DropzoneBaseController
      */
     public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop, $document)
     {
+
+        /*
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        */
 
         $em = $this->getDoctrine()->getManager();
         $correction = new Correction();
@@ -1113,7 +1118,7 @@ class CorrectionController extends DropzoneBaseController
         $event = new LogCorrectionStartEvent($dropzone, $drop, $correction);
         $this->dispatch($event);
 
-echo "drops";
+        echo "ic2i";
 
         // L'URL est déclarée dans le controlleur. InnovaERV.
         return $this->redirect(
