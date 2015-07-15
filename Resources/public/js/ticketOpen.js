@@ -31,7 +31,6 @@
     $('#ticket-open-head').on('click', '#ticket-edit-btn', function () {
         var ticketId = $(this).data('ticket-id');
         
-        
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'formalibre_ticket_edit_modal_form',

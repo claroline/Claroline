@@ -27,4 +27,41 @@
             }
         });
     });
+    
+    $('#comments-box').on('click', '.edit-comment-btn', function (e) {
+        var commentId = $(this).data('comment-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate(
+                'formalibre_admin_ticket_comment_edit_form',
+                {'comment': commentId}
+            ),
+            refreshPageAfterEdition,
+            function() {}
+        );
+    });
+    
+    $('#comments-box').on('click', '.delete-comment-btn', function (e) {
+        var commentId = $(this).data('comment-id');
+        
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'formalibre_admin_ticket_comment_delete',
+                {'comment': commentId}
+            ),
+            removeCommentRow,
+            commentId,
+            Translator.trans('comment_deletion_confirm_message', {}, 'support'),
+            Translator.trans('comment_deletion', {}, 'support')
+        );
+    });
+
+    var refreshPageAfterEdition = function () {
+        $('#comment_edit_form_content').html('');
+        window.location.reload();
+    };
+    
+    var removeCommentRow = function (event, commentId) {
+        $('#row-comment-' + commentId).remove();
+    };
 })();

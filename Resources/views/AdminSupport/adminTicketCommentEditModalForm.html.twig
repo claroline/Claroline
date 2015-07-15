@@ -14,7 +14,7 @@
             </h3>
         </div>
         <div class="modal-body">
-            <form id="ticket-comment-edit-form"
+            <form id="ticket-comment-edit-modal-form"
                   action="{{ path('formalibre_admin_ticket_comment_edit', {'comment': comment.getId()}) }}"
                   method="POST"
                   {{ form_enctype(form) }}
@@ -27,7 +27,7 @@
             <span class="btn btn-default" data-dismiss="modal">
                 {{ 'cancel'|trans({},'platform') }}
             </span>
-            <button type="submit" id='edit-btn' class="btn btn-primary">
+            <button type="submit" id="edit-btn" class="btn btn-primary">
                 {{ 'ok'|trans({},'platform') }}
             </button>
         </div>

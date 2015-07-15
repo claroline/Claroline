@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
+use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
 use FormaLibre\SupportBundle\Manager\SupportManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -439,11 +440,11 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentEditModalForm.html.twig")
      */
     public function adminTicketCommentEditFormAction(Comment $comment)
     {
-        $form = $this->formFactory->create(new CommentType(), $comment);
+        $form = $this->formFactory->create(new CommentEditType(), $comment);
 
         return array('form' => $form->createView(), 'comment' => $comment);
     }
@@ -455,18 +456,18 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:adminTicketCommentEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentEditModalForm.html.twig")
      */
     public function adminTicketCommentEditAction(Comment $comment)
     {
-        $form = $this->formFactory->create(new CommentType(), $comment);
+        $form = $this->formFactory->create(new CommentEditType(), $comment);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $comment->setEditionDate(new \DateTime());
             $this->supportManager->persistComment($comment);
 
-            return new JsonResponse('success', 204);
+            return new JsonResponse('success', 200);
         } else {
 
             return array('form' => $form->createView(), 'comment' => $comment);
