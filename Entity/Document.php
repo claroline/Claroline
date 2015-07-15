@@ -259,18 +259,18 @@ class Document {
      */
     public function getUnReadComments()
     {
-        $unReadCommentsDisplay = 0;
+        $unReadComments = 0;
 
         foreach ($this->comments as $comment) {
             $readOrNot = $comment->getComments();
             /** S'il n'y a pas d'occurrences dans CommentRead, c'est que le commentaire n'a pas été lu. **/
-            if (empty($readOrNot)) 
+            if (empty($readOrNot) || count($readOrNot) == 0) 
             {
-                $unReadCommentsDisplay++;
+                $unReadComments++;
             }
         }
 
-        return $unReadCommentsDisplay;
+        return $unReadComments;
     }
 
 }
