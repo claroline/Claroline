@@ -14,12 +14,71 @@
         <div class="modal-body">
             {% set comments = ticket.getComments() %}
             
-            {% if comments|length > 0 %}
+            {% if comments|length > 0 %}   
+                
                 {% for comment in comments %}
-                    {{ comment.getContent()|raw }}
+                    {% set commentUser = comment.getUser() %}
+                    <div class="media">
+
+                        {% if comment.getIsAdmin() %}
+                            <div class="media-body col-md-8 col-sm-8">
+                                <div class="pull-right">
+                                    {{ comment.getContent()|raw }}
+                                </div>
+                            </div>
+                            <div class="media-left col-md-4 col-sm-4 text-center comment-media-right">
+
+                                {% if commentUser.getPicture() != '' %}
+                                    <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                         class="media-object comment-picture"
+                                         alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                    >
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder">
+                                        <i class="fa fa-user"></i>
+                                    </h1>
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="media-left col-md-4 col-sm-4 text-center comment-media-left">
+
+                                {% if commentUser.getPicture() != '' %}
+                                    <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                         class="media-object comment-picture"
+                                         alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                    >
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder">
+                                        <i class="fa fa-user"></i>
+                                    </h1>
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% endif %}
+                            </div>
+                            <div class="media-body col-md-8 col-sm-8">
+                                <div>
+                                    {{ comment.getContent()|raw }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
 
                     {% if not loop.last %}
-                        <hr>
+                        <hr class="comment-separator">
                     {% endif %}
                 {% endfor %}
             {% else %}
@@ -35,3 +94,10 @@
         </div>
     </div>
 </div>
+
+{% block stylesheets %}
+    <link rel='stylesheet' 
+          type='text/css' 
+          href='{{ asset('bundles/formalibresupport/css/comments.css')}}'
+    >
+{% endblock %}

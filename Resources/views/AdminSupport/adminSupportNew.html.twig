@@ -78,6 +78,7 @@
                 {% for ticket in tickets %}
                     {% set ticketId = ticket.getId() %}
                     {% set ticketDescription = ticket.getDescription() %}
+                    {% set comments = ticket.getComments() %}
                     <tr id="row-ticket-{{ ticketId }}">
                         <td>
                             <a href="{{ path('formalibre_admin_ticket_new_open', {'ticket': ticketId}) }}">
@@ -111,9 +112,18 @@
                         <td class="text-center">
                             <span class="view-comments-btn pointer-hand"
                                   data-ticket-id="{{ ticketId }}"
+                                  {% if comments|length > 0 %}
+                                      {% set lastComment = comments|last %}
+                                      {% set lastCommenter = lastComment.getUser() %}
+                                      data-toggle="tooltip"
+                                      data-container="body" 
+                                      data-placement="left"
+                                      data-html="true"
+                                      title="{{ lastCommenter.getFirstName() }} {{ lastCommenter.getLastName() }} :<br>{{ lastComment.getContent()|raw }}"
+                                  {% endif %}
                             >
                                 <i class="fa fa-comments-o"></i>
-                                {{ ticket.getComments()|length }}
+                                {{ comments|length }}
                             </span>
                         </td>
                         <td class="pull-right">
