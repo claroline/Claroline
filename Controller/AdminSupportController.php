@@ -369,7 +369,7 @@ class AdminSupportController extends Controller
         }
 
         return new RedirectResponse(
-            $this->router->generate('formalibre_support_index')
+            $this->router->generate('formalibre_admin_ticket_open', array('ticket' => $ticket->getId()))
         );
     }
 
