@@ -1,0 +1,22 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br /><br />
+            Vous souhaitez faire l'appel pour la  <a  href="{{path("formalibre_presence_admin_tool_index")}}" role="button">{{period.getNumPeriod()}} période du {{period.getDay()}} {{date}}</a>
+            
+            <form method="post" {{ form_enctype(form) }}>
+                <br /><br /> <br /><br />
+                <div class="col-md-1">
+                {{form_label(form.selection)}}
+                </div>
+                <div class="col-md-4">
+                {{form_widget(form.selection)}}
+                </div>
+               <input type="submit" class="btn btn-primary" />
+           </form>
+        </div>
+    </div>
+{% endblock %}
+

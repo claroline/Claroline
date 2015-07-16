@@ -4,6 +4,7 @@ namespace FormaLibre\PresenceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Group;
 use FormaLibre\PresenceBundle\Entity\Period;
 
 /**
@@ -44,6 +45,17 @@ use FormaLibre\PresenceBundle\Entity\Period;
      * @ORM\JoinColumn(name="period_id", onDelete="CASCADE")
      */
     protected $period;
+      /**
+     * @ORM\Column(name="date", type="date")
+     */
+    protected $date;
+     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Group"
+     * )
+     * @ORM\JoinColumn(name="group_id", onDelete="CASCADE")
+     */
+    protected $group;
     
     public function getId()
     {
@@ -67,7 +79,7 @@ use FormaLibre\PresenceBundle\Entity\Period;
     
      public function getUserTeacher()
     {
-        return $this->userteacher;
+        return $this->userTeacher;
     }
     
     public function setUserTeacher(User $userTeacher)
@@ -77,7 +89,7 @@ use FormaLibre\PresenceBundle\Entity\Period;
     
      public function getUserStudent()
     {
-        return $this->userstudent;
+        return $this->userStudent;
     }
     
     public function setUserStudent(User $userStudent)
@@ -87,11 +99,31 @@ use FormaLibre\PresenceBundle\Entity\Period;
     
      public function getPeriod()
     {
-        return $this->userperiod;
+        return $this->period;
     }
     
-    public function setPeriod(User $period)
+    public function setPeriod(Period $period)
     {
-        $this->Period= $period;
+        $this->period= $period;
+    }
+    
+     public function getDate()
+    {
+        return $this->date;
+    }
+    
+    public function setDate(\DateTime $date = null)
+    {
+        $this->date = $date;
+    }
+    
+    public function getGroup()
+    {
+        return $this->group;
+    }
+    
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
     }
  }

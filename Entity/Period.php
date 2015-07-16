@@ -18,6 +18,14 @@ use Doctrine\ORM\Mapping as ORM;
      */
     protected $id;
     /**
+     * @ORM\Column(name="num_period")
+     */
+    protected $numPeriod;
+    /**
+     * @ORM\Column(name="name")
+     */
+    protected $name;
+    /**
      * @ORM\Column(name="school_day")
      */
     protected $day;
@@ -40,8 +48,16 @@ use Doctrine\ORM\Mapping as ORM;
     {
         $this->id = $id;
     }
+      public function getNumPeriod()
+    {
+        return $this->numPeriod;
+    }
     
-     public function getday()
+    public function setNumPeriod($numPeriod)
+    {
+        $this->numPeriod = $numPeriod;
+    }
+    public function getDay()
     {
         return $this->day;
     }
@@ -49,6 +65,14 @@ use Doctrine\ORM\Mapping as ORM;
     public function setDay($day)
     {
         $this->day = $day;
+    }
+     public function getName()
+    {
+        return $this->name;
+    }
+    public function setName($name)
+    {
+        $this->day = $name;
     }
      public function getBenginHour()
     {

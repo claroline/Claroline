@@ -1,0 +1,29 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block section_content %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <br /><br />
+            Vous souhaitez faire l'appel pour la  <a  href="{{path("formalibre_presence_admin_tool_index")}}" role="button">{{period.getNumPeriod()}} période du {{period.getDay()}} {{date}}</a>
+            <br /><br />
+            Classe: <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()})}}" role="button"> {{classe.getName()}} </a>
+            <br /><br /> <br /><br />
+            
+            {% for student in users%}
+                <form action="" method="post">
+                    <div class="col-md-2" align="center">
+                        <img src="{{asset('uploads/pictures/') ~ student.getPicture()}}" width="150" alt="Photo de l'élève"><br />
+                        {{student.getFirstName()}}
+                        {{student.getLastName()}}<br /><br />
+                        {{form_widget(presForm.status)}}<br /><br />
+
+                        <input type="submit" class="btn btn-default" value="Pre.">
+                        <input type="submit" class="btn btn-default" value="Abs.">
+                        <input type="submit" class="btn btn-default" value="Ret.">
+                    </div>
+                </form>
+            {% endfor %} 
+            
+        </div>
+    </div>
+{% endblock %}
