@@ -21,6 +21,7 @@ intervention_deletion_confirm_message: 'Êtes-vous sûr de vouloir supprimer cet
 interventions: 'Interventions'
 l1: 'L1'
 l2: 'L2'
+level: 'Niveau'
 my_tickets: 'Mes tickets'
 new: 'Nouveau'
 no_comment: 'Aucun commentaire'

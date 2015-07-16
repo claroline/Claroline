@@ -147,9 +147,9 @@ class AdminSupportController extends Controller
         $nbL1Tickets = count($l1Tickets);
         $l2Tickets = $this->supportManager->getTicketsByLevel($type, 2, '', 'id', 'ASC', false);
         $nbL2Tickets = count($l2Tickets);
-        $closedTickets = $this->supportManager->getTicketsByInterventionStatus(
+        $closedTickets = $this->supportManager->getTicketsByLevel(
             $type,
-            'status_fa',
+            -1,
             '',
             'id',
             'ASC',
@@ -309,10 +309,26 @@ class AdminSupportController extends Controller
             $page,
             $max
         );
+        $lastStatus = array();
+
+        foreach ($tickets as $ticket) {
+            $interventions = $ticket->getInterventions();
+            $reverseInterventions = array_reverse($interventions);
+
+            foreach ($reverseInterventions as $intervention) {
+                $status = $intervention->getStatus();
+
+                if (!is_null($status)) {
+                    $lastStatus[$ticket->getId()] = $status;
+                    break;
+                }
+            }
+        }
 
         return array(
             'tickets' => $tickets,
             'type' => $type,
+            'lastStatus' => $lastStatus,
             'supportName' => 'my_tickets',
             'search' => $search,
             'page' => $page,
@@ -341,9 +357,9 @@ class AdminSupportController extends Controller
         $order = 'DESC'
     )
     {
-        $tickets = $this->supportManager->getTicketsByInterventionStatus(
+        $tickets = $this->supportManager->getTicketsByLevel(
             $type,
-            'status_fa',
+            -1,
             $search,
             $orderedBy,
             $order,

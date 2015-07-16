@@ -21,6 +21,7 @@ intervention_deletion_confirm_message: 'Are you sure you want to delete this int
 interventions: 'Interventions'
 l1: 'L1'
 l2: 'L2'
+level: 'Level'
 my_tickets: 'My tickets'
 new: 'New'
 no_comment: 'No comment'
