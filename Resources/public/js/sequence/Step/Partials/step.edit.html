@@ -1,0 +1,46 @@
+<form method="post" class="form">
+    <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left">{{ 'sequence_step_panel_title'|trans:{}:'ujm_sequence' }} {{ stepEditCtrl.currentStepIndex + 1}} / {{ stepEditCtrl.steps.length}}</h3>
+            <div class="btn-group pull-right">
+                <button type="button" role="button" class="btn btn-default fa fa-plus" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_add'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.addStep()"></button>
+                <button type="button" role="button" class="btn btn-default fa fa-minus" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_remove'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.removeStep()"></button>
+                <button type="button" role="button" class="btn btn-default fa fa-save" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_save'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.update()"></button>
+            </div>
+        </div>
+        <div class="panel-body">       
+            <!-- Pages list row -->
+            <div class="row center-text">
+                <div class="col-md-1">
+                    <button type="button" role="button" class="btn btn-default fa fa-arrow-left" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_previous'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.getPreviousStep()"></button>
+                </div>
+                <div class="col-md-10">
+                    <ul class="step-list" data-ui-sortable="stepEditCtrl.sortableOptions" data-ng-model="stepEditCtrl.steps">
+                        <li class="step-list-item" data-ng-click="stepEditCtrl.setCurrentStep(step)" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_view'|trans:{}:'ujm_sequence' }}" data-ng-repeat="step in stepEditCtrl.steps| orderBy:'position'" data-ng-class="{ 'active' : stepEditCtrl.steps[stepEditCtrl.currentStepIndex] == step , 'unsortable' : step.isFirst || step.isLast}">
+                            <div>{{ step.position }}</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" role="button" class="btn btn-default fa fa-arrow-right" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_next'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.getNextStep()"></button> 
+                </div>
+            </div>
+            <hr/>
+            <!-- Current page details row -->
+            <!-- Shuffle questions (only if not first page or last page) -->
+            <div ng-hide="stepEditCtrl.steps[stepEditCtrl.currentStepIndex].isFirst || stepEditCtrl.steps[stepEditCtrl.currentStepIndex].isLast">
+                <div class="checkbox">                
+                    <label>
+                        <input id="step_shuffle" type="checkbox" data-ng-model="stepEditCtrl.steps[stepEditCtrl.currentStepIndex].shuffle"> {{ 'sequence_step_shuffle'|trans:{}:'ujm_sequence' }}
+                    </label>
+                </div>
+                <hr/>
+            </div>
+            <!-- Page Description -->
+            <div class="form-group">
+                <label for="step_description">{{ 'sequence_step_description'|trans:{}:'ujm_sequence' }}</label>
+                <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" id="step_description" class="form-control" name="description" data-ng-model="stepEditCtrl.steps[stepEditCtrl.currentStepIndex].description"></textarea>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,39 @@
+{% extends "UJMExoBundle:Sequence:layout.html.twig" %}
+
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %} 
+    <div class="ujm-sequence-container" data-ng-app="SequenceEditApp" data-ng-cloak="">
+        <sequence-edit class="sequence-container" data-sequence="{{ _resource | json_encode() }}"></sequence-edit>
+        <step-edit class="step-container" data-steps="{{ steps | json_encode() }}"></step-edit>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_sequence_edit.js'
+         
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Step/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/editor.module.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+   
+{% endblock %}
+
+
