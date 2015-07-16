@@ -15,5 +15,6 @@ class UJMExoExtension extends Extension
         $loader = new YamlFileLoader($container, $locator);
         $loader->load('services.yml');
         $loader->load('parameters.yml');
+        $loader->load('form_types.yml');
     }
 }

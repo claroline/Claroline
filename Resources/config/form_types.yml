@@ -1,0 +1,6 @@
+services:    
+    # ExercisePlayer type
+    ujm_exo_bundle.form.type.exercise_player_type:
+        class:  %ujm_exo_bundle.form.type.sequence_type.class%
+        tags:
+          - { name: form.type, alias: sequence_type }
