@@ -4,7 +4,7 @@
     {{ 
         parent() ~
         ' - ' ~
-        'formalibre_support_management_tool' | trans({}, 'tools')
+        'configuration' | trans({}, 'platform')
     }}
 {% endblock %}
 
@@ -18,6 +18,10 @@
             },
             {
                 'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                'href': path('formalibre_admin_support_index')
+            },
+            {
+                'name': 'configuration'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -27,23 +31,19 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'formalibre_support_management_tool'|trans({}, 'tools') }}
+            {{ 'configuration'|trans({}, 'platform') }}
         </h3>
     </div>
     <div class="list-group">
-
-        {% for type in types %}
-            <a class="list-group-item"
-               href="{{ path('formalibre_admin_support_new', {'type': type.getId()}) }}"
-            >
-                {{ type.getName()|trans({}, 'support') }}
-            </a>
-        {% endfor %}
         <a class="list-group-item"
-           href="{{ path('formalibre_admin_support_configuration_menu') }}"
+           href="{{ path('formalibre_admin_support_type_management') }}"
         >
-            <i class="fa fa-cogs"></i>
-            {{ 'configuration'|trans({}, 'platform') }}
+            {{ 'support_type_management'|trans({}, 'support') }}
+        </a>
+        <a class="list-group-item"
+           href="{{ path('formalibre_admin_support_status_management') }}"
+        >
+            {{ 'support_status_management'|trans({}, 'support') }}
         </a>
     </div>
 {% endblock %}

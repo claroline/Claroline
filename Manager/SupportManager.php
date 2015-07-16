@@ -87,6 +87,18 @@ class SupportManager
         $this->om->flush();
     }
 
+    public function persistStatus(Status $status)
+    {
+        $this->om->persist($status);
+        $this->om->flush();
+    }
+
+    public function deleteStatus(Status $status)
+    {
+        $this->om->remove($status);
+        $this->om->flush();
+    }
+
     public function persistIntervention(Intervention $intervention)
     {
         $this->om->persist($intervention);
@@ -118,6 +130,40 @@ class SupportManager
             $this->persistIntervention($intervention);
         }
         $this->om->endFlushSuite();
+    }
+
+    public function reorderStatus(Status $status, $nextStatusId)
+    {
+        $allStatus = $this->getAllStatus();
+        $nextId = intval($nextStatusId);
+        $order = 1;
+        $updated = false;
+
+        foreach ($allStatus as $oneStatus) {
+
+            if ($oneStatus === $status) {
+                continue;
+            } elseif ($oneStatus->getId() === $nextId) {
+                $status->setOrder($order);
+                $updated = true;
+                $this->om->persist($status);
+                $order++;
+                $oneStatus->setOrder($order);
+                $this->om->persist($oneStatus);
+                $order++;
+
+            } else {
+                $oneStatus->setOrder($order);
+                $this->om->persist($oneStatus);
+                $order++;
+            }
+        }
+
+        if (!$updated) {
+            $status->setOrder($order);
+            $this->om->persist($status);
+        }
+        $this->om->flush();
     }
 
 
@@ -289,8 +335,31 @@ class SupportManager
      * Access to StatusRepository methods *
      **************************************/
 
+    public function getAllStatus(
+        $search = '',
+        $orderedBy = 'order',
+        $order = 'ASC',
+        $withPager = false,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $status = empty($search) ?
+            $this->statusRepo->findAllStatus($orderedBy, $order) :
+            $this->statusRepo->findAllSearchedStatus($search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($status, $page, $max) :
+            $status;
+    }
+
     public function getStatusByType($type, $orderedBy = 'order', $order = 'ASC')
     {
         return $this->statusRepo->findStatusByType($type, $orderedBy, $order);
+    }
+
+    public function getOrderOfLastStatus()
+    {
+        return $this->statusRepo->findOrderOfLastStatus();
     }
 }

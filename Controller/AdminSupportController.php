@@ -5,10 +5,13 @@ namespace FormaLibre\SupportBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Intervention;
+use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
+use FormaLibre\SupportBundle\Form\StatusType;
+use FormaLibre\SupportBundle\Form\TypeType;
 use FormaLibre\SupportBundle\Manager\SupportManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -66,6 +69,52 @@ class AdminSupportController extends Controller
         $types = $this->supportManager->getAllTypes();
 
         return array('types' => $types);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/configuration/menu",
+     *     name="formalibre_admin_support_configuration_menu",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportConfigurationMenuAction()
+    {
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/management",
+     *     name="formalibre_admin_support_type_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportTypeManagementAction()
+    {
+        $types = $this->supportManager->getAllTypes();
+
+        return array('types' => $types);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/management",
+     *     name="formalibre_admin_support_status_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportStatusManagementAction()
+    {
+        $allStatus = $this->supportManager->getAllStatus();
+
+        return array('allStatus' => $allStatus);
     }
 
     /**
@@ -531,6 +580,221 @@ class AdminSupportController extends Controller
     public function adminTicketInterventionDeleteAction(Intervention $intervention)
     {
         $this->supportManager->deleteIntervention($intervention);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/create/form",
+     *     name="formalibre_admin_support_type_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeCreateModalForm.html.twig")
+     */
+    public function adminSupportTypeCreateFormAction()
+    {
+        $form = $this->formFactory->create(new TypeType(), new Type());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/create",
+     *     name="formalibre_admin_support_type_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeCreateModalForm.html.twig")
+     */
+    public function adminSupportTypeCreateAction()
+    {
+        $type = new Type();
+        $form = $this->formFactory->create(new TypeType(), $type);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistType($type);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView());
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/{type}/edit/form",
+     *     name="formalibre_admin_support_type_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeEditModalForm.html.twig")
+     */
+    public function adminSupportTypeEditFormAction(Type $type)
+    {
+        $form = $this->formFactory->create(new TypeType(), $type);
+
+        return array('form' => $form->createView(), 'type' => $type);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/{type}/edit",
+     *     name="formalibre_admin_support_type_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeEditModalForm.html.twig")
+     */
+    public function adminSupportTypeEditAction(Type $type)
+    {
+        $form = $this->formFactory->create(new TypeType(), $type);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistType($type);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'type' => $type);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/type/{type}/delete",
+     *     name="formalibre_admin_support_type_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminSupportTypeDeleteAction(Type $type)
+    {
+        $this->supportManager->deleteType($type);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/create/form",
+     *     name="formalibre_admin_support_status_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusCreateModalForm.html.twig")
+     */
+    public function adminSupportStatusCreateFormAction()
+    {
+        $form = $this->formFactory->create(new StatusType(), new Status());
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/create",
+     *     name="formalibre_admin_support_status_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusCreateModalForm.html.twig")
+     */
+    public function adminSupportStatusCreateAction()
+    {
+        $status = new Status();
+        $form = $this->formFactory->create(new StatusType(), $status);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $lastOrder = $this->supportManager->getOrderOfLastStatus();
+
+            if (is_null($lastOrder['order_max'])) {
+                $status->setOrder(1);
+            } else {
+                $status->setOrder($lastOrder['order_max'] + 1);
+            }
+            $this->supportManager->persistStatus($status);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView());
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/{status}/edit/form",
+     *     name="formalibre_admin_support_status_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusEditModalForm.html.twig")
+     */
+    public function adminSupportStatusEditFormAction(Status $status)
+    {
+        $form = $this->formFactory->create(new StatusType(), $status);
+
+        return array('form' => $form->createView(), 'status' => $status);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/{status}/edit",
+     *     name="formalibre_admin_support_status_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusEditModalForm.html.twig")
+     */
+    public function adminSupportStatusEditAction(Status $status)
+    {
+        $form = $this->formFactory->create(new StatusType(), $status);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistStatus($status);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'status' => $status);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/{status}/delete",
+     *     name="formalibre_admin_support_status_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminSupportStatusDeleteAction(Status $status)
+    {
+        $this->supportManager->deleteStatus($status);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/status/{status}/reorder/next/{nextStatusId}",
+     *     name="formalibre_admin_support_status_reorder",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminSupportStatusReorderAction(Status $status, $nextStatusId)
+    {
+        $this->supportManager->reorderStatus($status, $nextStatusId);
 
         return new JsonResponse('success', 200);
     }

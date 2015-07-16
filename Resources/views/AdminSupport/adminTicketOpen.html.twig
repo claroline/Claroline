@@ -73,15 +73,15 @@
             <div class="table-responsive">
                 <table class="table">
                     <tr>
-                        <th>{{ 'creator'|trans({}, 'platform') }}</th>
-                        <td>
+                        <th class="col-md-2">{{ 'creator'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
                             {{ ticketUser.getFirstName() }}
                             {{ ticketUser.getLastName() }}
                         </td>
                     </tr>
                     <tr>
-                        <th>{{ 'contact'|trans({}, 'platform') }}</th>
-                        <td>
+                        <th class="col-md-2">{{ 'contact'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
                             <i class="fa fa-envelope-o"></i> :
                             {{ ticket.getContactMail() }}
                             <br>
@@ -90,14 +90,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>{{ 'creation_date'|trans({}, 'platform') }}</th>
-                        <td>
+                        <th class="col-md-2">{{ 'creation_date'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
                             {{ ticket.getCreationDate()|intl_date_format }}
                         </td>
                     </tr>
                     <tr>
-                        <th>{{ 'description'|trans({}, 'platform') }}</th>
-                        <td>
+                        <th class="col-md-2">{{ 'description'|trans({}, 'platform') }}</th>
+                        <td class="col-md-10">
                             {{ ticket.description()|raw }}
                         </td>
                     </tr>
