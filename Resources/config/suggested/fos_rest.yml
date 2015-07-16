@@ -1,6 +1,11 @@
+# app/config/config.yml
 fos_rest:
+    disable_csrf_role: true
+    param_fetcher_listener: true
+    body_listener: true
+    format_listener: true
     view:
-        view_response_listener: force
+        view_response_listener: 'force'
     format_listener:
         rules:
             priorities: ['json']

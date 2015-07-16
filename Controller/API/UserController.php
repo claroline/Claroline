@@ -11,35 +11,23 @@
 
 namespace Claroline\CoreBundle\Controller\API;
 
-use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
-use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Form\ProfileCreationType;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\ToolManager;
-use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\SecurityExtraBundle\Annotation as SEC;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class UserController extends FOSRestController
@@ -47,50 +35,40 @@ class UserController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
-     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler"),
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "localeManager"          = @DI\Inject("claroline.common.locale_manager"),
-     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "request"                = @DI\Inject("request"),
-     *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
-     *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager")
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+    *      "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
      */
     public function __construct(
         AuthenticationManager $authenticationManager,
         FormFactory $formFactory,
         LocaleManager $localeManager,
-        MailManager $mailManager,
-        PlatformConfigurationHandler $configHandler,
         Request $request,
-        RightsManager $rightsManager,
-        RoleManager $roleManager,
-        ToolManager $toolManager,
-        ToolMaskDecoderManager $toolMaskDecoderManager,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager,
-        ObjectManager $om
+        GroupManager $groupManager,
+        RoleManager $roleManager,
+        ObjectManager $om,
+        ProfilePropertyManager $profilePropertyManager
     )
     {
         $this->authenticationManager = $authenticationManager;
-        $this->configHandler = $configHandler;
         $this->formFactory = $formFactory;
         $this->localeManager = $localeManager;
-        $this->mailManager = $mailManager;
         $this->request = $request;
-        $this->rightsManager = $rightsManager;
-        $this->roleManager = $roleManager;
-        $this->toolManager = $toolManager;
-        $this->toolMaskDecoderManager = $toolMaskDecoderManager;
-        $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
         $this->userManager = $userManager;
-        $this->workspaceManager = $workspaceManager;
+        $this->groupManager = $groupManager;
+        $this->roleManager = $roleManager;
         $this->om = $om;
+        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
+        $this->profilePropertyManager = $profilePropertyManager;
     }
 
     /**
@@ -101,7 +79,12 @@ class UserController extends FOSRestController
         return $this->userManager->getAll();
     }
 
-    public function putUserAction()
+    /**
+     * @View(serializerGroups={"api"})
+     * profile_form_creation[fieldname] for the put request
+     * profile_form_creation[platformRoles][] // for the list of roles
+     */
+    public function postUserAction()
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
 
@@ -111,38 +94,122 @@ class UserController extends FOSRestController
             true,
             $this->authenticationManager->getDrivers()
         );
+        $profileType->enableApi();
 
         $form = $this->formFactory->create($profileType);
-        $form->handleRequest($this->request);
-        $roles = $form->get('platformRoles')->getData();
-        $unavailableRoles = $this->roleManager->validateNewUserRolesInsert($roles);
+        $form->submit($this->request);
+        //$form->handleRequest($this->request);
 
-        if ($form->isValid() && count($unavailableRoles) === 0) {
+        if ($form->isValid()) {
+            $roles = $form->get('platformRoles')->getData();
             $user = $form->getData();
             $this->userManager->createUser($user, true, $roles);
 
-            return $this->redirect($this->generateUrl('claro_admin_user_list'));
+            return $user;
         }
 
-        return array(
-            'form_complete_user' => $form->createView(),
-            'error' => $error,
-            'unavailableRoles' => $unavailableRoles,
+        return $form;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * profile_form[fieldname] for the put request
+     * profile_form[platformRoles][] // for the list of roles
+     */
+    public function putUserAction(User $user)
+    {
+        $roles = $this->roleManager->getPlatformRoles($user);
+        $accesses = $this->profilePropertyManager->getAccessessByRoles(array('ROLE_ADMIN'));
+
+        $formType = new ProfileType(
+            $this->localeManager,
+            $roles,
+            true,
+            true,
+            $accesses,
+            $this->authenticationManager->getDrivers()
         );
+
+        $formType->enableApi();
+        $userRole = $this->roleManager->getUserRoleByUser($user);
+        $form = $this->formFactory->create($formType, $user);
+        $form->submit($this->request);
+        //$form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $user = $form->getData();
+            $this->roleManager->renameUserRole($userRole, $user->getUsername());
+            $this->userManager->rename($user, $user->getUsername());
+
+            if (isset($form['platformRoles'])) {
+                //verification:
+                //only the admin can grant the role admin
+                //simple users cannot change anything. Don't let them put whatever they want with a fake form.
+                $newRoles = $form['platformRoles']->getData();
+                $this->userManager->setPlatformRoles($user, $newRoles);
+            }
+
+            return $user;
+        }
+
+        return $form;
     }
 
     /**
      * @View(serializerGroups={"api"})
      */
-    public function getUserAction($slug)
+    public function getUserAction(User $user)
     {
-        $user = $this->userManager->getUserByUsername($slug);
-
         return $user;
     }
 
-    public function deleteUserAction($slug)
+    /**
+     * @View()
+     */
+    public function deleteUserAction(User $user)
     {
+        $this->userManager->deleteUser($user);
 
+        return array('success');
+    }
+
+    /**
+     * @View()
+     */
+    public function addUserRoleAction(User $user, Role $role)
+    {
+        $this->roleManager->associateRole($user, $role, false);
+
+        return array('success');
+    }
+
+    /**
+     * @View()
+     */
+    public function removeUserRoleAction(User $user, Role $role)
+    {
+        $this->roleManager->dissociateRole($user, $role);
+
+        return array('success');
+    }
+
+    /**
+     * @View()
+     */
+    public function addUserGroupAction(User $user, Group $group)
+    {
+        $this->groupManager->addUsersToGroup($group, array($user));
+
+        return array('success');
+    }
+
+    /**
+     * @View()
+     */
+    public function removeUserGroupAction(User $user, Group $group)
+    {
+        $this->groupManager->removeUsersFromGroup($group, array($user));
+
+        return array('success');
     }
 }

@@ -286,6 +286,16 @@ claro_user_api:
     type: rest
     prefix: api
 
+claro_workspace_api:
+    resource: "@ClarolineCoreBundle/Controller/API/WorkspaceController.php"
+    type: rest
+    prefix: api
+
+claro_group_api:
+    resource: "@ClarolineCoreBundle/Controller/API/GroupController.php"
+    type: rest
+    prefix: api
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact

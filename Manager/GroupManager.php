@@ -74,6 +74,7 @@ class GroupManager
     public function insertGroup(Group $group)
     {
         $this->om->persist($group);
+        $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', array($group));
         $this->om->flush();
     }
 

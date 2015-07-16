@@ -50,6 +50,7 @@ class ProfileType extends AbstractType
         $this->isGrantedUserAdministration = $isGrantedUserAdministration;
         $this->langs = $localeManager->retrieveAvailableLocales();
         $this->authenticationDrivers = $authenticationDrivers;
+        $this->forApi = false;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -167,11 +168,17 @@ class ProfileType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'data_class'         => 'Claroline\CoreBundle\Entity\User',
-                'translation_domain' => 'platform'
-            )
+        $default = array(
+            'data_class'         => 'Claroline\CoreBundle\Entity\User',
+            'translation_domain' => 'platform'
         );
+        if ($this->forApi) $default['csrf_protection'] = false;
+        
+        $resolver->setDefaults($default);
+    }
+
+    public function enableApi()
+    {
+        $this->forApi = true;
     }
 }

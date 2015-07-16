@@ -14,12 +14,25 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class GroupType extends AbstractType
 {
+    public function __construct()
+    {
+        $this->forApi = false;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('label' => 'name'));
+        $builder->add(
+            'name',
+            'text',
+            array(
+                'label' => 'name',
+                'constraints' => new NotBlank()
+            )
+        );
     }
 
     public function getName()
@@ -29,11 +42,14 @@ class GroupType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver
-        ->setDefaults(
-            array(
-                'translation_domain' => 'platform'
-                )
-        );
+        $default = array('translation_domain' => 'platform');
+        if ($this->forApi) $default['csrf_protection'] = false;
+
+        $resolver->setDefaults($default);
+    }
+
+    public function enableApi()
+    {
+        $this->forApi = true;
     }
 }

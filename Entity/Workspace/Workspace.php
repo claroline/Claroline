@@ -16,6 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -37,43 +38,51 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
      */
     protected $description;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $code;
 
     /**
      * @ORM\Column(type="string", nullable=false)
+     * @Groups({"api"})
      */
     protected $maxStorageSize = "1 TB";
 
     /**
      * @ORM\Column(type="integer", nullable=false)
+     * @Groups({"api"})
      */
     protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
+     * @Groups({"api"})
      */
     protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api"})
      */
     protected $displayable = false;
 
@@ -116,56 +125,67 @@ class Workspace
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     * @Groups({"api"})
      */
     protected $creator;
 
     /**
      * @ORM\Column(unique=true)
+     * @Groups({"api"})
      */
     protected $guid;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
+     * @Groups({"api"})
      */
     protected $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
+     * @Groups({"api"})
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
+     * @Groups({"api"})
      */
     protected $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
+     * @Groups({"api"})
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
+     * @Groups({"api"})
      */
     protected $isPersonal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     * @Groups({"api"})
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     * @Groups({"api"})
      */
     protected $endDate;
 
     /**
      * @ORM\Column(name="is_access_date", type="boolean")
+     * @Groups({"api"})
      */
     protected $isAccessDate = false;
 
     /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
+     * @Groups({"api"})
      */
     protected $workspaceType;
 
