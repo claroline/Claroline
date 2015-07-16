@@ -6,8 +6,8 @@ parameters:
     ujm.param.qti_directory: "%ujm.param.exo_directory%/qti"
     
     # Form Types
-    ujm_exo_bundle.form.type.exercise_player_type.class:   UJM\ExoBundle\Form\Player\ExercisePlayerType
+    ujm_exo_bundle.form.type.sequence_type.class:   UJM\ExoBundle\Form\Sequence\SequenceType
     
     # Managers
-    ujm_exo_bundle.manager.exercise_player.class:    UJM\ExoBundle\Manager\Player\ExercisePlayerManager
-    ujm_exo_bundle.manager.pages.class:    UJM\ExoBundle\Manager\Player\PageManager
+    ujm_exo_bundle.manager.sequence.class:    UJM\ExoBundle\Manager\Sequence\SequenceManager
+    ujm_exo_bundle.manager.steps.class:    UJM\ExoBundle\Manager\Sequence\StepManager

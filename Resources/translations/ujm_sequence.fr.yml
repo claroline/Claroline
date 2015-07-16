@@ -1,0 +1,19 @@
+# e
+sequence_panel_title: Séquence
+sequence_panel_hide: Cacher / Montrer les informations de la séquence
+sequence_type_name : Nom de la séquence
+sequence_type_description : Description de la séquence
+sequence_start_date: Date de début
+sequence_end_date: Date de fin
+sequence_name : Nom
+sequence_description : Description
+sequence_step_description: Description
+sequence_step_shuffle: Aléatoire
+sequence_step_previous: Etape précédente
+sequence_step_next: Etape suivante
+sequence_step_view: Voir l'étape
+sequence_steps_save: Sauvegarder les étapes
+sequence_step_add: Ajouter une étape
+sequence_step_remove: Supprimer une étape
+sequence_save: Sauvegarder la séquence
+sequence_step_panel_title: Etapes

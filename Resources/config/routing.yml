@@ -50,13 +50,13 @@ all_qti:
     resource: "routing/all/qti.yml"
     prefix:   /all/qti
     
-exercise_player:
-    resource: "@UJMExoBundle/Controller/Player/ExercisePlayerController.php"
+sequence:
+    resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
     type: annotation
-    prefix: /player
+    prefix: /sequence
     
    
-exercise_pages:
-    resource: "@UJMExoBundle/Controller/Player/ExercisePlayerPageController.php"
+sequence_steps:
+    resource: "@UJMExoBundle/Controller/Sequence/StepController.php"
     type: annotation
     prefix: /page
