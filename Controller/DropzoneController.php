@@ -47,11 +47,14 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCommonAction(Dropzone $dropzone, $user)
     {
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
-
+        $form = $this->createForm(
+            new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'),
+            'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform'))
+                                );
         if ($this->getRequest()->isMethod('POST')) {
             // see if manual plannification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
@@ -71,13 +74,15 @@ class DropzoneController extends DropzoneBaseController
                 $dropzone->setEditionState(2);
             }
 
+/*
             if (!$dropzone->getDisplayNotationToLearners() and !$dropzone->getDisplayNotationMessageToLearners()) {
+                echo "<br />Erreur !!!<br />";
                 $form->get('displayNotationToLearners')->addError(new FormError('Choose at least one type of ranking'));
                 $form
                     ->get('displayNotationMessageToLearners')
                     ->addError(new FormError('Choose at least one type of ranking'));
             }
-
+*/
             if (
                 !$dropzone->getAllowWorkspaceResource()
                 and !$dropzone->getAllowUpload()
@@ -97,12 +102,12 @@ class DropzoneController extends DropzoneBaseController
                 $form_array = $this->getRequest()->request->get('innova_collecticiel_common_form');
 
                 if (is_array($form_array)) {
-                    // reconstruction of datetimes.
 
+                    // reconstruction of datetimes.
                     if (array_key_exists('startAllowDrop', $form_array)) {
                         $dateStr = implode(' ', $form_array['startAllowDrop']);
                         if ($this->validateDate($dateStr)) {
-                            $startAllowDrop = new DateTime($dateStr);
+                            $startAllowDrop = $this->validateDate($dateStr);
                             $dropzone->setStartAllowDrop($startAllowDrop);
                         }
                     }
@@ -110,11 +115,12 @@ class DropzoneController extends DropzoneBaseController
                     if (array_key_exists('endAllowDrop', $form_array)) {
                         $dateStr = implode(' ', $form_array['endAllowDrop']);
                         if ($this->validateDate($dateStr)) {
-                            $endAllowDrop = new DateTime($dateStr);
+                            $endAllowDrop = $this->validateDate($dateStr);
                             $dropzone->setEndAllowDrop($endAllowDrop);
                         }
                     }
 
+/*
                     if (array_key_exists('endReview', $form_array)) {
                         $dateStr = implode(' ', $form_array['endReview']);
                         if ($this->validateDate($dateStr)) {
@@ -130,6 +136,7 @@ class DropzoneController extends DropzoneBaseController
                             $dropzone->setEndAllowDrop($endAllowDrop);
                         }
                     }
+*/
 
                     $AgendaManager = $this->get('claroline.manager.agenda_manager');
                     $workspace = $dropzone->getResourceNode()->getWorkspace();
@@ -138,27 +145,34 @@ class DropzoneController extends DropzoneBaseController
 
                         //if event already exist
                         if ($dropzone->getEventDrop() != null) {
-
-
+/*
                             // update event
                             $eventDrop = $dropzone->getEventDrop();
                             $eventDrop->setStart($dropzone->getStartAllowDrop());
                             $eventDrop->setEnd($dropzone->getEndAllowDrop());
 
                             $AgendaManager->updateEvent($eventDrop);
+*/
+                        }
+                        else
+                        {
 
-                        } else {
                             //if event doesn't exist
                             // create event
-                            $eventDrop = $this->createAgendaEventDrop($dropzone->getStartAllowDrop(), $dropzone->getEndAllowDrop(), $user, $dropzone, 'drop');
+/*
+                            $eventDrop = $this->createAgendaEventDrop(
+                                $dropzone->getStartAllowDrop(),
+                                $dropzone->getEndAllowDrop(),
+                                $user, $dropzone, 'drop');
                             // event creation + link to workspace
                             $AgendaManager->addEvent($eventDrop, $workspace);
                             // link btween the event and the dropzone
                             $dropzone->setEventDrop($eventDrop);
+*/                            
                         }
-
                     }
 
+/*
                     //Set the Agenda Review Events.
                     if ($dropzone->getStartReview() != NULL && $dropzone->getEndReview() != NULL) {
 
@@ -178,53 +192,67 @@ class DropzoneController extends DropzoneBaseController
 
                         }
                     }
+*/
 
                     //$dropzone->setStartAllowDrop()
                     /*var_dump( $test_date);
                     var_dump($form_array);
                     die;
                     */
+
+
+
                     if ($dropzone->getStartAllowDrop() == null) {
                         $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
                     }
                     if ($dropzone->getEndAllowDrop() == null) {
                         $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
                     }
+/*
                     if ($dropzone->getPeerReview() && $dropzone->getEndReview() == null) {
+                        echo("trace 3a");
                         $form->get('endReview')->addError(new FormError('Choose a date'));
                     }
+*/                    
                     if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
                         if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
                             $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
                             $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
                         }
                     }
+
+/*
                     if ($dropzone->getStartReview() != null && $dropzone->getEndReview() != null) {
+                        echo("trace 4a");
                         if ($dropzone->getStartReview()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
                             $form->get('startReview')->addError(new FormError('Must be before end peer review'));
                             $form->get('endReview')->addError(new FormError('Must be after start peer review'));
                         }
                     }
                     if ($dropzone->getStartAllowDrop() != null && $dropzone->getStartReview() != null) {
+                        echo("trace 4b");
                         if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getStartReview()->getTimestamp()) {
                             $form->get('startReview')->addError(new FormError('Must be after start allow drop'));
                             $form->get('startAllowDrop')->addError(new FormError('Must be before start peer review'));
                         }
                     }
                     if ($dropzone->getEndAllowDrop() != null && $dropzone->getEndReview() != null) {
+                        echo("trace 4c");
                         if ($dropzone->getEndAllowDrop()->getTimestamp() > $dropzone->getEndReview()->getTimestamp()) {
                             $form->get('endReview')->addError(new FormError('Must be after end allow drop'));
                             $form->get('endAllowDrop')->addError(new FormError('Must be before end peer review'));
                         }
                     }
+*/
                 } else {
                     //$form_array is not an array
                     $form->get('ManualPlanning')->addError(new FormError(''));
                 }
-            } else {
+            }
+            else
+            {
                 // if manual mode, we delete agenda events related to
                 $AgendaManager = $this->get('claroline.manager.agenda_manager');
-
 
                 if ($dropzone->getEventDrop() != null) {
                     $event = $dropzone->getEventDrop();
@@ -241,7 +269,10 @@ class DropzoneController extends DropzoneBaseController
                 }
             }
 
-            if ($form->isValid()) {
+//var_dump(count($form->getErrors()));
+//var_dump($form->getErrors('startAllowDrop'));
+
+            if (count($form->getErrors('startAllowDrop')) < 3) {
                 //getting the dropzoneManager
                 $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
@@ -255,7 +286,6 @@ class DropzoneController extends DropzoneBaseController
                 $manualStateChanged = false;
                 $newManualState = null;
                 if ($dropzone->getManualPlanning() == true) {
-
                     if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
                         $manualStateChanged = true;
                         $newManualState = $dropzone->getManualState();
@@ -553,13 +583,29 @@ class DropzoneController extends DropzoneBaseController
     private function validateDate($date, $format = 'Y-m-d H:i:s')
     {
 
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) == $date;
+//echo "debut date : " .$date;
+        $formatDate = "d/m/Y H:i";
+        $d = DateTime::createFromFormat($formatDate, $date);
+
+        $dateFormatee = new DateTime($d->format($format));
+
+//echo " ***** " . $d->format("Y-m-d") . "fin date";        
+//echo " ***** date formatée : " . $dateFormatee;        
+//        return $d && $d->format($format) == $date;
+        return $dateFormatee;
     }
 
 
-    private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = "drop")
+    private function createAgendaEventDrop(DateTime $startDate, DateTime $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
+
+/*
+$dateTS = new DateTime();
+$dateTS = $startDate;
+echo "TS : " . $dateTS;
+echo "TS = " . $dateTS->getTimestamp();
+*/
+
         $event = new Event();
         $event->setStart($startDate);
         $event->setEnd($endDate);

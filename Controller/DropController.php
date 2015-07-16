@@ -31,6 +31,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropController extends DropzoneBaseController
 {
+
     /**
      * @Route(
      *      "/{resourceId}/drop",
@@ -151,7 +152,142 @@ class DropController extends DropzoneBaseController
             $adminInnova = true;
         }
         
+        // Déclarations des nouveaux tableaux, qui seront passés à la vue
+        $userNbTextToRead = array();
 
+        return array(
+            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
+            '_resource' => $dropzone,
+            'dropzone' => $dropzone,
+            'drop' => $drop,
+            'form' => $form->createView(),
+            'form_url' => $form_url->createView(),
+            'form_file' => $form_file->createView(),
+            'form_resource' => $form_resource->createView(),
+            'form_text' => $form_text->createView(),
+            'allowedTypes' => $allowedTypes,
+            'resourceTypes' => $resourceTypes,
+            'dropzoneProgress' => $dropzoneProgress,
+            'adminInnova' => $adminInnova,
+            'userNbTextToRead' => $userNbTextToRead,
+        );
+    }
+
+    /**
+     * @Route(
+     *      "/{resourceId}/drop/{userId}",
+     *      name="innova_collecticiel_drop_switch",
+     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     * )
+     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
+     * @Template("InnovaCollecticielBundle:Drop:drop.html.twig"))
+     */
+    public function dropSwitchAction(Dropzone $dropzone, User $user)
+    {
+        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+
+        $em = $this->getDoctrine()->getManager();
+        $dropRepo = $em->getRepository('InnovaCollecticielBundle:Drop');
+
+        if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
+            $this->getRequest()->getSession()->getFlashBag()->add(
+                'error',
+                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'innova_collecticiel')
+            );
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'innova_collecticiel_open',
+                    array(
+                        'resourceId' => $dropzone->getId()
+                    )
+                )
+            );
+        }
+
+        $notFinishedDrop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => false));
+        if ($notFinishedDrop === null) {
+            $notFinishedDrop = new Drop();
+            $number = ($dropRepo->getLastNumber($dropzone) + 1);
+            $notFinishedDrop->setNumber($number);
+
+            $notFinishedDrop->setUser($user);
+            $notFinishedDrop->setDropzone($dropzone);
+            $notFinishedDrop->setFinished(false);
+
+            $em->persist($notFinishedDrop);
+            $em->flush();
+            $em->refresh($notFinishedDrop);
+
+            $event = new LogDropStartEvent($dropzone, $notFinishedDrop);
+            $this->dispatch($event);
+        }
+
+        $form = $this->createForm(new DropType(), $notFinishedDrop);
+        $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
+        $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
+        $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
+        $form_text = $this->createForm(new DocumentType(), null, array('documentType' => 'text'));
+        $drop = $notFinishedDrop;
+
+        if ($this->getRequest()->isMethod('POST')) {
+            $form->handleRequest($this->getRequest());
+
+            if (count($notFinishedDrop->getDocuments()) == 0) {
+                $form->addError(new FormError('Add at least one document'));
+            }
+
+            if ($form->isValid()) {
+                // Début InnovaERV : vu avec Donovan //
+                // On ne ferme plus le collecticiel ici. //
+                // Par contre, on ne touche pas ailleurs, notamment lors de la fermeture automatiquement d'un collecticiel. //
+                // $notFinishedDrop->setFinished(true);
+                // fin InnovaERV :  //
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($notFinishedDrop);
+                $em->flush();
+
+                $rm = $this->get('claroline.manager.role_manager');
+                $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
+                $this->dispatch($event);
+
+                $this->getRequest()->getSession()->getFlashBag()->add(
+                    'success',
+                    $this->get('translator')->trans('Your copy has been saved', array(), 'innova_collecticiel')
+                );
+
+                return $this->redirect(
+                    $this->generateUrl(
+                        'innova_collecticiel_open',
+                        array(
+                            'resourceId' => $dropzone->getId()
+                        )
+                    )
+                );
+            }
+        }
+
+        $allowedTypes = array();
+        if ($dropzone->getAllowWorkspaceResource()) $allowedTypes[] = 'resource';
+        if ($dropzone->getAllowUpload()) $allowedTypes[] = 'file';
+        if ($dropzone->getAllowUrl()) $allowedTypes[] = 'url';
+        if ($dropzone->getAllowRichText()) $allowedTypes[] = 'text';
+
+        $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
+
+//        $adminInnova = $this->get('innova.manager.collecticiel_manager')->adminOrNot($user);
+
+        $adminInnova = false;
+        if ( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN' === true)
+        && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
+            $adminInnova = true;
+        }
+        
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userNbTextToRead = array();
 

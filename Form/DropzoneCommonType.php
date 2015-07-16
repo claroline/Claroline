@@ -31,7 +31,6 @@ class DropzoneCommonType extends AbstractType
                 'required' => false
             ))
 
-
             ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
             ->add('allowUpload', 'checkbox', array('required' => false))
             ->add('allowUrl', 'checkbox', array('required' => false))
@@ -73,9 +72,8 @@ Suppression suite demande #251
 
             ->add('successMessage','tinymce',array('required' => false))
             ->add('failMessage','tinymce',array('required' => false))
-            ->add('minimumScoreToPass', 'integer', array('required' => true))
+//            ->add('minimumScoreToPass', 'integer', array('required' => true))
 
-/*
             ->add('manualPlanning', 'choice', array(
                 'required' => true,
                 'choices' => array(
@@ -85,7 +83,6 @@ Suppression suite demande #251
                 'expanded' => true,
                 'multiple' => false
             ))
-*/
             ->add('manualState', 'choice', array(
                 'choices' => array(
                     'allowDrop' => 'allowDropManualState',
@@ -101,19 +98,17 @@ issue #251 InnovaERV
                 'expanded' => true,
                 'multiple' => false
             ))
-/*            ->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false)) */
-            ->add('notifyOnDrop', 'checkbox', array('required' => false))
-            /*
-             *
-             ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
+            //->add('autoCloseOpenedDropsWhenTimeIsUp','checkbox', array('required' => false)) */
+//            ->add('notifyOnDrop', 'checkbox', array('required' => false))
+
+            ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('endAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
-            ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
+//            ->add('startReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
+//            ->add('endReview', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))
             ->add('startAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
             ->add('endAllowDrop', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
-            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions)
-            */
+//            ->add('startReview', 'datetimepicker', $defaultDateTimeOptions)
+//            ->add('endReview', 'datetimepicker', $defaultDateTimeOptions)
             ;
 
     }

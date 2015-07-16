@@ -86,8 +86,9 @@
                  {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.failMessage) }}
-
+{#
                 {{ form_row(form.minimumScoreToPass, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-7', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
+#}
             </div>
             <div class="col-lg-offset-3 col-lg-9">
             </div>
@@ -97,40 +98,35 @@
         <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
         <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
 
-        <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
-
-{#      {{ form_errors(form.manualPlanning) }}
+        {{ form_errors(form.manualPlanning.1) }}
         <div class="radio">
             <label>
                 {{ form_widget(form.manualPlanning.0) }}
                 <strong>{{ 'manualPlanning'|trans({}, 'innova_collecticiel') }}</strong>
             </label>
         </div>
-#}
 
         <div id="planning_manual" class="form-group">
             <div class="col-md-offset-2">{{ 'Choose current phase'|trans({}, 'innova_collecticiel') }}</div>
             {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
-{#        <label class="radio">
+        <label class="radio">
             {{ form_widget(form.manualPlanning.1) }}
             <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
         </label>
-#}
+
         <div id="planning_dates">
             <div class="row form-group">
                 <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
-{#                     {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
- #}
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
-{#                    {{ form_row(form.endAllowDrop, {'label_attr': 'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
+                    {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
-#}
                 </div>
             </div>
 {# Mis en commentaire par issue #251 InnovaERV #}
@@ -160,6 +156,7 @@
 #}
         </div>
 
+{#
         <div id="dropzone_notification_part">
             <h4>{{ 'Notifications'|trans({}, 'innova_collecticiel') }}</h4>
 
@@ -170,13 +167,14 @@
                 </div>
             </div>
         </div>
+#}
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
                class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
 
             {# fix #60 Enlever un bouton InnovaERV #}
             {# fix #60 Mise en commentaire car un bouton s'affiche via le JS #}
-{#            <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>1{{ 'Save'|trans({}, 'innova_collecticiel') }}</a> #}
+            {# <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>1{{ 'Save'|trans({}, 'innova_collecticiel') }}</a> #}
 
             {# fix #60 Enlever un bouton InnovaERV #}
             <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
@@ -200,9 +198,8 @@
     </div>
 #}
 
-{# InnovaERV : déclaration de la modal dans un temptale dédié, à part #}
-{% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
-
+    {# InnovaERV : déclaration de la modal dans un temptale dédié, à part #}
+    {% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
 
 {% endblock %}
 
@@ -242,7 +239,6 @@
             $displayNotationToLearner.change(function () {
                 manageSuccessFailMessagesVisibility($(this));
             });
-
 
             var enablePeerReviewOptions = function (peerReviewEnabled) {
                 // when loading the page without having saved yet, all tabs available by default
