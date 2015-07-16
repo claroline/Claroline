@@ -33,10 +33,33 @@
     <div class="list-group">
 
         {% for type in types %}
+            {% set typeId = type.getId() %}
             <a class="list-group-item"
-               href="{{ path('formalibre_admin_support_new', {'type': type.getId()}) }}"
+               href="{{ path('formalibre_admin_support_new', {'type': typeId}) }}"
             >
                 {{ type.getName()|trans({}, 'support') }}
+            
+                {% if counters[typeId] is defined and counters[typeId] is not empty %}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span>
+                        <span class="label label-default margin-right-sm">
+                            {{ 'new'|trans({}, 'support') }} :
+                            {{ counters[typeId]['new'] }}
+                        </span>
+                        <span class="label label-primary margin-right-sm">
+                            {{ 'l1'|trans({}, 'support') }} :
+                            {{ counters[typeId]['l1'] }}
+                        </span>
+                        <span class="label label-danger margin-right-sm">
+                            {{ 'l2'|trans({}, 'support') }} :
+                            {{ counters[typeId]['l2'] }}
+                        </span>
+                        <span class="label label-success">
+                            {{ 'archives'|trans({}, 'support') }} :
+                            {{ counters[typeId]['closed'] }}
+                        </span>
+                    </span>
+                {% endif %}
             </a>
         {% endfor %}
         <a class="list-group-item"

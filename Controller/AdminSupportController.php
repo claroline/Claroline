@@ -67,8 +67,22 @@ class AdminSupportController extends Controller
     public function adminSupportIndexAction()
     {
         $types = $this->supportManager->getAllTypes();
+        $counters = array();
 
-        return array('types' => $types);
+        foreach ($types as $type) {
+            $typeId = $type->getId();
+            $counters[$typeId] = array();
+            $newTickets = $this->supportManager->getTicketsByLevel($type, 0, '', 'id', 'ASC', false);
+            $counters[$typeId]['new'] = count($newTickets);
+            $closedTickets = $this->supportManager->getTicketsByLevel($type, -1, '', 'id', 'ASC', false);
+            $counters[$typeId]['closed'] = count($closedTickets);
+            $l1Tickets = $this->supportManager->getTicketsByLevel($type, 1, '', 'id', 'ASC', false);
+            $counters[$typeId]['l1'] = count($l1Tickets);
+            $l2Tickets = $this->supportManager->getTicketsByLevel($type, 2, '', 'id', 'ASC', false);
+            $counters[$typeId]['l2'] = count($l2Tickets);
+        }
+
+        return array('types' => $types, 'counters' => $counters);
     }
 
     /**
