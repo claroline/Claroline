@@ -9,8 +9,12 @@ class isNotEmptyValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (empty($value)) {
-            $this->context->addViolation($constraint->message);
+        $valueT=trim($value);
+        if (isset($valueT)) {
+            if(preg_match('/^$|\s+/',$valueT)){
+              
+                $this->context->addViolation($constraint->message);
+            }
         }
     }
 }
