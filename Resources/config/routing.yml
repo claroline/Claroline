@@ -296,6 +296,12 @@ claro_group_api:
     type: rest
     prefix: api
 
+claro_parameters_api:
+    resource: "@ClarolineCoreBundle/Controller/API/ParametersController.php"
+    type: rest
+    prefix: api
+
+
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
