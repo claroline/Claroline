@@ -112,7 +112,7 @@ class Portfolio
     public function __construct()
     {
         $this->commentsViewAt = new \DateTime();
-        $this->$portfolioWidgets = new ArrayCollection();
+        $this->portfolioWidgets = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
