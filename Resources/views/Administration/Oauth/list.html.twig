@@ -60,6 +60,22 @@
                             <th> {{ client.getName() }} </th>
                             <th>
                                 <div class="btn-group">
+                                    <button class="btn btn-default show-client-btn"
+                                            data-client-id="{{ client.getId() }}"
+                                            data-client-random="{{ client.getRandomId() }}"
+                                    >
+                                        <i class="fa fa-info"></i>
+                                    </button>
+                                    <button class="btn btn-default show-secret-btn"
+                                            data-secret="{{ client.getSecret() }}"
+                                    >
+                                        <i class="fa fa-key"></i>
+                                    </button>
+                                    <button class="btn btn-default show-refresh-btn"
+                                        data-url="/oauth/v2/auth?client_id={{ client.getId() }}_{{ client.getRandomId() }}&redirect_uri={% for uris in client.getRedirectUris() %}{{ uris }}{% endfor %}&response_type=token"
+                                    >
+                                        <i class="fa fa-refresh"></i>
+                                    </button>
                                     <button class="btn btn-danger delete-client-btn"
                                             data-client-id="{{ client.getId() }}"
                                     >

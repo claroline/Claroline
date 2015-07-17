@@ -11,6 +11,7 @@
     'use strict';
 
     var modal = window.Claroline.Modal;
+    var id = '';
 
     var addClient = function() {
         window.location.reload();
@@ -24,6 +25,15 @@
         .on('click', '#add-client-btn', function(event) {
             var url = Routing.generate('claro_admin_oauth_form');
             modal.displayForm(url, addClient, function(){}, 'form_client_creation');
+        })
+        .on('click', '.show-client-btn', function(event) {
+            modal.simpleContainer('', $(event.target).attr('data-client-id') + '_' + $(event.target).attr('data-client-random'));
+        })
+        .on('click', '.show-secret-btn', function(event) {
+            modal.simpleContainer('', $(event.target).attr('data-secret'));
+        })
+        .on('click', '.show-refresh-btn', function(event) {
+            modal.simpleContainer('', $(event.target).attr('data-url'));
         })
         .on('click', '.delete-client-btn', function(event) {
             var clientid = $(event.target).attr('data-client-id');

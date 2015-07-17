@@ -28,10 +28,10 @@ security:
                 use_referer: true
             anonymous: true
 
-        #api:
-            #pattern:    ^/api
-            #fos_oauth:  true
-            #stateless:  true
+        api:
+            pattern:    ^/api
+            fos_oauth:  true
+            stateless:  true
 
         main:
             pattern: ^/
