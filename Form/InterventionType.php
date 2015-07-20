@@ -35,7 +35,7 @@ class InterventionType extends AbstractType
             'startDate',
             'datetimepicker',
             array(
-                'required' => false,
+                'required' => true,
                 'read_only' => false,
                 'component' => true,
                 'autoclose' => true,
@@ -67,9 +67,21 @@ class InterventionType extends AbstractType
             'duration',
             'integer',
             array(
-                'translation_domain' => 'platform',
-                'label' => 'duration',
+                'label' => 'duration_in_minute',
                 'required' => false,
+            )
+        );
+        $builder->add(
+            'computeTimeMode',
+            'choice',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'label' => 'compute_time_mode',
+                'choices' => array(
+                    0 => 'compute_time_from_end_date',
+                    1 => 'compute_time_from_duration'
+                )
             )
         );
         $builder->add(

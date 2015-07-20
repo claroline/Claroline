@@ -54,6 +54,7 @@
           novalidate
     >
         <div class="panel-body">
+            {{ form_errors(form) }}
             {{ form_row(form.intervenant) }}
             <div class="form-group row ticket-datetime-field">
                 {{ form_row(form.startDate) }}

@@ -18,11 +18,13 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -34,26 +36,30 @@ class AdminSupportController extends Controller
     private $request;
     private $router;
     private $supportManager;
+    private $translator;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"    = @DI\Inject("form.factory"),
      *     "requestStack"   = @DI\Inject("request_stack"),
      *     "router"         = @DI\Inject("router"),
-     *     "supportManager" = @DI\Inject("formalibre.manager.support_manager")
+     *     "supportManager" = @DI\Inject("formalibre.manager.support_manager"),
+     *     "translator"     = @DI\Inject("translator")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         RequestStack $requestStack,
         RouterInterface $router,
-        SupportManager $supportManager
+        SupportManager $supportManager,
+        TranslatorInterface $translator
     )
     {
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->supportManager = $supportManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -618,6 +624,7 @@ class AdminSupportController extends Controller
         $now = new \DateTime();
         $intervention->setStartDate($now);
         $intervention->setEndDate($now);
+        $intervention->setDuration(0);
         $form = $this->formFactory->create(
             new InterventionType($authenticatedUser),
             $intervention
@@ -650,6 +657,43 @@ class AdminSupportController extends Controller
             $intervention
         );
         $form->handleRequest($this->request);
+        $timeType = $form->get('computeTimeMode')->getData();
+        $startDate = $intervention->getStartDate();
+
+        if (!is_null($timeType) && !is_null($startDate)) {
+            $startDateTimestamp = $startDate->format('U');
+
+            if ($timeType === 0) {
+                $endDate = $intervention->getEndDate();
+
+                if (!is_null($endDate)) {
+                    $endDateTimestamp = $endDate->format('U');
+                    $duration = ceil(($endDateTimestamp - $startDateTimestamp) / 60);
+                    $intervention->setDuration($duration);
+                } else {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans('end_date_is_required', array(), 'support')
+                        )
+                    );
+                }
+            } elseif ($timeType === 1) {
+                $duration = $intervention->getDuration();
+
+                if (!is_null($duration)) {
+                    $endDateTimestamp = $startDateTimestamp + ($duration * 60);
+                    $endDate = new \DateTime();
+                    $endDate->setTimestamp($endDateTimestamp);
+                    $intervention->setEndDate($endDate);
+                } else {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans('duration_is_required', array(), 'support')
+                        )
+                    );
+                }
+            }
+        }
 
         if ($form->isValid()) {
             $this->supportManager->persistIntervention($intervention);
@@ -706,6 +750,43 @@ class AdminSupportController extends Controller
             $intervention
         );
         $form->handleRequest($this->request);
+        $timeType = $form->get('computeTimeMode')->getData();
+        $startDate = $intervention->getStartDate();
+
+        if (!is_null($timeType) && !is_null($startDate)) {
+            $startDateTimestamp = $startDate->format('U');
+
+            if ($timeType === 0) {
+                $endDate = $intervention->getEndDate();
+
+                if (!is_null($endDate)) {
+                    $endDateTimestamp = $endDate->format('U');
+                    $duration = ceil(($endDateTimestamp - $startDateTimestamp) / 60);
+                    $intervention->setDuration($duration);
+                } else {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans('end_date_is_required', array(), 'support')
+                        )
+                    );
+                }
+            } elseif ($timeType === 1) {
+                $duration = $intervention->getDuration();
+
+                if (!is_null($duration)) {
+                    $endDateTimestamp = $startDateTimestamp + ($duration * 60);
+                    $endDate = new \DateTime();
+                    $endDate->setTimestamp($endDateTimestamp);
+                    $intervention->setEndDate($endDate);
+                } else {
+                    $form->addError(
+                        new FormError(
+                            $this->translator->trans('duration_is_required', array(), 'support')
+                        )
+                    );
+                }
+            }
+        }
 
         if ($form->isValid()) {
             $this->supportManager->persistIntervention($intervention);
