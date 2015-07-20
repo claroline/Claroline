@@ -10,6 +10,7 @@ use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
+use FormaLibre\SupportBundle\Form\InterventionType;
 use FormaLibre\SupportBundle\Form\StatusType;
 use FormaLibre\SupportBundle\Form\TypeType;
 use FormaLibre\SupportBundle\Manager\SupportManager;
@@ -597,6 +598,132 @@ class AdminSupportController extends Controller
         $this->supportManager->deleteComment($comment);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/intervention/create/form",
+     *     name="formalibre_admin_ticket_intervention_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketInterventionCreateFormAction(
+        User $authenticatedUser,
+        Ticket $ticket
+    )
+    {
+        $intervention = new Intervention();
+        $now = new \DateTime();
+        $intervention->setStartDate($now);
+        $intervention->setEndDate($now);
+        $form = $this->formFactory->create(
+            new InterventionType($authenticatedUser),
+            $intervention
+        );
+
+        return array('form' => $form->createView(), 'ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/intervention/create",
+     *     name="formalibre_admin_ticket_intervention_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketInterventionCreateForm.html.twig")
+     */
+    public function adminTicketInterventionCreateAction(
+        User $authenticatedUser,
+        Ticket $ticket
+    )
+    {
+        $intervention = new Intervention();
+        $intervention->setTicket($ticket);
+        $intervention->setUser($authenticatedUser);
+        $now = new \DateTime();
+        $intervention->setStartDate($now);
+        $form = $this->formFactory->create(
+            new InterventionType($authenticatedUser),
+            $intervention
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistIntervention($intervention);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'formalibre_admin_ticket_open_interventions',
+                    array('ticket' => $ticket->getId())
+                )
+            );
+        } else {
+
+            return array('form' => $form->createView(), 'ticket' => $ticket);
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/edit/form",
+     *     name="formalibre_admin_ticket_intervention_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketInterventionEditFormAction(Intervention $intervention)
+    {
+        $form = $this->formFactory->create(
+            new InterventionType($intervention->getUser()),
+            $intervention
+        );
+
+        return array(
+            'form' => $form->createView(),
+            'intervention' => $intervention,
+            'ticket' => $intervention->getTicket()
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/edit",
+     *     name="formalibre_admin_ticket_intervention_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketInterventionEditForm.html.twig")
+     */
+    public function adminTicketInterventionEditAction(Intervention $intervention)
+    {
+        $ticket = $intervention->getTicket();
+        $form = $this->formFactory->create(
+            new InterventionType($intervention->getUser()),
+            $intervention
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistIntervention($intervention);
+
+            return new RedirectResponse(
+                $this->router->generate(
+                    'formalibre_admin_ticket_open_interventions',
+                    array('ticket' => $ticket->getId())
+                )
+            );
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'intervention' => $intervention,
+                'ticket' => $ticket
+            );
+        }
     }
 
     /**

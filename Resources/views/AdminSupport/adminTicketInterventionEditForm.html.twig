@@ -1,0 +1,86 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set type = ticket.getType() %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'intervention_edition'|trans({}, 'support')
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                'href': path('formalibre_admin_support_index')
+            },
+            {
+                'name': type.getName()|trans({}, 'support'),
+                'href': path('formalibre_admin_support_new', {'type': type.getId()})
+            },
+            {
+                'name': ('l' ~ ticket.getLevel())|trans({}, 'support'),
+                'href': path('formalibre_admin_support_level', {'type': type.getId(), 'level': ticket.getLevel()})
+            },
+            {
+                'name': ticket.getTitle(),
+                'href': path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()})
+            },
+            {
+                'name': 'intervention_edition'|trans({}, 'support'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'intervention_edition'|trans({}, 'support') }}
+        </h3>
+    </div>
+    <form action="{{ path('formalibre_admin_ticket_intervention_edit', {'intervention': intervention.getId()}) }}" 
+          method="POST"
+          {{ form_enctype(form) }}
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_row(form.intervenant) }}
+            <div class="form-group row ticket-datetime-field">
+                {{ form_row(form.startDate) }}
+            </div>
+            <div class="form-group row ticket-datetime-field">
+                {{ form_row(form.endDate) }}
+            </div>
+            {{ form_rest(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()}) }}"
+               class="btn btn-default" 
+               role="button"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' 
+          type='text/css' 
+          href='{{ asset('bundles/formalibresupport/css/datetime.css')}}'
+    >
+{% endblock %}

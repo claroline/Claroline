@@ -80,10 +80,10 @@
                             <th>
                                 {{ 'intervenant'|trans({}, 'support') }}
                             </th>
-                            <th>
+                            <th class="text-center">
                                 {{ 'status'|trans({}, 'platform') }}
                             </th>
-                            <th>
+                            <th class="text-center">
                                 {{ 'message'|trans({}, 'platform') }}
                             </th>
                             <th></th>
@@ -119,7 +119,7 @@
                                     {{ intervenant.getFirstName() }}
                                     {{ intervenant.getLastName() }}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     {% if status is not empty %}
                                         <span class="label label-success"
                                               data-toggle="tooltip"
@@ -148,9 +148,9 @@
                                         {{ internalComment|raw }}
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <div class="btn-group">
-                                        <a href="#"
+                                        <a href="{{ path('formalibre_admin_ticket_intervention_edit_form', {'intervention': intervention.getId()}) }}"
                                            class="btn btn-default btn-sm"
                                         >
                                             <i class="fa fa-edit"></i>
@@ -167,6 +167,13 @@
                     </table>
                 </div>
             {% endif %}
+            <hr>
+            <a href="{{ path('formalibre_admin_ticket_intervention_create_form', {'ticket': ticket.getId()}) }}"
+               class="btn btn-primary pull-right"
+            >
+                <i class="fa fa-plus"></i>
+                {{ 'add_an_intervention'|trans({}, 'support') }}
+            </a>
         </div>
     </div>
 {% endblock %}
