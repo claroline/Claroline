@@ -35,6 +35,10 @@
                             {% endif %}
                         {% endif %}
                     {% endif %}
+                    {% render controller(
+                        'IcapNotificationBundle:FollowerResource:renderForm',
+                        {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}
+                    ) %}
                 </div>
                 <div class="col-md-4">
                      <div class="input-group">
@@ -67,7 +71,7 @@
                             {{ 'activate_global_notifications'|trans({}, 'forum') }}
                         </a>
                     {% endif %}
-            
+
                     {% if hasSubscribed %}
                         <a class="btn btn-primary" href="{{ _path('claro_forum_unsubscribe', {'forum': _resource.getId()}) }}">
                             {{ 'unsubscribe_mail_list'|trans({}, 'forum') }}
