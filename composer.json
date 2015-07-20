@@ -53,7 +53,7 @@
         "claroline/bundle-recorder": "~5.0",
         "claroline/kernel-bundle": "~5.0",
         "claroline/installation-bundle": "~5.0",
-        "claroline/front-end-bundle": "~5.0",
+        "claroline/front-end-bundle": "dev-6.x-dev",
         "claroline/migration-bundle": "~5.0",
         "johngrogg/ics-parser": "dev-master",
         "gregwar/captcha-bundle": "1.0.12",
