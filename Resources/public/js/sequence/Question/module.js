@@ -1,10 +1,10 @@
 /**
- * Sequence module
+ * Question module
  */
 (function () {
     'use strict';
 
-    angular.module('Sequence', [
+    angular.module('Question', [
        
     ]);
 })();

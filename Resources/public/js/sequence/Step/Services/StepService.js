@@ -31,6 +31,7 @@
                             console.log('Step service, update method error');
                             console.log(status);
                             console.log(data);
+                            deferred.reject([]);
                         });
                         
                      return deferred.promise;

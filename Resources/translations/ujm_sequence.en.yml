@@ -17,3 +17,5 @@ sequence_step_add: Add step
 sequence_step_remove: Remove step
 sequence_save: Save sequence
 sequence_step_panel_title: Steps
+sequence_select_available_question: Select a question
+sequence_step_add_question: Add question

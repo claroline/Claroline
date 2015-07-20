@@ -1,0 +1,14 @@
+
+<div class="modal-header">
+    <h4 class="modal-title"> {{ 'sequence_select_available_question' | trans:{}:'ujm_sequence' }}</h4>
+</div>
+<div class="modal-body"> 
+    <div class="list-group">
+        <a href="" class="list-group-item" data-ng-repeat="question in questionCtrl.questions" data-ng-click="questionCtrl.select(question)">
+            {{ question.title }} / {{ question.type }}
+        </a>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default cancel" ng-click="questionCtrl.cancel()">Cancel</button>
+</div>

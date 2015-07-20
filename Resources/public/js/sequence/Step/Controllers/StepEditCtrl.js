@@ -2,9 +2,11 @@
     'use strict';
 
     angular.module('Step').controller('StepEditCtrl', [
+        '$modal',
         'StepService',
-        function (StepService) {
-
+        'QuestionService',
+        function ($modal, StepService, QuestionService) {
+            // all steps for the sequence
             this.steps = {};
             this.currentStepIndex = 0;
 
@@ -55,7 +57,8 @@
                     shuffle: false,
                     sequenceId: my.steps[0].sequenceId,
                     isLast: false,
-                    isFirst: false
+                    isFirst: false,
+                    questions: []
                 };
                 return ujm_step;
             };
@@ -97,25 +100,25 @@
             this.getNextStep = function () {
                 var newIndex = this.currentStepIndex + 1;
                 if (this.steps[newIndex]) {
-                    this.currentStepIndex = newIndex;
+                    this.setCurrentStep(this.steps[newIndex]);
                 } else {
-                    this.currentStepIndex = 0;
+                    this.setCurrentStep(this.steps[0]);
                 }
             };
 
             this.getPreviousStep = function () {
                 var newIndex = this.currentStepIndex - 1;
                 if (this.steps[newIndex]) {
-                    this.currentStepIndex = newIndex;
+                    this.setCurrentStep(this.steps[newIndex]);
                 } else {
-                    this.currentStepIndex = this.steps.length - 1;
+                    this.setCurrentStep(this.steps.length - 1);
                 }
             };
-            
+
             // on dragg end
-            this.updateStepsOrder = function(){
+            this.updateStepsOrder = function () {
                 var index = 0;
-                for(index; index < this.steps.length; index++){
+                for (index; index < this.steps.length; index++) {
                     var step = this.steps[index];
                     step.position = index + 1;
                 }
@@ -129,9 +132,55 @@
                 return this.steps;
             };
 
+            // on step square click or called by getNext/getPrevious Step
             this.setCurrentStep = function (step) {
                 var index = this.steps.indexOf(step);
                 this.currentStepIndex = index;
+                // questions are applicable only for "normal" steps
+                if (index !== 0 || index !== this.steps.length - 1) {
+                    this.getStepQuestions(step);
+                }
+            };
+
+            this.getStepQuestions = function (step) {
+                // if new step there will be no questions
+                step.questions = [];
+                var my = this;
+                // else we need to get the already existing questions
+                if (step.id) {
+                    var promise = QuestionService.getStepQuestions(step);
+                    promise.then(function (result) {
+                        step.questions = result.data;
+                    }, function (error) {
+                        console.log('get step questions error');
+                    });
+                }
+            };
+
+            this.addQuestion = function () {
+                var modalInstance = $modal.open({
+                    templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/questions.available.html',
+                    controller: 'QuestionCtrl as questionCtrl',
+                    resolve: {
+                        questions: [
+                            'QuestionService',
+                            function (QuestionService) {
+                                return QuestionService.getAll();
+                            }
+                        ]
+                    }
+                });
+
+                modalInstance.result.then(function (selected) {
+                    console.log('modal closed see selected question details');
+                    console.log(selected);                   
+                    // add question to collection
+                    this.steps[this.currentStepIndex].questions.push(selected);
+                }.bind(this));
+            };
+            
+            this.removeQuestion = function (questionId){
+                
             };
         }
     ]);

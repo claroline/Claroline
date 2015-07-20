@@ -48,8 +48,9 @@
                             console.log('sequence service, update method error');
                             console.log(status);
                             console.log(data);
+                            deferred.reject([]);
                         });
-                        return deferred;
+                        return deferred.promise;
                 }
             };
         }

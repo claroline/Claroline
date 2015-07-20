@@ -10,6 +10,7 @@
         'ui.translation',
         'ui.resourcePicker',
         'Step',
-        'Sequence'
+        'Sequence',
+        'Question'
     ]);
 })();

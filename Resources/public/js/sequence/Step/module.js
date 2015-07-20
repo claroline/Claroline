@@ -1,5 +1,5 @@
 /**
- * Page module
+ * Step module
  */
 (function () {
     'use strict';
