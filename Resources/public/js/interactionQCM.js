@@ -328,7 +328,7 @@ function fillChoicesArray(row,edition,index) {
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
     if (nbResponses == 0) {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="col-md-1">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
         // create the button to add a choice
         var add = $('<a title="'+addchoice+'" href="#" id="add_choice" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addchoice+'</a>');
 
@@ -361,7 +361,6 @@ function checkScore() {
         }
       $("*[id$='_weight']").each(function () {
           if ($(this).val() === '~') {
-              alert('la');
                 $(this).val('');
            }
         });
@@ -372,13 +371,10 @@ function checkScore() {
                 $(this).val('~');
             }
         if ($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val() === '~') {
-            alert('la');
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('');
         }
         if ($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val() === '~') {
-            alert('la');
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');
-            
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');           
         }      
         });
     }

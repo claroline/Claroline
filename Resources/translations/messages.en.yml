@@ -326,7 +326,6 @@ right_response: Points for correct answer
 save: Save
 save_order: Save the new order
 score: Score
-score_answer: Points for this answer
 score_list_question: Score and list of questions
 score_error: Be careful, score must be a number
 score_max : Score maximum possible

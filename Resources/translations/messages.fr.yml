@@ -326,7 +326,6 @@ right_response: Points pour la bonne réponse
 save: Enregistrer
 save_order: Enregistrer le nouvel ordre
 score: Score
-score_answer: Points pour cette réponse
 score_list_question: Note et liste des questions
 score_error: Attention, le score doit être un chiffre !
 score_max : Score maximum possible
