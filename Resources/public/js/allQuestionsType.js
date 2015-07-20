@@ -258,7 +258,7 @@ function displayOptionalFields(){
   if(valFeedback !== "")
   {
       $("#collepseinteraction").collapse('show');
-  }
+  }   
 }
 
 /**
@@ -276,5 +276,22 @@ function textareaAdvancedEdition()
             $("#"+idProposalVal).data("data-theme","advanced");
             $("#btnEdition_"+idProposalVal).remove();
         }
+         //Show feedback answers
+        if($(this).text() !== "") {
+            var idspanFeedback ='span_'+$(this).attr("id");
+            var idBtnFeedback = 'btn_'+$(this).attr("id"); 
+            $('#'+idspanFeedback).removeAttr( 'style' );
+            $('#'+idBtnFeedback).remove();
+        }
     });
+}
+/**
+ * Button feedback (matching & QCM)
+ * @param {type} spanFeedback
+ * @param {type} btnHiddenFeedback
+ * @returns {undefined}
+ */
+function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
+     $('#'+btnHiddenFeedback).remove();
+     $('#'+spanFeedback).removeAttr( 'style' );    
 }

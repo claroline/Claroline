@@ -53,6 +53,13 @@ class WordResponse
      * @ORM\JoinColumn(name="hole_id", referencedColumnName="id")
      */
     private $hole;
+    
+     /**
+     * @var text $feedback
+     *
+     * @ORM\Column(name="feedback", type="text", nullable=true)
+     */
+    private $feedback;
 
     /**
      * Get id
@@ -143,4 +150,22 @@ class WordResponse
     {
         $this->hole = $hole;
     }
+    
+    /**
+     * get feedback
+     * @return string
+     */
+    function getFeedback() {
+        return $this->feedback;
+    }
+
+    /**
+     * set feedback
+     * @param \UJM\ExoBundle\Entity\text $feedback
+     */
+    function setFeedback($feedback) {
+        $this->feedback = $feedback;
+    }
+
+
 }

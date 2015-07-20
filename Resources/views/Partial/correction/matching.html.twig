@@ -3,6 +3,7 @@
     <tr>
         <th class="classic">{{ 'your_answer' | trans }}</th>
         <th class="classic">{{ 'expected_answer' | trans }}</th>
+        <th class="classic">{{ 'comment' | trans }}</th>
     </tr>
 
         {% for label in inter.labels %}
@@ -68,6 +69,15 @@
                         {% endfor%}
                     </div>
                 </td>
+     
+                <td class="classic">
+                {% if label.feedback is not empty %}
+                    {{ label.feedback|raw }}
+                {% else %}
+                    -
+                {% endif %} 
+                </td>
+        
             </tr>
         {% endfor%}
             <tr>
@@ -88,4 +98,5 @@
                     {% endfor %}
                 </td>
             </tr>
+             
 </table>

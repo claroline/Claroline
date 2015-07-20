@@ -105,15 +105,16 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         
     }); 
    //Show feedback answers
-   $('.classic').find('textarea').each(function() {
-        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
-        if($(this).text() !== "") {
-            var idspanFeedback ='span_'+$(this).attr("id");
-            var idBtnFeedback = 'btn_'+$(this).attr("id");
-            $('#'+idspanFeedback).removeAttr( 'style' );
-            $('#'+idBtnFeedback).remove();
-        }
-    });   
+//   $('.classic').find('textarea').each(function() {
+//        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+//        if($(this).text() !== "") {
+//            var idspanFeedback ='span_'+$(this).attr("id");
+//            var idBtnFeedback = 'btn_'+$(this).attr("id");
+//            $('#'+idspanFeedback).removeAttr( 'style' );
+//            $('#'+idBtnFeedback).remove();
+//        }
+//    }); 
+ 
     //Displays enabled tinyMCE
    textareaAdvancedEdition();
 
@@ -345,10 +346,6 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
         // Add the structure od the table
         tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
-}
-function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
-     $('#'+btnHiddenFeedback).remove();
-     $('#'+spanFeedback).removeAttr( 'style' );    
 }
 
 /**

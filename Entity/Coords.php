@@ -61,6 +61,13 @@ class Coords
      * @ORM\Column(name="size", type="float")
      */
     private $size;
+    
+     /**
+     * @var text $feedback
+     *
+     * @ORM\Column(name="feedback", type="text", nullable=true)
+     */
+    private $feedback;
 
     /**
      * Get id
@@ -181,4 +188,22 @@ class Coords
     {
         $this->interactionGraphic = $interactionGraphic;
     }
+    
+    /**
+     * get feedback
+     * @return string
+     */
+    function getFeedback() {
+        return $this->feedback;
+    }
+
+    /**
+     * set feedback
+     * @param \UJM\ExoBundle\Entity\text $feedback
+     */
+    function setFeedback($feedback) {
+        $this->feedback = $feedback;
+    }
+
+
 }

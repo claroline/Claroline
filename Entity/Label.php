@@ -56,6 +56,13 @@ class Label
     private $interactionMatching;
 
     /**
+     * @var text $feedback
+     *
+     * @ORM\Column(name="feedback", type="text", nullable=true)
+     */
+    private $feedback;
+    
+    /**
      * Get id
      *
      * @return integer
@@ -161,4 +168,21 @@ class Label
     {
         return $this->ordre;
     }
+    /**
+     * get feedback
+     * @return string
+     */
+    function getFeedback() {
+        return $this->feedback;
+    }
+
+    /**
+     * set feedback
+     * @param \UJM\ExoBundle\Entity\text $feedback
+     */
+    function setFeedback($feedback) {
+        $this->feedback = $feedback;
+    }
+
+
 }
