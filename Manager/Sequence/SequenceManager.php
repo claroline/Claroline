@@ -30,6 +30,7 @@ class SequenceManager {
         // add first page
         $first = new Step();
         $first->setIsFirst(true);
+        $first->setIsContentStep(true);
         $first->setPosition(1);
         $first->setDescription('<h1>This is the first Step</h1>');
         $first->setSequence($s);
@@ -38,6 +39,7 @@ class SequenceManager {
         // add last page
         $last = new Step();
         $last->setIsLast(true);
+        $last->setIsContentStep(true);
         $last->setPosition(2);
         $last->setDescription('<h1>This is the last Step</h1>');
         $last->setSequence($s);

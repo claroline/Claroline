@@ -60,6 +60,15 @@ class Step implements \JsonSerializable {
      * @ORM\Column(name="is_last", type="boolean") 
      */
     protected $isLast;
+    
+    /**
+     * There is two types of Steps : content step and question step
+     * Content steps have no questions
+     * Both types are draggable excepts for isFirst and isLast steps
+     * @var boolean
+     * @ORM\Column(name="is_content_step", type="boolean") 
+     */
+    protected $isContentStep;
 
     /**
      * @var ExercisePlayer 
@@ -80,6 +89,7 @@ class Step implements \JsonSerializable {
         $this->shuffle = false;
         $this->isFirst = false;
         $this->isLast = false;
+        $this->isContentStep = false;
         $this->stepQuestions = new ArrayCollection();
     }
 
@@ -194,7 +204,25 @@ class Step implements \JsonSerializable {
     public function getIsFirst() {
         return $this->isFirst;
     }
+    
+    /**
+     * 
+     * @param boolean $isContentStep
+     * @return \UJM\ExoBundle\Entity\Sequence\Step
+     */
+    public function setIsContentStep($isContentStep){
+        $this->isContentStep = $isContentStep;
+        return $this;
+    }
 
+    /**
+     * 
+     * @return boolean
+     */
+    public function getIsContentStep(){
+        return $this->isContentStep;
+    }
+    
     /**
      * 
      * @param \UJM\ExoBundle\Entity\Sequence\StepQuestion $stepQuestion
@@ -226,14 +254,15 @@ class Step implements \JsonSerializable {
     public function jsonSerialize() {
         // TODO serialize questions arraycollection
         return array(
-            'id' => $this->id,
-            'position' => $this->position,
-            'shuffle' => $this->shuffle,
-            'isFirst' => $this->isFirst,
-            'isLast' => $this->isLast,
-            'description' => $this->description,
-            'sequenceId' => $this->sequence->getId(),
-            'questions' => $this->stepQuestions//count($this->stepQuestions) > 0 ? $this->stepQuestions : array()
+            'id'                => $this->id,
+            'position'          => $this->position,
+            'shuffle'           => $this->shuffle,
+            'isFirst'           => $this->isFirst,
+            'isLast'            => $this->isLast,
+            'isContentStep'     => $this->isContentStep,
+            'description'       => $this->description,
+            'sequenceId'        => $this->sequence->getId(),
+            'questions'         => $this->stepQuestions
         );
     }
 

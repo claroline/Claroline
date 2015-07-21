@@ -62,6 +62,7 @@ class StepManager {
             $stepEntity->setPosition($step['position']);
             $stepEntity->setDescription($step['description']);
             $stepEntity->setShuffle(isset($step['shuffle']) ? $step['shuffle'] : false);
+            $stepEntity->setIsContentStep(isset($step['isContentStep']) ? $step['isContentStep'] : false);
             $this->em->persist($stepEntity);
             $this->em->flush();
 

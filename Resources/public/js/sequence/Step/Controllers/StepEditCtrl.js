@@ -50,7 +50,7 @@
 
             // Step constructor
             var my = this;
-            var Step = function () {
+            var Step = function (isContentStep) {
                 var ujm_step = {
                     description: '<h1>New step default description</h1>',
                     position: my.steps.length,
@@ -58,14 +58,15 @@
                     sequenceId: my.steps[0].sequenceId,
                     isLast: false,
                     isFirst: false,
+                    isContentStep: isContentStep,
                     questions: []
                 };
                 return ujm_step;
             };
 
-            this.addStep = function () {
+            this.addStep = function (isContentStep) {
                 // create a new step
-                var step = new Step();
+                var step = new Step(isContentStep);
                 // update last step position
                 var last = this.steps[this.steps.length - 1];
                 last.position = step.position + 1;

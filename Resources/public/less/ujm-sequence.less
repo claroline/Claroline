@@ -29,6 +29,10 @@
             li.step-list-item.active{
                 background-color: rgba(66, 139, 202, 1);
             }
+            li.step-list-item.content-step{
+                border-radius: 0px;
+                border: 1px solid #F89406;
+            }
             .placeholder {
                 display: inline-block;
                 border: 1px dotted #aaa;
@@ -40,6 +44,29 @@
                 border-radius: 5px;
                 background-color: rgba(66, 139, 202, 0.2);
             }
+        }
+        .question-row {           
+            margin-bottom: 10px;
+            padding-bottom: 10px;           
+            .choice-item-col{                
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                width: 100%;
+                img{
+                    margin-left: 10px;
+                    width: 150px;
+                }
+                .score-input{
+                    width: 50px;
+                }
+                .bordered{
+                    border-bottom: 1px solid #F89406;
+                    padding-bottom: 20px;  
+                }
+            }
+        }
+        .question-row.row-bordered{
+            border-bottom: 1px solid #eee;
         }
     }
 }

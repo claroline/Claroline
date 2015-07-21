@@ -12,7 +12,8 @@
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/choice.question.html',
                 scope: {
                     step: '=',
-                    question: '='
+                    question: '=',
+                    selfRemove:"&"
                 },
                 link: function (scope, element, attr, choiceQuestionCtrl) {
                     console.log('choiceQuestion directive link method called');

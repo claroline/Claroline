@@ -2,14 +2,12 @@
     'use strict';
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
-        function () {
+        '$scope',        
+        function ($scope) {
             this.question = {};
-            /**
-             * test
-             */
-            this.test = function () {
-                console.log('test');
-            };
+            
+            this.isCollapsed = false;
+            
 
             this.setQuestion = function (question) {
                 this.question = question;
