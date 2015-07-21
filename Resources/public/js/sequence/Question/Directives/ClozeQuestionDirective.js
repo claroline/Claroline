@@ -12,10 +12,12 @@
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/cloze.question.html',
                 scope: {
                     step: '=',
-                    question: '='
+                    question: '=',
+                    selfRemove:"&"
                 },
                 link: function (scope, element, attr, clozeQuestionCtrl) {
                     console.log('clozeQuestion directive link method called');
+                    clozeQuestionCtrl.setQuestion(scope.question);
                 }
             };
         }

@@ -180,8 +180,9 @@
                 }.bind(this));
             };
             
-            this.removeQuestion = function (questionId){
-                
+            this.removeQuestion = function (index){
+                this.steps[this.currentStepIndex].questions.splice(index, 1);
+                $('.tooltip').hide();
             };
         }
     ]);

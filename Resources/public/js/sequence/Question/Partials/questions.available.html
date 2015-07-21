@@ -5,7 +5,13 @@
 <div class="modal-body"> 
     <div class="list-group">
         <a href="" class="list-group-item" data-ng-repeat="question in questionCtrl.questions" data-ng-click="questionCtrl.select(question)">
-            {{ question.title }} / {{ question.type }}
+            {{ question.title }} / 
+            <span data-ng-switch="question.type">
+                <psan data-ng-switch-when="application/x.choice+json">Choice question</psan>
+                <psan data-ng-switch-when="application/x.cloze+json">Cloze question</psan>
+                <psan data-ng-switch-when="application/x.match+json">Match question</psan>
+                <psan data-ng-switch-when="application/x.sort+json">Sort question</psan>
+            </span>
         </a>
     </div>
 </div>

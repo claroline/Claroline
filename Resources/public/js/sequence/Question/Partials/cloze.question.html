@@ -1,21 +1,90 @@
-<div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <h3>Cloze question</h3>
+<div class="panel panel-primary">
+    <div class="panel-heading clearfix">
+        <h5 class="panel-title pull-left">{{question.title}}</h5>
+        <div class="btn-group pull-right">
+            <button type="button" role="button" class="btn btn-default fa" data-toggle="tooltip" data-container="body" data-ng-class="{' fa-arrow-circle-down':clozeQuestionCtrl.isCollapsed, ' fa-arrow-circle-up':!clozeQuestionCtrl.isCollapsed}" data-ng-click="clozeQuestionCtrl.isCollapsed = !clozeQuestionCtrl.isCollapsed" title="{{ 'question_panel_hide'|trans:{}:'ujm_sequence' }}"></button>
+            <button type="button" role="button" class="btn btn-danger fa fa-trash" data-toggle="tooltip" data-container="body" data-ng-click="selfRemove()" title="{{ 'question_remove'|trans:{}:'ujm_sequence' }}"></button>
         </div>
     </div>
-    <hr/>
-    <div class="row">
-        <div class="col-md-12">
-            {{step.description}}
+    <div class="panel-body" ng-hide="clozeQuestionCtrl.isCollapsed">
+        <div class="form-inline question-row row-bordered">          
+            <div class="checkbox">                
+                <label>
+                    <input type="checkbox" data-ng-model="question.multiple">  {{ 'question_allow_multiple_choice'|trans:{}:'ujm_sequence' }}
+                </label>
+            </div>           
+            <div class="checkbox">                
+                <label>
+                    <input type="checkbox" data-ng-model="question.random"> {{ 'question_randomize_choices'|trans:{}:'ujm_sequence' }}
+                </label>
+            </div>
+        </div>
+        <div data-ng-if="question.meta" class="form-inline question-row row-bordered"> 
+            <span data-ng-repeat="(metaKey, metaValue) in question.meta">
+                <!-- meta authors -->
+                <span data-ng-if="metaKey === 'authors'">
+                    <strong>{{ 'question_authors'|trans:{}:'ujm_sequence' }}:</strong>
+                    <span data-ng-repeat="author in metaValue">                            
+                        <span data-ng-if="author.name"> {{ 'meta_author_name'|trans:{}:'ujm_sequence' }}: {{author.name}}</span>
+                        <span data-ng-if="author.status"> {{ 'meta_author_status'|trans:{}:'ujm_sequence' }}: {{author.status}}</span>
+                        <span data-ng-if="author.email"> {{ 'meta_author_mail'|trans:{}:'ujm_sequence' }}: {{author.email}}</span>
+                        <span data-ng-if="!$last"> - </span>
+                    </span>
+                    <span data-ng-if="!$last"> | </span>
+                </span>
+                <span data-ng-if="metaKey === 'licence'"><strong>{{ 'meta_licence'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'created'"><strong>{{ 'meta_created'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'modified'"><strong>{{ 'meta_updated'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}} <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'description'"><strong>{{ 'meta_description'|trans:{}:'ujm_sequence' }} :</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+            </span>
+        </div>       
+        <div data-ng-if="question.hints" class="form-inline question-row row-bordered">
+            <div class="form-group">
+                <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
+                <span data-ng-repeat="hint in question.hints">
+                    {{hint.text}} / {{hint.penalty}}
+                    <span data-ng-if="!$last"> | </span>
+                </span>                
+            </div>
+        </div>
+        <div data-ng-if="question.objects" class="form-inline question-row row-bordered">
+            <div class="form-group">
+                <label>{{ 'question_objects'|trans:{}:'ujm_sequence' }}:</label>
+                <div data-ng-repeat="object in question.objects">
+                    <div data-ng-if="object.type === 'text/html'" ng-bind-html="object.data">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="question.resources" class="form-inline question-row row-bordered">
+            <div class="form-group">
+                <label>{{ 'question_resources'|trans:{}:'ujm_sequence' }}:</label>
+                <div data-ng-repeat="resource in question.resources">
+                    {{resource}}
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="question.choices" class="question-row">
+            <label><strong>{{ 'question_choices'|trans:{}:'ujm_sequence' }}:</strong></label>
+            <div class="form-inline choice-item-col" data-ng-repeat="choice in question.choices">
+                <div data-ng-class="{'bordered' : !$last}">
+                    <div class="form-group">
+                        <div class="checkbox">                
+                            <label>                            
+                                <input data-ng-if="question.multiple" data-ng-checked="choice.isValid" disabled name="multiple-choice" type="checkbox">
+                                <input data-ng-if="!question.multiple" data-ng-checked="choice.isValid" disabled name="unique-choice" type="radio">
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img data-ng-if="choice.type == 'image/png'" src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
+                    </div>
+                    <div class="form-group"> 
+                        <label>{{ 'question_choice_score'|trans:{}:'ujm_sequence' }}:</label>
+                        <input type="text" data-ng-model="choice.score" class="form-control score-input">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <hr/>
-    <div class="row">
-        <div class="col-md-12">
-            {{question.title}}
-        </div>
-    </div>
-
 </div>

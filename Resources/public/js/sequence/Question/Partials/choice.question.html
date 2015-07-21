@@ -19,21 +19,24 @@
                 </label>
             </div>
         </div>
-        <div data-ng-if="question.meta" class="form-inline question-row row-bordered">            
-            <div>
-                <span data-ng-repeat="(key, value) in question.meta">
-                    <span data-ng-if="key == 'authors'">
-                        <strong>{{ 'question_author'|trans:{}:'ujm_sequence' }}:</strong>
-                        <span data-ng-repeat="(key2, value2) in value">
-                            {{ value2}} <span data-ng-if="!$last"> / </span>
-                        </span>
+        <div data-ng-if="question.meta" class="form-inline question-row row-bordered"> 
+            <span data-ng-repeat="(metaKey, metaValue) in question.meta">
+                <!-- meta authors -->
+                <span data-ng-if="metaKey === 'authors'">
+                    <strong>{{ 'question_authors'|trans:{}:'ujm_sequence' }}:</strong>
+                    <span data-ng-repeat="author in metaValue">                            
+                        <span data-ng-if="author.name"> {{ 'meta_author_name'|trans:{}:'ujm_sequence' }}: {{author.name}}</span>
+                        <span data-ng-if="author.status"> {{ 'meta_author_status'|trans:{}:'ujm_sequence' }}: {{author.status}}</span>
+                        <span data-ng-if="author.email"> {{ 'meta_author_mail'|trans:{}:'ujm_sequence' }}: {{author.email}}</span>
+                        <span data-ng-if="!$last"> - </span>
                     </span>
-                    <span data-ng-if="key != 'authors'">
-                        <strong>{{key| uppercase}}</strong> : {{value}}
-                    </span>
-                    <span data-ng-if="!$last"> <strong>|</strong> </span>
+                    <span data-ng-if="!$last"> | </span>
                 </span>
-            </div>
+                <span data-ng-if="metaKey === 'licence'"><strong>{{ 'meta_licence'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'created'"><strong>{{ 'meta_created'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'modified'"><strong>{{ 'meta_updated'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}} <span data-ng-if="!$last"> | </span></span>
+                <span data-ng-if="metaKey === 'description'"><strong>{{ 'meta_description'|trans:{}:'ujm_sequence' }} :</strong> {{metaValue}}  <span data-ng-if="!$last"> | </span></span>
+            </span>
         </div>        
         <div data-ng-if="question.hints" class="form-inline question-row row-bordered">
             <div class="form-group">

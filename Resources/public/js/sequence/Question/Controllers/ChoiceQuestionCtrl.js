@@ -2,8 +2,7 @@
     'use strict';
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
-        '$scope',        
-        function ($scope) {
+        function () {
             this.question = {};
             
             this.isCollapsed = false;

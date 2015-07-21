@@ -56,19 +56,19 @@
                 <hr/>
 
                 <!-- display new and existing questions for the step-->               
-                <div data-ng-repeat="question in stepEditCtrl.steps[stepEditCtrl.currentStepIndex].questions">
+                <div class="step-questions-container" data-ng-repeat="question in stepEditCtrl.steps[stepEditCtrl.currentStepIndex].questions">
                     <div ng-switch="question.type">
                         <div data-ng-switch-when="application/x.choice+json">
-                            <choice-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.steps[stepEditCtrl.currentStepIndex].questions.splice($index,1)" data-question="question"></choice-question>
+                            <choice-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.removeQuestion($index)" data-question="question"></choice-question>
                         </div>
                         <div data-ng-switch-when="application/x.match+json">
-                            <match-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" data-question="question"></match-question>
+                            <match-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.removeQuestion($index)" data-question="question"></match-question>
                         </div>
                         <div data-ng-switch-when="application/x.sort+json">
-                            <sort-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" data-question="question"></sort-question>
+                            <sort-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.removeQuestion($index)" data-question="question"></sort-question>
                         </div>
                         <div data-ng-switch-when="application/x.cloze+json">
-                            <cloze-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" data-question="question"></cloze-question>
+                            <cloze-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.removeQuestion($index)" data-question="question"></cloze-question>
                         </div>                        
                     </div>
                 </div>

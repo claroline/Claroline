@@ -2,7 +2,7 @@
     'use strict';
 
     // exercise player module
-    angular.module('SequenceViewApp', [
+    angular.module('SequencePlayerApp', [
         'ngSanitize',
         'ui.bootstrap',
         'ui.tinymce',

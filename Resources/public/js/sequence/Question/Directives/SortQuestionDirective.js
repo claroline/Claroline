@@ -12,10 +12,12 @@
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/sort.question.html',
                 scope: {
                     step: '=',
-                    question: '='
+                    question: '=',
+                    selfRemove:"&"
                 },
                 link: function (scope, element, attr, sortQuestionCtrl) {
                     console.log('sortQuestion directive link method called');
+                    sortQuestionCtrl.setQuestion(scope.question);
                 }
             };
         }

@@ -89,11 +89,13 @@ class StepController extends Controller {
             "type" => "application/x.choice+json",
             "meta" => array(
                 "authors" => array(
-                    "name" => "John Doe", "status" => "Tutor"
-                )
-                ,
+                    array("name" => "John Doe", "status" => "Tutor", "mail" => "john.doe@fake.com"),
+                    array("name" => "Jane Doe", "status" => "Professor", "mail" => "jane.doe@fake.com")
+                    
+                ),
                 "license" => "CC",
-                "created" => "2014-06-23"
+                "created" => "2014-06-23",
+                "modified" => "2014-08-23"
             ),
             "objects" => array(
                 array(

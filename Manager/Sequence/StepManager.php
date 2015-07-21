@@ -69,6 +69,7 @@ class StepManager {
 
             // handle step questions
             if (!empty($step['questions'])) {
+                // print_r($step['questions']);die;
                 // since the question used are fake ones we can not persist the relation yet
                 // $this->handleStepQuestions($stepEntity, $step['questions']);
             }

@@ -23,8 +23,7 @@ sequence_step_add_question: Add question
 step_question_shuffle: Shuffle question order for this step
 
 # q
-
-question_author: Author
+question_authors: Author(s)
 question_hints: Hints
 question_objects: Objects
 question_global_feedback: Global feedback
@@ -35,3 +34,12 @@ question_allow_multiple_choice: Allow multiple choice
 question_randomize_choices: Shuffle choices order
 question_panel_hide: Hide / Show question details
 question_remove: Remove question
+
+# m
+meta_author_name: Name
+meta_author_status: Status
+meta_author_mail: Email
+meta_created: Created
+meta_updated: Modified
+meta_licence: Licence
+meta_description: Description

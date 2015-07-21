@@ -4,11 +4,17 @@
     angular.module('Question').controller('SortQuestionCtrl', [          
         function () {
             
-            /**
-             * test
-             */
-            this.test = function () {
-                console.log('test');
+            this.question = {};
+            
+            this.isCollapsed = false;
+            
+
+            this.setQuestion = function (question) {
+                this.question = question;
+            };
+
+            this.getQuestion = function () {
+                return this.question;
             };
         }
     ]);
