@@ -6,7 +6,9 @@
     {% else %}
         <strong>{{ systemName }}</strong>
     {% endif %}
-    grdsg
-    {{ 'resource-claroline_forum-create_message'|trans({'%forum%': notification.details.forum.name}, 'notification')|raw }}
 
+    {% if notification.details is defined and notification.details.forum.name is defined %}
+        {% set url = path('claro_forum_messages', {'subject': notification.details.subject.id}) %}
+        {{ 'resource-claroline_forum-create_message'|trans({'%forum%': notification.details.forum.name, '%url%': url}, 'notification')|raw }}
+    {% endif %}
 {% endblock %}

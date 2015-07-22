@@ -114,7 +114,8 @@ class CreateMessageEvent extends AbstractLogResourceEvent implements NotifiableI
     public function getNotificationDetails()
     {
         $details = $this->details;
-        $details['forum']['name'] = $message->getSubject()->getCategory()->getForum()
+        $details['forum']['name'] = $this->message->getSubject()->getCategory()->getForum()->getResourceNode()->getName();
 
+        return $details;
     }
 }

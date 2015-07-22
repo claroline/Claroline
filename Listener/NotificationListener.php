@@ -36,15 +36,13 @@ class NotificationListener extends ContainerAware
         $notificationView = $event->getNotificationView();
         $notification = $notificationView->getNotification();
         $content = $this->templating->render(
-            'ClarolineForumBundle:Notification:notification_item.html.twig',
+            'ClarolineForumBundle:Notification:notification.html.twig',
             array(
                 'notification'  => $notification,
                 'status'        => $notificationView->getStatus(),
                 'systemName'    => $event->getSystemName()
             )
         );
-        var_dump($content);
-
         $event->setResponseContent($content);
         $event->stopPropagation();
     }

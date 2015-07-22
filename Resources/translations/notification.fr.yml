@@ -1,2 +1,2 @@
 forum: Forum
-resource-claroline_forum-create_message: Un nouveau message a été posté dans le forum <a href="#"> %forum% </a>
+resource-claroline_forum-create_message: Un nouveau message a été posté dans le forum <a href="%url%"> %forum% </a>
