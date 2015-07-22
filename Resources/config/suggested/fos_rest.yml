@@ -9,8 +9,6 @@ fos_rest:
         formats:
             json: true
             xml: true
-        templating_formats:
-            html: false
     format_listener:
         rules:
             priorities: ['json']
