@@ -9,6 +9,7 @@ _Returns the groups list_
   - Requirement: json|xml
 
 
+
 ### `POST` /api/groups.{_format} ###
 
 _Create a group_
@@ -18,6 +19,7 @@ _Create a group_
 **_format**
 
   - Requirement: json|xml
+
 
 #### Parameters ####
 
@@ -42,6 +44,7 @@ _Returns a group_
 **_format**
 
   - Requirement: json|xml
+
 **group**
 
 
@@ -55,6 +58,7 @@ _Update a group_
 **_format**
 
   - Requirement: json|xml
+
 **group**
 
 
@@ -81,6 +85,7 @@ _Removes a group_
 **_format**
 
   - Requirement: json|xml
+
 **group**
 
 
@@ -94,6 +99,7 @@ _Add a role to a group_
 **_format**
 
   - Requirement: json|xml
+
 **group**
 
 **role**
@@ -109,6 +115,7 @@ _Remove a role from a group_
 **_format**
 
   - Requirement: json|xml
+
 **group**
 
 **role**

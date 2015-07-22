@@ -9,6 +9,7 @@ _Returns the users list_
   - Requirement: json|xml
 
 
+
 ### `POST` /api/users.{_format} ###
 
 _Creates a user_
@@ -18,6 +19,7 @@ _Creates a user_
 **_format**
 
   - Requirement: json|xml
+
 
 #### Parameters ####
 
@@ -107,6 +109,7 @@ _Returns a user_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 
@@ -120,6 +123,7 @@ _Update a user_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 
@@ -206,6 +210,7 @@ _Add a user in a group_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 **group**
@@ -221,6 +226,7 @@ _Remove a user from a group_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 **group**
@@ -236,6 +242,7 @@ _Add a role to a user_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 **role**
@@ -251,6 +258,7 @@ _remove a role from a user_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 **role**

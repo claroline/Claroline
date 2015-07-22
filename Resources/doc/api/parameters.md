@@ -8,6 +8,7 @@ _Update/Add a parameters in the platform_options.yml file_
 
   - Requirement: json|xml
 
+
 #### Parameters ####
 
 parameter_name:

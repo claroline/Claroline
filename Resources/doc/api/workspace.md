@@ -9,6 +9,7 @@ _Returns the workspaces list_
   - Requirement: json|xml
 
 
+
 ### `POST` /api/workspaces/{user}/users.{_format} ###
 
 _Create a workspace_
@@ -18,6 +19,7 @@ _Create a workspace_
 **_format**
 
   - Requirement: json|xml
+
 **user**
 
 
@@ -104,6 +106,7 @@ _Returns a workspace_
 **_format**
 
   - Requirement: json|xml
+
 **workspace**
 
 
@@ -117,6 +120,7 @@ _Removes a workspace_
 **_format**
 
   - Requirement: json|xml
+
 **workspace**
 
 
@@ -130,6 +134,7 @@ _Update a workspace_
 **_format**
 
   - Requirement: json|xml
+
 **workspace**
 
 **user**
