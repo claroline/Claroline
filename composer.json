@@ -49,7 +49,7 @@
         "mrclay/minify": "~2.2",
         "natxet/CssMin": "3.0.2",
         "werkint/jsmin": "1.0.0",
-        "nelmio/api-doc-bundle": "~2.7",
+        "nelmio/api-doc-bundle": "dev-master",
         "claroline/bundle-recorder": "~5.0",
         "claroline/kernel-bundle": "~5.0",
         "claroline/installation-bundle": "~5.0",

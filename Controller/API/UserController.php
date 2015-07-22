@@ -29,6 +29,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class UserController extends FOSRestController
 {
@@ -73,6 +74,11 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     decription="Returns the users list",
+     *     section="user",
+     *     views = {"api"}
+     * )
      */
     public function getUsersAction()
     {

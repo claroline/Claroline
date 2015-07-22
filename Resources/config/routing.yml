@@ -301,7 +301,6 @@ claro_parameters_api:
     type: rest
     prefix: api
 
-
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
     prefix: contact
