@@ -55,8 +55,8 @@
                 </div>
             {% endif %}
         {% endif %}
+        <br>
     {% endif %}
-    <br>
 
     {% if unfinishedInterventions|length > 0 %}
         <div class="table-responsive">
@@ -85,8 +85,8 @@
             </table>
         </div>
     {% endif %}
-    <br>
     
+    <br>
     {% if hasOngoingIntervention %}
         {% set ongoingStartDate = ongoingIntervention.getStartDate() %}
         {% set ongoingIntervenant = ongoingIntervention.getUser() %}
@@ -99,7 +99,6 @@
             <i class="fa fa-clock-o"></i>
             <span id="ongoing-intervention-timer"></span>
         </div>
-        <br>
         <button class="btn btn-danger"
                 id="stop-ongoing-intervention-btn"
                 data-intervention-id="{{ ongoingIntervention.getId() }}"
