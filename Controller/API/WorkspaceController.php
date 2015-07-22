@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class WorkspaceController extends FOSRestController
 {
@@ -57,6 +58,10 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the workspaces list",
+     *     views = {"workspace"}
+     * )
      */
     public function getWorkspacesAction()
     {
@@ -65,6 +70,10 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns a workspace",
+     *     views = {"workspace"}
+     * )
      */
     public function getWorkspaceAction(Workspace $workspace)
     {
@@ -73,7 +82,11 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * group_form[workspace_form] for the put request
+     * @ApiDoc(
+     *     description="Create a workspace",
+     *     views = {"workspace"},
+     *     input="Claroline\CoreBundle\Form\WorkspaceType"
+     * )
      */
     public function postWorkspaceUserAction(User $user)
     {
@@ -110,6 +123,10 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Removes a workspace",
+     *     views = {"workspace"}
+     * )
      */
     public function deleteWorkspaceAction(Workspace $workspace)
     {
@@ -120,7 +137,11 @@ class WorkspaceController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * group_form[workspace_form] for the put request
+     * @ApiDoc(
+     *     description="Update a workspace",
+     *     views = {"workspace"},
+     *     input="Claroline\CoreBundle\Form\WorkspaceType"
+     * )
      */
     public function putWorkspaceUserAction(Workspace $workspace, User $user)
     {

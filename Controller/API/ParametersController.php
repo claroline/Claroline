@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class ParametersController extends FOSRestController
 {
@@ -35,6 +36,13 @@ class ParametersController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Update/Add a parameters in the platform_options.yml file",
+     *     views = {"parameters"},
+     *     parameters={
+     *          {"name"="parameter_name", "dataType"="any", "required"=true ,"description"="The parameter_name is the parameter you want to change"}
+     *     }
+     * )
      */
     public function postParametersAction()
     {

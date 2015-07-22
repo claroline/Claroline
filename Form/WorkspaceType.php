@@ -32,6 +32,9 @@ class WorkspaceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $this->user;
+        if (php_sapi_name() === 'cli') {
+            $this->forApi = true;
+        }
 
         $builder
             ->add(

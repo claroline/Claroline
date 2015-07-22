@@ -75,9 +75,8 @@ class UserController extends FOSRestController
     /**
      * @View(serializerGroups={"api"})
      * @ApiDoc(
-     *     decription="Returns the users list",
-     *     section="user",
-     *     views = {"api"}
+     *     description="Returns the users list",
+     *     views = {"user"}
      * )
      */
     public function getUsersAction()
@@ -87,8 +86,11 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * profile_form_creation[fieldname] for the put request
-     * profile_form_creation[platformRoles][] // for the list of roles
+     * @ApiDoc(
+     *     description="Creates a user",
+     *     views = {"user"},
+     *     input="Claroline\CoreBundle\Form\ProfileCreationType"
+     * )
      */
     public function postUserAction()
     {
@@ -119,8 +121,11 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * profile_form[fieldname] for the put request
-     * profile_form[platformRoles][] // for the list of roles
+     * @ApiDoc(
+     *     description="Update a user",
+     *     views = {"user"},
+     *     input="Claroline\CoreBundle\Form\ProfileType"
+     * )
      */
     public function putUserAction(User $user)
     {
@@ -163,6 +168,10 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns a user",
+     *     views = {"user"}
+     * )
      */
     public function getUserAction(User $user)
     {
@@ -171,6 +180,11 @@ class UserController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Removes a user",
+     *     section="user",
+     *     views = {"api"}
+     * )
      */
     public function deleteUserAction(User $user)
     {
@@ -181,6 +195,10 @@ class UserController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Add a role to a user",
+     *     views = {"user"}
+     * )
      */
     public function addUserRoleAction(User $user, Role $role)
     {
@@ -191,6 +209,10 @@ class UserController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="remove a role from a user",
+     *     views = {"user"}
+     * )
      */
     public function removeUserRoleAction(User $user, Role $role)
     {
@@ -201,6 +223,10 @@ class UserController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Add a user in a group",
+     *     views = {"user"}
+     * )
      */
     public function addUserGroupAction(User $user, Group $group)
     {
@@ -211,6 +237,10 @@ class UserController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Remove a user from a group",
+     *     views = {"user"}
+     * )
      */
     public function removeUserGroupAction(User $user, Group $group)
     {

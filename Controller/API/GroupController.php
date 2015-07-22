@@ -23,6 +23,7 @@ use Claroline\CoreBundle\Form\GroupType;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Role;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class GroupController extends FOSRestController
 {
@@ -53,6 +54,10 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the groups list",
+     *     views = {"group"}
+     * )
      */
     public function getGroupsAction()
     {
@@ -61,6 +66,10 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns a group",
+     *     views = {"group"}
+     * )
      */
     public function getGroupAction(Group $group)
     {
@@ -69,7 +78,11 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * group_form[fieldname] for the put request
+     * @ApiDoc(
+     *     description="Create a group",
+     *     views = {"group"},
+     *     input="Claroline\CoreBundle\Form\GroupType"
+     * )
      */
     public function postGroupAction()
     {
@@ -93,7 +106,11 @@ class GroupController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api"})
-     * group_form[fieldname] for the put request
+     * @ApiDoc(
+     *     description="Update a group",
+     *     views = {"group"},
+     *     input="Claroline\CoreBundle\Form\GroupType"
+     * )
      */
     public function putGroupAction(Group $group)
     {
@@ -116,6 +133,10 @@ class GroupController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Removes a group",
+     *     views = {"group"},
+     * )
      */
     public function deleteGroupAction(Group $group)
     {
@@ -126,6 +147,10 @@ class GroupController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Add a role to a group",
+     *     views = {"group"}
+     * )
      */
     public function addGroupRoleAction(Group $group, Role $role)
     {
@@ -136,6 +161,10 @@ class GroupController extends FOSRestController
 
     /**
      * @View()
+     * @ApiDoc(
+     *     description="Remove a role from a group",
+     *     views = {"group"}
+     * )
      */
     public function removeGroupRoleAction(Group $group, Role $role)
     {

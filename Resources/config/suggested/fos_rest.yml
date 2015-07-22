@@ -6,6 +6,11 @@ fos_rest:
     format_listener: true
     view:
         view_response_listener: 'force'
+        formats:
+            json: true
+            xml: true
+        templating_formats:
+            html: false
     format_listener:
         rules:
             priorities: ['json']
