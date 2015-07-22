@@ -4,10 +4,9 @@ _Returns the workspaces list_
 
 #### Requirements ####
 
+
 **_format**
-
   - Requirement: json|xml
-
 
 
 ### `POST` /api/workspaces/{user}/users.{_format} ###
@@ -16,12 +15,11 @@ _Create a workspace_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
-
 
 #### Parameters ####
 
@@ -103,12 +101,11 @@ _Returns a workspace_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **workspace**
-
 
 
 ### `DELETE` /api/workspaces/{workspace}.{_format} ###
@@ -117,12 +114,11 @@ _Removes a workspace_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **workspace**
-
 
 
 ### `PUT` /api/workspaces/{workspace}/users/{user}.{_format} ###
@@ -131,14 +127,13 @@ _Update a workspace_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **workspace**
 
 **user**
-
 
 #### Parameters ####
 

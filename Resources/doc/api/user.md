@@ -4,10 +4,9 @@ _Returns the users list_
 
 #### Requirements ####
 
+
 **_format**
-
   - Requirement: json|xml
-
 
 
 ### `POST` /api/users.{_format} ###
@@ -16,10 +15,9 @@ _Creates a user_
 
 #### Requirements ####
 
+
 **_format**
-
   - Requirement: json|xml
-
 
 #### Parameters ####
 
@@ -106,12 +104,11 @@ _Returns a user_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
-
 
 
 ### `PUT` /api/users/{user}.{_format} ###
@@ -120,12 +117,11 @@ _Update a user_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
-
 
 #### Parameters ####
 
@@ -207,14 +203,13 @@ _Add a user in a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
 
 **group**
-
 
 
 ### `GET` /api/users/{user}/groups/{group}/remove.{_format} ###
@@ -223,14 +218,13 @@ _Remove a user from a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
 
 **group**
-
 
 
 ### `PATCH` /api/users/{user}/roles/{role}/add.{_format} ###
@@ -239,14 +233,13 @@ _Add a role to a user_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**
 
 **role**
-
 
 
 ### `GET` /api/users/{user}/roles/{role}/remove.{_format} ###
@@ -255,8 +248,8 @@ _remove a role from a user_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **user**

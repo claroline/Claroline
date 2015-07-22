@@ -4,10 +4,9 @@ _Returns the groups list_
 
 #### Requirements ####
 
+
 **_format**
-
   - Requirement: json|xml
-
 
 
 ### `POST` /api/groups.{_format} ###
@@ -16,10 +15,9 @@ _Create a group_
 
 #### Requirements ####
 
+
 **_format**
-
   - Requirement: json|xml
-
 
 #### Parameters ####
 
@@ -41,12 +39,11 @@ _Returns a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **group**
-
 
 
 ### `PUT` /api/groups/{group}.{_format} ###
@@ -55,12 +52,11 @@ _Update a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **group**
-
 
 #### Parameters ####
 
@@ -82,12 +78,11 @@ _Removes a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **group**
-
 
 
 ### `PATCH` /api/groups/{group}/roles/{role}/add.{_format} ###
@@ -96,14 +91,13 @@ _Add a role to a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **group**
 
 **role**
-
 
 
 ### `GET` /api/groups/{group}/roles/{role}/remove.{_format} ###
@@ -112,8 +106,8 @@ _Remove a role from a group_
 
 #### Requirements ####
 
-**_format**
 
+**_format**
   - Requirement: json|xml
 
 **group**
