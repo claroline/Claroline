@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="formalibre_support_intervention")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="FormaLibre\SupportBundle\Repository\InterventionRepository")
  */
 class Intervention
 {

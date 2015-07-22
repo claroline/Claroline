@@ -47,6 +47,10 @@
         </h3>
     </div>
     <div class="panel-body">
+        
+        {% render(controller('FormaLibreSupportBundle:AdminSupport:adminTicketLatestInterventionInfo', {'ticket': ticket.getId()})) %}
+        <br>
+        
         <ul class="nav nav-tabs">
             <li role="presentation">
                 <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticket.getId()}) }}">
@@ -112,7 +116,7 @@
                                     {% if duration is not empty %}
                                         <br>
                                         <i class="fa fa-clock-o"></i>
-                                        {{ duration }} min
+                                        {{ duration }} {{ 'minute_short'|trans({}, 'support') }}
                                     {% endif %}
                                 </td>
                                 <td>

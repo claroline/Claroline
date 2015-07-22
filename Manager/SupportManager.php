@@ -20,6 +20,7 @@ class SupportManager
     private $om;
     private $pagerFactory;
 
+    private $interventionRepo;
     private $statusRepo;
     private $ticketRepo;
     private $typeRepo;
@@ -34,6 +35,7 @@ class SupportManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->interventionRepo = $om->getRepository('FormaLibreSupportBundle:Intervention');
         $this->statusRepo = $om->getRepository('FormaLibreSupportBundle:Status');
         $this->ticketRepo = $om->getRepository('FormaLibreSupportBundle:Ticket');
         $this->typeRepo = $om->getRepository('FormaLibreSupportBundle:Type');
@@ -361,5 +363,23 @@ class SupportManager
     public function getOrderOfLastStatus()
     {
         return $this->statusRepo->findOrderOfLastStatus();
+    }
+
+
+    /********************************************
+     * Access to InterventionRepository methods *
+     ********************************************/
+
+    public function getUnfinishedInterventionByTicket(
+        Ticket $ticket,
+        $orderedBy = 'startDate',
+        $order = 'ASC'
+    )
+    {
+        return $this->interventionRepo->findUnfinishedInterventionByTicket(
+            $ticket,
+            $orderedBy,
+            $order
+        );
     }
 }

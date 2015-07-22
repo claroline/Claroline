@@ -48,6 +48,10 @@
         </h3>
     </div>
     <div class="panel-body">
+        
+        {% render(controller('FormaLibreSupportBundle:AdminSupport:adminTicketLatestInterventionInfo', {'ticket': ticket.getId()})) %}
+        <br>
+        
         <ul class="nav nav-tabs">
             <li role="presentation" class="active">
                 <a href="#">

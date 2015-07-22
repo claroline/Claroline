@@ -10,6 +10,7 @@ use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
+use FormaLibre\SupportBundle\Form\InterventionStatusType;
 use FormaLibre\SupportBundle\Form\InterventionType;
 use FormaLibre\SupportBundle\Form\StatusType;
 use FormaLibre\SupportBundle\Form\TypeType;
@@ -507,6 +508,97 @@ class AdminSupportController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/admin/ticket/{ticket}/latest/intervention/info",
+     *     name="formalibre_admin_ticket_latest_intervention_info",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTicketLatestInterventionInfoAction(
+        User $authenticatedUser,
+        Ticket $ticket
+    )
+    {
+        $interventions = $ticket->getInterventions();
+        $lastIntervention = null;
+        $nbInterventions = count($interventions);
+
+        if ($nbInterventions > 0) {
+            $lastIntervention = $interventions[$nbInterventions - 1];
+        }
+
+        $unfinishedInterventions = $this->supportManager->getUnfinishedInterventionByTicket($ticket);
+        $hasOngoingIntervention = false;
+        $ongoingIntervention = null;
+        $otherUnfinishedInterventions = array();
+
+        foreach ($unfinishedInterventions as $unfinishedIntervention) {
+
+            if ($unfinishedIntervention->getUser() === $authenticatedUser) {
+                $hasOngoingIntervention = true;
+                $ongoingIntervention = $unfinishedIntervention;
+            } else {
+                $otherUnfinishedInterventions[] = $unfinishedIntervention;
+            }
+        }
+
+        return array(
+            'ticket' => $ticket,
+            'currentUser' => $authenticatedUser,
+            'unfinishedInterventions' => $otherUnfinishedInterventions,
+            'hasOngoingIntervention' => $hasOngoingIntervention,
+            'ongoingIntervention' => $ongoingIntervention,
+            'lastIntervention' => $lastIntervention
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/intervention/start",
+     *     name="formalibre_admin_ticket_intervention_start",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketInterventionStartAction(
+        User $authenticatedUser,
+        Ticket $ticket
+    )
+    {
+        $intervention = new Intervention();
+        $intervention->setTicket($ticket);
+        $intervention->setUser($authenticatedUser);
+        $intervention->setStartDate(new \DateTime());
+        $this->supportManager->persistIntervention($intervention);
+
+        return new JsonResponse(array('id' => $intervention->getId()), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/stop",
+     *     name="formalibre_admin_ticket_intervention_stop",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTicketInterventionStopAction(Intervention $intervention)
+    {
+        $endDate = new \DateTime();
+        $startDate = $intervention->getStartDate();
+        $startDateTimestamp = $startDate->format('U');
+        $endDateTimestamp = $endDate->format('U');
+        $duration = ceil(($endDateTimestamp - $startDateTimestamp) / 60);
+        $intervention->setEndDate($endDate);
+        $intervention->setDuration($duration);
+        $this->supportManager->persistIntervention($intervention);
+
+        return new JsonResponse(array('id' => $intervention->getId()), 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/admin/ticket/{ticket}/comment/create/form",
      *     name="formalibre_admin_ticket_comment_create_form",
      *     options={"expose"=true}
@@ -820,6 +912,52 @@ class AdminSupportController extends Controller
         $this->supportManager->deleteIntervention($intervention);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/status/edit/form",
+     *     name="formalibre_admin_intervention_status_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminInterventionStatusEditModalForm.html.twig")
+     */
+    public function adminInterventionStatusEditFormAction(Intervention $intervention)
+    {
+        $form = $this->formFactory->create(
+            new InterventionStatusType(),
+            $intervention
+        );
+
+        return array('form' => $form->createView(), 'intervention' => $intervention);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/intervention/{intervention}/status/edit",
+     *     name="formalibre_admin_intervention_status_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminInterventionStatusEditModalForm.html.twig")
+     */
+    public function adminInterventionStatusEditAction(Intervention $intervention)
+    {
+        $form = $this->formFactory->create(
+            new InterventionStatusType(),
+            $intervention
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistIntervention($intervention);
+
+            return new JsonResponse($intervention->getId(), 200);
+        } else {
+
+            return array('form' => $form->createView(), 'intervention' => $intervention);
+        }
     }
 
     /**
