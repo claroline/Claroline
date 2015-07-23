@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('Question').directive('clozeQuestion', [
+    angular.module('Question').directive('clozeQuestion', [        
         function () {
             return {
                 restrict: 'E',
@@ -18,6 +18,7 @@
                 link: function (scope, element, attr, clozeQuestionCtrl) {
                     console.log('clozeQuestion directive link method called');
                     clozeQuestionCtrl.setQuestion(scope.question);
+                    clozeQuestionCtrl.setQuestionText(scope.question.text);
                 }
             };
         }

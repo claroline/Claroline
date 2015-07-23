@@ -12,5 +12,10 @@
         'Step',
         'Sequence',
         'Question'
-    ]);
+    ])
+    .filter(
+    'unsafe', 
+    function($sce) { 
+        return $sce.trustAsHtml; 
+    });
 })();

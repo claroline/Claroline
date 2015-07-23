@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="panel-body">       
-            <!-- Pages list row -->
+            <!-- Step list row -->
             <div class="row center-text">
                 <div class="col-md-1">
                     <button type="button" role="button" class="btn btn-default fa fa-arrow-left" data-toggle="tooltip" data-container="body" title="{{ 'sequence_step_previous'|trans:{}:'ujm_sequence' }}" data-ng-click="stepEditCtrl.getPreviousStep()"></button>
@@ -57,7 +57,7 @@
 
                 <!-- display new and existing questions for the step-->               
                 <div class="step-questions-container" data-ng-repeat="question in stepEditCtrl.steps[stepEditCtrl.currentStepIndex].questions">
-                    <div ng-switch="question.type">
+                    <div ng-switch="question.mimeType">
                         <div data-ng-switch-when="application/x.choice+json">
                             <choice-question data-step="stepEditCtrl.steps[stepEditCtrl.currentStepIndex]" self-remove="stepEditCtrl.removeQuestion($index)" data-question="question"></choice-question>
                         </div>

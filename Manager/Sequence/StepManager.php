@@ -82,12 +82,12 @@ class StepManager {
         
         $position = 1;
         foreach ($questions as $question) {
-            // Get the question entity !
+            // Get the question entity
             $questionEntity = $this->em->getRepository('UJMExoBundle:Question')->findOneBy(array('id' => $question['id']));
             // if the relation is already here get it
-            $stepQuestion = $this->em->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step));
+            $stepQuestion = $this->em->getRepository('UJMExoBundle:StepQuestion')->findOneBy(array('step' => $step, 'question' => $questionEntity));
             // else create a new StepQuestion Entity
-            if (!$stepQuestion) {
+            if (!$stepQuestion->getStep()->getId()) {
                 $stepQuestion = new \UJM\ExoBundle\Entity\Sequence\StepQuestion();
                 $stepQuestion->setStep($step);
                 $stepQuestion->setQuestion($questionEntity);

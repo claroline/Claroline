@@ -23,7 +23,6 @@ sequence_step_add_question: Ajouter une question
 step_question_shuffle: Ordre des questions aléatoire pour cette étape
 
 # q
-question_authors: Auteur(s)
 question_hints: Aides
 question_objects: Objets
 question_global_feedback: Retour global
@@ -34,8 +33,14 @@ question_allow_multiple_choice: Permettre un choix multiple
 question_randomize_choices: Ordre aléatoire des choix
 question_panel_hide: Cacher / Montrer les détails de la question
 question_remove: Enlever la question
+question_cloze_text: Texte à trous
+question_solutions: Solutions
+question_solution_answers: Réponse(s)
+question_solution_score: Score
 
 # m
+meta_authors: Author(s)
+meta_others: Others
 meta_author_name: Nom
 meta_author_status: Status
 meta_author_mail: Email
