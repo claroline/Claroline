@@ -13,6 +13,7 @@ use FormaLibre\SupportBundle\Form\CommentType;
 use FormaLibre\SupportBundle\Form\InterventionStatusType;
 use FormaLibre\SupportBundle\Form\InterventionType;
 use FormaLibre\SupportBundle\Form\StatusType;
+use FormaLibre\SupportBundle\Form\TicketTypeChangeType;
 use FormaLibre\SupportBundle\Form\TypeType;
 use FormaLibre\SupportBundle\Manager\SupportManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -595,6 +596,46 @@ class AdminSupportController extends Controller
         $this->supportManager->persistIntervention($intervention);
 
         return new JsonResponse(array('id' => $intervention->getId()), 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/type/change/form",
+     *     name="formalibre_admin_ticket_type_change_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketTypeChangeModalForm.html.twig")
+     */
+    public function adminTicketTypeChangeFormAction(Ticket $ticket)
+    {
+        $form = $this->formFactory->create(new TicketTypeChangeType($ticket), $ticket);
+
+        return array('form' => $form->createView(), 'ticket' => $ticket);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/{ticket}/type/change",
+     *     name="formalibre_admin_ticket_type_change",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketTypeChangeModalForm.html.twig")
+     */
+    public function adminTicketTypeChangeAction(Ticket $ticket)
+    {
+        $form = $this->formFactory->create(new TicketTypeChangeType($ticket), $ticket);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->supportManager->persistTicket($ticket);
+
+            return new JsonResponse($ticket->getId(), 200);
+        } else {
+
+            return array('form' => $form->createView(), 'ticket' => $ticket);
+        }
     }
 
     /**
