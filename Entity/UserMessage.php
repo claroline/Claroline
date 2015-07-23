@@ -58,6 +58,13 @@ class UserMessage
      */
     protected $isSent;
 
+        /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="last_open_date", type="datetime", nullable=true)
+     */
+    protected $lastOpenDate;
+
     public function __construct()
     {
         $this->isRead = false;
@@ -83,6 +90,8 @@ class UserMessage
     public function markAsRead()
     {
         $this->isRead = true;
+        $now = new \DateTime();
+        $this->setLastOpenDate($now);
     }
 
     public function isRemoved()
@@ -128,5 +137,15 @@ class UserMessage
     public function getUserMessages()
     {
         return $this->userMessages;
+    }
+
+    public function setLastOpenDate(\DateTime $date)
+    {
+        $this->lastOpenDate = $date;
+    }
+
+    public function getLastOpenDate()
+    {
+        return $this->lastOpenDate;
     }
 }
