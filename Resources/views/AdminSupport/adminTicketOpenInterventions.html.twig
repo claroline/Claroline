@@ -73,6 +73,11 @@
         <br>
         <br>    
         <div id="interventions-box">
+            <b>{{ 'total_time'|trans({}, 'support') }} :</b>
+            {{ totalTime }}
+            {{ 'minute_short'|trans({}, 'support') }}
+            <br>
+            <br>
             
             {% if interventions|length > 0 %}
                 <div class="table-responsive">

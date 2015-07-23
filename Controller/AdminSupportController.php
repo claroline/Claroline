@@ -504,7 +504,18 @@ class AdminSupportController extends Controller
      */
     public function adminTicketOpenInterventionsAction(Ticket $ticket)
     {
-        return array('ticket' => $ticket);
+        $totalTime = 0;
+        $interventions = $ticket->getInterventions();
+
+        foreach ($interventions as $intervention) {
+            $duration = $intervention->getDuration();
+
+            if (!is_null($duration)) {
+                $totalTime += $duration;
+            }
+        }
+
+        return array('ticket' => $ticket, 'totalTime' => $totalTime);
     }
 
     /**
