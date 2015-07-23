@@ -14,6 +14,7 @@ parameters:
     claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"
     claroline.param.templates_directory: "%claroline.param.files_directory%/templates/"
     claroline.param.default_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/template/default.zip"
+    claroline.param.personal_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/template/personal.zip"
     claroline.param.plugin_skel_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/skel"
     claroline.param.plugin_template_resource_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/resource"
     claroline.param.plugin_template_tool_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/tool"
