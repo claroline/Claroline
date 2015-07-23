@@ -34,7 +34,6 @@
         height: 100%;
         width: 100%;
         padding-top: @navbar-height;
-        /*overflow-y: hidden;*/
         background-color: #EEE;
         border: 1px solid @panel-default-border;
         border-radius: @border-radius-base;
@@ -62,7 +61,8 @@
         }
 
         .path-summary-tree {
-            overflow-y: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
             height: 100%;
             position: relative;
 
@@ -207,6 +207,11 @@
             &.link-progression-to_review {
                 color: @brand-info;
             }
+        }
+
+        .dropdown-menu-right {
+            left: auto;
+            right: 0;
         }
     }
 }
