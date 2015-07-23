@@ -50,7 +50,7 @@
         {% if tickets.getNbPages() > 1 %}
             {{ renderPager(tickets, type.getId(), search, orderedBy, order, max) }}
         {% endif %}
-        <div class="table-responsive" id="my-tickets-tab">
+        <div class="table-responsive" id="archived-tickets-tab">
             <table class="table">
                 <tr>
                     <th>
@@ -183,4 +183,16 @@
             {{ 'no_ticket'|trans({}, 'support') }}
         </div>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/formalibresupport/js/adminSupportArchives.js') }}'
+            type="text/javascript"
+    >
+    </script>
 {% endblock %}
