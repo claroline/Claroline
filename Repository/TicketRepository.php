@@ -208,6 +208,67 @@ class TicketRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findActiveTicketsByInterventionUser(
+        Type $type,
+        User $user,
+        $orderedBy = 'creationDate',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM FormaLibre\SupportBundle\Entity\Ticket t
+            JOIN t.interventions i
+            WHERE t.type = :type
+            AND t.level > 0
+            AND i.user = :user
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('user', $user);
+
+        return $query->getResult();
+    }
+
+    public function findSearchedActiveTicketsByInterventionUser(
+        Type $type,
+        User $user,
+        $search,
+        $orderedBy = 'creationDate',
+        $order = 'DESC'
+    )
+    {
+        $dql = "
+            SELECT t
+            FROM FormaLibre\SupportBundle\Entity\Ticket t
+            JOIN t.interventions i
+            JOIN t.user u
+            WHERE t.type = :type
+            AND t.level > 0
+            AND i.user = :user
+            AND (
+                UPPER(t.title) LIKE :search
+                OR UPPER(t.description) LIKE :search
+                OR UPPER(t.contactMail) LIKE :search
+                OR UPPER(t.contactPhone) LIKE :search
+                OR UPPER(u.username) LIKE :search
+                OR UPPER(u.firstName) LIKE :search
+                OR UPPER(u.lastName) LIKE :search
+                OR CONCAT(UPPER(u.firstName), CONCAT(\' \', UPPER(u.lastName))) LIKE :search
+                OR CONCAT(UPPER(u.lastName), CONCAT(\' \', UPPER(u.firstName))) LIKE :search
+            )
+            ORDER BY t.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('type', $type);
+        $query->setParameter('user', $user);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $query->getResult();
+    }
+
     public function findTicketsWithoutIntervention(
         Type $type,
         $orderedBy = 'creationDate',

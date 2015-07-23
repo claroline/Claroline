@@ -32,7 +32,7 @@
         
         window.Claroline.Modal.displayForm(
             Routing.generate(
-                'formalibre_admin_intervention_status_edit_form',
+                'formalibre_admin_ticket_intervention_status_edit_form',
                 {'intervention': interventionId}
             ),
             stopIntervention,

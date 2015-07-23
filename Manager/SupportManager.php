@@ -250,6 +250,26 @@ class SupportManager
             $tickets;
     }
 
+    public function getActiveTicketsByInterventionUser(
+        Type $type,
+        User $user,
+        $search = '',
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $withPager = true,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $tickets = empty($search) ?
+            $this->ticketRepo->findActiveTicketsByInterventionUser($type, $user, $orderedBy, $order) :
+            $this->ticketRepo->findSearchedActiveTicketsByInterventionUser($type, $user, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($tickets, $page, $max) :
+            $tickets;
+    }
+
     public function getTicketsWithoutIntervention(
         Type $type,
         $search = '',

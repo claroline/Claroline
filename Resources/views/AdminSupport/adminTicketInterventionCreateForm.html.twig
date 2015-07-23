@@ -11,35 +11,68 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
-                'href': path('formalibre_admin_support_index')
-            },
-            {
-                'name': type.getName()|trans({}, 'support'),
-                'href': path('formalibre_admin_support_new', {'type': type.getId()})
-            },
-            {
-                'name': ('l' ~ ticket.getLevel())|trans({}, 'support'),
-                'href': path('formalibre_admin_support_level', {'type': type.getId(), 'level': ticket.getLevel()})
-            },
-            {
-                'name': ticket.getTitle(),
-                'href': path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()})
-            },
-            {
-                'name': 'intervention_creation'|trans({}, 'support'),
-                'href': ''
-            }
-        ])
-    }}
+    
+    {% if ticket.getLevel() == -1 %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': 'archives'|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_archives', {'type': type.getId()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()})
+                },
+                {
+                    'name': 'intervention_creation'|trans({}, 'support'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% else %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                    'href': path('formalibre_admin_support_index')
+                },
+                {
+                    'name': type.getName()|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_new', {'type': type.getId()})
+                },
+                {
+                    'name': ('l' ~ ticket.getLevel())|trans({}, 'support'),
+                    'href': path('formalibre_admin_support_level', {'type': type.getId(), 'level': ticket.getLevel()})
+                },
+                {
+                    'name': ticket.getTitle(),
+                    'href': path('formalibre_admin_ticket_open_interventions', {'ticket': ticket.getId()})
+                },
+                {
+                    'name': 'intervention_creation'|trans({}, 'support'),
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block section_content %}

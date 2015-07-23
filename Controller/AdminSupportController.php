@@ -187,7 +187,14 @@ class AdminSupportController extends Controller
             'ASC',
             false
         );
-        $nbMyTickets =  count($myTickets);
+        $nbMyTickets = 0;
+
+        foreach ($myTickets as $ticket) {
+
+            if ($ticket->getLevel() > 0) {
+                $nbMyTickets++;
+            }
+        }
 
         return array(
             'type' => $type,
@@ -606,6 +613,14 @@ class AdminSupportController extends Controller
         $intervention->setDuration($duration);
         $this->supportManager->persistIntervention($intervention);
 
+        $status = $intervention->getStatus();
+
+        if (!is_null($status) && $status->getCode() === 'FA') {
+            $ticket = $intervention->getTicket();
+            $ticket->setLevel(-1);
+            $this->supportManager->persistTicket($ticket);
+        }
+
         return new JsonResponse(array('id' => $intervention->getId()), 200);
     }
 
@@ -969,13 +984,13 @@ class AdminSupportController extends Controller
     /**
      * @EXT\Route(
      *     "/admin/ticket/intervention/{intervention}/status/edit/form",
-     *     name="formalibre_admin_intervention_status_edit_form",
+     *     name="formalibre_admin_ticket_intervention_status_edit_form",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminInterventionStatusEditModalForm.html.twig")
      */
-    public function adminInterventionStatusEditFormAction(Intervention $intervention)
+    public function adminTicketInterventionStatusEditFormAction(Intervention $intervention)
     {
         $form = $this->formFactory->create(
             new InterventionStatusType(),
@@ -988,13 +1003,13 @@ class AdminSupportController extends Controller
     /**
      * @EXT\Route(
      *     "/admin/ticket/intervention/{intervention}/status/edit",
-     *     name="formalibre_admin_intervention_status_edit",
+     *     name="formalibre_admin_ticket_intervention_status_edit",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminInterventionStatusEditModalForm.html.twig")
      */
-    public function adminInterventionStatusEditAction(Intervention $intervention)
+    public function adminTicketInterventionStatusEditAction(Intervention $intervention)
     {
         $form = $this->formFactory->create(
             new InterventionStatusType(),
