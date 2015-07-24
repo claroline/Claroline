@@ -30,7 +30,7 @@ widgetsApp
                 widget.prototype.isEditing = false;
                 widget.prototype.isUpdating = false;
                 widget.prototype.isDeleting = false;
-                widget.prototype.isCollapsed = true;
+                widget.prototype.isCollapsed = false;
 
                 widget.prototype.generateUrl = function(action) {
                     var parameters = {};
