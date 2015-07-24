@@ -67,7 +67,7 @@ class PortfolioController extends Controller
             'portfolioId' => $portfolioId,
             'page' => $page,
             'guidedPage' => $guidedPage,
-            'widgetTypes' => $widgetTypeManager->getWidgetsTypes()
+            'widgetTypes' => $widgetTypeManager->getWidgetsTypesForDisplay()
         );
 
         if ($request->isXmlHttpRequest()) {
