@@ -9,17 +9,17 @@
             Classe: <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()})}}" role="button"> {{classe.getName()}} </a>
             <br /><br /> <br /><br />
             
+     
             {% for student in users%}
                 <form action="" method="post">
                     <div class="col-md-2" align="center">
-                        <img src="{{asset('uploads/pictures/') ~ student.getPicture()}}" width="150" alt="Photo de l'élève"><br />
+                        <img class="img-thumbnail" src="{{asset('uploads/pictures/') ~ student.getPicture()}}" width="150" alt="Photo de l'élève"><br />
                         {{student.getFirstName()}}
                         {{student.getLastName()}}<br /><br />
-                        {{form_widget(presForm.status)}}<br /><br />
-
-                        <input type="submit" class="btn btn-default" value="Pre.">
-                        <input type="submit" class="btn btn-default" value="Abs.">
-                        <input type="submit" class="btn btn-default" value="Ret.">
+                        {{form_widget(presForm.Pres)}}
+                        {{form_widget(presForm.Abs)}}
+                        {{form_widget(presForm.Ret)}}
+                        {{ form_widget(presForm.userStudent,{ 'attr': {'value': student.getId() } } ) }}
                     </div>
                 </form>
             {% endfor %} 

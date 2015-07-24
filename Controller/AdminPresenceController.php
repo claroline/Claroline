@@ -12,17 +12,18 @@ use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Group;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('formalibre_job_admin_tool')")
+ * @SEC\PreAuthorize("canOpenAdminTool('formalibre_presence_admin_tool')")
  */
 class AdminPresenceController extends Controller
 {
     private $om;
     private $presenceRepo;
     private $periodRepo;
-    private $groupdRepo;
+    private $groupRepo;
     private $userRepo;
     
     
@@ -59,7 +60,8 @@ class AdminPresenceController extends Controller
         $Presences = $this->presenceRepo->findAll() ;
         $Periods = $this->periodRepo->findAll() ;
         
-        return array('user'=>$user, 'presences'=>$Presences, 'periods'=>$Periods);
+        
+        return array('user'=>$user, 'presences'=>$Presences, 'periods'=>$Periods );
          
     }
           /**
@@ -118,30 +120,107 @@ class AdminPresenceController extends Controller
         $Periods = $this->periodRepo->findAll() ;
         $Groups = $this->groupRepo->findAll() ;
         $Users = $this->userRepo->findByGroup($classe) ;
+       
+        
+       
         
         $presence = new Presence;
         
         $presForm = $this->createFormBuilder($presence)
-            ->add('status','text', array('data' => '2'))
+            ->add('userStudent','hidden')
+            ->add('Pres', 'submit')
+            ->add('Abs', 'submit')
+            ->add('Ret', 'submit')
+        
             ->getForm();
+       
             
         $presForm->handleRequest($request);
         
-        if ($request->getMethod() == 'POST')
-            {
-                $em = $this->getDoctrine()->getEntityManager();
-                $actualPresence =new Presence();
-                $actualPresence->setStatus("testperiod");
-                $actualPresence->setUserTeacher($user);
-                $actualPresence->setUserStudent($user);
-                $dateFormat=new \DateTime($date);
-                $actualPresence->setGroup($classe);
-                $actualPresence->setPeriod($period);
-                $actualPresence->setDate($dateFormat);
-                $em->persist($actualPresence);
-                $em->flush();
-            }
-
+       
+                if ($presForm->get('Pres')->isClicked())
+                {  
+                    $idStudent = $presForm->get("userStudent")->getData();
+                    $dateFormat=new \DateTime($date);
+                    $ActualStudent = $this->userRepo->findOneById($idStudent);
+                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
+                  
+                    if (!$isPresenceExist)
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $actualPresence =new Presence();
+                        $actualPresence->setStatus("présent");
+                        $actualPresence->setUserTeacher($user);
+                        $actualPresence->setUserStudent($ActualStudent);
+                        $actualPresence->setGroup($classe);
+                        $actualPresence->setPeriod($period);
+                        $actualPresence->setDate($dateFormat);
+                        $em->persist($actualPresence);
+                        $em->flush();
+                    }
+                    else
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $isPresenceExist->setStatus("présent");
+                        $em->flush();
+                    }
+   
+                }
+                else if ($presForm->get('Abs')->isClicked())
+                {
+                    $idStudent = $presForm->get("userStudent")->getData();
+                    $dateFormat=new \DateTime($date);
+                    $ActualStudent = $this->userRepo->findOneById($idStudent);
+                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
+                  
+                    if (!$isPresenceExist)
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $actualPresence =new Presence();
+                        $actualPresence->setStatus("absent");
+                        $actualPresence->setUserTeacher($user);
+                        $actualPresence->setUserStudent($ActualStudent);
+                        $actualPresence->setGroup($classe);
+                        $actualPresence->setPeriod($period);
+                        $actualPresence->setDate($dateFormat);
+                        $em->persist($actualPresence);
+                        $em->flush();
+                    }
+                    else
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $isPresenceExist->setStatus("absent");
+                        $em->flush();
+                    }
+                }
+                else if ($presForm->get('Ret')->isClicked())
+                {
+                    $idStudent = $presForm->get("userStudent")->getData();
+                    $dateFormat=new \DateTime($date);
+                    $ActualStudent = $this->userRepo->findOneById($idStudent);
+                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
+                  
+                    if (!$isPresenceExist)
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $actualPresence =new Presence();
+                        $actualPresence->setStatus("retard");
+                        $actualPresence->setUserTeacher($user);
+                        $actualPresence->setUserStudent($ActualStudent);
+                        $actualPresence->setGroup($classe);
+                        $actualPresence->setPeriod($period);
+                        $actualPresence->setDate($dateFormat);
+                        $em->persist($actualPresence);
+                        $em->flush();
+                    }
+                    else
+                    {
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $isPresenceExist->setStatus("retard");
+                        $em->flush();
+                    }
+                }
+         
         
         return array('presForm'=>$presForm->createView(),'user'=>$user, 'presences'=>$Presences, 'period'=>$period, 'date'=>$date, 'classe'=>$classe, 'groups'=>$Groups, 'users'=>$Users );
          

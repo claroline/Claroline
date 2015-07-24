@@ -74,9 +74,9 @@ use Doctrine\ORM\Mapping as ORM;
     {
         $this->day = $name;
     }
-     public function getBenginHour()
+     public function getBeginHour()
     {
-        return $this->benginHour;
+        return $this->beginHour;
     }
     
     public function setBeginHour($beginHour)
@@ -85,7 +85,7 @@ use Doctrine\ORM\Mapping as ORM;
     }
      public function getEndHour()
     {
-        return $this->EndHour;
+        return $this->endHour;
     }
     
     public function setEndHour($endHour)

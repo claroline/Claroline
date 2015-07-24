@@ -4,7 +4,7 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <br /><br />
-            Vous souhaitez faire l'appel pour la  <a  href="{{path("formalibre_presence_admin_tool_index")}}" role="button">{{period.getNumPeriod()}} période du {{period.getDay()}} {{date}}</a>
+            Vous souhaitez faire l'appel pour la <a  href="{{path("formalibre_presence_admin_tool_index")}}" role="button">{{period.getNumPeriod()}} période du {{date|date('d-m-y')}}</a>
             
             <form method="post" {{ form_enctype(form) }}>
                 <br /><br /> <br /><br />

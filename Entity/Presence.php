@@ -21,7 +21,7 @@ use FormaLibre\PresenceBundle\Entity\Period;
      */
     protected $id;
      /**
-     * @ORM\Column(name="status")
+     * @ORM\Column(name="status" )
      */
     protected $status;
     /**
@@ -92,7 +92,7 @@ use FormaLibre\PresenceBundle\Entity\Period;
         return $this->userStudent;
     }
     
-    public function setUserStudent(User $userStudent)
+    public function setUserStudent($userStudent)
     {
         $this->userStudent= $userStudent;
     }
