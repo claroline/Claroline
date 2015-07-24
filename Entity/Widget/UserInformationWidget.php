@@ -10,6 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserInformationWidget extends AbstractWidget
 {
+    const WIDGET_TYPE = 'userInformation';
+    const SIZE_X = 4;
+    const SIZE_Y = 5;
+
     protected $widgetType = 'userInformation';
 
     /**
@@ -53,12 +57,6 @@ class UserInformationWidget extends AbstractWidget
      * @ORM\Column(type="boolean", name="show_description")
      */
     protected $showDescription = false;
-
-    public function __construct()
-    {
-        $this->sizeX = 4;
-        $this->sizeY = 5;
-    }
 
     /**
      * @param string $city

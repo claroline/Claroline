@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioUser;
 use Icap\PortfolioBundle\Entity\PortfolioGuide;
-use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Entity\Widget\WidgetNode;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddViewerEvent;
@@ -75,31 +74,25 @@ class PortfolioManager
 
     /**
      * @param Portfolio   $portfolio
-     * @param TitleWidget $titleWidget
      *
      * @throws \InvalidArgumentException
      */
-    public function addPortfolio(Portfolio $portfolio, TitleWidget $titleWidget)
+    public function addPortfolio(Portfolio $portfolio)
     {
-        $titleWidget->setPortfolio($portfolio);
-        $portfolio->setWidgets([$titleWidget]);
-
-        $this->entityManager->persist($titleWidget);
-
         $this->persistPortfolio($portfolio);
     }
 
     /**
-     * @param TitleWidget $titleWidget
+     * @param Portfolio $portfolio
      * @param bool      $refreshUrl
      */
-    public function renamePortfolio(TitleWidget $titleWidget, $refreshUrl = false)
+    public function renamePortfolio(Portfolio $portfolio, $refreshUrl = false)
     {
         if ($refreshUrl) {
-            $titleWidget->setSlug(null);
+            $portfolio->setSlug(null);
         }
 
-        $this->entityManager->persist($titleWidget);
+        $this->entityManager->persist($portfolio);
         $this->entityManager->flush();
     }
 
@@ -231,17 +224,19 @@ class PortfolioManager
      */
     public function getPortfolioData(Portfolio $portfolio)
     {
-        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
-        $widgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $portfolioWidgets */
+        $portfolioWidgets  = $this->widgetsManager->getByPortfolioForGridster($portfolio);
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
         $data = array(
-            'id' => $portfolio->getId()
+            'id' => $portfolio->getId(),
+            'title' => $portfolio->getTitle(),
+            'portfolioWidgets' => []
         );
 
-        foreach ($widgets as $widget) {
-            $data['widgets'][] = $this->widgetsManager->getWidgetData($widget);
+        foreach ($portfolioWidgets as $portfolioWidget) {
+            $data['portfolioWidgets'][] = $this->widgetsManager->getPortfolioWidgetData($portfolioWidget);
         }
 
         $commentsDatas = array();
@@ -284,9 +279,9 @@ class PortfolioManager
     public function getUserGuidedPortfolioData(Portfolio $portfolio, User $user)
     {
         return array(
-            'type'           => ($user === $portfolio->getUser()) ? 'owned' : 'guided',
-            'id'             => $portfolio->getId(),
-            'title'          => $portfolio->getTitleWidget()->getTitle(),
+            'type' => ($user === $portfolio->getUser()) ? 'owned' : 'guided',
+            'id' => $portfolio->getId(),
+            'title' => $portfolio->getTitle(),
             'unreadComments' => $portfolio->getCountUnreadComments(),
             'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C)
         );
@@ -311,7 +306,7 @@ class PortfolioManager
      */
     public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
     {
-        $data           = array();
+        $data = array();
 
         $form = $this->getForm($portfolio);
         $form->submit($parameters);

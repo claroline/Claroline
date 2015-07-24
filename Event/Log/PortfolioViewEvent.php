@@ -30,6 +30,11 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
                 'owner' => array(
                     'lastName'  => $user->getLastName(),
                     'firstName' => $user->getFirstName()
+                ),
+                'portfolio' => array(
+                    'id'    => $this->portfolio->getId(),
+                    'title' => $this->portfolio->getTitle(),
+                    'slug'  => $this->portfolio->getSlug()
                 )
             ),
             null,

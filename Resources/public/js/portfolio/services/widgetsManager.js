@@ -1,45 +1,50 @@
 'use strict';
 
 portfolioApp
-    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", function($http, widgetsConfig, widgetFactory){
+    .factory("widgetsManager", ["$http", "widgetsConfig", "widgetFactory", "$q", "urlInterpolator",
+        function($http, widgetsConfig, widgetFactory, $q, urlInterpolator){
         return {
-            widgets: [],
-            emptyWidgets: [],
-            forms:   [],
-            init: function(portfolioId, widgets) {
-                angular.forEach(widgets, function(rawWidget) {
-                    var widget = widgetFactory.getWidget(portfolioId, rawWidget.type);
-                    this.widgets.push(new widget(rawWidget).setNewMode(false));
+            portfolioWidgets: [],
+            init: function(portfolioWidgets) {
+                angular.forEach(portfolioWidgets, function(rawWidget) {
+                    var widget = widgetFactory.getWidget(rawWidget.portfolio_id, rawWidget.widget_type, rawWidget.widget_id);
+                    var newPortfolioWidget= new widget(rawWidget);
+                    newPortfolioWidget.isNew = false;
+                    this.portfolioWidgets.push(newPortfolioWidget);
                 }, this);
             },
-            edit: function(widget) {
-                widget.copy = angular.copy(widget);
-                if (!widget.isEditing()) {
-                    widget.setEditMode(true);
-                    this.loadForm(widget);
-                }
+            addWidget: function(portfolioWidget) {
+                var widget = widgetFactory.getWidget(portfolioWidget.portfolio_id, portfolioWidget.widget_type, portfolioWidget.widget_id);
+                var newPortfolioWidget= new widget(portfolioWidget);
+                newPortfolioWidget.isNew = true;
+                this.portfolioWidgets.push(newPortfolioWidget);
+                this.save(newPortfolioWidget);
             },
-            loadForm: function(widget) {
-                if (this.forms[widget.getType()]) {
-                    widget.setFormView(this.forms[widget.getType()]);
-                    return true;
+            delete: function(portfolioWidget) {
+                portfolioWidget.isDeleting = true;
+                var self = this;
+                var success = function() {
+                    self.portfolioWidgets.remove(portfolioWidget);
+                };
+                var failed = function(error) {
+                    console.error('Error occured while deleting portfolio widget');
+                    console.log(error);
                 }
-                var $this = this;
-
-                return $http.get(widget.getFormUrl()).success(function(formViewData) {
-                    widget.setFormView(formViewData.form);
-                    $this.forms[widget.getType()] = formViewData.form;
+                portfolioWidget.$delete(success, failed).then(function() {
+                    portfolioWidget.isDeleting = false;
                 });
             },
-            cancelEditing: function(widget, rollback) {
-                if (rollback) {
-                    angular.copy(widget.copy, widget);
-                }
-                widget.setEditMode(false);
+            getAvailableWidgetsByTpe: function(portfolioId, type) {
+                var url = urlInterpolator.interpolate('/{{portfolioId}}/{{type}}', {portfolioId: portfolioId, type: type});
 
-                if (widget.isNew()) {
-                    this.widgets.remove(widget);
-                }
+                var deferred = $q.defer();
+                $http.get(url)
+                    .success(function(data) {
+                        deferred.resolve(data);
+                    }).error(function(msg, code) {
+                        deferred.reject(msg);
+                    });
+                return deferred.promise;
             },
             save: function(widget) {
                 if (null == widget.row) {
@@ -49,89 +54,33 @@ portfolioApp
                     widget.col = 0;
                 }
 
-                widget.setUpdatingMode(true);
-                delete widget.copy;
-
-                widget.deleteChildren();
+                widget.isUpdating = true;
 
                 var $this = this;
                 var success = function() {
-                    widget.setNewMode(false);
+                    widget.isNew = false;
                     $this.cancelEditing(widget);
-                    widget.setUpdatingMode(false);
+                    widget.isUpdating = false;
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
                     console.log(error);
                 }
 
-                if (widget.isNew()) {
+                if (widget.isNew) {
                     delete widget.id;
                 }
-
-                return widget.isNew() ? widget.$save(success, failed) : widget.$update(success, failed);
+                return widget.isNew ? widget.$save(success, failed) : widget.$update(success, failed);
             },
-            create: function(portfolioId, type, column) {
-                var isTypeUnique = widgetsConfig.config[type].isUnique;
-                if (isTypeUnique && 0 < this.findWidgetsByType(type).length) {
-                    this.edit(this.findWidgetsByType(type)[0]);
-                }
-                else {
-                    this.createEmptyWidget(portfolioId, type, isTypeUnique, column);
+            cancelEditing: function(widget) {
+                widget.isEditing = false;
+
+                if (widget.isNew) {
+                    this.portfolioWidgets.remove(widget);
                 }
             },
-            findWidgetsByType: function(type) {
-                var widgets = [];
-
-                for (var index = 0; index < this.widgets.length; index++) {
-                    if (type == this.widgets[index].type) {
-                        widgets.push(this.widgets[index]);
-                    }
-                }
-
-                return widgets;
-            },
-            createEmptyWidget: function(portfolioId, type, istypeUnique, column) {
-                var newWidget;
-                var widget = widgetFactory.getWidget(portfolioId, type);
-                if (this.emptyWidgets[type]) {
-                    newWidget = new widget(angular.copy(this.emptyWidgets[type]));
-                    newWidget.id = new Date().getTime();
-                    this.edit(newWidget);
-                }
-                else {
-                    newWidget = widget.create();
-                    var $this = this;
-                    newWidget.$promise.then(function() {
-                        $this.emptyWidgets[type] = angular.copy(newWidget);
-                        newWidget.column = column;
-                        $this.edit(newWidget);
-                    });
-                }
-
-                newWidget.column  = column;
-                newWidget.editing = true;
-
-                this.widgets.push(newWidget);
-            },
-            isDeletable: function(widget) {
-                return widgetsConfig.isDeletable(widget.getType());
-            },
-            delete: function(widget) {
-                if (this.isDeletable(widget)) {
-                    widget.isDeleting = true;
-                    var $this = this;
-                    var success = function() {
-                        $this.widgets.remove(widget);
-                    };
-                    var failed = function(error) {
-                        console.error('Error occured while deleting widget');
-                        console.log(error);
-                    }
-                    widget.$delete(success, failed).then(function() {
-                        delete widget.isDeleting;
-                    });
-                }
+            edit: function(widget) {
+                widget.isEditing = true;
             }
         };
     }]);

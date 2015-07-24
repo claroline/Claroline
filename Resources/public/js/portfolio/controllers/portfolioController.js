@@ -1,20 +1,81 @@
 'use strict';
 
 portfolioApp
-    .controller("portfolioController", ["$scope", "$filter", "portfolioManager", "widgetsManager", "commentsManager", "$attrs", "widgetsConfig", "assetPath", "$timeout",
-                                function($scope, $filter, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $timeout) {
+    .controller(
+    "portfolioController", ["$scope", "portfolioManager", "widgetsManager", "commentsManager", "$attrs", "widgetsConfig",
+        "assetPath", "$modal", "$timeout",
+    function($scope, portfolioManager, widgetsManager, commentsManager, $attrs, widgetsConfig, assetPath, $modal, $timeout) {
         $scope.portfolio = portfolioManager.getPortfolio($attrs['portfolioContainer']);
         $scope.portfolio.$promise.then(function () {
-            $scope.widgets  = widgetsManager.widgets;
+            $scope.portfolioWidgets  = widgetsManager.portfolioWidgets;
             $scope.comments = commentsManager.comments;
         });
 
-        $scope.widgetTypes    = widgetsConfig.getTypes(true);
-        $scope.assetPath      = assetPath;
+        $scope.widgetTypes = widgetsConfig.getTypes(true);
+        $scope.assetPath = assetPath;
+        $scope.isAdding = false;
+        $scope.isFetching = false;
 
-        $scope.createWidget = function(type, column) {
-            widgetsManager.create(portfolioManager.portfolioId, type, column || 1);
+        $scope.setAddingMode = function(addingMode) {
+            $scope.isAdding = addingMode;
         };
+        $scope.setFetchingMode = function(fetchingMode) {
+            $scope.isFetching = fetchingMode;
+        };
+
+        $scope.createWidget = function(type) {
+            $scope.setAddingMode(false);
+            $scope.setFetchingMode(true);
+
+            var modalInstance = $modal.open({
+                backdrop: false,
+                animation: true,
+                templateUrl: 'widget_picker_modal.html',
+                controller: 'widgetPickerController',
+                size: 'lg',
+                resolve: {
+                    portfolioWidgets: function () {
+                        return widgetsManager.getAvailableWidgetsByTpe($scope.portfolio.id, type);
+                    },
+                    selectedPortfolioWidget: function() {
+                        return null;
+                    }
+                }
+            });
+
+            modalInstance.opened.then(function() {
+                $scope.setFetchingMode(false);
+            });
+
+            modalInstance.result.then(function (selectedWidget) {
+                widgetsManager.addWidget(selectedWidget);
+            });
+
+            /*
+             Small code to avoid https://github.com/angular-ui/bootstrap/issues/3633
+             Solution come from https://github.com/angular-ui/bootstrap/issues/3633#issuecomment-110166992
+             */
+            modalInstance.result.finally(function() {
+                $timeout(function() {
+                    $('.modal:last').trigger('$animate:close');
+                    $timeout(function() {
+                        $('.modal-backdrop:last').trigger('$animate:close');
+                    }, 100);
+                }, 100);
+            });
+        };
+
+        $scope.edit = function() {
+            portfolioManager.rename($scope.portfolio);
+        }
+
+        $scope.save = function() {
+            return portfolioManager.save($scope.portfolio);
+        }
+
+        $scope.cancelRename = function() {
+            portfolioManager.cancelRename($scope.portfolio);
+        }
 
         $scope.gridsterOptions = {
             columns:    16, // the width of the grid, in columns
@@ -30,9 +91,9 @@ portfolioApp
                 start: function(event, $element, widget) {
                 }, // optional callback fired when resize is started,
                 stop: function(event, $element, widget) {
-                    for (var index = 0; index < $scope.widgets.length; index++) {
-                        var widget = $scope.widgets[index];
-                        if (widget.toSave && !widget.isEditing()) {
+                    for (var index = 0; index < $scope.portfolioWidgets.length; index++) {
+                        var widget = $scope.portfolioWidgets[index];
+                        if (widget.toSave && !widget.isEditing) {
                             widgetsManager.save(widget).then(function() {
                                 widget.toSave = false;
                             });
@@ -46,8 +107,8 @@ portfolioApp
                 start: function(event, $element, widget) {
                 }, // optional callback fired when drag is started,
                 stop: function(event, $element, widget) {
-                    for (var index = 0; index < $scope.widgets.length; index++) {
-                        var widget = $scope.widgets[index];
+                    for (var index = 0; index < $scope.portfolioWidgets.length; index++) {
+                        var widget = $scope.portfolioWidgets[index];
                         if (widget.toSave) {
                             widgetsManager.save(widget).then(function() {
                                 widget.toSave = false;

@@ -32,8 +32,7 @@ class PortfolioRepository extends EntityRepository
     public function findByUserWithWidgetsAndComments(User $user, $executeQuery = true)
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->select('p', 'widgets')
-            ->join('p.widgets','widgets')
+            ->select('p')
             ->leftJoin('p.comments','comments')
             ->andWhere('p.user = :userId')
             ->setParameter('userId', $user->getId())
@@ -51,11 +50,8 @@ class PortfolioRepository extends EntityRepository
     public function findGuidedPortfolios(User $user, $executeQuery = true)
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->select('p', 'widgets')
-            ->join('p.widgets','widgets')
             ->join('p.portfolioGuides', 'guides')
             ->andWhere('guides.user = :guide')
-            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
             ->setParameter('guide', $user)
         ;
 
@@ -71,12 +67,9 @@ class PortfolioRepository extends EntityRepository
     public function findAvailableToGuideByUser(User $user, $executeQuery = true)
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->select('p', 'widgets')
-            ->join('p.widgets','widgets')
             ->leftJoin('p.portfolioGuides', 'guides')
             ->andWhere('p.user = :user')
             ->orWhere('guides.user = :guide')
-            ->andWhere('widgets INSTANCE OF IcapPortfolioBundle:Widget\TitleWidget')
             ->setParameter('user', $user)
             ->setParameter('guide', $user)
         ;

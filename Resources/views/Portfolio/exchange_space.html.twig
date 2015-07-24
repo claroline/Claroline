@@ -1,6 +1,9 @@
-<div data-ng-app="commentsApp" data-ng-strict-di>
+<div>
+    <p class="help_text">
+        {{ 'exchange_space_help_text'|trans({}, 'icap_portfolio') }}
+    </p>
     <div id="exchange_space_container" class="portfolios-container col-lg-3">
-        <div class="portfolio-container" data-ng-init="init()">
+        <div class="portfolio-container">
             <p class="list-group-item title lead text-center">{{ 'my_owned_portfolio'|trans({}, 'icap_portfolio') }}</p>
             <ul class="list-group">
                 <li class="list-group-item loading" data-ng-class="{'loading': !portfolios.$resolved}" data-ng-show="!portfolios.$resolved"></li>

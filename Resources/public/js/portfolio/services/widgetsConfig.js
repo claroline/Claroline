@@ -10,9 +10,6 @@ portfolioApp
                     delete types.title;
                 }
                 return types;
-            },
-            isDeletable: function(widgetType) {
-                return this.config[widgetType].isDeletable
             }
         };
     }]);

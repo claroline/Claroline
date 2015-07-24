@@ -1,0 +1,174 @@
+table.table_portfolios {
+    .statusCol {
+        width: 250px;
+    }
+    .actionsCol {
+        width: 200px;
+    }
+    .portfolio {
+        .block {
+            display: block;
+        }
+        td {
+            padding:        10px 15px;
+            vertical-align: middle;
+            .dropdown-menu {
+                a.delete {
+                    color: #d9534f;
+                    &:hover {
+                        color: #fff;
+                        background-color: #d2322d;
+                    }
+                }
+            }
+            .visibility {
+                .badge {
+                    display:      block;
+                    height:       15px;
+                    width:        15px;
+                    float:        left;
+                    margin-right: 5px;
+                    &.visibile_to_me {
+                        background-color: #d9534f;
+                    }
+                    &.visible_for_some_users {
+                        background-color: #ed9c28;
+                    }
+                    &.visible_for_platform_user {
+                        background-color: #428bca;
+                    }
+                    &.visible_for_everybody {
+                        background-color: #5cb85c;
+                    }
+                }
+            }
+            .exchange_link {
+                &.highlight {
+                    color: #eea236;
+                    border-color: #eea236;
+                }
+                .badge {
+                    top:              0px;
+                    background-color: #f0ad4e;
+                }
+            }
+        }
+    }
+}
+
+div.pagination {
+    ul {
+        margin: 0;
+    }
+}
+
+.guided_portfolios_panel_group {
+    margin-bottom: 20px;
+    .guided_portfolios_panel{
+        .panel-body {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        table.table_portfolios {
+            margin-top:    0;
+            margin-bottom: 0;
+            tbody {
+                td {
+                    border-top: 0;
+                }
+                tr + tr td {
+                    border-top: 1px solid #ddd;
+                }
+            }
+        }
+    }
+}
+
+#visibility_form, #guides_form {
+    a.remove {
+        color:       #fff;
+        margin-left: 2px;
+        &:hover {
+            color:           #ac2925;
+            text-decoration: none;
+        }
+    }
+    .form-collection-element {
+        padding:       2px 5px 5px 5px;
+        border-radius: .25em;
+    }
+}
+
+.portfolio_toolbar
+{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+.clear {
+    clear: both;
+}
+
+.help_text {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.widgets_container {
+    .loading_container {
+        margin-top: 40px;
+        .loading_view {
+            margin: auto;
+        }
+    }
+
+    .add_data_button {
+        margin-bottom: 10px;
+    }
+
+    .panel {
+        .panel-heading {
+            .panel-title {
+                span {
+                    cursor: pointer;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+                .loading {
+                    margin-left: 5px;
+                }
+                input {
+                    display: inline;
+                    width: auto;
+                }
+            }
+            .widget-actions {
+                position: absolute;
+                right: 30px;
+                .btn {
+                    position: relative;
+                    right: 0;
+                    top: 0;
+                }
+            }
+        }
+        .panel-body {
+            &.loading {
+                height: 60px;
+                background-position: center;
+                width: 100%;
+                margin-bottom: 0;
+            }
+        }
+        .panel-footer {
+            span.loading {
+                display: inline-block;
+                margin: 0;
+                vertical-align: middle;
+            }
+        }
+    }
+}

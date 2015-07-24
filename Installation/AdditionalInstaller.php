@@ -25,5 +25,11 @@ class AdditionalInstaller extends BaseInstaller
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }
+        if (version_compare($currentVersion, '5.0.2', '<=')) {
+            $updater = new Updater\Updater050002($this->container->get('doctrine.orm.entity_manager'),
+                $this->container->get('doctrine.dbal.default_connection'));
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
     }
 }

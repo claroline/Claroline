@@ -26,9 +26,6 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
 
         $user = $portfolio->getUser();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
-
         parent::__construct(
             self::ACTION,
             array(
@@ -38,8 +35,8 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
                 ),
                 'portfolio' => array(
                     'id'    => $this->portfolio->getId(),
-                    'title' => $titleWidget->getTitle(),
-                    'slug'  => $titleWidget->getSlug()
+                    'title' => $this->portfolio->getTitle(),
+                    'slug'  => $this->portfolio->getSlug()
                 )
             ),
             $portfolioGuide->getUser(),
@@ -118,14 +115,11 @@ class PortfolioAddGuideEvent extends LogGenericEvent implements NotifiableInterf
     {
         $receiver = $this->getReceiver();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
-
         $notificationDetails = array(
             'portfolio' => array(
                 'id'    => $this->portfolio->getId(),
-                'title' => $titleWidget->getTitle(),
-                'slug'  => $titleWidget->getSlug()
+                'title' => $this->portfolio->getTitle(),
+                'slug'  => $this->portfolio->getSlug()
             ),
             'guide'  => array(
                 'id'        => $receiver->getId(),

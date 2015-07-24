@@ -9,13 +9,16 @@
         <input type="text" class="form-control" id="experience_company_name"
          name="experience[company_name]" data-ng-model="widget.companyName" required="required" />
     </p>
-    <p>
+    <div>
         <label for="experience_website">{{ 'experience_website'|trans({}, 'icap_portfolio') }}</label>
-        <input type="text" class="form-control" id="experience_website"
-         name="experience[website]" data-ng-model="widget.website" required="required" />
-    </p>
+        <p class="input-group">
+            <span class="input-group-addon"><span class="fa fa-link"></span></span>
+            <input type="text" class="form-control" id="experience_website"
+             name="experience[website]" data-ng-model="widget.website" required="required" />
+        </p>
+    </div>
     <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
-        <span class="input-group-addon">{{ 'date_range_from'|trans({}, 'icap_portfolio') }}</span>
+        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
         <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
                class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
         <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>

@@ -37,3 +37,4 @@ services:
             - { name: kernel.event_listener, event: create_log_list_item_portfolio-remove_guide, method: onCreateLogListItem }
             - { name: kernel.event_listener, event: create_log_list_item_portfolio-add_guide,    method: onCreateLogListItem }
             - { name: kernel.event_listener, event: create_log_list_item_portfolio-add_viewer,   method: onCreateLogListItem }
+            - { name: kernel.event_listener, event: create_log_list_item_portfolio-view,         method: onCreateLogListItem }

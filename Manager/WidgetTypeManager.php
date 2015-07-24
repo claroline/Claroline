@@ -28,9 +28,24 @@ class WidgetTypeManager
     /**
      * @return array
      */
-    public function getWidgetsConfig()
+    public function getWidgetTabOrder()
     {
-        $widgetTypes       = $this->widgetTypeRepository->findAllInArray();
+        return [
+            'userInformation' => 0,
+            'text' => 4,
+            'skills' => 3,
+            'formations' => 1,
+            'badges' => 5,
+            'experience' => 2,
+        ];
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType[]
+     */
+    public function getWidgetsTypes()
+    {
+        $widgetTypes = $this->widgetTypeRepository->findAllInArray();
         $sortedWidgetTypes = array();
 
         foreach ($widgetTypes as $widgetType) {
@@ -38,6 +53,32 @@ class WidgetTypeManager
         }
 
         return $sortedWidgetTypes;
+    }
+
+    /**
+     * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType[]
+     */
+    public function getWidgetsTypesForDisplay()
+    {
+        $widgetTypes = $this->getWidgetsTypes();
+        $sortedWidgetTypes = array();
+        $widgetTabOrder = $this->getWidgetTabOrder();
+
+        foreach ($widgetTypes as $widgetType) {
+            $sortedWidgetTypes[$widgetTabOrder[$widgetType['name']]] = $widgetType;
+        }
+
+        ksort($sortedWidgetTypes);
+
+        return $sortedWidgetTypes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWidgetsConfig()
+    {
+        return $this->getWidgetsTypes();
     }
 
     /**

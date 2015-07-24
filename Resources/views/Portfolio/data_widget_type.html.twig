@@ -1,0 +1,53 @@
+<div data-widget-container="{{ widgetType.name }}">
+    <p class="help_text">
+        {{ (widgetType.name ~ '_help_text')|trans({}, 'icap_portfolio') }}
+    </p>
+    <button type="button" class="btn btn-default add_data_button" data-ng-click="create()">{{ 'add_data_widget'|trans({'%widgetType%': (widgetType.name ~ '_title')|trans({}, 'icap_portfolio')}, 'icap_portfolio') }}</button>
+    <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" data-ng-show="widgets.length && widgets.$resolved">
+        {% verbatim %}
+        <div class="panel panel-default" data-ng-repeat="widget in typedWidgets = (widgets | toArray : false | filter:{type: widgetType}) ">
+            <div class="panel-heading clearfix" role="tab" id="heading-widget{{ widget.id }}">
+                <h4 class="panel-title pull-left" id="collapsible-widget{{ widget.id }}">
+                    <span class="fa" data-ng-click="widget.isCollapsed = !widget.isCollapsed"
+                          data-ng-class="{ 'fa-caret-right': widget.isCollapsed, 'fa-caret-down': !widget.isCollapsed }"></span>
+                    <span data-ng-click="widget.isCollapsed = !widget.isCollapsed" data-ng-show="!widget.isEditing">
+                        {{ widget.label }}
+                    </span>
+                    <input type="text" data-ng-show="widget.views.form && widget.isEditing" class="input-sm form-control"
+                           name="widget_label" data-ng-model="widget.label">
+                    <span class="pull-right loading" data-ng-if="widget.isEditing && !widget.views.form"></span>
+                </h4>
+                <div class="widget-actions pull-right">
+                    <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit(widget)" data-ng-if="!widget.isEditing">
+                        <span class="fa fa-pencil"></span>
+                    </button>
+                    <button class="widget-action btn btn-xs btn-danger" data-ng-class="{'btn-loading': widget.isDeleting}"
+                            data-confirm-click="delete(widget)">
+                        <span class="fa fa-spinner fa-spin" data-ng-if="widget.isDeleting"></span>
+                        <span class="fa fa-trash-o" data-ng-if="!widget.isDeleting"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="panel-collapse" role="tabpanel" collapse="widget.isCollapsed">
+                <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
+                </div>
+                <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.views.form && widget.isEditing">
+                    <div class="panel-body" data-bind-html="widget.views.form"></div>
+                    <div class="panel-footer">
+        {% endverbatim %}
+                        <button type="submit" class="btn btn-primary">{{ 'save'|trans({}, 'platform') }}</button>
+                        <button type="button" class="btn btn-default" data-ng-click="cancelEdition(widget)">
+                            {{ 'cancel'|trans({}, 'platform') }}
+                        </button>
+                    </div>
+                </form>
+                <div class="panel-body loading" data-ng-show="widget.isEditing && !widget.views.form"></div>
+            </div>
+        </div>
+    </div>
+    <p class="no-data well ng-cloak" data-ng-show="!typedWidgets.length && widgets.$resolved">
+        {{ 'no_data_widget'|trans({}, 'icap_portfolio') }}
+    </p>
+
+    <div class="loading_container" data-ng-show="!widgets.$resolved"><p class="loading loading_view"></p></div>
+</div>

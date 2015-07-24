@@ -33,7 +33,7 @@ class PortfolioController extends BaseController
     }
 
     /**
-     * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", options={"expose"=true})
+     * @Route("/portfolio/{id}", name="icap_portfolio_internal_portfolio", requirements={"id" = "\d+"}, options={"expose"=true})
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
@@ -43,13 +43,6 @@ class PortfolioController extends BaseController
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
         $data = $this->getPortfolioManager()->getPortfolioData($portfolio);
-
-        $portfolioGuide = $this->getPortfolioGuideManager()->getByPortfolioAndGuide($portfolio, $loggedUser);
-
-        if (null !== $portfolioGuide) {
-            $data['unreadComments'] = $portfolio->getCountUnreadComments($portfolioGuide->getCommentsViewAt());
-            $data['commentsViewAt'] = $portfolioGuide->getCommentsViewAt();
-        }
 
         $response = new JsonResponse($data);
 

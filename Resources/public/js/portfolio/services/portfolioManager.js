@@ -5,18 +5,22 @@ portfolioApp
         return {
             portfolio:   null,
             portfolioId: null,
+            originalTitle: null,
 
             getPortfolio: function(portfolioId) {
                 this.portfolioId = portfolioId;
                 this.portfolio   = portfolioFactory.get({portfolioId: this.portfolioId}, function(portfolio) {
-                    widgetsManager.init(portfolioId, portfolio.widgets);
+                    widgetsManager.init(portfolio.portfolioWidgets);
                     commentsManager.init(portfolioId, portfolio.comments);
                 });
 
                 return this.portfolio;
             },
             save: function(portfolio) {
+                var self = this;
                 var success = function() {
+                    self.originalTitle = portfolio.title;
+                    portfolio.isEditing = false;
                 };
                 var failed = function(error) {
                     console.error('Error occured while saving widget');
@@ -24,6 +28,14 @@ portfolioApp
                 }
 
                 return portfolio.$update(success, failed);
+            },
+            rename: function(portfolio) {
+                portfolio.isEditing = true;
+                this.originalTitle = portfolio.title;
+            },
+            cancelRename: function(portfolio) {
+                portfolio.isEditing = false;
+                portfolio.title = this.originalTitle;
             },
             updateViewCommentsDate: function () {
                 this.portfolio.commentsViewAt = new Date();

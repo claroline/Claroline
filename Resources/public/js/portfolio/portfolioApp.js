@@ -1,11 +1,10 @@
 'use strict';
 
-var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-    'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover',
-    'app.translation', 'app.interpolator', 'app.directives', 'gridster']);
+var portfolioApp = angular.module('portfolioApp', ['ngResource', 'ngSanitize', 'ui.tinymce',
+    'mgcrea.ngStrap.popover', 'app.translation', 'app.interpolator', 'app.directives', 'gridster', 'ui.bootstrap']);
 
 portfolioApp.config(["$httpProvider", function($http) {
-    var elementToRemove = ['views', 'editing', 'updating', 'new', 'id', 'type', 'unreadComments', 'toSave'];
+    var elementToRemove = ['views', 'isUpdating', 'isDeleting', 'isEditing', 'isCollapsed', 'id', 'unreadComments', 'toSave', 'isNew', 'widget'];
 
     $http.defaults.transformRequest.push(function(data) {
         data = angular.fromJson(data);

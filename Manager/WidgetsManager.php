@@ -2,9 +2,11 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -94,6 +96,16 @@ class WidgetsManager
     }
 
     /**
+     * @param PortfolioWidget $portfolioWidget
+     *
+     * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
+     */
+    public function getPortfolioWidgetForm(PortfolioWidget $portfolioWidget)
+    {
+        return $this->formFactory->create('icap_portfolio_portfolio_widget_form', $portfolioWidget);
+    }
+
+    /**
      * @param AbstractWidget $widget
      * @param string         $type
      * @param array          $parameters
@@ -144,64 +156,199 @@ class WidgetsManager
     }
 
     /**
-     * @param Portfolio $portfolio
-     * @param string    $type
+     * @param PortfolioWidget $porfolioWidget
+     * @param array           $parameters
+     * @param string          $env
      *
-     * @throws \InvalidArgumentException
+     * @return array
+     */
+    public function handlePortfolioWidget(PortfolioWidget $porfolioWidget, array $parameters, $env = 'prod')
+    {
+        $data = array();
+
+        $form = $this->getPortfolioWidgetForm($porfolioWidget);
+        $form->submit($parameters);
+
+        if ($form->isValid()) {
+            $this->entityManager->persist($porfolioWidget);
+            $this->entityManager->flush();
+
+            $data = $this->getPortfolioWidgetData($porfolioWidget);
+
+            return $data;
+        }
+
+        if ('dev' === $env) {
+            echo "<pre>";
+            foreach ($form->getErrors(true, false) as $formError) {
+                var_dump($formError->getMessage());
+                var_dump($formError->getMessageParameters());
+            }
+            echo "</pre>" . PHP_EOL;
+        }
+
+        throw new \InvalidArgumentException();
+    }
+
+    /**
+     * @param string $type
+     * @param User   $user
+     *
      * @return AbstractWidget
      */
-    public function getNewWidget(Portfolio $portfolio, $type)
+    public function getNewDataWidget($type, User $user)
     {
-        $widget = $this->widgetFactory->createWidget($portfolio, $type);
-        $widget->setId(uniqid());
+        $widget = $this->widgetFactory->createDataWidget($type);
+        $widget
+            ->setId(uniqid())
+            ->setUser($user);
 
         return $widget;
     }
 
     /**
+     * @param Portfolio $portfolio
+     * @param string    $type
+     *
+     * @return PortfolioWidget
+     */
+    public function getNewPortfolioWidget(Portfolio $portfolio, $type)
+    {
+        return $this->widgetFactory->createPortfolioWidget($portfolio, $type);
+    }
+
+    /**
+     * @param PortfolioWidget $portfolioWidget
+     */
+    public function deletePortfolioWidget(PortfolioWidget $portfolioWidget)
+    {
+        $this->entityManager->remove($portfolioWidget);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @param AbstractWidget $widget
      */
-    public function deleteWidget(AbstractWidget $widget)
+    public function deleteDataWidget(AbstractWidget $widget)
     {
         $this->entityManager->remove($widget);
         $this->entityManager->flush();
     }
 
     /**
-     * @param AbstractWidget $widget
+     * @param PortfolioWidget $portfolioWidget
      * @param bool           $withView
      *
      * @return array
      */
-    public function getWidgetData(AbstractWidget $widget, $withView = true)
+    public function getPortfolioWidgetData(PortfolioWidget $portfolioWidget, $withView = true)
     {
+        $widget = $portfolioWidget->getWidget();
+
         $widgetViews = array(
-            'views'  => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
+            'views' => $withView ? array('view' => $this->getView($widget, $widget->getWidgetType())) : array()
         );
 
-        return  $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty());
+        $widgetData = [
+            'widget' => $widget->getCommonData() + $widgetViews + ($withView ? $widget->getData() : $widget->getEmpty())
+        ];
+
+        return  $portfolioWidget->getData() + $widgetData;
+    }
+
+    /**
+     * @param AbstractWidget $widget
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgetData(AbstractWidget $widget)
+    {
+        $widgetViews = array(
+            'views' => array('view' => $this->getView($widget, $widget->getWidgetType()))
+        );
+
+        return $widget->getCommonData() + $widgetViews + $widget->getData();
     }
 
     /**
      * @param Portfolio $portfolio
      * @param bool      $inArray
      *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]|array
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]|array
      */
     public function getByPortfolioForGridster(Portfolio $portfolio, $inArray = false)
     {
-        $widgets = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget")->findOrderedByRowAndCol($portfolio);
+        $portfolioWidgets = $this->entityManager->getRepository("IcapPortfolioBundle:PortfolioWidget")->findOrderedByRowAndCol($portfolio);
 
         if ($inArray) {
-            $widgetsInArray = [];
-            foreach ($widgets as $widget) {
-                $widgetsInArray[] = $this->getWidgetData($widget);
+            $portfolioWidgetsInArray = [];
+            foreach ($portfolioWidgets as $portfolioWidget) {
+                $portfolioWidgetsInArray[] = $this->getPortfolioWidgetData($portfolioWidget);
             }
 
-            $widgets = $widgetsInArray;
+            $portfolioWidgets = $portfolioWidgetsInArray;
+        }
+
+        return $portfolioWidgets;
+    }
+
+    /**
+     * @param User $user
+     * @param string|null $type
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     */
+    public function getWidgets(User $user, $type = null)
+    {
+        /** @var \Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository $abstractWidgetRepository */
+        $abstractWidgetRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Widget\AbstractWidget");
+
+        if ($type !== null) {
+            $widgets = $abstractWidgetRepository->findByWidgetTypeAndUser($type, $user);
+        }
+        else {
+            $widgets = $abstractWidgetRepository->findByUser($user);
         }
 
         return $widgets;
+    }
+
+    /**
+     * @param Portfolio $portfolio
+     * @param User      $user
+     * @param string    $type
+     *
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
+     */
+    public function getPortfolioWidgetsForWidgetPicker(Portfolio $portfolio, User $user, $type)
+    {
+        $portfolioWidgets = [];
+
+        $widgets = $this->getWidgets($user, $type);
+
+        foreach ($widgets as $widget) {
+            $portfolioWidget = new PortfolioWidget();
+            $portfolioWidget
+                ->setPortfolio($portfolio)
+                ->setWidget($widget)
+                ->setWidgetType($type)
+                ->setSize($this->getWidgetSizeByType($type))
+            ;
+            $portfolioWidgets[] = $portfolioWidget;
+        }
+
+        return $portfolioWidgets;
+    }
+
+    public function getWidgetSizeByType($type)
+    {
+        $classNamespace = '\Icap\PortfolioBundle\Entity\Widget\\' . ucfirst($type) . 'Widget';
+        $position = [
+            'sizeX' => $classNamespace::SIZE_X,
+            'sizeY' => $classNamespace::SIZE_Y
+        ];
+
+        return $position;
     }
 }
  

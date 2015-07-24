@@ -39,7 +39,7 @@ class IcapPortfolioExtension extends \Twig_Extension
         $orderedWidgets = array();
 
         foreach ($widgets as $widget) {
-            $orderedWidgets[$widget->getColumn() . $widget->getRow()] = $widget;
+            $orderedWidgets[$widget->getCol() . $widget->getRow()] = $widget;
         }
 
         ksort($orderedWidgets);

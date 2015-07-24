@@ -27,9 +27,6 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
 
         $user = $portfolio->getUser();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
-
         parent::__construct(
             self::ACTION,
             array(
@@ -39,8 +36,8 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
                 ),
                 'portfolio' => array(
                     'id'    => $this->portfolio->getId(),
-                    'title' => $titleWidget->getTitle(),
-                    'slug'  => $titleWidget->getSlug()
+                    'title' => $this->portfolio->getTitle(),
+                    'slug'  => $this->portfolio->getSlug()
                 )
             ),
             $portfolioUser->getUser(),
@@ -119,14 +116,11 @@ class PortfolioAddViewerEvent extends LogGenericEvent implements NotifiableInter
     {
         $receiver = $this->getReceiver();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
-
         $notificationDetails = array(
             'portfolio' => array(
                 'id'    => $this->portfolio->getId(),
-                'title' => $titleWidget->getTitle(),
-                'slug'  => $titleWidget->getSlug()
+                'title' => $this->portfolio->getTitle(),
+                'slug'  => $this->portfolio->getSlug()
             ),
             'viewer'  => array(
                 'id'        => $receiver->getId(),

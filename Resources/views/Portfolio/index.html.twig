@@ -12,6 +12,17 @@
                     </span>
                 </a>
             </li>
+            {% for widgetType in widgetTypes %}
+            <li class="widgets-tab {{ widgetType.name }}-tab">
+                <a href="#{{ widgetType.name }}" aria-controls="{{ widgetType.name }}" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-{{ widgetType.icon }}"></i>
+                        <span class="visible-md-inline visible-lg-inline">{{ (widgetType.name ~ '_title')|trans({}, 'icap_portfolio') }}</span>
+                    </span>
+                </a>
+            </li>
+            {% endfor %}
             <li class="list-tab">
                 <a href="#list" aria-controls="list" role="tab" data-toggle="tab">
                     <span class="icon-bg"></span>
@@ -32,24 +43,34 @@
             </li>
         </ul>
 
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="presentation">
-                <p>
-                    {{ 'presentation_message'|trans({}, 'icap_portfolio')|raw }}
-                </p>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="list">
-                {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}
-            </div>
-            <div role="tabpanel" class="tab-pane" id="exchange_space">
-                <div class="row">
-                    <div class="col-md-12">
-                        {% include 'IcapPortfolioBundle:Portfolio:exchange_space.html.twig' %}
+        <div data-ng-app="indexApp">
+            <div class="tab-content index-container" data-ng-strict-di>
+                <div role="tabpanel" class="tab-pane active" id="presentation">
+                    <div>
+                        {{ 'presentation_message'|trans({}, 'icap_portfolio')|raw }}
                     </div>
                 </div>
+                <div role="tabpanel" class="tab-pane" id="list">
+                    {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="exchange_space">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% include 'IcapPortfolioBundle:Portfolio:exchange_space.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+                {% for widgetType in widgetTypes %}
+                    <div role="tabpanel" class="tab-pane" id="{{ widgetType.name }}">
+                        <div class="row">
+                            <div class="col-md-12 widgets_container">
+                                {% include 'IcapPortfolioBundle:Portfolio:data_widget_type.html.twig' %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
         </div>
-
     </div>
 {% endblock %}
 
@@ -82,7 +103,7 @@
     <script type="text/javascript" src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
 
-    {% javascripts debug=true filter='jsmin' output='js/portfolio/comments/vendor.js'
+    {% javascripts debug=true filter='jsmin' output='js/portfolio/index/vendor.js'
         '@StfalconTinymceBundle/Resources/public/vendor/tinymce/tinymce.jquery.min.js'
         '@StfalconTinymceBundle/Resources/public/vendor/tinymce/jquery.tinymce.min.js'
         '@ClarolineCoreBundle/Resources/public/js/tinymce/tinymce.js'
@@ -91,12 +112,23 @@
         '@InnovaAngularJSBundle/Resources/public/js/angular-sanitize.min.js'
         '@InnovaAngularJSBundle/Resources/public/js/angular-animate.min.js'
         '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-tinymce/tinymce.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/moment.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/dateTimeInput.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/dimensions.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/tooltip.tpl.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-strap/popover.tpl.min.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-0.13.0.js'
+        '@IcapPortfolioBundle/Resources/public/js/vendor/angular-ui/ui-bootstrap-custom-tpls-0.13.0.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/datepicker/js/bootstrap-datepicker.js'
         '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.js'
+        '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    {% javascripts debug=true filter='jsmin' output='js/portfolio/comments/script.js'
+    {% javascripts debug=true filter='jsmin' output='js/portfolio/index/script.js'
         '@IcapPortfolioBundle/Resources/public/js/index.js'
         '@IcapPortfolioBundle/Resources/public/js/vendor/toArrayFilter.js'
         '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
@@ -109,9 +141,25 @@
         '@IcapPortfolioBundle/Resources/public/js/comments/services/commentsManager.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/services/commentFactory.js'
         '@IcapPortfolioBundle/Resources/public/js/comments/services/portfolioFactory.js'
+        '@IcapPortfolioBundle/Resources/public/js/widget/widgetsApp.js'
+        '@IcapPortfolioBundle/Resources/public/js/widget/controllers/widgetController.js'
+        '@IcapPortfolioBundle/Resources/public/js/widget/directives/widgetDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/widget/services/widgetManager.js'
+        '@IcapPortfolioBundle/Resources/public/js/widget/services/widgetFactory.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/resourcePickerDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/datepickerDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/badgePickerDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/bindHtmlDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/loadingFormDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormController.js'
+        '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/index/indexApp.js'
+        '@IcapPortfolioBundle/Resources/public/js/index/indexDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/index/indexController.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

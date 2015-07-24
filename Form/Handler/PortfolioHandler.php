@@ -3,7 +3,6 @@
 namespace Icap\PortfolioBundle\Form\Handler;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\Widget\TitleWidget;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -54,13 +53,13 @@ class PortfolioHandler
     }
 
     /**
-     * @param \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget
+     * @param \Icap\PortfolioBundle\Entity\Portfolio $portfolio
      *
      * @return \Symfony\Component\Form\Form|FormInterface
      */
-    public function getRenameForm(TitleWidget $titleWidget)
+    public function getRenameForm(Portfolio $portfolio)
     {
-        return $this->formFactory->create('icap_portfolio_rename_form', $titleWidget);
+        return $this->formFactory->create('icap_portfolio_rename_form', $portfolio);
     }
 
     /**
@@ -90,17 +89,15 @@ class PortfolioHandler
      */
     public function handleAdd(Portfolio $portfolio)
     {
-        $titleWidget = new TitleWidget();
-
         $form = $this->getAddForm();
-        $form->setData($titleWidget);
+        $form->setData($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->addPortfolio($portfolio, $titleWidget);
+                $this->portfolioManager->addPortfolio($portfolio);
 
                 return true;
             }
@@ -110,20 +107,20 @@ class PortfolioHandler
     }
 
     /**
-     * @param TitleWidget $titleWidget
+     * @param Portfolio $portfolio
      *
      * @return bool True on successfull processing, false otherwise
      */
-    public function handleRename(TitleWidget $titleWidget)
+    public function handleRename(Portfolio $portfolio)
     {
-        $form = $this->getRenameForm($titleWidget);
+        $form = $this->getRenameForm($portfolio);
 
         $request = $this->requestStack->getCurrentRequest();
         if ($request->isMethod('POST')) {
             $form->submit($request);
 
             if ($form->isValid()) {
-                $this->portfolioManager->renamePortfolio($titleWidget, $form->get('refreshUrl')->getData());
+                $this->portfolioManager->renamePortfolio($portfolio, $form->get('refreshUrl')->getData());
 
                 return true;
             }

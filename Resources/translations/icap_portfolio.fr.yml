@@ -44,15 +44,14 @@ widget_delete_confirm_title: 'Suppression d''un widget'
 widget_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer ce widget ?'
 widget_delete_confirm_ok: 'Supprimer'
 widget_delete_confirm_cancel: 'Annuler'
-no_widget: 'Vous n''affichez aucune information sur votre portfolio. <br />Utilisez le menu sous chaque colonne pour ajouter des informations à votre portfolio.'
+no_widget: 'Vous n''affichez aucune information sur votre portfolio. <br />Utilisez le menu ci-dessus pour ajouter des informations à votre portfolio.'
 skills_title: 'Compétences'
-text_title: 'Texte'
+text_title: 'Informations libres'
 formations_title: 'Formations'
-formation_title: 'Titre de la formation'
+formation_title: 'Nom de la formation'
 formation_delete_resource: 'Supprimer la ressource'
 formation_cancel_deletion_resource: 'Annuler la suppression de la ressource'
-formation_add_resource: 'Ajouter des ressources'
-date_range_from: 'Du'
+formation_add_resource: 'Lier des documents de la plateforme'
 date_range_to: 'au'
 user_information_form_birth_date: 'Date de naissance'
 portfolio_empty: 'Aucune information n''est affichée sur ce portfolio.'
@@ -111,10 +110,22 @@ owner: "Propriétaire"
 presentation: "Présentation"
 portfolio: "Portfolio"
 exchange_space: "Espace d'échange"
-presentation_message: "<h3>Bienvenue dans votre espace portfolio</h3><br>Depuis cet espace vous pouvez :<br /><ul><li>gérer vos portfolios</li><li>voir les portfolios que vous accompagnez</li><li>échanger sur vos portfolios ou les portfolios que vous accompagnez</li></ul>"
+presentation_message: "<h3>Bienvenue dans votre espace portfolio</h3><br>Renseignez dans les différents onglets vos Diplômes/Formations, Expériences professionnelles et Compétences afin de créer ensuite une vue de votre portfolio."
 portfolio_added_ajax_notification: "Portfolio ajouté avec succès"
 portfolio_renamed_ajax_notification: "Portfolio renommé avec succès"
 portfolio_update_visibility_ajax_notification: "Visibilité du portfolio mise à jour avec succès"
 portfolio_update_guides_ajax_notification: "Liste des accompagnateurs du portfolio mise à jour avec succès"
 portfolio_imported_ajax_notification: "Import d'un portfolio effectué avec succès"
 portfolio_deleted_ajax_notification: "Portfolio supprimé avec succès"
+no_data_widget: "Aucune données de ce type actuellement."
+add_data_widget: "Ajouter %widgetType%"
+widget_selection: "Sélection de widget"
+no_available_widget: "Aucun widget de ce type disponible"
+userInformation_help_text: "Vous permet de préciser les informations concernant votre état civil. Une partie est directement récupérée de votre profil plateforme. Les informations complémentaires que vous souhaitez ajouter peuvent m'être dans un champ libre (statut marital, lien réseaux sociaux, age etc...)."
+formations_help_text: "Indiquez ici l'ensemble des diplomes obtenus durant votre scolarité, études ou apprentissage, ainsi que les formations suivies après votre scolarité (reprise d'études et formations pour les salariés et demandeurs d'emploi).Vous pouvez aussi indiquer :les diplomes obtenus par une Validation des Acquis de l'Expérience (VAE)les attestations et certificats privés (B2i, Toefl, certificat Microsoft...)Vous pouvez y rattacher des documents (attestation de diplomes etc)"
+experience_help_text: "Listez ici les postes que vous avez occupés dans le cadre d'un contrat de travail (y compris en alternance : apprentissage, contrat de professionnalisation), d'un stage ou bien en tant que professionnel indépendant.Vous pouvez aussi présenter les activités bénévoles (non rémunérées, tournées vers autrui, en dehors d’un cadre privé ou familial) que vous avez eues, dans une association, un syndicat, un club... ou vos expériences en langue étrangère (stage dans un autre pays, une année au pair, une période de vie à l'étranger...)"
+skills_help_text: "Indiquez votre ou vos langues maternelles, les langues que vous savez parler, écrire ou lire. Pour chaque langue, vous pourrez détailler votre niveau (A,B,C / 1-2-3)Indiquez vos :Aptitudes et compétences socialesAptitudes et compétences organisationnellesAptitudes et compétences techniquesAptitudes et compétences informatiquesAptitudes et compétences artistiquesAutres aptitudes et compétences"
+text_help_text: "Vous pouvez rajouter ici toutes les informations supplémentaires que vous souhaitez faire apparaitre dans votre porfolio.Par exemple vous pouvez indiquer :- vos permis de conduire- les activités et les loisirs que vous pratiquez. Vous pouvez si vous le souhaitez préciser des détails, ainsi que votre niveau.- les associations et activités bénévoles auxquelles vous avez participé (si vous ne l'avez pas déjà indiqué dans la partie Formation/Diplome)etc..."
+badges_help_text: "Vous pouvez afficher les badges obtenus sur la plateforme (bientôt) et afficher les badges importés d'autres plateformes (via l'outil badge)"
+my_portfolios_help_text: "Voici la liste des différentes vues de votre portfolio personnel.Vous pouvez choisir de faire apparaitre plus ou moins d'information en fonction de l'interlocuteur ciblé.Chacun de vos portfolios peuvent être commentés et suivis par des accompagnateurs (contact à selectionner dans la plateforme).Vous pouvez commenter et suivre les portfolios sur lesquels on vous a demandez de faire un accompagnement."
+exchange_space_help_text: "Retrouvez ici de manière centralisée tous les échanges sur les accompagnements de vos portfolios, et ceux que vous suivez."

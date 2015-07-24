@@ -24,10 +24,7 @@ class PortfolioRemoveGuideEvent extends LogGenericEvent implements NotifiableInt
     {
         $this->portfolio = $portfolio;
 
-        $user     = $portfolio->getUser();
-
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
+        $user = $portfolio->getUser();
 
         parent::__construct(
             self::ACTION,
@@ -38,8 +35,8 @@ class PortfolioRemoveGuideEvent extends LogGenericEvent implements NotifiableInt
                 ),
                 'portfolio' => array(
                     'id'    => $this->portfolio->getId(),
-                    'title' => $titleWidget->getTitle(),
-                    'slug'  => $titleWidget->getSlug()
+                    'title' => $this->portfolio->getTitle(),
+                    'slug'  => $this->portfolio->getSlug()
                 )
             ),
             $portfolioGuide->getUser(),
@@ -118,14 +115,11 @@ class PortfolioRemoveGuideEvent extends LogGenericEvent implements NotifiableInt
     {
         $receiver = $this->getReceiver();
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\TitleWidget $titleWidget */
-        $titleWidget = $this->portfolio->getTitleWidget();
-
         $notificationDetails = array(
             'portfolio' => array(
                 'id'    => $this->portfolio->getId(),
-                'title' => $titleWidget->getTitle(),
-                'slug'  => $titleWidget->getSlug()
+                'title' => $this->portfolio->getTitle(),
+                'slug'  => $this->portfolio->getSlug()
             ),
             'guide'  => array(
                 'id'        => $receiver->getId(),

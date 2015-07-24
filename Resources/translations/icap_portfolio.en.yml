@@ -44,15 +44,14 @@ widget_delete_confirm_title: 'Deletion of a widget'
 widget_delete_confirm_message: 'Are you sure you want to delete this widget ?'
 widget_delete_confirm_ok: 'Delete'
 widget_delete_confirm_cancel: 'Cancel'
-no_widget: 'You aren''t displaying any information on your portfolio. <br /> Use each column menu to add information to your portfolio.'
+no_widget: 'You aren''t displaying any information on your portfolio. <br /> Use menu above to add information to your portfolio.'
 skills_title: 'Skills'
-text_title: 'Text'
+text_title: 'Open informations'
 formations_title: 'Formations'
-formation_title: 'Title of the formation'
+formation_title: 'Name of the formation'
 formation_delete_resource: 'Delete the ressource'
 formation_cancel_deletion_resource: 'Cancel the deletion of the resource'
-formation_add_resource: 'Add some resources'
-date_range_from: 'From'
+formation_add_resource: "Link to some platform's documents"
 date_range_to: 'to'
 user_information_form_birth_date: 'Birth date'
 portfolio_empty: 'No information is display on this portfolio.'
@@ -118,3 +117,7 @@ portfolio_update_visibility_ajax_notification: "Visibility of the portfolio upda
 portfolio_update_guides_ajax_notification: "Guide list of the portfolio updated with success"
 portfolio_imported_ajax_notification: "Import of a portfolio made with success"
 portfolio_deleted_ajax_notification: "Portfolio deleted with success"
+no_data_widget: "No data of this type yet."
+add_data_widget: "Adding data"
+widget_selection: "Widget selection"
+no_available_widget: "No available widget of this type"

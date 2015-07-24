@@ -13,7 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class BadgesWidget extends AbstractWidget
 {
-    protected $widgetType = 'badges';
+    const WIDGET_TYPE = 'badges';
+    const SIZE_X = 4;
+    const SIZE_Y = 4;
+
+    protected $widgetType = self::WIDGET_TYPE;
 
     /**
      * @var BadgesWidgetBadge[]|\Doctrine\ORM\PersistentCollection
@@ -25,8 +29,6 @@ class BadgesWidget extends AbstractWidget
     public function __construct()
     {
         $this->badges = new ArrayCollection();
-        $this->sizeX  = 4;
-        $this->sizeY  = 4;
     }
 
     /**

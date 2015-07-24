@@ -1,4 +1,5 @@
-@presentation-tab-bg: #FFB61C;
+@presentation-tab-bg: #337ab7;
+@widgets-tab-bg: #FFB61C;
 @list-tab-bg: #E94B3B;
 @exchange-space-tab-bg: #23AE89;
 
@@ -24,6 +25,7 @@
                 transition: height 0.2s ease-in-out;
                 width: 100%;
                 z-index: 0;
+                background-color: @presentation-tab-bg;
             }
 
             span.option-text {
@@ -31,12 +33,18 @@
                 z-index: 5;
             }
 
-            & > a:not(.btn) {
-                margin-right: -1px !important;
-                border-top: 0px;
-                border-radius: 0;
-                &:focus, &:active {
-                    outline: none;
+            & > a {
+                -webkit-transition: all 0.2s ease-in-out;
+                -moz-transition: all 0.2s ease-in-out;
+                -o-transition: all 0.2s ease-in-out;
+                transition: all 0.2s ease-in-out;
+                &:not(.btn) {
+                    margin-right  : -1px !important;
+                    border-top    : 0px;
+                    border-radius : 0;
+                    &:focus, &:active {
+                        outline : none;
+                    }
                 }
             }
 
@@ -65,6 +73,11 @@
                     background-color: @presentation-tab-bg;
                 }
             }
+            &.widgets-tab {
+                .icon-bg {
+                    background-color: @widgets-tab-bg;
+                }
+            }
             &.list-tab {
                 .icon-bg {
                     background-color: @list-tab-bg;
@@ -83,6 +96,6 @@
         border: 1px solid #ddd;
         border-top: 0;
         padding: 10px;
-        min-height: 120px;
+        min-height: 150px;
     }
 }
