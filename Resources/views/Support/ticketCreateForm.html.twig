@@ -1,0 +1,52 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}
+    {{ 
+        'formalibre_support_tool' | trans({}, 'tools')  ~
+        ' - ' ~
+        'ticket_creation'|trans({}, 'support')
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'formalibre_support_tool'|trans({}, 'tools'),
+                'href': path('formalibre_support_index')
+            },
+            {
+                'name': 'ticket_creation'|trans({}, 'support'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'ticket_creation'|trans({}, 'support') }}
+        </h3>
+    </div>
+    <form action="{{ path('formalibre_ticket_create') }}" 
+          method="POST"
+          {{ form_enctype(form) }}
+          novalidate
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('formalibre_support_index') }}"
+               class="btn btn-default" 
+               role="button"
+            >
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

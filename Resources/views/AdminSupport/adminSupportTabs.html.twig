@@ -1,0 +1,32 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" {% if supportName == 'new' %}class="active"{% endif %}>
+        <a href="{{ path('formalibre_admin_support_new', {'type': type.getId()}) }}">
+            {{ 'new'|trans({}, 'support') }}
+            <span class="badge">{{ nbNewTickets }}</span>
+        </a>
+    </li>
+    <li role="presentation" {% if supportName == 'level_1' %}class="active"{% endif %}>
+        <a href="{{ path('formalibre_admin_support_level', {'type': type.getId(), 'level': 1}) }}">
+            {{ 'l1'|trans({}, 'support') }}
+            <span class="badge">{{ nbL1Tickets }}</span>
+        </a>
+    </li>
+    <li role="presentation" {% if supportName == 'level_2' %}class="active"{% endif %}>
+        <a href="{{ path('formalibre_admin_support_level', {'type': type.getId(), 'level': 2}) }}">
+            {{ 'l2'|trans({}, 'support') }}
+            <span class="badge">{{ nbL2Tickets }}</span>
+        </a>
+    </li>
+    <li role="presentation" {% if supportName == 'archives' %}class="active"{% endif %}>
+        <a href="{{ path('formalibre_admin_support_archives', {'type': type.getId()}) }}">
+            {{ 'archives'|trans({}, 'support') }}
+            <span class="badge">{{ nbClosedTickets }}</span>
+        </a>
+    </li>
+    <li role="presentation" {% if supportName == 'my_tickets' %}class="active"{% endif %}>
+        <a href="{{ path('formalibre_admin_support_my_tickets', {'type': type.getId()}) }}">
+            {{ 'my_tickets'|trans({}, 'support') }}
+            <span class="badge">{{ nbMyTickets }}</span>
+        </a>
+    </li>
+</ul>

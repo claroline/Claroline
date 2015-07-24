@@ -1,0 +1,103 @@
+<div class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'comments'|trans({}, 'support') }}
+                <small>
+                    [{{ ticket.getTitle() }}]
+                </small>
+            </h3>
+        </div>
+        <div class="modal-body">
+            {% set comments = ticket.getComments() %}
+            
+            {% if comments|length > 0 %}   
+                
+                {% for comment in comments %}
+                    {% set commentUser = comment.getUser() %}
+                    <div class="media">
+
+                        {% if comment.getIsAdmin() %}
+                            <div class="media-body col-md-8 col-sm-8">
+                                <div class="pull-right">
+                                    {{ comment.getContent()|raw }}
+                                </div>
+                            </div>
+                            <div class="media-left col-md-4 col-sm-4 text-center comment-media-right">
+
+                                {% if commentUser.getPicture() != '' %}
+                                    <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                         class="media-object comment-picture"
+                                         alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                    >
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder">
+                                        <i class="fa fa-user"></i>
+                                    </h1>
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="media-left col-md-4 col-sm-4 text-center comment-media-left">
+
+                                {% if commentUser.getPicture() != '' %}
+                                    <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                         class="media-object comment-picture"
+                                         alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                    >
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder">
+                                        <i class="fa fa-user"></i>
+                                    </h1>
+                                    {{ commentUser.getFirstName() }}
+                                    {{ commentUser.getLastName() }}
+                                    <br>
+                                    {{ comment.getCreationDate()|intl_date_format }}
+                                {% endif %}
+                            </div>
+                            <div class="media-body col-md-8 col-sm-8">
+                                <div>
+                                    {{ comment.getContent()|raw }}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {% if not loop.last %}
+                        <hr class="comment-separator">
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    {{ 'no_comment'|trans({}, 'support') }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default pull-right" data-dismiss="modal">
+                {{ 'close'|trans({}, 'platform') }}
+            </span>
+        </div>
+    </div>
+</div>
+
+{% block stylesheets %}
+    <link rel='stylesheet' 
+          type='text/css' 
+          href='{{ asset('bundles/formalibresupport/css/comments.css')}}'
+    >
+{% endblock %}
