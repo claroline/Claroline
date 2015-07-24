@@ -5,6 +5,7 @@
     var ongoingStart = $('#latest-intervention-datas-box').data('ongoing-start');
     var previousTime = $('#latest-intervention-datas-box').data('previous-time');
     var availableCredits = $('#latest-intervention-datas-box').data('available-credits');
+    var hasOngoingIntervention = $('#latest-intervention-datas-box').data('has-ongoing-intervention');
     var ongoingBox = $('#ongoing-intervention-box');
     var ongoingBoxType = 'info';
     var ongoingTimer = $('#ongoing-intervention-timer');
@@ -72,7 +73,9 @@
         );
     });
     
-    setInterval(displayOngoingTimer, 1000);
+    if (hasOngoingIntervention) {
+        setInterval(displayOngoingTimer, 1000);
+    }
     
     var stopIntervention = function (interventionId) {
         $.ajax({
