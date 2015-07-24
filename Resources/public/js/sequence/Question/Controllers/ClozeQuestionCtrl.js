@@ -2,13 +2,19 @@
     'use strict';
 
     angular.module('Question').controller('ClozeQuestionCtrl', [
-        '$sce',
-        function ($sce) {
+        function () {
 
             this.question = {};
             this.formatedClozeText = '';
-
             this.isCollapsed = false;
+
+            this.setQuestion = function (question) {
+                this.question = question;
+            };
+
+            this.getQuestion = function () {
+                return this.question;
+            };
 
             /**
              * build the cloze string to show
@@ -84,14 +90,14 @@
                         break;
 
                 }
-            }
-
-            this.setQuestion = function (question) {
-                this.question = question;
             };
 
-            this.getQuestion = function () {
-                return this.question;
+            /**
+             * Check if the question has meta like created / licence, description...
+             * @returns {boolean}
+             */
+            this.questionHasOtherMeta = function () {
+                return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
             };
         }
     ]);
