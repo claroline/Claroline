@@ -98,12 +98,12 @@
     {% if hasOngoingIntervention %}
         {% set ongoingStartDate = ongoingIntervention.getStartDate() %}
         {% set ongoingIntervenant = ongoingIntervention.getUser() %}
-        <div class="alert alert-info">
+        <div class="alert alert-info" id="ongoing-intervention-box">
             {{ ongoingStartDate|intl_date_format }}
             -
             {{ ongoingIntervenant.getFirstName() }}
             {{ ongoingIntervenant.getLastName() }}
-            -
+            <br>
             <i class="fa fa-clock-o"></i>
             <span id="ongoing-intervention-timer"></span>
         </div>
@@ -127,6 +127,7 @@
      data-ticket-id="{{ ticket.getId() }}"
      data-ongoing-start="{{ lastStartDate|date('U') }}"
      data-previous-time="{{ totalTime }}"
+     data-available-credits="{{ availableCredits }}"
 >
 </div>
 

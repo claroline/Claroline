@@ -579,7 +579,6 @@ class AdminSupportController extends Controller
         $nbHours = (int)($totalTime / 60);
         $nbMinutes = ($nbHours === 0) ? $totalTime : $totalTime % ($nbHours * 60);
         $totalCredits = (5 * $nbHours) + ceil($nbMinutes / 15);
-        $availableCredits = $nbCredits - $totalCredits;
 
         return array(
             'ticket' => $ticket,
@@ -590,7 +589,7 @@ class AdminSupportController extends Controller
             'lastIntervention' => $lastIntervention,
             'nbCredits' => $nbCredits,
             'totalCredits' => $totalCredits,
-            'availableCredits' => $availableCredits,
+            'availableCredits' => $nbCredits,
             'totalTime' => $totalTime
         );
     }

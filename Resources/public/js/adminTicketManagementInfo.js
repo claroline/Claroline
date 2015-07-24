@@ -4,6 +4,9 @@
     var ticketId = $('#latest-intervention-datas-box').data('ticket-id');
     var ongoingStart = $('#latest-intervention-datas-box').data('ongoing-start');
     var previousTime = $('#latest-intervention-datas-box').data('previous-time');
+    var availableCredits = $('#latest-intervention-datas-box').data('available-credits');
+    var ongoingBox = $('#ongoing-intervention-box');
+    var ongoingBoxType = 'info';
     var ongoingTimer = $('#ongoing-intervention-timer');
     
     var displayOngoingTimer = function () {
@@ -19,10 +22,28 @@
         var nbHours = Math.floor(totalTime / 60);
         var nbMinutes = totalTime % 60;
         var requiredCredits = (5 * nbHours) + Math.ceil(nbMinutes / 15);
+        var remainingCredits = availableCredits - requiredCredits;
         
         var timerDisplay = minutes + ':' + (('' + seconds).length > 1 ? '' : '0') + seconds;
-        timerDisplay += ' [<b>' + Translator.trans('required_credits', {}, 'support')  + ' :</b> ' + requiredCredits + ']';
+        timerDisplay += '<br><b>' + Translator.trans('required_credits', {}, 'support')  + ' :</b> ' + requiredCredits;
+        timerDisplay += '<br><b>' + Translator.trans('remaining_credits', {}, 'support')  + ' :</b> ' + remainingCredits;
         ongoingTimer.html(timerDisplay);
+        
+        if (remainingCredits > 1 && ongoingBoxType !== 'info') {
+            ongoingBox.removeClass('alert-' + ongoingBoxType);
+            ongoingBox.addClass('alert-info');
+            ongoingBoxType = 'info';
+        } else if (remainingCredits === 1 && ongoingBoxType !== 'warning') {
+            ongoingBox.removeClass('alert-' + ongoingBoxType);
+            ongoingBox.addClass('alert-warning');
+            ongoingBoxType = 'warning';
+            alert(Translator.trans('remaining_credits', {}, 'support'));
+        } else if (remainingCredits < 1 && ongoingBoxType !== 'danger') {
+            ongoingBox.removeClass('alert-' + ongoingBoxType);
+            ongoingBox.addClass('alert-danger');
+            ongoingBoxType = 'danger';
+            alert(Translator.trans('remaining_credits', {}, 'support'));
+        }
     };
     
     $('#latest-intervention-info').on('click', '#start-intervention-btn', function () {
