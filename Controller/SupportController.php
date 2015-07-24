@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ToolManager;
+use FormaLibre\InvoiceBundle\Manager\CreditSupportManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Form\CommentType;
@@ -26,6 +27,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class SupportController extends Controller
 {
     private $authorization;
+    private $creditManager;
     private $formFactory;
     private $request;
     private $router;
@@ -35,6 +37,7 @@ class SupportController extends Controller
     /**
      * @DI\InjectParams({
      *     "authorization"  = @DI\Inject("security.authorization_checker"),
+     *     "creditManager"  = @DI\Inject("formalibre.manager.credit_support_manager"),
      *     "formFactory"    = @DI\Inject("form.factory"),
      *     "requestStack"   = @DI\Inject("request_stack"),
      *     "router"         = @DI\Inject("router"),
@@ -44,6 +47,7 @@ class SupportController extends Controller
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        CreditSupportManager $creditManager,
         FormFactory $formFactory,
         RequestStack $requestStack,
         RouterInterface $router,
@@ -52,6 +56,7 @@ class SupportController extends Controller
     )
     {
         $this->authorization = $authorization;
+        $this->creditManager = $creditManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -102,6 +107,7 @@ class SupportController extends Controller
                 }
             }
         }
+        $nbCredits = $this->creditManager->getNbRemainingCredits($authenticatedUser);
 
         return array(
             'tickets' => $tickets,
@@ -110,7 +116,8 @@ class SupportController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'nbCredits' => $nbCredits
         );
     }
 

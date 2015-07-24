@@ -3,6 +3,7 @@
     
     var ticketId = $('#latest-intervention-datas-box').data('ticket-id');
     var ongoingStart = $('#latest-intervention-datas-box').data('ongoing-start');
+    var previousTime = $('#latest-intervention-datas-box').data('previous-time');
     var ongoingTimer = $('#ongoing-intervention-timer');
     
     var displayOngoingTimer = function () {
@@ -10,7 +11,17 @@
         var diff = now - ongoingStart;
         var minutes = (diff / 60) >> 0;
         var seconds = diff % 60;
-        var timerDisplay = minutes + ':' + (('' + seconds).length > 1 ? '' : '0') + seconds + ' minutes';
+        var totalTime = previousTime + minutes;
+        
+        if (seconds > 0) {
+            totalTime++;
+        }
+        var nbHours = Math.floor(totalTime / 60);
+        var nbMinutes = totalTime % 60;
+        var requiredCredits = (5 * nbHours) + Math.ceil(nbMinutes / 15);
+        
+        var timerDisplay = minutes + ':' + (('' + seconds).length > 1 ? '' : '0') + seconds;
+        timerDisplay += ' [<b>' + Translator.trans('required_credits', {}, 'support')  + ' :</b> ' + requiredCredits + ']';
         ongoingTimer.html(timerDisplay);
     };
     

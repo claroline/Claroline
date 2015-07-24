@@ -3,6 +3,7 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use FormaLibre\InvoiceBundle\Manager\CreditSupportManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Status;
@@ -34,6 +35,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class AdminSupportController extends Controller
 {
+    private $creditManager;
     private $formFactory;
     private $request;
     private $router;
@@ -42,6 +44,7 @@ class AdminSupportController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "creditManager"  = @DI\Inject("formalibre.manager.credit_support_manager"),
      *     "formFactory"    = @DI\Inject("form.factory"),
      *     "requestStack"   = @DI\Inject("request_stack"),
      *     "router"         = @DI\Inject("router"),
@@ -50,6 +53,7 @@ class AdminSupportController extends Controller
      * })
      */
     public function __construct(
+        CreditSupportManager $creditManager,
         FormFactory $formFactory,
         RequestStack $requestStack,
         RouterInterface $router,
@@ -57,6 +61,7 @@ class AdminSupportController extends Controller
         TranslatorInterface $translator
     )
     {
+        $this->creditManager = $creditManager;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -527,14 +532,14 @@ class AdminSupportController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/admin/ticket/{ticket}/latest/intervention/info",
-     *     name="formalibre_admin_ticket_latest_intervention_info",
+     *     "/admin/ticket/{ticket}/management/info",
+     *     name="formalibre_admin_ticket_management_info",
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function adminTicketLatestInterventionInfoAction(
+    public function adminTicketManagementInfoAction(
         User $authenticatedUser,
         Ticket $ticket
     )
@@ -542,9 +547,18 @@ class AdminSupportController extends Controller
         $interventions = $ticket->getInterventions();
         $lastIntervention = null;
         $nbInterventions = count($interventions);
+        $totalTime = 0;
 
         if ($nbInterventions > 0) {
             $lastIntervention = $interventions[$nbInterventions - 1];
+
+            foreach ($interventions as $intervention) {
+                $duration = $intervention->getDuration();
+
+                if (!is_null($duration)) {
+                    $totalTime += $duration;
+                }
+            }
         }
 
         $unfinishedInterventions = $this->supportManager->getUnfinishedInterventionByTicket($ticket);
@@ -561,6 +575,11 @@ class AdminSupportController extends Controller
                 $otherUnfinishedInterventions[] = $unfinishedIntervention;
             }
         }
+        $nbCredits = $this->creditManager->getNbRemainingCredits($ticket->getUser());
+        $nbHours = (int)($totalTime / 60);
+        $nbMinutes = ($nbHours === 0) ? $totalTime : $totalTime % ($nbHours * 60);
+        $totalCredits = (5 * $nbHours) + ceil($nbMinutes / 15);
+        $availableCredits = $nbCredits - $totalCredits;
 
         return array(
             'ticket' => $ticket,
@@ -568,7 +587,11 @@ class AdminSupportController extends Controller
             'unfinishedInterventions' => $otherUnfinishedInterventions,
             'hasOngoingIntervention' => $hasOngoingIntervention,
             'ongoingIntervention' => $ongoingIntervention,
-            'lastIntervention' => $lastIntervention
+            'lastIntervention' => $lastIntervention,
+            'nbCredits' => $nbCredits,
+            'totalCredits' => $totalCredits,
+            'availableCredits' => $availableCredits,
+            'totalTime' => $totalTime
         );
     }
 

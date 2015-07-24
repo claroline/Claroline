@@ -65,6 +65,26 @@
             </h3>
         </div>
         <div class="panel-body">
+            
+            {% if nbCredits > 0 %}
+                <div class="alert alert-info">
+                    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+                    {{ nbCredits }}
+                </div>
+            {% else %}
+                <div class="alert alert-danger">
+                    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+                    {{ nbCredits }}
+                    <br>
+                    {{ 'no_credit_message'|trans({}, 'support') }}
+                    <br>
+                    <br>
+                    <a href="#" class="btn btn-danger btn-sm">
+                        {{ 'buy_support_credits'|trans({}, 'support') }}
+                    </a>
+                </div>
+            {% endif %}
+                
             {% if tickets|length > 0 %}
         
                 {% if tickets.getNbPages() > 1 %}
@@ -175,11 +195,13 @@
                 </div>
             {% endif %}
             
-            <a href="{{ path('formalibre_ticket_create_form') }}"
-               class="btn btn-primary"
-            >
-                {{ 'create_ticket'|trans({}, 'support') }}
-            </a>
+            {% if nbCredits > 0 %}
+                <a href="{{ path('formalibre_ticket_create_form') }}"
+                   class="btn btn-primary"
+                >
+                    {{ 'create_ticket'|trans({}, 'support') }}
+                </a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

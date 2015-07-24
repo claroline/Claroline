@@ -1,4 +1,12 @@
+{#{% use 'ClarolineCoreBundle:Layout:javascripts.html.twig' %}#}
+
 <div id="latest-intervention-info">
+    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+    {{ nbCredits }}
+    <br>
+    <b>{{ 'required_credits'|trans({}, 'support') }} :</b>
+    {{ totalCredits }}
+    <br>
     
     {% if lastIntervention is not empty %}
         {% set lastStatus = lastIntervention.getStatus() %}
@@ -118,11 +126,12 @@
 <div id="latest-intervention-datas-box"
      data-ticket-id="{{ ticket.getId() }}"
      data-ongoing-start="{{ lastStartDate|date('U') }}"
+     data-previous-time="{{ totalTime }}"
 >
 </div>
 
 {% block javascripts %}
-    <script src='{{ asset('bundles/formalibresupport/js/adminTicketLatestInterventionInfo.js') }}'
+    <script src='{{ asset('bundles/formalibresupport/js/adminTicketManagementInfo.js') }}'
             type="text/javascript"
     >
     </script>
