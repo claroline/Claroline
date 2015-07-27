@@ -46,7 +46,7 @@ class OauthClientType extends AbstractType
         $builder->add(
             'uri',
             'text',
-            array('label' => 'uri', 'constraints' => new NotBlank())
+            array('label' => 'uri')
         );
     }
 

@@ -97,13 +97,12 @@ class OauthController extends Controller
     public function createClientAction()
     {
         $form = $this->get('form.factory')->create(new OauthClientType());
-
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $grantTypes = $form->get('allowed_grant_types')->getData();
             $client = $this->oauthManager->createClient();
-            $client->setRedirectUris(array($form->get('uri')->getData()));
+            if ($uri = $form->get('uri')->getData()) $client->setRedirectUris(array($uri));
             $client->setAllowedGrantTypes($grantTypes);
             $client->setName($form->get('name')->getData());
             $this->oauthManager->updateClient($client);
