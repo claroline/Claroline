@@ -49,9 +49,11 @@ class ApiManager
         $json = json_decode($serverOutput);
 
         if ($json) {
-            if ($json->error === 'access_denied') {
-                $this->oauthManager->connect($host, $id, $secret);
-                $this->url($host, $url, $id, $secret, $payload, $type);
+            if (property_exists($json, 'error')) {
+                if ($json->error === 'access_denied') {
+                    $this->oauthManager->connect($host, $id, $secret);
+                    $this->url($host, $url, $id, $secret, $payload, $type);
+                }
             }
         }
 

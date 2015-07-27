@@ -40,7 +40,6 @@ class OauthManager extends ClientManager
             $secret . '&grant_type=client_credentials';
 
         $serverOutput = $this->curlManager->exec($url);
-        echo $serverOutput;
         $json = json_decode($serverOutput);
 
         if (property_exists($json, 'access_token')) {
@@ -59,11 +58,13 @@ class OauthManager extends ClientManager
         //1st step, remove any existing access
         $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
             ->findOneByRandomId($randomId);
-        $this->om->remove($access);
-        $this->om->flush();
+        if ($access) {
+            $this->om->remove($access);
+            $this->om->flush();
+        }
         //2nd step, creates a new access
         $access = new ClarolineAccess();
-        $access->setRandomId($id);
+        $access->setRandomId($randomId);
         $access->setAccessToken($token);
         $this->om->persist($access);
         $this->om->flush();

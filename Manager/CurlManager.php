@@ -42,10 +42,24 @@ class CurlManager
     private function setPostCurl($ch, $payload)
     {
         curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $this->urlify($payload));
     }
 
     private function setPutCurl($ch, $payload)
     {
         curl_setopt($ch, CURLOPT_PUT, 1);
+    }
+
+    private function urlify($payload)
+    {
+        $string = '';
+
+        foreach ($payload as $key => $value) {
+            $string .= $key.'='.$value.'&';
+        }
+
+        rtrim($string, '&');
+
+        return $string;
     }
 }
