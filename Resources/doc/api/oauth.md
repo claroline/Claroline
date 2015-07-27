@@ -21,4 +21,5 @@ Oauth refresh
 Api usage
 ---------
 - Once you have your access token, you can access the api by passing the access_token as an url parameter.
+
 > CLIENT_HOST/api/path/to/url.json?access_token=TOKEN
