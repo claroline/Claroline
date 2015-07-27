@@ -92,26 +92,10 @@ class SupportController extends Controller
             $page,
             $max
         );
-        $lastStatus = array();
-
-        foreach ($tickets as $ticket) {
-            $interventions = $ticket->getInterventions();
-            $reverseInterventions = array_reverse($interventions);
-
-            foreach ($reverseInterventions as $intervention) {
-                $status = $intervention->getStatus();
-
-                if (!is_null($status)) {
-                    $lastStatus[$ticket->getId()] = $status;
-                    break;
-                }
-            }
-        }
         $nbCredits = $this->creditManager->getNbRemainingCredits($authenticatedUser);
 
         return array(
             'tickets' => $tickets,
-            'lastStatus' => $lastStatus,
             'search' => $search,
             'page' => $page,
             'max' => $max,

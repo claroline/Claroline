@@ -117,7 +117,6 @@ class SupportManager
     {
         $this->om->startFlushSuite();
         $ticket->setLevel(1);
-        $this->persistTicket($ticket);
         $startStatus = $this->getStatusByType(Status::STATUS_MANDATORY_START);
         $now = new \DateTime();
 
@@ -130,7 +129,9 @@ class SupportManager
             $intervention->setEndDate($now);
             $intervention->setDuration(0);
             $this->persistIntervention($intervention);
+            $ticket->setStatus($status);
         }
+        $this->persistTicket($ticket);
         $this->om->endFlushSuite();
     }
 

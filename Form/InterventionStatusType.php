@@ -21,6 +21,7 @@ class InterventionStatusType extends AbstractType
                 'choice_translation_domain' => true,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('s')
+                        ->where("s.type = 0")
                         ->orderBy('s.order', 'ASC');
                 },
                 'property' => 'name',

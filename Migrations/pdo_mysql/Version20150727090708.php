@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/07/13 10:25:56
+ * Generation date: 2015/07/27 09:07:11
  */
-class Version20150713102553 extends AbstractMigration
+class Version20150727090708 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -31,6 +31,7 @@ class Version20150713102553 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 user_id INT DEFAULT NULL, 
                 type_id INT DEFAULT NULL, 
+                status_id INT DEFAULT NULL, 
                 title VARCHAR(255) NOT NULL, 
                 description LONGTEXT NOT NULL, 
                 contact_mail VARCHAR(255) NOT NULL, 
@@ -41,6 +42,7 @@ class Version20150713102553 extends AbstractMigration
                 details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 INDEX IDX_59A907AEA76ED395 (user_id), 
                 INDEX IDX_59A907AEC54C8C93 (type_id), 
+                INDEX IDX_59A907AE6BF700BD (status_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -96,6 +98,12 @@ class Version20150713102553 extends AbstractMigration
             ON DELETE CASCADE
         ");
         $this->addSql("
+            ALTER TABLE formalibre_support_ticket 
+            ADD CONSTRAINT FK_59A907AE6BF700BD FOREIGN KEY (status_id) 
+            REFERENCES formalibre_support_status (id) 
+            ON DELETE SET NULL
+        ");
+        $this->addSql("
             ALTER TABLE formalibre_support_comment 
             ADD CONSTRAINT FK_EA0B277BA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
@@ -129,6 +137,10 @@ class Version20150713102553 extends AbstractMigration
 
     public function down(Schema $schema)
     {
+        $this->addSql("
+            ALTER TABLE formalibre_support_ticket 
+            DROP FOREIGN KEY FK_59A907AE6BF700BD
+        ");
         $this->addSql("
             ALTER TABLE formalibre_support_intervention 
             DROP FOREIGN KEY FK_B12874826BF700BD
