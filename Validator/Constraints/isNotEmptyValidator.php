@@ -8,13 +8,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 class isNotEmptyValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
-    {
-        $valueT=trim($value);
-        if (isset($valueT)) {
-            if(preg_match('/^$|\s+/',$valueT)){
-              
+    {  
+        if (empty($value) && !is_numeric($value)) {         
                 $this->context->addViolation($constraint->message);
-            }
         }
     }
 }
