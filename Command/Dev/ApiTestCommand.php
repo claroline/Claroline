@@ -72,7 +72,7 @@ class ApiTestCommand extends ContainerAwareCommand
         $url = $input->getArgument('url');
         $clientName = $input->getArgument('client_name');
         $client = $this->getContainer()->get('claroline.manager.oauth_manager')->findClientBy(array('name' => $clientName));
-        $response = $apiManager->url($host, $url, $client);
+        $response = $apiManager->url($host, $url, $client->getConcatRandomId(), $client->getSecret());
         echo $response;
     }
 }

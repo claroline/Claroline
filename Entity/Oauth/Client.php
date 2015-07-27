@@ -138,4 +138,9 @@ class Client extends BaseClient
     {
         return $this->refreshTokens;
     }
+
+    public function getConcatRandomId()
+    {
+        return $this->id . '_' . $this->getRandomId();
+    }
 }

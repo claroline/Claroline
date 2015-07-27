@@ -39,19 +39,19 @@ class ApiManager
         $this->curlManager = $curlManager;
     }
 
-    public function url($host, $url, Client $client, $payload = null, $type = 'GET')
+    public function url($host, $url, $id, $secret, $payload = null, $type = 'GET')
     {
         $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
-            ->findOneByClient($client);
-        if (!$access) $this->oauthManager->connect($host, $client);
+            ->findOneByRandomId($id);
+        if (!$access) $this->oauthManager->connect($host, $id, $secret);
         $url = $host . '/' . $url . '?access_token=' . $access->getAccessToken();
-        $serverOutput = $this->curlManager->exec($url, $type);
+        $serverOutput = $this->curlManager->exec($url, $payload, $type);
         $json = json_decode($serverOutput);
 
         if ($json) {
             if ($json->error === 'access_denied') {
-                $this->oauthManager->connect($host, $client);
-                $this->url($host, $url, $client, $payload, $type);
+                $this->oauthManager->connect($host, $id, $secret);
+                $this->url($host, $url, $id, $secret, $payload, $type);
             }
         }
 

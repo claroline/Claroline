@@ -27,10 +27,11 @@ class ClarolineAccess
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Oauth\Client", inversedBy="authCodes")
-     * @ORM\JoinColumn(nullable=false)
+     * @var string
+     *
+     * @ORM\Column(name="random_id", type="string", nullable=false)
      */
-    protected $client;
+    protected $randomId;
 
     /**
      * @var string
@@ -44,14 +45,14 @@ class ClarolineAccess
         return $this->id;
     }
 
-    public function setClient(Client $client)
+    public function setRandomId($randomId)
     {
-        $this->client = $client;
+        $this->randomId = $randomId;
     }
 
-    public function getClient()
+    public function getRandomId()
     {
-        return $this->client;
+        return $this->randomId;
     }
 
     public function setAccessToken($accessToken)

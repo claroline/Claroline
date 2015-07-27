@@ -33,36 +33,37 @@ class OauthManager extends ClientManager
         return $this->repository->findAll();
     }
 
-    public function connect($host, Client $client)
+    public function connect($host, $id, $secret)
     {
         $url = $host . '/oauth/v2/token?client_id=' .
-            $client->getId() . '_' . $client->getRandomId() . '&client_secret=' .
-            $client->getSecret() . '&grant_type=client_credentials';
+            $id . '&client_secret=' .
+            $secret . '&grant_type=client_credentials';
 
         $serverOutput = $this->curlManager->exec($url);
+        echo $serverOutput;
         $json = json_decode($serverOutput);
 
         if (property_exists($json, 'access_token')) {
-            $this->createAccess($client, $json->access_token);
+            $this->createAccess($id, $json->access_token);
             return;
         }
 
-        throw new \Exception('The oauth connection for client ' . $client->getName() . ' could not be initialized');
+        throw new \Exception('The oauth connection for id ' . $id . ' could not be initialized');
     }
 
     /**
      * Only 1 access per client !
      */
-    private function createAccess(Client $client, $token)
+    private function createAccess($randomId, $token)
     {
         //1st step, remove any existing access
         $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
-            ->findOneByClient($client);
+            ->findOneByRandomId($randomId);
         $this->om->remove($access);
         $this->om->flush();
         //2nd step, creates a new access
         $access = new ClarolineAccess();
-        $access->setClient($client);
+        $access->setRandomId($id);
         $access->setAccessToken($token);
         $this->om->persist($access);
         $this->om->flush();
