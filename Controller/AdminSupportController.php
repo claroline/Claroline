@@ -284,27 +284,11 @@ class AdminSupportController extends Controller
             $page,
             $max
         );
-        $lastStatus = array();
-
-        foreach ($tickets as $ticket) {
-            $interventions = $ticket->getInterventions();
-            $reverseInterventions = array_reverse($interventions);
-
-            foreach ($reverseInterventions as $intervention) {
-                $status = $intervention->getStatus();
-
-                if (!is_null($status)) {
-                    $lastStatus[$ticket->getId()] = $status;
-                    break;
-                }
-            }
-        }
 
         return array(
             'tickets' => $tickets,
             'type' => $type,
             'level' => $level,
-            'lastStatus' => $lastStatus,
             'supportName' => 'level_' . $level,
             'search' => $search,
             'page' => $page,
@@ -344,26 +328,10 @@ class AdminSupportController extends Controller
             $page,
             $max
         );
-        $lastStatus = array();
-
-        foreach ($tickets as $ticket) {
-            $interventions = $ticket->getInterventions();
-            $reverseInterventions = array_reverse($interventions);
-
-            foreach ($reverseInterventions as $intervention) {
-                $status = $intervention->getStatus();
-
-                if (!is_null($status)) {
-                    $lastStatus[$ticket->getId()] = $status;
-                    break;
-                }
-            }
-        }
 
         return array(
             'tickets' => $tickets,
             'type' => $type,
-            'lastStatus' => $lastStatus,
             'supportName' => 'my_tickets',
             'search' => $search,
             'page' => $page,

@@ -115,6 +115,7 @@
                         {% for ticket in tickets %}
                             {% set ticketId = ticket.getId() %}
                             {% set ticketDescription = ticket.getDescription() %}
+                            {% set ticketStatus = ticket.getStatus() %}
                             <tr id="row-ticket-{{ ticketId }}">
                                 <td>
                                     #{{ ticket.getNum() }}
@@ -152,16 +153,15 @@
                                         {{ ticket.getComments()|length }}
                                     </span>
                                     
-                                    {% if lastStatus[ticketId] is defined %}
-                                        {% set status = lastStatus[ticketId] %}
+                                    {% if ticketStatus is not empty %}
                                         <br>
                                         <span class="label label-success"
                                               data-toggle="tooltip"
                                               data-container="body" 
                                               data-placement="left"
-                                              title="{{ status.getName()|trans({}, 'support') }}"
+                                              title="{{ ticketStatus.getName()|trans({}, 'support') }}"
                                         >
-                                            {{ status.getCode() }}
+                                            {{ ticketStatus.getCode() }}
                                         </span>
                                     {% endif %}
                                 </td>

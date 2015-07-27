@@ -5,6 +5,7 @@ namespace FormaLibre\SupportBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use FormaLibre\SupportBundle\Entity\Status;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -75,6 +76,14 @@ class Ticket
      * @ORM\Column(name="level", type="integer")
      */
     protected $level = 0;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="FormaLibre\SupportBundle\Entity\Status"
+     * )
+     * @ORM\JoinColumn(name="status_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $status;
 
     /**
      * @ORM\OneToMany(
@@ -181,6 +190,16 @@ class Ticket
     public function setLevel($level)
     {
         $this->level = $level;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setStatus(Status $status = null)
+    {
+        $this->status = $status;
     }
 
     public function getComments()
