@@ -23,7 +23,7 @@ class WorkspaceType extends AbstractType
 {
     private $user;
 
-    public function __construct(User $user)
+    public function __construct(User $user = null)
     {
         $this->user = $user;
         $this->forApi = false;

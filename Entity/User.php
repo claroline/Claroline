@@ -31,6 +31,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\UserOptions;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Table(name="claro_user")
@@ -58,6 +59,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="first_name", length=50)
      * @Assert\NotBlank()
      * @Groups({"api"})
+     * @SerializedName("firstName")
      */
     protected $firstName;
 
@@ -67,6 +69,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="last_name", length=50)
      * @Assert\NotBlank()
      * @Groups({"api"})
+     * @SerializedName("lastName")
      */
     protected $lastName;
 
@@ -78,6 +81,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\Length(min="3")
      * @ClaroAssert\Username()
      * @Groups({"api"})
+     * @SerializedName("username")
      */
     protected $username;
 
@@ -93,6 +97,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(nullable=true)
      * @Groups({"api"})
+     * @SerializedName("locale")
      */
     protected $locale;
 
@@ -116,6 +121,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(nullable=true)
      * @Groups({"api"})
+     * @SerializedName("phone")
      */
     protected $phone;
 
@@ -126,6 +132,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @Assert\NotBlank()
      * @Assert\Email(checkMX = false)
      * @Groups({"api"})
+     * @SerializedName("mail")
      */
     protected $mail;
 
@@ -134,6 +141,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="administrative_code", nullable=true)
      * @Groups({"api"})
+     * @SerializedName("administrativeCode")
      */
     protected $administrativeCode;
 
@@ -188,6 +196,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      * @ORM\Column(name="creation_date", type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @Groups({"api"})
+     * @SerializedName("created")
      */
     protected $created;
 
@@ -196,6 +205,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="initialization_date", type="datetime", nullable=true)
      * @Groups({"api"})
+     * @SerializedName("initDate")
      */
     protected $initDate;
 
@@ -221,6 +231,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("picture")
      */
     protected $picture;
 
@@ -231,6 +243,8 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
 
@@ -239,6 +253,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(type="boolean", nullable=true)
      * @Groups({"api"})
+     * @SerializedName("hasAcceptedTerms")
      */
     protected $hasAcceptedTerms;
 
@@ -247,6 +262,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="is_enabled", type="boolean")
      * @Groups({"api"})
+     * @SerializedName("isEnabled")
      */
     protected $isEnabled = true;
 
@@ -255,12 +271,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="is_mail_notified", type="boolean")
      * @Groups({"api"})
+     * @SerializedName("isMailNotified")
      */
     protected $isMailNotified = true;
 
     /**
      * @ORM\Column(name="last_uri", length=255, nullable=true)
      * @Groups({"api"})
+     * @SerializedName("lastUri")
      */
     protected $lastUri;
 
@@ -269,6 +287,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="public_url", type="string", nullable=true, unique=true)
      * @Groups({"api"})
+     * @SerializedName("publicUrl")
      */
     protected $publicUrl;
 
@@ -277,6 +296,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="has_tuned_public_url", type="boolean")
      * @Groups({"api"})
+     * @SerializedName("hasTunedPublicUrl")
      */
     protected $hasTunedPublicUrl = false;
 
@@ -285,6 +305,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(name="expiration_date", type="datetime", nullable=true)
      * @Groups({"api"})
+     * @SerializedName("expirationDate")
      */
     protected $expirationDate;
 
@@ -314,6 +335,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @ORM\Column(nullable=true)
      * @Groups({"api"})
+     * @SerializedName("authentication")
      */
     protected $authentication;
 

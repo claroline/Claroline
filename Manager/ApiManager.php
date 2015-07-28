@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Oauth\Client;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\AbstractType;
 
 /**
  * @DI\Service("claroline.manager.api_manager")
@@ -60,5 +62,25 @@ class ApiManager
         }
 
         return $serverOutput;
+    }
+
+    public function formEncode($entity, Form $form, AbstractType $formType)
+    {
+        var_dump($entity);
+        $baseName = $formType->getName();
+        $payload = array();
+
+        foreach ($form->getIterator() as $el) {
+            if (is_array($entity)) {
+                $payload[$baseName . '[' . $el->getName() . ']'] = $entity[$el->getName()];
+            }
+        }
+
+        return $payload;
+    }
+
+    private function getRealPropertyName($property)
+    {
+        
     }
 }
