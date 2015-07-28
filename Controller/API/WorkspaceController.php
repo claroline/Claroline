@@ -24,6 +24,7 @@ use FOS\RestBundle\Controller\Annotations\View;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class WorkspaceController extends FOSRestController
 {
@@ -87,6 +88,7 @@ class WorkspaceController extends FOSRestController
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function postWorkspaceUserAction(User $user)
     {
@@ -142,6 +144,7 @@ class WorkspaceController extends FOSRestController
      *     views = {"workspace"},
      *     input="Claroline\CoreBundle\Form\WorkspaceType"
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function putWorkspaceUserAction(Workspace $workspace, User $user)
     {
