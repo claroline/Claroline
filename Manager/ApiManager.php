@@ -17,6 +17,8 @@ use Claroline\CoreBundle\Entity\Oauth\Client;
 
 /**
  * @DI\Service("claroline.manager.api_manager")
+ * This service allows 2 instances of claroline-connect to communicate through their REST api.
+ * The REST api requires an oauth authentication (wich is why the $id/$secret combination is required)
  */
 class ApiManager
 {
@@ -50,7 +52,7 @@ class ApiManager
 
         if ($json) {
             if (property_exists($json, 'error')) {
-                if ($json->error === 'access_denied') {
+                if ($json->error === 'access_denied' || $json->error = 'invalid_grant') {
                     $this->oauthManager->connect($host, $id, $secret);
                     $this->url($host, $url, $id, $secret, $payload, $type);
                 }

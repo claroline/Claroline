@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class UserController extends FOSRestController
 {
@@ -126,6 +127,7 @@ class UserController extends FOSRestController
      *     views = {"user"},
      *     input="Claroline\CoreBundle\Form\ProfileType"
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function putUserAction(User $user)
     {
@@ -172,6 +174,7 @@ class UserController extends FOSRestController
      *     description="Returns a user",
      *     views = {"user"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function getUserAction(User $user)
     {
@@ -185,6 +188,7 @@ class UserController extends FOSRestController
      *     section="user",
      *     views = {"api"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function deleteUserAction(User $user)
     {
@@ -199,6 +203,7 @@ class UserController extends FOSRestController
      *     description="Add a role to a user",
      *     views = {"user"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserRoleAction(User $user, Role $role)
     {
@@ -213,6 +218,7 @@ class UserController extends FOSRestController
      *     description="remove a role from a user",
      *     views = {"user"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserRoleAction(User $user, Role $role)
     {
@@ -227,6 +233,7 @@ class UserController extends FOSRestController
      *     description="Add a user in a group",
      *     views = {"user"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserGroupAction(User $user, Group $group)
     {
@@ -241,6 +248,7 @@ class UserController extends FOSRestController
      *     description="Remove a user from a group",
      *     views = {"user"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserGroupAction(User $user, Group $group)
     {
