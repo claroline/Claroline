@@ -109,6 +109,11 @@ class matchingImport extends qtiImport {
         foreach ($sms->getElementsByTagName("simpleAssociableChoice") as $simpleLabel) {
             //create a new Label and set attributes
             $label = new Label();
+            $feedback = $simpleLabel->getElementsByTagName("feedbackInline");
+            if ($feedback->item(0)) {
+                $label->setFeedback($feedback->item(0)->nodeValue);
+                $simpleLabel->removeChild($feedback->item(0));
+            }
             $label->setValue($this->value($simpleLabel));
             $identifiant = $simpleLabel->getAttribute("identifier");
             $label->setScoreRightResponse($this->notation($identifiant));

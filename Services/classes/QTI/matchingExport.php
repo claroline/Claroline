@@ -196,8 +196,7 @@ class matchingExport extends qtiExport
      * @param type $numberLabel
      * @param type $elementLabel
      */
-    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
-    {
+    protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel){
         if($this->cardinality == "multiple") {
             $w = 0;
             foreach ($this->interactionmatching->getProposals() as $pr) {
@@ -207,7 +206,7 @@ class matchingExport extends qtiExport
         } else {
             $maxAssociation = 1;
         }
-
+        
         if ($label->getPositionForce() == 1) {
             $positionForced = 'true';
         } else {
@@ -225,8 +224,18 @@ class matchingExport extends qtiExport
 
         $simpleLabel->appendChild($simpleLabeltxt);
         $elementLabel->appendChild($simpleLabel);
+        
+        if(($label->getFeedback()!=Null) && ($label->getFeedback()!="")){
+            $feedbackInline = $this->document->CreateElement('feedbackInline');
+            $feedbackInline->setAttribute("outcomeIdentifier", "FEEDBACK");
+            $feedbackInline->setAttribute("identifier","Choice".$numberLabel);
+            $feedbackInline->setAttribute("showHide","show");
+            $feedbackInlinetxt = $this->document->CreateTextNode($label->getFeedback());
+            $feedbackInline->appendChild($feedbackInlinetxt);
+            $simpleLabel->appendChild($feedbackInline);
+        }
     }
-
+       
     /**
      * Implements the abstract method
      * add the tag correctResponse in responseDeclaration
