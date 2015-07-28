@@ -31,3 +31,5 @@ parameters:
     claroline.composer_log_file: "%kernel.root_dir%/logs/composer.log"
     claroline.ip_white_list_file: "%kernel.root_dir%/config/ips"
     claroline.cache_dir: "%kernel.root_dir%/cache"
+    claroline.param.home_custom_template_directory: "%kernel.root_dir%/Resources/ClarolineCoreBundle/views/Home/templates/custom"
+    

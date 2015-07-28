@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Form\HomeTemplateType;
 use Claroline\CoreBundle\Manager\HomeManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -20,6 +21,9 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -34,6 +38,8 @@ class HomeController
     private $authorization;
     private $templating;
     private $homeService;
+    private $formFactory;
+    private $templatesDirectory;
 
     /**
      * @InjectParams({
@@ -41,16 +47,29 @@ class HomeController
      *     "authorization"  = @Inject("security.authorization_checker"),
      *     "request"        = @Inject("request"),
      *     "templating"     = @Inject("templating"),
-     *     "homeService"    = @Inject("claroline.common.home_service")
+     *     "homeService"    = @Inject("claroline.common.home_service"),
+     *     "container"      = @Inject("service_container"),
+     *     "formFactory"    = @Inject("form.factory")
      * })
      */
-    public function __construct(HomeManager $manager, Request $request, $authorization, $templating, $homeService)
+    public function __construct(
+        HomeManager $manager,
+        Request $request,
+        $authorization,
+        $templating,
+        $homeService,
+        ContainerInterface $container,
+        FormFactory $formFactory
+    )
     {
         $this->manager = $manager;
         $this->request = $request;
         $this->authorization = $authorization;
         $this->templating = $templating;
         $this->homeService = $homeService;
+        $this->container = $container;
+        $this->formFactory = $formFactory;
+        $this->templatesDirectory = $container->getParameter('claroline.param.home_custom_template_directory');
     }
 
     /**
@@ -89,25 +108,32 @@ class HomeController
      */
     public function homeAction($type)
     {
-        if (null === $this->manager->getType($type)) {
-             throw new NotFoundHttpException("Page not found");
+        $typeEntity = $this->manager->getType($type);
+
+        if (is_null($typeEntity)) {
+
+            throw new NotFoundHttpException("Page not found");
+        } else {
+            $typeTemplate = $typeEntity->getTemplate();
+            $template = is_null($typeTemplate) ?
+                'ClarolineCoreBundle:Home:home.html.twig' :
+                'ClarolineCoreBundle:Home\templates\custom:' . $typeTemplate;
+            $response = $this->render(
+                $template,
+                array(
+                    'type' => $type,
+                    'region' => $this->renderRegions($this->manager->getRegionContents()),
+                    'content' => $this->typeAction($type)->getContent()
+                )
+            );
+            $response->headers->addCacheControlDirective('no-cache', true);
+            $response->headers->addCacheControlDirective('max-age', 0);
+            $response->headers->addCacheControlDirective('must-revalidate', true);
+            $response->headers->addCacheControlDirective('no-store', true);
+            $response->headers->addCacheControlDirective('expires', '-1');
+
+            return $response;
         }
-
-        $response = $this->render(
-            'ClarolineCoreBundle:Home:home.html.twig',
-            array(
-                'type' => $type,
-                'region' => $this->renderRegions($this->manager->getRegionContents()),
-                'content' => $this->typeAction($type)->getContent()
-            )
-        );
-        $response->headers->addCacheControlDirective('no-cache', true);
-        $response->headers->addCacheControlDirective('max-age', 0);
-        $response->headers->addCacheControlDirective('must-revalidate', true);
-        $response->headers->addCacheControlDirective('no-store', true);
-        $response->headers->addCacheControlDirective('expires', '-1');
-
-        return $response;
     }
 
     /**
@@ -137,6 +163,7 @@ class HomeController
     public function typesAction()
     {
         $types = $this->manager->getTypes();
+        $hasCustomTemplates = is_dir($this->templatesDirectory);
 
         $response = $this->render(
             'ClarolineCoreBundle:Home:home.html.twig',
@@ -145,7 +172,7 @@ class HomeController
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
                 'content' => $this->render(
                     'ClarolineCoreBundle:Home:types.html.twig',
-                    array('types' => $types)
+                    array('types' => $types, 'hasCustomTemplates' => $hasCustomTemplates)
                 )->getContent()
             )
         );
@@ -206,6 +233,62 @@ class HomeController
             return new Response('true');
         } catch (\Exeption $e) {
             return new Response('false'); //useful in ajax
+        }
+    }
+
+    /**
+     * Edit template form
+     *
+     * @Route(
+     *     "/type/{type}/change/template/form",
+     *     name="claro_content_change_template_form",
+     *     options = {"expose" = true}
+     * )
+     * @Secure(roles="ROLE_HOME_MANAGER")
+     *
+     * @Template("ClarolineCoreBundle:Home:changeTemplateModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function changeTemplateFormAction(Type $type)
+    {
+        $form = $this->formFactory->create(
+            new HomeTemplateType($this->templatesDirectory),
+            $type
+        );
+
+        return array('form' => $form->createView(), 'type' => $type);
+    }
+
+    /**
+     * Edit template
+     *
+     * @Route(
+     *     "/type/{type}/change/template",
+     *     name="claro_content_change_template",
+     *     options = {"expose" = true}
+     * )
+     * @Secure(roles="ROLE_HOME_MANAGER")
+     *
+     * @Template("ClarolineCoreBundle:Home:changeTemplateModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function changeTemplateAction(Type $type)
+    {
+        $form = $this->formFactory->create(
+            new HomeTemplateType($this->templatesDirectory),
+            $type
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->manager->persistType($type);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'type' => $type);
         }
     }
 

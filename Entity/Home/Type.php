@@ -52,6 +52,11 @@ class Type
     private $publish;
 
     /**
+     * @ORM\Column(nullable=true)
+     */
+    private $template;
+
+    /**
      * Constructor.
      */
     public function __construct($name = null)
@@ -140,5 +145,15 @@ class Type
     public function isPublish()
     {
         return $this->publish;
+    }
+
+    public function getTemplate()
+    {
+        return $this->template;
+    }
+
+    public function setTemplate($template)
+    {
+        $this->template = $template;
     }
 }
