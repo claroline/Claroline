@@ -15,13 +15,17 @@ containerWR = $('#ujm_exobundle_interactionholetype_holes___name___wordResponses
 var langKeyWord;
 var langPoint;
 var langDel;
+var langComment;
+var langEdition;
 
-function addFormHole( response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint) {
+function addFormHole( response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint,comment,edition) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
     langDel     = '<i class="fa fa-close"></i>';
+    langComment = comment;
+    langEdition     = edition;
 
-    tableHoles.append('<table id="newTable" class="table table-striped table table-condensed"><thead id="Entete"><tr><th >' + size + '</th><th style="display:none;">' + orthography + '</th><th >' + selector + '</th><th >' + response + '</th><th >' + del + '</th></tr></thead><tbody></tbody></table>');
+    tableHoles.append('<table id="newTable" class="table table-striped table-condensed"><thead id="Entete"><tr><th >' + size + '</th><th style="display:none;">' + orthography + '</th><th >' + selector + '</th><th >' + response + '</th><th >' + del + '</th></tr></thead><tbody></tbody></table>');
     $('tbody').sortable();
 
     $('#newTable').css({"display" : "none"});
@@ -29,17 +33,19 @@ function addFormHole( response, size, orthography, del, selector, source_image_a
 
 }
 
-function addFormHoleEdit(response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses) {
+function addFormHoleEdit(response, size, orthography, del, selector, source_image_add, wlangKeyWord, wlangPoint, nbResponses,comment,edition) {
     langKeyWord = wlangKeyWord;
     langPoint   = wlangPoint;
     langDel     = '<i class="fa fa-close"></i>';
+    langComment = comment;
+    langEdition     = edition;
     var index;
     var i = 0;
 
     if (nbResponses == 0) {
-        tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic" style="display:none;">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
+        tableHoles.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic" style="display:none;">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th><th class="classic">' + del + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
     } else {
-        tableHoles.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic" style="display:none;">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
+        tableHoles.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">' + size + '</th><th class="classic" style="display:none;">' + orthography + '</th><th class="classic">' + selector + '</th><th class="classic">' + response + '</th></tr></thead><tbody class="bodyHole"></tbody></table>');
     }
     $('tbody').sortable();
 
@@ -102,14 +108,14 @@ function addFormHoleEdit(response, size, orthography, del, selector, source_imag
             $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
             $(this).appendTo($('#tabWR_' + index).find('tr:last').find('td:last'));
             i++;
-
+            
             //add buton delete for a key word
             if ( (nbResponses == 0) && (i > 2) && ($('#tabWR_' + index).find('.trWR').length > 1)) {
                 $('#tabWR_' + index).find('tr:last').append('<td class="classic"></td>');
                 $('#tabWR_' + index).find('td:last').append(
                     '<a id="wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length + '" href="#" class="btn btn-default"><i style="color : red" class="fa fa-trash-o"></i></a>'
                 );
-
+                
                 // When click, delete the matching keyword's row in the table
                 $('#wr_' + index + '_' + $('#tabWR_' + index).find('.trWR').length).click(function(e) {
                     $(this).parent('td').parent('tr').remove();
@@ -348,7 +354,9 @@ function addWR(indexHole, idTabWR) {
         if ($(this).find('input').length) {
             $('#tabWR_'+idTabWR).find('tr:last').append('<td class="classic"></td>');
             $('#tabWR_'+idTabWR).find('td:last').append($(this).find('input'));
-        }
+        }     
+        //Add the field of type textarea feedback
+//        addFeedback($(this),indexHole,idTabWR);   
     });
 
     if (indexWR > 0) {
@@ -366,7 +374,7 @@ function addWR(indexHole, idTabWR) {
             return false;
         });
     }
-
+    
     $('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_response').attr("placeholder", langKeyWord);
     //$('#ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_score').attr("placeholder", langPoint);
 
@@ -445,3 +453,23 @@ function disableNotYetReady() {
     });
 }
 //*******************
+
+/**
+ * Add the field of type textarea feedback
+ * @param {type} row
+ * @param {type} indexHole
+ * @param {type} idTabWR
+ */
+function addFeedback(row,indexHole,idTabWR)
+{
+     //Add the field of type textarea feedback
+        if (row.find('*[id$="_feedback"]').length) {
+       
+            var idFeedbackVal = row.find('textarea').attr("id");
+            //Adds a cell array with a comment button
+            $('#tabWR_' + idTabWR).find('tr:last').append('<td class="classic"><a class="btn btn-default" title="'+langComment+'" id="btn_' + idFeedbackVal + '" onClick="addTextareaFeedback(\'span_' + idFeedbackVal + '\',\'btn_' + idFeedbackVal + '\')" ><i class="fa fa-comments-o"></i></a><span id="span_' + idFeedbackVal + '" class="input-group" style="display:none;"></span></td>');
+            //Adds the textarea and its advanced edition button (hidden by default)
+            $('#span_' + idFeedbackVal).append(row.find('*[id$="_feedback"]'));
+            $('#span_' + idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_' + idFeedbackVal + '" onClick="advancedEdition(\'ujm_exobundle_interactionholetype_holes_' + indexHole + '_wordResponses_' + indexWR + '_feedback\',\'btnEdition_' + idFeedbackVal + '\',event);" title="' + langEdition + '"><i class="fa fa-font"></i></a></span>');
+        }   
+}

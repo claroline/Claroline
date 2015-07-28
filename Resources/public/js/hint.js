@@ -17,7 +17,7 @@ function newHint(label, penalty, addHint, deleteHint) {
     // When click, add a new hint in the table
     add.click(function (e) {
         if (begin == true) {
-            tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" ><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
+            tableHints.append('<table id="newTable2" class="table table-striped table-condensed" ><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
 
             begin = false;
         }
@@ -38,7 +38,7 @@ function newHintEdit(label, penalty, addHint, deleteHint) {
     // Add the button after the table
     tableHints.append(add);
 
-    tableHints.append('<table id="newTable2" class="table table-striped table-bordered table-condensed" ><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
+    tableHints.append('<table id="newTable2" class="table table-striped table-condensed" ><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+label+'</th><th class="classic">'+penalty+'</th><th class="classic">'+deleteHint+'</th></tr></thead><tbody></tbody></table>');
 
     // When click, add a new hint in the table
     add.click(function (e) {
