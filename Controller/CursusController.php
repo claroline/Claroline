@@ -75,6 +75,28 @@ class CursusController extends Controller
      * Cursus methods *
      ******************/
 
+    /**
+     * @EXT\Route(
+     *     "/cursus/management/tool/menu",
+     *     name="claro_cursus_management_tool_menu"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function cursusManagementToolMenuAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+
+        return array(
+            'defaultWords' => CursusDisplayedWord::$defaultKey,
+            'displayedWords' => $displayedWords
+        );
+    }
 
     /**
      * @EXT\Route(

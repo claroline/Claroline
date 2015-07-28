@@ -48,7 +48,7 @@ class CursusListener
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
         $params = array();
-        $params['_controller'] = 'ClarolineCursusBundle:Cursus:cursusToolIndex';
+        $params['_controller'] = 'ClarolineCursusBundle:Cursus:cursusManagementToolMenu';
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
