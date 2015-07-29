@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\SupportBundle\Entity\Comment;
+use FormaLibre\SupportBundle\Entity\Configuration;
 use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
@@ -20,6 +21,7 @@ class SupportManager
     private $om;
     private $pagerFactory;
 
+    private $configurationRepo;
     private $interventionRepo;
     private $statusRepo;
     private $ticketRepo;
@@ -35,6 +37,7 @@ class SupportManager
     {
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->configurationRepo = $om->getRepository('FormaLibreSupportBundle:Configuration');
         $this->interventionRepo = $om->getRepository('FormaLibreSupportBundle:Intervention');
         $this->statusRepo = $om->getRepository('FormaLibreSupportBundle:Status');
         $this->ticketRepo = $om->getRepository('FormaLibreSupportBundle:Ticket');
@@ -167,6 +170,37 @@ class SupportManager
             $this->om->persist($status);
         }
         $this->om->flush();
+    }
+
+    public function getConfiguration()
+    {
+        $configs = $this->configurationRepo->findAll();
+
+        if (count($configs) > 0) {
+
+            $config = $configs[0];
+        } else {
+            $config = new Configuration();
+            $details = array('with_credits' => false);
+            $config->setDetails($details);
+            $this->persistConfiguration($config);
+        }
+
+        return $config;
+    }
+
+    public function persistConfiguration(Configuration $config)
+    {
+        $this->om->persist($config);
+        $this->om->flush();
+    }
+
+    public function getConfigurationCreditOption()
+    {
+        $config = $this->getConfiguration();
+        $details = $config->getDetails();
+
+        return isset($details['with_credits']) ? $details['with_credits'] : false;
     }
 
 

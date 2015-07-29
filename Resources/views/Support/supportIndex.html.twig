@@ -66,23 +66,26 @@
         </div>
         <div class="panel-body">
             
-            {% if nbCredits > 0 %}
-                <div class="alert alert-info">
-                    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
-                    {{ nbCredits }}
-                </div>
-            {% else %}
-                <div class="alert alert-danger">
-                    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
-                    {{ nbCredits }}
-                    <br>
-                    {{ 'no_credit_message'|trans({}, 'support') }}
-                    <br>
-                    <br>
-                    <a href="#" class="btn btn-danger btn-sm">
-                        {{ 'buy_support_credits'|trans({}, 'support') }}
-                    </a>
-                </div>
+            {% if withCredits %}
+                
+                {% if nbCredits > 0 %}
+                    <div class="alert alert-info">
+                        <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+                        {{ nbCredits }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger">
+                        <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+                        {{ nbCredits }}
+                        <br>
+                        {{ 'no_credit_message'|trans({}, 'support') }}
+                        <br>
+                        <br>
+                        <a href="#" class="btn btn-danger btn-sm">
+                            {{ 'buy_support_credits'|trans({}, 'support') }}
+                        </a>
+                    </div>
+                {% endif %}
             {% endif %}
                 
             {% if tickets|length > 0 %}
@@ -195,7 +198,7 @@
                 </div>
             {% endif %}
             
-            {% if nbCredits > 0 %}
+            {% if nbCredits > 0 or withCredits == false %}
                 <a href="{{ path('formalibre_ticket_create_form') }}"
                    class="btn btn-primary"
                 >

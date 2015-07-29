@@ -139,3 +139,11 @@
         </div>
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+{% endblock %}

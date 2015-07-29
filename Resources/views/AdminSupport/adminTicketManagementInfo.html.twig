@@ -1,12 +1,13 @@
-{#{% use 'ClarolineCoreBundle:Layout:javascripts.html.twig' %}#}
-
 <div id="latest-intervention-info">
-    <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
-    {{ nbCredits }}
-    <br>
-    <b>{{ 'required_credits'|trans({}, 'support') }} :</b>
-    {{ totalCredits }}
-    <br>
+    
+    {% if withCredits %}
+        <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
+        {{ nbCredits }}
+        <br>
+        <b>{{ 'required_credits'|trans({}, 'support') }} :</b>
+        {{ totalCredits }}
+        <br>
+    {% endif %}
     
     {% if lastIntervention is not empty %}
         {% set lastStatus = lastIntervention.getStatus() %}
@@ -129,6 +130,7 @@
      data-previous-time="{{ totalTime }}"
      data-available-credits="{{ availableCredits }}"
      data-has-ongoing-intervention="{% if hasOngoingIntervention %}true{% else %}false{% endif %}"
+     data-with-credits="{% if withCredits %}true{% else %}false{% endif %}"
 >
 </div>
 

@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/07/27 09:07:11
+ * Generation date: 2015/07/29 10:52:41
  */
-class Version20150727090708 extends AbstractMigration
+class Version20150729105239 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -82,6 +82,13 @@ class Version20150727090708 extends AbstractMigration
                 INDEX IDX_B1287482A76ED395 (user_id), 
                 INDEX IDX_B1287482700047D2 (ticket_id), 
                 INDEX IDX_B12874826BF700BD (status_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE formalibre_support_configuration (
+                id INT AUTO_INCREMENT NOT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -171,6 +178,9 @@ class Version20150727090708 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE formalibre_support_intervention
+        ");
+        $this->addSql("
+            DROP TABLE formalibre_support_configuration
         ");
     }
 }
