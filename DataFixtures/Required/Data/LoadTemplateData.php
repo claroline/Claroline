@@ -23,9 +23,11 @@ class LoadTemplateData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/default.zip';
-        $sourcePath = $this->container->getParameter('claroline.param.default_template');
         @unlink($destinationPath);
-        copy($sourcePath, $destinationPath);
+        copy($this->container->getParameter('claroline.param.default_template'), $destinationPath);
+        $destinationPath = $this->container->getParameter('claroline.param.templates_directory'). '/personal.zip';
+        @unlink($destinationPath);
+        copy($this->container->getParameter('claroline.param.personal_template'), $destinationPath);
     }
 
     public function setContainer($container)

@@ -4,3 +4,8 @@ fos_oauth_server:
     access_token_class:  Claroline\CoreBundle\Entity\Oauth\AccessToken
     refresh_token_class: Claroline\CoreBundle\Entity\Oauth\RefreshToken
     auth_code_class:     Claroline\CoreBundle\Entity\Oauth\AuthCode
+    service:
+        options:
+            access_token_lifetime: 3600
+            refresh_token_lifetime: 1209600
+            auth_code_lifetime: 30

@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleRepository")
@@ -40,12 +41,14 @@ class Role implements RoleInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $name;
 
@@ -110,6 +113,7 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"api"})
      */
     protected $type = self::PLATFORM_ROLE;
 

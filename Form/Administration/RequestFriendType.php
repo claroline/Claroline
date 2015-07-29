@@ -9,47 +9,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Form;
+namespace Claroline\CoreBundle\Form\Administration;
 
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
-class GroupType extends AbstractType
+class RequestFriendType extends AbstractType
 {
-    public function __construct()
-    {
-        $this->forApi = false;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
             'name',
             'text',
-            array(
-                'label' => 'name',
-                'constraints' => new NotBlank()
-            )
+            array('constraints' => new NotBlank(), 'label' => 'name')
+        );
+        $builder->add(
+            'host',
+            'text',
+            array('constraints' => new NotBlank(), 'label' => 'host')
         );
     }
 
     public function getName()
     {
-        return 'group_form';
+        return 'request_friend_form';
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $default = array('translation_domain' => 'platform');
-        if ($this->forApi) $default['csrf_protection'] = false;
-
-        $resolver->setDefaults($default);
-    }
-
-    public function enableApi()
-    {
-        $this->forApi = true;
+        $resolver->setDefaults(array('translation_domain' => 'platform'));
     }
 }

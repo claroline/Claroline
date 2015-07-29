@@ -1,0 +1,39 @@
+properties:
+    name: 'default'
+    code: default
+    visible: true
+    self_registration: true
+    self_unregistration: true
+    owner: null
+
+roles:
+    -
+        role:
+            name: ROLE_WS_COLLABORATOR
+            translation: collaborator
+            is_base_role: false
+tools:
+    -
+        tool:
+            type: resource_manager
+            translation: resource_manager
+            roles:
+                -
+                    name: ROLE_WS_COLLABORATOR
+            data:
+                root:
+                    uid: 0
+                    roles:
+                        -
+                            role:
+                                name: ROLE_WS_COLLABORATOR
+                                rights:
+                                    open: true
+                                    export: true
+    -
+        tool:
+            type: home
+            translation: home
+            roles:
+                -
+                    name: ROLE_WS_COLLABORATOR

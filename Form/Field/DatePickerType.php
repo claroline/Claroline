@@ -47,13 +47,14 @@ class DatePickerType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        $lang = (php_sapi_name() === 'cli') ? 'en': $this->localeManager->getUserLocale($this->container->get('request'));
         $resolver->setDefaults(
             array(
                 'input'              => 'datetime',
                 'widget'             => 'single_text',
                 'component'          => false,
                 'autoclose'          => false,
-                'language'           => $this->localeManager->getUserLocale($this->container->get('request'))
+                'language'           => $lang
             )
         );
     }

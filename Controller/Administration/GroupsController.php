@@ -118,7 +118,6 @@ class GroupsController extends Controller
             $userRole = $this->roleManager->getRoleByName('ROLE_USER');
             $group->setPlatformRole($userRole);
             $this->groupManager->insertGroup($group);
-            $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', array($group));
 
             return $this->redirect($this->generateUrl('claro_admin_group_list'));
         }

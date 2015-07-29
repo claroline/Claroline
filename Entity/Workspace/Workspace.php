@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceRepository")
@@ -37,43 +39,59 @@ class Workspace
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
+     * @SerializedName("id")
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
+     * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     * @Groups({"api"})
+     * @SerializedName("code")
      */
     protected $code;
 
     /**
      * @ORM\Column(type="string", nullable=false)
+     * @Groups({"api"})
+     * @SerializedName("maxStorageSize")
      */
     protected $maxStorageSize = "1 TB";
 
     /**
      * @ORM\Column(type="integer", nullable=false)
+     * @Groups({"api"})
+     * @SerializedName("maxUploadResources")
      */
     protected $maxUploadResources = 10000;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
+     * @Groups({"api"})
+     * @SerializedName("maxUsers")
      */
     protected $maxUsers = 10000;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("displayable")
      */
     protected $displayable = false;
 
@@ -116,56 +134,78 @@ class Workspace
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     * @Groups({"api"})
+     * @SerializedName("creator")
      */
     protected $creator;
 
     /**
      * @ORM\Column(unique=true)
+     * @Groups({"api"})
+     * @SerializedName("guid")
      */
     protected $guid;
 
     /**
      * @ORM\Column(name="self_registration", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("selfRegistration")
      */
     protected $selfRegistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
     /**
      * @ORM\Column(name="self_unregistration", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("selfUnregistration")
      */
     protected $selfUnregistration = false;
 
     /**
      * @ORM\Column(name="creation_date", type="integer", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("isPersonal")
      */
     protected $isPersonal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("endDate")
      */
     protected $endDate;
 
     /**
      * @ORM\Column(name="is_access_date", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("isAccessDate")
      */
     protected $isAccessDate = false;
 
     /**
      * @ORM\Column(name="workspace_type", type="integer", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("workspaceType")
      */
     protected $workspaceType;
 

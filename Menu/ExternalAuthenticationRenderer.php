@@ -37,14 +37,19 @@ class ExternalAuthenticationRenderer extends ListRenderer
     )
     {
         parent::__construct($matcher, $defaultOptions, $charset);
-    }/*
+    }
 
     protected function renderLinkElement(ItemInterface $item, array $options)
     {
+        return sprintf(
+            '<a href="%s" class="list-group-item">%s</a>',
+            $this->escape($item->getUri()),
+            $this->renderLabel($item, $options)
+        );
     }
 
     protected function renderSpanElement(ItemInterface $item, array $options)
     {
         return $this->renderLinkElement($item, $options);
-    }*/
+    }
 }

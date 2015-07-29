@@ -266,14 +266,40 @@ claro_admin_facet:
     prefix: admin/facet
     type: annotation
 
+claro_admin_oauth:
+    resource: "@ClarolineCoreBundle/Controller/Administration/OauthController.php"
+    prefix: admin/oauth
+    type: annotation
+
 claro_admin_i18n:
     resource: "@ClarolineCoreBundle/Controller/Administration/InternationalizationController.php"
     prefix: admin/i18n
     type: annotation
 
 claro_api:
-    resource: "@ClarolineCoreBundle/Controller/API"
+    resource: "@ClarolineCoreBundle/Controller/API/ApiController.php"
+    prefix: api
     type: annotation
+
+claro_user_api:
+    resource: "@ClarolineCoreBundle/Controller/API/UserController.php"
+    type: rest
+    prefix: api
+
+claro_workspace_api:
+    resource: "@ClarolineCoreBundle/Controller/API/WorkspaceController.php"
+    type: rest
+    prefix: api
+
+claro_group_api:
+    resource: "@ClarolineCoreBundle/Controller/API/GroupController.php"
+    type: rest
+    prefix: api
+
+claro_parameters_api:
+    resource: "@ClarolineCoreBundle/Controller/API/ParametersController.php"
+    type: rest
+    prefix: api
 
 claro_contact:
     resource: "@ClarolineCoreBundle/Controller/ContactController.php"
