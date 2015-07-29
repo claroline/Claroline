@@ -482,22 +482,15 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
 
-        $courses = $search === '' ?
-            $this->cursusManager->getUnmappedCoursesByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getUnmappedSearchedCoursesByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $courses = $this->cursusManager->getUnmappedCoursesByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -819,26 +812,24 @@ class CursusController extends Controller
         $configCursus = $config->getCursus();
 
         if (is_null($configCursus)) {
-            $courses = $search === '' ?
-                $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-                $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+            $courses = $this->cursusManager->getAllCourses(
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         } else {
-            $courses = $search === '' ?
-                $this->cursusManager->getDescendantCoursesByCursus(
-                    $configCursus,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                ) :
-                $this->cursusManager->getDescendantSearchedCoursesByCursus(
-                    $configCursus,
-                    $search,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                );
+            $courses = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         }
         $coursesArray = array();
 

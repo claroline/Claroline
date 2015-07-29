@@ -33,20 +33,6 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findAllRootCursus($executeQuery = true)
-    {
-    	$dql = '
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.parent IS NULL
-        ';
-    	$query = $this->_em->createQuery($dql);
-
-    	return $executeQuery ?
-            $query->getResult() :
-            $query;
-    }
-
     public function findSearchedCursus(
         $search = '',
         $orderedBy = 'title',
@@ -68,6 +54,48 @@ class CursusRepository extends NestedTreeRepository
         $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findAllRootCursus(
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+    	$dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent IS NULL
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+    	$query = $this->_em->createQuery($dql);
+
+    	return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedRootCursus(
+        $search = '',
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+    	$dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent IS NULL
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+                OR UPPER(cc.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+    	$query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+    	return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findLastRootCursusOrder($executeQuery = true)
