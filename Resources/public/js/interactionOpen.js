@@ -57,9 +57,9 @@ function addWr(container, deleteWr) {
     var index = $('#tablewr').find('tr:not(:first)').length;
 
     while (uniqChoiceID == false) {
-        if ($('#ujm_exobundle_interactionopentype_wordResponses_' + index + '_label').length) {
+        if ($('#ujm_exobundle_interactionopentype_wordResponses_' + index + '_response').length) {
             index++;
-        } else {
+        } else {         
             uniqChoiceID = true;
         }
     }
