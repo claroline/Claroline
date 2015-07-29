@@ -16,6 +16,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Table(name="claro_api_claroline_access")
  * @ORM\Entity
+ *
+ * This entity stores the list of Accesses generated. It's used to find the access_token wich was
+ * returned for a specific randomId.
  */
 class ClarolineAccess
 {
@@ -36,9 +39,27 @@ class ClarolineAccess
     /**
      * @var string
      *
-     * @ORM\Column(name="access_token", type="string", nullable=false)
+     * @ORM\Column(name="secret", type="string", nullable=false)
+     */
+    protected $secret;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="access_token", type="string", nullable=true)
      */
     protected $accessToken;
+
+    /**
+     * @var FriendRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Oauth\FriendRequest"
+     * )
+     * @ORM\JoinColumn(name="friend_request_id", onDelete="SET NULL")
+     */
+    protected $friendRequest;
+
 
     public function getId()
     {
@@ -63,5 +84,25 @@ class ClarolineAccess
     public function getAccessToken()
     {
         return $this->accessToken;
+    }
+
+    public function setSecret($secret)
+    {
+        $this->secret = $secret;
+    }
+
+    public function getSecret()
+    {
+        return $this->secret;
+    }
+
+    public function setFriendRequest(FriendRequest $request)
+    {
+        $this->friendRequest = $request;
+    }
+
+    public function getFriendRequest()
+    {
+        return $this->request;
     }
 }

@@ -66,7 +66,6 @@ class ApiManager
 
     public function formEncode($entity, Form $form, AbstractType $formType)
     {
-        var_dump($entity);
         $baseName = $formType->getName();
         $payload = array();
 
@@ -77,10 +76,5 @@ class ApiManager
         }
 
         return $payload;
-    }
-
-    private function getRealPropertyName($property)
-    {
-        
     }
 }

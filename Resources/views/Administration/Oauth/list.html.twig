@@ -27,73 +27,199 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'claroline'|trans({}, 'platform') }}</h3>
+    <div class="panel">
+        <div class="panel-body">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#client-list">
+                                <b>{{ 'client_list'|trans({}, 'platform') }}</b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="client-list" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th> {{ 'id'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'redirect_uri'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'grant_type'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'client_name'|trans({}, 'platform')}} </th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for client in clients %}
+                                            <tr id="client-row-{{ client.getId() }}" data-client-id="{{ client.getId() }}">
+                                                <th> {{ client.getId() }} </th>
+                                                <th>
+                                                    {% for uris in client.getRedirectUris() %}
+                                                        {{ uris }}
+                                                    {% endfor %}
+                                                </th>
+                                                <th>
+                                                    {% for grantType in client.getAllowedGrantTypes() %}
+                                                        {{ grantType }}
+                                                    {% endfor %}
+                                                </th>
+                                                <th> {{ client.getName() }} </th>
+                                                <th>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-default show-client-btn"
+                                                                data-client-id="{{ client.getId() }}"
+                                                                data-client-random="{{ client.getRandomId() }}"
+                                                        >
+                                                            <i class="fa fa-info"
+                                                                data-client-id="{{ client.getId() }}"
+                                                                data-client-random="{{ client.getRandomId() }}">
+                                                            </i>
+                                                        </button>
+                                                        <button class="btn btn-default show-secret-btn"
+                                                                data-secret="{{ client.getSecret() }}"
+                                                        >
+                                                            <i class="fa fa-key" data-secret="{{ client.getSecret() }}"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger delete-client-btn"
+                                                                data-client-id="{{ client.getId() }}"
+                                                        >
+                                                            <i class="fa fa-trash" data-client-id="{{ client.getId() }}"></i>
+                                                        </button>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button id="add-client-btn"
+                                    type="submit"
+                                    class="btn btn-primary">
+                                {{ 'add'|trans({}, 'platform') }}
+                            </button>
+                            <button id="request-friend-btn"
+                                    type="submit"
+                                    class="btn btn-primary">
+                                {{ 'request_friend'|trans({}, 'platform') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#friend-request-list">
+                                <b>{{ 'friend_request'|trans({}, 'platform') }}</b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="friend-request-list" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th> </th>
+                                            <th> {{ 'host'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'name'|trans({}, 'platform') }} </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for request in friendRequests %}
+                                            <tr id="friend-request-row-{{ request.getId() }}">
+                                                <th>
+                                                    {% if request.isActivated() %}
+                                                        activated
+                                                    {% else %}
+                                                        not activated
+                                                    {% endif %}
+                                                </th>
+                                                <th> {{ request.getHost() }} </th>
+                                                <th> {{ request.getName() }} </th>
+                                                <th>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-danger delete-friend-request-btn"
+                                                                data-friend-request-id="{{ request.getId() }}"
+                                                        >
+                                                            <i class="fa fa-trash" data-friend-request-id="{{ request.getId() }}"></i>
+                                                        </button>
+                                                        {% if request.isActivated() and request.getClarolineAccess() != null %}
+                                                            <button class="btn btn-default show-client-access-btn"
+                                                                    data-client-random="{{ request.getClarolineAccess().getRandomId() }}"
+                                                            >
+                                                                <i class="fa fa-info"
+                                                                    data-client-random="{{ request.getClarolineAccess().getRandomId() }}">
+                                                                </i>
+                                                            </button>
+                                                            <button class="btn btn-default show-secret-btn"
+                                                                    data-secret="{{ request.getClarolineAccess().getSecret() }}"
+                                                            >
+                                                                <i class="fa fa-key" data-secret="{{ request.getClarolineAccess().getSecret() }}"></i>
+                                                            </button>
+                                                        {% endif %}
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#pending-friend-list">
+                                <b>{{ 'pending_friend'|trans({}, 'platform') }}</b>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="pending-friend-list" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th> {{ 'host'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'ip'|trans({}, 'platform') }} </th>
+                                            <th> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for pendingFriend in pendingFriends %}
+                                            <tr id="friend-pending-row-{{ pendingFriend.getId() }}">
+                                                <th> {{ pendingFriend.getHost() }} </th>
+                                                <th> {{ pendingFriend.getName() }} </th>
+                                                <th>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-success add-friend-pending-btn"
+                                                                data-friend-pending-id="{{ pendingFriend.getId() }}"
+                                                        >
+                                                            <i class="fa fa-check" data-friend-pending-id="{{ pendingFriend.getId() }}"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger delete-friend-pending-btn"
+                                                                data-friend-pending-id="{{ pendingFriend.getId() }}"
+                                                        >
+                                                            <i class="fa fa-trash" data-friend-pending-id="{{ pendingFriend.getId() }}"></i>
+                                                        </button>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="panel-body">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered table-condensed">
-                <thead>
-                    <tr>
-                        <th> {{ 'id'|trans({}, 'platform') }} </th>
-                        <th> {{ 'redirect_uri'|trans({}, 'platform') }} </th>
-                        <th> {{ 'grant_type'|trans({}, 'platform') }} </th>
-                        <th> {{ 'client_name'|trans({}, 'platform')}} </th>
-                        <th> </th>
-                    </tr>
-                </thead>
-                <tbody id="user-table-body">
-                    {% for client in clients %}
-                        <tr id="client-row-{{ client.getId() }}" data-client-id="{{ client.getId() }}">
-                            <th> {{ client.getId() }} </th>
-                            <th>
-                                {% for uris in client.getRedirectUris() %}
-                                    {{ uris }}
-                                {% endfor %}
-                            </th>
-                            <th>
-                                {% for grantType in client.getAllowedGrantTypes() %}
-                                    {{ grantType }}
-                                {% endfor %}
-                            </th>
-                            <th> {{ client.getName() }} </th>
-                            <th>
-                                <div class="btn-group">
-                                    <button class="btn btn-default show-client-btn"
-                                            data-client-id="{{ client.getId() }}"
-                                            data-client-random="{{ client.getRandomId() }}"
-                                    >
-                                        <i class="fa fa-info"></i>
-                                    </button>
-                                    <button class="btn btn-default show-secret-btn"
-                                            data-secret="{{ client.getSecret() }}"
-                                    >
-                                        <i class="fa fa-key"></i>
-                                    </button>
-                                    <button class="btn btn-default show-refresh-btn"
-                                        data-url="/oauth/v2/auth?client_id={{ client.getId() }}_{{ client.getRandomId() }}&redirect_uri={% for uris in client.getRedirectUris() %}{{ uris }}{% endfor %}&response_type=token"
-                                    >
-                                        <i class="fa fa-refresh"></i>
-                                    </button>
-                                    <button class="btn btn-danger delete-client-btn"
-                                            data-client-id="{{ client.getId() }}"
-                                    >
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </th>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <button id="add-client-btn"
-                type="submit"
-                class="btn btn-primary">
-            {{ 'add'|trans({}, 'platform') }}
-        </button>
-    </div>
 {% endblock %}
 
 {% block javascripts %}
