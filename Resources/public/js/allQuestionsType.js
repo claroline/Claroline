@@ -262,7 +262,7 @@ function displayOptionalFields(){
 }
 
 /**
- * Displays enabled tinyMCE by QCM et Matching
+ * Displays enabled tinyMCE
  * @returns {undefined}
  */
 function textareaAdvancedEdition()
@@ -286,7 +286,7 @@ function textareaAdvancedEdition()
     });
 }
 /**
- * Button feedback (matching & QCM)
+ * Button feedback
  * @param {type} spanFeedback
  * @param {type} btnHiddenFeedback
  * @returns {undefined}

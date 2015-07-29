@@ -29,13 +29,13 @@
 {# functions javascript #}
 {% if error is defined %}
     <script type="text/javascript">
-       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+       insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
        openEdit(0);
        newHintEdit('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% else %}
     <script type="text/javascript">
-        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}');
+        insertStyle('{{ typeOpen|raw }}', '{{ 'delete' | trans }}','{{ 'advanced_edition' | trans }}','{{ 'comment' | trans }}');
         newHint('{{ 'hint' | trans }}', '{{ 'penalty' | trans }}', '{{ 'hint' | trans }}', '{{ 'delete' | trans }}');
     </script>
 {% endif %}

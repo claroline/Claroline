@@ -356,7 +356,7 @@ function addWR(indexHole, idTabWR) {
             $('#tabWR_'+idTabWR).find('td:last').append($(this).find('input'));
         }     
         //Add the field of type textarea feedback
-//        addFeedback($(this),indexHole,idTabWR);   
+        addFeedback($(this),indexHole,idTabWR);   
     });
 
     if (indexWR > 0) {
