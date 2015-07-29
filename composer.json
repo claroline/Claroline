@@ -17,9 +17,9 @@
         "symfony/symfony": "~2.3",
         "doctrine/doctrine-bundle": "~1.0",
         "doctrine/data-fixtures": "dev-master",
-        "claroline/kernel-bundle": "dev-6.x-dev",
-        "claroline/migration-bundle": "dev-6.x-dev",
-        "claroline/core-bundle": "dev-6.x-dev"
+        "claroline/kernel-bundle": "~6.0",
+        "claroline/migration-bundle": "~6.0",
+        "claroline/core-bundle": "~6.0"
     },
     "autoload": {
         "psr-0": { "Claroline\\InstallationBundle": "" }
