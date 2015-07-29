@@ -1,0 +1,51 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'support_plugin_configuration' | trans({}, 'support') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'packages'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'support_plugin_configuration'|trans({}, 'support'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'support_plugin_configuration'|trans({}, 'support') }}
+        </h3>
+    </div>
+    <form role="form"
+          class="form-horizontal"
+          action="{{ path('formalibre_support_plugin_configure') }}"
+          method="post"
+          {{ form_enctype(form) }}
+          enctype='multipart/form-data'
+    >
+        <div class="panel-body">
+            {{ form_widget(form) }}
+        </div>
+        <div class="panel-footer">
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+            <a href="{{ path('claro_admin_plugins') }}" class="btn btn-default">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </a>
+        </div>
+    </form>
+{% endblock %}

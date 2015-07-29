@@ -13,6 +13,7 @@ use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
 use FormaLibre\SupportBundle\Form\InterventionStatusType;
 use FormaLibre\SupportBundle\Form\InterventionType;
+use FormaLibre\SupportBundle\Form\PluginConfigurationType;
 use FormaLibre\SupportBundle\Form\StatusType;
 use FormaLibre\SupportBundle\Form\TicketTypeChangeType;
 use FormaLibre\SupportBundle\Form\TypeType;
@@ -543,7 +544,10 @@ class AdminSupportController extends Controller
                 $otherUnfinishedInterventions[] = $unfinishedIntervention;
             }
         }
-        $nbCredits = $this->creditManager->getNbRemainingCredits($ticket->getUser());
+        $withCredits = $this->supportManager->getConfigurationCreditOption();
+        $nbCredits = $withCredits ?
+            $this->creditManager->getNbRemainingCredits($ticket->getUser()) :
+            666;
         $nbHours = (int)($totalTime / 60);
         $nbMinutes = ($nbHours === 0) ? $totalTime : $totalTime % ($nbHours * 60);
         $totalCredits = (5 * $nbHours) + ceil($nbMinutes / 15);
@@ -558,7 +562,8 @@ class AdminSupportController extends Controller
             'nbCredits' => $nbCredits,
             'totalCredits' => $totalCredits,
             'availableCredits' => $nbCredits,
-            'totalTime' => $totalTime
+            'totalTime' => $totalTime,
+            'withCredits' => $withCredits
         );
     }
 
@@ -1230,5 +1235,58 @@ class AdminSupportController extends Controller
         $this->supportManager->reorderStatus($status, $nextStatusId);
 
         return new JsonResponse('success', 200);
+    }
+
+
+    /********************************
+     * Plugin configuration methods *
+     ********************************/
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/configure/form",
+     *     name="formalibre_support_plugin_configure_form"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function pluginConfigureFormAction()
+    {
+        $config = $this->supportManager->getConfiguration();
+        $details = $config->getDetails();
+
+        $form = $this->formFactory->create(new PluginConfigurationType($details));
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/plugin/configure",
+     *     name="formalibre_support_plugin_configure"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:pluginConfigureForm.html.twig")
+     */
+    public function pluginConfigureAction()
+    {
+        $config = $this->supportManager->getConfiguration();
+        $details = $config->getDetails();
+
+        $form = $this->formFactory->create(new PluginConfigurationType($details));
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $details['with_credits'] = $form->get('withCredits')->getData();
+            $config->setDetails($details);
+            $this->supportManager->persistConfiguration($config);
+
+            return new RedirectResponse(
+                $this->router->generate('claro_admin_plugins')
+            );
+        } else {
+
+            return array('form' => $form->createView());
+        }
     }
 }

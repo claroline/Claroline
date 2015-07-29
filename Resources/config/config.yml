@@ -1,5 +1,5 @@
 plugin:
-    has_options: false
+    has_options: true
 
     admin_tools:
         - name: formalibre_support_management_tool

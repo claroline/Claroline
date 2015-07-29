@@ -6,6 +6,7 @@
     var previousTime = $('#latest-intervention-datas-box').data('previous-time');
     var availableCredits = $('#latest-intervention-datas-box').data('available-credits');
     var hasOngoingIntervention = $('#latest-intervention-datas-box').data('has-ongoing-intervention');
+    var withCredits = $('#latest-intervention-datas-box').data('with-credits');
     var ongoingBox = $('#ongoing-intervention-box');
     var ongoingBoxType = 'info';
     var ongoingTimer = $('#ongoing-intervention-timer');
@@ -15,36 +16,37 @@
         var diff = now - ongoingStart;
         var minutes = (diff / 60) >> 0;
         var seconds = diff % 60;
-        var totalTime = previousTime + minutes;
-        
-        if (seconds > 0) {
-            totalTime++;
-        }
-        var nbHours = Math.floor(totalTime / 60);
-        var nbMinutes = totalTime % 60;
-        var requiredCredits = (5 * nbHours) + Math.ceil(nbMinutes / 15);
-        var remainingCredits = availableCredits - requiredCredits;
-        
         var timerDisplay = minutes + ':' + (('' + seconds).length > 1 ? '' : '0') + seconds;
-        timerDisplay += '<br><b>' + Translator.trans('required_credits', {}, 'support')  + ' :</b> ' + requiredCredits;
-        timerDisplay += '<br><b>' + Translator.trans('remaining_credits', {}, 'support')  + ' :</b> ' + remainingCredits;
-        ongoingTimer.html(timerDisplay);
         
-        if (remainingCredits > 1 && ongoingBoxType !== 'info') {
-            ongoingBox.removeClass('alert-' + ongoingBoxType);
-            ongoingBox.addClass('alert-info');
-            ongoingBoxType = 'info';
-        } else if (remainingCredits === 1 && ongoingBoxType !== 'warning') {
-            ongoingBox.removeClass('alert-' + ongoingBoxType);
-            ongoingBox.addClass('alert-warning');
-            ongoingBoxType = 'warning';
-            alert(Translator.trans('remaining_credits', {}, 'support'));
-        } else if (remainingCredits < 1 && ongoingBoxType !== 'danger') {
-            ongoingBox.removeClass('alert-' + ongoingBoxType);
-            ongoingBox.addClass('alert-danger');
-            ongoingBoxType = 'danger';
-            alert(Translator.trans('remaining_credits', {}, 'support'));
+        if (withCredits) {
+            var totalTime = previousTime + minutes;
+
+            if (seconds > 0) {
+                totalTime++;
+            }
+            var nbHours = Math.floor(totalTime / 60);
+            var nbMinutes = totalTime % 60;
+            var requiredCredits = (5 * nbHours) + Math.ceil(nbMinutes / 15);
+            var remainingCredits = availableCredits - requiredCredits;
+
+            timerDisplay += '<br><b>' + Translator.trans('required_credits', {}, 'support')  + ' :</b> ' + requiredCredits;
+            timerDisplay += '<br><b>' + Translator.trans('remaining_credits', {}, 'support')  + ' :</b> ' + remainingCredits;
+
+            if (remainingCredits > 5 && ongoingBoxType !== 'info') {
+                ongoingBox.removeClass('alert-' + ongoingBoxType);
+                ongoingBox.addClass('alert-info');
+                ongoingBoxType = 'info';
+            } else if (remainingCredits > 1 && remainingCredits <= 5 && ongoingBoxType !== 'warning') {
+                ongoingBox.removeClass('alert-' + ongoingBoxType);
+                ongoingBox.addClass('alert-warning');
+                ongoingBoxType = 'warning';
+            } else if (remainingCredits <= 1 && ongoingBoxType !== 'danger') {
+                ongoingBox.removeClass('alert-' + ongoingBoxType);
+                ongoingBox.addClass('alert-danger');
+                ongoingBoxType = 'danger';
+            }
         }
+        ongoingTimer.html(timerDisplay);
     };
     
     $('#latest-intervention-info').on('click', '#start-intervention-btn', function () {

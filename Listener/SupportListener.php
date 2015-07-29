@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -59,6 +60,22 @@ class SupportListener
         $subRequest = $this->request->duplicate(array(), null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("plugin_options_supportbundle")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onPluginOptionsOpen(PluginOptionsEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:pluginConfigureForm';
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

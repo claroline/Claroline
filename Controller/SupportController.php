@@ -92,7 +92,10 @@ class SupportController extends Controller
             $page,
             $max
         );
-        $nbCredits = $this->creditManager->getNbRemainingCredits($authenticatedUser);
+        $withCredits = $this->supportManager->getConfigurationCreditOption();
+        $nbCredits = $withCredits ?
+            $this->creditManager->getNbRemainingCredits($authenticatedUser) :
+            666;
 
         return array(
             'tickets' => $tickets,
@@ -101,6 +104,7 @@ class SupportController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
+            'withCredits' => $withCredits,
             'nbCredits' => $nbCredits
         );
     }
