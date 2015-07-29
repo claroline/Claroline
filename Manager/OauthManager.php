@@ -141,12 +141,13 @@ class OauthManager extends ClientManager
             '/secret/' . $client->getSecret() . '/name/' . $friend->getName();
         $data = $this->curlManager->exec($url);
 
-        throw new \Exception($data);
-
         if (!json_decode($data)) {
             $this->om->remove($client);
-            $this->om->flush();
+        } else {
+            $this->om->remove($friend);
         }
+
+        $this->om->flush();
 
         return $client;
     }
