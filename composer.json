@@ -6,8 +6,8 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "dev-6.x-dev",
-        "claroline/front-end-bundle": "dev-6.x-dev"
+        "claroline/core-bundle": "~6.0",
+        "claroline/front-end-bundle": "~6.0"
     },
     "autoload": {
         "psr-0": { "Claroline\\AgendaBundle": "" }
