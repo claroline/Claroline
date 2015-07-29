@@ -80,6 +80,7 @@
                     <th>{{ 'object'|trans({}, 'platform') }}</th>
                     <th>{{ 'from_message'|trans({}, 'platform') }}</th>
                     <th>{{ 'date'|trans({}, 'platform') }}</th>
+                    <th>{{ 'open_the'|trans({}, 'message')}}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -95,8 +96,13 @@
                             data-route="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}" >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
                             <td> {{ userMessage.getMessage().getObject() }} </td>
-                            <td> {{ userMessage.getMessage().getSenderUsername() }} </td>
+                            <td> {{ userMessage.getMessage().getSenderUsername() }} ({{ userMessage.getUser().getFirstName()}} {{ userMessage.getUser().getLastName()}}) </td>
                             <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
+                            <td>
+                                {% if userMessage.getLastOpenDate() %}
+                                    {{ userMessage.getLastOpenDate()|intl_date_format }}
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if userMessage.isRead() %}
                                     <div style="color: green" class="fa fa-check-circle"></div>

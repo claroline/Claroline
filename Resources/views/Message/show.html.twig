@@ -17,20 +17,24 @@
                         <h3 class='panel-title'>{{ ancestor.getObject() | raw }}</h3>
                     </div>
                     <div class="panel-body">
-                        <p class="text-muted">
-                            {{ 'from_message'|trans({}, 'platform') }}:  {{ ancestor.getSenderUsername() }}
-                        </p>
-                        <div>
-                            {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
-                                <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2" alt="{{ ancestor.getObject() }}">
-                            {% endif %}
+                        <div class="row">
+                            <div class="col-md-2">
+                                {% if ancestor.getSender() and ancestor.getSender().getPicture() != "" %}
+                                    <img src="{{ asset('uploads/pictures/') ~  ancestor.getSender().getPicture() }}" class="col-md-2" alt="{{ ancestor.getObject() }}">
+                                {% else %}
+                                    <h1 class="profile_picture_placeholder"><i class="fa fa-user"></i></h1>
+                               {% endif %}
+                                <p class="text-muted">
+                                    {{ ancestor.getSenderUsername() }} ({{ ancestor.getSender().getFirstName()}} {{ ancestor.getSender().getLastName()}})
+                                </p>
+                            </div>
+                            <div class="col-md-9">
+                                {{ ancestor.getContent()|raw }}
+                                <p class="text-muted">
+                                    {{ ancestor.getDate()|timeAgo }}
+                                </p>
+                            </div>
                         </div>
-                        <p>
-                            {{ ancestor.getContent()|raw }}
-                            <p class="text-muted">
-                                {{ ancestor.getDate()|timeAgo }}
-                            </p>
-                        </p>
                     </div>
                 </div>
             {% endfor %}
