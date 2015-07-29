@@ -63,7 +63,7 @@ class UserManager
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "personalWsTemplateFile" = @DI\Inject("%claroline.param.templates_directory%"),
+     *     "templateDir"            = @DI\Inject("%claroline.param.templates_directory%"),
      *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager"),
      *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"           = @DI\Inject("claroline.pager.pager_factory"),
@@ -80,7 +80,7 @@ class UserManager
      * })
      */
     public function __construct(
-        $personalWsTemplateFile,
+        $templateDir,
         MailManager $mailManager,
         ObjectManager $objectManager,
         PagerFactory $pagerFactory,
@@ -101,7 +101,7 @@ class UserManager
         $this->workspaceManager       = $workspaceManager;
         $this->toolManager            = $toolManager;
         $this->strictEventDispatcher  = $strictEventDispatcher;
-        $this->personalWsTemplateFile = $personalWsTemplateFile . "default.zip";
+        $this->personalWsTemplateFile = $templateDir . "personal.zip";
         $this->translator             = $translator;
         $this->platformConfigHandler  = $platformConfigHandler;
         $this->pagerFactory           = $pagerFactory;
@@ -522,6 +522,13 @@ class UserManager
         $query = $this->userRepo->findAll(false, $orderedBy, $order);
 
         return $this->pagerFactory->createPager($query, $page, $max);
+    }
+
+    /**
+     */
+    public function getAll()
+    {
+        return $this->userRepo->findAll();
     }
 
     /**

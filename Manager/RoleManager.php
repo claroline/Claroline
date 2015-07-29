@@ -803,6 +803,25 @@ class RoleManager
         return false;
     }
 
+    public function validateNewUserRolesInsert(array $roles)
+    {
+        foreach ($roles as $role) {
+            $isAvailable = $this->validateRoleInsert(new User(), $role);
+
+            if (!$isAvailable) {
+                $unavailableRoles[] = $role;
+            }
+        }
+
+        $isAvailable = $this->validateRoleInsert(new User(), $roleUser);
+
+        if (!$isAvailable) {
+            $unavailableRoles[] = $roleUser;
+        }
+
+        return array_unique($unavailableRoles);
+    }
+
     /**
      * @param Role $role
      * @return bool

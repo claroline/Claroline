@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\GroupRepository")
@@ -35,12 +36,14 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
 
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
      */
     protected $name;
 

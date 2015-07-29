@@ -634,11 +634,19 @@ class ResourceController
 
         unset($element);
 
+        $sorted = array();
+
+        foreach ($creatableTypes as $type) {
+            $sorted[$this->translator->trans($type, array(), 'resource')] = $type;
+        }
+
+        ksort($sorted);
+
         $jsonResponse = new JsonResponse(
             array(
                 'id'                => $directoryId,
                 'path'              => $path,
-                'creatableTypes'    => $creatableTypes,
+                'creatableTypes'    => $sorted,
                 'nodes'             => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id'      => $workspaceId,
@@ -969,10 +977,10 @@ class ResourceController
     public function exportAction(array $nodes)
     {
         if (count($nodes) === 0) {
-            
+
             throw new \Exception('No resource to export');
         }
-            
+
         $workspace = $nodes[0]->getWorkspace();
         $archive = $this->transferManager->exportResources($workspace, $nodes);
         $fileName = $workspace->getCode() . '.zip';

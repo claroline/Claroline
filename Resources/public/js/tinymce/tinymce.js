@@ -21,7 +21,10 @@
     //Load external plugins
     tinymce.PluginManager.load('mention', home.asset + 'bundles/frontend/tinymce/plugins/mention/plugin.min.js');
     tinymce.PluginManager.load('accordion', home.asset + 'bundles/frontend/tinymce/plugins/accordion/plugin.min.js');
+    tinymce.PluginManager.load('codemirror', home.asset + 'bundles/frontend/tinymce/plugins/codemirror/plugin.min.js');
     tinymce.DOM.loadCSS(home.asset + 'bundles/frontend/tinymce/plugins/mention/css/autocomplete.css');
+
+    var codemirrorPath = home.asset + 'bundles/frontend/tinymce/plugins/codemirror/codemirror-4.8';
 
     /**
      * Claroline TinyMCE parameters and methods.
@@ -251,6 +254,9 @@
         },
         'picker': {
             'openResourcesInNewTab': false
+        },
+        'codemirror': {
+            'path': codemirrorPath
         }
     };
 
@@ -267,10 +273,10 @@
                 'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
                 'searchreplace wordcount visualblocks visualchars fullscreen',
                 'insertdatetime media nonbreaking save table directionality',
-                'template paste textcolor emoticons code -mention -accordion'
+                'template paste textcolor emoticons code -mention -accordion -codemirror'
             ];
 
-            var toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons |'
+            var toolbar1 = 'bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | fullscreen displayAllButtons'
 
             $.each(tinymce.claroline.plugins, function(key, value) {
                 if (value === true) {

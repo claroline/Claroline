@@ -1555,4 +1555,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findForApi($data)
+    {
+        $dql = 'SELECT u FROM Claroline\CoreBundle\Entity\User u
+            WHERE u.id = :data
+            OR u.username LIKE :data
+            OR u.mail LIKE :data';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('data', $data);
+
+        return $query->getOneOrNullResult();
+    }
 }
