@@ -1131,3 +1131,13 @@ your_username: 'Your username is '
 your_platform_id: 'Your platform login'
 your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'
+oauth_client_list: Oauth client list
+redirect_uri: Redirection url
+grant_type: Permissions
+friend_platform: Friends platforms
+pending_friends: Pending friends
+create_client: Create client
+delete_client: Delete client
+delete_client_message: Do you really want to remove this client ?
+delete_platform_friend_message: Do you really want to remove this friend ?
+delete_platform_friend: Delete a platform friend

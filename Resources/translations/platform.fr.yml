@@ -1131,3 +1131,13 @@ your_platform_id: 'Votre identifiant sur la plateforme'
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'
+oauth_client_list: Liste des clients Oauth
+redirect_uri: Url de redirection
+grant_type: Permissions
+friend_platform: Plateformes amies
+pending_friends: Amis en attente
+create_client: Créer un client
+delete_client: Supprimer un client
+delete_client_message: Êtes-vous sûr de vouloir supprimer ce client ?
+delete_platform_friend_message: Êtes-vous sûr de vouloir supprimer cette plateforme amie ?
+delete_platform_friend: Supprimer une plateforme amie
