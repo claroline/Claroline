@@ -93,4 +93,9 @@ class FriendRequest
     {
         return $this->clarolineAccess;
     }
+
+    public function setClarolineAccess(ClarolineAccess $access)
+    {
+        $this->clarolineAccess = $access;
+    }
 }

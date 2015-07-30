@@ -176,7 +176,7 @@ copiable: Copiable
 copies: Copies
 copy: Copier
 core_packages: 'Paquets du noyau'
-count_resources: 'Nombre de ressource'
+count_resources: 'Nombre de ressources'
 create: Créer
 create_account: Créer le compte
 create_and_update: 'Création et mise à jour'

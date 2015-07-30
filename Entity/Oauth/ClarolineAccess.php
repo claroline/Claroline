@@ -54,12 +54,12 @@ class ClarolineAccess
      * @var FriendRequest
      *
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Oauth\FriendRequest"
+     *     targetEntity="Claroline\CoreBundle\Entity\Oauth\FriendRequest",
+     *     inversedBy="clarolineAccess"
      * )
      * @ORM\JoinColumn(name="friend_request_id", onDelete="SET NULL")
      */
     protected $friendRequest;
-
 
     public function getId()
     {
@@ -103,6 +103,6 @@ class ClarolineAccess
 
     public function getFriendRequest()
     {
-        return $this->request;
+        return $this->friendRequest;
     }
 }

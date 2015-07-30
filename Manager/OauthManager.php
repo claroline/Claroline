@@ -57,7 +57,7 @@ class OauthManager extends ClientManager
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findOneBy(array('name' => $name));
     }
 
-    public function connect($host, $id, $secret, FriendRequest $friendRequest = null)
+    public function connect($host, $id, $secret, FriendRequest $friendRequest)
     {
         $url = $host . '/oauth/v2/token?client_id=' .
             $id . '&client_secret=' .
@@ -66,7 +66,7 @@ class OauthManager extends ClientManager
         $serverOutput = $this->curlManager->exec($url);
         $json = json_decode($serverOutput);
 
-        if (property_exists($json, 'access_token')) {
+        if ($json && property_exists($json, 'access_token')) {
             return $this->createAccess(
                 $id,
                 $secret,
@@ -155,27 +155,20 @@ class OauthManager extends ClientManager
     /**
      * Only 1 access per client !
      */
-    private function createAccess($randomId, $secret, $token, FriendRequest $request = null)
+    private function createAccess($randomId, $secret, $token, FriendRequest $request)
     {
         //1st step, remove any existing access
         $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
             ->findOneByRandomId($randomId);
-        if ($access) {
-            $this->om->remove($access);
-            $this->om->flush();
-        }
-        //2nd step, creates a new access
-        $access = new ClarolineAccess();
+
+        if ($access === null) $access = new ClarolineAccess();
+
         $access->setRandomId($randomId);
         $access->setSecret($secret);
         $access->setAccessToken($token);
-
-        if ($request) {
-            $request->setIsActivated(true);
-            $access->setFriendRequest($request);
-            $this->om->persist($request);
-        }
-
+        $request->setIsActivated(true);
+        $access->setFriendRequest($request);
+        $this->om->persist($request);
         $this->om->persist($access);
         $this->om->flush();
 
