@@ -262,12 +262,12 @@ function displayOptionalFields(){
 }
 
 /**
- * Displays enabled tinyMCE
+ * active advanced edition
  * @returns {undefined}
  */
 function textareaAdvancedEdition()
 {
-    //Enables advanced edition QCM - Matching
+    //active advanced edition
     $('.classic').find('textarea').each(function() {
         //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
         if($(this).val().match("<.+>.+|\s<\/.+>$")) {

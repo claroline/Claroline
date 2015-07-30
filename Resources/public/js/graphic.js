@@ -227,7 +227,7 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
 
     var empty = false; // Answer zone aren't defined
 
-    for (j = 0 ; j < grade ; j++) {
+    for (j = 0; j < grade; j++) {
 
         // If at least one answer zone exist
         if ($('#img' + j).length > 0) {
@@ -236,54 +236,57 @@ function Check( noQuestion, noImg, noAnswerZone, invite) {
         }
     }
 
-        // No question asked
-        if (tinyMCE.get(invite).getContent() == '') {
-            alert(noQuestion);
+    // No question asked
+    if (tinyMCE.get(invite).getContent() == '') {
+        alert(noQuestion);
+        return false;
+    } else {
+
+        // No picture load
+        if ($('#AnswerImage').length == 0) {
+            alert(noImg);
             return false;
         } else {
 
-            // No picture load
-            if ($('#AnswerImage').length == 0) {
-                alert(noImg);
+            // No answer zone
+            if (empty == false) {
+                alert(noAnswerZone);
                 return false;
             } else {
 
-                // No answer zone
-                if (empty == false) {
-                    alert(noAnswerZone);
-                    return false;
-                } else {
+                // Submit if required fields not empty
+                $('#imagewidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
+                $('#imageheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
 
-                    // Submit if required fields not empty
-                    $('#imagewidth').val($('#AnswerImage').width()); // Pass width of the image to the controller
-                    $('#imageheight').val($('#AnswerImage').height()); // Pass height of the image to the controller
+                for (j = 0; j < grade; j++) {
 
-                    for (j = 0 ; j < grade ; j++) {
+                    var imgN = 'img' + j;
+                    var selectedZone = $('#' + imgN); // An answer zone
+                    var container = $('#dragContainer' + j);
+                    var feedback = $("#ujm_exobundle_interactiongraphictype_coords_" + j + "_feedback").val();
 
-                        var imgN = 'img' + j;
-                        var selectedZone = $('#' + imgN); // An answer zone
-                        var container = $('#dragContainer' + j);
+                    if (selectedZone.length) { // If at least one answer zone is defined
 
-                        if (selectedZone.length) { // If at least one answer zone is defined
+                        var position = selectedZone;
 
-                            var position = selectedZone;
-
-                            if (selectedZone.css("left") == 'auto') {
-                                position = container;
-                            }
-
-                            // Position x answer zone
-                            imgx = parseInt(position.css("left").substring(0, position.css("left").indexOf('p')));
-
-                            // Position y answer zone
-                            imgy = parseInt(position.css("top").substring(0, position.css("top").indexOf('p')));
-                         //   alert('imgx:'+imgx+' imgy:'+imgy);
-                            // Concatenate informations of the answer zones
-                            var val = selectedZone.attr("src") + ';' + imgx + '_' + imgy + '-' + point[imgN] + '~' + selectedZone.prop("width");
-
-                            // And send it to the controller
-                            $('#coordsZone').val($('#coordsZone').val() + val + ',');
+                        if (selectedZone.css("left") == 'auto') {
+                            position = container;
                         }
+                        if (typeof feedback === "undefined") {
+                            feedback = '';
+                        }
+                        // Position x answer zone
+                        imgx = parseInt(position.css("left").substring(0, position.css("left").indexOf('p')));
+
+                        // Position y answer zone
+                        imgy = parseInt(position.css("top").substring(0, position.css("top").indexOf('p')));
+
+                        // Concatenate informations of the answer zones
+                        var val = selectedZone.attr("src") + '§§' + imgx + '__' + imgy + '|-|' + point[imgN] + '~~' + selectedZone.prop("width") + '^^' + feedback;
+
+                        // And send it to the controller
+                        $('#coordsZone').val($('#coordsZone').val() + val + ',');
+                    }
 
                 }
             }
@@ -407,42 +410,6 @@ function switchColorShape(prefix, shape, color, target, targetColor) {
     }
 }
 
-//// Key press for delete an answer zone
-//document.addEventListener('keydown', function (e) {
-//    if (e.keyCode === 83) { // Touch s down
-//        pressS = true;
-//    }
-//}, false);
-//
-//document.addEventListener('keyup', function (e) {
-//    if (e.keyCode === 83) { // Touch s up
-//        pressS = false;
-//    }
-//}, false);
-//
-//document.addEventListener('click', function (e) {
-//
-//    // To delete an answer zone
-//    if (pressS === true) {
-//
-//        for (j = 0 ; j < grade ; j++) {
-//            if ($(e.target).hasClass('fa fa-arrows')) {
-//                $(e.target).parent('div').remove();
-//
-//                var containerID = $(e.target).parent('div').attr('id');
-//                var numToDel = parseInt(containerID.substring(containerID.indexOf('er') + 2, containerID.indexOf('er') + 3)) + 1;
-//
-//                $('#AlreadyPlacedArray').find('td:contains("' + numToDel + '")').parent('tr').remove();
-//
-//                setOrderAfterDel();
-//
-//                break;
-//            }
- //       }
-//        pressS = false;
-//    }
-//}, false);
-
 function addPicture(url) {
     $.ajax({
             type: "POST",
@@ -466,12 +433,12 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
     var contenu = '<tr><td class="classic" width="25%">' + (parseInt(count) + 1) + '</td><td class="classic">';
 
     if (shape == 'square') {
-        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" style="width:100px;display:block; margin:auto;" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
                         <option value="circle"> <img src="bundles/ujmexo/images/graphic/circleblack.png"></option>\n\
                         <option value="square" selected>' + translations['tradSquare'] + '</option>\n\
                     </select></td>'
     } else {
-        contenu += '<select class="form-control" id="shape' + grade + '" size="1" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
+        contenu += '<select class="form-control" id="shape' + grade + '" size="1" style="width:100px;display:block; margin:auto;" onchange="alterAlreadyPlaced(\'' + pathImg + '\', this);">\n\
                         <option value="circle" selected>' + translations['tradCircle'] + '</option>\n\
                         <option value="square">' + translations['tradSquare'] + '</option>\n\
                     </select></td>';
@@ -519,8 +486,10 @@ function alreadyPlacedAnswersZone(shape, color, pathImg, point) {
                 <option value="brown"  style="background-color:#5A4C41;"> &nbsp;&nbsp;&nbsp; </option>\n\
              </select></td>';
 
-    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
+    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" style="width:100px;display:block; margin:auto;" value="'
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td>\n\
+                <td class="classic" id="row_feedback_'+grade+'"><a class="btn btn-default" id="btn_feedback_'+grade+'" onClick="addFeedbackGraphic('+grade+',\'btn_feedback_'+grade+'\',\'row_feedback_'+grade+'\');"><i class="fa fa-comments-o"></i></a></td>\n\
+                <td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
     $('#AlreadyPlacedArray').find('tbody').append(contenu);
 
     $('#delete'+grade).click(function(e) {
@@ -593,40 +562,19 @@ function setOrderAfterDel() {
     $("*[id^='img']").each(function () {
         point[$(this).attr('id')] = oldPoints[$(this).attr('id')];
     });
-
-//    count = 0;
-//
-//    $("*[id^='img']").each(function () {
-//        var oldId = $(this).attr('id');
-////        $(this).attr('id', String('img' + count));
-//        point[$(this).attr('id')] = oldPoints[oldId];
-////        count++;
-//    });
-//
-//    count = 0;
-//
-//    $("*[id^='shape']").each(function () {
-//        if ($(this).attr('id').length > 5) {
-//            $(this).attr('id', String('shape' + count));
-//            count++;
-//        }
-//    });
-//
-//    count = 0;
-//
-//    $("*[id^='color']").each(function () {
-//        if ($(this).attr('id').length > 5) {
-//            $(this).attr('id', String('color' + count));
-//            count++;
-//        }
-//    });
-//
-//    count = 0;
-//
-//    $("*[id^='points']").each(function () {
-//        if ($(this).attr('id').length > 6) {
-//            $(this).attr('id', String('points' + count));
-//            count++;
-//        }
-//    });
 }
+
+/**
+  * Activate the feedback
+  * @param {type} row 
+  * @param {type} btn the button used to activate the feedback
+  * @param {type} index
+  */
+ function addFeedbackGraphic(index,btn,row){
+     $('#'+btn).remove(); 
+     $('#'+row).append('<span class="input-group">\n\
+             <textarea class="form-control" style="height:34px;" id="ujm_exobundle_interactiongraphictype_coords_'+index+'_feedback"></textarea>\n\
+             <span class="input-group-btn">\n\
+                    <a class="btn btn-default" id="btnEdition_ujm_exobundle_interactiongraphictype_coords_'+index+'_feedback" onClick="advancedEdition(\'ujm_exobundle_interactiongraphictype_coords_'+index+'_feedback\',\'btnEdition_ujm_exobundle_interactiongraphictype_coords_'+index+'_feedback\',event);">\n\
+                    <i class="fa fa-font"></i></a></span></span>');
+ }

@@ -274,7 +274,7 @@ class InteractionGraphicController extends Controller
 
         $exerciseSer = $this->container->get('ujm.exercise_services');
         $res = $exerciseSer->responseGraphic($request);
-
+        
         $vars['point']   = $res['point']; // Score of the student without penalty
         $vars['penalty'] = $res['penalty']; // Penalty (hints)
         $vars['interG']  = $res['interG']; // The entity interaction graphic (for the id ...)
