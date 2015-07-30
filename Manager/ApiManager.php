@@ -57,7 +57,7 @@ class ApiManager
             if (property_exists($json, 'error')) {
                 if ($json->error === 'access_denied' || $json->error === 'invalid_grant') {
                     $access = $this->oauthManager->connect($request->getHost(), $access->getRandomId(), $access->getSecret(), $access->getFriendRequest());
-                    $this->url($request->getHost(), $url, $access->getRandomId(), $access->getSecret(), $payload, $type);
+                    $this->url($request, $url, $payload, $type);
                 }
             }
         }
