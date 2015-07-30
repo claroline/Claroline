@@ -56,7 +56,7 @@ class CurlManager
 
     private function setPutCurl($ch, $payload)
     {
-        curl_setopt($ch, CURLOPT_PUT, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->urlify($payload));
     }
 
