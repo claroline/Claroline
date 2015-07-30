@@ -143,7 +143,7 @@ function whichImg(shape, color, i, x, y, rx, ry, prefix, size, id) {
 }
 function whichTab(point, feedback,i){
    var j = i+1; //1 is added for the same number as the display
-   if(feedback==='')
+    if(feedback==='')
    {
      feedback='-';  
    }

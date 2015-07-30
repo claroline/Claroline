@@ -60,7 +60,17 @@
 
             {% set inter = interG %}
             {% include "UJMExoBundle:Partial:correction/graphic.html.twig" %}
-
+                <table id="tableAnswer" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr style="background-color: lightsteelblue;">
+                        <th class="classic">{{ 'answer_zone' | trans }}</th>
+                        <th class="classic">{{ 'points' | trans }}</th>
+                        <th class="classic">{{ 'comment' | trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
             <div id="Answer" style="position: relative;">
                 <img class="AnswerImage" src="{{asset (doc.url)}}" width="{{ interG.width }}" height="{{ interG.height }}"
                      alt="AnswerImage" id="AnswerImage1"/>
@@ -85,19 +95,7 @@
                     {% set i = i + 1 %}
                     
                 {% endfor %}
-            </div>
-            <br>
-            <table id="tableAnswer" class="table table-striped table-bordered table-condensed">
-                <thead>
-                    <tr style="background-color: lightsteelblue;">
-                        <th class="classic">{{ 'answer_zone' | trans }}</th>
-                        <th class="classic">{{ 'points' | trans }}</th>
-                        <th class="classic">{{ 'comment' | trans }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            </div>       
             <hr>
 
             {% set score = score ~ ' / ' ~ total %}
