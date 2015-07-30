@@ -53,7 +53,7 @@ class SupportListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopResourceManager(DisplayToolEvent $event)
+    public function onDesktopToolOpen(DisplayToolEvent $event)
     {
         $params = array();
         $params['_controller'] = 'FormaLibreSupportBundle:Support:supportIndex';
