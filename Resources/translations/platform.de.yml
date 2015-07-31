@@ -178,8 +178,10 @@ copy: Copier
 core_packages: 'Paquets du noyau'
 count_resources: 'Nombre de ressource'
 create: Créer
+create_account: create_account
 create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
+create_client: create_client
 create_facet: 'Créer une facette'
 create_field: 'Créer un champ'
 create_group: 'Créer un groupe'
@@ -263,11 +265,17 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_client: delete_client
+delete_client_message: delete_client_message
 delete_contact: 'Supprimer le contact'
 delete_contact_confirm_message: 'Voulez-vous vraiment supprimer ce contact ?'
+delete_friend_pending: delete_friend_pending
+delete_friend_pending_message: delete_friend_pending_message
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
 delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences ?'
+delete_platform_friend: delete_platform_friend
+delete_platform_friend_message: delete_platform_friend_message
 description: Description
 desktop: Bureau
 desktop_and_home: 'Bureau et accueil'
@@ -352,12 +360,13 @@ filter: Filtrer
 filter_actions: 'Filtrer les actions'
 filters: Filtres
 find_workspaces: 'Tous les espaces d''activités publics'
-firstName: 'Vorname'
-first_name: 'vorname'
+firstName: Vorname
+first_name: vorname
 footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
+friend_platform: friend_platform
 from: Depuis
 from_message: De
 fullscreen_text_editor: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
@@ -374,6 +383,7 @@ generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscri
 get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
 google_tag_validation: 'Balise HTML de validation Google'
 grant_access: 'Donner l''accès'
+grant_type: grant_type
 graph_draw_area: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 group: Groupe
 group_configuration: 'Configuration du groupe'
@@ -623,6 +633,7 @@ number: Nombre
 number_of_attempts: 'Nombre de tentatives'
 number_of_attempts_explanation: 'La signification du nombre de tentatives peut varier en fonction de l''activité. Il ne s''agit pas forcément du nombre de fois où l''activité a été exécutée.'
 oauth: Oauth
+oauth_client_list: oauth_client_list
 object: Objet
 occurrence: Occurrence
 ok: Ok
@@ -653,12 +664,13 @@ parameters_save_error: 'Une erreur est survenue pendant la sauvegarde des param�
 parameters_save_success: 'Paramètres sauvegardés avec succès.'
 passed: Réussi
 passing_score: 'Score pour réussir'
-password: 'Password'
+password: Password
 password_mismatch: 'Les mots de passe ne correspondent pas.'
 password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.'
 paste: Coller
 path: Emplacement
 pending: 'En attente'
+pending_friends: pending_friends
 pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
@@ -722,6 +734,7 @@ receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
+redirect_uri: redirect_uri
 refresh: Raffraîchir
 refresh_explanation: "Certains problèmes peuvent être causés car les fichiers javascripts et css n'ont pas été bien générés. </br>\nAfin de tenter de résoudre, veuillez sur \"Raffraîchir\"  </br>\nPour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
 register: Inscription
@@ -1054,6 +1067,7 @@ validate: Valider
 validation: Validation
 variable_available_message: 'Vous pouvez utiliser les variables suivantes dans votre formulaire'
 verification: Vérification
+verify_your_password: verify_your_password
 view: Voir
 view_category_hierarchy: 'Visualiser la structure des catégories'
 views: 'Nb vues'
@@ -1125,6 +1139,7 @@ ws_most_viewed: 'Espaces d''activités les plus consultés'
 'yes': Oui
 yesterday_activity: 'Activité de la veille'
 your_current_url: 'Votre URL actuelle'
+your_platform_id: your_platform_id
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'

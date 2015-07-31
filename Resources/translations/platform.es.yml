@@ -178,9 +178,10 @@ copy: Copiar
 core_packages: 'Core packages'
 count_resources: count_resources
 create: Crear
-create_account: Crear la cuenta
+create_account: 'Crear la cuenta'
 create_and_update: 'Crear y actualizar'
 create_category: 'Crear una categoría'
+create_client: create_client
 create_facet: 'Crear una faceta'
 create_field: 'Crear un campo'
 create_group: 'Crear un grupo'
@@ -264,11 +265,17 @@ delete: Suprimir
 delete_category: 'Suprimir categoría'
 delete_category_confirm_message: '¿Realmente deseas eliminar esta categoría?'
 delete_category_confirm_title: 'Supresión de categoría'
+delete_client: delete_client
+delete_client_message: delete_client_message
 delete_contact: 'Suprimir el contacto'
 delete_contact_confirm_message: '¿Está seguro que desea suprimir este contacto?'
+delete_friend_pending: delete_friend_pending
+delete_friend_pending_message: delete_friend_pending_message
 delete_home_tab: 'Suprimir pestaña'
 delete_learning_outcomes: delete_learning_outcomes
 delete_learning_outcomes_confirm_message: delete_learning_outcomes_confirm_message
+delete_platform_friend: delete_platform_friend
+delete_platform_friend_message: delete_platform_friend_message
 description: Descripción
 desktop: Escritorio
 desktop_and_home: 'Escritorio e inicio'
@@ -359,6 +366,7 @@ footer: 'Pie de página'
 for_period: 'para el período'
 forgot_password: '¿Ha olvidado su contraseña?'
 form_role: Rol
+friend_platform: friend_platform
 from: De
 from_message: De
 fullscreen_text_editor: 'Usted puede usar la versión de pantalla completa del editor de texto para incluir HTML'
@@ -375,6 +383,7 @@ generate_url_subscription_fail: 'Usted debe marcar "activar primero la casilla d
 get_mail_notifications: 'Me gustaría ser notificado por correo electrónico a %adress%.'
 google_tag_validation: 'Etiqueta HTML de validación de Google'
 grant_access: 'Conceder acceso'
+grant_type: grant_type
 graph_draw_area: 'Dibuje un área en el gráfico para ampliar, haga doble clic para cancelar'
 group: Grupos
 group_configuration: 'Configuración de un grupo'
@@ -624,6 +633,7 @@ number: Numero
 number_of_attempts: 'Número de intentos'
 number_of_attempts_explanation: 'El significado del número de intentos puede variar dependiendo de la actividad. No se trata necesariamente del número de veces que la actividad ha sido realizada.'
 oauth: OAuth
+oauth_client_list: oauth_client_list
 object: Asunto
 occurrence: Ocurrencia
 ok: Ok
@@ -660,6 +670,7 @@ password_ok: 'Su contraseña ha cambiado, ahora pude conectarse'
 paste: Pegar
 path: Ruta
 pending: pending
+pending_friends: pending_friends
 pending_users_list: pending_users_list
 permissions: Permisos
 personal_data: 'No se recuperarán datos personales. Los datos técnicos y estadísticos recogidos serán utilizados sólo en relación con el proyecto Claroline Connect y no serán difundidos de otra manera.'
@@ -723,6 +734,7 @@ receiver: Destinatarios
 recent_all_workspace_activities_overview: 'Resumen de todas las actividades recientes en %workspaceName%'
 recursive_dir_action: 'Aplicar en el contenido de la carpeta y la subcarpeta'
 redirect_after_login: 'Redirigir a la ultima página visitada'
+redirect_uri: redirect_uri
 refresh: refresh
 refresh_explanation: refresh_explanation
 register: Inscribirse
@@ -1127,6 +1139,7 @@ ws_most_viewed: 'Espacio de trabajo mas visto'
 'yes': Si
 yesterday_activity: 'Actividades de ayer'
 your_current_url: your_current_url
+your_platform_id: your_platform_id
 your_username: 'Su nombre de usuario es '
 your_workspace_activity_overview: 'Resumen de todas las actividades recientes de su espacio e trabajo'
 404: 'Page Not found'

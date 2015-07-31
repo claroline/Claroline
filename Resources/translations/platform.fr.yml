@@ -178,9 +178,10 @@ copy: Copier
 core_packages: 'Paquets du noyau'
 count_resources: 'Nombre de ressources'
 create: Créer
-create_account: Créer le compte
+create_account: 'Créer le compte'
 create_and_update: 'Création et mise à jour'
 create_category: 'Créer une catégorie'
+create_client: 'Créer un client'
 create_facet: 'Créer une facette'
 create_field: 'Créer un champ'
 create_group: 'Créer un groupe'
@@ -264,11 +265,17 @@ delete: Supprimer
 delete_category: 'Supprimer la catégorie'
 delete_category_confirm_message: 'Voulez-vous vraiment supprimer cette catégorie ?'
 delete_category_confirm_title: 'Suppression d''une catégorie'
+delete_client: 'Supprimer un client'
+delete_client_message: 'Êtes-vous sûr de vouloir supprimer ce client ?'
 delete_contact: 'Supprimer le contact'
 delete_contact_confirm_message: 'Voulez-vous vraiment supprimer ce contact ?'
+delete_friend_pending: 'Supprimer une demande d''ami'
+delete_friend_pending_message: 'Êtes-vous sûr de vouloir supprimer cette demande d''ami ?'
 delete_home_tab: 'Supprimer l''onglet'
 delete_learning_outcomes: 'Suppression d''un référentiel de compétences'
 delete_learning_outcomes_confirm_message: 'Voulez-vous vraiment supprimer ce référentiel de compétences ?'
+delete_platform_friend: 'Supprimer une plateforme amie'
+delete_platform_friend_message: 'Êtes-vous sûr de vouloir supprimer cette plateforme amie ?'
 description: Description
 desktop: Bureau
 desktop_and_home: 'Bureau et accueil'
@@ -359,6 +366,7 @@ footer: 'Pied de page'
 for_period: 'sur la période du :'
 forgot_password: 'Mot de passe oublié ?'
 form_role: Rôle
+friend_platform: 'Plateformes amies'
 from: Depuis
 from_message: De
 fullscreen_text_editor: 'Vous pouvez utiliser la version plein écran de l''éditeur afin d''y inclure du HTML'
@@ -375,6 +383,7 @@ generate_url_subscription_fail: 'Vous devez d''abord cochez la case de l''inscri
 get_mail_notifications: 'Je veux recevoir les notifications sur %adress%.'
 google_tag_validation: 'Balise HTML de validation Google'
 grant_access: 'Donner l''accès'
+grant_type: Permissions
 graph_draw_area: 'Tracez une zone sur le graphique pour zoomer; double cliquez pour annuler'
 group: Groupe
 group_configuration: 'Configuration du groupe'
@@ -624,6 +633,7 @@ number: Nombre
 number_of_attempts: 'Nombre de tentatives'
 number_of_attempts_explanation: 'La signification du nombre de tentatives peut varier en fonction de l''activité. Il ne s''agit pas forcément du nombre de fois où l''activité a été exécutée.'
 oauth: Oauth
+oauth_client_list: 'Liste des clients Oauth'
 object: Objet
 occurrence: Occurrence
 ok: Ok
@@ -660,6 +670,7 @@ password_ok: 'Votre mot de passe a été modifié. Vous pouvez maintenant vous c
 paste: Coller
 path: Emplacement
 pending: 'En attente'
+pending_friends: 'Amis en attente'
 pending_users_list: 'Liste des utilisateurs en attente'
 permissions: Permissions
 personal_data: 'Aucune donnée personnelle ne sera récupérée. Les données techniques et statistiques récupérées seront exclusivement utilisées en relation avec le projet Claroline Connect et ne seront pas autrement diffusées.'
@@ -723,6 +734,7 @@ receiver: destinataire(s)
 recent_all_workspace_activities_overview: 'Aperçu de toutes les activités récentes de %workspaceName%'
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
+redirect_uri: 'Url de redirection'
 refresh: Raffraîchir
 refresh_explanation: "Certains problèmes peuvent être causés car les fichiers javascripts et css n'ont pas été bien générés. </br>\nAfin de tenter de résoudre, veuillez sur \"Raffraîchir\"  </br>\nPour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
 register: Inscription
@@ -1036,7 +1048,7 @@ user_public_profile_not_visible: 'Votre profil public n''est visible à personne
 user_removed: 'Utilisateur supprimé'
 user_selector: 'Sélecteur d''utilisateurs'
 user_visit: 'Audience/Visites utilisateurs'
-username: 'Identifiant'
+username: Identifiant
 username_and_email_from_two_different_users: 'Le nom d''utilisateur %username% et l''adresse mail %email% sont tous deux utilisés et n''appartiennent pas au même utilisateur.'
 username_found_at: 'Le nom d''utilisateur %username% a été trouvé aux lignes: %lines%'
 username_or_email: 'Nom d''utilisateur ou email'
@@ -1131,13 +1143,3 @@ your_platform_id: 'Votre identifiant sur la plateforme'
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'
-oauth_client_list: Liste des clients Oauth
-redirect_uri: Url de redirection
-grant_type: Permissions
-friend_platform: Plateformes amies
-pending_friends: Amis en attente
-create_client: Créer un client
-delete_client: Supprimer un client
-delete_client_message: Êtes-vous sûr de vouloir supprimer ce client ?
-delete_platform_friend_message: Êtes-vous sûr de vouloir supprimer cette plateforme amie ?
-delete_platform_friend: Supprimer une plateforme amie
