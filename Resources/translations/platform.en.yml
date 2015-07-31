@@ -178,9 +178,10 @@ copy: Copy
 core_packages: 'Core packages'
 count_resources: 'Amount of resources'
 create: Create
-create_account: Create account
+create_account: 'Create account'
 create_and_update: 'Create and update'
 create_category: 'Create a category'
+create_client: 'Create client'
 create_facet: 'Create a facet'
 create_field: 'Create a field'
 create_group: 'Create group'
@@ -264,11 +265,17 @@ delete: Delete
 delete_category: 'Delete category'
 delete_category_confirm_message: 'Do you really want to delete this category ?'
 delete_category_confirm_title: 'Category deletion'
+delete_client: 'Delete client'
+delete_client_message: 'Do you really want to remove this client ?'
 delete_contact: 'Delete contact'
 delete_contact_confirm_message: 'Do you really want to delete this contact ?'
+delete_friend_pending: 'Delete pending friend'
+delete_friend_pending_message: 'Do you really want to remove this pending friend ?'
 delete_home_tab: 'Delete tab'
 delete_learning_outcomes: 'Delete learning outcomes'
 delete_learning_outcomes_confirm_message: 'Do you really want to delete this learning outcomes ?'
+delete_platform_friend: 'Delete a platform friend'
+delete_platform_friend_message: 'Do you really want to remove this friend ?'
 description: Description
 desktop: Desktop
 desktop_and_home: 'Desktop and home'
@@ -359,6 +366,7 @@ footer: Footer
 for_period: 'for period'
 forgot_password: 'Forgot your password?'
 form_role: Role
+friend_platform: 'Friends platforms'
 from: From
 from_message: From
 fullscreen_text_editor: 'You can use the full screen version of the text editor to include HTML'
@@ -375,6 +383,7 @@ generate_url_subscription_fail: 'You must check "enable registration checkbow fi
 get_mail_notifications: 'I want to be notified by email on %adress%.'
 google_tag_validation: 'Google HTML tag validation'
 grant_access: 'Grant access'
+grant_type: Permissions
 graph_draw_area: 'Draw an area on the graph to zoom, double-click to cancel'
 group: Group
 group_configuration: 'Group configuration'
@@ -624,6 +633,7 @@ number: Number
 number_of_attempts: 'Number of attempts'
 number_of_attempts_explanation: 'The meaning of the number of attempts can vary depending on the activity. It is not necessarily the number of times the activity has been performed.'
 oauth: Oauth
+oauth_client_list: 'Oauth client list'
 object: Object
 occurrence: Occurrence
 ok: Ok
@@ -660,6 +670,7 @@ password_ok: 'Your password has been changed, you can login now'
 paste: Paste
 path: Path
 pending: Pending
+pending_friends: 'Pending friends'
 pending_users_list: 'Pending users list'
 permissions: Permissions
 personal_data: 'No personal data will be retrieved. The technical and statistical data collected will be used only in relation to the Claroline Connect project and will not be otherwise broadcast.'
@@ -723,6 +734,7 @@ receiver: Receiver(s)
 recent_all_workspace_activities_overview: 'Overview of all recent activities in %workspaceName%'
 recursive_dir_action: 'Apply to the contents of the directory and its subdirectories'
 redirect_after_login: 'Redirect to last visited page'
+redirect_uri: 'Redirection url'
 refresh: refresh
 refresh_explanation: "Some issues can be cause because javascript and css aren't properly generated. </br>\nIf you want to try to solve them, please click on \"refresh\" </br>\nYou can also try to empty your app/cache directory before this operation.\n"
 register: Register
@@ -1007,7 +1019,7 @@ unregistered_users: 'Unregistered users'
 unwritable_file_exception: 'The file %path% is not writable.'
 up: Up
 up_to_date: 'Up to date'
-update: Update to %version%
+update: 'Update to %version%'
 update_available: 'Update available'
 update_impossible: 'Update impossible'
 updated_by: 'Last update: %modificationDate%'
@@ -1128,7 +1140,7 @@ ws_most_viewed: 'Most viewed workspaces'
 'yes': 'Yes'
 yesterday_activity: 'Yesterday''s activity'
 your_current_url: 'Your current URL'
-your_username: 'Your username is '
 your_platform_id: 'Your platform login'
+your_username: 'Your username is '
 your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'
