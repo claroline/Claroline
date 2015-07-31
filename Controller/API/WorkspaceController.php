@@ -11,50 +11,63 @@
 
 namespace Claroline\CoreBundle\Controller\API;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\User;
-use FOS\RestBundle\Controller\FOSRestController;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
-use FOS\RestBundle\Controller\Annotations\View;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class WorkspaceController extends FOSRestController
 {
+    private $formFactory;
+    private $om;
+    private $request;
+    private $templateDir;
+    private $tokenStorage;
+    private $utilities;
+    private $workspaceManager;
+    private $workspaceRepo;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"      = @DI\Inject("form.factory"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"          = @DI\Inject("request"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
-     *     "om"               = @DI\Inject("claroline.persistence.object_manager")
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
-        FormFactory      $formFactory,
-        WorkspaceManager $workspaceManager,
-        ObjectManager    $om,
-        Request          $request,
+        FormFactory $formFactory,
+        ObjectManager $om,
+        Request $request,
+        $templateDir,
         TokenStorageInterface $tokenStorage,
-        $templateDir
+        ClaroUtilities $utilities,
+        WorkspaceManager $workspaceManager
     )
     {
         $this->formFactory = $formFactory;
-        $this->workspaceManager = $workspaceManager;
         $this->om = $om;
-        $this->workspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->request = $request;
-        $this->tokenStorage = $tokenStorage;
         $this->templateDir = $templateDir;
+        $this->tokenStorage = $tokenStorage;
+        $this->utilities = $utilities;
+        $this->workspaceManager = $workspaceManager;
+        $this->workspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
     }
 
     /**
@@ -79,6 +92,27 @@ class WorkspaceController extends FOSRestController
     public function getWorkspaceAction(Workspace $workspace)
     {
         return $workspace;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns a workspace with additional datas",
+     *     views = {"workspace"}
+     * )
+     */
+    public function getWorkspaceAdditionalDatasAction(Workspace $workspace)
+    {
+        $datas = array();
+        $nbUsers = $this->workspaceManager->countUsers($workspace, true);
+        $usedStorage = $this->workspaceManager->getUsedStorage($workspace);
+        $nbUsedStorage = $this->utilities->formatFileSize($usedStorage);
+        $nbResources = $this->workspaceManager->countResources($workspace);
+        $datas['used_storage'] = $nbUsedStorage;
+        $datas['nb_users'] = $nbUsers;
+        $datas['nb_resources'] = $nbResources;
+
+        return new JsonResponse($datas);
     }
 
     /**

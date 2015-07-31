@@ -12,6 +12,15 @@
                             {{ 'rename' | trans({}, 'platform') }}
                         </a>
                     </li>
+                    
+                    {% if hasCustomTemplates is defined and hasCustomTemplates %}
+                        <li role="presentation">
+                            <a class="pointer-hand type-template" role="menuitem">
+                                <i class="fa fa-fw fa-eye"></i>
+                                {{ 'select_a_template' | trans({}, 'platform') }}
+                            </a>
+                        </li>
+                    {% endif %}
                     <li role="presentation">
                         <a class="pointer-hand type-publish" role="menuitem">
                             <i class="fa fa-fw fa-globe"></i>

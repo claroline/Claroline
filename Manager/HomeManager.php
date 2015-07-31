@@ -421,6 +421,12 @@ class HomeManager
         return $type;
     }
 
+    public function persistType(Type $type)
+    {
+        $this->manager->persist($type);
+        $this->manager->flush();
+    }
+
     /**
      * Verify if a type exist.
      */

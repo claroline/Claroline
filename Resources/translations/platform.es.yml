@@ -851,6 +851,7 @@ see_public_profile: see_public_profile
 select_a_filter_type: 'Seleccione un tipo de filtro'
 select_a_group: 'Seleccione un grupo'
 select_a_role: 'Seleccione un role'
+select_a_template: 'Seleccione un modelo'
 select_a_workspace: 'Seleccione un espacio de trabajo'
 select_all: 'Seleccionar todo'
 select_category: 'Seleccionar una categoría'

@@ -113,6 +113,18 @@
             });
         });
     })
+    .on('click', '.type-template', function (event) {
+        var typeId = $(event.target).parents('.alert').data('id');
+        
+        modal.displayForm(
+            Routing.generate(
+                'claro_content_change_template_form',
+                {'type': typeId}
+            ),
+            function() {},
+            function() {}
+        );
+    })
     .on('click', '.create-type', function (event) {
         var typeCreator = $(event.target).parents('.creator').get(0);
         var name = $('input', typeCreator);
