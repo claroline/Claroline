@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Oauth\Client;
+use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\AbstractType;
 
@@ -43,20 +44,20 @@ class ApiManager
         $this->curlManager = $curlManager;
     }
 
-    public function url($host, $url, $id, $secret, $payload = null, $type = 'GET')
+    public function url(FriendRequest $request, $url, $payload = null, $type = 'GET')
     {
-        $access = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\ClarolineAccess')
-            ->findOneByRandomId($id);
-        if (!$access) $this->oauthManager->connect($host, $id, $secret);
-        $url = $host . '/' . $url . '?access_token=' . $access->getAccessToken();
+        $this->validateUrl($url);
+        $access = $request->getClarolineAccess();
+        if ($access === null) throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
+        $url = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
         $serverOutput = $this->curlManager->exec($url, $payload, $type);
         $json = json_decode($serverOutput);
 
         if ($json) {
             if (property_exists($json, 'error')) {
-                if ($json->error === 'access_denied' || $json->error = 'invalid_grant') {
-                    $this->oauthManager->connect($host, $id, $secret);
-                    $this->url($host, $url, $id, $secret, $payload, $type);
+                if ($json->error === 'access_denied' || $json->error === 'invalid_grant') {
+                    $access = $this->oauthManager->connect($request->getHost(), $access->getRandomId(), $access->getSecret(), $access->getFriendRequest());
+                    $this->url($request, $url, $payload, $type);
                 }
             }
         }
@@ -76,5 +77,10 @@ class ApiManager
         }
 
         return $payload;
+    }
+
+    private function validateUrl($url)
+    {
+
     }
 }

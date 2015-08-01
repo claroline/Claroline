@@ -83,8 +83,8 @@
                 ),
                 removeFriendRequestRow,
                 requestid,
-                Translator.trans('delete_friend_request_message', {}, 'platform'),
-                Translator.trans('delete_friend_request', {}, 'platform')
+                Translator.trans('delete_platform_friend_message', {}, 'platform'),
+                Translator.trans('delete_platform_friend', {}, 'platform')
             );
         })
         .on('click', '.delete-friend-pending-btn', function(event) {

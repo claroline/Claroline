@@ -60,17 +60,17 @@ class UserController extends FOSRestController
         ProfilePropertyManager $profilePropertyManager
     )
     {
-        $this->authenticationManager = $authenticationManager;
-        $this->formFactory = $formFactory;
-        $this->localeManager = $localeManager;
-        $this->request = $request;
-        $this->userManager = $userManager;
-        $this->groupManager = $groupManager;
-        $this->roleManager = $roleManager;
-        $this->om = $om;
-        $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
-        $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
+        $this->authenticationManager  = $authenticationManager;
+        $this->formFactory            = $formFactory;
+        $this->localeManager          = $localeManager;
+        $this->request                = $request;
+        $this->userManager            = $userManager;
+        $this->groupManager           = $groupManager;
+        $this->roleManager            = $roleManager;
+        $this->om                     = $om;
+        $this->userRepo               = $om->getRepository('ClarolineCoreBundle:User');
+        $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->groupRepo              = $om->getRepository('ClarolineCoreBundle:Group');
         $this->profilePropertyManager = $profilePropertyManager;
     }
 

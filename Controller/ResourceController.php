@@ -178,7 +178,7 @@ class ResourceController
             return $response;
         }
 
-        $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', array($parent, $resourceType));
+        $event = $this->dispatcher->dispatch('create_' . $resourceType, 'CreateResource', array($parent, $resourceType));
         $isPublished = intval($published) === 1 ? true : $event->isPublished();
 
         if (count($event->getResources()) > 0) {
@@ -619,6 +619,7 @@ class ResourceController
 
             $creatableTypes = $this->rightsManager->getCreatableTypes($currentRoles, $node);
             $creatableTypes = array_merge($creatableTypes, $adminTypes);
+            asort($creatableTypes);
             $this->dispatcher->dispatch('log', 'Log\LogResourceRead', array($node));
         }
 
@@ -632,21 +633,11 @@ class ResourceController
             $element['path_for_display'] = ResourceNode::convertPathForDisplay($element['path']);
         }
 
-        unset($element);
-
-        $sorted = array();
-
-        foreach ($creatableTypes as $type) {
-            $sorted[$this->translator->trans($type, array(), 'resource')] = $type;
-        }
-
-        ksort($sorted);
-
         $jsonResponse = new JsonResponse(
             array(
                 'id'                => $directoryId,
                 'path'              => $path,
-                'creatableTypes'    => $sorted,
+                'creatableTypes'    => $creatableTypes,
                 'nodes'             => $nodesWithCreatorPerms,
                 'canChangePosition' => $canChangePosition,
                 'workspace_id'      => $workspaceId,

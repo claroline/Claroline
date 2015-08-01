@@ -19,7 +19,7 @@
                 'href': path('claro_admin_parameters_oauth_index')
             },
             {
-                'name': 'claroline'|trans({}, 'platform'),
+                'name': 'Claroline'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -34,7 +34,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#client-list">
-                                <b>{{ 'client_list'|trans({}, 'platform') }}</b>
+                                <b>{{ 'oauth_client_list'|trans({}, 'platform') }}</b>
                             </a>
                         </h4>
                     </div>
@@ -99,11 +99,6 @@
                                     class="btn btn-primary">
                                 {{ 'add'|trans({}, 'platform') }}
                             </button>
-                            <button id="request-friend-btn"
-                                    type="submit"
-                                    class="btn btn-primary">
-                                {{ 'request_friend'|trans({}, 'platform') }}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -111,7 +106,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#friend-request-list">
-                                <b>{{ 'friend_request'|trans({}, 'platform') }}</b>
+                                <b>{{ 'friend_platform'|trans({}, 'platform') }}</b>
                             </a>
                         </h4>
                     </div>
@@ -166,6 +161,11 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
+                                <button id="request-friend-btn"
+                                        type="submit"
+                                        class="btn btn-primary">
+                                    {{ 'add'|trans({}, 'platform') }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -174,7 +174,7 @@
                     <div class="panel-heading">
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#pending-friend-list">
-                                <b>{{ 'pending_friend'|trans({}, 'platform') }}</b>
+                                <b>{{ 'pending_friends'|trans({}, 'platform') }}</b>
                             </a>
                         </h4>
                     </div>
@@ -185,6 +185,7 @@
                                     <thead>
                                         <tr>
                                             <th> {{ 'host'|trans({}, 'platform') }} </th>
+                                            <th> {{ 'name'|trans({}, 'platform') }} </th>
                                             <th> {{ 'ip'|trans({}, 'platform') }} </th>
                                             <th> </th>
                                         </tr>
@@ -194,6 +195,7 @@
                                             <tr id="friend-pending-row-{{ pendingFriend.getId() }}">
                                                 <th> {{ pendingFriend.getHost() }} </th>
                                                 <th> {{ pendingFriend.getName() }} </th>
+                                                <th> {{ pendingFriend.getIp() }} </th>
                                                 <th>
                                                     <div class="btn-group">
                                                         <button class="btn btn-success add-friend-pending-btn"

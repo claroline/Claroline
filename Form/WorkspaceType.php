@@ -36,6 +36,12 @@ class WorkspaceType extends AbstractType
             $this->forApi = true;
         }
 
+        if ($this->forApi) {
+            $codeConstraints = array(new NotBlank());
+        } else {
+            $codeConstraints = array(new WorkspaceUniqueCode(), new NotBlank());
+        }
+
         $builder
             ->add(
                 'name',
@@ -49,7 +55,7 @@ class WorkspaceType extends AbstractType
                 'code',
                 'text',
                 array(
-                    'constraints' => array(new WorkspaceUniqueCode(), new NotBlank()),
+                    'constraints' => $codeConstraints,
                     'label' => 'code'
                 )
             )
@@ -124,7 +130,7 @@ class WorkspaceType extends AbstractType
                 ),
                 'constraints' => array(new NotBlank())
             );
-
+            
             $builder->add('endDate', 'datepicker', $params);
         }
     }

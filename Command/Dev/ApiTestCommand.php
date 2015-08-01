@@ -24,9 +24,8 @@ class ApiTestCommand extends ContainerAwareCommand
         $this->setName('claroline:api:test')->setDescription('Tests the api');
         $this->setDefinition(
             array(
-                new InputArgument('host', InputArgument::REQUIRED, 'The host'),
-                new InputArgument('url', InputArgument::REQUIRED, 'The url'),
-                new InputArgument('client_name', InputArgument::REQUIRED, 'The client name')
+                new InputArgument('platform_name', InputArgument::REQUIRED, 'the friend request name'),
+                new InputArgument('url', InputArgument::REQUIRED, 'the url'),
             )
         );
     }
@@ -34,9 +33,8 @@ class ApiTestCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $params = array(
-            'host' => 'The host',
-            'url' => 'The url',
-            'client_name' => 'The client name'
+            'platform_name' => 'the friend request name',
+            'url'           => 'the url'
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -68,11 +66,10 @@ class ApiTestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $apiManager = $this->getContainer()->get('claroline.manager.api_manager');
-        $host = $input->getArgument('host');
+        $name = $input->getArgument('platform_name');
         $url = $input->getArgument('url');
-        $clientName = $input->getArgument('client_name');
-        $client = $this->getContainer()->get('claroline.manager.oauth_manager')->findClientBy(array('name' => $clientName));
-        $response = $apiManager->url($host, $url, $client->getConcatRandomId(), $client->getSecret());
+        $friend = $this->getContainer()->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Oauth\FriendRequest')->findOneByName($name);
+        $response = $apiManager->url($friend, $url);
         echo $response;
     }
 }
