@@ -492,8 +492,9 @@ class ResourceController
         $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
         $response->headers->set('Content-Type', $mimeType);
         $response->headers->set('Connection', 'close');
+        $response->send();
 
-        return $response;
+        return new Response();
     }
 
     /**
