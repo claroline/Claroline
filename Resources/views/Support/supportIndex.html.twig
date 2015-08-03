@@ -72,6 +72,13 @@
                     <div class="alert alert-info">
                         <b>{{ 'nb_available_support_credits'|trans({}, 'support') }} :</b>
                         {{ nbCredits }}
+                        <br>
+                        <br>
+                        <a href="{{ path('formalibre_support_credits_products_purchase_form') }}"
+                           class="btn btn-info btn-sm"
+                        >
+                            {{ 'buy_support_credits'|trans({}, 'support') }}
+                        </a>
                     </div>
                 {% else %}
                     <div class="alert alert-danger">
