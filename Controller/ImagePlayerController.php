@@ -13,6 +13,7 @@ namespace Claroline\ImagePlayerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
@@ -38,7 +39,8 @@ class ImagePlayerController extends Controller
             }
         );
         $response->headers->set('Content-Type', $node->getMimeType());
-
-        return $response;
+        $response->send();
+        
+        return new Response();
     }
 }
