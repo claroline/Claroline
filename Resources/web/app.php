@@ -13,12 +13,19 @@ $apcLoader->register(true);
 
 require_once __DIR__.'/../app/AppKernel.php';
 
+use Symfony\Component\Yaml\Yaml;
+
 $maintenanceMode = file_exists(__DIR__ . '/../app/config/.update');
 $authorized = false;
 
-if (file_exists($file = __DIR__ . '/../app/config/ips')) {
-    $authorizedIps = file($file, FILE_IGNORE_NEW_LINES);
-    $authorized = in_array($_SERVER['REMOTE_ADDR'], $authorizedIps);
+if (file_exists($file = __DIR__ . '/../app/config/ip_white_list.yml')) {
+
+    $ips = Yaml::parse($file);
+    $authorized = false;
+
+    foreach ($ips as $ip) {
+        if ($ip === $_SERVER['REMOTE_ADDR']) $authorized = true;
+    }
 }
 
 if (!$maintenanceMode || $authorized) {
