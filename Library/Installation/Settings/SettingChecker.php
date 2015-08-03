@@ -97,7 +97,7 @@ class SettingChecker
             array('parameter' => 'detect_unicode', 'value' => 'false'),
             false === ini_get('detect_unicode')
         );
-        
+
         $category->addRequirement(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
             array('parameter' => 'max_execution_time', 'value' => 300),
@@ -229,6 +229,8 @@ class SettingChecker
             'app/config/bundles.ini' => 'file',
             'app/config/parameters.yml' => 'file',
             'app/config/platform_options.yml' => 'file',
+            'app/config/white_list_ip_range.yml' => 'file',
+            'app/config/ip_white_list.yml' => 'file',
             'app/logs' => 'directory',
             'files' => 'directory',
             'files/templates' => 'directory',

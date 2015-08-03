@@ -34,35 +34,14 @@ class IPWhiteListManager
 
     public function addIP($ip)
     {
-        $ipAdded = false;
-
-        if (!$this->IPExists($ip)) {
-            if (is_writeable($this->ipFile)) {
-                if (!file_put_contents($this->ipFile, $ip, FILE_APPEND)) {
-                    throw new \Exception('The IP ' . $ip . ' could not be added to the white list');
-                }
-
-                $ipAdded = true;
-            }
-        }
-        else {
-            $ipAdded = true;
-        }
-
-        return false;
-    }
-
-    public function getIPs()
-    {
-        if (!file_exists($this->ipFile)) {
-            touch($this->ipFile);
-        }
-
-        return file($this->ipFile, FILE_IGNORE_NEW_LINES);
+        $ips = Yaml::parse($this->ipFile);
+        if (!in_array($ip, $ips)) $ips[] = $ip;
+        $yaml = Yaml::dump($ips);
+        file_put_contents($this->ipFile, $yaml);
     }
 
     public function IPExists($ip)
     {
-        return in_array($ip, $this->getIPs());
+        return in_array($ip, Yaml::parse($this->ipFile));
     }
 }
