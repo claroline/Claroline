@@ -176,11 +176,6 @@ class AuthenticationController
     public function passwordInitializationAction(array $users)
     {
         foreach ($users as $user) {
-            $user->setHashTime(time());
-            $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
-            $user->setResetPasswordHash($password);
-            $this->om->persist($user);
-            $this->om->flush();
             $this->mailManager->sendForgotPassword($user);
         }
 

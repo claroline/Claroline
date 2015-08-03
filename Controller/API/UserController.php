@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -44,7 +45,8 @@ class UserController extends FOSRestController
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-    *      "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
+     *     "mailManager"            = @DI\Inject("claroline.manager.mail_manager")  
      * })
      */
     public function __construct(
@@ -56,7 +58,8 @@ class UserController extends FOSRestController
         GroupManager $groupManager,
         RoleManager $roleManager,
         ObjectManager $om,
-        ProfilePropertyManager $profilePropertyManager
+        ProfilePropertyManager $profilePropertyManager,
+        MailManager $mailManager
     )
     {
         $this->authenticationManager  = $authenticationManager;
@@ -71,6 +74,7 @@ class UserController extends FOSRestController
         $this->roleRepo               = $om->getRepository('ClarolineCoreBundle:Role');
         $this->groupRepo              = $om->getRepository('ClarolineCoreBundle:Group');
         $this->profilePropertyManager = $profilePropertyManager;
+        $this->mailManager            = $mailManager;
     }
 
     /**
@@ -112,7 +116,9 @@ class UserController extends FOSRestController
         if ($form->isValid()) {
             $roles = $form->get('platformRoles')->getData();
             $user = $form->getData();
-            $this->userManager->createUser($user, true, $roles);
+            $user = $this->userManager->createUser($user, false, $roles);
+            //maybe only do this if a parameter is present in platform_options.yml
+            $this->mailManager->sendInitPassword($user);
 
             return $user;
         }
