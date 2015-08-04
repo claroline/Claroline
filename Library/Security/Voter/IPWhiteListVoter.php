@@ -14,8 +14,8 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the
@@ -30,42 +30,17 @@ class IPWhiteListVoter implements VoterInterface
     //claroline.ip_range_white_list_file
     /**
      * @DI\InjectParams({
-     *     "whiteListRange" = @DI\Inject("%claroline.ip_range_white_list_file%"),
-     *     "whiteList"      = @DI\Inject("%claroline.ip_white_list_file%")
+     *     "ipwlm" = @DI\Inject("claroline.manager.ip_white_list_manager"),
      * })
      */
-    public function __construct($whiteListRange, $whiteList)
+    public function __construct(IPWhiteListManager $ipwlm)
     {
-        $this->whiteListRange = $whiteListRange;
-        $this->whiteList      = $whiteList;
+        $this->ipwlm = $ipwlm;
     }
 
     public function vote(TokenInterface $token, $object, array $attributes)
     {
-        return $this->isWhiteListed() ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
-    }
-
-    protected function isWhiteListed()
-    {
-        if (file_exists($this->whiteList)) {
-            $ips = Yaml::parse($this->whiteList);
-
-            foreach ($ips as $ip) {
-                if ($ip === $_SERVER['REMOTE_ADDR']) return true;
-            }
-        }
-
-        if (file_exists($this->whiteListRange)) {
-            $ranges = $ips = Yaml::parse($this->whiteListRange);
-
-            foreach ($ranges as $range) {
-                if ($this->validateRange($range['lower_bound'], $range['higher_bound'])) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->ipwlm->isWhiteListed() ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
     }
 
     public function supportsAttribute($attribute)
@@ -76,13 +51,5 @@ class IPWhiteListVoter implements VoterInterface
     public function supportsClass($class)
     {
         return true;
-    }
-
-    private function validateRange($lowerBound, $higherBound)
-    {
-        $ip = $_SERVER['REMOTE_ADDR'];
-
-        return (ip2long($ip) <= ip2long($higherBound) && ip2long($lowerBound) <= ip2long($ip));
-
     }
 }
