@@ -36,6 +36,9 @@
         'plugins': {}
     };
 
+    tinymce.claroline.init = tinymce.claroline.init || {};
+    tinymce.claroline.plugins = tinymce.claroline.plugins || {};
+
     /**
      * This method fix the height of TinyMCE after modify it,
      * this is usefull when change manually something in the editor.
@@ -151,6 +154,7 @@
             }
         }).on('LoadContent', function () {
             tinymce.claroline.editorChange(editor);
+            tinymce.claroline.customInit(editor);
         });
 
         editor.on('BeforeRenderUI', function () {
@@ -259,6 +263,13 @@
             'path': codemirrorPath
         }
     };
+
+    tinymce.claroline.customInit = function(editor)
+    {
+        $.each(tinymce.claroline.init, function(key, func) {
+            func(editor);
+        });
+    }
 
     /**
      * Initialization function for TinyMCE editors.
