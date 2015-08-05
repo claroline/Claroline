@@ -1145,3 +1145,5 @@ your_username: 'Your username is '
 your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'
 initialize_your_password: Password initialization
+hide_client: Hide a client
+hide_client_message: Do you really want to hide this client ?

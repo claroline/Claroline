@@ -51,6 +51,13 @@ class Client extends BaseClient
      */
     protected $refreshTokens;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_hidden", type="boolean")
+     */
+    protected $isHidden = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -143,5 +150,10 @@ class Client extends BaseClient
     public function getConcatRandomId()
     {
         return $this->id . '_' . $this->getRandomId();
+    }
+
+    public function hide()
+    {
+        $this->isHidden = true;
     }
 }

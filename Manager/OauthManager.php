@@ -37,6 +37,11 @@ class OauthManager extends ClientManager
         return $this->repository->findAll();
     }
 
+    public function findVisibleClients()
+    {
+        return $this->repository->findBy(array('isHidden' => false));
+    }
+
     public function findAllFriendRequests()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findAll();
@@ -173,5 +178,12 @@ class OauthManager extends ClientManager
         $this->om->flush();
 
         return $access;
+    }
+
+    public function hideClient(Client $client)
+    {
+        $client->hide();
+        $this->om->persist($client);
+        $this->om->flush();
     }
 }
