@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @Service("claroline.manager.ip_white_list_manager")
@@ -21,48 +22,61 @@ use JMS\DiExtraBundle\Annotation\Service;
 class IPWhiteListManager
 {
     private $ipFile;
+    private $rangeFile;
 
     /**
      * @InjectParams({
-     *      "ipFile" = @Inject("%claroline.ip_white_list_file%"),
+     *      "rangeFile" = @Inject("%claroline.ip_range_white_list_file%"),
+     *      "ipFile"    = @Inject("%claroline.ip_white_list_file%")
      * })
      */
-    public function __construct($ipFile)
+    public function __construct($ipFile, $rangeFile)
     {
         $this->ipFile = $ipFile;
+        $this->rangeFile = $rangeFile;
     }
 
     public function addIP($ip)
     {
-        $ipAdded = false;
+        $ips = Yaml::parse($this->ipFile);
+        if (!in_array($ip, $ips)) $ips[] = $ip;
+        $yaml = Yaml::dump($ips);
+        file_put_contents($this->ipFile, $yaml);
+    }
 
-        if (!$this->IPExists($ip)) {
-            if (is_writeable($this->ipFile)) {
-                if (!file_put_contents($this->ipFile, $ip, FILE_APPEND)) {
-                    throw new \Exception('The IP ' . $ip . ' could not be added to the white list');
-                }
+    public function IPExists($ip)
+    {
+        return in_array($ip, Yaml::parse($this->ipFile));
+    }
 
-                $ipAdded = true;
+    public function isWhiteListed()
+    {
+        if (file_exists($this->ipFile)) {
+            $ips = Yaml::parse($this->ipFile);
+
+            foreach ($ips as $ip) {
+                if ($ip === $_SERVER['REMOTE_ADDR']) return true;
             }
         }
-        else {
-            $ipAdded = true;
+
+        if (file_exists($this->rangeFile)) {
+            $ranges = $ips = Yaml::parse($this->rangeFile);
+
+            foreach ($ranges as $range) {
+                if ($this->validateRange($range['lower_bound'], $range['higher_bound'])) {
+                    return true;
+                }
+            }
         }
 
         return false;
     }
 
-    public function getIPs()
+    private function validateRange($lowerBound, $higherBound)
     {
-        if (!file_exists($this->ipFile)) {
-            touch($this->ipFile);
-        }
+        $ip = $_SERVER['REMOTE_ADDR'];
 
-        return file($this->ipFile, FILE_IGNORE_NEW_LINES);
-    }
+        return (ip2long($ip) <= ip2long($higherBound) && ip2long($lowerBound) <= ip2long($ip));
 
-    public function IPExists($ip)
-    {
-        return in_array($ip, $this->getIPs());
     }
 }

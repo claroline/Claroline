@@ -59,7 +59,7 @@ class OauthController extends Controller
      */
     public function listAction()
     {
-        $clients = $this->oauthManager->findAllClients();
+        $clients = $this->oauthManager->findVisibleClients();
         $friendRequests = $this->oauthManager->findAllFriendRequests();
         $pendingFriends = $this->oauthManager->findAllPendingFriends();
 
@@ -273,6 +273,22 @@ class OauthController extends Controller
     {
         $friendRequest = $this->oauthManager->findFriendRequestByName($name);
         $access = $this->oauthManager->connect($friendRequest->getHost(), $id, $secret, $friendRequest);
+
+        return new JsonResponse('done');
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/hide/client/{client}",
+     *     name="oauth_client_hide",
+     *     options = {"expose"=true}
+     * )
+     *
+     * @return Response
+     */
+    public function hideClientAction(Client $client)
+    {
+        $this->oauthManager->hideClient($client);
 
         return new JsonResponse('done');
     }

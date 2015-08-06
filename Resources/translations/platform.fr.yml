@@ -1144,3 +1144,6 @@ your_platform_id: 'Votre identifiant sur la plateforme'
 your_username: 'Votre nom d''utilisateur est '
 your_workspace_activity_overview: 'Aperçu des activités récentes de vos espaces de travail'
 404: 'La page que vous cherchez n''existe pas.'
+initialize_your_password: Initialisation du mot de passe
+hide_client: Cacher un client
+hide_client_message: Êtes-vous sûr de vouloir cacher ce client ?

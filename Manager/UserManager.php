@@ -1448,4 +1448,13 @@ class UserManager
 
         return $restrictions;
     }
+    
+    public function initializePassword(User $user)
+    {
+        $user->setHashTime(time());
+        $password = sha1(rand(1000, 10000) . $user->getUsername() . $user->getSalt());
+        $user->setResetPasswordHash($password);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+    }
 }

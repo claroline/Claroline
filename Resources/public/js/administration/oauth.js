@@ -73,6 +73,20 @@
                 Translator.trans('delete_client', {}, 'platform')
             );
         })
+        .on('click', '.hide-client-btn', function(event) {
+            var clientid = $(event.target).attr('data-client-id');
+
+            modal.confirmRequest(
+                Routing.generate(
+                    'oauth_client_hide',
+                    {'client': clientid}
+                ),
+                removeClientRow,
+                clientid,
+                Translator.trans('hide_client_message', {}, 'platform'),
+                Translator.trans('hide_client', {}, 'platform')
+            );
+        })
         .on('click', '.delete-friend-request-btn', function(event) {
             var requestid = $(event.target).attr('data-friend-request-id');
 

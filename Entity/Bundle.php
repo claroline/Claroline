@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
@@ -25,18 +26,21 @@ class Bundle
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     private $id;
 
     /**
      * @var string
      * @ORM\Column(length=100)
+     * @Groups({"api"})
      */
     private $name;
 
     /**
      * @var string
      * @ORM\Column(length=50)
+     * @Groups({"api"})
      */
     private $version;
 

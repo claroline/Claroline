@@ -49,15 +49,16 @@ class ApiManager
         $this->validateUrl($url);
         $access = $request->getClarolineAccess();
         if ($access === null) throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
-        $url = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
-        $serverOutput = $this->curlManager->exec($url, $payload, $type);
+        $firstTry = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
+        $serverOutput = $this->curlManager->exec($firstTry, $payload, $type);
         $json = json_decode($serverOutput, true);
 
         if ($json) {
             if (array_key_exists('error', $json)) {
                 if ($json['error'] === 'access_denied' || $json['error'] === 'invalid_grant') {
                     $access = $this->oauthManager->connect($request->getHost(), $access->getRandomId(), $access->getSecret(), $access->getFriendRequest());
-                    $this->url($request, $url, $payload, $type);
+                    $secondTry = $request->getHost() . '/' . $url . '?access_token=' . $access->getAccessToken();
+                    $serverOutput = $this->curlManager->exec($secondTry, $payload, $type);
                 }
             }
         }
