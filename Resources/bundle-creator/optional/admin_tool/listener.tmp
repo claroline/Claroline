@@ -5,11 +5,12 @@ namespace [[Vendor]]\[[Bundle]]Bundle\Listener;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  *  @DI\Service()
  */
-class [[Tool]]Listener
+class [[Admin_Tool]]Listener
 {
     private $container;
 
@@ -24,12 +25,13 @@ class [[Tool]]Listener
     }
 
     /**
-     * @DI\Observe("administration_[[admin_tool]]")
+     * @DI\Observe("administration_tool_[[admin_tool]]")
      *
      * @param OpenAdministrationToolEvent $event
      */
     public function onOpenEvent(OpenAdministrationToolEvent $event)
     {
-        $$event->setContent('Change me !');
+        $response = new Response('change me !');
+        $event->setContent($response);
     }
 }
