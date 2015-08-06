@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -92,7 +93,6 @@ class Cursus
      *     targetEntity="Claroline\CursusBundle\Entity\Cursus",
      *     mappedBy="parent"
      * )
-     * @Groups({"api"})
      */
     protected $children;
 
@@ -327,5 +327,15 @@ class Cursus
         }
 
         return $result;
+    }
+
+    /**
+     * @Groups({"api"})
+     * @VirtualProperty
+     * @SerializedName("parentId")
+     */
+    public function getParentId()
+    {
+        return is_null($this->parent) ? null : $this->parent->getId();
     }
 }
