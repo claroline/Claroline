@@ -80,7 +80,7 @@ class CursusController extends FOSRestController
      */
     public function getCourseAction()
     {
-        return $this->cursusManager->getAllCourses();
+        return $this->cursusManager->getAllCourses('', 'title', 'ASC', false);
     }
 
     /**
