@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\WorkspaceType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\Controller\Annotations\View;
@@ -33,6 +34,7 @@ class WorkspaceController extends FOSRestController
     private $formFactory;
     private $om;
     private $request;
+    private $roleManager;
     private $templateDir;
     private $tokenStorage;
     private $utilities;
@@ -44,6 +46,7 @@ class WorkspaceController extends FOSRestController
      *     "formFactory"      = @DI\Inject("form.factory"),
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "request"          = @DI\Inject("request"),
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
      *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "utilities"        = @DI\Inject("claroline.utilities.misc"),
@@ -54,6 +57,7 @@ class WorkspaceController extends FOSRestController
         FormFactory $formFactory,
         ObjectManager $om,
         Request $request,
+        RoleManager $roleManager,
         $templateDir,
         TokenStorageInterface $tokenStorage,
         ClaroUtilities $utilities,
@@ -63,6 +67,7 @@ class WorkspaceController extends FOSRestController
         $this->formFactory = $formFactory;
         $this->om = $om;
         $this->request = $request;
+        $this->roleManager = $roleManager;
         $this->templateDir = $templateDir;
         $this->tokenStorage = $tokenStorage;
         $this->utilities = $utilities;
@@ -113,6 +118,18 @@ class WorkspaceController extends FOSRestController
         $datas['nb_resources'] = $nbResources;
 
         return new JsonResponse($datas);
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Returns the non-personal workspaces list",
+     *     views = {"workspace"}
+     * )
+     */
+    public function getNonPersonalWorkspacesAction()
+    {
+        return $this->workspaceRepo->findNonPersonalWorkspaces();
     }
 
     /**
@@ -206,5 +223,30 @@ class WorkspaceController extends FOSRestController
         }
 
         return $form;
+    }
+
+    /**
+     * @View(serializerGroups={"api"})
+     * @ApiDoc(
+     *     description="Update a workspace owner",
+     *     views = {"workspace"}
+     * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     */
+    public function putWorkspaceOwnerAction(Workspace $workspace, User $user)
+    {
+        $currentCreator = $workspace->getCreator();
+
+        if ($currentCreator->getId() !== $user->getId()) {
+            $this->om->startFlushSuite();
+            $role = $this->roleManager->getManagerRole($workspace);
+            $this->roleManager->associateRole($user, $role);
+            $this->roleManager->dissociateRole($currentCreator, $role);
+            $workspace->setCreator($user);
+            $this->workspaceManager->editWorkspace($workspace);
+            $this->om->endFlushSuite();
+        }
+
+        return $workspace;
     }
 }
