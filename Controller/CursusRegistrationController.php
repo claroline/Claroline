@@ -127,8 +127,14 @@ class CursusRegistrationController extends Controller
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
 
-        $searchedCursus = $this->cursusManager
-            ->getSearchedCursus($search, $orderedBy, $order, $page, $max);
+        $searchedCursus = $this->cursusManager->getAllCursus(
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
         $rootIds = array();
 
         foreach ($searchedCursus as $cursus) {
@@ -146,7 +152,7 @@ class CursusRegistrationController extends Controller
             $roots[$cursusRoot->getId()] = $cursusRoot;
         }
         // To reduce DB queries only
-        $courses = $this->cursusManager->getAllCourses();
+        $courses = $this->cursusManager->getAllCourses('', 'id', 'ASC', false);
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
@@ -261,22 +267,15 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
 
-        $groups = $search === '' ?
-            $this->cursusManager->getUnregisteredGroupsByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getSearchedUnregisteredGroupsByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $groups = $this->cursusManager->getUnregisteredGroupsByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -318,22 +317,15 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
 
-        $users = $search === '' ?
-            $this->cursusManager->getUnregisteredUsersByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getSearchedUnregisteredUsersByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $users = $this->cursusManager->getUnregisteredUsersByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,

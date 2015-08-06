@@ -75,6 +75,28 @@ class CursusController extends Controller
      * Cursus methods *
      ******************/
 
+    /**
+     * @EXT\Route(
+     *     "/cursus/management/tool/menu",
+     *     name="claro_cursus_management_tool_menu"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function cursusManagementToolMenuAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+
+        return array(
+            'defaultWords' => CursusDisplayedWord::$defaultKey,
+            'displayedWords' => $displayedWords
+        );
+    }
 
     /**
      * @EXT\Route(
@@ -460,22 +482,15 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
 
-        $courses = $search === '' ?
-            $this->cursusManager->getUnmappedCoursesByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getUnmappedSearchedCoursesByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $courses = $this->cursusManager->getUnmappedCoursesByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -797,26 +812,24 @@ class CursusController extends Controller
         $configCursus = $config->getCursus();
 
         if (is_null($configCursus)) {
-            $courses = $search === '' ?
-                $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-                $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+            $courses = $this->cursusManager->getAllCourses(
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         } else {
-            $courses = $search === '' ?
-                $this->cursusManager->getDescendantCoursesByCursus(
-                    $configCursus,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                ) :
-                $this->cursusManager->getDescendantSearchedCoursesByCursus(
-                    $configCursus,
-                    $search,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                );
+            $courses = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         }
         $coursesArray = array();
 

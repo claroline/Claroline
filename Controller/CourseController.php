@@ -115,9 +115,14 @@ class CourseController extends Controller
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
-        $courses = $search === '' ?
-            $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-            $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+        $courses = $this->cursusManager->getAllCourses(
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
@@ -594,24 +599,16 @@ class CourseController extends Controller
         $order = 'ASC'
     )
     {
-        $users = $search === '' ?
-            $this->cursusManager->getUnregisteredUsersBySession(
-                $session,
-                $userType,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getSearchedUnregisteredUsersBySession(
-                $session,
-                $userType,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $users = $this->cursusManager->getUnregisteredUsersBySession(
+            $session,
+            $userType,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'session' => $session,
