@@ -47,7 +47,7 @@ class CursusApiManager
     {
         $targetPlatformUrl = $this->friendRepo->findOneByName($platformName);
         $url = is_null($cursus) ?
-            'clarolinecursusbundle/api/all/cursus..json' :
+            'clarolinecursusbundle/api/all/cursus.json' :
             'clarolinecursusbundle/api/cursuses/' . $cursus->getId() . '.json';
         $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
 
