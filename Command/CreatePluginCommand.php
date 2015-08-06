@@ -51,6 +51,12 @@ class CreatePluginCommand extends ContainerAwareCommand
             'When set to true, add a default config for the tool'
         );
         $this->addOption(
+            'admin_tool',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a default config for the admin_tool'
+        );
+        $this->addOption(
             'widget',
             null,
             InputOption::VALUE_REQUIRED,
@@ -68,7 +74,6 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default config for the theme'
         );
-        //todo admin tool
         //todo top bar shortcut
 
         $this->addOption(
@@ -143,6 +148,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $wType = $input->getOption('widget');
         $eAuth = $input->getOption('external_authentication');
         $theme = $input->getOption('theme');
+        $aTool = $input->getOption('admin_tool');
 
         $config = array(
             'plugin' => array(
@@ -155,6 +161,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
         if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
         if ($theme) $this->addTheme($rootDir, $ivendor, $ibundle, $theme, $config);
+        if ($aTool) $this->addAdminTool($rootDir, $ivendor, $ibundle, $aTool, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -166,7 +173,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             $rType,
             $tType,
             $wType,
-            $eAuth
+            $eAuth,
+            $aTool
         );
 
         if ($input->getOption('install')) {
@@ -339,6 +347,30 @@ class CreatePluginCommand extends ContainerAwareCommand
         }
     }
 
+    private function addAdminTool($rootDir, $vendor, $bundle, $tType, &$config)
+    {
+        $this->addAdminToolConfig($tType, $config);
+        $this->addAdminToolListener($rootDir, $vendor, $bundle, $tType);
+        $this->addToolTranslationFiles($rootDir, $tType);
+    }
+
+    private function addAdminToolConfig($rType, &$config)
+    {
+        $config['plugin']['admin_tools'][] = array(
+            'name' => $rType,
+            'class' => 'warning'
+        );
+    }
+
+    private function addAdminToolListener($rootDir, $vendor, $bundle, $tType)
+    {
+        $className = ucfirst($tType) . 'Listener';
+        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_admin_tool_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents($newPath, $content);
+    }
+
     private function addWidget($rootDir, $vendor, $bundle, $wType, &$config)
     {
         $this->addWidgetConfig($wType, $vendor, $config);
@@ -485,7 +517,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $rType = null,
         $tType = null,
         $wType = null,
-        $eAuth = null
+        $eAuth = null,
+        $aTool = null
     ) {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
@@ -498,7 +531,7 @@ class CreatePluginCommand extends ContainerAwareCommand
                 $content = file_get_contents($filepath);
                 file_put_contents(
                     $filepath,
-                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth)
+                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth, $aTool)
                 );
             }
         }
@@ -531,7 +564,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $rType = '',
         $tType = '',
         $wType = '',
-        $eAuth = ''
+        $eAuth = '',
+        $adminTool = ''
     )
     {
         $patterns = array(
@@ -545,7 +579,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[tool\]\]/',
             '/\[\[Widget\]\]/',
             '/\[\[widget\]\]/',
-            '/\[\[external_authentication\]\]/'
+            '/\[\[external_authentication\]\]/',
+            '/\[\[Admin_Tool\]\]/',
+            '/\[\[admin_tool\]\]/'
         );
 
         $replacements = array(
@@ -559,7 +595,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             strtolower($tType),
             ucfirst($wType),
             strtolower($wType),
-            strtolower($eAuth)
+            strtolower($eAuth),
+            ucfirst($adminTool),
+            strtolower($adminTool)
         );
 
         return preg_replace($patterns, $replacements, $content);

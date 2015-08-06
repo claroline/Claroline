@@ -18,6 +18,7 @@ parameters:
     claroline.param.plugin_skel_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/skel"
     claroline.param.plugin_template_resource_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/resource"
     claroline.param.plugin_template_tool_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/tool"
+    claroline.param.plugin_template_admin_tool_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/admin_tool"
     claroline.param.plugin_template_widget_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/widget"
     claroline.param.plugin_template_theme_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/theme"
     claroline.param.plugin_template_external_authentication_directory: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/bundle-creator/optional/external_authentication"
