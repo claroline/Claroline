@@ -52,6 +52,8 @@ class Course
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
     

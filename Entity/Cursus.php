@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -54,6 +55,8 @@ class Cursus
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
 
@@ -123,6 +126,14 @@ class Cursus
      * @ORM\Column(nullable=true)
      */
     protected $icon;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $workspace;
 
     /**
      * @Gedmo\TreeRoot
@@ -276,6 +287,16 @@ class Cursus
     public function setIcon($icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(Workspace $workspace = null)
+    {
+        $this->workspace = $workspace;
     }
 
     public function getRoot()
