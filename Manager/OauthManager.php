@@ -52,6 +52,11 @@ class OauthManager extends ClientManager
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findBy(array('isActivated' => false));
     }
 
+    public function findAllActivatedFriendRequests()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Oauth\FriendRequest')->findBy(array('isActivated' => true));
+    }
+
     public function findAllPendingFriends()
     {
         return $this->om->getRepository('ClarolineCoreBundle:Oauth\PendingFriend')->findAll();

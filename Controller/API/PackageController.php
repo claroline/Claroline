@@ -17,28 +17,32 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Claroline\Persitence\ObjectManager;
+use Claroline\CoreBundle\Persitence\ObjectManager;
+use Claroline\CoreBundle\Manager\BundleManager;
 
 class PackageController extends FOSRestController
 {
-    private $dependencyManager;
+    private $bundleManager;
+    private $om;
+    private $fileDir;
+    private $ch;
 
     /**
      * @DI\InjectParams({
-     *     "dependencyManager" = @DI\Inject("claroline.manager.dependency_manager"),
+     *     "bundleManager"     = @DI\Inject("claroline.manager.bundle_manager"),
      *     "ch"                = @DI\Inject("claroline.config.platform_config_handler"),
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "fileDir"           = @DI\Inject("%claroline.param.files_directory%")
      * })
      */
     public function __construct(
-        DependencyManager $dependencyManager,
+        BundleManager $bundleManager,
         PlatformConfigurationHandler $ch,
-        ObjectManager $om,
+        $om,
         $fileDir
     )
     {
-        $this->dependencyManager = $dependencyManager;
+        $this->bundleManager     = $bundleManager;
         $this->ch                = $ch;
         $this->fileDir           = $fileDir;
         $this->om                = $om;
@@ -54,7 +58,7 @@ class PackageController extends FOSRestController
      */
     public function getPackagesAction()
     {
-        $this->dependencyManager->getAllInstalled();
+        return $this->bundleManager->getInstalled();
     }
 
     /**
@@ -63,7 +67,7 @@ class PackageController extends FOSRestController
      *     views = {"package"}
      * )
      */
-    public function getInfos()
+    public function getInfosAction()
     {
         return array(
             'name'              => $this->ch->getParameter('name'),
@@ -71,7 +75,7 @@ class PackageController extends FOSRestController
             'storage_used'      => $this->getUsedStorage(),
             'resources_created' => $this->om->count('Claroline\CoreBundle\Entity\Resource\ResourceNode'),
             'workspace_created' => $this->om->count('Claroline\CoreBundle\Entity\Workspace\Workspace'),
-            'users_enabled'     => $this->om->countAllEnabledUsers(),
+            'users_enabled'     => $this->om->getRepository('ClarolineCoreBundle:User')->countAllEnabledUsers(),
             'users_all'         => $this->om->count('Claroline\CoreBundle\Entity\User')
         );
     }
@@ -84,6 +88,6 @@ class PackageController extends FOSRestController
             $size += $file->getSize();
         }
 
-        return $size;
+        return $this->get('claroline.utilities.misc')->formatFileSize($size);
     }
 }
