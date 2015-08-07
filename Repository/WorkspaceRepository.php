@@ -60,6 +60,24 @@ class WorkspaceRepository extends EntityRepository
     }
 
     /**
+     * Returns the workspaces which are not a user's personal workspace.
+     *
+     * @return array[Workspace]
+     */
+    public function findNonPersonalWorkspaces()
+    {
+        $dql = '
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            WHERE w.isPersonal = false
+            ORDER BY w.id
+        ';
+        $query = $this->_em->createQuery($dql);
+
+        return $query->getResult();
+    }
+
+    /**
      * Returns the workspaces whose at least one tool is accessible to anonymous users.
      *
      * @return array[Workspace]

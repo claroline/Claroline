@@ -450,4 +450,9 @@ class Workspace
     {
         return $this->maxUsers;
     }
+
+    public function getNameAndCode()
+    {
+        return $this->name . ' [' . $this->code . ']';
+    }
 }
