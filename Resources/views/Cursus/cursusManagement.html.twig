@@ -1,9 +1,15 @@
 {% macro showCursus(cursus, hierarchy) %}
     {% set cursusId = cursus.getId() %}
     {% set cursusTitle = cursus.getTitle() %}
+    {% set details = cursus.getDetails() %}
 
     {% if cursus.getCourse() is empty %}
         <div class="cursus-element" data-cursus-id="{{ cursusId }}">
+            
+            {% if details['color'] is defined and details['color'] is not empty %}
+                <i class="fa fa-circle" style="color: {{ details['color'] }}"></i>
+                &nbsp;
+            {% endif %}
             <span class="pointer-hand view-cursus-btn"
                   data-cursus-id="{{ cursusId }}"
                   data-cursus-title="{{ cursusTitle }}"
@@ -131,6 +137,10 @@
             },
             {
                 'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                'href': path('claro_cursus_management_tool_menu')
+            },
+            {
+                'name': displayedWords['cursus'],
                 'href': path('claro_cursus_tool_index')
             },
             {

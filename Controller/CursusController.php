@@ -165,6 +165,9 @@ class CursusController extends Controller
             } else {
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
+            $color = $form->get('color')->getData();
+            $details = array('color' => $color);
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
@@ -197,7 +200,7 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CursusType(),
+            new CursusType($cursus),
             $cursus
         );
 
@@ -222,12 +225,21 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CursusType(),
+            new CursusType($cursus),
             $cursus
         );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $color = $form->get('color')->getData();
+            $details = $cursus->getDetails();
+
+            if (is_null($details)) {
+                $details = array('color' => $color);
+            } else {
+                $details['color'] = $color;
+            }
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
@@ -433,6 +445,9 @@ class CursusController extends Controller
             } else {
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
+            $color = $form->get('color')->getData();
+            $details = array('color' => $color);
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             return new JsonResponse(

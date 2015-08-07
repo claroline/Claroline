@@ -41,10 +41,15 @@
                     {% for cursus in allRootCursus %}
                         {% set cursusId = cursus.getId() %}
                         {% set cursusTitle = cursus.getTitle() %}
+                        {% set details = cursus.getDetails() %}
                     
                         <li class="cursus-element"
                             data-cursus-id="{{ cursusId }}"
                         >
+                            {% if details['color'] is defined and details['color'] is not empty %}
+                                <i class="fa fa-circle" style="color: {{ details['color'] }}"></i>
+                                &nbsp;
+                            {% endif %}
                             <a href="{{ path('claro_cursus_management', {'cursus': cursusId}) }}">
                                 {{ cursusTitle }}
                             </a>
