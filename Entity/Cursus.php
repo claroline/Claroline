@@ -78,6 +78,7 @@ class Cursus
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api"})
      */
     protected $details;
 
