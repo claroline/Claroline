@@ -5,6 +5,7 @@ parameters:
     claroline.param.bundle_sources: "%kernel.root_dir%/config/downloaded.json"
     claroline.param.files_directory: "%kernel.root_dir%/../files"
     claroline.param.vendor_directory: "%kernel.root_dir%/../vendor"
+    claroline.param.claroline_log: "%kernel.root_dir%/logs/claroline_debug.log"
     claroline.param.root_directory: "%kernel.root_dir%/.."
     claroline.param.web_directory: "%claroline.param.root_directory%/web"
     claroline.param.web_js_directory: "%claroline.param.web_directory%/js"
@@ -35,3 +36,4 @@ parameters:
     claroline.cache_dir: "%kernel.root_dir%/cache"
     claroline.param.home_custom_template_directory: "%kernel.root_dir%/Resources/ClarolineCoreBundle/views/Home/templates/custom"
     claroline.ip_range_white_list_file: "%kernel.root_dir%/config/white_list_ip_range.yml"
+    claroline.param.oauth_master_platforms: "%kernel.root_dir%/config/masters.yml"

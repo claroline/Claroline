@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Oauth\ClarolineAccess;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Claroline\CoreBundle\Entity\Oauth\PendingFriend;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * @DI\Service("claroline.manager.oauth_manager", parent="fos_oauth_server.client_manager.default")
@@ -88,16 +89,19 @@ class OauthManager extends ClientManager
         throw new \Exception('The oauth connection for id ' . $id . ' could not be initialized');
     }
 
-    public function createFriendRequest(FriendRequest $friend)
+    public function createFriendRequest(FriendRequest $friend, $master)
     {
-        //$host = $this->container->get('request')->getSchemeAndHttpHost();
-        $host = $this->container->get('request')->getSchemeAndHttpHost() . $this->container->get('router')->getContext()->getBaseUrl();
-        $url = $friend->getHost() . '/admin/oauth/request/friend/name/' . $friend->getName() . '?host=' . urlencode($host);
+        $this->om->persist($friend);
+        $this->om->flush();
+        $url = $friend->getHost() . '/admin/oauth/request/friend/name/' . $friend->getName() . '?host=' . urlencode($master);
         $data = $this->curlManager->exec($url);
 
-        if ($data) {
-            $this->om->persist($friend);
+        if (!json_decode($data)) {
+
+            $this->om->remove($friend);
             $this->om->flush();
+
+            throw new Exception\FriendRequestException('An error occured during the friend request');
         }
 
         return $url;
@@ -116,24 +120,23 @@ class OauthManager extends ClientManager
     }
 
     //@todo basic ip filter
-    public function addPendingFriendRequest($name, $host)
+    public function addPendingFriendRequest($name, $host, $autoadd = false)
     {
         $ip = $_SERVER['REMOTE_ADDR'];
-        //basic ip protection goes here
-
-
-        //check the ip match the host aswell
-
-        //then wea ad
         $pending = new PendingFriend();
         $pending->setName($name);
         $pending->setHost($host);
         $pending->setIp($ip);
         $this->om->persist($pending);
         $this->om->flush();
+
+        if ($autoadd) {
+            $client = $this->acceptFriendAction($pending, true);
+            $this->hideClient($client);
+        }
     }
 
-    public function acceptFriendAction(PendingFriend $friend)
+    public function acceptFriendAction(PendingFriend $friend, $hide = false)
     {
         $grantTypes = array(
             'authorization_code',
@@ -153,11 +156,13 @@ class OauthManager extends ClientManager
 
         if (!json_decode($data)) {
             $this->om->remove($client);
+            $this->om->remove($friend);
+            $this->om->flush();
+            throw new \Exception('The friend request host was not found for the url ' . $url);
         } else {
             $this->om->remove($friend);
+            $this->om->flush();
         }
-
-        $this->om->flush();
 
         return $client;
     }
@@ -190,5 +195,22 @@ class OauthManager extends ClientManager
         $client->hide();
         $this->om->persist($client);
         $this->om->flush();
+    }
+
+    public function isAutoCreated($host)
+    {
+        $file = $this->container->getParameter('claroline.param.oauth_master_platforms');
+
+        if (file_exists($file)) {
+
+            $data = Yaml::parse($file);
+
+            foreach ($data as $authorization) {
+                if ($authorization === $host) return true;
+                if (ip2long($authorization) === ip2long($_SERVER['REMOTE_ADDR'])) return true;
+            }
+        }
+
+        return false;
     }
 }
