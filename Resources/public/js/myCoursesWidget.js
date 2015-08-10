@@ -39,17 +39,20 @@
     }
     
     $('#my-courses-widget').on('click', 'a', function (event) {
-        event.preventDefault();
-        var element = event.currentTarget;
-        var route = $(element).attr('href');
+        
+        if (!$(this).hasClass('standard-link')) {
+            event.preventDefault();
+            var element = event.currentTarget;
+            var route = $(element).attr('href');
 
-        $.ajax({
-            url: route,
-            type: 'GET',
-            success: function (datas) {
-                $('#courses-list').html(datas);
-            }
-        });
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function (datas) {
+                    $('#courses-list').html(datas);
+                }
+            });
+        }
     });
 
     $('#my-courses-widget').on('click', '#search-course-btn', function () {

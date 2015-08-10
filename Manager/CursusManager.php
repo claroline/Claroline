@@ -1791,6 +1791,17 @@ class CursusManager
         );
     }
 
+    public function getSessionUsersByUser(
+        User $user,
+        $executeQuery = true
+    )
+    {
+        return $this->sessionUserRepo->findSessionUsersByUser(
+            $user,
+            $executeQuery
+        );
+    }
+
     public function getSessionUsersBySession(
         CourseSession $session,
         $executeQuery = true

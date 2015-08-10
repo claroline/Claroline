@@ -1071,6 +1071,18 @@ class CursusController extends Controller
             $page,
             $max
         );
+        $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser);
+        $workspacesList = array();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $session = $sessionUser->getSession();
+            $course = $session->getCourse();
+            $workspace = $session->getWorkspace();
+
+            if (!is_null($workspace)) {
+                $workspacesList[$course->getId()] = $workspace;
+            }
+        }
 
         return array(
             'widgetInstance' => $widgetInstance,
@@ -1079,7 +1091,8 @@ class CursusController extends Controller
             'page' => $page,
             'max' => $max,
             'orderedBy' => $orderedBy,
-            'order' => $order
+            'order' => $order,
+            'workspacesList' => $workspacesList
         );
     }
 

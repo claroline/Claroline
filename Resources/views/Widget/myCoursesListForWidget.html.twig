@@ -112,6 +112,17 @@
                                 <div>
                                     {{ course.getDescription()|raw }}
                                 </div>
+                                
+                                {% if workspacesList[courseId] is defined %}
+                                    <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspacesList[courseId].getId(), 'toolName': 'home'}) }}"
+                                       class="standard-link"
+                                    >
+                                        <i class="fa fa-book">
+                                        </i>
+                                        {{ workspacesList[courseId].getName() }}
+                                        <small>({{ workspacesList[courseId].getCode() }})</small>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
