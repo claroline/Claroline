@@ -1423,6 +1423,34 @@ class CursusManager
             $courses;
     }
 
+    public function getCoursesByUser(
+        User $user,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $withPager = true,
+        $page = 1,
+        $max = 20
+    )
+    {
+        $courses = empty($search) ?
+            $this->courseRepo->findCoursesByUser(
+                $user,
+                $orderedBy,
+                $order
+            ) :
+            $this->courseRepo->findSearchedCoursesByUser(
+                $user,
+                $search,
+                $orderedBy,
+                $order
+            );
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($courses, $page, $max) :
+            $courses;
+    }
+
 
     /******************************************
      * Access to CursusUserRepository methods *

@@ -788,7 +788,6 @@ class CursusController extends Controller
      * Widget methods *
      ******************/
 
-
     /**
      * @EXT\Route(
      *     "/courses/registration/widget/{widgetInstance}",
@@ -1027,6 +1026,61 @@ class CursusController extends Controller
                 'config' => $config
             );
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}",
+     *     name="claro_cursus_my_courses_widget",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidget.html.twig")
+     */
+    public function myCoursesWidgetAction(WidgetInstance $widgetInstance)
+    {
+        return array('widgetInstance' => $widgetInstance);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_my_courses_list_for_widget",
+     *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidget.html.twig")
+     */
+    public function myCoursesListForWidgetAction(
+        User $authenticatedUser,
+        WidgetInstance $widgetInstance,
+        $search = '',
+        $page = 1,
+        $max = 20,
+        $orderedBy = 'title',
+        $order = 'ASC'
+    )
+    {
+        $courses = $this->cursusManager->getCoursesByUser(
+            $authenticatedUser,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
+
+        return array(
+            'widgetInstance' => $widgetInstance,
+            'courses' => $courses,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order
+        );
     }
 
     private function checkToolAccess()

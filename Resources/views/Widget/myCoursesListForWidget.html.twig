@@ -1,0 +1,139 @@
+{% macro renderPager(pager, widgetInstanceId, search, max, orderedBy, order) %}
+    {% if search is empty %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_my_courses_widget',
+                    'routeParams': {
+                        'widgetInstance': widgetInstanceId,
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order
+                    }
+                }
+            )
+        }}
+    {% else %}
+        {{
+            pagerfanta(
+                pager,
+                'twitter_bootstrap_translated',
+                {
+                    'proximity' : 1,
+                    'routeName': 'claro_cursus_my_courses_widget',
+                    'routeParams': {
+                        'widgetInstance': widgetInstanceId,
+                        'search': search,
+                        'max': max,
+                        'orderedBy': orderedBy,
+                        'order': order
+                    }
+                }
+            )
+        }}
+    {% endif %}
+{% endmacro %}
+
+{% from _self import renderPager %}
+{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
+    
+{% if search != '' %}
+    <div class="alert alert-info">
+        {{ 'results_for_search_on'|trans({}, 'platform') }} :
+        "{{ search }}"
+    </div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-4 pull-right">
+        <div class="input-group margin-bottom-md">
+            <input class="form-control search-course"
+                   type="text"
+                   id="search-course-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+                   value="{{ search }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-course-btn"
+                        type="button"
+                        id="search-course-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+
+{% if courses|length > 0 %}
+
+    {% if courses.getNbPages() > 1 %}
+        {{ renderPager(courses, widgetInstance.getId(), search, max, orderedBy, order) }}
+    {% endif %}
+
+    <div class="panel-group" role="tablist">
+
+        {% for course in courses %}
+            {% set courseId = course.getId() %}
+            {% set icon = course.getIcon() %}
+
+            {% if icon is empty %}
+                {% set iconPath = asset('bundles/clarolinecursus/images/no_icon.png') %}
+            {% else %}
+                {% set iconPath = asset('files/cursusbundle/icons/' ~ course.getIcon()) %}
+            {% endif %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span data-toggle="collapse"
+                              href="#course-content-{{ courseId }}"
+                              class="pointer-hand"
+                        >
+                            {{ course.getTitle() }}
+                            <small>[{{ course.getCode() }}]</small>
+                        </span>
+                    </h3>
+                </div>
+                <div id="course-content-{{ courseId }}" class="panel-collapse collapse">
+                    <div class="panel-body">   
+
+                        <div class="media">
+                            <div class="media-left col-md-2 text-center">
+                                <img class="media-object"
+                                     src="{{ iconPath }}"
+                                     alt=""
+                                     width="150px"
+                                >
+                            </div>
+                            <div class="media-body col-md-10">
+                                <div>
+                                    {{ course.getDescription()|raw }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if courses.getNbPages() > 1 %}
+        {{ renderPager(courses, widgetInstance.getId(), search, max, orderedBy, order) }}
+    {% endif %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_course'|trans({}, 'cursus') }}
+    </div>
+{% endif %}
+
+<div id="my-courses-widget-datas-box"
+     data-search="{{ search }}"
+     data-max="{{ max }}"
+     data-ordered-by="{{ orderedBy }}"
+     data-order="{{ order }}"
+     data-widget-instance-id="{{ widgetInstance.getId() }}"
+>
+</div>
