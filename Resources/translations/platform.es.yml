@@ -413,6 +413,7 @@ help_url: 'URL de ayuda'
 hide: Ocultar
 history: Historial
 home: Inicio
+home_lock: 'Bloquear escritorio'
 home_manager: 'Gestionario de inicio'
 home_parameters: Parámetros
 home_tab: Pestañas

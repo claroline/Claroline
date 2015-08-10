@@ -413,6 +413,7 @@ help_url: 'URL de l''aide'
 hide: Cacher
 history: Historique
 home: Accueil
+home_lock: 'Verrouillage du bureau'
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet

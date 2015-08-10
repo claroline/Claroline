@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\RoleOptions;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -37,6 +38,8 @@ class RoleManager
 {
     /** @var RoleRepository */
     private $roleRepo;
+    /** @var RoleOptionsRepository */
+    private $roleOptionsRepo;
     /** @var UserRepository */
     private $userRepo;
     /** @var GroupRepository */
@@ -67,6 +70,7 @@ class RoleManager
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->roleOptionsRepo = $om->getRepository('ClarolineCoreBundle:RoleOptions');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
         $this->om = $om;
@@ -993,5 +997,55 @@ class RoleManager
             $i++;
         }
         $this->om->endFlushSuite();
+    }
+
+    public function getRoleOptions(Role $role)
+    {
+        $roleOptions = $this->roleOptionsRepo->findOneByRole($role);
+
+        if (is_null($roleOptions)) {
+            $roleOptions = new RoleOptions();
+            $roleOptions->setRole($role);
+            $roleOptions->setDetails(array('home_lock' => false));
+            $this->om->persist($roleOptions);
+            $this->om->flush();
+        }
+
+        return $roleOptions;
+    }
+
+    public function persistRoleOptions(RoleOptions $roleOptions)
+    {
+        $this->om->persist($roleOptions);
+        $this->om->flush();
+    }
+
+    public function isHomeLocked(User $user)
+    {
+        $isLocked = false;
+        $adminRole = $this->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
+
+        if (is_null($adminRole)) {
+            $roles = $this->getPlatformRoles($user);
+            $rolesOptions = $this->getRoleOptionsByRoles($roles);
+
+            foreach ($rolesOptions as $options) {
+                $details = $options->getDetails();
+
+                if (isset($details['home_lock']) && $details['home_lock']) {
+                    $isLocked = true;
+                    break;
+                }
+            }
+        }
+
+        return $isLocked;
+    }
+
+    public function getRoleOptionsByRoles(array $roles)
+    {
+        return count($roles) > 0 ?
+            $this->roleOptionsRepo->findRoleOptionsByRoles($roles) :
+            array();
     }
 }

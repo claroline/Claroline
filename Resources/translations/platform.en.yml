@@ -413,6 +413,7 @@ help_url: 'Help URL'
 hide: Hide
 history: History
 home: Home
+home_lock: 'Home lock'
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'

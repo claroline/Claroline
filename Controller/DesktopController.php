@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\HomeTabManager;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
@@ -38,6 +39,7 @@ class DesktopController extends Controller
     private $eventDispatcher;
     private $homeTabManager;
     private $request;
+    private $roleManager;
     private $router;
     private $toolManager;
     private $userManager;
@@ -49,6 +51,7 @@ class DesktopController extends Controller
      *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher"),
      *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
+     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *     "router"             = @DI\Inject("router"),
      *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
@@ -60,6 +63,7 @@ class DesktopController extends Controller
         StrictDispatcher $eventDispatcher,
         HomeTabManager $homeTabManager,
         RequestStack $requestStack,
+        RoleManager $roleManager,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
         UserManager $userManager,
@@ -70,6 +74,7 @@ class DesktopController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
         $this->request = $requestStack->getCurrentRequest();
+        $this->roleManager = $roleManager;
         $this->router = $router;
         $this->toolManager = $toolManager;
         $this->userManager = $userManager;
@@ -198,6 +203,7 @@ class DesktopController extends Controller
         }
         $options = $this->userManager->getUserOptions($user);
         $editionMode = $options->getDesktopMode() === 1;
+        $isHomeLocked = $this->roleManager->isHomeLocked($user);
 
         return array(
             'widgetsDatas' => $widgets,
@@ -206,7 +212,8 @@ class DesktopController extends Controller
             'homeTabId' => $homeTabId,
             'initWidgetsPosition' => $initWidgetsPosition,
             'isWorkspace' => $isWorkspace,
-            'editionMode' => $editionMode
+            'editionMode' => $editionMode,
+            'isHomeLocked' => $isHomeLocked
         );
     }
 

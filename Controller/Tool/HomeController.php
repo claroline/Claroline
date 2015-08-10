@@ -210,13 +210,15 @@ class HomeController extends Controller
         }
         $options = $this->userManager->getUserOptions($user);
         $editionMode = $options->getDesktopMode() === 1;
+        $isHomeLocked = $this->roleManager->isHomeLocked($user);
 
         return array(
             'adminHomeTabConfigs' => $visibleAdminHomeTabConfigs,
             'userHomeTabConfigs' => $userHomeTabConfigs,
             'workspaceUserHTCs' => $workspaceUserHTCs,
             'tabId' => $homeTabId,
-            'editionMode' => $editionMode
+            'editionMode' => $editionMode,
+            'isHomeLocked' => $isHomeLocked
         );
     }
 
