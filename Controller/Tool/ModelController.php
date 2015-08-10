@@ -306,7 +306,6 @@ class ModelController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"=""}
      * )
-     * @EXT\Method("GET")
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters\model:userShare.html.twig")
      *
      * Displays the list of users that the current user can send a message to,
