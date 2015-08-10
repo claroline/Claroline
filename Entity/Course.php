@@ -107,6 +107,8 @@ class Course
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("icon")
      */
     protected $icon;
 
