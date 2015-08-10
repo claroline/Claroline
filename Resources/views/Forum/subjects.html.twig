@@ -128,7 +128,7 @@
                             {{ subject['subject_created']|intl_date_format() }}
                         </td>
                         <td>
-                            {{ subject['count_messages'] }}
+                            {{ subject['count_messages'] - 1 }}
                         </td>
                         <td>
                             {% if lastMessages[subject['id']] is defined and lastMessages[subject['id']] is not empty %}
@@ -145,7 +145,7 @@
                                 {{ lastMessages[subject['id']].getAuthor() }}
                                 <br>
                                 {{ lastMessages[subject['id']].getModificationDate()|intl_date_format() }}
-                                
+
                                 {% if isNew %}
                                     </b>
                                 {% endif %}

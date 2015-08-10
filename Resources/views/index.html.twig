@@ -90,7 +90,7 @@
                 <thead>
                     <tr>
                         <th>{{ 'category'|trans({}, 'forum') }}</th>
-                        <th>{{ 'messages'|trans({}, 'forum') }} </th>
+                        <th>{{ 'subjects'|trans({}, 'forum') }} </th>
                         <th>{{ 'last_message'|trans({}, 'forum') }}</th>
                         {% if isModerator %}
                             <th></th>
@@ -113,7 +113,7 @@
                            {% endif %}
                             <br>
                         <td>
-                            {{ category['count_messages'] }}
+                            {{ category['count_subjects'] }}
                         </td>
                         <td>
                             {{ category['last_message_author'] }}

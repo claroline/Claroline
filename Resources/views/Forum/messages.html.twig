@@ -149,7 +149,7 @@
             {% if not subject.isClosed() %}
                 <textarea class="forum-answer claroline-tiny-mce hide"></textarea>
                 {# something may be wrong here because _token doesn't always exists #}
-                {{ form_widget(form._token) }}
+                {% if form._token is defined %} {{ form_widget(form._token) }} {% endif %}
             {% endif %}
             </div>
         {% endif %}
