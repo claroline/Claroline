@@ -472,10 +472,11 @@ class WorkspaceController extends Controller
         //if manager or admin, show every tools
         if ($hasManagerAccess) {
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-
+            $hideToolsMenu = false;
         } else {
             //otherwise only shows the relevant tools
             $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+            $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
         }
         $roleHasAccess = array();
         $workspaceRolesWithAccess = $this->roleManager
@@ -489,7 +490,8 @@ class WorkspaceController extends Controller
             'hasManagerAccess' => $hasManagerAccess,
             'orderedTools' => $orderedTools,
             'workspace' => $workspace,
-            'roleHasAccess' => $roleHasAccess
+            'roleHasAccess' => $roleHasAccess,
+            'hideToolsMenu' => $hideToolsMenu
         );
     }
 

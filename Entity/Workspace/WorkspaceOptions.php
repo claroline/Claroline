@@ -9,16 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Entity;
+namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="claro_role_options")
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\RoleOptionsRepository")
+ * @ORM\Table(name="claro_workspace_options")
+ * @ORM\Entity()
  */
-class RoleOptions
+class WorkspaceOptions
 {
     /**
      * @ORM\Id
@@ -29,11 +28,12 @@ class RoleOptions
 
     /**
      * @ORM\OneToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     mappedBy="options"
      * )
-     * @ORM\JoinColumn(name="role_id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="workspace_id", onDelete="CASCADE")
      */
-    protected $role;
+    protected $workspace;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
@@ -50,14 +50,14 @@ class RoleOptions
         $this->id = $id;
     }
 
-    public function getRole()
+    public function getWorkspace()
     {
-        return $this->role;
+        return $this->workspace;
     }
 
-    public function setRole(Role $role)
+    public function setWorkspace(Workspace $workspace)
     {
-        $this->role = $role;
+        $this->workspace = $workspace;
     }
 
     public function getDetails()
