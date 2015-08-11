@@ -27,7 +27,7 @@ Project setup
 - PHP >= 5.4.1
 - PHP extensions:
     - fileinfo (for mime type detection)
-    - curl (for facebook authentication)
+    - curl
     - mcrypt
 
 - MySQL >=5.0 (MariaDB should work aswell)
@@ -54,6 +54,7 @@ Project setup
 - MySQL >=5.0 (MariaDB should work aswell)
 - A web server like Apache or Nginx
 - A global installation of [composer][3] (for dependency management)
+- A cache system like Varnish
 
 ##### Configuration of php.ini
 - The *memory_limit* must be >= 512mb (for the webserver).
