@@ -1,0 +1,21 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+
+{% block section_content %}
+    <div class="panel panel-default">
+        <div class="panel-body"> 
+            
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" aria-controls="home" role="tab" data-toggle="tab">Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}" aria-controls="profile" role="tab" data-toggle="tab">Archives</a></li>
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_configurations")}}" aria-controls="messages" role="tab" data-toggle="tab">Configurations</a></li>
+                </ul>
+            </div>
+            
+            <br /><br />
+        page de configurations
+        </div>
+    </div>
+{% endblock %}

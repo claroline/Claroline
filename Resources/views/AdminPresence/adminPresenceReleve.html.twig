@@ -9,17 +9,40 @@
             Classe: <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()})}}" role="button"> {{classe.getName()}} </a>
             <br /><br /> <br /><br />
             
-     
-            {% for student in users%}
-                <form action="" method="post">
-                    <div class="col-md-2" align="center">
-                        <img class="img-thumbnail" src="{{asset('uploads/pictures/') ~ student.getPicture()}}" width="150" alt="Photo de l'élève"><br />
-                        {{student.getFirstName()}}
-                        {{student.getLastName()}}<br /><br />
-                        {{form_widget(presForm.Pres)}}
-                        {{form_widget(presForm.Abs)}}
-                        {{form_widget(presForm.Ret)}}
-                        {{ form_widget(presForm.userStudent,{ 'attr': {'value': student.getId() } } ) }}
+   
+            {% for presence in presences %}
+   
+             <form action="" method="post">
+                    <div class="col-md-2" align="center" >
+                   
+                        <img style="height:220px; background-color: {{presence.getStatus().getStatusColor()}};" class="img-thumbnail" src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}" width="150" alt="Photo de l'élève"><br />
+                        {{presence.getUserStudent().getFirstName()}}
+                        {{presence.getUserStudent().getLastName()}}
+                        
+                        <br /><br />
+             
+                        {{form_widget(presForm.idPresence,{ 'attr': {'value': presence.getId() } } ) }}
+                        
+                        <button class="btn btn-primary" type="submit" name="Releve[Pres]">Pres</button>
+                        <button class="btn btn-primary" type="submit" name="Releve[Abs]">Abs</button>
+                        <button class="btn btn-primary" type="submit" name="Releve[Ret]">Ret</button>
+                        
+                        <span class="dropdown">
+                            
+                            <span class="btn btn-primary" data-toggle="dropdown">...</span>
+                            
+                            <ul class="dropdown-menu" role="menu">
+                                
+                                {% for stat in status %}
+                                    <li class="margin-bottom-sm" role="presentation"><button class="btn btn-primary" type="submit" name="Releve[{{stat.getStatusName()}}]" > {{stat.getStatusName()}}</button></li>                                
+                                {% endfor %}
+                                
+                              
+                            </ul>
+                            
+                        </span>
+
+       
                     </div>
                 </form>
             {% endfor %} 

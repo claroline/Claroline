@@ -21,7 +21,10 @@ use FormaLibre\PresenceBundle\Entity\Period;
      */
     protected $id;
      /**
-     * @ORM\Column(name="status" )
+     * @ORM\ManyToOne(
+     *     targetEntity="FormaLibre\PresenceBundle\Entity\Status"
+     * )
+     * @ORM\JoinColumn(name="status_id", onDelete="CASCADE")
      */
     protected $status;
     /**

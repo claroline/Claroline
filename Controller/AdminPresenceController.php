@@ -10,9 +10,12 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
+use FormaLibre\PresenceBundle\Entity\Status;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use FormaLibre\PresenceBundle\Form\Type\ReleveType;
+use FormaLibre\PresenceBundle\Form\Type\CollReleveType;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -37,10 +40,12 @@ class AdminPresenceController extends Controller
       )
     {
         $this->om                 = $om;
-        $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');
+        $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User');  
         $this->periodRepo         = $om->getRepository('FormaLibrePresenceBundle:Period');
         $this->groupRepo          = $om->getRepository('ClarolineCoreBundle:Group');
-        $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User');  
+        $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User'); 
+        $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
+        $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');  
     }
     
        /**
@@ -115,116 +120,126 @@ class AdminPresenceController extends Controller
      */
     public function adminPresenceReleveAction(Request $request, User $user, Period $period, $date, Group $classe)
     {
+        $dateFormat=new \DateTime($date);
  
-        $Presences = $this->presenceRepo->findAll() ;
+        $Presences = $this->presenceRepo->findBy(array('period' => $period, 'date' =>$dateFormat, 'group' =>$classe)) ;
         $Periods = $this->periodRepo->findAll() ;
         $Groups = $this->groupRepo->findAll() ;
         $Users = $this->userRepo->findByGroup($classe) ;
+        $Pre = $this->statuRepo->findOneByStatusName('Présent');
+        $Ret = $this->statuRepo->findOneByStatusName('Retard');
+        $Abs = $this->statuRepo->findOneByStatusName('Absent');
+        $Null = $this->statuRepo->findOneByStatusName('NR');
+        $liststatus= $this->statuRepo->findByStatusByDefault(false);
        
+            if (!$Presences)
+            {
+                $Presences=array();
+                foreach ($Users as $student)
+
+                    {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $actualPresence =new Presence();
+                    $actualPresence->setStatus($Null);
+                    $actualPresence->setUserTeacher($user);
+                    $actualPresence->setUserStudent($student);
+                    $actualPresence->setGroup($classe);
+                    $actualPresence->setPeriod($period);
+                    $actualPresence->setDate($dateFormat);
+                    $em->persist($actualPresence);
+                    $em->flush();
+                    $Presences[]=$actualPresence;
+                    }
+            } 
+
+
+        $presForm = $this->get('form.factory')->create(new ReleveType($liststatus));
         
-       
-        
-        $presence = new Presence;
-        
-        $presForm = $this->createFormBuilder($presence)
-            ->add('userStudent','hidden')
-            ->add('Pres', 'submit')
-            ->add('Abs', 'submit')
-            ->add('Ret', 'submit')
-        
-            ->getForm();
-       
-            
         $presForm->handleRequest($request);
         
-       
                 if ($presForm->get('Pres')->isClicked())
                 {  
-                    $idStudent = $presForm->get("userStudent")->getData();
-                    $dateFormat=new \DateTime($date);
-                    $ActualStudent = $this->userRepo->findOneById($idStudent);
-                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
-                  
-                    if (!$isPresenceExist)
-                    {
+                        $idPresence = $presForm->get("idPresence")->getData();
+                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
+                    
                         $em = $this->getDoctrine()->getEntityManager();
-                        $actualPresence =new Presence();
-                        $actualPresence->setStatus("présent");
-                        $actualPresence->setUserTeacher($user);
-                        $actualPresence->setUserStudent($ActualStudent);
-                        $actualPresence->setGroup($classe);
-                        $actualPresence->setPeriod($period);
-                        $actualPresence->setDate($dateFormat);
-                        $em->persist($actualPresence);
+                        $ActualPresence->setStatus($Pre);
                         $em->flush();
-                    }
-                    else
-                    {
-                        $em = $this->getDoctrine()->getEntityManager();
-                        $isPresenceExist->setStatus("présent");
-                        $em->flush();
-                    }
-   
                 }
+
                 else if ($presForm->get('Abs')->isClicked())
-                {
-                    $idStudent = $presForm->get("userStudent")->getData();
-                    $dateFormat=new \DateTime($date);
-                    $ActualStudent = $this->userRepo->findOneById($idStudent);
-                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
-                  
-                    if (!$isPresenceExist)
-                    {
+                 {  
+                        $idPresence = $presForm->get("idPresence")->getData();
+                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
+                    
                         $em = $this->getDoctrine()->getEntityManager();
-                        $actualPresence =new Presence();
-                        $actualPresence->setStatus("absent");
-                        $actualPresence->setUserTeacher($user);
-                        $actualPresence->setUserStudent($ActualStudent);
-                        $actualPresence->setGroup($classe);
-                        $actualPresence->setPeriod($period);
-                        $actualPresence->setDate($dateFormat);
-                        $em->persist($actualPresence);
+                        $ActualPresence->setStatus($Abs);
                         $em->flush();
-                    }
-                    else
-                    {
-                        $em = $this->getDoctrine()->getEntityManager();
-                        $isPresenceExist->setStatus("absent");
-                        $em->flush();
-                    }
                 }
+                
                 else if ($presForm->get('Ret')->isClicked())
-                {
-                    $idStudent = $presForm->get("userStudent")->getData();
-                    $dateFormat=new \DateTime($date);
-                    $ActualStudent = $this->userRepo->findOneById($idStudent);
-                    $isPresenceExist= $this->presenceRepo->findOneBy(array('period' => $period, 'userStudent' => $idStudent, 'date' =>$dateFormat));
-                  
-                    if (!$isPresenceExist)
-                    {
+                 {  
+                        $idPresence = $presForm->get("idPresence")->getData();
+                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
+                    
                         $em = $this->getDoctrine()->getEntityManager();
-                        $actualPresence =new Presence();
-                        $actualPresence->setStatus("retard");
-                        $actualPresence->setUserTeacher($user);
-                        $actualPresence->setUserStudent($ActualStudent);
-                        $actualPresence->setGroup($classe);
-                        $actualPresence->setPeriod($period);
-                        $actualPresence->setDate($dateFormat);
-                        $em->persist($actualPresence);
+                        $ActualPresence->setStatus($Ret);
                         $em->flush();
-                    }
-                    else
-                    {
-                        $em = $this->getDoctrine()->getEntityManager();
-                        $isPresenceExist->setStatus("retard");
-                        $em->flush();
-                    }
                 }
-         
-        
-        return array('presForm'=>$presForm->createView(),'user'=>$user, 'presences'=>$Presences, 'period'=>$period, 'date'=>$date, 'classe'=>$classe, 'groups'=>$Groups, 'users'=>$Users );
-         
+                  else
+                  {
+                  foreach ($liststatus as $actualStatus) 
+                     {
+                        if ($presForm->get($actualStatus->getStatusName())->isClicked())
+                        {  
+                        $idPresence = $presForm->get("idPresence")->getData();
+                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
+                    
+                        $em = $this->getDoctrine()->getEntityManager();
+                        $ActualPresence->setStatus($actualStatus);
+                        $em->flush();
+                        break;
+                         }
+                     }
+                  }
+  
+        return array('presForm'=>$presForm->createView(),'status'=>$liststatus, 'user'=>$user, 'presences'=>$Presences, 'period'=>$period, 'date'=>$date, 'classe'=>$classe, 'groups'=>$Groups, 'users'=>$Users );   
     }
 
+    
+           /**
+     * @EXT\Route(
+     *     "/admin/presence/archives",
+     *     name="formalibre_presence_archives",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     * @EXT\Template()
+     */
+    public function adminArchivesAction()
+            
+    {
+       return array();
+    }
+    
+             /**
+     * @EXT\Route(
+     *     "/admin/presence/configurations",
+     *     name="formalibre_presence_configurations",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     * @EXT\Template()
+     */
+    public function adminConfigurationsAction()
+            
+    {
+       return array();
+    }
+    
 }
 
