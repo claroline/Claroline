@@ -22,7 +22,9 @@ use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
 use Claroline\CoreBundle\Entity\Oauth\PendingFriend;
 use Claroline\CoreBundle\Form\Administration\OauthClientType;
 use Claroline\CoreBundle\Form\Administration\RequestFriendType;
+use Claroline\CoreBundle\Manager\Exception\FriendRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Form\FormError;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -166,7 +168,7 @@ class OauthController extends Controller
      *     name="oauth_request_friend_submit",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration:oauth\requestFriendForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:Administration:Oauth\requestFriendForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return Response
@@ -178,7 +180,15 @@ class OauthController extends Controller
 
         if ($form->isValid()) {
             $request = $form->getData();
-            $data = $this->oauthManager->createFriendRequest($request);
+            $host = $this->container->get('request')->getSchemeAndHttpHost() .
+                $this->container->get('router')->getContext()->getBaseUrl();
+            try {
+                $data = $this->oauthManager->createFriendRequest($request, $host);
+            } catch (FriendRequestException $e) {
+                $form->addError(new FormError('invalid_host'));
+
+                return array("form" => $form->createView());
+            }
 
             return new JsonResponse(array(
                 'id' => $request->getId(),
@@ -188,6 +198,8 @@ class OauthController extends Controller
                 'data' => $data
             ));
         }
+
+        return array("form" => $form->createView());
     }
 
     /**
@@ -237,8 +249,21 @@ class OauthController extends Controller
      */
     public function newFriendRequestAction($name)
     {
+        $logFile = $this->container->getParameter('claroline.param.claroline_log');
         $host = $this->request->query->get('host');
-        $this->oauthManager->addPendingFriendRequest($name, $host);
+        //uncomment this for debugging puroposes...
+
+        if ($this->container->get('kernel')->getEnvironment() === 'dev') {
+            $fileLogger = new \Monolog\Logger('claroline.debug.log');
+            $fileLogger->pushHandler(new \Monolog\Handler\StreamHandler($logFile));
+            $fileLogger->addInfo(var_export($this->oauthManager->isAutoCreated($host), true));
+        }
+
+        $this->oauthManager->addPendingFriendRequest(
+            $name,
+            $host,
+            $this->oauthManager->isAutoCreated($host)
+        );
 
         return new JsonResponse(array('name' => $name, 'host' => $host));
     }
