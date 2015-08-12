@@ -3,7 +3,7 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use FormaLibre\InvoiceBundle\Manager\CreditSupportManager;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Status;
@@ -22,6 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class AdminSupportController extends Controller
 {
-    private $creditManager;
+    private $eventDispatcher;
     private $formFactory;
     private $request;
     private $router;
@@ -45,16 +46,16 @@ class AdminSupportController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "creditManager"  = @DI\Inject("formalibre.manager.credit_support_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "router"         = @DI\Inject("router"),
-     *     "supportManager" = @DI\Inject("formalibre.manager.support_manager"),
-     *     "translator"     = @DI\Inject("translator")
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "router"          = @DI\Inject("router"),
+     *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
+     *     "translator"      = @DI\Inject("translator")
      * })
      */
     public function __construct(
-        CreditSupportManager $creditManager,
+        EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
         RequestStack $requestStack,
         RouterInterface $router,
@@ -62,7 +63,7 @@ class AdminSupportController extends Controller
         TranslatorInterface $translator
     )
     {
-        $this->creditManager = $creditManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -545,9 +546,16 @@ class AdminSupportController extends Controller
             }
         }
         $withCredits = $this->supportManager->getConfigurationCreditOption();
-        $nbCredits = $withCredits ?
-            $this->creditManager->getNbRemainingCredits($ticket->getUser()) :
-            666;
+
+        if ($withCredits) {
+            $datasEvent = new GenericDatasEvent($ticket->getUser());
+            $this->eventDispatcher->dispatch('formalibre_request_nb_remaining_credits', $datasEvent);
+            $response = $datasEvent->getResponse();
+
+            $nbCredits = is_null($response) ? 666 : $response;
+        } else {
+            $nbCredits = 666;
+        }
         $nbHours = (int)($totalTime / 60);
         $nbMinutes = ($nbHours === 0) ? $totalTime : $totalTime % ($nbHours * 60);
         $totalCredits = (5 * $nbHours) + ceil($nbMinutes / 15);

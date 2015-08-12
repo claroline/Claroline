@@ -3,8 +3,8 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Manager\ToolManager;
-use FormaLibre\InvoiceBundle\Manager\CreditSupportManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Form\CommentType;
@@ -13,6 +13,7 @@ use FormaLibre\SupportBundle\Manager\SupportManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class SupportController extends Controller
 {
     private $authorization;
-    private $creditManager;
+    private $eventDispatcher;
     private $formFactory;
     private $request;
     private $router;
@@ -36,18 +37,18 @@ class SupportController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "authorization"  = @DI\Inject("security.authorization_checker"),
-     *     "creditManager"  = @DI\Inject("formalibre.manager.credit_support_manager"),
-     *     "formFactory"    = @DI\Inject("form.factory"),
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "router"         = @DI\Inject("router"),
-     *     "supportManager" = @DI\Inject("formalibre.manager.support_manager"),
-     *     "toolManager"    = @DI\Inject("claroline.manager.tool_manager")
+     *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
+     *     "formFactory"     = @DI\Inject("form.factory"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "router"          = @DI\Inject("router"),
+     *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
+     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        CreditSupportManager $creditManager,
+        EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
         RequestStack $requestStack,
         RouterInterface $router,
@@ -56,7 +57,7 @@ class SupportController extends Controller
     )
     {
         $this->authorization = $authorization;
-        $this->creditManager = $creditManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
@@ -93,9 +94,16 @@ class SupportController extends Controller
             $max
         );
         $withCredits = $this->supportManager->getConfigurationCreditOption();
-        $nbCredits = $withCredits ?
-            $this->creditManager->getNbRemainingCredits($authenticatedUser) :
-            666;
+        
+        if ($withCredits) {
+            $datasEvent = new GenericDatasEvent($authenticatedUser);
+            $this->eventDispatcher->dispatch('formalibre_request_nb_remaining_credits', $datasEvent);
+            $response = $datasEvent->getResponse();
+
+            $nbCredits = is_null($response) ? 666 : $response;
+        } else {
+            $nbCredits = 666;
+        }
 
         return array(
             'tickets' => $tickets,
