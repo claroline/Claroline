@@ -6,16 +6,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use FormaLibre\PresenceBundle\Entity\Period;
-use FormaLibre\PresenceBundle\Entity\Presence;
-use FormaLibre\PresenceBundle\Entity\Status;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
+use FormaLibre\PresenceBundle\Entity\Period;
+use FormaLibre\PresenceBundle\Entity\Presence;
+use FormaLibre\PresenceBundle\Entity\Status;
+use FormaLibre\PresenceBundle\Entity\FormColl;
+use Claroline\CoreBundle\Entity\User;
+
 use FormaLibre\PresenceBundle\Form\Type\ReleveType;
 use FormaLibre\PresenceBundle\Form\Type\CollReleveType;
+
 
 /**
  * @DI\Tag("security.secure_service")
@@ -152,8 +156,15 @@ class AdminPresenceController extends Controller
                     }
             } 
 
+        $formCollection = new FormColl;
+        
+        foreach ($Presences as $presence) {
+            $formCollection->getPresFormColl()->add($presence);
+        }
+        
+        $presform = $this->createForm(new CollReleveType(), $formCollection);
 
-        $presForm = $this->get('form.factory')->create(new ReleveType($liststatus));
+//        $presForm = $this->get('form.factory')->create(new ReleveType());
         
         $presForm->handleRequest($request);
         
@@ -186,22 +197,22 @@ class AdminPresenceController extends Controller
                         $ActualPresence->setStatus($Ret);
                         $em->flush();
                 }
-                  else
-                  {
-                  foreach ($liststatus as $actualStatus) 
-                     {
-                        if ($presForm->get($actualStatus->getStatusName())->isClicked())
-                        {  
-                        $idPresence = $presForm->get("idPresence")->getData();
-                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
-                    
-                        $em = $this->getDoctrine()->getEntityManager();
-                        $ActualPresence->setStatus($actualStatus);
-                        $em->flush();
-                        break;
-                         }
-                     }
-                  }
+//                  else
+//                  {
+//                  foreach ($liststatus as $actualStatus) 
+//                     {
+//                        if ($presForm->get($actualStatus->getStatusName())->isClicked())
+//                        {  
+//                        $idPresence = $presForm->get("idPresence")->getData();
+//                        $ActualPresence = $this->presenceRepo->findOneById($idPresence);
+//                    
+//                        $em = $this->getDoctrine()->getEntityManager();
+//                        $ActualPresence->setStatus($actualStatus);
+//                        $em->flush();
+//                        break;
+//                         }
+//                     }
+//                  }
   
         return array('presForm'=>$presForm->createView(),'status'=>$liststatus, 'user'=>$user, 'presences'=>$Presences, 'period'=>$period, 'date'=>$date, 'classe'=>$classe, 'groups'=>$Groups, 'users'=>$Users );   
     }
@@ -238,7 +249,9 @@ class AdminPresenceController extends Controller
     public function adminConfigurationsAction()
             
     {
-       return array();
+      $Periods = $this->periodRepo->findAll() ;
+        
+       return array('periods'=>$Periods);
     }
     
 }

@@ -1,21 +1,106 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% set duration ='00:50:00' %}
+{% set startday ='08:00:00' %}
+{% set endday ='16:00:00' %}
 
-{% block section_content %}
+
+{% block section_content %} 
+  
+
     <div class="panel panel-default">
-        <div class="panel-body"> 
-            
+        <div class="panel-body">   
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" aria-controls="home" role="tab" data-toggle="tab">Appel</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}" aria-controls="profile" role="tab" data-toggle="tab">Archives</a></li>
-                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_configurations")}}" aria-controls="messages" role="tab" data-toggle="tab">Configurations</a></li>
+                  <li role="presentation" class="active"><a href="#home"  role="tab" data-toggle="tab">Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  role="tab" data-toggle="tab">Archives</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" role="tab" data-toggle="tab">Configurations</a></li>
                 </ul>
             </div>
             
             <br /><br />
-        page de configurations
+
+            Bienvenue sur la page de configuration.
+            
+            <br /><br />
+            Voici l'horaire type de votre école:
+            <br /><br /><br />
+            
+            <div id='calendar'></div>
+            
+           {% block stylesheets %}
+            {{ parent() }}
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.print.css') }}' media='print' />
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
+            <style>
+                .fc-day-grid-event > .fc-content {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 100%;
+                }
+                .is-task {
+                    padding-right: 3px;
+                }
+            </style>
+            {% endblock %}
+            {% block javascripts %}
+            
+                <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
+                <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.js') }}' ></script>
+                <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+                <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
+                
+                <script type='text/javascript' src='lang-all.js'></script>
+                
+            <script>
+
+                $(document).ready(function() {
+                        
+                        $('#calendar').fullCalendar({
+                                header: {},
+                                defaultView: 'basicWeek',
+                                lang: 'fr',
+                                weekends: false,
+                                editable: false,
+                                defaultTimedEventDuration:'{{duration}}',
+                                forceEventDuration:true,
+                                timeFormat:'hh:mm',
+                                columnFormat: '',
+                                titleFormat:'',
+                                minTime:'{{startday}}',
+                                maxTime:'{{endday}}',
+                                //slotDuration:'{{duration}}',
+                                eventLimit: true, // allow "more" link when too many events
+                                
+                                 events: [
+                                    {% for item in periods %}
+                                       {
+                                       id: {{ item.getId }},
+                                       title: '{{ item.getName()}}',
+                                       start: '{{item.getDay()}}T{{item.getBeginHour()|date('H:i:s')}}',
+                                       end: '{{item.getDay()}}T{{item.getEndHour()|date('H:i:s')}}',
+                                       url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()})}}',
+                                      
+                
+                                        }
+                                      {% if loop.last %}{% else %},{% endif %}{% endfor %}
+
+                        ]
+    
+                        });
+  
+                });
+
+            </script>   
+                
+            {% endblock javascripts %}
+
         </div>
     </div>
+
 {% endblock %}
+
