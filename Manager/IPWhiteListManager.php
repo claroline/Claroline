@@ -53,18 +53,22 @@ class IPWhiteListManager
     {
         if (file_exists($this->ipFile)) {
             $ips = Yaml::parse($this->ipFile);
-
-            foreach ($ips as $ip) {
-                if ($ip === $_SERVER['REMOTE_ADDR']) return true;
+            
+            if (is_array($ips)) {
+                foreach ($ips as $ip) {
+                    if ($ip === $_SERVER['REMOTE_ADDR']) return true;
+                }
             }
         }
 
         if (file_exists($this->rangeFile)) {
-            $ranges = $ips = Yaml::parse($this->rangeFile);
+            $ranges = Yaml::parse($this->rangeFile);
 
-            foreach ($ranges as $range) {
-                if ($this->validateRange($range['lower_bound'], $range['higher_bound'])) {
-                    return true;
+            if (is_array($ranges)) {
+                foreach ($ranges as $range) {
+                    if ($this->validateRange($range['lower_bound'], $range['higher_bound'])) {
+                        return true;
+                    }
                 }
             }
         }
