@@ -11,14 +11,66 @@
 
 namespace Claroline\CursusBundle\Form;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class PluginConfigurationType extends AbstractType
 {
+    private $configHandler;
+
+    public function __construct(PlatformConfigurationHandler $configHandler)
+    {
+        $this->configHandler = $configHandler;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $attr = array();
+        $attr['class'] = 'datepicker input-small';
+        $attr['data-date-format'] = 'dd-mm-yyyy';
+        $attr['autocomplete'] = 'off';
+
+        $startOptions = array(
+            'required' => false,
+            'mapped' => false,
+            'format' => 'dd-MM-yyyy',
+            'widget' => 'single_text',
+            'attr' => $attr,
+            'input' => 'datetime',
+            'label' => 'default_session_start_date'
+        );
+        $defaultStartDate = $this->configHandler->getParameter('cursusbundle_default_session_start_date');
+
+        if (!empty($defaultStartDate)) {
+            $startOptions['data'] = new \DateTime($defaultStartDate);
+        }
+        $endOptions = array(
+            'required' => false,
+            'mapped' => false,
+            'format' => 'dd-MM-yyyy',
+            'widget' => 'single_text',
+            'attr' => $attr,
+            'input' => 'datetime',
+            'label' => 'default_session_start_date',
+        );
+        $defaultEndDate = $this->configHandler->getParameter('cursusbundle_default_session_end_date');
+
+        if (!empty($defaultEndDate)) {
+            $endOptions['data'] = new \DateTime($defaultEndDate);
+        }
+
+        $builder->add(
+            'startDate',
+            'datepicker',
+            $startOptions
+        );
+        $builder->add(
+            'endDate',
+            'datepicker',
+            $endOptions
+        );
         $builder->add(
             'content',
             'content',
@@ -27,7 +79,6 @@ class PluginConfigurationType extends AbstractType
                 'theme_options' => array('contentTitle' => true)
             )
         );
-
     }
 
     public function getName()

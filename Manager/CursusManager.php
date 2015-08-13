@@ -891,7 +891,9 @@ class CursusManager
         User $user,
         $sessionName = null,
         Cursus $cursus = null,
-        $registrationDate = null
+        $registrationDate = null,
+        $startDate = null,
+        $endDate = null
     )
     {
         if (is_null($registrationDate)) {
@@ -905,6 +907,8 @@ class CursusManager
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
         $session->setRegistrationValidation($course->getRegistrationValidation());
+        $session->setStartDate($startDate);
+        $session->setEndDate($endDate);
 
         $workspace = $this->generateWorkspace(
             $course,

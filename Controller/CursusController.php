@@ -23,6 +23,7 @@ use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\CursusCourseType;
 use Claroline\CursusBundle\Form\CursusType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -37,36 +38,40 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CursusController extends Controller
 {
+    private $authorization;
     private $cursusManager;
     private $formFactory;
+    private $platformConfigHandler;
     private $request;
-    private $authorization;
     private $toolManager;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         CursusManager $cursusManager,
         FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
-        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
     {
+        $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
-        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -762,7 +767,7 @@ class CursusController extends Controller
         }
 
         $form = $this->formFactory->create(
-            new PluginConfigurationType(),
+            new PluginConfigurationType($this->platformConfigHandler),
             $this->cursusManager->getConfirmationEmail()
         );
 
@@ -792,8 +797,14 @@ class CursusController extends Controller
 
         $formData = $this->request->get('cursus_plugin_configuration_form');
         $this->cursusManager->persistConfirmationEmail($formData['content']);
+        $this->platformConfigHandler->setParameters(
+            array(
+                'cursusbundle_default_session_start_date' => $formData['startDate'],
+                'cursusbundle_default_session_end_date' => $formData['endDate'],
+            )
+        );
         $form = $this->formFactory->create(
-            new PluginConfigurationType(),
+            new PluginConfigurationType($this->platformConfigHandler),
             $this->cursusManager->getConfirmationEmail()
         );
 
