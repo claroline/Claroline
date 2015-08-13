@@ -642,6 +642,7 @@ occurrence: Ocurrencia
 ok: Ok
 only_for_workspace_creation: 'Sólo en la creación de un espacio de trabajo'
 open: Abrir
+open_resource_when_opening_ws: 'Open a resource when opening the workspace'
 operation_done: 'Operación terminada.'
 options: Opciones
 or: O
@@ -806,6 +807,7 @@ resource_creation_wrong_type: 'Usted no tiene el permiso de crear un tipo %type%
 resource_delete: '¿Está seguro que desea suprimir este recurso?'
 resource_limit_exceeded: resource_limit_exceeded
 resource_picker: 'Selector de recursos'
+resource_to_open: 'Resource to open'
 resource_type: 'Tipo de recurso'
 resources: Recursos
 resources_delete: '¿Está seguro que desea suprimir estos recursos?'

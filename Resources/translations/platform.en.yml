@@ -642,6 +642,7 @@ occurrence: Occurrence
 ok: Ok
 only_for_workspace_creation: 'Only for workspace creation'
 open: Open
+open_resource_when_opening_ws: 'Open a resource when opening the workspace'
 operation_done: 'Operation done.'
 options: Options
 or: Or
@@ -806,6 +807,7 @@ resource_creation_wrong_type: 'You don''t have the permission to create a(n) %ty
 resource_delete: 'Are you sure you want to delete this resource ?'
 resource_limit_exceeded: 'The maximmum amount of resource (%max%) has been reached. You already have %current% resources.'
 resource_picker: 'Resource picker'
+resource_to_open: 'Resource to open'
 resource_type: 'Resource type'
 resources: Resources
 resources_delete: 'Are you sure you want to delete these resources?'

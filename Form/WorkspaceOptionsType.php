@@ -30,8 +30,18 @@ class WorkspaceOptionsType extends AbstractType
         $details = is_null($this->workspaceOptions) ?
             array() :
             $this->workspaceOptions->getDetails();
-        $backgroundColor = isset($details['background_color']) ? $details['background_color'] : null;
-        $hideToolsMenu = isset($details['hide_tools_menu']) ? $details['hide_tools_menu'] : false;
+        $backgroundColor = isset($details['background_color']) ? 
+            $details['background_color'] :
+            null;
+        $hideToolsMenu = isset($details['hide_tools_menu']) ?
+            $details['hide_tools_menu'] :
+            false;
+        $useDefaultResource = isset($details['use_workspace_opening_resource']) ?
+            $details['use_workspace_opening_resource'] :
+            false;
+        $defaultResourceId = isset($details['workspace_opening_resource']) ?
+            $details['workspace_opening_resource'] :
+            null;
 
         $builder->add(
             'hideToolsMenu',
@@ -51,6 +61,26 @@ class WorkspaceOptionsType extends AbstractType
                 'mapped' => false,
                 'data' => $backgroundColor,
                 'label' => 'background_color'
+            )
+        );
+        $builder->add(
+            'useWorkspaceOpeningResource',
+            'checkbox',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'data' => $useDefaultResource,
+                'label' => 'open_resource_when_opening_ws'
+            )
+        );
+        $builder->add(
+            'workspaceOpeningResource',
+            'resourcePicker',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'data' => $defaultResourceId,
+                'label' => 'resource_to_open'
             )
         );
     }
