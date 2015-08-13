@@ -415,7 +415,7 @@ class Workspace
         return $this->startDate;
     }
 
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate = null)
     {
         $this->startDate = $startDate;
     }
@@ -425,7 +425,7 @@ class Workspace
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(\DateTime $endDate = null)
     {
         $this->endDate = $endDate;
     }
