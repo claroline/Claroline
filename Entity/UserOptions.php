@@ -49,6 +49,11 @@ class UserOptions
      */
     protected $desktopMode = 1;
 
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $details;
+
     public function getId()
     {
         return $this->id;
@@ -87,5 +92,15 @@ class UserOptions
     public function setDesktopMode($desktopMode)
     {
         $this->desktopMode = $desktopMode;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
     }
 }

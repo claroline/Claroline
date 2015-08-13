@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -26,18 +28,21 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class DesktopConfigurationController extends Controller
 {
-    private $desktopAdminTool;
+    private $roleManager;
     private $toolManager;
 
     /**
      * @DI\InjectParams({
+     *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
      *     "toolManager" = @DI\Inject("claroline.manager.tool_manager")
      * })
      */
     public function __construct(
+        RoleManager $roleManager,
         ToolManager $toolManager
     )
     {
+        $this->roleManager = $roleManager;
         $this->toolManager = $toolManager;
     }
 
@@ -157,5 +162,53 @@ class DesktopConfigurationController extends Controller
 
             throw new AccessDeniedException();
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/desktop/home/lock/management",
+     *     name="claro_admin_desktop_home_lock_management"
+     * )
+     *
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser"=true})
+     * @EXT\Template()
+     */
+    public function adminDesktopHomeLockManagementAction()
+    {
+        $roles = array();
+        $options = array();
+        $platformRoles = $this->roleManager->getAllPlatformRoles();
+        
+        foreach ($platformRoles as $role) {
+            
+            if ($role->getName() !== 'ROLE_ADMIN') {
+                $roles[] = $role;
+                $roleOptions = $this->roleManager->getRoleOptions($role);
+                $options[$role->getId()] = $roleOptions->getDetails();
+            }
+        }
+
+        return array('roles' => $roles, 'options' => $options);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/desktop/home/role/{role}/lock/{locked}/change",
+     *     name="claro_admin_desktop_home_lock_change",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser"=true})
+     * @EXT\Template()
+     */
+    public function adminDesktopHomeLockChangeAction(Role $role, $locked)
+    {
+        $roleOptions = $this->roleManager->getRoleOptions($role);
+        $details = $roleOptions->getDetails();
+        $details['home_lock'] = ($locked === '1');
+        $roleOptions->setDetails($details);
+        $this->roleManager->persistRoleOptions($roleOptions);
+
+        return new Response('success', 200);
     }
 }

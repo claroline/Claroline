@@ -114,6 +114,7 @@ available_workspaces: 'Espacios de trabajo disponibles'
 back: Atrás
 back_to_activities_list: 'Volver a la lista de actividades'
 back_to_profile: back_to_profile
+background_color: 'Color del fondo de pantalla'
 backup_reminder: backup_reminder
 bad_request: 'La solicitud no es correcta. Si usted llegó a esta página a través de un enlace interno, por favor informe del problema al administrador de la plataforma.'
 base_informations: base_informations
@@ -411,8 +412,10 @@ has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
 help_url: 'URL de ayuda'
 hide: Ocultar
+hide_tools_menu: 'Ocultar el menú de herramientas (excepto para los administradores)'
 history: Historial
 home: Inicio
+home_lock: 'Bloquear escritorio'
 home_manager: 'Gestionario de inicio'
 home_parameters: Parámetros
 home_tab: Pestañas
@@ -1102,6 +1105,7 @@ workspace_delete: 'Suprimir el espacio de trabajo'
 workspace_delete_confirm_message: '¿Está seguro que desea suprimir este espacio de trabajo?'
 workspace_delete_confirm_title: 'Confirmar la supresión'
 workspace_delete_success_message: workspace_delete_success_message
+workspace_display: Visualización
 workspace_home_tab_creation: 'Creación de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tab_edition: 'Edición de una pestaña en el inicio de un espacio de trabajo'
 workspace_home_tabs: 'Pestaña de un espacio de trabajo'

@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -69,6 +70,8 @@ class WorkspaceManager
     private $userRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
+    /** @var WorkspaceOptionsRepository */
+    private $workspaceOptionsRepo;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -131,6 +134,7 @@ class WorkspaceManager
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
+        $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');
         $this->workspaceFavouriteRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite');
         $this->pagerFactory = $pagerFactory;
         $this->container = $container;
@@ -1064,5 +1068,40 @@ class WorkspaceManager
                 return $tool;
             }
         }
+    }
+
+    public function getWorkspaceOptions(Workspace $workspace)
+    {
+        $workspaceOptions = $this->workspaceOptionsRepo->findOneByWorkspace($workspace);
+
+        if (is_null($workspaceOptions)) {
+            $workspaceOptions = new WorkspaceOptions();
+            $workspaceOptions->setWorkspace($workspace);
+            $details = array(
+                'hide_tools_menu' => false,
+                'background_color' => null
+            );
+            $workspaceOptions->setDetails($details);
+            $workspace->setOptions($workspaceOptions);
+            $this->om->persist($workspaceOptions);
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
+
+        return $workspaceOptions;
+    }
+
+    public function persistworkspaceOptions(WorkspaceOptions $workspaceOptions)
+    {
+        $this->om->persist($workspaceOptions);
+        $this->om->flush();
+    }
+
+    public function isToolsMenuHidden(Workspace $workspace)
+    {
+        $workspaceOptions = $this->getWorkspaceOptions($workspace);
+        $details = $workspaceOptions->getDetails();
+
+        return isset($details['hide_tools_menu']) && $details['hide_tools_menu'];
     }
 }

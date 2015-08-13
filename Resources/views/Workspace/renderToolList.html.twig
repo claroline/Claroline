@@ -1,27 +1,29 @@
-<div class="list-group menu">
-    <div class="list-group-item disabled">{{ workspace.getName() }} <em>({{ workspace.getCode() }})</em></div>
-    {% if hasManagerAccess %}
-        <a class="list-group-item accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
-            <i class="fa fa-eye"></i>
-            {{ 'show_as'|trans({}, 'platform') }}
-        </a>
-        <div id="collapse" class="collapse">
-             {% if has_role_access_to_workspace('ROLE_ANONYMOUS', workspace.getId()) %}
-                <a class="list-group-item" href="?view_as=ROLE_ANONYMOUS_{{ workspace.getId() }}">{{ 'anonymous'|trans({}, 'platform') }}</a>
-            {% endif %}
-            {% for role in workspace.getRoles() %}
-                {% if roleHasAccess[role.getId()] is defined %}
-                    <a class="list-group-item" href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}?view_as={{ role.getName() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</a>
+{% if not hideToolsMenu %}
+    <div class="list-group menu">
+        <div class="list-group-item disabled">{{ workspace.getName() }} <em>({{ workspace.getCode() }})</em></div>
+        {% if hasManagerAccess %}
+            <a class="list-group-item accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse">
+                <i class="fa fa-eye"></i>
+                {{ 'show_as'|trans({}, 'platform') }}
+            </a>
+            <div id="collapse" class="collapse">
+                 {% if has_role_access_to_workspace('ROLE_ANONYMOUS', workspace.getId()) %}
+                    <a class="list-group-item" href="?view_as=ROLE_ANONYMOUS_{{ workspace.getId() }}">{{ 'anonymous'|trans({}, 'platform') }}</a>
                 {% endif %}
-            {% endfor %}
-        </div>
+                {% for role in workspace.getRoles() %}
+                    {% if roleHasAccess[role.getId()] is defined %}
+                        <a class="list-group-item" href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}?view_as={{ role.getName() }}">{{ role.getTranslationKey()|trans({}, 'platform') }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-    {% endif %}
-    {% for orderedTool in orderedTools %}
-        <a class="list-group-item{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) | compareRoute(" active") | raw }}"
-            href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}">
-            <i class="fa fa-{{ orderedTool.getTool().getClass() }}"></i>
-            <span>{{ orderedTool.getName()|trans({}, 'tools') }}</span>
-        </a>
-    {% endfor %}
-</div>
+        {% endif %}
+        {% for orderedTool in orderedTools %}
+            <a class="list-group-item{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) | compareRoute(" active") | raw }}"
+                href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': orderedTool.getTool().getName()}) }}">
+                <i class="fa fa-{{ orderedTool.getTool().getClass() }}"></i>
+                <span>{{ orderedTool.getName()|trans({}, 'tools') }}</span>
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

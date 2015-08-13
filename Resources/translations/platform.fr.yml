@@ -114,6 +114,7 @@ available_workspaces: 'Espaces d''activités disponibles'
 back: Retour
 back_to_activities_list: 'Retour à la liste des activités'
 back_to_profile: 'Retour au profil'
+background_color: 'Couleur du fond d''écran'
 backup_reminder: 'Pensez à faire un backup de la plateforme avant de faire une mise à jour.'
 bad_request: 'La requête est incorrecte. Si vous êtes arrivé sur cette page via un lien interne, veuillez signaler le problème à l''''administrateur de la plateforme.'
 base_informations: 'Informations de base'
@@ -411,8 +412,10 @@ has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 help_url: 'URL de l''aide'
 hide: Cacher
+hide_tools_menu: 'Cacher le menu d''outils (sauf pour les gestionnaires)'
 history: Historique
 home: Accueil
+home_lock: 'Verrouillage du bureau'
 home_manager: 'Gestionnaire de l''accueil'
 home_parameters: 'Paramètres de l''accueil'
 home_tab: Onglet
@@ -1102,6 +1105,7 @@ workspace_delete: 'Supprimer l''espace d''activités'
 workspace_delete_confirm_message: 'Etes-vous sûr de vouloir supprimer cet espace d''activités ?'
 workspace_delete_confirm_title: 'Confirmation de suppression'
 workspace_delete_success_message: 'L''espace d''activités "%workspaceName%" été supprimé.'
+workspace_display: Affichage
 workspace_home_tab_creation: 'Création d''un onglet pour les espaces d''activités'
 workspace_home_tab_edition: 'Edition de l''onglet pour les espaces d''activités'
 workspace_home_tabs: 'Onglets pour les espaces d''activités'

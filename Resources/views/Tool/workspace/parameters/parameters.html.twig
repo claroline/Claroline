@@ -42,5 +42,8 @@
                 </a>
             {% endif %}
         {% endfor %}
+        <a class="list-group-item" href="{{ path('claro_workspace_display_edit_form', {'workspace': workspace.getId()}) }}">
+            {{ 'workspace_display'|trans({}, 'platform') }}
+        </a>
     </div>
 {% endblock %}

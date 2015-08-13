@@ -4,9 +4,12 @@
 
 {% block section_content %}
     <div id="desktop-home-content" class="panel-body">
-        <i class="fa {% if editionMode %}fa-unlock-alt{% else %}fa-lock{% endif %} pull-right pointer-hand"
-           id="desktop-mode-btn"
-        ></i>
+        
+        {% if not isHomeLocked %}
+            <i class="fa {% if editionMode %}fa-unlock-alt{% else %}fa-lock{% endif %} pull-right pointer-hand"
+               id="desktop-mode-btn"
+            ></i>
+       {% endif %}
         <ul id="desktop-hometabs-list" class="nav nav-tabs margin-bottom-md">
             
             {% for adminHomeTabConfig in adminHomeTabConfigs %}
@@ -21,7 +24,7 @@
                    >
                         {{ adminHomeTab.getName() }}
                         
-                        {% if editionMode %}
+                        {% if not isHomeLocked and editionMode %}
                         
                             {% if adminHomeTabConfig.isLocked() %}
                                 <i class="fa fa-lock"></i>
@@ -48,7 +51,7 @@
                             {{ userHomeTab.getName() }}
                         </span>
                         
-                        {% if editionMode %}
+                        {% if not isHomeLocked and editionMode %}
                             &nbsp;
                             {% if userHomeTab.getId() == tabId %}
                                 <i class="fa fa-cog edit-hometab-btn pointer-hand text-muted"></i>
@@ -76,7 +79,7 @@
                 </li>
             {% endfor %}
                 
-            {% if editionMode %}
+            {% if not isHomeLocked and editionMode %}
                 <li id="add-hometab-btn">
                     <a class="pointer-hand">
                         <span class="text-muted">
@@ -112,7 +115,7 @@
     >
     </script>
                 
-    {% if editionMode %}
+    {% if not isHomeLocked and editionMode %}
         <script src='{{ asset('bundles/clarolinecore/js/tool/desktop/home/desktopHomeLayout.js') }}'
                 type="text/javascript"
         >

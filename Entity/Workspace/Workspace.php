@@ -209,6 +209,15 @@ class Workspace
      */
     protected $workspaceType;
 
+    /**
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions",
+     *     inversedBy="workspace"
+     * )
+     * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
+     */
+    protected $options;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -454,5 +463,15 @@ class Workspace
     public function getNameAndCode()
     {
         return $this->name . ' [' . $this->code . ']';
+    }
+
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    public function setOptions(WorkspaceOptions $options = null)
+    {
+        $this->options = $options;
     }
 }

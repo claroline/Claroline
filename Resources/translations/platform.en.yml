@@ -114,6 +114,7 @@ available_workspaces: 'Available workspaces'
 back: Back
 back_to_activities_list: 'Back to activities list'
 back_to_profile: 'Back to profile'
+background_color: 'Background color'
 backup_reminder: 'We recommand you to do a backup before going further.'
 bad_request: 'The request is incorrect. If you arrived at this page via an internal link, please report the problem to the platform administrator.'
 base_informations: 'Basic information'
@@ -411,8 +412,10 @@ has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 help_url: 'Help URL'
 hide: Hide
+hide_tools_menu: 'Hide tools menu (except for managers)'
 history: History
 home: Home
+home_lock: 'Home lock'
 home_manager: 'Home manager'
 home_parameters: 'Home parameters'
 home_tab: 'Home tab'
@@ -1102,6 +1105,7 @@ workspace_delete: 'Delete the workspace'
 workspace_delete_confirm_message: 'Are you sure you want to delete this workspace?'
 workspace_delete_confirm_title: 'Delete Confirm'
 workspace_delete_success_message: 'Workspace "%workspaceName%" has been deleted.'
+workspace_display: Display
 workspace_home_tab_creation: 'Workspace Home tab creation'
 workspace_home_tab_edition: 'Workspace Home tab edition'
 workspace_home_tabs: 'Workspace Home tabs'
