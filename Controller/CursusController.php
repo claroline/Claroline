@@ -20,6 +20,7 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
+use Claroline\CursusBundle\Form\CursusCourseType;
 use Claroline\CursusBundle\Form\CursusType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
@@ -647,6 +648,61 @@ class CursusController extends Controller
         $this->cursusManager->removeCoursesFromCursus($cursus, $courses);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/course/create/form",
+     *     name="claro_cursus_course_into_cursus_create_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
+     */
+    public function cursusCourseCreateFormAction(User $authenticatedUser, Cursus $cursus)
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), new Course());
+
+        return array(
+            'form' => $form->createView(),
+            'cursus' => $cursus
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/course/create",
+     *     name="claro_cursus_course_into_cursus_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
+     */
+    public function cursusCourseCreateAction(User $authenticatedUser, Cursus $cursus)
+    {
+        $this->checkToolAccess();
+        $course = new Course();
+        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), $course);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->cursusManager->persistCourse($course);
+            $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
+            $results = array();
+
+            foreach ($createdCursus as $created) {
+                $results[] = array('id' => $created->getId(), 'title' => $created->getTitle());
+            }
+
+            return new JsonResponse($results, 200);
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'cursus' => $cursus
+            );
+        }
     }
 
     /**

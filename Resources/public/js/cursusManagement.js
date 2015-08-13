@@ -86,6 +86,39 @@
             }
         });
     });
+    
+    $('#cursus-management-body').on('click', '.create-course-to-cursus-btn', function () {
+        var cursusId = $(this).data('cursus-id');
+        
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_cursus_course_into_cursus_create_form', {'cursus': cursusId}),
+            function(datas) {
+                
+                for (var i = 0; i < datas.length; i++) {
+                    var courseRow =
+                        '<li id="cursus-row-' +
+                        datas[i]['id'] +
+                        '" data-cursus-id="' +
+                        datas[i]['id'] +
+                        '">' +      
+                            '<span>' +
+                                '<span class="label label-primary">' +
+                                    datas[i]['title'] +
+                                '</span>' +
+                                '<span class="label label-danger pointer-hand remove-course-btn" data-cursus-id="' +
+                                datas[i]['id'] +
+                                '">' +
+                                    '<i class="fa fa-trash"></i>' +
+                                '</span>' +
+                            '</span>' +
+                        '</li>';
+                    $('#collapse-' + cursusId).append(courseRow);
+                    $('#collapse-' + cursusId).removeClass('hidden');
+                }
+            },
+            function() {}
+        );
+    });
 
     $('#view-courses-body').on('click', 'a', function (event) {
         event.preventDefault();
@@ -296,6 +329,17 @@
                                 '</a>' +
                             '</li>' +
                             '<li role="presentation" class="divider"></li>' +
+                            '<li role="presentation">' +
+                                '<a role="menuitem"' +
+                                   ' tabindex="-1"' +
+                                   ' class="pointer-hand create-course-to-cursus-btn"' +
+                                   ' data-cursus-id="' + data['id'] + '"' +
+                                   ' data-cursus-title="' + data['title'] +'"' +
+                                '>' +
+                                    '<i class="fa fa-plus-circle"></i>' +
+                                    Translator.trans('create_course', {}, 'cursus') +
+                                '</a>' +
+                            '</li>' +
                             '<li role="presentation">' +
                                 '<a role="menuitem"' +
                                    ' tabindex="-1"' +

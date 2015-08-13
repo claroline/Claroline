@@ -55,6 +55,17 @@
                     <li role="presentation">
                         <a role="menuitem"
                            tabindex="-1"
+                           class="pointer-hand create-course-to-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                           data-cursus-title="{{ cursus.getTitle() }}"
+                        >
+                            <i class="fa fa-plus-circle"></i>
+                            {{ 'create_course'|trans({}, 'cursus') }}
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
                            class="pointer-hand add-course-to-cursus-btn"
                            data-cursus-id="{{ cursusId }}"
                            data-cursus-title="{{ cursus.getTitle() }}"
