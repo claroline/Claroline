@@ -2,6 +2,8 @@
 
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% else %}
+    {% set workspace = pdf.getResourceNode().getWorkspace() %}
 {% endif %}
 
 {% extends layout %}
