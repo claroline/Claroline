@@ -1,9 +1,15 @@
 {% macro showCursus(cursus, hierarchy) %}
     {% set cursusId = cursus.getId() %}
     {% set cursusTitle = cursus.getTitle() %}
+    {% set details = cursus.getDetails() %}
 
     {% if cursus.getCourse() is empty %}
         <div class="cursus-element" data-cursus-id="{{ cursusId }}">
+            
+            {% if details['color'] is defined and details['color'] is not empty %}
+                <i class="fa fa-circle" style="color: {{ details['color'] }}"></i>
+                &nbsp;
+            {% endif %}
             <span class="pointer-hand view-cursus-btn"
                   data-cursus-id="{{ cursusId }}"
                   data-cursus-title="{{ cursusTitle }}"
@@ -46,6 +52,17 @@
                         </a>
                     </li>
                     <li role="presentation" class="divider"></li>
+                    <li role="presentation">
+                        <a role="menuitem"
+                           tabindex="-1"
+                           class="pointer-hand create-course-to-cursus-btn"
+                           data-cursus-id="{{ cursusId }}"
+                           data-cursus-title="{{ cursus.getTitle() }}"
+                        >
+                            <i class="fa fa-plus-circle"></i>
+                            {{ 'create_course'|trans({}, 'cursus') }}
+                        </a>
+                    </li>
                     <li role="presentation">
                         <a role="menuitem"
                            tabindex="-1"
@@ -96,6 +113,7 @@
     {% if hierarchy[cursusId] is defined %}
         <ul id="collapse-{{ cursusId }}"
             class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
         >
         {% for child in hierarchy[cursusId] %}
             <li id="cursus-row-{{ child.getId() }}"
@@ -106,7 +124,8 @@
         </ul>
     {% else %}
         <ul id="collapse-{{ cursusId }}"
-            class="collapse in cursus-children hidden"
+            class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
         >
         </ul>
     {% endif %}
@@ -131,6 +150,10 @@
             },
             {
                 'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                'href': path('claro_cursus_management_tool_menu')
+            },
+            {
+                'name': displayedWords['cursus'],
                 'href': path('claro_cursus_tool_index')
             },
             {
@@ -152,7 +175,7 @@
         {{ macros.flashBox() }}
         {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
         <br>
-        <div>
+        <div id="cursus-hierarchy">
             {{ showCursus(cursus, hierarchy) }}
         </div>
     </div>

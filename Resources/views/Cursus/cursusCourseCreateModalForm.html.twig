@@ -1,102 +1,62 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
-
-{% block title %}
-    {{ 
-        parent() ~
-        ' - ' ~
-        'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~
-        ' - ' ~
-        displayedWords['course'] ~
-        ' - ' ~ 
-        'course_creation'|trans({}, 'cursus')
-    }}
-{% endblock %}
-
-{% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'claroline_cursus_tool'|trans({}, 'tools'),
-                'href': path('claro_cursus_management_tool_menu')
-            },
-            {
-                'name': displayedWords['course'],
-                'href': path('claro_cursus_tool_course_index')
-            },
-            {
-                'name': 'course_creation'|trans({}, 'cursus'),
-                'href': ''
-            }
-        ])
-    }}
-{% endblock %}
-
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'course_creation'|trans({}, 'cursus') }}
-        </h3>
-    </div>
-    <form action="{{ path('claro_cursus_course_create') }}" 
-          method="POST"
-          {{ form_enctype(form) }}
-          novalidate
-    >
-        <div class="panel-body">
-            {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
-            <br>
-            
-            {{ form_widget(form) }}
-            <div id="role-name-choice">
-                <div class="form-group row">
-                    <label class="control-label col-md-3"
-                           for="course_form_tutorRoleName"
-                    >
-                        {{ 'course_form_tutorRoleName'|trans({}, 'cursus') }}
-                    </label>
-                    <div class="col-md-9">
-                        <select id="tutor-role-name-choice"
-                                class="form-control"
-                        >
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label class="control-label col-md-3"
-                           for="course_form_learnerRoleName"
-                    >
-                        {{ 'course_form_learnerRoleName'|trans({}, 'cursus') }}
-                    </label>
-                    <div class="col-md-9">
-                        <select id="learner-role-name-choice"
-                                class="form-control"
-                        >
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">
-                {{ 'ok'|trans({}, 'platform') }}
+<div id="modal-course-create-form" class="modal-dialog" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
             </button>
-            <a href="{{ path('claro_cursus_tool_course_index') }}"
-               class="btn btn-default" 
-               role="button"
-            >
-                {{ 'cancel'|trans({}, 'platform') }}
-            </a>
+            <h3 class="modal-title">
+                {{ 'course_creation'|trans({}, 'cursus') }}
+            </h3>
         </div>
-    </form>
-{% endblock %}
+        <div class="modal-body">
+            <form id="course-create-form"
+                  action="{{ path('claro_cursus_course_into_cursus_create', {'cursus': cursus.getId()}) }}"
+                  method="POST"
+                  {{ form_enctype(form) }}
+            > 
+                {{ form_widget(form) }}
+                <div id="role-name-choice">
+                    <div class="form-group row">
+                        <label class="control-label col-md-3"
+                               for="course_form_tutorRoleName"
+                        >
+                            {{ 'course_form_tutorRoleName'|trans({}, 'cursus') }}
+                        </label>
+                        <div class="col-md-9">
+                            <select id="tutor-role-name-choice"
+                                    class="form-control"
+                            >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-md-3"
+                               for="course_form_learnerRoleName"
+                        >
+                            {{ 'course_form_learnerRoleName'|trans({}, 'cursus') }}
+                        </label>
+                        <div class="col-md-9">
+                            <select id="learner-role-name-choice"
+                                    class="form-control"
+                            >
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='create-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>
 
 {% block javascripts %}
-    {{ parent() }}
     <script type="text/javascript">
         
         function manageModelValue()

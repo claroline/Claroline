@@ -13,6 +13,7 @@ namespace Claroline\CursusBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
@@ -29,28 +30,32 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CursusRegistrationController extends Controller
 {
-    private $cursusManager;
     private $authorization;
+    private $cursusManager;
+    private $platformConfigHandler;
     private $toolManager;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
-        CursusManager $cursusManager,
         AuthorizationCheckerInterface $authorization,
+        CursusManager $cursusManager,
+        PlatformConfigurationHandler $platformConfigHandler,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
     {
-        $this->cursusManager = $cursusManager;
         $this->authorization = $authorization;
+        $this->cursusManager = $cursusManager;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -127,8 +132,14 @@ class CursusRegistrationController extends Controller
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
         }
 
-        $searchedCursus = $this->cursusManager
-            ->getSearchedCursus($search, $orderedBy, $order, $page, $max);
+        $searchedCursus = $this->cursusManager->getAllCursus(
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
         $rootIds = array();
 
         foreach ($searchedCursus as $cursus) {
@@ -146,7 +157,7 @@ class CursusRegistrationController extends Controller
             $roots[$cursusRoot->getId()] = $cursusRoot;
         }
         // To reduce DB queries only
-        $courses = $this->cursusManager->getAllCourses();
+        $courses = $this->cursusManager->getAllCourses('', 'id', 'ASC', false);
 
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
@@ -261,22 +272,15 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
 
-        $groups = $search === '' ?
-            $this->cursusManager->getUnregisteredGroupsByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getSearchedUnregisteredGroupsByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $groups = $this->cursusManager->getUnregisteredGroupsByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -318,22 +322,15 @@ class CursusRegistrationController extends Controller
     {
         $this->checkToolAccess();
 
-        $users = $search === '' ?
-            $this->cursusManager->getUnregisteredUsersByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getSearchedUnregisteredUsersByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $users = $this->cursusManager->getUnregisteredUsersByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -438,6 +435,16 @@ class CursusRegistrationController extends Controller
         $root = 0;
         $cursusRoot = null;
         $registrationDate = new \DateTime();
+        $configStartDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ?
+            null :
+            new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ?
+            null :
+            new \DateTime($configEndDate);
 
         foreach ($sessions as $session) {
             $course = $session->getCourse();
@@ -474,7 +481,9 @@ class CursusRegistrationController extends Controller
                 $authenticatedUser,
                 $sessionName,
                 $cursusRoot,
-                $registrationDate
+                $registrationDate,
+                $startDate,
+                $endDate
             );
             $sessions[] = $session;
         }
@@ -503,7 +512,7 @@ class CursusRegistrationController extends Controller
      *      options={"multipleIds" = true, "name" = "userIds"}
      * )
      *
-     * @param Cursus $cursus
+     * @param Cursus[] $multipleCursus
      * @param User[] $users
      */
     public function cursusUsersRegisterToMultipleCursusAction(
@@ -610,6 +619,16 @@ class CursusRegistrationController extends Controller
         $root = 0;
         $cursusRoot = null;
         $registrationDate = new \DateTime();
+        $configStartDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_start_date');
+        $configEndDate = $this->platformConfigHandler
+            ->getParameter('cursusbundle_default_session_end_date');
+        $startDate = empty($configStartDate) ?
+            null :
+            new \DateTime($configStartDate);
+        $endDate = empty($configEndDate) ?
+            null :
+            new \DateTime($configEndDate);
 
         foreach ($sessions as $session) {
             $course = $session->getCourse();
@@ -639,7 +658,9 @@ class CursusRegistrationController extends Controller
                 $authenticatedUser,
                 $sessionName,
                 $cursusRoot,
-                $registrationDate
+                $registrationDate,
+                $startDate,
+                $endDate
             );
             $sessions[] = $session;
         }

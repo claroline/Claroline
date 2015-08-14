@@ -20,8 +20,10 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
+use Claroline\CursusBundle\Form\CursusCourseType;
 use Claroline\CursusBundle\Form\CursusType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -36,36 +38,40 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class CursusController extends Controller
 {
+    private $authorization;
     private $cursusManager;
     private $formFactory;
+    private $platformConfigHandler;
     private $request;
-    private $authorization;
     private $toolManager;
     private $translator;
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
+        AuthorizationCheckerInterface $authorization,
         CursusManager $cursusManager,
         FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
-        AuthorizationCheckerInterface $authorization,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
     {
+        $this->authorization = $authorization;
         $this->cursusManager = $cursusManager;
         $this->formFactory = $formFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
-        $this->authorization = $authorization;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -75,6 +81,28 @@ class CursusController extends Controller
      * Cursus methods *
      ******************/
 
+    /**
+     * @EXT\Route(
+     *     "/cursus/management/tool/menu",
+     *     name="claro_cursus_management_tool_menu"
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function cursusManagementToolMenuAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+
+        return array(
+            'defaultWords' => CursusDisplayedWord::$defaultKey,
+            'displayedWords' => $displayedWords
+        );
+    }
 
     /**
      * @EXT\Route(
@@ -143,6 +171,9 @@ class CursusController extends Controller
             } else {
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
+            $color = $form->get('color')->getData();
+            $details = array('color' => $color);
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
@@ -175,7 +206,7 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CursusType(),
+            new CursusType($cursus),
             $cursus
         );
 
@@ -200,12 +231,21 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $form = $this->formFactory->create(
-            new CursusType(),
+            new CursusType($cursus),
             $cursus
         );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $color = $form->get('color')->getData();
+            $details = $cursus->getDetails();
+
+            if (is_null($details)) {
+                $details = array('color' => $color);
+            } else {
+                $details['color'] = $color;
+            }
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             $message = $this->translator->trans(
@@ -411,6 +451,9 @@ class CursusController extends Controller
             } else {
                 $cursus->setCursusOrder(intval($orderMax) + 1);
             }
+            $color = $form->get('color')->getData();
+            $details = array('color' => $color);
+            $cursus->setDetails($details);
             $this->cursusManager->persistCursus($cursus);
 
             return new JsonResponse(
@@ -460,22 +503,15 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
 
-        $courses = $search === '' ?
-            $this->cursusManager->getUnmappedCoursesByCursus(
-                $cursus,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            ) :
-            $this->cursusManager->getUnmappedSearchedCoursesByCursus(
-                $cursus,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
+        $courses = $this->cursusManager->getUnmappedCoursesByCursus(
+            $cursus,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
 
         return array(
             'cursus' => $cursus,
@@ -621,6 +657,61 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
+     *     "cursus/{cursus}/course/create/form",
+     *     name="claro_cursus_course_into_cursus_create_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
+     */
+    public function cursusCourseCreateFormAction(User $authenticatedUser, Cursus $cursus)
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), new Course());
+
+        return array(
+            'form' => $form->createView(),
+            'cursus' => $cursus
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/course/create",
+     *     name="claro_cursus_course_into_cursus_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
+     */
+    public function cursusCourseCreateAction(User $authenticatedUser, Cursus $cursus)
+    {
+        $this->checkToolAccess();
+        $course = new Course();
+        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), $course);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->cursusManager->persistCourse($course);
+            $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
+            $results = array();
+
+            foreach ($createdCursus as $created) {
+                $results[] = array('id' => $created->getId(), 'title' => $created->getTitle());
+            }
+
+            return new JsonResponse($results, 200);
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'cursus' => $cursus
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
      *     "cursus/{cursus}/order/update/with/cursus/{otherCursus}/mode/{mode}",
      *     name="claro_cursus_update_order",
      *     options={"expose"=true}
@@ -652,6 +743,34 @@ class CursusController extends Controller
         }
     }
 
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/update/parent/{parent}/order/with/cursus/{nextCursusId}",
+     *     name="claro_cursus_update_parent_and_order",
+     *     defaults={"nextCursusId"=-1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function updateCursusParentAndOrderAction(
+        Cursus $cursus,
+        Cursus $parent,
+        $nextCursusId = -1
+    )
+    {
+        $this->checkToolAccess();
+
+        if ($nextCursusId === -1) {
+            $order = -1;
+        } else {
+            $nextCursus = $this->cursusManager->getOneCursusById($nextCursusId);
+            $order = is_null($nextCursus) ? -1 : $nextCursus->getCursusOrder();
+        }
+        $this->cursusManager->updateCursusParentAndOrder($cursus, $parent, $order);
+
+        return new JsonResponse('success', 204);
+    }
+
 
     /********************************
      * Plugin configuration methods *
@@ -676,7 +795,7 @@ class CursusController extends Controller
         }
 
         $form = $this->formFactory->create(
-            new PluginConfigurationType(),
+            new PluginConfigurationType($this->platformConfigHandler),
             $this->cursusManager->getConfirmationEmail()
         );
 
@@ -706,8 +825,14 @@ class CursusController extends Controller
 
         $formData = $this->request->get('cursus_plugin_configuration_form');
         $this->cursusManager->persistConfirmationEmail($formData['content']);
+        $this->platformConfigHandler->setParameters(
+            array(
+                'cursusbundle_default_session_start_date' => $formData['startDate'],
+                'cursusbundle_default_session_end_date' => $formData['endDate'],
+            )
+        );
         $form = $this->formFactory->create(
-            new PluginConfigurationType(),
+            new PluginConfigurationType($this->platformConfigHandler),
             $this->cursusManager->getConfirmationEmail()
         );
 
@@ -758,7 +883,6 @@ class CursusController extends Controller
      * Widget methods *
      ******************/
 
-
     /**
      * @EXT\Route(
      *     "/courses/registration/widget/{widgetInstance}",
@@ -797,26 +921,24 @@ class CursusController extends Controller
         $configCursus = $config->getCursus();
 
         if (is_null($configCursus)) {
-            $courses = $search === '' ?
-                $this->cursusManager->getAllCourses($orderedBy, $order, $page, $max) :
-                $this->cursusManager->getSearchedCourses($search, $orderedBy, $order, $page, $max);
+            $courses = $this->cursusManager->getAllCourses(
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         } else {
-            $courses = $search === '' ?
-                $this->cursusManager->getDescendantCoursesByCursus(
-                    $configCursus,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                ) :
-                $this->cursusManager->getDescendantSearchedCoursesByCursus(
-                    $configCursus,
-                    $search,
-                    $orderedBy,
-                    $order,
-                    $page,
-                    $max
-                );
+            $courses = $this->cursusManager->getDescendantCoursesByCursus(
+                $configCursus,
+                $search,
+                $orderedBy,
+                $order,
+                true,
+                $page,
+                $max
+            );
         }
         $coursesArray = array();
 
@@ -999,6 +1121,74 @@ class CursusController extends Controller
                 'config' => $config
             );
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}",
+     *     name="claro_cursus_my_courses_widget",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidget.html.twig")
+     */
+    public function myCoursesWidgetAction(WidgetInstance $widgetInstance)
+    {
+        return array('widgetInstance' => $widgetInstance);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/my/courses/widget/{widgetInstance}/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_cursus_my_courses_list_for_widget",
+     *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidget.html.twig")
+     */
+    public function myCoursesListForWidgetAction(
+        User $authenticatedUser,
+        WidgetInstance $widgetInstance,
+        $search = '',
+        $page = 1,
+        $max = 20,
+        $orderedBy = 'title',
+        $order = 'ASC'
+    )
+    {
+        $courses = $this->cursusManager->getCoursesByUser(
+            $authenticatedUser,
+            $search,
+            $orderedBy,
+            $order,
+            true,
+            $page,
+            $max
+        );
+        $sessionUsers = $this->cursusManager->getSessionUsersByUser($authenticatedUser);
+        $workspacesList = array();
+
+        foreach ($sessionUsers as $sessionUser) {
+            $session = $sessionUser->getSession();
+            $course = $session->getCourse();
+            $workspace = $session->getWorkspace();
+
+            if (!is_null($workspace)) {
+                $workspacesList[$course->getId()] = $workspace;
+            }
+        }
+
+        return array(
+            'widgetInstance' => $widgetInstance,
+            'courses' => $courses,
+            'search' => $search,
+            'page' => $page,
+            'max' => $max,
+            'orderedBy' => $orderedBy,
+            'order' => $order,
+            'workspacesList' => $workspacesList
+        );
     }
 
     private function checkToolAccess()

@@ -11,10 +11,14 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\Course;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,22 +34,29 @@ class Cursus
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
     
     /**
      * @ORM\Column(unique=true, nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("code")
      */
     protected $code;
     
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
+     * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
 
@@ -54,16 +65,20 @@ class Cursus
      *     targetEntity="Claroline\CursusBundle\Entity\Course"
      * )
      * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups({"api"})
      */
     protected $course;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("blocking")
      */
     protected $blocking = false;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api"})
      */
     protected $details;
 
@@ -87,6 +102,8 @@ class Cursus
 
     /**
      * @ORM\Column(name="cursus_order", type="integer")
+     * @Groups({"api"})
+     * @SerializedName("cursusOrder")
      */
     protected $cursusOrder;
 
@@ -112,26 +129,42 @@ class Cursus
     protected $icon;
 
     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
+     * )
+     * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $workspace;
+
+    /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("root")
      */
     private $root;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
+     * @Groups({"api"})
+     * @SerializedName("lvl")
      */
     private $lvl;
 
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
+     * @Groups({"api"})
+     * @SerializedName("lft")
      */
     private $lft;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
+     * @Groups({"api"})
+     * @SerializedName("rgt")
      */
     private $rgt;
 
@@ -257,6 +290,16 @@ class Cursus
         $this->icon = $icon;
     }
 
+    public function getWorkspace()
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(Workspace $workspace = null)
+    {
+        $this->workspace = $workspace;
+    }
+
     public function getRoot()
     {
         return $this->root;
@@ -306,5 +349,15 @@ class Cursus
         }
 
         return $result;
+    }
+
+    /**
+     * @Groups({"api"})
+     * @VirtualProperty
+     * @SerializedName("parentId")
+     */
+    public function getParentId()
+    {
+        return is_null($this->parent) ? null : $this->parent->getId();
     }
 }

@@ -14,6 +14,8 @@ namespace Claroline\CursusBundle\Entity;
 use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,38 +30,51 @@ class Course
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api"})
      */
     protected $id;
     
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
+     * @Groups({"api"})
+     * @SerializedName("code")
      */
     protected $code;
     
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api"})
+     * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("description")
      */
     protected $description;
     
     /**
      * @ORM\Column(name="public_registration", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
+     * @Groups({"api"})
+     * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
 
@@ -86,11 +101,14 @@ class Course
      *     targetEntity="Claroline\CursusBundle\Entity\CourseSession",
      *     mappedBy="course"
      * )
+     * @Groups({"api"})
      */
     protected $sessions;
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api"})
+     * @SerializedName("icon")
      */
     protected $icon;
 

@@ -33,20 +33,6 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findAllRootCursus($executeQuery = true)
-    {
-    	$dql = '
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.parent IS NULL
-        ';
-    	$query = $this->_em->createQuery($dql);
-
-    	return $executeQuery ?
-            $query->getResult() :
-            $query;
-    }
-
     public function findSearchedCursus(
         $search = '',
         $orderedBy = 'title',
@@ -68,6 +54,48 @@ class CursusRepository extends NestedTreeRepository
         $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findAllRootCursus(
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+    	$dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent IS NULL
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+    	$query = $this->_em->createQuery($dql);
+
+    	return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedRootCursus(
+        $search = '',
+        $orderedBy = 'id',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+    	$dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent IS NULL
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+                OR UPPER(cc.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+    	$query = $this->_em->createQuery($dql);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+    	return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findLastRootCursusOrder($executeQuery = true)
@@ -262,6 +290,53 @@ class CursusRepository extends NestedTreeRepository
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('group', $group);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findCursusByParent(
+        Cursus $parent,
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent = :parent
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('parent', $parent);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedCursusByParent(
+        Cursus $parent,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            LEFT JOIN c.course cc
+            WHERE c.parent = :parent
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+                OR UPPER(cc.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('parent', $parent);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
     }

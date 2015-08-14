@@ -39,6 +39,23 @@ class CourseSessionUserRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
+    public function findSessionUsersByUser(
+        User $user,
+        $executeQuery = true
+    )
+    {
+        $dql = '
+            SELECT csu
+            FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+            WHERE csu.user = :user
+            ORDER BY csu.registrationDate DESC
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     public function findSessionUsersBySession(
         CourseSession $session,
         $executeQuery = true

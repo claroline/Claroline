@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\Cursus;
 use Doctrine\ORM\EntityRepository;
 
@@ -166,6 +167,63 @@ class CourseRepository extends EntityRepository
         $query->setParameter('root', $cursus->getRoot());
         $query->setParameter('left', $cursus->getLft());
         $query->setParameter('right', $cursus->getRgt());
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findCoursesByUser(
+        User $user,
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE EXISTS (
+                SELECT csu
+                FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+                JOIN csu.session csus
+                WHERE csu.user = :user
+                AND csus.course = c
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedCoursesByUser(
+        User $user,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Course c
+            WHERE EXISTS (
+                SELECT csu
+                FROM Claroline\CursusBundle\Entity\CourseSessionUser csu
+                JOIN csu.session csus
+                WHERE csu.user = :user
+                AND csus.course = c
+            )
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
         $upperSearch = strtoupper($search);
         $query->setParameter('search', "%{$upperSearch}%");
 
