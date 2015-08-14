@@ -182,6 +182,7 @@ class ResourceManager
         $node->setParent($parent);
         $node->setName($name);
         $node->setClass(get_class($resource));
+        $node->setGuid($this->ut->generateGuid());
         if ($parent) $this->setLastIndex($parent, $node);
 
         if (!is_null($parent)) {

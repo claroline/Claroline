@@ -111,6 +111,7 @@ class SimpleTextWidgetListener
         if (!is_null($widgetConfig)) {
             $widgetConfigCopy = new SimpleTextConfig();
             $widgetConfigCopy->setWidgetInstance($copy);
+            $content = $widgetConfig->getContent();
             $widgetConfigCopy->setContent($widgetConfig->getContent());
 
             $this->om->persist($widgetConfigCopy);
