@@ -241,43 +241,37 @@
 //        }
 //    );
 
-    $('.cursus-children').sortable({
-        items: '> li',
+    $('#cursus-hierarchy').sortable({
+        items: 'li',
         cursor: 'move'
     });
 
-    $('.cursus-children').on('sortupdate', function (event, ui) {
-
-        if (this === ui.item.parents('.cursus-children')[0]) {
-            var cursusId = $(ui.item).data('cursus-id');
-            var otherCursusId = $(ui.item).next().data('cursus-id');
-            var mode = 'previous';
-            var execute = false;
-
-            if (otherCursusId !== undefined) {
-                mode = 'next';
-                execute = true;
-            } else {
-                otherCursusId = $(ui.item).prev().data('cursus-id');
-
-                if (otherCursusId !== undefined) {
-                    execute = true;
-                }
-            }
-
-            if (execute) {
-                $.ajax({
-                    url: Routing.generate(
-                        'claro_cursus_update_order',
-                        {
-                            'cursus': cursusId,
-                            'otherCursus': otherCursusId,
-                            'mode': mode
-                        }
-                    ),
-                    type: 'POST'
-                });
-            }
+    $('#cursus-hierarchy').on('sortupdate', function (event, ui) {
+        var cursusId = $(ui.item).data('cursus-id');
+        var nextCursusId = $(ui.item).next().data('cursus-id');
+        var parentCursusId = $(ui.item).parent().data('cursus-id');
+        
+        if (parentCursusId !== undefined) {
+            var route = (nextCursusId !== undefined) ?
+                Routing.generate(
+                    'claro_cursus_update_parent_and_order',
+                    {
+                        'cursus': cursusId,
+                        'parent': parentCursusId,
+                        'nextCursusId': nextCursusId
+                    }
+                ) :
+                Routing.generate(
+                    'claro_cursus_update_parent_and_order',
+                    {
+                        'cursus': cursusId,
+                        'parent': parentCursusId
+                    }
+                );
+            $.ajax({
+                url: route,
+                type: 'POST'
+            });
         }
     });
     

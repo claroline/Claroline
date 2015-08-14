@@ -293,4 +293,51 @@ class CursusRepository extends NestedTreeRepository
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
+    public function findCursusByParent(
+        Cursus $parent,
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            WHERE c.parent = :parent
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('parent', $parent);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findSearchedCursusByParent(
+        Cursus $parent,
+        $search = '',
+        $orderedBy = 'title',
+        $order = 'ASC',
+        $executeQuery = true
+    )
+    {
+        $dql = "
+            SELECT c
+            FROM Claroline\CursusBundle\Entity\Cursus c
+            LEFT JOIN c.course cc
+            WHERE c.parent = :parent
+            AND (
+                UPPER(c.title) LIKE :search
+                OR UPPER(c.code) LIKE :search
+                OR UPPER(cc.code) LIKE :search
+            )
+            ORDER BY c.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('parent', $parent);
+        $upperSearch = strtoupper($search);
+        $query->setParameter('search', "%{$upperSearch}%");
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

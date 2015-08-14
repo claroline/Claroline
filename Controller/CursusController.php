@@ -743,6 +743,34 @@ class CursusController extends Controller
         }
     }
 
+    /**
+     * @EXT\Route(
+     *     "cursus/{cursus}/update/parent/{parent}/order/with/cursus/{nextCursusId}",
+     *     name="claro_cursus_update_parent_and_order",
+     *     defaults={"nextCursusId"=-1},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function updateCursusParentAndOrderAction(
+        Cursus $cursus,
+        Cursus $parent,
+        $nextCursusId = -1
+    )
+    {
+        $this->checkToolAccess();
+
+        if ($nextCursusId === -1) {
+            $order = -1;
+        } else {
+            $nextCursus = $this->cursusManager->getOneCursusById($nextCursusId);
+            $order = is_null($nextCursus) ? -1 : $nextCursus->getCursusOrder();
+        }
+        $this->cursusManager->updateCursusParentAndOrder($cursus, $parent, $order);
+
+        return new JsonResponse('success', 204);
+    }
+
 
     /********************************
      * Plugin configuration methods *

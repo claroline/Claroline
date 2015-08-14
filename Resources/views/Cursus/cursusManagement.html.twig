@@ -113,6 +113,7 @@
     {% if hierarchy[cursusId] is defined %}
         <ul id="collapse-{{ cursusId }}"
             class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
         >
         {% for child in hierarchy[cursusId] %}
             <li id="cursus-row-{{ child.getId() }}"
@@ -123,7 +124,8 @@
         </ul>
     {% else %}
         <ul id="collapse-{{ cursusId }}"
-            class="collapse in cursus-children hidden"
+            class="collapse in cursus-children"
+            data-cursus-id="{{ cursusId }}"
         >
         </ul>
     {% endif %}
@@ -173,7 +175,7 @@
         {{ macros.flashBox() }}
         {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
         <br>
-        <div>
+        <div id="cursus-hierarchy">
             {{ showCursus(cursus, hierarchy) }}
         </div>
     </div>

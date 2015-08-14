@@ -535,6 +535,49 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
+    public function updateCursusParentAndOrder(
+        Cursus $cursus,
+        Cursus $parent = null,
+        $cursusOrder = -1
+    )
+    {
+        if ($cursus->getParent() !== $parent || $cursus->getCursusOrder() !== $cursusOrder) {
+            $cursusList = is_null($parent) ?
+                $this->getAllRootCursus('', 'cursusOrder', 'ASC') :
+                $this->getCursusByParent($parent);
+            $cursus->setParent($parent);
+            $i = 1;
+            $updated = false;
+
+            $this->om->startFlushSuite();
+
+            foreach ($cursusList as $oneCursus) {
+
+                if ($oneCursus->getId() === $cursus->getId()) {
+                    continue;
+                } else {
+                    $currentOrder = $oneCursus->getCursusOrder();
+
+                    if ($currentOrder === $cursusOrder) {
+                        $cursus->setCursusOrder($i);
+                        $this->om->persist($cursus);
+                        $updated = true;
+                        $i++;
+                    }
+                    $oneCursus->setCursusOrder($i);
+                    $this->om->persist($oneCursus);
+                    $i++;
+                }
+            }
+
+            if (!$updated) {
+                $cursus->setCursusOrder($i);
+                $this->om->persist($cursus);
+            }
+            $this->om->endFlushSuite();
+        }
+    }
+
     public function updateCursusOrder(Cursus $cursus, $cursusOrder)
     {
         $this->updateCursusOrderByParent($cursusOrder, $cursus->getParent());
@@ -1339,6 +1382,25 @@ class CursusManager
     public function getCursusByGroup(Group $group, $executeQuery = true)
     {
         return $this->cursusRepo->findCursusByGroup($group, $executeQuery);
+    }
+
+    public function getCursusByParent(
+        Cursus $parent,
+        $search = '',
+        $orderedBy = 'cursusOrder',
+        $order = 'ASC',
+        $withPager = false,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $cursus = empty($search) ?
+            $this->cursusRepo->findCursusByParent($parent, $orderedBy, $order) :
+            $this->cursusRepo->findSearchedCursusByParent($parent, $search, $orderedBy, $order);
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($cursus, $page, $max) :
+            $cursus;
     }
 
 
