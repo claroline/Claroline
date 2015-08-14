@@ -161,6 +161,9 @@ class UserManager
                 $this->mailManager->sendCreationMessage($user);
             }
         }
+        
+        $this->container->get('claroline.event.event_dispatcher')
+            ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
 
         return $user;
     }
