@@ -270,7 +270,7 @@ correction n°%nb_correction%/%expected_correction%: 'correction n°%nb_correcti
 waiting for correction: 'En attente de correction'
 corrected copy: 'Document corrigé, évaluation terminée'
 Dropzone progress: 'Etat d''avancement de votre évaluation'
-Choose a resource: 'Choisissez une ressource'
+Choose a resource: 'Ajoutez une ressource'
 Auto close opened drops when time is up: 'Evaluer automatiquement les documents non terminés lorsque la date de fin du dépot est atteinte'
 People will not be able to drop anymore: 'Les utilisateurs ne pourront plus déposer/terminer de document'
 Do you want to valid all drop started but not validated yet ?: 'Voulez-vous Evaluer automatiquement toutes les travaux commencés qui n''ont pas encore été terminées ?'
