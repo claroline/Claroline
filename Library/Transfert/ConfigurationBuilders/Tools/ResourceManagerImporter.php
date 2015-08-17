@@ -229,25 +229,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         foreach ($data['data']['root']['roles'] as $role) {
             $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
         }
-
-        //We need to force the flush in order to add the rich text.
-        //$this->om->forceFlush();
-
-        /*************/
-        /* RICH TEXT */
-        /*************/
-
-        /*
-        if (isset($data['data']['items'])) {
-            foreach ($data['data']['items'] as $item) {
-                if (isset ($item['item']['is_rich'])) {
-                    if ($item['item']['is_rich']) {
-                        $this->getImporterByName($item['item']['type'])
-                            ->format($res, array('directories' => $directories, 'items' => $resourceNodes));
-                    }
-                }
-            }
-        }*/
     }
 
     public function importResources(array $data, $workspace, ResourceNode $root)
@@ -389,7 +370,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $children = $resourceNode->getChildren();
 
             foreach ($children as $child) {
-                if ($child->getResourceType()->getName() !== 'directory') {
+                $child = $this->resourceManager->getRealTarget($child, false);
+
+                if ($child && $child->getResourceType()->getName() !== 'directory') {
                     $importer = $this->getImporterByName($child->getResourceType()->getName());
                     $childData = array();
 

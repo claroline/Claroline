@@ -1754,4 +1754,22 @@ class ResourceManager
 
         return $lastIndex;
     }
+
+    public function getRealTarget(ResourceNode $node, $throwException = true)
+    {
+        if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            $resource = $this->getResourceFromNode($node);
+            if ($resource === null) {
+                if ($throwException) throw new \Exception('The resource was removed.');
+                return null;
+            }
+            $node = $resource->getTarget();
+            if ($node === null) {
+                if ($throwException) throw new \Exception('The node target was removed.');
+                return null;
+            }
+        }
+
+        return $node;
+    }
 }

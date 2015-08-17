@@ -376,7 +376,7 @@ class Workspace
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
     }
