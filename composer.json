@@ -2,7 +2,7 @@
     "name": "innova/collecticiel-bundle",
     "license": "MIT",
     "type": "project",
-    "description": "Innova Collecticiel",
+    "description": "Collecticiel",
     "type": "claroline-plugin",
     "require": {
         "php": ">=5.4.1",
