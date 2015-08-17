@@ -257,7 +257,7 @@ default sort: 'Tri par défaut'
 no reported copies: 'Aucun document signalée'
 Examiners : 'Correcteurs'
 Empty field warning: "Attention, certains champs ne sont pas vides, il ne seront pas intégrés dans le document tant que vous n''aurez pas cliqué sur le bouton 'Ajouter'. Seuls les documents listés en haut feront parti du travail."
-Documents added  the copy: 'Documents déposés'
+Documents added  the copy %nom% %prenom% %pseudo%: 'Espace "%nom% %prenom% (%pseudo%)"'
 no document added yet: 'aucun document ajouté pour l''instant'
 Instructions for examiners: 'Instructions spécifiques aux correcteurs'
 Examiners Instructions: 'Instructions aux correcteurs'
