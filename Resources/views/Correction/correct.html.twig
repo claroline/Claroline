@@ -66,9 +66,9 @@
 
 
         {% if admin %}
-            <h2 class="{% if correction.reporter %}text-danger{% endif %}">
+        <!--    <h2 class="{% if correction.reporter %}text-danger{% endif %}">
                 {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
-            </h2>
+            </h2>-->
             {{ macros.flashBox() }}
 
             {# Bloc "Retour aux corrections ..." #}
@@ -92,7 +92,8 @@
 
             {# Bloc "Rappel des instructions ..." #}
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+            {#    {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %} #}
+                {{ dropzone.instruction|raw }}
                 <br/>
             {% endif %}
 

@@ -19,3 +19,7 @@ input.form-control {
 .del_btn_td {
     margin: auto;
 }
+
+.table thead > tr > th {
+    vertical-align: middle;
+}
