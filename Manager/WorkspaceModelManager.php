@@ -485,7 +485,8 @@ class WorkspaceModelManager
     private function duplicateHomeTabs(
         Workspace $source,
         Workspace $workspace,
-        array $homeTabs
+        array $homeTabs,
+        $resourceInfos
     )
     {
         $this->om->startFlushSuite();
@@ -580,7 +581,7 @@ class WorkspaceModelManager
                         $this->dispatcher->dispatch(
                             'copy_widget_config_' . $widget->getName(),
                             'CopyWidgetConfiguration',
-                            array($widgetInstance, $newWidgetInstance)
+                            array($widgetInstance, $newWidgetInstance, $resourceInfos)
                         );
                     } catch (NotPopulatedEventException $e) {
                         $widgetCongigErrors[] = array(
@@ -607,7 +608,8 @@ class WorkspaceModelManager
         array $resourcesModels,
         Directory $rootDirectory,
         Workspace $workspace,
-        User $user
+        User $user,
+        &$resourcesInfos
     )
     {
         $this->om->startFlushSuite();
@@ -629,7 +631,7 @@ class WorkspaceModelManager
                         false,
                         false
                     );
-                    $copies[] = $copy;
+                    $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy);
                 } catch (NotPopulatedEventException $e) {
                     $resourcesErrors[] = array(
                         'resourceName' => $resourceNode->getName(),
@@ -821,16 +823,20 @@ class WorkspaceModelManager
         $modelWorkspace = $model->getWorkspace();
         $resourcesModels = $model->getResourcesModel();
         $homeTabs = $model->getHomeTabs();
+        $resourcesInfos = array();
 
         $this->duplicateWorkspaceRoles($modelWorkspace, $workspace, $user);
         $this->duplicateOrderedTools($modelWorkspace, $workspace);
         $rootDirectory = $this->duplicateRootDirectory($modelWorkspace, $workspace, $user);
-        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray());
         $errors['resourceErrors'] = $this->duplicateResources(
             $resourcesModels->toArray(),
             $rootDirectory,
             $workspace,
-            $user
+            $user,
+            $resourcesInfos
         );
+        $this->om->forceFlush();
+        
+        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
     }
 }
