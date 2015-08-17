@@ -92,7 +92,8 @@
 
             {# Bloc "Rappel des instructions ..." #}
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+            {#    {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %} #}
+                {{ dropzone.instruction|raw }}
                 <br/>
             {% endif %}
 
