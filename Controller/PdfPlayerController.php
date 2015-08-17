@@ -39,8 +39,7 @@ class PdfPlayerController extends Controller
             }
         );
         $response->headers->set('Content-Type', $node->getMimeType());
-        $response->send();
-
-        return new Response();
+        
+        return $response->send();
     }
 }
