@@ -2,7 +2,7 @@ services:
     # Path importer
     innova_path.importer.importer:
         class: %innova_path.importer.importer.class%
-        # arguments:
-        #    pathManager: @innova_path.manager.path
+        calls:
+            - [setContainer, ["@service_container"]]
         tags:
             - { name: claroline.importer }

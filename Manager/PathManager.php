@@ -259,14 +259,14 @@ class PathManager
         $data['modified']    = $path->isModified();
 
         // Get Steps if Path is published
-        $data['steps'] = array ();
+        /*$data['steps'] = array ();*/
 
-        if ($path->isPublished()) {
+        /*if ($path->isPublished()) {
             // Export each step
             foreach ($path->getSteps() as $step) {
 
             }
-        }
+        }*/
 
         return $data;
     }
@@ -274,6 +274,16 @@ class PathManager
     public function import(array $data)
     {
         $path = new Path();
+
+        $path->setBreadcrumbs(!empty($data['data']['breadcrumbs']) ? $data['data']['breadcrumbs'] : false);
+
+        if (!empty($data['data']['structure'])) {
+            $path->setStructure($data['data']['structure']);
+        } else {
+            $path->initializeStructure();
+        }
+
+        $path->setModified(!empty($data['data']['modified']) ? $data['data']['modified'] : false);
 
         return $path;
     }

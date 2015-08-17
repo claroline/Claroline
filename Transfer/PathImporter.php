@@ -3,28 +3,27 @@
 namespace Innova\PathBundle\Transfer;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Innova\PathBundle\Manager\PathManager;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class PathImporter extends Importer implements ConfigurationInterface
+class PathImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     /**
-     * Path manager
-     * @var \Innova\PathBundle\Manager\PathManager
+     * We need to inject the whole service container
+     * if we try to only inject PathManager, there is a crash because of a circular reference into services
+     *
+     * @var ContainerInterface
      */
-    protected $pathManager;
+    protected $container;
 
-    /**
-     * Class constructor
-     * @param \Innova\PathBundle\Manager\PathManager $pathManager
-     */
-    /*public function __construct(PathManager $pathManager)
+    public function setContainer(ContainerInterface $container = null)
     {
-        $this->pathManager = $pathManager;
-    }*/
+        $this->container = $container;
+    }
 
     /**
      * {@inheritdoc}
@@ -48,7 +47,7 @@ class PathImporter extends Importer implements ConfigurationInterface
                 ->scalarNode('description')->end()
                 ->scalarNode('structure')->end()
                 ->booleanNode('breadcrumbs')->end()
-                ->booleanNode('modified')->default(false)->end()
+                ->booleanNode('modified')->defaultFalse()->end()
 
                 // Steps
                 ->arrayNode('steps')
@@ -71,13 +70,18 @@ class PathImporter extends Importer implements ConfigurationInterface
         $processor->processConfiguration($this, $data);
     }
 
+    public function format($data)
+    {
+
+    }
+
     public function import(array $data, $name)
     {
-        return $this->pathManager->import($data);
+        return $this->container->get('innova_path.manager.path')->import($data);
     }
 
     public function export(Workspace $workspace, array &$files, $object)
     {
-        return $this->pathManager->export($workspace, $files, $object);
+        return $this->container->get('innova_path.manager.path')->export($workspace, $files, $object);
     }
 }
