@@ -66,12 +66,11 @@ tinymce.claroline.plugins = tinymce.claroline.plugins || {};
  * Tinymce setup
  */ 
  
-/**
 var tinymceSetup = function(editor) {
     $.each(tinymce.claroline.init, function(key, func) {
         func(editor);
     });
-}**/
+}
 
 var plugins = [
     'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
@@ -101,7 +100,7 @@ StepEditCtrl.prototype.tinymceOptions = {
     autoresize_max_height: 500,
     plugins: plugins, //j'ai repris la liste des plugins de ce fichier, mais sinon on peut aussi utiliser celle du tinymce du core bundle
     toolbar1: toolbar, //même chose pour la toolbar
-    setup: tinymce.claroline.setup, //à confirmer; sinon on peut remplacer par le tinymceSetup de ce fichier
+    //setup: tinymceSetup, //pour une raison que j'ignore, la détection auto du changement de description casse avec cette ligne
     paste_preprocess: function (plugin, args) { //on peut aussi utiliser le paste du CoreBundle (mais il est différent donc je n'en suis pas sûr, et puis le comportement doit peut-être être différent de toute façon).
         var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
         var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
