@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -256,7 +257,7 @@ class CursusManager
         }
     }
 
-    public function registerUserToCursus(Cursus $cursus, User $user)
+    public function registerUserToCursus(Cursus $cursus, User $user, $withWorkspace = true)
     {
         $cursusUser = $this->cursusUserRepo->findOneCursusUserByCursusAndUser(
             $cursus,
@@ -264,16 +265,26 @@ class CursusManager
         );
 
         if (is_null($cursusUser)) {
+            $this->om->startFlushSuite();
             $registrationDate = new \DateTime();
             $cursusUser = new CursusUser();
             $cursusUser->setCursus($cursus);
             $cursusUser->setUser($user);
             $cursusUser->setRegistrationDate($registrationDate);
             $this->persistCursusUser($cursusUser);
+
+            if ($withWorkspace) {
+                $this->registerToCursusWorkspace($user, $cursus);
+            }
+            $this->om->endFlushSuite();
         }
     }
 
-    public function registerUserToMultipleCursus(array $multipleCursus, User $user)
+    public function registerUserToMultipleCursus(
+        array $multipleCursus,
+        User $user,
+        $withWorkspace = true
+    )
     {
         $registrationDate = new \DateTime();
 
@@ -293,12 +304,20 @@ class CursusManager
                 $this->persistCursusUser($cursusUser);
                 $event = new LogCursusUserRegistrationEvent($cursus, $user);
                 $this->eventDispatcher->dispatch('log', $event);
+
+                if ($withWorkspace) {
+                    $this->registerToCursusWorkspace($user, $cursus);
+                }
             }
         }
         $this->om->endFlushSuite();
     }
 
-    public function registerUsersToMultipleCursus(array $multipleCursus, array $users)
+    public function registerUsersToMultipleCursus(
+        array $multipleCursus,
+        array $users,
+        $withWorkspace = true
+    )
     {
         $registrationDate = new \DateTime();
 
@@ -320,6 +339,10 @@ class CursusManager
                     $this->persistCursusUser($cursusUser);
                     $event = new LogCursusUserRegistrationEvent($cursus, $user);
                     $this->eventDispatcher->dispatch('log', $event);
+
+                    if ($withWorkspace) {
+                        $this->registerToCursusWorkspace($user, $cursus);
+                    }
                 }
             }
         }
@@ -331,12 +354,12 @@ class CursusManager
         $this->unregisterUsersFromCursus($cursus, array($user));
     }
 
-    public function registerUsersToCursus(Cursus $cursus, array $users)
+    public function registerUsersToCursus(Cursus $cursus, array $users, $withWorkspace = true)
     {
         $this->om->startFlushSuite();
 
         foreach ($users as $user) {
-            $this->registerUserToCursus($cursus, $user);
+            $this->registerUserToCursus($cursus, $user, $withWorkspace);
         }
         $this->om->endFlushSuite();
     }
@@ -411,7 +434,11 @@ class CursusManager
         $this->om->endFlushSuite();
     }
 
-    public function registerGroupToMultipleCursus(array $multipleCursus, Group $group)
+    public function registerGroupToMultipleCursus(
+        array $multipleCursus,
+        Group $group,
+        $withWorkspace = true
+    )
     {
         $registrationDate = new \DateTime();
 
@@ -429,8 +456,12 @@ class CursusManager
                 $cursusGroup->setGroup($group);
                 $cursusGroup->setRegistrationDate($registrationDate);
                 $this->persistCursusGroup($cursusGroup);
+
+                if ($withWorkspace) {
+                    $this->registerToCursusWorkspace($group, $cursus);
+                }
                 $users = $group->getUsers();
-                $this->registerUsersToCursus($cursus, $users->toArray());
+                $this->registerUsersToCursus($cursus, $users->toArray(), false);
             }
         }
         $this->om->endFlushSuite();
@@ -1246,6 +1277,16 @@ class CursusManager
     {
         $this->om->persist($config);
         $this->om->flush();
+    }
+
+    public function registerToCursusWorkspace(AbstractRoleSubject $ars, Cursus $cursus)
+    {
+        $workspace = $cursus->getWorkspace();
+
+        if (!is_null($workspace)) {
+            $collaborator = $this->roleManager->getCollaboratorRole($workspace);
+            $this->roleManager->associateRole($ars, $collaborator);
+        }
     }
 
 
