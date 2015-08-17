@@ -153,6 +153,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $position = 1;
 
         foreach ($tools as $tool) {
+            $otr = null;
             $toolEntity = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')
                 ->findOneByName($tool['tool']['type']);
 
