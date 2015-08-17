@@ -1,4 +1,4 @@
-formatDatetime: 'd/m/Y H:i'
+formatDatetime: 'd/m/Y (H:i)'
 Resource: 'Ressource'
 dropzone_edit: 'Modifier'
 Common: 'Général'
