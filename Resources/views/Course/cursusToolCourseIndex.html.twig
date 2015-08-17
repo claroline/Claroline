@@ -96,6 +96,11 @@
             </div>
         {% endif %}
         
+        <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-primary">
+            <i class="fa fa-plus-circle"></i>
+            {{ 'create_course'|trans({}, 'cursus') }}
+        </a>
+        
         {% if search != '' or courses|length > 0 %}
             <div class="input-group col-md-6 pull-right">
                 <input class="form-control search-course"
@@ -252,11 +257,6 @@
                 {{ 'no_course'|trans({}, 'cursus') }}
             </div>
         {% endif %}
-        
-        <br>
-        <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-default">
-            {{ 'create_course'|trans({}, 'cursus') }}
-        </a>
     </div>
 
     <div id="view-course-description-box" class="modal fade" role="dialog" aria-hidden="true">
