@@ -60,6 +60,9 @@ class DropzoneListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
+        // Modification ERV (août 2015) InnovaERV
+        // suite demande JJQ, voir son document de référence d'août 2015
+        // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
         $collection = new ResourceCollection(array($event->getResource()->getResourceNode()));
         if (false === $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection)) {
             $route = $this->container
@@ -72,7 +75,7 @@ class DropzoneListener extends ContainerAware
             $route = $this->container
                 ->get('router')
                 ->generate(
-                    'innova_collecticiel_edit',
+                    'innova_collecticiel_drops_awaiting',
                     array('resourceId' => $event->getResource()->getId())
                 );
         }
