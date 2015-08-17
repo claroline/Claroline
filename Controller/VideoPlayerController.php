@@ -40,6 +40,6 @@ class VideoPlayerController extends Controller
 
         $response->headers->set('Content-Type', $node->getMimeType());
 
-        return $response;
+        return $response->send();
     }
 }
