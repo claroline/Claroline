@@ -200,11 +200,6 @@ class ResourceNode
      * @ORM\Column(type="boolean", options={"default": 1})
      */
     protected $active = true;
-    
-    /**
-     * @ORM\Column(unique=true)
-     */
-    protected $guid;
 
     public function __construct()
     {
@@ -599,15 +594,5 @@ class ResourceNode
     public function __toString()
     {
         return $this->getPathForDisplay();
-    }
-    
-    public function setGuid($guid)
-    {
-        $this->guid = $guid;
-    }
-
-    public function getGuid()
-    {
-        return $this->guid;
     }
 }

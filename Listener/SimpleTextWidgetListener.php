@@ -30,26 +30,30 @@ class SimpleTextWidgetListener
     private $formFactory;
     private $templating;
     private $om;
+    private $router;
 
     /**
      * @DI\InjectParams({
      *      "simpleTextManager" = @DI\Inject("claroline.manager.simple_text_manager"),
      *      "formFactory"       = @DI\Inject("claroline.form.factory"),
      *      "templating"        = @DI\Inject("templating"),
-     *      "om"                = @DI\Inject("claroline.persistence.object_manager")
+     *      "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *      "router"            = @DI\Inject("router")
      * })
      */
     public function __construct(
         SimpleTextManager $simpleTextManager,
         FormFactory $formFactory,
         TwigEngine $templating,
-        ObjectManager $om
+        ObjectManager $om,
+        $router
     )
     {
         $this->simpleTextManager = $simpleTextManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
         $this->om = $om;
+        $this->router = $router;
     }
 
     /**
@@ -105,19 +109,40 @@ class SimpleTextWidgetListener
     {
         $source = $event->getWidgetInstance();
         $copy = $event->getWidgetInstanceCopy();
-
         $widgetConfig = $this->simpleTextManager->getTextConfig($source);
 
         if (!is_null($widgetConfig)) {
             $widgetConfigCopy = new SimpleTextConfig();
             $widgetConfigCopy->setWidgetInstance($copy);
-            $content = $widgetConfig->getContent();
-            $widgetConfigCopy->setContent($widgetConfig->getContent());
+            $widgetConfigCopy->setContent($this->replaceLinks($widgetConfig->getContent(), $event->getResourceInfos()));
 
             $this->om->persist($widgetConfigCopy);
             $this->om->flush();
         }
         $event->validateCopy();
         $event->stopPropagation();
+    }
+    
+    private function replaceLinks($content, $resourceInfos)
+    {
+        $baseUrl = $this->router->getContext()->getBaseUrl();
+
+        foreach ($resourceInfos['copies'] as $resource) {
+            $content = str_replace(
+                '/file/resource/media/' . $resource['original']->getId(),
+                '/file/resource/media/' . $resource['copy']->getId(),
+                $content
+            );
+            
+            $type = $resource['original']->getResourceType()->getName();
+            
+            $content = str_replace(
+                "/resource/open/{$type}/" . $resource['original']->getId(),
+                "/resource/open/{$type}/" . $resource['copy']->getId(),
+                $content
+            );
+        }
+
+        return $content;
     }
 }

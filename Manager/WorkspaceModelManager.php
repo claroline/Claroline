@@ -631,7 +631,6 @@ class WorkspaceModelManager
                         false,
                         false
                     );
-                    $copies[] = $copy;
                     $resourcesInfos['copies'][] = array('original' => $resourceNode, 'copy' => $copy);
                 } catch (NotPopulatedEventException $e) {
                     $resourcesErrors[] = array(
@@ -836,6 +835,8 @@ class WorkspaceModelManager
             $user,
             $resourcesInfos
         );
-        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourceInfos);
+        $this->om->forceFlush();
+        
+        $errors['widgetConfigErrors'] = $this->duplicateHomeTabs($modelWorkspace, $workspace, $homeTabs->toArray(), $resourcesInfos);
     }
 }
