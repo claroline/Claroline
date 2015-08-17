@@ -57,6 +57,37 @@ StepEditCtrl.prototype.collapsedPanels = {
     properties        : true
 };
 
+//we need the claroline tinymce object for additionnal initialization parameters
+var tinymce = window.tinymce;
+tinymce.claroline.init = tinymce.claroline.init || {};
+tinymce.claroline.plugins = tinymce.claroline.plugins || {};
+
+/**
+ * Tinymce setup
+ */ 
+ 
+/**
+var tinymceSetup = function(editor) {
+    $.each(tinymce.claroline.init, function(key, func) {
+        func(editor);
+    });
+}**/
+
+var plugins = [
+    'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
+    'searchreplace wordcount visualblocks visualchars fullscreen',
+    'insertdatetime media nonbreaking save table directionality',
+    'template paste textcolor emoticons code'
+];
+var toolbar = 'undo redo | styleselect | bold italic underline | forecolor | alignleft aligncenter alignright | preview fullscreen';
+
+$.each(tinymce.claroline.plugins, function(key, value) {
+    if (value === true) {
+        plugins.push(key);
+        toolbar += ' ' + key;
+    }
+});
+
 /**
  * Tiny MCE options
  * @type {object}
@@ -68,14 +99,10 @@ StepEditCtrl.prototype.tinymceOptions = {
     entity_encoding : "numeric",
     autoresize_min_height: 150,
     autoresize_max_height: 500,
-    plugins: [
-        'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars fullscreen',
-        'insertdatetime media nonbreaking save table directionality',
-        'template paste textcolor emoticons code'
-    ],
-    toolbar1: 'undo redo | styleselect | bold italic underline | forecolor | alignleft aligncenter alignright | preview fullscreen',
-    paste_preprocess: function (plugin, args) {
+    plugins: plugins, //j'ai repris la liste des plugins de ce fichier, mais sinon on peut aussi utiliser celle du tinymce du core bundle
+    toolbar1: toolbar, //même chose pour la toolbar
+    setup: tinymce.claroline.setup, //à confirmer; sinon on peut remplacer par le tinymceSetup de ce fichier
+    paste_preprocess: function (plugin, args) { //on peut aussi utiliser le paste du CoreBundle (mais il est différent donc je n'en suis pas sûr, et puis le comportement doit peut-être être différent de toute façon).
         var link = $('<div>' + args.content + '</div>').text().trim(); //inside div because a bug of jquery
         var url = link.match(/^(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})$/);
 
