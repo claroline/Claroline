@@ -153,6 +153,14 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     array()
                 );
 
+                //let's order everything !
+                if (isset($directory['directory']['index'])) {
+                    $node = $directoryEntity->getResourceNode();
+                    $node->setIndex($directory['directory']['index']);
+                    $this->om->persist($node);
+                    $this->om->flush();
+                }
+
                 //add the missing roles
                 foreach ($directory['directory']['roles'] as $role) {
                     $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
@@ -206,6 +214,15 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         );
 
                         $entity->getResourceNode()->setParent($directories[$item['item']['parent']]->getResourceNode());
+
+                        //let's order everything !
+                        if (isset($item['item']['index'])) {
+                            $node = $entity->getResourceNode();
+                            $node->setIndex($directory['directory']['index']);
+                            $this->om->persist($node);
+                            $this->om->flush();
+                        }
+
                         $this->om->persist($entity);
 
                         //add the missing roles
@@ -361,7 +378,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     'creator' => null,
                     'parent'  => $resourceNode->getParent()->getId(),
                     'uid'     => $resourceNode->getId(),
-                    'roles'   => $this->getPermsArray($resourceNode)
+                    'roles'   => $this->getPermsArray($resourceNode),
+                    'index'   => $resourceNode->getIndex()
                 ));
             }
         }
@@ -391,7 +409,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                         'type'    => $child->getResourceType()->getName(),
                         'roles'   => $this->getPermsArray($child),
                         'uid'     => $child->getId(),
-                        'data'    => $childData
+                        'data'    => $childData,
+                        'index'   => $resourceNode->getIndex()
                     ));
                 }
             }
@@ -608,6 +627,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                 ->children()
                                     ->scalarNode('name')->isRequired()->end()
                                     ->scalarNode('uid')->isRequired()->end()
+                                    ->scalarNode('index')->defaultNull()->end()
                                     ->scalarNode('creator')->isRequired()
                                         ->validate()
                                             ->ifTrue(
@@ -671,6 +691,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                                     ->scalarNode('name')->end()
                                     ->scalarNode('creator')->end()
                                     ->scalarNode('uid')->end()
+                                    ->scalarNode('index')->defaultNull()->end()
                                     ->booleanNode('is_rich')->defaultFalse()->end()
                                     ->scalarNode('parent')
                                         ->validate()

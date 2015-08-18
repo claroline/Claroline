@@ -970,10 +970,10 @@ class ResourceController
     public function exportAction(array $nodes)
     {
         if (count($nodes) === 0) {
-            
+
             throw new \Exception('No resource to export');
         }
-            
+
         $workspace = $nodes[0]->getWorkspace();
         $archive = $this->transferManager->exportResources($workspace, $nodes);
         $fileName = $workspace->getCode() . '.zip';
@@ -991,6 +991,7 @@ class ResourceController
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
         $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Content-Length', filesize($archive));
         $response->headers->set('Connection', 'close');
 
         return $response;

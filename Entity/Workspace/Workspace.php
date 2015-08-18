@@ -99,6 +99,7 @@ class Workspace
      *     mappedBy="workspace",
      *     cascade={"persist", "merge"}
      * )
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $orderedTools;
 
