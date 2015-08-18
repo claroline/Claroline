@@ -8,16 +8,12 @@ use Innova\CollecticielBundle\Form\DropzoneCommonType;
 use Innova\CollecticielBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
-/**
-* Changement de "use" suite plantage Chrome. InnovaERV. 
-*/
 use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
-use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use DateTime;
@@ -380,13 +376,17 @@ class DropzoneController extends DropzoneBaseController
         $nbCorrections = $em
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
+
         $hasCopyToCorrect = $em
             ->getRepository('InnovaCollecticielBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
 
+<<<<<<< HEAD
+=======
         $hasUnfinishedCorrection = 
         $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
+>>>>>>> origin
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
 
@@ -407,6 +407,15 @@ class DropzoneController extends DropzoneBaseController
 
     private function createAgendaEventDrop(DateTime $startDate, DateTime $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
+<<<<<<< HEAD
+        /*
+$dateTS = new DateTime();
+$dateTS = $startDate;
+echo "TS : " . $dateTS;
+echo "TS = " . $dateTS->getTimestamp();
+*/
+=======
+>>>>>>> origin
 
         $event = new Event();
         $event->setStart($startDate);

@@ -1,13 +1,13 @@
 <!-- Vue donnant la liste des espaces partagés. Exemple d'URL : innovacollecticielbundle/4/shared/spaces -->
 <div class="table-responsive">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover sharedSpacesTable">
         <thead>
-        <th>{{ 'Name'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'First name'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Submissions'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Addressed requests'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Spaces collecticiel'|trans({},'innova_collecticiel') }}</th>
+        <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
+        <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
+        <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:120px;" class="centered">{{ 'Submissions'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:120px;" class="centered">{{ 'Addressed requests'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:120px;" class="centered">{{ 'Spaces collecticiel'|trans({},'innova_collecticiel') }}</th>
         </thead>
         <tbody>
             {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}

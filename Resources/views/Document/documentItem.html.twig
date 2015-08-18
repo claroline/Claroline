@@ -7,6 +7,15 @@
 
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
+    <td class="{{ classArray }}">
+        {{ document.drop.user.lastName }}
+    </td>
+    <td class={{ classArray }}>
+        {{ document.drop.user.firstName }}
+    </td>
+    <td class={{ classArray }}>
+        {{ document.drop.user.username }}
+    </td>
     <td class={{ classArray }}>
         {% if document.url is not null %}
             <a target="_blank"
@@ -26,14 +35,16 @@
     </td>
 
     {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
-    <td class="{{ classArray }}" id="is-validate-{{ document.id }}">
+    <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>
 
-    <td class="{{ classArray }}">
+    <td class="{{ classArray }} centered">
         <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
             {{ document.comments|length }}
-            ({{ document.getUnReadComments() }} nouveau{% if document.getUnReadComments() > 1 %}x{% endif %})
+            {% if document.getUnReadComments() != 0 %}
+                ({{ document.getUnReadComments() }} nouveau{% if document.getUnReadComments() > 1 %}x{% endif %})
+            {% endif %}
         </a>
     </td>
 

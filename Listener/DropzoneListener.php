@@ -60,19 +60,27 @@ class DropzoneListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
+        // Modification ERV (août 2015) InnovaERV
+        // suite demande JJQ, voir son document de référence d'août 2015
+        // il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
+        // Point 5 du document
         $collection = new ResourceCollection(array($event->getResource()->getResourceNode()));
         if (false === $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection)) {
             $route = $this->container
                 ->get('router')
                 ->generate(
-                    'innova_collecticiel_open',
+                    'innova_collecticiel_drop',
                     array('resourceId' => $event->getResource()->getId())
                 );
         } else {
+        // Modification ERV (août 2015) InnovaERV
+        // suite demande JJQ, voir son document de référence d'août 2015
+        // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
+        // Point 3 du document
             $route = $this->container
                 ->get('router')
                 ->generate(
-                    'innova_collecticiel_edit',
+                    'innova_collecticiel_drops_awaiting',
                     array('resourceId' => $event->getResource()->getId())
                 );
         }

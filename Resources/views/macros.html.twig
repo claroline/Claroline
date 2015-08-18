@@ -15,12 +15,15 @@
                     <thead>
                         <tr class="text-left">
 {#                            <th></th> #}
+                            <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ adminInnova }} {{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                            <th></th>
+                            <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
+                            <th style="width: 120px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,14 +42,14 @@
             <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</h4>
+                <h4 class="modal-title" id="myModalLabel">{{ 'Commented document modal'|trans({}, 'innova_collecticiel') }}</h4>
             </div>
             <div class="modal-body">
-                Êtes-vous sûr de vouloir demander un commentaire pour ce document ?
+                {{ 'Sure to ask comment for document'|trans({}, 'innova_collecticiel') }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Non</button>
-                <button data-document_id="titi" id="modal_confirm" data-method="VALIDATE" type="button" class="btn btn-info rest" href="#">Oui, valider</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                <button data-document_id="titi" id="modal_confirm" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">Ok</button>
             </div>
             </div>
         </div>

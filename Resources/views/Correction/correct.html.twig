@@ -66,9 +66,9 @@
 
 
         {% if admin %}
-            <h2 class="{% if correction.reporter %}text-danger{% endif %}">
+        <!--    <h2 class="{% if correction.reporter %}text-danger{% endif %}">
                 {{ 'Correction by %firstName% %lastName%'|trans({'%firstName%': correction.user.firstName, '%lastName%': correction.user.lastName}, 'innova_collecticiel') }}
-            </h2>
+            </h2>-->
             {{ macros.flashBox() }}
 
             {# Bloc "Retour aux corrections ..." #}
@@ -92,7 +92,8 @@
 
             {# Bloc "Rappel des instructions ..." #}
             {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+            {#    {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %} #}
+                {{ dropzone.instruction|raw }}
                 <br/>
             {% endif %}
 
@@ -142,7 +143,7 @@
             {% endif %}
 
             {# Bloc Documents. C'est la liste des documents #}
-            {% set documentListText = 'Document'|trans({}, 'innova_collecticiel') %}
+            {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
             {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
             {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
             {{ collecticielDocumentMacros.innovaDocumentDisplay(correction.drop, dropzone, 6, "condensed", documentListText, document)
@@ -150,7 +151,7 @@
 
             {# Bloc Apprenants #}
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'innova_collecticiel') }}</div>
+                <h4 class="text-muted col-md-4">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
                 <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
             </div>
 
@@ -195,8 +196,8 @@
                                     <!-- Message. Default to the left -->
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-info clearfix">
-                                            <span class="direct-chat-name pull-left">Vous</span>
-                                            <span class="direct-chat-timestamp pull-right">{{ comment.commentDate|date("d/m/Y H:i:s") }}</span>
+                                            <span class="direct-chat-name">Vous</span>
+                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
                                         </div><!-- /.direct-chat-info -->
                                         <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
                                         <!-- /.direct-chat-img -->
@@ -207,8 +208,8 @@
                                     <!-- Message to the right -->
                                     <div class="direct-chat-msg right">
                                         <div class="direct-chat-info clearfix">
-                                            <span class="direct-chat-name pull-right">Correcteur(rice)</span>
-                                            <span class="direct-chat-timestamp pull-left">{{ comment.commentDate|date("d/m/Y H:i:s") }}</span>
+                                            <span class="direct-chat-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.username }})</span>
+                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
                                         </div><!-- /.direct-chat-info -->
                                         <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
                                     </div><!-- /.direct-chat-msg -->
@@ -277,7 +278,7 @@
                     {% endif %}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
-                    {% set documentListText = 'Documents'|trans({}, 'innova_collecticiel') %}
+                    {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
                     {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
                 {% else %}
                     <p class="text-danger">{{ 'No document associated'|trans({}, 'innova_collecticiel') }}</p>

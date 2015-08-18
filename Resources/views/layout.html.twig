@@ -5,6 +5,52 @@
 {% import 'InnovaCollecticielBundle::macrosCollecticiel.html.twig' as collecticielMacros %}
 {% import 'InnovaCollecticielBundle::macrosCollecticielDocumentDisplay.html.twig' as collecticielDocumentMacros %}
 
+{#  
+Modification ERV (août 2015) InnovaERV
+suite demande JJQ, voir son document de référence d'août 2015
+il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
+Point 5 du document, vu avec Axel
+#}
+{% block breadcrumb %}
+    <div id="resource-breadcrumb">
+        {% if _resource is defined %}
+            <div id="twig-resource-attributes"
+                 data-resource-id="{{ _resource.getId() }}"
+                 data-resource-name="{{ _resource.getName() }}"
+            >
+            </div>
+            {% if not is_path_mode  %}
+                <ul class="breadcrumb">
+                    {% if not has_role('ROLE_ANONYMOUS') %}
+                        <li><a href="{{ path('claro_workspace_list') }}"><i class="fa fa-book"></i> {{ 'workspaces'|trans({}, 'platform') }}</a></li>
+                        <li>
+                            {# we're finding wich is the workspace we want to display here #}
+                            {% set node = app.session.get('current_resource_node') %}
+                            {% if node is not null %}
+                                {% set workspace = node.getWorkspace() %}
+                            {% else %}
+                                {% set workspace = _resource.getResourceNode().getWorkspace() %}
+                            {% endif %}
+                            <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                                {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                            </a>
+                        </li>
+                        {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs",
+                            {'node': _resource.getResourceNode(), '_breadcrumbs': app.request.query.get('_breadcrumbs', {})}))
+                        %}
+                        <li class="active">
+                            <span class="fa fa-file"></span> <a href="{{ path('innova_collecticiel_drop', {'resourceId': _resource.getId() }) }}">
+                            {{ _resource.getResourceNode().getName() }}
+                            </a>
+                        </li>
+                    {% endif %}
+                   
+                </ul>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp' output='css/innovacollecticiel/style.css'
