@@ -138,4 +138,71 @@ class CursusController extends FOSRestController
 
         return array('success');
     }
+
+    /**
+     * @View()
+     * @ApiDoc(
+     *     description="Register an user to a cursus hierarchy",
+     *     views = {"cursus"}
+     * )
+     */
+    public function addUserToCursusHierarchyAction(User $user, Cursus $cursus)
+    {
+        $hierarchy = array();
+        $lockedHierarchy = array();
+        $unlockedCursus = array();
+        $allRelatedCursus = $this->cursusManager->getRelatedHierarchyByCursus($cursus);
+        foreach ($allRelatedCursus as $oneCursus) {
+            $parent = $oneCursus->getParent();
+            $lockedHierarchy[$oneCursus->getId()] = 'blocked';
+
+            if (is_null($parent)) {
+
+                if (!isset($hierarchy['root'])) {
+                    $hierarchy['root'] = array();
+                }
+                $hierarchy['root'][] = $oneCursus;
+            } else {
+                $parentId = $parent->getId();
+
+                if (!isset($hierarchy[$parentId])) {
+                    $hierarchy[$parentId] = array();
+                }
+                $hierarchy[$parentId][] = $oneCursus;
+            }
+        }
+        $this->unlockedHierarchy($cursus, $hierarchy, $lockedHierarchy, $unlockedCursus);
+        $this->cursusManager->registerUserToMultipleCursus($unlockedCursus, $user);
+
+        return array('success');
+    }
+
+    private function unlockedHierarchy(
+        Cursus $cursus,
+        array $hierarchy,
+        array &$lockedHierarchy,
+        array &$unlockedCursus
+    )
+    {
+        $lockedHierarchy[$cursus->getId()] = false;
+        $unlockedCursus[] = $cursus;
+
+        if (!$cursus->isBlocking()) {
+            // Unlock parents
+            $parent = $cursus->getParent();
+
+            while (!is_null($parent) && !$parent->isBlocking()) {
+                $lockedHierarchy[$parent->getId()] = 'up';
+                $unlockedCursus[] = $parent;
+                $parent = $parent->getParent();
+            }
+            // Unlock children
+            $this->unlockedChildrenHierarchy(
+                $cursus,
+                $hierarchy,
+                $lockedHierarchy,
+                $unlockedCursus
+            );
+        }
+    }
 }
