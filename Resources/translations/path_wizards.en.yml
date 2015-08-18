@@ -38,6 +38,8 @@ open_templates: Open templates
 # p
 path_breadcrumbs: Show breadcrumbs ?
 path_description: Description
+path_empty_user_can_edit: This path is empty. Please edit and publish it to fill it.
+path_empty_user_read_only: This path is empty and has not been configured by its designer. Please come back later.
 path_init_structure: Create a new empty structure
 path_init_structure_template: Créer une structure à partir d'un modèle
 path_name: Name
