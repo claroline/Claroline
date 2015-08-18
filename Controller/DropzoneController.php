@@ -551,11 +551,13 @@ class DropzoneController extends DropzoneBaseController
         $nbCorrections = $em
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
+
         $hasCopyToCorrect = $em
             ->getRepository('InnovaCollecticielBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
-        $hasUnfinishedCorrection = $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
+        $hasUnfinishedCorrection = 
+        $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
         $dropzoneProgress = $dropzoneManager->getDrozponeProgress($dropzone, $drop, $nbCorrections);
@@ -598,13 +600,6 @@ class DropzoneController extends DropzoneBaseController
 
     private function createAgendaEventDrop(DateTime $startDate, DateTime $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
-
-/*
-$dateTS = new DateTime();
-$dateTS = $startDate;
-echo "TS : " . $dateTS;
-echo "TS = " . $dateTS->getTimestamp();
-*/
 
         $event = new Event();
         $event->setStart($startDate);
