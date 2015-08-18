@@ -7,35 +7,21 @@
 {% block collecticiel_parametres_link %}#{% endblock %}
 
 {% block drop_zone_content_edit %}
-    {#<div class="navbar navbar-default peer-review-options" role="navigation" {% if not dropzone.peerReview %}style="display: none;"{% endif %}>#}
-        {#<div class="collapse navbar-collapse navbar-ex1-collapse">#}
-            {#<ul class="nav navbar-nav">#}
-                {#<li class="active">#}
-                    {#<a href="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}">#}
-                        {#{{ 'Common'|trans({}, 'innova_collecticiel') }}#}
-                    {#</a>#}
-                {#</li>#}
-                {#<li class="{% if dropzone.editionState < 1 %}disabled{% endif %}">#}
-                    {#<a href="{% if dropzone.editionState < 1 %}#{% else %}{{ path('innova_collecticiel_edit_criteria', {'resourceId': dropzone.id}) }}{% endif %}">#}
-                        {#{{ 'Peer review criteria'|trans({}, 'innova_collecticiel') }}#}
-                    {#</a>#}
-                {#</li>#}
-            {#</ul>#}
-        {#</div>#}
-    {#</div>#}
-    {#<h3>{{ 'Common information'|trans({}, 'innova_collecticiel') }}</h3>#}
 
     <form class="form-horizontal" role="form" method="POST" action="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
 
         {{ form_errors(form) }}
 
+        {# Explication #}
         <p>{{ 'common_explication'|trans({}, 'innova_collecticiel')|raw }}</p>
 
+        {# Consigne #}
         <h4>{{ 'Instruction'|trans({}, 'innova_collecticiel') }}</h4>
         <div class="form-group">
             {{ form_row(form.instruction, {'input_col_size': 'col-md-12', 'label_col_size': '', 'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
+        {# Documents autorisés #}
         <h4>{{ 'Document type allowed'|trans({}, 'innova_collecticiel') }}</h4>
         <p>{{ 'Select the types of documents that learners can make'|trans({}, 'innova_collecticiel') }}</p>
 
@@ -46,39 +32,8 @@
             {{ form_row(form.allowUrl, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label'}}) }}
         </div>
 
-{# Issue #44 cacher cette partie. InnovaERV
-        <h4>{{ 'Type of evaluation'|trans({}, 'innova_collecticiel') }}</h4>
-        <p>{{ 'Select how copies will be corrected'|trans({}, 'innova_collecticiel') }}</p>
+        {# ??? #}
         <div class="form-group">
-            {{ form_row(form.peerReview, {'label_attr': {'style': 'display: none;'}}) }}
-            <div class="col-sm-offset-3 col-lg-9 peer-review-options">
-                <div id="expected-total-correction-explication" class="col-lg-8 control-label" style="text-align: left;" data-toggle="popover" data-placement="bottom" data-content="{{ 'expected_total_correction'|trans({}, 'innova_collecticiel')|raw }}">
-                    <span class="fa fa-info-circle"></span> {{ 'Expected total correction'|trans({}, 'innova_collecticiel') }}
-                </div>
-                {{ form_row(form.expectedTotalCorrection, {'input_col_size': 'col-lg-4', 'label_col_size': '', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'style': 'display: none;'}}) }}
-            </div>
-            <div class="col-sm-offset-3 peer-review-options">
-                <div class='col-lg-8' style="text-align: left;">
-                    {{ form_row(form.diplayCorrectionsToLearners, {'label_attr': { 'style': 'font-weight: normal;' }})
-                    }}
-                </div>
-            </div>
-            <div class="col-sm-offset-4 ">
-                <div id='allow-correction-deny' class='col-lg-8'>
-                {{ form_row(form.allowCorrectionDeny, {'label_attr': { 'style': 'font-weight: normal;'}}) }}
-                </div>
-            </div>
-        </div>
-#}
-
-{#
-        <h4>{{ 'Rating'|trans({}, 'innova_collecticiel') }}</h4>
-#}
-        <div class="form-group">
-{#
-            {{ form_row(form.displayNotationToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
-            {{ form_row(form.displayNotationMessageToLearners, {'input_col_size': 'col-lg-offset-2 col-lg-10', 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
-#}
             <div id='dropzone-message-part' class='col-lg-offset-3 col-lg-7' {% if dropzone.displayNotationMessageToLearners == false %} style="display:none" {% endif %} >
                 {{ form_label(form.successMessage,null,{'label': 'successMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.successMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
@@ -86,19 +41,17 @@
                  {{ form_label(form.failMessage,null,{'label': 'failMessage'|trans({},'innova_collecticiel'), 'label_attr': {'class': 'control-label','style':'font-weight:normal;'}}) }}
                 {{ form_widget(form.failMessage, {'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
                 {{ form_errors(form.failMessage) }}
-{#
-                {{ form_row(form.minimumScoreToPass, {'input_col_size': 'col-lg-4', 'label_col_size': 'col-lg-7', 'attr': {'style': 'width: 60px;'}, 'label_attr': {'class': 'control-label', 'style': 'font-weight: normal;'}}) }}
-#}
             </div>
-            <div class="col-lg-offset-3 col-lg-9">
-            </div>
+            <div class="col-lg-offset-3 col-lg-9"></div>
         </div>
 
+        {# Ouverture #}
         <h4>{{ 'Planning'|trans({}, 'innova_collecticiel') }}</h4>
         <p>{{ 'Planification instruction'|trans({}, 'innova_collecticiel') }}</p>
         <p class="peer-review-options">{{ 'Planification peer review instruction'|trans({}, 'innova_collecticiel') }}</p>
-
         {{ form_errors(form.manualPlanning.1) }}
+
+        {# Manuel #}
         <div class="radio">
             <label>
                 {{ form_widget(form.manualPlanning.0) }}
@@ -111,94 +64,40 @@
             {{ form_row(form.manualState, {'label_attr': {'style': 'display: none;'}}) }}
         </div>
 
+        {# Par date #}
         <label class="radio">
             {{ form_widget(form.manualPlanning.1) }}
             <strong>{{ 'scheduleByDatePlanning'|trans({}, 'innova_collecticiel') }}</strong>
         </label>
-
+        
         <div id="planning_dates">
             <div class="row form-group">
-                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
+                <div class="col-md-6">
                     {{ form_row(form.startAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1">
+                <div class="col-md-6">
                     {{ form_row(form.endAllowDrop, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
                     ) }}
                 </div>
             </div>
-{# Mis en commentaire par issue #251 InnovaERV #}
-{#             <div class=" row form-group">
-                <div class="col-md-offset-2 ">
-                    {{ form_row(form.autoCloseOpenedDropsWhenTimeIsUp,{'label_attr': {'class': 'control-label  popoverItem ', 'style': 'font-weight: normal;',
-                    'data-toggle':'popover','data-placement':'top','data-content': 'dropzone_startedNotValidatedYet_infos'|trans({}, 'innova_collecticiel')|raw }}
-                    ) }}
 
-                </div>
-            </div>
-#}
-
-{#            <div class=" row form-group">
-                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1  peer-review-options">
-                    {{ form_row(form.startReview, {'label_attr': {'class': 'control-label col-xs-offset-2 col-xs-12 col-sm-2', 'style': 'font-weight: normal;' }}
-                    ) }}
-                </div>
-            </div>
-#}
-
-{#              <div class="  form-group">
-                <div class="col-md-offset-2 col-xs-offset-2 col-sm-offset-1 peer-review-options">
-                    {{ form_row(form.endReview, {'label_attr': {'class': 'control-label col-xs-offset-2  col-xs-12 col-sm-2', 'style': 'font-weight: normal;'} } ) }}
-                </div>
-            </div>
-#}
         </div>
 
-{#
-        <div id="dropzone_notification_part">
-            <h4>{{ 'Notifications'|trans({}, 'innova_collecticiel') }}</h4>
-
-            <div class="form-group">
-                <div class="col-lg-offset-2 col-lg-9 manual-review-option">
-                    {{ form_errors(form.notifyOnDrop) }}
-                    {{ form_widget(form.notifyOnDrop) }}
-                </div>
-            </div>
-        </div>
-#}
+        {# Submit #}
         <div class="btn-group pull-right">
             <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'resource_manager'}) }}"
-               class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
-
-            {# fix #60 Enlever un bouton InnovaERV #}
-            {# fix #60 Mise en commentaire car un bouton s'affiche via le JS #}
-            {# <a href="#" class="btn btn-primary peer-review-options save-button" {% if dropzone.peerReview %}style="display: none;"{% endif %}>1{{ 'Save'|trans({}, 'innova_collecticiel') }}</a> #}
-
-            {# fix #60 Enlever un bouton InnovaERV #}
+               class="btn btn-default ">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}
+            </a>
             <button id="submitAndGotoCriteriaButton" type="submit" class="btn btn-primary submit_button">
-                {# fix #60 Mise en commentaire car ce test ne sert plus à rien #}
-                {# {% if dropzone.peerReview %}
-                    {{ 'Save'|trans({}, 'innova_collecticiel') }}
-                {% else %} #}
-                    {{ 'Save'|trans({}, 'innova_collecticiel') }}
-                {# {% endif %} #}
+                {{ 'Save'|trans({}, 'innova_collecticiel') }}
             </button>
         </div>
         {{ form_rest(form) }}
     </form>
 
-{#
-    InnovaERV / Voir issue #251
-    <div class="row peer-review-options" {% if dropzone.peerReview %}style="display: none;"{% endif %}>
-        <div class="col-md-12">
-            <strong>1/2</strong>
-        </div>
-    </div>
-#}
-
-    {# InnovaERV : déclaration de la modal dans un temptale dédié, à part #}
     {% include 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModalCollecticiel.html.twig' %}
 
 {% endblock %}
@@ -208,6 +107,12 @@
     {{ tinymce_init() }}
     <script>
         $('document').ready(function() {
+
+            // hack dégueu pour recharger les calendriers avec le même format.
+            var pickers = $("#innova_collecticiel_common_form_startAllowDrop_date, #innova_collecticiel_common_form_endAllowDrop_date");
+            pickers.datepicker('remove');
+            pickers.datepicker({format: 'dd/mm/yyyy'});
+
 
             $('#expected-total-correction-explication, .popoverItem').popover({
                 'trigger': 'hover',
@@ -280,7 +185,6 @@
             enablePeerReviewOptions({{ dropzone.peerReview }});
 
             var manualPlanning = function () {
-
                 var $planning_dates = $('#planning_dates');
                 $planning_dates.addClass('text-muted');
                 $planning_dates.find('input').prop('disabled', true);
@@ -298,6 +202,7 @@
                 var $planning_dates = $('#planning_dates');
                 $planning_dates.removeClass('text-muted');
                 $planning_dates.find('input').prop('disabled', false);
+                $("#innova_collecticiel_common_form_manualPlanning_1").attr('checked','checked');
             };
 
             $('#innova_collecticiel_common_form_manualPlanning_0').on('click', manualPlanning);
