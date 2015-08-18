@@ -2,8 +2,9 @@
     {% set cursusId = cursus.getId() %}
     {% set cursusTitle = cursus.getTitle() %}
     {% set details = cursus.getDetails() %}
+    {% set course = cursus.getCourse() %}
 
-    {% if cursus.getCourse() is empty %}
+    {% if course is empty %}
         <div class="cursus-element" data-cursus-id="{{ cursusId }}">
             
             {% if details['color'] is defined and details['color'] is not empty %}
@@ -100,7 +101,10 @@
     {% else %}
         <span>
             <span class="label label-primary">
-                {{ cursusTitle }}
+                {{ course.getTitle() }}
+                <small>
+                    [{{ course.getCode() }}]
+                </small>
             </span>
             <span class="label label-danger pointer-hand remove-course-btn"
                   data-cursus-id="{{ cursusId }}"
