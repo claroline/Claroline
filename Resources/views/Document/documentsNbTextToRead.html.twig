@@ -1,6 +1,6 @@
 {# Variable qui va compter le nombre de commentaires #}
 {% if document.comments|length == 0 %}
-        <span class="fa fa-minus"> </span>
+        <span class="fa fa-minus" title="Demande non traitée"> </span>
 {% else %}
-        <span class="fa fa-check"> </span>
+        <span class="fa fa-check" title="Demande traitée"> </span>
 {% endif %}
