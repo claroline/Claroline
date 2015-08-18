@@ -69,7 +69,7 @@
                     </div>
 
                     <div id="panel-description" data-ng-show="!stepEditCtrl.collapsedPanels.description">
-                        <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" class="form-control" name="step-description" data-ng-model="stepEditCtrl.step.description"></textarea>
+                        <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" data-before-unload="off" class="form-control" name="step-description" data-ng-model="stepEditCtrl.step.description"></textarea>
                     </div>
                 </div>
 
