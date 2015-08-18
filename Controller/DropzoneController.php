@@ -8,9 +8,6 @@ use Innova\CollecticielBundle\Form\DropzoneCommonType;
 use Innova\CollecticielBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
-/**
-* Changement de "use" suite plantage Chrome. InnovaERV. 
-*/
 use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,7 +17,6 @@ use Symfony\Component\Form\FormError;
 use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use DateTime;
 
 class DropzoneController extends DropzoneBaseController
 {
@@ -384,7 +380,7 @@ class DropzoneController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Drop')
             ->hasCopyToCorrect($dropzone, $user);
 
-        $hasUnfinishedCorrection = 
+        $hasUnfinishedCorrection =
         $em->getRepository('InnovaCollecticielBundle:Correction')->getNotFinished($dropzone, $user) != null;
 
         // get progression of the evaluation ( current state, all states available and needed infos to the view).
@@ -407,7 +403,6 @@ class DropzoneController extends DropzoneBaseController
 
     private function createAgendaEventDrop(DateTime $startDate, DateTime $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
-
         $event = new Event();
         $event->setStart($startDate);
         $event->setEnd($endDate);
