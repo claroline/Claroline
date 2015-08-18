@@ -208,7 +208,7 @@
                                     <!-- Message to the right -->
                                     <div class="direct-chat-msg right">
                                         <div class="direct-chat-info clearfix">
-                                            <span class="direct-chat-name pull-right">Correcteur(rice)</span>
+                                            <span class="direct-chat-name pull-right">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.username }})</span>
                                             <span class="direct-chat-timestamp pull-left">{{ comment.commentDate|date("d/m/Y H:i:s") }}</span>
                                         </div><!-- /.direct-chat-info -->
                                         <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
