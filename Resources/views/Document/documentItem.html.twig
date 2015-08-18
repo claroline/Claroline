@@ -42,7 +42,9 @@
     <td class="{{ classArray }}">
         <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
             {{ document.comments|length }}
-            ({{ document.getUnReadComments() }} nouveau{% if document.getUnReadComments() > 1 %}x{% endif %})
+            {% if document.getUnReadComments() != 0 %}
+                ({{ document.getUnReadComments() }} nouveau{% if document.getUnReadComments() > 1 %}x{% endif %})
+            {% endif %}
         </a>
     </td>
 
