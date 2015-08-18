@@ -189,15 +189,17 @@
                 <div class="box box-warning direct-chat direct-chat-warning">
                     <div class="box-body">
                         <!-- Conversations are loaded here -->
-                        <div class="direct-chat-messages">
+                        <div class="direct-chat-messages" style="width: 70%;">
                             {% for comment in comments %}
                                 <!-- Si le créateur du commentaire est l'utilisateur actuel alors ... -->
                                 {% if comment.user.id == user.id %}
                                     <!-- Message. Default to the left -->
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-info clearfix">
+                                            <span class="pull-right">
                                             <span class="direct-chat-name">Vous</span>
                                             <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
+                                            </span>
                                         </div><!-- /.direct-chat-info -->
                                         <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
                                         <!-- /.direct-chat-img -->
