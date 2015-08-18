@@ -126,6 +126,11 @@ abstract class Importer
         $this->roles[] = $role;
     }
 
+    public function getPriority()
+    {
+        return 0;
+    }
+
     abstract function getName();
 
     abstract function validate(array $data);

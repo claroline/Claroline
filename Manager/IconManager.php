@@ -252,7 +252,7 @@ class IconManager
             $prefix = $this->thumbDir . $ds . $workspace->getCode();
 
             if (!is_dir($prefix)) {
-                mkdir($prefix);
+                @mkdir($prefix);
             }
         }
         $newPath = $prefix . $ds . $this->ut->generateGuid() . ".png";

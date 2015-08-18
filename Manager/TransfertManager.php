@@ -134,6 +134,9 @@ class TransfertManager
     {
         $this->om->startFlushSuite();
         $data = $configuration->getData();
+        $data = $this->reorderData($data);
+        //now we need to reorder the data because well...
+
         //refactor how workspace are created because this sucks
         $this->data = $configuration->getData();
         $this->workspace = $workspace;
@@ -449,5 +452,37 @@ class TransfertManager
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    private function reorderData(array $data)
+    {
+        $resManager = null;
+
+        foreach ($data['tools'] as $dataTool) {
+            if ($dataTool['tool']['type'] === 'resource_manager') $resManager = $dataTool;
+        }
+
+        $priorities = array();
+
+        //we currently only reorder resources...
+        foreach ($resManager['tool']['data']['items'] as $item) {
+            $importer = $this->getImporterByName($item['item']['type']);
+            if ($importer) $priorities[$importer->getPriority()][] = $item;
+        }
+
+        ksort($priorities);
+        $ordered = array();
+
+        foreach ($priorities as $priority) {
+            $ordered = array_merge($ordered, $priority);
+        }
+
+        foreach ($data['tools'] as &$dataTool) {
+            if ($dataTool['tool']['type'] === 'resource_manager') {
+                $dataTool['tool']['data']['items'] = $ordered;
+            }
+        }
+
+        return $data;
     }
 }

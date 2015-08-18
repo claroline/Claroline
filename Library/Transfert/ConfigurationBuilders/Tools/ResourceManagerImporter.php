@@ -179,17 +179,21 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         /* RESOURCES */
         /*************/
 
+        $created = array();
+
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
+                //THIS IS WHERE RES COME FROM !
                 $res = array();
                 if (isset($item['item']['data'])) $res['data'] = $item['item']['data'];
                 //get the entity from an importer
                 $importer = $this->getImporterByName($item['item']['type']);
 
                 if ($importer) {
-                    $entity = $importer->import($res, $item['item']['name']);
+                    $entity = $importer->import($res, $item['item']['name'], $created);
                     //some importers are not fully functionnal yet
                     if ($entity) {
+                        $created[$item['item']['uid']] = $entity;
                         $entity->setName($item['item']['name']);
                         $type = $this->om
                             ->getRepository('Claroline\CoreBundle\Entity\Resource\ResourceType')
