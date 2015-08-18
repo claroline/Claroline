@@ -1,0 +1,4 @@
+reservation_controller:
+    resource: "@FormaLibreReservationBundle/Controller/ReservationController.php"
+    type: annotation
+    prefix: /

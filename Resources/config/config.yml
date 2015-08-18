@@ -1,0 +1,6 @@
+plugin:
+    has_options: false
+    admin_tools:
+        -
+            name: reservation_tool
+            class: warning
