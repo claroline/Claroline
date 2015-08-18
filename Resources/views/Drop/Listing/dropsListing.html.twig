@@ -1,14 +1,14 @@
 <!-- Vue donnant la liste des copies. Exemple d'URL : innovacollecticielbundle/2/drops/awaiting -->
 <div class="table-responsive">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover sharedSpacesTable">
         <thead>
         <!-- Colonne supprimée : 'Copie rendue le' -->
         <!-- <th>{{ 'Established on'|trans({}, 'innova_collecticiel') }}</th> -->
         <!-- Colonne modifiée de "Rendue par" par "Etudiant" -->
-        <th>{{ 'Name'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'First name'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
-        <th>{{ 'Dated'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:120px;">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:120px;">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:70px;">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:100px;">{{ 'Dated'|trans({},'innova_collecticiel') }}</th>
         <!-- Colonnes supprimées : -->
         <!-- 'Dernière correction le' -->
         <!-- 'Note' -->
@@ -23,9 +23,9 @@
         <!-- Colonne ajoutée "Commentaires non lus" modifiée en "Document" -->
         <th>{{ 'Document'|trans({},'innova_collecticiel') }}</th>
         <!-- Colonne ajoutée "Devoirs à corriger" modifiée en "Etat" -->
-        <th>{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:50px;">{{ 'Condition'|trans({},'innova_collecticiel') }}</th>
         <!-- Colonne ajoutée "Voir" modifiée en "Commentaire  - Evaluation"  -->
-        <th>{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
+        <th style="width:140px;">{{ 'Comment evaluation'|trans({},'innova_collecticiel') }}</th>
         </thead>
         <tbody>
 
