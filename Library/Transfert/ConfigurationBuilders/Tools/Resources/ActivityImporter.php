@@ -185,4 +185,19 @@ class ActivityImporter extends Importer implements ConfigurationInterface
 
         return !file_exists($rootpath . $ds . $v);;
     }
+
+    public function format($data)
+    {
+        if ($path = $data[0]['activity']['description']) {
+            $description = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+            $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findByDescription($description);
+
+            foreach ($entities as $entity) {
+                $text = $entity->getDescription();
+                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                $entity->setDescription($text);
+                $this->om->persist($entity);
+            }
+        }
+    }
 }
