@@ -29,7 +29,32 @@ input.form-control {
     text-align: center;
 }
 
+.table thead > tr > th,
+.table thead > tr > td,
+.table tbody > tr > th,
+.table tbody > tr > td,
+.table tfoot > tr > th,
+.table tfoot > tr > td {
+    vertical-align: middle;
+}
+
 .sharedSpacesTable {
     table-layout: fixed;
     word-wrap: break-word;
+}
+
+.nameColumn {
+    width: 120px;
+}
+
+.usernameColumn {
+    width: 70px;
+}
+
+.dateColumn {
+    width: 100px;
+}
+
+.typeColumn {
+    width: 70px;
 }

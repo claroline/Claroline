@@ -15,15 +15,15 @@
                     <thead>
                         <tr class="text-left">
 {#                            <th></th> #}
-                            <th>{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
                             <th>{{ adminInnova }} {{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                            <th></th>
+                            <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
+                            <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
+                            <th style="width: 120px;"></th>
                         </tr>
                     </thead>
                     <tbody>

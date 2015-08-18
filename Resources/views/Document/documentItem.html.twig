@@ -7,7 +7,7 @@
 
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
-    <td class={{ classArray }}>
+    <td class="{{ classArray }}">
         {{ document.drop.user.lastName }}
     </td>
     <td class={{ classArray }}>
@@ -35,11 +35,11 @@
     </td>
 
     {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
-    <td class="{{ classArray }}" id="is-validate-{{ document.id }}">
+    <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>
 
-    <td class="{{ classArray }}">
+    <td class="{{ classArray }} centered">
         <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
             {{ document.comments|length }}
             {% if document.getUnReadComments() != 0 %}
