@@ -72,7 +72,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface
                                 ->end()
                             ->end()
                             ->scalarNode('title')->isRequired()->end()
-                            ->scalarNode('primary_resource')->isRequired()->end()
+                            ->scalarNode('primary_resource')->end()
                             ->scalarNode('max_duration')->isRequired()->end()
                             ->scalarNode('who')->isRequired()->end()
                             ->scalarNode('where')->isRequired()->end()
@@ -150,10 +150,12 @@ class ActivityImporter extends Importer implements ConfigurationInterface
             $secondaryResources[] = array('uid' => $resource->getId());
         }
 
+        $primaryResource = $object->getPrimaryResource() ? $object->getPrimaryResource()->getId(): null;
+
         $data = array(array('activity' => array(
             'description' => $uid,
             'title' => $object->getTitle(),
-            'primary_resource' => $object->getPrimaryResource()->getId(),
+            'primary_resource' => $primaryResource,
             'max_duration' => $parameters->getMaxDuration(),
             'who' => $parameters->getWho(),
             'where' => $parameters->getWhere(),
