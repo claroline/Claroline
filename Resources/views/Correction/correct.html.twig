@@ -143,7 +143,7 @@
             {% endif %}
 
             {# Bloc Documents. C'est la liste des documents #}
-            {% set documentListText = 'Document'|trans({}, 'innova_collecticiel') %}
+            {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
             {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
             {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
             {{ collecticielDocumentMacros.innovaDocumentDisplay(correction.drop, dropzone, 6, "condensed", documentListText, document)
@@ -151,7 +151,7 @@
 
             {# Bloc Apprenants #}
             <div class="row">
-                <div class="text-muted col-md-4">{{ 'Learner'|trans({}, 'innova_collecticiel') }}</div>
+                <h4 class="text-muted col-md-4">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
                 <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
             </div>
 
@@ -278,7 +278,7 @@
                     {% endif %}
                 </p>
                 {% if correction.drop.documents|length > 0 %}
-                    {% set documentListText = 'Documents'|trans({}, 'innova_collecticiel') %}
+                    {% set documentListText = 'Comments on'|trans({}, 'innova_collecticiel') %}
                     {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }}
                 {% else %}
                     <p class="text-danger">{{ 'No document associated'|trans({}, 'innova_collecticiel') }}</p>
