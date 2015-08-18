@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
-                <div class="text-muted">{{ documentListText }}</div>
+                <h4 class="text-muted">{{ documentListText }}</h4>
             {% endif %}
             <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well table-striped">
                 {% if drop.documents|length <= 0 %}
