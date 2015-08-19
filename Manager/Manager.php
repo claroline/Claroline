@@ -11,7 +11,8 @@
 
 namespace Claroline\MigrationBundle\Manager;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Claroline\MigrationBundle\Generator\Generator;
 use Claroline\MigrationBundle\Generator\Writer;
@@ -22,12 +23,11 @@ use Claroline\MigrationBundle\Migrator\Migrator;
  */
 class Manager
 {
-    use LoggableTrait;
+    use LoggerAwareTrait;
 
     private $generator;
     private $writer;
     private $migrator;
-    private $supportedPlatforms;
 
     /**
      * Constructor.
@@ -176,5 +176,12 @@ class Manager
                 "Nothing to execute: bundle is already at version {$currentVersion}" :
                 "Done: bundle is now at version {$currentVersion}"
         );
+    }
+
+    private function log($message)
+    {
+        if ($this->logger) {
+            $this->logger->log(LogLevel::INFO, $message);
+        }
     }
 }
