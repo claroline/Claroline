@@ -14,9 +14,12 @@ namespace Claroline\CoreBundle\Library\Transfert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 
 abstract class Importer
 {
+    use LoggableTrait;
+
     private $listImporters;
     private $rootPath;
     private $configuration;
@@ -124,6 +127,16 @@ abstract class Importer
     public function addRoleEntity($role)
     {
         $this->roles[] = $role;
+    }
+
+    public function getPriority()
+    {
+        return 0;
+    }
+
+    public function setLogger($logger)
+    {
+        $this->logger = $logger;
     }
 
     abstract function getName();

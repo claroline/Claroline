@@ -18,6 +18,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Psr\Log\LogLevel;
 
 /**
  * Creates an user, optionaly with a specific role (default to simple user).
@@ -76,7 +78,15 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $verbosityLevelMap = array(
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::DEBUG  => OutputInterface::VERBOSITY_NORMAL
+        );
+        $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
+
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+        $workspaceManager->setLogger($consoleLogger);
         $validator = $this->getContainer()->get('validator');
         $template = $input->getArgument('archive_path');
         $username = $input->getArgument('owner_username');
@@ -95,6 +105,5 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         $config->setWorkspaceDescription(true);
         $workspaceManager->create($config, $user);
         $workspaceManager->importRichText();
-
     }
 }
