@@ -2,8 +2,11 @@
 namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\AgendaBundle\Entity\Event;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
+use DateTime;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -29,12 +32,11 @@ class DropzoneManager
         $this->em = $em;
     }
 
-
     /**
      *  Getting the user that have the 'open' rights.
      *  Excluded the admin profil.
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     * @return array UserIds.
+     * @param  \Innova\CollecticielBundle\Entity\Dropzone $dropzone
+     * @return array                                      UserIds.
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
@@ -65,7 +67,6 @@ class DropzoneManager
                 foreach ($users as $user) {
                     array_push($userIds, $user->getId());
                 }
-
             }
         }
         $userIds = array_unique($userIds);
@@ -112,6 +113,7 @@ class DropzoneManager
         $nbCorrections = $this->em
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
+
         return $this->getDrozponeProgress($dropzone, $drop, $nbCorrections);
     }
 
@@ -138,17 +140,16 @@ class DropzoneManager
      *  percent : rounded progress in percent
      *  nbCorrection : corrections made by the user in this evaluation.
      *
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
-     * @param \Innova\CollecticielBundle\Entity\Drop|\Innova\CollecticielBundle\Manager\Drop $drop
-     * @param int $nbCorrection number of correction the user did.
-     * @return array (states, currentState,percent,nbCorrection)
+     * @param  \Innova\CollecticielBundle\Entity\Dropzone                                     $dropzone
+     * @param  \Innova\CollecticielBundle\Entity\Drop|\Innova\CollecticielBundle\Manager\Drop $drop
+     * @param  int                                                                            $nbCorrection number of correction the user did.
+     * @return array                                                                          (states, currentState,percent,nbCorrection)
      */
     public function getDrozponeProgress(Dropzone $dropzone, Drop $drop = null, $nbCorrection = 0)
     {
         $begin_states = array('Evaluation not started', 'awaiting for drop', 'drop provided');
         $end_states = array('waiting for correction', 'corrected copy');
         $states = array();
-
 
         $states = array_merge($states, $begin_states);
         $expectedCorrections = $dropzone->getExpectedTotalCorrection();
@@ -157,7 +158,6 @@ class DropzoneManager
         // set the states of the dropzone.
 
         if ($dropzone->getPeerReview()) {
-
             // case of peerReview
 
             /*
@@ -192,7 +192,6 @@ class DropzoneManager
                     $nbCorrection = $expectedCorrections;
                 }
 
-
                 if (!$allow_user_to_not_have_expected_corrections && !$drop->isUnlockedDrop()) {
                     $currentState += $nbCorrection;
                     if ($nbCorrection >= $expectedCorrections) {
@@ -202,14 +201,13 @@ class DropzoneManager
                     $currentState++;
                 }
 
-
                 if ($drop->countFinishedCorrections() >= $expectedCorrections) {
                     $currentState++;
 
                     if ($allow_user_to_not_have_expected_corrections) {
                         $currentState++;
                     }
-                } else if ($drop->isUnlockedDrop()) {
+                } elseif ($drop->isUnlockedDrop()) {
                     $currentState++;
                 }
 
@@ -217,8 +215,6 @@ class DropzoneManager
                 if ($currentState >= count($states)) {
                     $currentState = count($states) - 1;
                 }
-
-
             }
         } else {
             // case of normal correction.
@@ -245,7 +241,7 @@ class DropzoneManager
      *  Test to detect the special case where the peerReview end whereas user didnt had time to make the expected
      *  number of correction.
      *
-     * @param Dropzone $dropzone
+     * @param  Dropzone $dropzone
      * @param $nbCorrection
      * @return bool
      */
@@ -255,24 +251,22 @@ class DropzoneManager
         if (($dropzone->getManualPlanning() && $dropzone->getManualState() == Dropzone::MANUAL_STATE_FINISHED) ||
             (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0)
         ) {
-
             if ($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
                 $specialCase = true;
             }
         }
+
         return $specialCase;
     }
-
 
     /**
      * if the dropzone option 'autocloseOpenDropsWhenTimeIsUp' is activated, and evalution allowToDrop time is over,
      *  this will close all drop not closed yet.
      * @param Dropzone $dropzone
-     * @param bool $force
+     * @param bool     $force
      */
     public function closeDropzoneOpenedDrops(Dropzone $dropzone, $force = false)
     {
-
         if ($force || $this->isDropzoneDropTimeIsUp($dropzone)) {
             $dropRepo = $this->em->getRepository('InnovaCollecticielBundle:Drop');
             $dropRepo->closeUnTerminatedDropsByDropzone($dropzone->getId());
@@ -282,7 +276,7 @@ class DropzoneManager
 
     /**
      * Check if dropzone  options are ok in order to autoclose Drops
-     * @param Dropzone $dropzone
+     * @param  Dropzone $dropzone
      * @return bool
      */
     private function isDropzoneDropTimeIsUp(Dropzone $dropzone)
@@ -292,9 +286,9 @@ class DropzoneManager
             $now = new \DateTime();
             $dropDatePassed = $now->getTimestamp() > $dropzone->getEndAllowDrop()->getTimeStamp();
         }
+
         return $dropDatePassed;
     }
-
 
     public function recalculateScoreByDropzone(Dropzone $dropzone)
     {
@@ -310,10 +304,71 @@ class DropzoneManager
         $corrections = $CorrectionRepo->findBy(['dropzone' => $dropzone->getId()]);
 
         $this->container->get('innova.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
-
     }
 
+    /**
+     * Handle events when modifying dropzone
+     * Delete useless events (if manualPlanning) & update/create (if datePlanning)
+     * @param  Dropzone $dropzone
+     * @return bool
+     */
+    public function handleEvents(Dropzone $dropzone, User $user)
+    {
+        $agendaManager = $this->container->get('claroline.manager.agenda_manager');
+        $workspace = $dropzone->getResourceNode()->getWorkspace();
 
+        if ($dropzone->getManualPlanning()) {
+            if ($dropzone->getEventDrop() != null) {
+                $event = $dropzone->getEventDrop();
+                $agendaManager->deleteEvent($event);
+                $dropzone->setEventDrop(null);
+            }
 
+            if ($dropzone->getEventCorrection() != null) {
+                $event = $dropzone->getEventCorrection();
+                $agendaManager->deleteEvent($event);
+                $dropzone->setEventCorrection(null);
+            }
+        } elseif ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+            if ($dropzone->getEventDrop() != null) {
+                // update event
+                $eventDrop = $dropzone->getEventDrop();
+                $eventDrop->setStart($dropzone->getStartAllowDrop());
+                $eventDrop->setEnd($dropzone->getEndAllowDrop());
+                $agendaManager->updateEvent($eventDrop);
+            } else {
+                // create event
+                $eventDrop = $this->createAgendaEventDrop($user, $dropzone);
+                // event creation + link to workspace
+                $agendaManager->addEvent($eventDrop, $workspace);
+                // link btween the event and the dropzone
+                $dropzone->setEventDrop($eventDrop);
+            }
+        }
 
+        return $dropzone;
+    }
+
+    private function createAgendaEventDrop(User $user, Dropzone $dropzone)
+    {
+        $translator = $this->container->get('translator');
+        $em = $this->container->get('doctrine')->getEntityManager();
+
+        $event = new Event();
+        $event->setStart($dropzone->getStartAllowDrop());
+        $event->setEnd($dropzone->getEndAllowDrop());
+        $event->setUser($user);
+
+        $dropzoneName = $dropzone->getResourceNode()->getName();
+        $title = $translator->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+        $desc = $translator->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+
+        $event->setTitle($title);
+        $event->setDescription($desc);
+
+        $em->persist($event);
+        $em->flush();
+
+        return $event;
+    }
 }

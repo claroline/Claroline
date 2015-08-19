@@ -14,7 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormError;
-use DateTime;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -44,146 +43,67 @@ class DropzoneController extends DropzoneBaseController
      */
     public function editCommonAction(Dropzone $dropzone, $user)
     {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-        $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        // $this->get('translator')->trans('date_form_format', array(), 'platform')
+        $em                     = $this->getDoctrine()->getManager();
+        $dropzoneVoter          = $this->get('innova.manager.dropzone_voter');
+        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
+        $agendaManager          = $this->get('claroline.manager.agenda_manager');
+        $translator             = $this->get('translator');
+        $platformConfigHandler  = $this->get('claroline.config.platform_config_handler');
+
+        $dropzoneVoter->isAllowToOpen($dropzone);
+        $dropzoneVoter->isAllowToEdit($dropzone);
+
         $form = $this->createForm(
-            new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'),
-            'date_format' => 'dd/MM/yyyy', )
-                                );
+            new DropzoneCommonType(), $dropzone,
+            array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => 'dd/MM/yyyy')
+        );
+
         if ($this->getRequest()->isMethod('POST')) {
-            // see if manual plannification option has changed.
+            // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
             $oldEndDropDate = $dropzone->getEndAllowDrop();
 
             $form->handleRequest($this->getRequest());
             $dropzone = $form->getData();
+            $form = $this->handleFormErrors($form, $dropzone);
 
-            if (!$dropzone->getPeerReview() and $dropzone->getManualState() == 'peerReview') {
-                $dropzone->setManualState('notStarted');
-            }
             if ($dropzone->getEditionState() < 2) {
                 $dropzone->setEditionState(2);
             }
 
-            if (
-                !$dropzone->getAllowWorkspaceResource()
-                and !$dropzone->getAllowUpload()
-                and !$dropzone->getAllowUrl()
-                and !$dropzone->getAllowRichText()
-            ) {
-                $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
-                $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));
-                $form->get('allowUrl')->addError(new FormError('Choose at least one type of document'));
-                $form->get('allowRichText')->addError(new FormError('Choose at least one type of document'));
-            }
+            // handle events (delete if needed, create & update)
+            $dropzone = $dropzoneManager->handleEvents($dropzone, $user);
 
-            if (!$dropzone->getManualPlanning()) {
-                $dropzone->setStartAllowDrop($form->get('startAllowDrop')->getData());
-                $dropzone->setEndAllowDrop($form->get('endAllowDrop')->getData());
-
-                if ($dropzone->getStartAllowDrop() == null) {
-                    $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
-                }
-                if ($dropzone->getEndAllowDrop() == null) {
-                    $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
-                }
-
-                if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
-                    if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
-                        $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
-                        $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
-                    }
-                }
-            } else {
-                $AgendaManager = $this->get('claroline.manager.agenda_manager');
-                // if manual mode, we delete agenda events related to
-                if ($dropzone->getEventDrop() != null) {
-                    $event = $dropzone->getEventDrop();
-                    $AgendaManager->deleteEvent($event);
-                    $dropzone->setEventDrop(null);
-                }
-
-                if ($dropzone->getEventCorrection() != null) {
-                    $event = $dropzone->getEventCorrection();
-                    $AgendaManager->deleteEvent($event);
-                    $dropzone->setEventCorrection(null);
+            $manualStateChanged = false;
+            $newManualState = null;
+            if ($dropzone->getManualPlanning() == true) {
+                if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
+                    $manualStateChanged = true;
+                    $newManualState = $dropzone->getManualState();
                 }
             }
 
-            if (count($form->getErrors('startAllowDrop')) < 3) {
-                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+            $unitOfWork = $em->getUnitOfWork();
+            $unitOfWork->computeChangeSets();
+            $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
 
-                if ($dropzone->getPeerReview() != true) {
-                    $dropzone->setExpectedTotalCorrection(1);
-                    if ($dropzone->getManualState() == 'peerReview') {
-                        $dropzone->setManualState('notStarted');
-                    }
-                }
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($dropzone);
+            $em->flush();
 
-                $manualStateChanged = false;
-                $newManualState = null;
-                if ($dropzone->getManualPlanning() == true) {
-                    if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
-                        $manualStateChanged = true;
-                        $newManualState = $dropzone->getManualState();
-                    }
-                    // option auto Close unterminated drops
-                    if ($form->get('autoCloseForManualStates')->getData() == 1) {
-                        $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
-                    }
-                } else {
-                    if ($oldEndDropDate != $dropzone->getEndAllowDrop()) {
-                        $dropzone->setAutoCloseState(Dropzone::AUTO_CLOSED_STATE_WAITING);
-                    }
-                }
-                $em = $this->getDoctrine()->getManager();
-
-                $unitOfWork = $em->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
-                $changeSet = $unitOfWork->getEntityChangeSet($dropzone);
-
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($dropzone);
-                $em->flush();
-
-                // check if manual state has changed
-                if ($manualStateChanged) {
-                    // send notification.
-                    $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
-                    $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
-                    $this->get('event_dispatcher')->dispatch('log', $event);
-                }
-                $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
-                $this->dispatch($event);
-
-                if ($dropzone->getPeerReview()) {
-                    $stayHere = $form->get('stayHere')->getData();
-
-                    if ($stayHere == 1) {
-                        $this->getRequest()->getSession()->getFlashBag()->add(
-                            'success',
-                            $this->get('translator')->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel')
-                        );
-                    } else {
-                        return $this->redirect(
-                            $this->generateUrl(
-                                'innova_collecticiel_edit_criteria',
-                                array(
-                                    'resourceId' => $dropzone->getId(),
-                                )
-                            )
-                        );
-                    }
-                } else {
-                    $this->getRequest()->getSession()->getFlashBag()->add(
-                        'success',
-                        $this->get('translator')->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel')
-                    );
-                }
+            // check if manual state has changed
+            if ($manualStateChanged) {
+                // send notification.
+                $usersIds = $dropzoneManager->getDropzoneUsersIds($dropzone);
+                $event = new LogDropzoneManualStateChangedEvent($dropzone, $newManualState, $usersIds);
+                $this->get('event_dispatcher')->dispatch('log', $event);
             }
+
+            $event = new LogDropzoneConfigureEvent($dropzone, $changeSet);
+            $this->dispatch($event);
+
+            $this->getRequest()->getSession()->getFlashBag()->add('success', $translator->trans('The collecticiel has been successfully saved', array(), 'innova_collecticiel'));
         }
 
         $adminInnova = false;
@@ -401,31 +321,36 @@ class DropzoneController extends DropzoneBaseController
         );
     }
 
-    private function createAgendaEventDrop(DateTime $startDate, DateTime $endDate, $user, Dropzone $dropzone, $type = "drop")
+    private function handleFormErrors($form, Dropzone $dropzone)
     {
-        $event = new Event();
-        $event->setStart($startDate);
-        $event->setEnd($endDate);
-        $event->setUser($user);
-
-        $dropzoneName = $dropzone->getResourceNode()->getName();
-        if ($type == 'drop') {
-            $title = $this->get('translator')->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
-            $desc = $this->get('translator')->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
-
-            $event->setTitle($title);
-            $event->setDescription($desc);
-        } else {
-            $title = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
-            $desc = $this->get('translator')->trans('Peer Review is starting in %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
-
-            $event->setTitle($title);
-            $event->setDescription($desc);
+        if (
+            !$dropzone->getAllowWorkspaceResource()
+            and !$dropzone->getAllowUpload()
+            and !$dropzone->getAllowUrl()
+            and !$dropzone->getAllowRichText()
+            ) {
+            $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
+            $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));
+            $form->get('allowUrl')->addError(new FormError('Choose at least one type of document'));
+            $form->get('allowRichText')->addError(new FormError('Choose at least one type of document'));
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($event);
-        $em->flush();
 
-        return $event;
+        if (!$dropzone->getManualPlanning()) {
+            if ($dropzone->getStartAllowDrop() == null) {
+                $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
+            }
+            if ($dropzone->getEndAllowDrop() == null) {
+                $form->get('endAllowDrop')->addError(new FormError('Choose a date'));
+            }
+
+            if ($dropzone->getStartAllowDrop() != null && $dropzone->getEndAllowDrop() != null) {
+                if ($dropzone->getStartAllowDrop()->getTimestamp() > $dropzone->getEndAllowDrop()->getTimestamp()) {
+                    $form->get('startAllowDrop')->addError(new FormError('Must be before end allow drop'));
+                    $form->get('endAllowDrop')->addError(new FormError('Must be after start allow drop'));
+                }
+            }
+        }
+
+        return $form;
     }
 }
