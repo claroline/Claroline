@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4.1",
         "symfony/framework-bundle": "*",
         "symfony/console": "~2.0",
         "symfony/twig-bridge": "~2.0",
@@ -21,6 +21,7 @@
         "doctrine/orm": "~2.2",
         "doctrine/migrations": "dev-master",
         "jdorn/sql-formatter": "~1.0",
+        "psr/log": "~1.0",
         "claroline/kernel-bundle": "~6.0"
     },
     "require-dev": {

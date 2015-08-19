@@ -135,6 +135,7 @@ class Migrator
         }
 
         $driverName = $this->connection->getDriver()->getName();
+
         $migrationsDir = "{$bundle->getPath()}/Migrations/{$driverName}";
         $migrationsName = "{$bundle->getName()} migration";
         $migrationsNamespace = "{$bundle->getNamespace()}\\Migrations\\{$driverName}";
@@ -145,7 +146,10 @@ class Migrator
         $config->setMigrationsDirectory($migrationsDir);
         $config->setMigrationsNamespace($migrationsNamespace);
         $config->setMigrationsTableName($migrationsTableName);
-        $config->registerMigrationsFromDirectory($migrationsDir);
+
+        if (is_dir($migrationsDir)) {
+            $config->registerMigrationsFromDirectory($migrationsDir);
+        }
 
         $this->cacheConfigs[$bundle->getName()] = $config;
 
