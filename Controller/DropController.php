@@ -1166,10 +1166,10 @@ class DropController extends DropzoneBaseController
         // Récupération du Workspace
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
-//var_dump($workspace->getId());
         // Récupération des roles du Workspace
-        $roles = $this->getDoctrine()->getManager()
-        ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
+        $roles = 
+         $this->getDoctrine()->getManager()
+         ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
 
 //        var_dump($roles);
 //        die();
