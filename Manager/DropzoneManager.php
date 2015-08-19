@@ -2,8 +2,11 @@
 namespace Innova\CollecticielBundle\Manager;
 
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\AgendaBundle\Entity\Event;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Entity\Drop;
+use DateTime;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -303,22 +306,69 @@ class DropzoneManager
         $this->container->get('innova.manager.correction_manager')->recalculateScoreForCorrections($dropzone, $corrections);
     }
 
-    public function deleteEvents(Dropzone $dropzone)
+    /**
+     * Handle events when modifying dropzone
+     * Delete useless events (if manualPlanning) & update/create (if datePlanning)
+     * @param  Dropzone $dropzone
+     * @return bool
+     */
+    public function handleEvents(Dropzone $dropzone, User $user)
     {
         $agendaManager = $this->container->get('claroline.manager.agenda_manager');
+        $workspace = $dropzone->getResourceNode()->getWorkspace();
 
-        if ($dropzone->getEventDrop() != null) {
-            $event = $dropzone->getEventDrop();
-            $agendaManager->deleteEvent($event);
-            $dropzone->setEventDrop(null);
-        }
+        if ($dropzone->getManualPlanning()) {
+            if ($dropzone->getEventDrop() != null) {
+                $event = $dropzone->getEventDrop();
+                $agendaManager->deleteEvent($event);
+                $dropzone->setEventDrop(null);
+            }
 
-        if ($dropzone->getEventCorrection() != null) {
-            $event = $dropzone->getEventCorrection();
-            $agendaManager->deleteEvent($event);
-            $dropzone->setEventCorrection(null);
+            if ($dropzone->getEventCorrection() != null) {
+                $event = $dropzone->getEventCorrection();
+                $agendaManager->deleteEvent($event);
+                $dropzone->setEventCorrection(null);
+            }
+        } elseif ($dropzone->getStartAllowDrop() != NULL && $dropzone->getEndAllowDrop() != NULL) {
+            if ($dropzone->getEventDrop() != null) {
+                // update event
+                $eventDrop = $dropzone->getEventDrop();
+                $eventDrop->setStart($dropzone->getStartAllowDrop());
+                $eventDrop->setEnd($dropzone->getEndAllowDrop());
+                $agendaManager->updateEvent($eventDrop);
+            } else {
+                // create event
+                $eventDrop = $this->createAgendaEventDrop($user, $dropzone);
+                // event creation + link to workspace
+                $agendaManager->addEvent($eventDrop, $workspace);
+                // link btween the event and the dropzone
+                $dropzone->setEventDrop($eventDrop);
+            }
         }
 
         return $dropzone;
+    }
+
+    private function createAgendaEventDrop(User $user, Dropzone $dropzone)
+    {
+        $translator = $this->container->get('translator');
+        $em = $this->container->get('doctrine')->getEntityManager();
+
+        $event = new Event();
+        $event->setStart($dropzone->getStartAllowDrop());
+        $event->setEnd($dropzone->getEndAllowDrop());
+        $event->setUser($user);
+
+        $dropzoneName = $dropzone->getResourceNode()->getName();
+        $title = $translator->trans('Deposit phase of the %dropzonename% evaluation', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+        $desc = $translator->trans('Evaluation %dropzonename% opening', array('%dropzonename%' => $dropzoneName), 'innova_collecticiel');
+
+        $event->setTitle($title);
+        $event->setDescription($desc);
+
+        $em->persist($event);
+        $em->flush();
+
+        return $event;
     }
 }
