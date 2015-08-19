@@ -55,6 +55,7 @@ class DropzoneVoter
 
         }
     }
+    
 
     /**
      * @param Dropzone $dropzone
@@ -74,4 +75,20 @@ class DropzoneVoter
         $event = new LogResourceReadEvent($dropzone->getResourceNode());
         $this->container->get('event_dispatcher')->dispatch('log', $event);
     }
+    
+    /**
+     * @param Dropzone $dropzone
+     */
+    public function checkEditRight(Dropzone $dropzone)
+    {        
+        $collection = new ResourceCollection(array($dropzone->getResourceNode()));
+
+        if (false === $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection)) {
+
+            return false;
+        }
+        
+        return true;
+    }
+    
 } 

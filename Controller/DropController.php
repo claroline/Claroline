@@ -144,13 +144,8 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-//        $adminInnova = $this->get('innova.manager.collecticiel_manager')->adminOrNot($user);
-
-        $adminInnova = false;
-        if ( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN' === true)
-        && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
-            $adminInnova = true;
-        }
+        
+        $adminInnova = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
         
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userNbTextToRead = array();
@@ -279,14 +274,8 @@ class DropController extends DropzoneBaseController
 
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
-
-//        $adminInnova = $this->get('innova.manager.collecticiel_manager')->adminOrNot($user);
-
-        $adminInnova = false;
-        if ( $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN' === true)
-        && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
-            $adminInnova = true;
-        }
+        
+        $adminInnova = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
         
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
         $userNbTextToRead = array();
