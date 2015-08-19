@@ -11,7 +11,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dropzone extends AbstractResource
 {
-
     const MANUAL_STATE_NOT_STARTED = "notStarted";
     const MANUAL_STATE_PEER_REVIEW = "peerReview";
     const MANUAL_STATE_ALLOW_DROP = "allowDrop";
@@ -28,7 +26,7 @@ class Dropzone extends AbstractResource
     const MANUAL_STATE_FINISHED = "finished";
 
     const AUTO_CLOSED_STATE_WAITING = "waiting";
-    const AUTO_CLOSED_STATE_CLOSED ="autoClosed";
+    const AUTO_CLOSED_STATE_CLOSED = "autoClosed";
 
     /**
      * 1 = common
@@ -44,7 +42,6 @@ class Dropzone extends AbstractResource
      * @ORM\Column(type="text", nullable=true)
      */
     protected $instruction = null;
-
 
     /**
      * @ORM\Column(name="correction_instruction",type="text", nullable=true)
@@ -93,7 +90,7 @@ class Dropzone extends AbstractResource
      *      max = 10
      * )
      */
-    protected $expectedTotalCorrection = 3;
+    protected $expectedTotalCorrection = 1;
 
     /**
      * @ORM\Column(name="display_notation_to_learners", type="boolean", nullable=false)
@@ -223,8 +220,6 @@ class Dropzone extends AbstractResource
      */
     protected $autoCloseState = self::AUTO_CLOSED_STATE_WAITING;
 
-
-
     /**
      * @ORM\OneToOne(
      *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
@@ -301,7 +296,6 @@ class Dropzone extends AbstractResource
         return $this->eventDrop;
     }
 
-
     /**
      * @param mixed $editionState
      */
@@ -375,7 +369,6 @@ class Dropzone extends AbstractResource
     {
         return $this->forceCommentInCorrection;
     }
-
 
     /**
      * @return mixed
@@ -571,11 +564,10 @@ class Dropzone extends AbstractResource
             self::MANUAL_STATE_PEER_REVIEW,
             self::MANUAL_STATE_ALLOW_DROP,
             self::MANUAL_STATE_ALLOW_DROP_AND_PEER_REVIEW,
-            self::MANUAL_STATE_FINISHED);
+            self::MANUAL_STATE_FINISHED, );
         if (array_search($manualState, $ms_tab_values) !== false) {
             $this->manualState = $manualState;
         }
-
     }
 
     /**
@@ -674,7 +666,6 @@ class Dropzone extends AbstractResource
         $this->displayNotationToLearners = $displayNotationToLearners;
     }
 
-
     /**
      * @return mixed
      */
@@ -699,7 +690,6 @@ class Dropzone extends AbstractResource
     {
         return $this->allowCorrectionDeny;
     }
-
 
     public function setAllowCorrectionDeny($allowCorrectionDeny)
     {
@@ -776,7 +766,6 @@ class Dropzone extends AbstractResource
             return $this->manualState == 'notStarted';
         } else {
             $now = new \DateTime();
-
 
             return $now->getTimestamp() < $this->getStartAllowDrop()->getTimestamp() && ($this->getStartReview() == null || $now->getTimestamp() < $this->getStartReview()->getTimestamp());
         }
@@ -874,7 +863,7 @@ class Dropzone extends AbstractResource
     /**
      * Add criterion
      *
-     * @param \Innova\CollecticielBundle\Entity\Criterion $criterion
+     * @param  \Innova\CollecticielBundle\Entity\Criterion $criterion
      * @return Dropzone
      */
     public function addCriterion(Criterion $criterion)
@@ -908,7 +897,7 @@ class Dropzone extends AbstractResource
     public function setAutoCloseState($autoCloseState)
     {
         $authorizedValues = array(self::AUTO_CLOSED_STATE_CLOSED,self::AUTO_CLOSED_STATE_WAITING);
-        if(in_array($autoCloseState,$authorizedValues)) {
+        if (in_array($autoCloseState, $authorizedValues)) {
             $this->autoCloseState = $autoCloseState;
         }
     }
@@ -950,7 +939,7 @@ class Dropzone extends AbstractResource
     /**
      * Add drops
      *
-     * @param \Innova\CollecticielBundle\Entity\Drop $drops
+     * @param  \Innova\CollecticielBundle\Entity\Drop $drops
      * @return Dropzone
      */
     public function addDrop(\Innova\CollecticielBundle\Entity\Drop $drops)
@@ -973,7 +962,7 @@ class Dropzone extends AbstractResource
     /**
      * Add peerReviewCriteria
      *
-     * @param \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
+     * @param  \Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria
      * @return Dropzone
      */
     public function addPeerReviewCriterium(\Innova\CollecticielBundle\Entity\Criterion $peerReviewCriteria)
@@ -996,7 +985,7 @@ class Dropzone extends AbstractResource
     /**
      * Set resourceNode
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
+     * @param  \Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode
      * @return Dropzone
      */
     public function setResourceNode(\Claroline\CoreBundle\Entity\Resource\ResourceNode $resourceNode = null)
