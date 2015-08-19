@@ -1152,10 +1152,23 @@ class DropController extends DropzoneBaseController
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
+        // Récupération du Workspace
+        $workspace = $dropzone->getResourceNode()->getWorkspace();
+
+        // Récupération des roles du Workspace
+        $roles = 
+         $this->getDoctrine()->getManager()
+         ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
+
+//        var_dump($roles);
+//        die();
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
+//        $userRepo = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User');
+
+//        $users = $dropRepo->getUsersByWorkspacesAndRoles($workspace, $roles);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
