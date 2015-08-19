@@ -1,40 +1,81 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% set courseTitle = course.getTitle() %}
+
 {% block title %}
-    {{
-        parent() ~ 
-        ' - ' ~ 
-        'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
-        ' - ' ~ 
-        displayedWords['course'] ~ 
-        ' - ' ~ 
-        courseTitle 
-    }}
+    {% if type == 'course' %}
+        {{
+            parent() ~ 
+            ' - ' ~ 
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
+            ' - ' ~ 
+            displayedWords['course'] ~ 
+            ' - ' ~ 
+            courseTitle 
+        }}
+    {% else %}
+        {{
+            parent() ~ 
+            ' - ' ~ 
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
+            ' - ' ~ 
+            displayedWords['cursus'] ~ 
+            ' - ' ~ 
+            courseTitle 
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'claroline_cursus_tool'|trans({}, 'tools'),
-                'href': path('claro_cursus_management_tool_menu')
-            },
-            {
-                'name': displayedWords['course'],
-                'href': path('claro_cursus_tool_course_index')
-            },
-            {
-                'name': courseTitle,
-                'href': ''
-            }
-        ])
-    }}
+    {% if type == 'course' %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['course'],
+                    'href': path('claro_cursus_tool_course_index')
+                },
+                {
+                    'name': courseTitle,
+                    'href': ''
+                }
+            ])
+        }}
+    {% else %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['cursus'],
+                    'href': path('claro_cursus_tool_index')
+                },
+                {
+                    'name': cursus.getTitle(),
+                    'href': path('claro_cursus_management', {'cursus': cursus.getId()})
+                },
+                {
+                    'name': courseTitle,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block section_content %}
@@ -46,9 +87,6 @@
     </div>
     <div class="panel-body">
         {{ macros.flashBox() }}
-        {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
-        
-        <br>
         <div>
             <h3>
                 {{ courseTitle }}
@@ -66,7 +104,11 @@
                     </small>
                 {% endif %}
                 <small>
-                    <a href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 1}) }}"
+                    <a {% if type == 'course' %}
+                           href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 1}) }}"
+                       {% else %}
+                           href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 2, 'cursusId': cursus.getId()}) }}"
+                       {% endif %}
                         <i class="fa fa-pencil"></i>
                     </a>
                 </small>

@@ -125,7 +125,6 @@ class CursusController extends Controller
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-            'type' => 'cursus',
             'allRootCursus' => $allRootCursus
         );
     }
@@ -400,7 +399,6 @@ class CursusController extends Controller
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-            'type' => 'cursus',
             'cursus' => $cursus,
             'hierarchy' => $hierarchy
         );

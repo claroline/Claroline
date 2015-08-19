@@ -127,7 +127,6 @@ class CourseController extends Controller
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-            'type' => 'course',
             'courses' => $courses,
             'search' => $search,
             'page' => $page,
@@ -157,8 +156,7 @@ class CourseController extends Controller
 
         return array(
             'form' => $form->createView(),
-            'displayedWords' => $displayedWords,
-            'type' => 'course'
+            'displayedWords' => $displayedWords
         );
     }
 
@@ -206,17 +204,16 @@ class CourseController extends Controller
 
             return array(
                 'form' => $form->createView(),
-                'displayedWords' => $displayedWords,
-                'type' => 'course'
+                'displayedWords' => $displayedWords
             );
         }
     }
 
     /**
      * @EXT\Route(
-     *     "cursus/course/{course}/edit/form/source/{source}",
+     *     "cursus/{cursusId}/course/{course}/edit/form/source/{source}",
      *     name="claro_cursus_course_edit_form",
-     *     defaults={"source"=0},
+     *     defaults={"source"=0, "cursusId"=-1},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -228,9 +225,13 @@ class CourseController extends Controller
     public function courseEditFormAction(
         Course $course,
         User $authenticatedUser,
-        $source = 0
+        $source = 0,
+        $cursusId = -1
     )
     {
+        $cursus = intval($source) === 2 ?
+            $this->cursusManager->getOneCursusById($cursusId) :
+            null;
         $displayedWords = array();
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
@@ -245,16 +246,17 @@ class CourseController extends Controller
             'form' => $form->createView(),
             'course' => $course,
             'displayedWords' => $displayedWords,
-            'type' => 'course',
-            'source' => $source
+            'source' => $source,
+            'cursus' => $cursus,
+            'cursusId' => $cursusId
         );
     }
 
     /**
      * @EXT\Route(
-     *     "cursus/course/{course}/edit/source/{source}",
+     *     "cursus/{cursusId}/course/{course}/edit/source/{source}",
      *     name="claro_cursus_course_edit",
-     *     defaults={"source"=0},
+     *     defaults={"source"=0, "cursusId"=-1},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
@@ -266,7 +268,8 @@ class CourseController extends Controller
     public function courseEditAction(
         Course $course,
         User $authenticatedUser,
-        $source = 0
+        $source = 0,
+        $cursusId = -1
     )
     {
         $form = $this->formFactory->create(
@@ -291,14 +294,17 @@ class CourseController extends Controller
             );
             $session = $this->request->getSession();
             $session->getFlashBag()->add('success', $message);
-            $route = $source === 0 ?
+            $route = intval($source) === 0 ?
                 $this->router->generate('claro_cursus_tool_course_index') :
                 $this->router->generate(
                     'claro_cursus_course_management',
-                    array('course' => $course->getId())
+                    array('course' => $course->getId(), 'cursusId' => $cursusId)
                 );
             return new RedirectResponse($route);
         } else {
+            $cursus = intval($source) === 2 ?
+                $this->cursusManager->getOneCursusById($cursusId) :
+                null;
             $displayedWords = array();
 
             foreach (CursusDisplayedWord::$defaultKey as $key) {
@@ -309,8 +315,9 @@ class CourseController extends Controller
                 'form' => $form->createView(),
                 'course' => $course,
                 'displayedWords' => $displayedWords,
-                'type' => 'course',
-                'source' => $source
+                'source' => $source,
+                'cursus' => $cursus,
+                'cursusId' => $cursusId
             );
         }
     }
@@ -358,19 +365,22 @@ class CourseController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/course/{course}/management",
+     *     "cursus/{cursusId}/course/{course}/management",
      *     name="claro_cursus_course_management",
+     *     defaults={"cursusId"=-1},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      *
-     * @param Cursus $cursus
+     * @param Course $course
      *
      */
-    public function courseManagementAction(Course $course)
+    public function courseManagementAction(Course $course, $cursusId = -1)
     {
         $displayedWords = array();
+        $cursus = $this->cursusManager->getOneCursusById($cursusId);
+        $type = is_null($cursus) ? 'course' : 'cursus';
 
         foreach (CursusDisplayedWord::$defaultKey as $key) {
             $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
@@ -391,7 +401,8 @@ class CourseController extends Controller
         return array(
             'defaultWords' => CursusDisplayedWord::$defaultKey,
             'displayedWords' => $displayedWords,
-            'type' => 'course',
+            'type' => $type,
+            'cursus' => $cursus,
             'course' => $course,
             'sessionsTab' => $sessionsTab,
             'queues' => $queues

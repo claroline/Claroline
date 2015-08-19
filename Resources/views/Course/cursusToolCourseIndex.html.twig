@@ -76,18 +76,10 @@
     <div class="panel-heading">
         <h3 class="panel-title">
             {{ displayedWords['course'] }}
-            <a href="{{ path('claro_cursus_plugin_configure_form') }}"
-               class="pull-right"
-            >
-                <i class="fa fa-cog"></i>
-            </a>
         </h3>
     </div>
     <div class="panel-body">
         {{ macros.flashBox() }}
-        {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
-        
-        <br>
         
         {% if search != '' %}
             <div class="alert alert-info">
