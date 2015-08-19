@@ -64,7 +64,6 @@ class ManagerTest extends MockeryTestCase
     public function testGetAvailablePlatforms()
     {
         $platforms = $this->manager->getAvailablePlatforms();
-        $this->assertGreaterThan(1, count($platforms));
         $this->assertContains('pdo_mysql', array_keys($platforms));
         $this->assertInstanceOf('Doctrine\DBAL\Platforms\AbstractPlatform', $platforms['pdo_mysql']);
     }

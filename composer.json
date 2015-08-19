@@ -13,7 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4.1",
         "symfony/framework-bundle": "*",
         "symfony/console": "~2.0",
         "symfony/twig-bridge": "~2.0",
