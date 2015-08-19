@@ -8,13 +8,13 @@
 {% endblock custom_widget_attributes %}
 
 
-{% block  datetimepicker_row %}
-    <div class="{% if errors %}has-error{% endif %}">
+{% block datetimepicker_row %}
+    <div class="{% if errors|length > 0 %}has-error{% endif %}">
         {% spaceless %}
             {{ form_errors(form,{}) }}
             {{ form_label(form,{}) }}
             {{ form_widget(form,{})  }}
-        {%  endspaceless %}
+        {% endspaceless %}
     </div>
 {% endblock %}
 
