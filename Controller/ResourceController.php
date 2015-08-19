@@ -1048,7 +1048,7 @@ class ResourceController
                 array(),
                 'platform'
             );
-            $form->addError(new FormError($errorMsg));
+            $form->addError(new FormError($e->getMessage()));
 
             return array('form' => $form->createView(), 'directory' => $directory);
         }

@@ -28,12 +28,16 @@ use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Yaml\Yaml;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.transfert_manager")
  */
 class TransfertManager
 {
+    use LoggableTrait;
+
     private $listImporters;
     private $rootPath;
     private $om;
@@ -155,6 +159,7 @@ class TransfertManager
             $importedRoles[$key] = $entityRole;
         }
 
+        $this->log('Importing tools...');
         $tools = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
     }
@@ -206,8 +211,10 @@ class TransfertManager
 
         $this->om->persist($workspace);
         $this->om->flush();
+        $this->log('Base workspace created...');
 
         //load roles
+        $this->log('Importing roles...');
         $entityRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
         //The manager role is required for every workspace
         $entityRoles['ROLE_WS_MANAGER'] = $this->container->get('claroline.manager.role_manager')->createWorkspaceRole(
@@ -217,6 +224,7 @@ class TransfertManager
             true
         );
 
+        $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
         $this->om->persist($owner);
 
@@ -247,6 +255,7 @@ class TransfertManager
             array()
         );
 
+        $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
@@ -395,6 +404,8 @@ class TransfertManager
             }
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);
+
+            if ($this->logger) $importer->setLogger($this->logger);
         }
     }
 
@@ -433,6 +444,7 @@ class TransfertManager
     {
         $configuration->setOwner($owner);
         $data = $configuration->getData();
+        $data = $this->reorderData($data);
         $this->data = $data;
         $this->workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
@@ -446,7 +458,13 @@ class TransfertManager
                 $tool = $dataTool['tool'];
 
                 if ($tool['type'] === 'resource_manager') {
-                    $resourceImporter->importResources($tool, $this->workspace, $directory);
+                    $resourceImporter->import(
+                        $tool,
+                        $this->workspace,
+                        array(),
+                        $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($directory),
+                        false
+                    );
                     break;
                 }
             }
@@ -484,5 +502,10 @@ class TransfertManager
         }
 
         return $data;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

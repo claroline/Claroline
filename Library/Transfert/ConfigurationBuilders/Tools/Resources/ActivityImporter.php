@@ -129,8 +129,6 @@ class ActivityImporter extends Importer implements ConfigurationInterface
             $activity->setParameters($parameters);
             $this->om->persist($activity);
             $this->om->persist($parameters);
-            //temporary but the permission init requires everything to be flushed...
-            $this->om->forceFlush();
 
             return $activity;
         }

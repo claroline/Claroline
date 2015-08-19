@@ -39,12 +39,16 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.workspace_manager")
  */
 class WorkspaceManager
 {
+    use LoggableTrait;
+
     const MAX_WORKSPACE_BATCH_SIZE = 10;
 
     /** @var HomeTabManager */
@@ -165,6 +169,7 @@ class WorkspaceManager
     public function create(Configuration $configuration, User $manager)
     {
         $transfertManager = $this->container->get('claroline.manager.transfert_manager');
+        if ($this->logger) $transfertManager->setLogger($this->logger);
         $workspace = $transfertManager->createWorkspace($configuration, $manager);
 
         return $workspace;
@@ -1064,5 +1069,10 @@ class WorkspaceManager
                 return $tool;
             }
         }
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }
