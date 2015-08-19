@@ -22,6 +22,8 @@
     active
 {% endblock %}
 
+{% block collecticiel_shared_active %}active{% endblock %}
+
 {% block resourceBreadcrumb %}
     <li>
         <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
