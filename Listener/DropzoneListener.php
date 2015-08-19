@@ -95,7 +95,7 @@ class DropzoneListener extends ContainerAware
         $route = $this->container
             ->get('router')
             ->generate(
-                'innova_collecticiel_open',
+                'innova_collecticiel_drop',
                 array('resourceId' => $event->getResource()->getId())
             );
         $event->setResponse(new RedirectResponse($route));
