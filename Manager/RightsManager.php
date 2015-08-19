@@ -643,6 +643,8 @@ class RightsManager
      */
     public function canEditPwsPerm(TokenInterface $token)
     {
+        if ($this->container->get('security.context')->isGranted('ROLE_ADMIN')) return true;
+
         $roles = $this->roleManager->getStringRolesFromToken($token);
         $accesses = $this->om
             ->getRepository('ClarolineCoreBundle:Resource\PwsRightsManagementAccess')

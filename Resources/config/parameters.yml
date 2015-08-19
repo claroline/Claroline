@@ -11,6 +11,7 @@ parameters:
     claroline.param.web_bundles_directory: "%claroline.param.web_directory%/bundles"
     claroline.param.thumbnails_directory: "%claroline.param.uploads_directory%/thumbnails"
     claroline.param.uploads_directory: "%claroline.param.web_dir%/uploads"
+    claroline.param.logos_directory: "%claroline.param.uploads_directory%/logos"
     claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"
     claroline.param.templates_directory: "%claroline.param.files_directory%/templates/"
     claroline.param.default_template: "%kernel.root_dir%/../vendor/claroline/core-bundle/Claroline/CoreBundle/Resources/template/default.zip"
