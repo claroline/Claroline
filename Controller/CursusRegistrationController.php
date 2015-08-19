@@ -214,7 +214,12 @@ class CursusRegistrationController extends Controller
                 $hierarchy[$parentId][] = $oneCursus;
             }
         }
-        $this->unlockedHierarchy($cursus, $hierarchy, $lockedHierarchy, $unlockedCursus);
+        $this->cursusManager->unlockedHierarchy(
+            $cursus,
+            $hierarchy,
+            $lockedHierarchy,
+            $unlockedCursus
+        );
         $unlockedIdsTemp = '';
 
         foreach ($unlockedCursus as $unlocked) {
@@ -745,62 +750,6 @@ class CursusRegistrationController extends Controller
         }
 
         return array('cursus' => $cursus, 'hierarchy' => $hierarchy);
-    }
-
-    private function unlockedHierarchy(
-        Cursus $cursus,
-        array $hierarchy,
-        array &$lockedHierarchy,
-        array &$unlockedCursus
-    )
-    {
-        $lockedHierarchy[$cursus->getId()] = false;
-        $unlockedCursus[] = $cursus;
-
-        if (!$cursus->isBlocking()) {
-            // Unlock parents
-            $parent = $cursus->getParent();
-
-            while (!is_null($parent) && !$parent->isBlocking()) {
-                $lockedHierarchy[$parent->getId()] = 'up';
-                $unlockedCursus[] = $parent;
-                $parent = $parent->getParent();
-            }
-            // Unlock children
-            $this->unlockedChildrenHierarchy(
-                $cursus,
-                $hierarchy,
-                $lockedHierarchy,
-                $unlockedCursus
-            );
-        }
-    }
-
-    private function unlockedChildrenHierarchy(
-        Cursus $cursus,
-        array $hierarchy,
-        array &$lockedHierarchy,
-        array &$unlockedCursus
-    )
-    {
-        $cursusId = $cursus->getId();
-
-        if (isset($hierarchy[$cursusId])) {
-
-            foreach ($hierarchy[$cursusId] as $child) {
-
-                if (!$child->isBlocking()) {
-                    $lockedHierarchy[$child->getId()] = 'down';
-                    $unlockedCursus[] = $child;
-                    $this->unlockedChildrenHierarchy(
-                        $child,
-                        $hierarchy,
-                        $lockedHierarchy,
-                        $unlockedCursus
-                    );
-                }
-            }
-        }
     }
 
     private function checkToolAccess()

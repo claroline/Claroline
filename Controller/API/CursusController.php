@@ -20,6 +20,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -89,6 +90,7 @@ class CursusController extends FOSRestController
      *     description="Register an user to a cursus",
      *     views = {"cursus"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusAction(User $user, Cursus $cursus)
     {
@@ -103,6 +105,7 @@ class CursusController extends FOSRestController
      *     description="Unregister an user from a cursus",
      *     views = {"cursus"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function removeUserFromCursusAction(User $user, Cursus $cursus)
     {
@@ -117,6 +120,7 @@ class CursusController extends FOSRestController
      *     description="Register an user to a course session",
      *     views = {"cursus"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToSessionAction(User $user, CourseSession $session, $type = 0)
     {
@@ -145,6 +149,7 @@ class CursusController extends FOSRestController
      *     description="Register an user to a cursus hierarchy",
      *     views = {"cursus"}
      * )
+     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
      */
     public function addUserToCursusHierarchyAction(User $user, Cursus $cursus)
     {
@@ -171,38 +176,14 @@ class CursusController extends FOSRestController
                 $hierarchy[$parentId][] = $oneCursus;
             }
         }
-        $this->unlockedHierarchy($cursus, $hierarchy, $lockedHierarchy, $unlockedCursus);
-        $this->cursusManager->registerUserToMultipleCursus($unlockedCursus, $user);
+        $this->cursusManager->unlockedHierarchy(
+            $cursus,
+            $hierarchy,
+            $lockedHierarchy,
+            $unlockedCursus
+        );
+        $this->cursusManager->registerUserToMultipleCursus($unlockedCursus, $user, true, true);
 
         return array('success');
-    }
-
-    private function unlockedHierarchy(
-        Cursus $cursus,
-        array $hierarchy,
-        array &$lockedHierarchy,
-        array &$unlockedCursus
-    )
-    {
-        $lockedHierarchy[$cursus->getId()] = false;
-        $unlockedCursus[] = $cursus;
-
-        if (!$cursus->isBlocking()) {
-            // Unlock parents
-            $parent = $cursus->getParent();
-
-            while (!is_null($parent) && !$parent->isBlocking()) {
-                $lockedHierarchy[$parent->getId()] = 'up';
-                $unlockedCursus[] = $parent;
-                $parent = $parent->getParent();
-            }
-            // Unlock children
-            $this->unlockedChildrenHierarchy(
-                $cursus,
-                $hierarchy,
-                $lockedHierarchy,
-                $unlockedCursus
-            );
-        }
     }
 }

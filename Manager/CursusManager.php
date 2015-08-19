@@ -283,7 +283,8 @@ class CursusManager
     public function registerUserToMultipleCursus(
         array $multipleCursus,
         User $user,
-        $withWorkspace = true
+        $withWorkspace = true,
+        $withCourse = false
     )
     {
         $registrationDate = new \DateTime();
@@ -307,6 +308,14 @@ class CursusManager
 
                 if ($withWorkspace) {
                     $this->registerToCursusWorkspace($user, $cursus);
+                }
+
+                if ($withCourse) {
+                    $course = $cursus->getCourse();
+
+                    if (!is_null($course)) {
+                        $this->registerUserToCourse($user, $course);
+                    }
                 }
             }
         }
@@ -1289,6 +1298,79 @@ class CursusManager
         }
     }
 
+    public function registerUserToCourse(User $user, Course $course)
+    {
+        $sessions = $this->getDefaultPublicSessionsByCourse($course);
+
+        if (count($sessions) > 0) {
+            $session = $sessions[0];
+
+            if ($session->getRegistrationValidation()) {
+                $this->addUserToSessionQueue($user, $session);
+            } else {
+                $this->registerUsersToSession($session, array($user), 0);
+            }
+        } elseif ($course->getPublicRegistration()) {
+            $this->addUserToCourseQueue($user, $course);
+        }
+    }
+
+    public function unlockedHierarchy(
+        Cursus $cursus,
+        array $hierarchy,
+        array &$lockedHierarchy,
+        array &$unlockedCursus
+    )
+    {
+        $lockedHierarchy[$cursus->getId()] = false;
+        $unlockedCursus[] = $cursus;
+
+        if (!$cursus->isBlocking()) {
+            // Unlock parents
+            $parent = $cursus->getParent();
+
+            while (!is_null($parent) && !$parent->isBlocking()) {
+                $lockedHierarchy[$parent->getId()] = 'up';
+                $unlockedCursus[] = $parent;
+                $parent = $parent->getParent();
+            }
+            // Unlock children
+            $this->unlockedChildrenHierarchy(
+                $cursus,
+                $hierarchy,
+                $lockedHierarchy,
+                $unlockedCursus
+            );
+        }
+    }
+
+    private function unlockedChildrenHierarchy(
+        Cursus $cursus,
+        array $hierarchy,
+        array &$lockedHierarchy,
+        array &$unlockedCursus
+    )
+    {
+        $cursusId = $cursus->getId();
+
+        if (isset($hierarchy[$cursusId])) {
+
+            foreach ($hierarchy[$cursusId] as $child) {
+
+                if (!$child->isBlocking()) {
+                    $lockedHierarchy[$child->getId()] = 'down';
+                    $unlockedCursus[] = $child;
+                    $this->unlockedChildrenHierarchy(
+                        $child,
+                        $hierarchy,
+                        $lockedHierarchy,
+                        $unlockedCursus
+                    );
+                }
+            }
+        }
+    }
+
 
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
@@ -1876,6 +1958,21 @@ class CursusManager
 
             return array();
         }
+    }
+
+    public function getDefaultPublicSessionsByCourse(
+        Course $course,
+        $orderedBy = 'creationDate',
+        $order = 'DESC',
+        $executeQuery = true
+    )
+    {
+        return $this->courseSessionRepo->findDefaultPublicSessionsByCourse(
+            $course,
+            $orderedBy,
+            $order,
+            $executeQuery
+        );
     }
 
 

@@ -11,9 +11,9 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CursusBundle\Entity\Cursus;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -43,16 +43,15 @@ class CursusApiManager
         $this->friendRepo = $this->om->getRepository('Claroline\CoreBundle\Entity\Oauth\FriendRequest');
     }
 
-    public function getRemoteCursus($platformName, Cursus $cursus = null)
+    public function getRemoteCursus($platformName, $cursusId = null)
     {
         $targetPlatformUrl = $this->friendRepo->findOneByName($platformName);
-        $url = is_null($cursus) ?
+        $url = is_null($cursusId) ?
             'clarolinecursusbundle/api/all/cursus.json' :
-            'clarolinecursusbundle/api/cursuses/' . $cursus->getId() . '.json';
+            'clarolinecursusbundle/api/cursuses/' . $cursusId . '.json';
         $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
 
         return json_decode($serverOutput, true);
-
     }
 
     public function getRemoteCourses($platformName)
@@ -62,6 +61,18 @@ class CursusApiManager
         $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
 
         return json_decode($serverOutput, true);
+    }
 
+    public function registerUserToCursusHierarchy($platformName, User $user, $cursusId)
+    {
+        $targetPlatformUrl = $this->friendRepo->findOneByName($platformName);
+        $url = 'clarolinecursusbundle/api/users/' .
+            $user->getId() .
+            '/tos/' .
+            $cursusId .
+            '/cursus/hierarchy/add.json';
+        $serverOutput = $this->apiManager->url($targetPlatformUrl, $url);
+
+        return json_decode($serverOutput, true);
     }
 }
