@@ -46,6 +46,9 @@ class DropzoneController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
         // $this->get('translator')->trans('date_form_format', array(), 'platform')
         $form = $this->createForm(
@@ -98,24 +101,11 @@ class DropzoneController extends DropzoneBaseController
                     }
                 }
             } else {
-                $agendaManager = $this->get('claroline.manager.agenda_manager');
                 // if manual mode, we delete agenda events related to
-                if ($dropzone->getEventDrop() != null) {
-                    $event = $dropzone->getEventDrop();
-                    $agendaManager->deleteEvent($event);
-                    $dropzone->setEventDrop(null);
-                }
-
-                if ($dropzone->getEventCorrection() != null) {
-                    $event = $dropzone->getEventCorrection();
-                    $agendaManager->deleteEvent($event);
-                    $dropzone->setEventCorrection(null);
-                }
+                $dropzone = $dropzoneManager->deleteEvents($dropzone);
             }
 
             if (count($form->getErrors('startAllowDrop')) < 3) {
-                $dropzoneManager = $this->get('innova.manager.dropzone_manager');
-
                 if ($dropzone->getPeerReview() != true) {
                     $dropzone->setExpectedTotalCorrection(1);
                     if ($dropzone->getManualState() == 'peerReview') {
