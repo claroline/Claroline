@@ -72,8 +72,10 @@ class TransferManagerTest extends UnitTestCase
             ['scale-level-is-not-a-string.json', 'integer value found, but a string is required', 'scale.levels[1]'],
             ['scale-level-is-empty.json', 'must be at least 1 characters long', 'scale.levels[0]'],
             ['scale-level-is-too-long.json', 'must be at most 255 characters long', 'scale.levels[0]'],
+            ['duplicate-scale-level.json', 'There are no duplicates allowed in the array', 'scale.levels'],
             ['competency-item-is-not-an-object.json', 'string value found, but an object is required', 'competencies[0]'],
             ['competency-item-has-no-name.json', 'the property name is required', 'competencies[0]'],
+            ['duplicate-competency-item.json', 'There are no duplicates allowed in the array', 'competencies[0].competencies'],
             ['ability-is-not-an-object.json', 'integer value found, but an object is required', 'abilities[0]'],
             ['no-ability-name.json', 'the property name is required', 'abilities[0]'],
             ['ability-name-is-not-a-string.json', 'integer value found, but a string is required', 'abilities[0].name'],
@@ -82,7 +84,8 @@ class TransferManagerTest extends UnitTestCase
             ['no-ability-level.json', 'the property level is required', 'abilities[0]'],
             ['ability-level-is-not-a-string.json', 'integer value found, but a string is required', 'abilities[0].level'],
             ['ability-level-is-empty.json', 'must be at least 1 characters long', 'abilities[0].level'],
-            ['ability-level-is-too-long.json', 'must be at most 255 characters long', 'abilities[0].level']
+            ['ability-level-is-too-long.json', 'must be at most 255 characters long', 'abilities[0].level'],
+            ['duplicate-ability.json', 'There are no duplicates allowed in the array', 'abilities']
         ];
     }
 

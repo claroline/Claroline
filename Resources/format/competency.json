@@ -20,6 +20,7 @@
           "properties": {
             "competencies": {
               "type": "array",
+              "uniqueItems": true,
               "items": {
                 "type": "object",
                 "oneOf": [
@@ -37,6 +38,7 @@
           "properties": {
             "abilities": {
               "type": "array",
+              "uniqueItems": true,
               "items": {
                 "type": "object",
                 "properties": {
