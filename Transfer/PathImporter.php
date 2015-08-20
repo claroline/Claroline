@@ -38,7 +38,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
      */
     public function getPriority()
     {
-        return 2;
+        return 99;
     }
 
     /**
@@ -52,15 +52,37 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
         $rootNode
             ->children()
                 // Path properties
-                ->scalarNode('description')->end()
-                ->scalarNode('structure')->end()
-                ->booleanNode('breadcrumbs')->end()
-                ->booleanNode('modified')->defaultFalse()->end()
+                ->arrayNode('path')
+                    ->children()
+                        ->scalarNode('description')->end()
+                        ->scalarNode('structure')->end()
+                        ->booleanNode('breadcrumbs')->end()
+                        ->booleanNode('modified')->end()
+                        ->booleanNode('published')->end()
+                    ->end()
+                ->end()
 
                 // Steps
                 ->arrayNode('steps')
-                    ->children()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('uid')->end()
+                            ->scalarNode('parent')->end()
+                            ->scalarNode('activityId')->end()
+                            ->scalarNode('activityNodeId')->end()
+                            ->scalarNode('order')->end()
+                            ->scalarNode('lvl')->end()
 
+                            // Inherited resources
+                            ->arrayNode('inheritedResources')
+                                ->prototype('array')
+                                    ->children()
+                                        ->scalarNode('resource')->end()
+                                        ->scalarNode('lvl')->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()
@@ -78,14 +100,67 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
         $processor->processConfiguration($this, $data);
     }
 
+    /**
+     * Replace IDs with the new ones in texts and path structure
+     * @param $data
+     */
     public function format($data)
     {
+        if (!empty($data['path']) && !empty($data['path']['structure'])) {
+            if (!$data['path']['published'] || $data['path']['modified']) {
+                // Only process Path structure if Path is not published or if has pending modification
+                $structure = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data['path']['structure']);
+                $entities = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findByStructure($structure);
 
+                foreach ($entities as $entity) {
+                    $text = $entity->getStructure();
+
+                    // Format RichText
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+
+                    // Decode JSON to be able to replace IDs in structure
+
+                    // TODO update IDs in step structure
+                    /*$json = json_decode($text);
+                    if (!empty($json) && !empty($json->steps)) {
+                        foreach ($json->steps as $step) {
+                            $this->formatStep($step);
+                        }
+                    }*/
+
+                    $entity->setStructure($text);
+                    $this->container->get('doctrine.orm.entity_manager')->persist($entity);
+                }
+            } else {
+                // else, structure can be recalculated from generated data
+            }
+        }
+    }
+
+    /**
+     * Replace IDS with the new ones in step structure
+     * @param \stdClass $step
+     */
+    protected function formatStep(\stdClass $step)
+    {
+        // Step ID
+
+        // Replace Activity ID
+
+        // Process children
+        if (!empty($step->children)) {
+            foreach ($step->children as $child) {
+                $this->formatStep($child);
+            }
+        }
     }
 
     public function import(array $data, $name, $created)
     {
-        return $this->container->get('innova_path.manager.path')->import($data, $created);
+        // Retrieve the structure of the Path from file
+        $structure = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $data['data']['path']['structure']);
+
+        return $this->container->get('innova_path.manager.path')->import($structure, $data, $created);
     }
 
     public function export(Workspace $workspace, array &$files, $object)

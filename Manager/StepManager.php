@@ -141,7 +141,7 @@ class StepManager
             $name = $stepStructure->name;
         } else {
             // Create a default name
-            $name = $step->getPath()->getName().' - '.Step::DEFAULT_NAME.' '.$step->getOrder();
+            $name = $step->getPath()->getName() . ' - ' . Step::DEFAULT_NAME . ' ' . $step->getOrder();
         }
         $activity->setName($name);
         $activity->setTitle($name);
@@ -273,16 +273,17 @@ class StepManager
         $step->setOrder($data['order']);
 
         // Link Step to its Activity
-        if (!empty($data['activityId']) && !empty($createdResources[$data['activityId']])) {
+        if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {
             // Step has an Activity
-            $step->setActivity($createdResources[$data['activityId']]);
+            $step->setActivity($createdResources[$data['activityNodeId']]);
         }
 
         if (!empty($data['inheritedResources'])) {
             foreach($data['inheritedResources'] as $inherited) {
                 $inheritedResource = new InheritedResource();
                 $inheritedResource->setLvl($inherited['lvl']);
-                $inheritedResource->setResource($createdResources[$inherited['resource']]);
+                $inheritedResource->setStep($step);
+                $inheritedResource->setResource($createdResources[$inherited['resource']]->getResourceNode());
 
                 $this->om->persist($inheritedResource);
             }
@@ -307,8 +308,9 @@ class StepManager
 
         $data = array (
             'uid'                => $step->getId(),
-            'parent'             => !empty($parent)   ? $parent->getId()   : null,
-            'activityId'         => !empty($activity) ? $activity->getId() : null,
+            'parent'             => !empty($parent)   ? $parent->getId()                      : null,
+            'activityId'         => !empty($activity) ? $activity->getId()                    : null,
+            'activityNodeId'     => !empty($activity) ? $activity->getResourceNode()->getId() : null,
             'order'              => $step->getOrder(),
             'lvl'                => $step->getLvl(),
             'inheritedResources' => array (),

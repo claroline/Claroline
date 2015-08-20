@@ -265,55 +265,64 @@ class PathManager
         $pathData = array ();
         $pathData['description'] = $path->getDescription();
         $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
-        $pathData['structure']   = $path->getStructure();
+        $pathData['modified']    = $path->isModified();
+        $pathData['published']   = $path->isPublished();
+
+        // Get path structure into a file (to replace resources ID with placeholders)
+        $uid = uniqid() . '.txt';
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        $structure = $path->getStructure();
+        file_put_contents($tmpPath, $structure);
+        $files[$uid] = $tmpPath;
+
+        $pathData['structure'] = $uid;
 
         $data['path'] = $pathData;
 
         // Process Steps
-        $stepsData = array ();
-        foreach ($path->getSteps() as $step) {
-            $stepsData[] = $this->stepManager->export($step);
-        }
+        $data['steps'] = array ();
+        if ($path->isPublished()) {
+            $stepsData = array ();
+            foreach ($path->getSteps() as $step) {
+                $stepsData[] = $this->stepManager->export($step);
+            }
 
-        $data['steps'] = $stepsData;
+            $data['steps'] = $stepsData;
+        }
 
         return $data;
     }
 
-    public function import(array $data, array $resourcesCreated = array ())
+    /**
+     * Import a Path into the Platform
+     * @param string $structure
+     * @param array $data
+     * @param array $resourcesCreated
+     * @return Path
+     */
+    public function import($structure, array $data, array $resourcesCreated = array ())
     {
-        var_dump($data);
-        die();
-
         // Create a new Path object which will be populated with exported data
         $path = new Path();
 
+        $pathData = $data['data']['path'];
+
         // Populate Path properties
-        $path->setBreadcrumbs(!empty($data['data']['breadcrumbs']) ? $data['data']['breadcrumbs'] : false);
-        $path->setDescription($data['data']['description']);
-
-        /*if (!empty($data['data']['structure'])) {
-            $path->setStructure($data['data']['structure']);
-        } else {
-            $path->initializeStructure();
-        }*/
-
-        // Path will be published will import, so it can't be out of sync with JSON structure
-        $path->setModified(false);
+        $path->setBreadcrumbs(!empty($pathData['breadcrumbs']) ? $pathData['breadcrumbs'] : false);
+        $path->setDescription($pathData['description']);
+        $path->setModified($pathData['modified']);
 
         // Create steps
-        if (!empty($data['data']['structure']) && !empty($data['data']['structure']['steps'])) {
+        $stepData = $data['data']['steps'];
+        if (!empty($stepData)) {
             $createdSteps = array ();
-            foreach ($data['data']['structure']['steps'] as $step) {
+            foreach ($stepData as $step) {
                 $createdSteps = $this->stepManager->import($path, $step, $resourcesCreated, $createdSteps);
             }
-
-            // Inject new structure into path
-            // Structure will not be fully updated
-            // we have not access to the new Resources IDs because they have not been saved to the DB
-            // That's not a problem because when Path is published, the structure is recalculated from the generated Data
-            $path->setStructure('{}');
         }
+
+        // Inject empty structure into path (will be replaced by a version with updated IDs later in the import process)
+        $path->setStructure($structure);
 
         return $path;
     }
