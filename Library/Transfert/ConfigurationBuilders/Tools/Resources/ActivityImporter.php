@@ -111,7 +111,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface
             $description = file_get_contents($this->getRootPath() . $ds . $item['activity']['description']);
             $activity = new Activity();
             $activity->setTitle($item['activity']['title']);
-            $primaryResource = !empty($item['activity']['primary_resource']) && $created[$item['activity']['primary_resource']] ?
+            $primaryResource = !empty($item['activity']['primary_resource']) && isset($created[$item['activity']['primary_resource']]) && $created[$item['activity']['primary_resource']] ?
                 $created[$item['activity']['primary_resource']]->getResourceNode():
                 null;
             $activity->setPrimaryResource($primaryResource);

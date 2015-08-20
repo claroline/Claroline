@@ -1029,7 +1029,7 @@ class ResourceController
         $form = $this->formFactory->create(new ImportResourcesType());
         $form->handleRequest($this->request);
 
-        try {
+        /*try {*/
             if ($form->isValid()) {
                 $template = $form->get('file')->getData();
                 $config = Configuration::fromTemplate($template);
@@ -1041,17 +1041,17 @@ class ResourceController
             } else {
 
                 return array('form' => $form->createView(), 'directory' => $directory);
-            }
+            }/*
         } catch (\Exception $e) {
             $errorMsg = $this->translator->trans(
                 'invalid_file',
                 array(),
                 'platform'
             );
-            $form->addError(new FormError($e->getMessage()));
+            $form->addError(new FormError($e->getMessage()));*/
 
             return array('form' => $form->createView(), 'directory' => $directory);
-        }
+        //}
     }
 
     private function isUsurpatingWorkspaceRole(TokenInterface $token)
