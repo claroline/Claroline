@@ -33,24 +33,16 @@ class DropController extends DropzoneBaseController
 {
     /**
      * @Route(
-     *      "/{resourceId}/drop/user/{userId}", name="innova_collecticiel_drop_switch",
-     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     *      "/{resourceId}/drop/user/{userId}", name="innova_collecticiel_drop_switch", requirements={"resourceId" = "\d+", "userId" = "\d+"}
      * )
      * @Route(
-     *      "/{resourceId}/drop", name="innova_collecticiel_drop",
-     *      requirements={"resourceId" = "\d+"}
+     *      "/{resourceId}/drop", name="innova_collecticiel_drop", requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={
-     *      "id" = "userId",
-     *      "authenticatedUser" = true,
-     *      "messageEnabled" = true,
-     *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
-     *      "messageTranslationDomain" = "innova_collecticiel"
-     * })
+     * @ParamConverter("user", isOptional="true", class="ClarolineCoreBundle:User",options={"id" = "userId"})
      * @Template()
      */
-    public function dropAction(Dropzone $dropzone, User $user)
+    public function dropAction(Dropzone $dropzone, User $user = null)
     {
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropManager = $this->get('innova.manager.drop_manager');
@@ -63,6 +55,10 @@ class DropController extends DropzoneBaseController
 
         // on teste si l'utilisateur à le droit d'ouvrir le dropzone
         $dropzoneVoter->isAllowToOpen($dropzone);
+
+        if (!$user) {
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+        }
 
         // on vérifie que la copie n'est pas terminée pour le dropzone et utilisateur donnée
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
