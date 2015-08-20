@@ -205,11 +205,6 @@ class TransfertManager
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
-
-        if ($owner) {
-            $workspace->setCreator($owner);
-        }
-
         $this->om->persist($workspace);
         $this->om->flush();
         $this->log('Base workspace created...');
@@ -261,6 +256,12 @@ class TransfertManager
         $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
+        
+        if ($owner) {
+            $this->log('Set the owner...');
+            $workspace->setCreator($owner);
+        }
+        
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
