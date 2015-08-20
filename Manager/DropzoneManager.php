@@ -21,7 +21,7 @@ class DropzoneManager
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
-     *        "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
+     *      "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
      *      "em" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
@@ -347,6 +347,28 @@ class DropzoneManager
         }
 
         return $dropzone;
+    }
+
+    /**
+     * Return allowed document types for a Dropzone
+     */
+    public function getAllowedTypes(Dropzone $dropzone)
+    {
+        $allowedTypes = array();
+        if ($dropzone->getAllowWorkspaceResource()) {
+            $allowedTypes[] = 'resource';
+        }
+        if ($dropzone->getAllowUpload()) {
+            $allowedTypes[] = 'file';
+        }
+        if ($dropzone->getAllowUrl()) {
+            $allowedTypes[] = 'url';
+        }
+        if ($dropzone->getAllowRichText()) {
+            $allowedTypes[] = 'text';
+        }
+
+        return $allowedTypes;
     }
 
     private function createAgendaEventDrop(User $user, Dropzone $dropzone)

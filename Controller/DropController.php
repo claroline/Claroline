@@ -31,15 +31,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class DropController extends DropzoneBaseController
 {
-
     /**
      * @Route(
-     *      "/{resourceId}/drop",
-     *      name="innova_collecticiel_drop",
+     *      "/{resourceId}/drop/user/{userId}", name="innova_collecticiel_drop_switch",
+     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     * )
+     * @Route(
+     *      "/{resourceId}/drop", name="innova_collecticiel_drop",
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("user", options={
+     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={
+     *      "id" = "userId",
      *      "authenticatedUser" = true,
      *      "messageEnabled" = true,
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
@@ -49,41 +52,30 @@ class DropController extends DropzoneBaseController
      */
     public function dropAction(Dropzone $dropzone, User $user)
     {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $dropManager = $this->get('innova.manager.drop_manager');
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $roleManager = $this->get('claroline.manager.role_manager');
         $em = $this->getDoctrine()->getManager();
+        $translator = $this->get('translator');
         $dropRepo = $em->getRepository('InnovaCollecticielBundle:Drop');
+        $flashbag = $this->getRequest()->getSession()->getFlashBag();
 
+        // on teste si l'utilisateur à le droit d'ouvrir le dropzone
+        $dropzoneVoter->isAllowToOpen($dropzone);
+
+        // on vérifie que la copie n'est pas terminée pour le dropzone et utilisateur donnée
         if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
-                'error',
-                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'innova_collecticiel')
-            );
+            $flashbag->add('error', $translator->trans('You ve already made ​​your copy for this review', array(), 'innova_collecticiel'));
+            $url = $this->generateUrl('innova_collecticiel_open', array('resourceId' => $dropzone->getId()));
 
-            return $this->redirect(
-                $this->generateUrl(
-                    'innova_collecticiel_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
+            return $this->redirect($url);
         }
 
+        // on récupère le drop existant ou on le créé s'il n'existe pas.
         $notFinishedDrop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => false));
         if ($notFinishedDrop === null) {
-            $notFinishedDrop = new Drop();
-            $number = ($dropRepo->getLastNumber($dropzone) + 1);
-            $notFinishedDrop->setNumber($number);
-
-            $notFinishedDrop->setUser($user);
-            $notFinishedDrop->setDropzone($dropzone);
-            $notFinishedDrop->setFinished(false);
-
-            $em->persist($notFinishedDrop);
-            $em->flush();
-            $em->refresh($notFinishedDrop);
-
+            $notFinishedDrop = $dropManager->create($dropzone, $user);
             $event = new LogDropStartEvent($dropzone, $notFinishedDrop);
             $this->dispatch($event);
         }
@@ -103,51 +95,22 @@ class DropController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
-                // Début InnovaERV : vu avec Donovan //
-                // On ne ferme plus le collecticiel ici. //
-                // Par contre, on ne touche pas ailleurs, notamment lors de la fermeture automatiquement d'un collecticiel. //
-                // $notFinishedDrop->setFinished(true);
-                // fin InnovaERV :  //
-
-                $em = $this->getDoctrine()->getManager();
                 $em->persist($notFinishedDrop);
                 $em->flush();
 
-                $rm = $this->get('claroline.manager.role_manager');
-                $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
+                $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $roleManager);
                 $this->dispatch($event);
 
-                $this->getRequest()->getSession()->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans('Your copy has been saved', array(), 'innova_collecticiel')
-                );
+                $flashbag->add('success', $translator->trans('Your copy has been saved', array(), 'innova_collecticiel'));
+                $url = $this->generateUrl('innova_collecticiel_open', array('resourceId' => $dropzone->getId()));
 
-                return $this->redirect(
-                    $this->generateUrl(
-                        'innova_collecticiel_open',
-                        array(
-                            'resourceId' => $dropzone->getId()
-                        )
-                    )
-                );
+                return $this->redirect($url);
             }
         }
 
-        $allowedTypes = array();
-        if ($dropzone->getAllowWorkspaceResource()) $allowedTypes[] = 'resource';
-        if ($dropzone->getAllowUpload()) $allowedTypes[] = 'file';
-        if ($dropzone->getAllowUrl()) $allowedTypes[] = 'url';
-        if ($dropzone->getAllowRichText()) $allowedTypes[] = 'text';
-
-        $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
-        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+        $allowedTypes = $dropzoneManager->getAllowedTypes($dropzone);
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
-
-        
-        $adminInnova = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
-        
-        // Déclarations des nouveaux tableaux, qui seront passés à la vue
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $userNbTextToRead = array();
 
         return array(
@@ -161,139 +124,8 @@ class DropController extends DropzoneBaseController
             'form_resource' => $form_resource->createView(),
             'form_text' => $form_text->createView(),
             'allowedTypes' => $allowedTypes,
-            'resourceTypes' => $resourceTypes,
             'dropzoneProgress' => $dropzoneProgress,
-            'adminInnova' => $adminInnova,
-            'userNbTextToRead' => $userNbTextToRead,
-        );
-    }
-
-    /**
-     * @Route(
-     *      "/{resourceId}/drop/{userId}",
-     *      name="innova_collecticiel_drop_switch",
-     *      requirements={"resourceId" = "\d+", "userId" = "\d+"}
-     * )
-     * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
-     * @Template("InnovaCollecticielBundle:Drop:drop.html.twig"))
-     */
-    public function dropSwitchAction(Dropzone $dropzone, User $user)
-    {
-        $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
-
-        $em = $this->getDoctrine()->getManager();
-        $dropRepo = $em->getRepository('InnovaCollecticielBundle:Drop');
-
-        if ($dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => true)) !== null) {
-            $this->getRequest()->getSession()->getFlashBag()->add(
-                'error',
-                $this->get('translator')->trans('You ve already made ​​your copy for this review', array(), 'innova_collecticiel')
-            );
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'innova_collecticiel_open',
-                    array(
-                        'resourceId' => $dropzone->getId()
-                    )
-                )
-            );
-        }
-
-        $notFinishedDrop = $dropRepo->findOneBy(array('dropzone' => $dropzone, 'user' => $user, 'finished' => false));
-        if ($notFinishedDrop === null) {
-            $notFinishedDrop = new Drop();
-            $number = ($dropRepo->getLastNumber($dropzone) + 1);
-            $notFinishedDrop->setNumber($number);
-
-            $notFinishedDrop->setUser($user);
-            $notFinishedDrop->setDropzone($dropzone);
-            $notFinishedDrop->setFinished(false);
-
-            $em->persist($notFinishedDrop);
-            $em->flush();
-            $em->refresh($notFinishedDrop);
-
-            $event = new LogDropStartEvent($dropzone, $notFinishedDrop);
-            $this->dispatch($event);
-        }
-
-        $form = $this->createForm(new DropType(), $notFinishedDrop);
-        $form_url = $this->createForm(new DocumentType(), null, array('documentType' => 'url'));
-        $form_file = $this->createForm(new DocumentType(), null, array('documentType' => 'file'));
-        $form_resource = $this->createForm(new DocumentType(), null, array('documentType' => 'resource'));
-        $form_text = $this->createForm(new DocumentType(), null, array('documentType' => 'text'));
-        $drop = $notFinishedDrop;
-
-        if ($this->getRequest()->isMethod('POST')) {
-            $form->handleRequest($this->getRequest());
-
-            if (count($notFinishedDrop->getDocuments()) == 0) {
-                $form->addError(new FormError('Add at least one document'));
-            }
-
-            if ($form->isValid()) {
-                // Début InnovaERV : vu avec Donovan //
-                // On ne ferme plus le collecticiel ici. //
-                // Par contre, on ne touche pas ailleurs, notamment lors de la fermeture automatiquement d'un collecticiel. //
-                // $notFinishedDrop->setFinished(true);
-                // fin InnovaERV :  //
-
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($notFinishedDrop);
-                $em->flush();
-
-                $rm = $this->get('claroline.manager.role_manager');
-                $event = new LogDropEndEvent($dropzone, $notFinishedDrop, $rm);
-                $this->dispatch($event);
-
-                $this->getRequest()->getSession()->getFlashBag()->add(
-                    'success',
-                    $this->get('translator')->trans('Your copy has been saved', array(), 'innova_collecticiel')
-                );
-
-                return $this->redirect(
-                    $this->generateUrl(
-                        'innova_collecticiel_open',
-                        array(
-                            'resourceId' => $dropzone->getId()
-                        )
-                    )
-                );
-            }
-        }
-
-        $allowedTypes = array();
-        if ($dropzone->getAllowWorkspaceResource()) $allowedTypes[] = 'resource';
-        if ($dropzone->getAllowUpload()) $allowedTypes[] = 'file';
-        if ($dropzone->getAllowUrl()) $allowedTypes[] = 'url';
-        if ($dropzone->getAllowRichText()) $allowedTypes[] = 'text';
-
-        $resourceTypes = $this->getDoctrine()->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
-
-        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
-        $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
-        
-        $adminInnova = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
-        
-        // Déclarations des nouveaux tableaux, qui seront passés à la vue
-        $userNbTextToRead = array();
-
-        return array(
-            'workspace' => $dropzone->getResourceNode()->getWorkspace(),
-            '_resource' => $dropzone,
-            'dropzone' => $dropzone,
-            'drop' => $drop,
-            'form' => $form->createView(),
-            'form_url' => $form_url->createView(),
-            'form_file' => $form_file->createView(),
-            'form_resource' => $form_resource->createView(),
-            'form_text' => $form_text->createView(),
-            'allowedTypes' => $allowedTypes,
-            'resourceTypes' => $resourceTypes,
-            'dropzoneProgress' => $dropzoneProgress,
-            'adminInnova' => $adminInnova,
+            'adminInnova' => $canEdit,
             'userNbTextToRead' => $userNbTextToRead,
         );
     }
@@ -306,7 +138,6 @@ class DropController extends DropzoneBaseController
 
         return $array;
     }
-
 
     /**
      *
@@ -346,7 +177,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -360,7 +191,7 @@ class DropController extends DropzoneBaseController
             '_resource' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'dropzone' => $dropzone,
-            'pager' => $pager
+            'pager' => $pager,
         ));
     }
 
@@ -372,7 +203,7 @@ class DropController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      *
-     * @param \Innova\CollecticielBundle\Entity\Dropzone $dropzone
+     * @param  \Innova\CollecticielBundle\Entity\Dropzone         $dropzone
      * @param $userId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @internal param $user
@@ -395,7 +226,7 @@ class DropController extends DropzoneBaseController
             $this->generateUrl(
                 'innova_collecticiel_examiners',
                 array(
-                    'resourceId' => $dropzone->getId()
+                    'resourceId' => $dropzone->getId(),
                 )
             )
         );
@@ -420,7 +251,6 @@ class DropController extends DropzoneBaseController
         return $this->unlockOrLockUsers($dropzone, true);
     }
 
-
     /**
      * @Route(
      *      "/{resourceId}/unlock/cancel",
@@ -440,11 +270,10 @@ class DropController extends DropzoneBaseController
         return $this->unlockOrLockUsers($dropzone, false);
     }
 
-
     /**
      *  Factorised function for lock & unlock users in a dropzone.
-     * @param Dropzone $dropzone
-     * @param bool $unlock
+     * @param  Dropzone                                           $dropzone
+     * @param  bool                                               $unlock
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     private function unlockOrLockUsers(Dropzone $dropzone, $unlock = true)
@@ -454,7 +283,6 @@ class DropController extends DropzoneBaseController
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
         $drops = $dropRepo->findBy(array('dropzone' => $dropzone->getId(), 'unlockedUser' => !$unlock));
-
 
         foreach ($drops as $drop) {
             $drop->setUnlockedUser($unlock);
@@ -466,12 +294,11 @@ class DropController extends DropzoneBaseController
             $this->generateUrl(
                 'innova_collecticiel_examiners',
                 array(
-                    'resourceId' => $dropzone->getId()
+                    'resourceId' => $dropzone->getId(),
                 )
             )
         );
     }
-
 
     /**
      * @Route(
@@ -517,7 +344,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -575,7 +402,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_by_user_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -630,7 +457,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_by_date_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -666,7 +493,6 @@ class DropController extends DropzoneBaseController
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
-
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -711,7 +537,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_awaiting_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -721,7 +547,7 @@ class DropController extends DropzoneBaseController
         }
 
         $adminInnova = false;
-        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
         }
 
@@ -776,7 +602,7 @@ class DropController extends DropzoneBaseController
                         $previousPath,
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $page
+                            'page' => $page,
                         )
                     )
 
@@ -797,7 +623,7 @@ class DropController extends DropzoneBaseController
             'form' => $form->createView(),
             'previousPath' => $previousPath,
             'tab' => $tab,
-            'page' => $page
+            'page' => $page,
         ));
     }
 
@@ -825,7 +651,7 @@ class DropController extends DropzoneBaseController
             $this->generateUrl(
                 'innova_collecticiel_drops_awaiting',
                 array(
-                    'resourceId' => $dropzone->getId()
+                    'resourceId' => $dropzone->getId(),
                 )
             ));
 
@@ -861,7 +687,6 @@ class DropController extends DropzoneBaseController
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $collection = new ResourceCollection(array($dropzone->getResourceNode()));
         $isAllowedToEdit = $this->get('security.context')->isGranted('EDIT', $collection);
-
 
         // getting the data
         $dropSecure = $this->getDoctrine()
@@ -908,17 +733,17 @@ class DropController extends DropzoneBaseController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route(
-     *      "/unlock/drop/{dropId}",
-     *      name="innova_collecticiel_unlock_drop",
-     *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
-     * )
+     *                                                            "/unlock/drop/{dropId}",
+     *                                                            name="innova_collecticiel_unlock_drop",
+     *                                                            requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     *                                                            )
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("user", options={
-     *      "authenticatedUser" = true,
-     *      "messageEnabled" = true,
-     *      "messageTranslationKey" = "This action requires authentication. Please login.",
-     *      "messageTranslationDomain" = "innova_collecticiel"
-     * })
+     *                                                            "authenticatedUser" = true,
+     *                                                            "messageEnabled" = true,
+     *                                                            "messageTranslationKey" = "This action requires authentication. Please login.",
+     *                                                            "messageTranslationDomain" = "innova_collecticiel"
+     *                                                            })
      * @Template()
      */
     public function unlockDropAction(Drop $drop, User $user)
@@ -934,16 +759,16 @@ class DropController extends DropzoneBaseController
             );
 
         $dropzoneId = $drop->getDropzone()->getId();
+
         return $this->redirect(
             $this->generateUrl(
                 'innova_collecticiel_drops_awaiting',
                 array(
-                    'resourceId' => $dropzoneId
+                    'resourceId' => $dropzoneId,
                 )
             )
         );
     }
-
 
     /**
      * @Route(
@@ -981,13 +806,11 @@ class DropController extends DropzoneBaseController
         if ($this->getRequest()->isMethod('POST')) {
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
-
                 $drop->setReported(true);
                 $correction->setReporter(true);
                 $correction->setEndDate(new \DateTime());
                 $correction->setFinished(true);
                 $correction->setTotalGrade(0);
-
 
                 $em->persist($drop);
                 $em->persist($correction);
@@ -1000,12 +823,11 @@ class DropController extends DropzoneBaseController
                     ->getFlashBag()
                     ->add('success', $this->get('translator')->trans('Your report has been saved', array(), 'innova_collecticiel'));
 
-
                 return $this->redirect(
                     $this->generateUrl(
                         'innova_collecticiel_open',
                         array(
-                            'resourceId' => $dropzone->getId()
+                            'resourceId' => $dropzone->getId(),
                         )
                     )
                 );
@@ -1034,7 +856,6 @@ class DropController extends DropzoneBaseController
         $this->get('event_dispatcher')->dispatch('log', $event);
     }
 
-
     /**
      * @Route(
      *      "/{resourceId}/remove/report/{dropId}/{correctionId}/{invalidate}",
@@ -1048,7 +869,6 @@ class DropController extends DropzoneBaseController
      */
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
-
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -1101,6 +921,7 @@ class DropController extends DropzoneBaseController
         if ($this->getRequest()->isXmlHttpRequest()) {
             $view = 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
         }
+
         return $this->render($view, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -1125,12 +946,11 @@ class DropController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneManager->closeDropzoneOpenedDrops($dropzone, true);
 
-
         return $this->redirect(
             $this->generateUrl(
                 'innova_collecticiel_drops_awaiting',
                 array(
-                    'resourceId' => $dropzone->getId()
+                    'resourceId' => $dropzone->getId(),
                 )
             )
         );
@@ -1148,7 +968,6 @@ class DropController extends DropzoneBaseController
      */
     public function sharedSpacesAction($dropzone, $page)
     {
-
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -1156,7 +975,7 @@ class DropController extends DropzoneBaseController
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
         // Récupération des roles du Workspace
-        $roles = 
+        $roles =
          $this->getDoctrine()->getManager()
          ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
 
@@ -1206,7 +1025,7 @@ class DropController extends DropzoneBaseController
                         'innova_collecticiel_drops_awaiting_paginated',
                         array(
                             'resourceId' => $dropzone->getId(),
-                            'page' => $pager->getNbPages()
+                            'page' => $pager->getNbPages(),
                         )
                     )
                 );
@@ -1216,7 +1035,7 @@ class DropController extends DropzoneBaseController
         }
 
         $adminInnova = false;
-        if ( $this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
         }
 
@@ -1233,5 +1052,4 @@ class DropController extends DropzoneBaseController
 
         return $dataToView;
     }
-
 }
