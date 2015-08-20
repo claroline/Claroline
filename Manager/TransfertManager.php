@@ -301,6 +301,9 @@ class TransfertManager
         return null;
     }
 
+    /**
+     * Full workspace export
+     */
     public function export(Workspace $workspace)
     {
         foreach ($this->listImporters as $importer) {
@@ -341,6 +344,9 @@ class TransfertManager
         return $archPath;
     }
 
+    /**
+     * Partial export for ressources
+     */
     public function exportResources(Workspace $workspace, array $resourceNodes)
     {
         foreach ($this->listImporters as $importer) {

@@ -129,6 +129,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface
             $activity->setParameters($parameters);
             $this->om->persist($activity);
             $this->om->persist($parameters);
+            $this->om->forceFlush();
 
             return $activity;
         }
