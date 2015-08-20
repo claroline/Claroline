@@ -3,4 +3,4 @@ plugin:
     admin_tools:
         -
             name: reservation_tool
-            class: warning
+            class: calendar

@@ -1,0 +1,24 @@
+form:
+  name: Nom
+  description: Description
+  maxTime: Temps maximum de réservation
+  localisation: Localisation
+  maxTimeOfReservation: Temps maximum par réservation (facultatif)
+  change_resource_type_name_title: Modification du nom
+  change_resource_type_name: Modifier le nom
+error_: Erreur
+error:
+  resource_type_already_exists: Ce type de ressource existe déjà.
+  empty_input: Le champs ne doit pas être vide.
+no_resources_type_yet: Il n'y a pas encore de ressources pour les réservations.
+add_new_resource_type: Ajouter un nouveau type de ressources
+no_resources_in_resource_type: Il n'y a pas encore de ressources dans cette catégorie.
+add_resource: Ajouter une ressource
+modify_resource_type_name: Modifier le nom
+modify_resource: Modifier une ressource
+delete_resource: Supprimer la ressource
+delete_resource_type: Supprimer ce type de ressources
+confirm_resource_type_deletion_title: Suppression d'un type de ressources
+confirm_resource_type_deletion_content: Êtes-vous sûr de vouloir supprimer ce type de ressources ? Cette action supprimera toutes les ressources appartenant à ce type de ressources ainsi que les éventuelles réservations en cours de chaque ressource.
+confirm_resource_deletion_title: Suppression d'une ressource
+confirm_resource_deletion_content: Êtes-vous sûr de vouloir supprimer cette ressource ? Cette action supprimera également toutes les réservations liées à cette ressource.

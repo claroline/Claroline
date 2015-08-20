@@ -4,7 +4,7 @@ namespace FormaLibre\ReservationBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_reservation_resource_type")
@@ -20,22 +20,14 @@ class ResourceType
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length="255")
+     * @ORM\Column(name="name", type="string", length=50)
+     * @Assert\NotNull()
+     * @Assert\Length(min=2, max=50)
      */
     private $name;
 
     /**
-     * @ORM\Column(name="description", type="text")
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(name="localisation", type="string", length="255")
-     */
-    private $localisation;
-
-    /**
-     * @ORM\OneToMany(targetEntity="ReservationBundle\Entity\ResourceType", mappedBy="resource_type")
+     * @ORM\OneToMany(targetEntity="FormaLibre\ReservationBundle\Entity\Resource", mappedBy="resourceType")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
     private $resources;
@@ -58,30 +50,6 @@ class ResourceType
     public function setName($name)
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getLocalisation()
-    {
-        return $this->localisation;
-    }
-
-    public function setLocalisation($localisation)
-    {
-        $this->localisation = $localisation;
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
+use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraint as Assert;
@@ -20,71 +21,30 @@ class Reservation
     protected $id;
 
     /**
-     * @ORM\Column(name="description", type="text")
-     */
-    private $description;
-
-    /**
-     * @ORM\Column(name="start", type="integer")
-     */
-    private $start;
-
-    /**
      * @ORM\Column(name="duration", type="integer")
      */
     private $duration;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ReservationBundle\Entity\Resource")
+     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
      * @ORM\JoinColumn(name="resource", nullable=false)
      */
     private $resource;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
-    private $user;
 
     /**
      * @ORM\Column(name="last_update", type="integer")
      */
     private $lastUpdate;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\AgendaBundle\Entity\Event")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     */
+    private $event;
+
     public function getId()
     {
         return $this->id;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getStart()
-    {
-        $date = Date('d-m-Y H:i', $this->start);
-        return new \DateTime($date);
-    }
-
-    public function setStart($start)
-    {
-        if ($start instanceof \Datetime) {
-            $this->start = $start->getTimestamp();
-        } elseif (is_int($start)) {
-            $this->start = $start;
-        } else {
-            throw new \Exception('Not an integer nor date.');
-        }
-
-        return $this;
     }
 
     public function getDuration()
@@ -92,9 +52,9 @@ class Reservation
         return $this->duration;
     }
 
-    public function setDuration($duration)
+    public function setDuration($hours, $minutes)
     {
-
+        $this->duration = $hours * 60 + $minutes;
     }
 
     public function getResource()
@@ -105,18 +65,6 @@ class Reservation
     public function setResource(Resource $resource)
     {
         $this->resource = $resource;
-
-        return $this;
-    }
-
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user)
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -134,7 +82,19 @@ class Reservation
         } elseif (is_int($lastUpdate)) {
             $this->lastUpdate = $lastUpdate;
         } else {
-            throw new \Exception('Not an integer nor date.');
+            throw new \Exception('Not an integer nor a date.');
         }
+    }
+
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    public function setEvent(Event $event)
+    {
+        $this->event = $event;
+
+        return $this;
     }
 }
