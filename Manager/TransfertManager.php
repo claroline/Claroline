@@ -492,9 +492,11 @@ class TransfertManager
         $priorities = array();
 
         //we currently only reorder resources...
-        foreach ($resManager['tool']['data']['items'] as $item) {
-            $importer = $this->getImporterByName($item['item']['type']);
-            if ($importer) $priorities[$importer->getPriority()][] = $item;
+        if (isset($resManager['tool']['data']['items'])) {
+            foreach ($resManager['tool']['data']['items'] as $item) {
+                $importer = $this->getImporterByName($item['item']['type']);
+                if ($importer) $priorities[$importer->getPriority()][] = $item;
+            }
         }
 
         ksort($priorities);
