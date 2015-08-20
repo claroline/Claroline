@@ -153,6 +153,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
         $position = 1;
 
         foreach ($tools as $tool) {
+            $otr = null;
             $toolEntity = $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\Tool')
                 ->findOneByName($tool['tool']['type']);
 
@@ -174,10 +175,9 @@ class ToolsImporter extends Importer implements ConfigurationInterface
                 $position++;
             }
 
-            if (isset($tool['tool']['roles']) && $addRoleToOtr) {
+            if (isset($tool['tool']['roles']) && $addRoleToOtr && $otr) {
                 foreach ($tool['tool']['roles'] as $role) {
                     $roleEntity = $this->roleManager->getRoleByName($role['name'] . '_' . $workspace->getGuid());
-//                    $this->toolManager->addRoleToOrderedTool($otr, $entityRoles[$role['name']]);
                     $this->toolRightManager->createToolRights(
                         $otr,
                         $entityRoles[$role['name']],

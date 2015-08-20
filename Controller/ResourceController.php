@@ -990,6 +990,7 @@ class ResourceController
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($fileName));
         $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Content-Length', filesize($archive));
         $response->headers->set('Connection', 'close');
 
         return $response;
@@ -1046,7 +1047,7 @@ class ResourceController
                 array(),
                 'platform'
             );
-            $form->addError(new FormError($errorMsg));
+            $form->addError(new FormError($e->getMessage()));
 
             return array('form' => $form->createView(), 'directory' => $directory);
         }
