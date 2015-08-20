@@ -210,6 +210,10 @@ class Step implements \JsonSerializable
     {
         $this->path = $path;
 
+        if (!empty($path)) {
+            $path->addStep($this);
+        }
+
         return $this;
     }
 
