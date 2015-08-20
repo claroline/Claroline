@@ -47,7 +47,7 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"order" = "ASC"})
+     * @ORM\OrderBy({"lvl" = "ASC", "order" = "ASC"})
      */
     protected $steps;
 
@@ -72,7 +72,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function __construct()
     {
         $this->steps = new ArrayCollection();
-        $this->published = false;
         $this->modified = false;
     }
     
@@ -159,8 +158,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         if (!$this->steps->contains($step)) {
             $this->steps->add($step);
         }
-
-        $step->setPath($this);
         
         return $this;
     }
@@ -175,8 +172,6 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         if ($this->steps->contains($step)) {
             $this->steps->removeElement($step);
         }
-
-        $step->setPath(null);
         
         return $this;
     }

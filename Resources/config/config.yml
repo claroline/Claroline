@@ -5,7 +5,7 @@ plugin:
   resources:
     - class: Innova\PathBundle\Entity\Path\Path
       name: innova_path
-      is_exportable: false
+      is_exportable: true
       icon: res_file.png
       actions:
         - name: administrate

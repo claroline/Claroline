@@ -47,25 +47,33 @@ class PathManager
     protected $securityToken;
 
     /**
+     * @var StepManager
+     */
+    protected $stepManager;
+
+    /**
      * Class constructor - Inject required services
      * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface        $securityAuth
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
      * @param \Claroline\CoreBundle\Manager\ResourceManager                                       $resourceManager
      * @param \Claroline\CoreBundle\Library\Security\Utilities                                    $utils
+     * @param \Innova\PathBundle\Manager\StepManager                                              $stepManager
      */
     public function __construct(
         ObjectManager                 $objectManager,
         AuthorizationCheckerInterface $securityAuth,
         TokenStorageInterface         $securityToken,
         ResourceManager               $resourceManager,
-        Utilities                     $utils)
+        Utilities                     $utils,
+        StepManager                   $stepManager)
     {
         $this->om              = $objectManager;
         $this->securityAuth    = $securityAuth;
         $this->securityToken   = $securityToken;
         $this->resourceManager = $resourceManager;
         $this->utils           = $utils;
+        $this->stepManager     = $stepManager;
     }
 
     /**
@@ -247,5 +255,75 @@ class PathManager
         $this->om->flush();
 
         return $this;
+    }
+
+    public function export(Workspace $workspace, array &$files, Path $path)
+    {
+        $data = array ();
+
+        // Get path data
+        $pathData = array ();
+        $pathData['description'] = $path->getDescription();
+        $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
+        $pathData['modified']    = $path->isModified();
+        $pathData['published']   = $path->isPublished();
+
+        // Get path structure into a file (to replace resources ID with placeholders)
+        $uid = uniqid() . '.txt';
+        $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
+        $structure = $path->getStructure();
+        file_put_contents($tmpPath, $structure);
+        $files[$uid] = $tmpPath;
+
+        $pathData['structure'] = $uid;
+
+        $data['path'] = $pathData;
+
+        // Process Steps
+        $data['steps'] = array ();
+        if ($path->isPublished()) {
+            $stepsData = array ();
+            foreach ($path->getSteps() as $step) {
+                $stepsData[] = $this->stepManager->export($step);
+            }
+
+            $data['steps'] = $stepsData;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Import a Path into the Platform
+     * @param string $structure
+     * @param array $data
+     * @param array $resourcesCreated
+     * @return Path
+     */
+    public function import($structure, array $data, array $resourcesCreated = array ())
+    {
+        // Create a new Path object which will be populated with exported data
+        $path = new Path();
+
+        $pathData = $data['data']['path'];
+
+        // Populate Path properties
+        $path->setBreadcrumbs(!empty($pathData['breadcrumbs']) ? $pathData['breadcrumbs'] : false);
+        $path->setDescription($pathData['description']);
+        $path->setModified($pathData['modified']);
+
+        // Create steps
+        $stepData = $data['data']['steps'];
+        if (!empty($stepData)) {
+            $createdSteps = array ();
+            foreach ($stepData as $step) {
+                $createdSteps = $this->stepManager->import($path, $step, $resourcesCreated, $createdSteps);
+            }
+        }
+
+        // Inject empty structure into path (will be replaced by a version with updated IDs later in the import process)
+        $path->setStructure($structure);
+
+        return $path;
     }
 }
