@@ -36,7 +36,7 @@ class InheritedResource
      * @var \Innova\PathBundle\Entity\Step
      *
      * @ORM\ManyToOne(targetEntity="Innova\PathBundle\Entity\Step", inversedBy="inheritedResources")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     private $step;
 
@@ -44,6 +44,7 @@ class InheritedResource
      * Resource
      * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      */
     private $resource;
 

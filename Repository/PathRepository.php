@@ -41,6 +41,8 @@ class PathRepository extends EntityRepository
     {
         $builder = $this->createQueryBuilder('p');
 
+        $builder->join('p.resourceNode', 'r');
+
         // Get only Paths which need publishing
         if ($toPublish) {
             $this->whereToPublish($builder);
@@ -60,7 +62,7 @@ class PathRepository extends EntityRepository
         $builder = $this->createQueryBuilder('p');
 
         // Join with resourceNode
-        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = '.$workspace->getId());
+        $builder->join('p.resourceNode', 'r', 'WITH', 'r.workspace = ' . $workspace->getId());
 
         // Get only Paths which need publishing
         if ($toPublish) {
@@ -72,7 +74,6 @@ class PathRepository extends EntityRepository
 
     /**
      * Get all published Paths
-     * @param  Workspace $workspace
      * @param  bool      $withPending If true, returns all published paths, including the ones with pending changes
      * @return array
      */
@@ -80,7 +81,9 @@ class PathRepository extends EntityRepository
     {
         $builder = $this->createQueryBuilder('p');
 
-        $builder->where('p.published = :published');
+        $builder->join('p.resourceNode', 'r');
+
+        $builder->where('r.published = :published');
         $builder->setParameter('published', true);
 
         if (!$withPending) {
@@ -93,7 +96,7 @@ class PathRepository extends EntityRepository
 
     private function whereToPublish(QueryBuilder $builder)
     {
-        $builder->where('p.published = :published');
+        $builder->where('r.published = :published');
         $builder->setParameter('published', false);
 
         $builder->orWhere('p.modified = :modified');

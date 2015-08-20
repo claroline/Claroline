@@ -68,4 +68,31 @@ class UserProgressionManager
 
         return $progression;
     }
+
+    public function update(Step $step, User $user = null, $status)
+    {
+        if (empty($user)) {
+            // Load current logged User
+            $user = $this->securityToken->getToken()->getUser();
+        }
+
+        // Retrieve the current progression for this step
+        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')->findOneBy(array (
+            'step' => $step,
+            'user' => $user
+        ));
+
+        if (empty($progression)) {
+            // No progression for User => initialize a new one
+            $progression = $this->create($step, $user, $status);
+        } else {
+            // Update existing progression
+            $progression->setStatus($status);
+
+            $this->om->persist($progression);
+            $this->om->flush();
+        }
+
+        return $progression;
+    }
 }

@@ -18,13 +18,14 @@ class UserProgression implements \JsonSerializable
      * Default status when creating a new UserProgression
      * @var string
      */
-    protected static $statusDefault = 'to_do';
+    protected static $statusDefault = 'seen';
 
     /**
      * List of available status
      * @var array
      */
     protected static $statusAvailable = array (
+        'seen',
         'to_do',
         'done',
         'to_review'

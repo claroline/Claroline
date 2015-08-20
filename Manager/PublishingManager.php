@@ -116,7 +116,7 @@ class PublishingManager
      */
     public function publish(Path $path)
     {
-        // TODO : publish all linked resources if needed
+        // We need to publish all linked resources to have a full working Path
 
         // Start Publishing
         $this->start($path);
@@ -131,7 +131,7 @@ class PublishingManager
         // Clean steps to remove
         $this->cleanSteps($publishedSteps, $existingSteps);
 
-        // flush alls steps
+        // flush all steps
         $this->om->flush();
 
         // replace ids
@@ -295,7 +295,7 @@ class PublishingManager
      */
     protected function cleanSteps(array $neededSteps = array(), array $existingSteps = array())
     {
-        $toRemove = array_filter($existingSteps, function ($current) use ($neededSteps) {
+        $toRemove = array_filter($existingSteps, function (Step $current) use ($neededSteps) {
             $removeStep = true;
             foreach ($neededSteps as $step) {
                 if ($current->getId() == $step->getId()) {

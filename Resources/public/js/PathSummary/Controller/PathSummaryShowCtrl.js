@@ -22,3 +22,11 @@ PathSummaryShowCtrl.prototype.constructor = PathSummaryShowCtrl;
  * @type {object}
  */
 PathSummaryShowCtrl.prototype.userProgression = {};
+
+PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
+    if (!angular.isObject(this.userProgression[step.id])) {
+        this.userProgressionService.create(step, newStatus);
+    } else {
+        this.userProgressionService.update(step, newStatus);
+    }
+};

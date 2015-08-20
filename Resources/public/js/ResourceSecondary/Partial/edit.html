@@ -3,7 +3,7 @@
     <li class="resource dropdown-fix" role="presentation" data-ng-repeat="resource in resourcesSecondaryEditCtrl.inherited" data-ng-class="{ excluded: resource.isExcluded }">
         <a href="" role="button" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
             <!-- Resource lvl -->
-            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }}"></div>
+            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }} lvl-bg"></div>
 
             <!-- Resource icon -->
             <img class="resource-icon" data-ng-src="{{ resourcesSecondaryEditCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryEditCtrl.resourceIcons['custom/default'] }}" alt="{{ resource.mimeType }}" />
@@ -83,7 +83,7 @@
 
     <!-- Add secondary resource button -->
     <li role="presentation">
-        <btn-resource-picker data-parameters="resourcesSecondaryEditCtrl.resourcePicker">
+        <btn-resource-picker class="resource-add" data-parameters="resourcesSecondaryEditCtrl.resourcePicker">
             <span class="fa fa-plus"></span> {{ 'resources_browse'|trans:{}:'path_wizards' }}
         </btn-resource-picker>
     </li>

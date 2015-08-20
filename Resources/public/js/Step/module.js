@@ -11,6 +11,7 @@
         'PathModule',
         'ResourceModule',
         'ResourcePrimaryModule',
-        'ResourceSecondaryModule'
+        'ResourceSecondaryModule',
+        'UserProgressionModule'
     ]);
 })();

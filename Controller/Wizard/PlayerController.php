@@ -5,7 +5,6 @@ namespace Innova\PathBundle\Controller\Wizard;
 use Innova\PathBundle\Manager\PathManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -59,7 +58,6 @@ class PlayerController
      *      defaults = { "stepId" = null },
      *      options  = { "expose" = true }
      * )
-     * @Method("GET")
      * @Template("InnovaPathBundle:Wizard:player.html.twig")
      */
     public function displayAction(Path $path)

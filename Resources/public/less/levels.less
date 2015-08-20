@@ -4,55 +4,57 @@
 
 .lvl {
     // LEVEL 0
-    .createLevel(0, @lvl-gray, @lvl-gray-dark, @lvl-gray-dark);
+    .createLevel(0, @lvl-gray);
 
     // LEVEL 1
-    .createLevel(1, @lvl-blue, @lvl-blue-dark, @lvl-blue-dark);
+    .createLevel(1, @lvl-blue);
 
     // LEVEL 2
-    .createLevel(2, @lvl-purple, @lvl-purple-dark, @lvl-purple-dark);
+    .createLevel(2, @lvl-purple);
 
     // LEVEL 3
-    .createLevel(3, @lvl-red, @lvl-red-dark, @lvl-red-dark);
+    .createLevel(3, @lvl-red);
 
     // LEVEL 4
-    .createLevel(4, @lvl-orange, @lvl-orange-dark, @lvl-orange-dark);
+    .createLevel(4, @lvl-orange);
 
     // LEVEL 5
-    .createLevel(5, @lvl-yellow, @lvl-yellow-dark, @lvl-yellow-dark);
+    .createLevel(5, @lvl-yellow);
 
     // LEVEL 6
-    .createLevel(6, @lvl-light-green, @lvl-light-green-dark, @lvl-light-green-dark);
+    .createLevel(6, @lvl-light-green);
 
     // LEVEL 7
-    .createLevel(7, @lvl-green, @lvl-green-dark, @lvl-green-dark);
+    .createLevel(7, @lvl-green);
 
     // LEVEL 8
-    .createLevel(8, @lvl-light-blue, @lvl-light-blue-dark, @lvl-light-blue-dark);
+    .createLevel(8, @lvl-light-blue);
 }
 
-.createLevel(@lvl, @bgColor, @textColor, @borderColor) {
+.createLevel(@lvl, @color) {
     &.lvl-@{lvl} {
-        background-color: @bgColor !important;
-    }
+        &.lvl-bg {
+            background-color: @color !important;
+        }
 
-    &.lvl-@{lvl}-text {
-        color: @textColor !important;
-    }
+        &.lvl-text {
+            color: darken(@color, 20%) !important;
+        }
 
-    &.lvl-@{lvl}-border {
-        border-color: @borderColor !important;
-    }
+        &.lvl-border {
+            border-color: @color !important;
+        }
 
-    &.lvl-@{lvl}-zindex {
-        z-index: @lvl;
-    }
+        &.lvl-zindex {
+            z-index: @lvl;
+        }
 
-    &.lvl-@{lvl}-zindex-reverse {
-        z-index: 9 - @lvl;
-    }
+        &.lvl-zindex-reverse {
+            z-index: 9 - @lvl;
+        }
 
-    &.lvl-@{lvl}-hover:hover {
-        box-shadow: 1px 0 3px 1px fadeout(@bgColor, 0.75);
+        &.lvl-hover:hover {
+            box-shadow: 1px 0 3px 1px fadeout(@color, 0.75);
+        }
     }
 }

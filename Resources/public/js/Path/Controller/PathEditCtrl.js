@@ -3,7 +3,7 @@
  * @returns {PathEditCtrl}
  * @constructor
  */
-var PathEditCtrl = function PathEditCtrl($route, PathService, HistoryService, ConfirmService, $scope) {
+var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathService, HistoryService, ConfirmService, $scope) {
     // Call parent constructor
     PathBaseCtrl.apply(this, arguments);
 
@@ -111,13 +111,8 @@ PathEditCtrl.prototype.publish = function () {
  * Preview path into player
  */
 PathEditCtrl.prototype.preview = function () {
-    if (this.published) {
-        // Path needs to be published at least once to be previewed
-        var url = Routing.generate('innova_path_player_wizard', {
-            id: this.id
-        });
-
-        if (this.modified || this.unsaved) {
+    function doPreview() {
+        if (this.modified) {
             // Path modified => modifications will not be visible before publishing so warn user
             this.confirmService.open(
                 // Confirm options
@@ -129,12 +124,37 @@ PathEditCtrl.prototype.preview = function () {
 
                 // Confirm success callback
                 function () {
-                    window.open(url, '_blank');
-                }
+                    this.window.location.href = url;
+                }.bind(this)
             );
         } else {
             // Open player to preview the path
-            window.open(url, '_blank');
+            this.window.location.href = url;
+        }
+    }
+
+    if (this.published) {
+        // Path needs to be published at least once to be previewed
+        var url = Routing.generate('innova_path_player_wizard', {
+            id: this.id
+        });
+
+        if (angular.isObject(this.currentStep) && angular.isDefined(this.currentStep.stepId)) {
+            url += '#/' + this.currentStep.stepId;
+        }
+
+        // Force save before exit Editor
+        if (this.unsaved) {
+            // Save only with there is something to change
+            this.pathService.save().then(function () {
+                // Mark path as modified
+                this.modified = true;
+                this.unsaved  = false;
+
+                doPreview.call(this);
+            }.bind(this));
+        } else {
+            doPreview.call(this);
         }
     }
 };

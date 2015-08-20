@@ -14,7 +14,7 @@
         <!-- Form of the Step -->
         <div class="panel panel-default">
             <!-- Step level -->
-            <div class="lvl-indicator lvl lvl-{{ stepEditCtrl.step.lvl }}"></div>
+            <div class="lvl-indicator lvl lvl-{{ stepEditCtrl.step.lvl }} lvl-bg"></div>
 
             <div class="panel-body">
                 <div class="panel-step-heading row">
@@ -69,7 +69,7 @@
                     </div>
 
                     <div id="panel-description" data-ng-show="!stepEditCtrl.collapsedPanels.description">
-                        <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" class="form-control" name="step-description" data-ng-model="stepEditCtrl.step.description"></textarea>
+                        <textarea data-ui-tinymce="stepEditCtrl.tinymceOptions" data-before-unload="off" class="form-control" name="step-description" data-ng-model="stepEditCtrl.step.description"></textarea>
                     </div>
                 </div>
 

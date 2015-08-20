@@ -38,18 +38,20 @@ class UserProgressionController
     /**
      * Log a new action from User (mark the the  step as to do)
      * @param \Innova\PathBundle\Entity\Step $step
+     * @param string $status
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/",
-     *     name    = "innova_path_progression_create",
-     *     options = { "expose" = true }
+     *     "/step/{id}/{status}",
+     *     name         = "innova_path_progression_create",
+     *     requirements = {"id" = "\d+"},
+     *     options      = { "expose" = true }
      * )
      * @Method("POST")
      */
-    public function createAction(Step $step)
+    public function createAction(Step $step, $status = null)
     {
-        $progression = $this->userProgressionManager->create($step);
+        $progression = $this->userProgressionManager->create($step, null, $status);
 
         return new JsonResponse($progression);
     }
@@ -61,16 +63,17 @@ class UserProgressionController
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      *
      * @Route(
-     *     "/",
+     *     "/step/{id}/{status}",
      *     name         = "innova_path_progression_update",
+     *     requirements = {"id" = "\d+"},
      *     options      = { "expose" = true }
      * )
      * @Method("PUT")
      */
     public function updateAction(Step $step, $status)
     {
-        return new JsonResponse(array (
+        $progression = $this->userProgressionManager->update($step, null, $status);
 
-        ));
+        return new JsonResponse($progression);
     }
 }

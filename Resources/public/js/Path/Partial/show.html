@@ -1,15 +1,36 @@
 <div class="path-show">
     <!-- Summary of the Path-->
-    <path-summary-show data-title="pathShowCtrl.path.name"></path-summary-show>
+    <path-summary-show data-title="pathShowCtrl.path.name" data-ng-if="pathShowCtrl.path.steps.length !== 0"></path-summary-show>
 
     <!-- Breadcrumbs -->
-    <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs"></path-navigation>
+    <path-navigation data-ng-if="pathShowCtrl.path.breadcrumbs && pathShowCtrl.path.steps.length !== 0"></path-navigation>
 
-    <button type="button" class="btn btn-primary btn-path-edit pull-right" data-ng-if="pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
+    <button type="button" class="btn btn-primary btn-path-edit pull-right" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
         <span class="fa fa-pencil"></span>
         {{ 'edit'|trans:{}:'path_wizards' }}
     </button>
 
     <!-- Current step -->
-    <div data-ng-view=""></div>
+    <div data-ng-view="" data-ng-if="pathShowCtrl.path.steps.length !== 0"></div>
+
+    <!-- Empty path alert -->
+    <div class="row" data-ng-if="pathShowCtrl.path.steps.length == 0">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="alert alert-info text-center">
+                <span class="fa fa-fw fa-warning"></span>
+
+                <!-- Message for Users who can only read the Path -->
+                <span data-ng-if="!pathShowCtrl.editEnabled">{{ 'path_empty_user_read_only'|trans:{}:'path_wizards' }}</span>
+
+                <!-- Message for Users who can edit the Path -->
+                <span data-ng-if="pathShowCtrl.editEnabled">{{ 'path_empty_user_can_edit'|trans:{}:'path_wizards' }}</span>
+            </div>
+
+            <!-- Display a big button for those who can edit Paths -->
+            <button class="btn btn-block btn-primary btn-lg" data-ng-if="pathShowCtrl.editEnabled" data-ng-click="pathShowCtrl.edit()">
+                <span class="fa fa-pencil"></span>
+                {{ 'edit'|trans:{}:'path_wizards' }}
+            </button>
+        </div>
+    </div>
 </div>

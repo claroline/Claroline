@@ -13,6 +13,7 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Innova\PathBundle\Entity\Path\Path;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Path Manager
@@ -76,7 +77,7 @@ class PathManager
      */
     public function checkAccess($action, Path $path, Workspace $workspace = null)
     {
-        if (false === $this->isAllow($action, $path, $workspace)) {
+        if (!$this->isAllow($action, $path, $workspace)) {
             throw new AccessDeniedException();
         }
     }
@@ -100,17 +101,6 @@ class PathManager
         $collection = new ResourceCollection(array ($path->getResourceNode()));
 
         return $this->securityAuth->isGranted($actionName, $collection);
-    }
-
-    /**
-     * Get a workspace from id
-     * @param  integer $workspaceId
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
-     * @deprecated used in PathHandler when creating a new path. But now the only to create a new path is the claroline way. S
-     */
-    public function getWorkspace($workspaceId)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($workspaceId);
     }
 
     /**
@@ -176,7 +166,13 @@ class PathManager
             $user = $this->securityToken->getToken()->getUser();
         }
 
-        return $this->om->getRepository('InnovaPathBundle:UserProgression')->findByPathAndUser($path, $user);
+        $results = array ();
+        if ($user instanceof UserInterface) {
+            // We have a logged User => get its progression
+            $results = $this->om->getRepository('InnovaPathBundle:UserProgression')->findByPathAndUser($path, $user);
+        }
+
+        return $results;
     }
 
     /**
@@ -215,6 +211,7 @@ class PathManager
     {
         // Check if JSON structure is built
         $structure = $path->getStructure();
+
         if (empty($structure)) {
             // Initialize path structure
             $path->initializeStructure();

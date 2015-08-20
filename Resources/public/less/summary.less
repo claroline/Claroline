@@ -2,11 +2,9 @@
  * Styles for Path summary
  */
 
-@path-summary-width: 400px;
-
 // Default state
 .path-summary-container {
-    overflow-y: hidden;
+    /*overflow-y: hidden;*/
     top: 70px !important; /* Same as body padding top */
     bottom: 70px !important;
 
@@ -36,7 +34,6 @@
         height: 100%;
         width: 100%;
         padding-top: @navbar-height;
-        overflow-y: hidden;
         background-color: #EEE;
         border: 1px solid @panel-default-border;
         border-radius: @border-radius-base;
@@ -45,7 +42,7 @@
         h2 {
             font-size: 17px;
             margin: 0;
-            padding: 0 floor(@grid-gutter-width / 2);
+            padding: 0 @grid-gutter-width 0 floor(@grid-gutter-width / 2);
             position: absolute;
             top: 0;
             left: 0;
@@ -53,6 +50,10 @@
             height: @navbar-height;
             line-height: @navbar-height;
             z-index: 1;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 100%;
         }
 
         em {
@@ -60,7 +61,8 @@
         }
 
         .path-summary-tree {
-            overflow-y: auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
             height: 100%;
             position: relative;
 
@@ -137,6 +139,7 @@
     }
 
     .step {
+        font-size: @path-summary-font;
         padding: 5px 8px 5px 30px;
         border-bottom: 1px solid #ddd;
         border-top: 1px solid #ddd;
@@ -175,6 +178,42 @@
             }
         }
     }
+
+    .step-progression {
+        height: 100%;
+
+        > a {
+            vertical-align: bottom;
+            height: 100%;
+            display: inline-block;
+            line-height: 1.5;
+            padding: @padding-base-vertical @padding-base-horizontal;
+            color: @text-color;
+        }
+
+        .link-progression {
+            &:hover {
+                background-color: darken(@dropdown-bg, 5%);
+            }
+
+            &.link-progression-to_do {
+                color: @brand-warning;
+            }
+
+            &.link-progression-done {
+                color: @brand-success;
+            }
+
+            &.link-progression-to_review {
+                color: @brand-info;
+            }
+        }
+
+        .dropdown-menu-right {
+            left: auto;
+            right: 0;
+        }
+    }
 }
 
 .step-children {
@@ -186,6 +225,7 @@
 // Opened state
 .path-summary-opened {
     .path-summary-container {
+        overflow: visible !important;
         width: @path-summary-width !important; // Override pageslideDirective width to make it a little more responsive
     }
 
