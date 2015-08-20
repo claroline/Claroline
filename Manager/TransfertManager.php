@@ -153,6 +153,7 @@ class TransfertManager
 
         if ($importRoles) {
             $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+            $this->om->forceFlush();
         }
 
         foreach ($entityRoles as $key => $entityRole) {
@@ -223,6 +224,8 @@ class TransfertManager
             $workspace,
             true
         );
+
+        $this->om->forceFlush();
 
         $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
