@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "Competency schema",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        }
+      },
+      "required": ["name"]
+    },
+    {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "competencies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "oneOf": [
+                  {
+                    "$ref": "competency.json"
+                  }
+                ]
+              }
+            }
+          },
+          "required": ["competencies"]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "abilities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "level": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  }
+                },
+                "required": ["name", "level"]
+              }
+            }
+          },
+          "required": ["abilities"]
+        }
+      ]
+    }
+  ]
+}
