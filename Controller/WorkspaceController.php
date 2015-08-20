@@ -777,6 +777,32 @@ class WorkspaceController extends Controller
      */
     public function openAction(Workspace $workspace)
     {
+        $options = $workspace->getOptions();
+
+        if (!is_null($options)) {
+            $details = $options->getDetails();
+
+            if (isset($details['use_workspace_opening_resource']) &&
+                $details['use_workspace_opening_resource'] &&
+                isset($details['workspace_opening_resource']) &&
+                !empty($details['workspace_opening_resource'])) {
+
+                $resourceNode = $this->resourceManager->getById($details['workspace_opening_resource']);
+
+                if (!is_null($resourceNode)) {
+                    $this->session->set('isDesktop', false);
+                    $route = $this->router->generate(
+                        'claro_resource_open',
+                        array(
+                            'node' => $resourceNode->getId(),
+                            'resourceType' => $resourceNode->getResourceType()->getName()
+                        )
+                    );
+
+                    return new RedirectResponse($route);
+                }
+            }
+        }
         $roles = $this->utils->getRoles($this->tokenStorage->getToken());
         $tool = $this->workspaceManager->getFirstOpenableTool($workspace);
 

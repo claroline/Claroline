@@ -306,8 +306,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         if ($form->isValid()) {
             $color = $form->get('backgroundColor')->getData();
             $hideToolsMenu = $form->get('hideToolsMenu')->getData();
+            $useDefaultResource = $form->get('useWorkspaceOpeningResource')->getData();
+            $defaultResource = $form->get('workspaceOpeningResource')->getData();
             $details['background_color'] = $color;
             $details['hide_tools_menu'] = $hideToolsMenu;
+            $details['use_workspace_opening_resource'] = $useDefaultResource;
+            $details['workspace_opening_resource'] = empty($defaultResource) ?
+                null :
+                $defaultResource->getId();
             $workspaceOptions->setDetails($details);
             $this->workspaceManager->persistworkspaceOptions($workspaceOptions);
 

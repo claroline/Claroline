@@ -642,6 +642,7 @@ occurrence: Occurrence
 ok: Ok
 only_for_workspace_creation: 'Seulement pour la création d''un espace d''activités'
 open: Ouvrir
+open_resource_when_opening_ws: 'Ouvrir une ressource à l''ouverture de l''espace d''activités'
 operation_done: 'Opération effectuée.'
 options: Options
 or: Ou
@@ -806,6 +807,7 @@ resource_creation_wrong_type: 'Vous n''avez pas la permission de créer un(e) %t
 resource_delete: 'Êtes-vous sûr de vouloir supprimer cette ressource ?'
 resource_limit_exceeded: 'La limite maximale (%max%) de ressource est dépassée. Vous avez déjà créé %current% ressources.'
 resource_picker: 'Sélecteur de ressources'
+resource_to_open: 'Ressource à ouvrir'
 resource_type: 'Type de ressource'
 resources: Ressources
 resources_delete: 'Êtes-vous sûr de vouloir supprimer ces ressources ?'
