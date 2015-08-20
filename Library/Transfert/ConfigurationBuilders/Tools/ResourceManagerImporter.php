@@ -780,6 +780,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function format($data)
     {
+        $resourceImporter = null;
+
         foreach ($data['data']['items'] as $item) {
             foreach ($this->getListImporters() as $importer) {
                 if ($importer->getName() == $item['item']['type']) {
@@ -787,7 +789,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
             }
 
-            if ($resourceImporter instanceof RichTextInterface) {
+            if ($resourceImporter && $resourceImporter instanceof RichTextInterface) {
                 if (isset($item['item']['data']) && $resourceImporter) {
                     $itemData = $item['item']['data'];
                     $resourceImporter->format($itemData);
