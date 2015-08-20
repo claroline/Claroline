@@ -5,6 +5,9 @@
     {% set classArray="info" %}
 {% endif %}
 
+{% if adminInnova and not document.validate %}
+    
+    {% else %}
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
     <td class="{{ classArray }}">
@@ -62,3 +65,4 @@
         </td>
     {% endif %}
 </tr>
+{% endif %}
