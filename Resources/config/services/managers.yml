@@ -8,6 +8,7 @@ services:
             securityToken:   @security.token_storage
             resourceManager: @claroline.manager.resource_manager
             utils:           @claroline.security.utilities
+            stepManager:     @innova_path.manager.step
 
     # Publishing manager
     innova_path.manager.publishing:

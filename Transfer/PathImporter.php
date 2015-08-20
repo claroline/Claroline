@@ -36,6 +36,14 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
     /**
      * {@inheritdoc}
      */
+    public function getPriority()
+    {
+        return 2;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
@@ -75,9 +83,9 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
 
     }
 
-    public function import(array $data, $name)
+    public function import(array $data, $name, $created)
     {
-        return $this->container->get('innova_path.manager.path')->import($data);
+        return $this->container->get('innova_path.manager.path')->import($data, $created);
     }
 
     public function export(Workspace $workspace, array &$files, $object)

@@ -47,25 +47,33 @@ class PathManager
     protected $securityToken;
 
     /**
+     * @var StepManager
+     */
+    protected $stepManager;
+
+    /**
      * Class constructor - Inject required services
      * @param \Doctrine\Common\Persistence\ObjectManager                                          $objectManager
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface        $securityAuth
      * @param \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $securityToken
      * @param \Claroline\CoreBundle\Manager\ResourceManager                                       $resourceManager
      * @param \Claroline\CoreBundle\Library\Security\Utilities                                    $utils
+     * @param \Innova\PathBundle\Manager\StepManager                                              $stepManager
      */
     public function __construct(
         ObjectManager                 $objectManager,
         AuthorizationCheckerInterface $securityAuth,
         TokenStorageInterface         $securityToken,
         ResourceManager               $resourceManager,
-        Utilities                     $utils)
+        Utilities                     $utils,
+        StepManager                   $stepManager)
     {
         $this->om              = $objectManager;
         $this->securityAuth    = $securityAuth;
         $this->securityToken   = $securityToken;
         $this->resourceManager = $resourceManager;
         $this->utils           = $utils;
+        $this->stepManager     = $stepManager;
     }
 
     /**
@@ -254,36 +262,58 @@ class PathManager
         $data = array ();
 
         // Get path data
-        $data['breadcrumbs'] = $path->hasBreadcrumbs();
-        $data['structure']   = $path->getStructure();
-        $data['modified']    = $path->isModified();
+        $pathData = array ();
+        $pathData['description'] = $path->getDescription();
+        $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
+        $pathData['structure']   = $path->getStructure();
 
-        // Get Steps if Path is published
-        /*$data['steps'] = array ();*/
+        $data['path'] = $pathData;
 
-        /*if ($path->isPublished()) {
-            // Export each step
-            foreach ($path->getSteps() as $step) {
+        // Process Steps
+        $stepsData = array ();
+        foreach ($path->getSteps() as $step) {
+            $stepsData[] = $this->stepManager->export($step);
+        }
 
-            }
-        }*/
+        $data['steps'] = $stepsData;
 
         return $data;
     }
 
-    public function import(array $data)
+    public function import(array $data, array $resourcesCreated = array ())
     {
+        var_dump($data);
+        die();
+
+        // Create a new Path object which will be populated with exported data
         $path = new Path();
 
+        // Populate Path properties
         $path->setBreadcrumbs(!empty($data['data']['breadcrumbs']) ? $data['data']['breadcrumbs'] : false);
+        $path->setDescription($data['data']['description']);
 
-        if (!empty($data['data']['structure'])) {
+        /*if (!empty($data['data']['structure'])) {
             $path->setStructure($data['data']['structure']);
         } else {
             $path->initializeStructure();
-        }
+        }*/
 
-        $path->setModified(!empty($data['data']['modified']) ? $data['data']['modified'] : false);
+        // Path will be published will import, so it can't be out of sync with JSON structure
+        $path->setModified(false);
+
+        // Create steps
+        if (!empty($data['data']['structure']) && !empty($data['data']['structure']['steps'])) {
+            $createdSteps = array ();
+            foreach ($data['data']['structure']['steps'] as $step) {
+                $createdSteps = $this->stepManager->import($path, $step, $resourcesCreated, $createdSteps);
+            }
+
+            // Inject new structure into path
+            // Structure will not be fully updated
+            // we have not access to the new Resources IDs because they have not been saved to the DB
+            // That's not a problem because when Path is published, the structure is recalculated from the generated Data
+            $path->setStructure('{}');
+        }
 
         return $path;
     }

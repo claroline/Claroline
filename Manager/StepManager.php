@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Doctrine\Common\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
+use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Entity\Path\Path;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -257,5 +258,70 @@ class StepManager
         }
 
         return $this;
+    }
+
+    public function import(Path $path, array $data, array $createdResources = array (), array $createdSteps = array ())
+    {
+        $step = new Step();
+
+        $step->setPath($path);
+        if (!empty($data['parent'])) {
+            $step->setParent($createdSteps[$data['parent']]);
+        }
+
+        $step->setLvl($data['lvl']);
+        $step->setOrder($data['order']);
+
+        // Link Step to its Activity
+        if (!empty($data['activityId']) && !empty($createdResources[$data['activityId']])) {
+            // Step has an Activity
+            $step->setActivity($createdResources[$data['activityId']]);
+        }
+
+        if (!empty($data['inheritedResources'])) {
+            foreach($data['inheritedResources'] as $inherited) {
+                $inheritedResource = new InheritedResource();
+                $inheritedResource->setLvl($inherited['lvl']);
+                $inheritedResource->setResource($createdResources[$inherited['resource']]);
+
+                $this->om->persist($inheritedResource);
+            }
+        }
+
+        $createdSteps[$data['uid']] = $step;
+
+        $this->om->persist($step);
+
+        return $createdSteps;
+    }
+
+    /**
+     * Transform Step data to export it
+     * @param  \Innova\PathBundle\Entity\Step $step
+     * @return array
+     */
+    public function export(Step $step)
+    {
+        $parent = $step->getParent();
+        $activity = $step->getActivity();
+
+        $data = array (
+            'uid'                => $step->getId(),
+            'parent'             => !empty($parent)   ? $parent->getId()   : null,
+            'activityId'         => !empty($activity) ? $activity->getId() : null,
+            'order'              => $step->getOrder(),
+            'lvl'                => $step->getLvl(),
+            'inheritedResources' => array (),
+        );
+
+        $inheritedResources = $step->getInheritedResources();
+        foreach ($inheritedResources as $inherited) {
+            $data['inheritedResources'][] = array (
+                'resource' => $inherited->getResource()->getId(),
+                'lvl'      => $inherited->getLvl(),
+            );
+        }
+
+        return $data;
     }
 }
