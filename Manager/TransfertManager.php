@@ -153,6 +153,7 @@ class TransfertManager
 
         if ($importRoles) {
             $importedRoles = $this->getImporterByName('roles')->import($data['roles'], $workspace);
+            $this->om->forceFlush();
         }
 
         foreach ($entityRoles as $key => $entityRole) {
@@ -204,11 +205,6 @@ class TransfertManager
         $workspace->setSelfUnregistration($configuration->getSelfUnregistration());
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
-
-        if ($owner) {
-            $workspace->setCreator($owner);
-        }
-
         $this->om->persist($workspace);
         $this->om->flush();
         $this->log('Base workspace created...');
@@ -223,6 +219,8 @@ class TransfertManager
             $workspace,
             true
         );
+
+        $this->om->forceFlush();
 
         $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
@@ -258,6 +256,12 @@ class TransfertManager
         $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
+        
+        if ($owner) {
+            $this->log('Set the owner...');
+            $workspace->setCreator($owner);
+        }
+        
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
@@ -301,6 +305,9 @@ class TransfertManager
         return null;
     }
 
+    /**
+     * Full workspace export
+     */
     public function export(Workspace $workspace)
     {
         foreach ($this->listImporters as $importer) {
@@ -341,6 +348,9 @@ class TransfertManager
         return $archPath;
     }
 
+    /**
+     * Partial export for ressources
+     */
     public function exportResources(Workspace $workspace, array $resourceNodes)
     {
         foreach ($this->listImporters as $importer) {
@@ -483,9 +493,11 @@ class TransfertManager
         $priorities = array();
 
         //we currently only reorder resources...
-        foreach ($resManager['tool']['data']['items'] as $item) {
-            $importer = $this->getImporterByName($item['item']['type']);
-            if ($importer) $priorities[$importer->getPriority()][] = $item;
+        if (isset($resManager['tool']['data']['items'])) {
+            foreach ($resManager['tool']['data']['items'] as $item) {
+                $importer = $this->getImporterByName($item['item']['type']);
+                if ($importer) $priorities[$importer->getPriority()][] = $item;
+            }
         }
 
         ksort($priorities);

@@ -20,12 +20,13 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 
 /**
  * @DI\Service("claroline.tool.resources.activity_importer")
  * @DI\Tag("claroline.importer")
  */
-class ActivityImporter extends Importer implements ConfigurationInterface
+class ActivityImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $container;
 
@@ -111,7 +112,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface
             $description = file_get_contents($this->getRootPath() . $ds . $item['activity']['description']);
             $activity = new Activity();
             $activity->setTitle($item['activity']['title']);
-            $primaryResource = !empty($item['activity']['primary_resource']) && $created[$item['activity']['primary_resource']] ?
+            $primaryResource = !empty($item['activity']['primary_resource']) && isset($created[$item['activity']['primary_resource']]) && $created[$item['activity']['primary_resource']] ?
                 $created[$item['activity']['primary_resource']]->getResourceNode():
                 null;
             $activity->setPrimaryResource($primaryResource);
