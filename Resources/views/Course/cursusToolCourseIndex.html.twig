@@ -245,6 +245,8 @@
                 {{ renderPager(courses, search, orderedBy, order, max) }}
             {% endif %}
         {% else %}
+            <br>
+            <br>
             <div class="alert alert-warning">
                 {{ 'no_course'|trans({}, 'cursus') }}
             </div>
