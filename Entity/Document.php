@@ -257,17 +257,19 @@ class Document {
      * Créé avec Axel, InnovaERV.
      * But : avoir le nombre de commentaires non lus.
      */
-    public function getUnReadComments()
+    public function getUnReadComments($userId)
     {
         $unReadComments = 0;
 
         foreach ($this->comments as $comment) {
-            $readOrNot = $comment->getComments();
-            /** S'il n'y a pas d'occurrences dans CommentRead, c'est que le commentaire n'a pas été lu. **/
-            if (empty($readOrNot) || count($readOrNot) == 0) 
-            {
-                $unReadComments++;
+            $readComments = $comment->getComments();
+            $newComment = 1;
+            foreach ($readComments as $readComment) {
+                if ($readComment->getUser()->getId() === $userId) {
+                    $newComment = 0;
+                }
             }
+            $unReadComments += $newComment;
         }
 
         return $unReadComments;
