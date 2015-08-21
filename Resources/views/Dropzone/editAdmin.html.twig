@@ -1,5 +1,5 @@
 {# Demandes adressées #}
-<li class="hometab-element {% block collecticiel_demandes_active %}{% endblock %}">
+<li class="hometab-element {% block collecticiel_demandes_active %}active{% endblock %}">
     <a href="{% block collecticiel_demandes_link %}
        {{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}
        {% endblock %}">
