@@ -133,15 +133,17 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function format($data)
     {
-        if ($path = $data[0]['file']['path']) {
-            $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
-            $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
+        if (isset($data[0]) {
+            if ($path = $data[0]['file']['path']) {
+                $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+                $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
 
-            foreach ($entities as $entity) {
-                $text = $entity->getContent();
-                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
-                $entity->setContent($text);
-                $this->om->persist($entity);
+                foreach ($entities as $entity) {
+                    $text = $entity->getContent();
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                    $entity->setContent($text);
+                    $this->om->persist($entity);
+                }
             }
         }
     }
