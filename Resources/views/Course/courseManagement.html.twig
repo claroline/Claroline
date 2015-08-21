@@ -206,11 +206,11 @@
                                 {% for session in sessionsTab[0] %}
                                 <tr id="row-session-{{ session.getId() }}">
                                     <td>
-                                        <span class="show-users-btn pointer-hand"
-                                              data-session-id="{{ session.getId() }}"
+                                        <a class="show-users-btn pointer-hand"
+                                           data-session-id="{{ session.getId() }}"
                                         >
                                             {{ session.getName() }}
-                                        </span>
+                                        </a>
                                     </td>
                                     <td>
                                         {{ session.getCreationDate()|intl_date_format }}
