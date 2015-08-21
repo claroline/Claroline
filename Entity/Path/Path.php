@@ -43,6 +43,14 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     protected $breadcrumbs = true;
 
     /**
+     * Is the summary displayed when open the Player ?
+     * @var boolean
+     *
+     * @ORM\Column(name="summary_displayed", type="boolean")
+     */
+    protected $summaryDisplayed = true;
+
+    /**
      * Steps linked to the path
      * @var \Doctrine\Common\Collections\ArrayCollection
      * 
@@ -146,6 +154,27 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function isModified()
     {
         return $this->modified;
+    }
+
+    /**
+     * Set summary displayed
+     * @param boolean $displayed
+     * @return \Innova\PathBundle\Entity\Path\Path
+     */
+    public function setSummaryDisplayed($displayed)
+    {
+        $this->summaryDisplayed = $displayed;
+
+        return $this;
+    }
+
+    /**
+     * Is summary displayed when open Player ?
+     * @return boolean
+     */
+    public function isSummaryDisplayed()
+    {
+        return $this->summaryDisplayed;
     }
 
     /**
