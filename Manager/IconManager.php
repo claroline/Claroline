@@ -18,7 +18,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -200,15 +200,15 @@ class IconManager
      * Creates a custom ResourceIcon entity from a File (wich should contain an image).
      * (for instance if the thumbnail of a resource is changed)
      *
-     * @param UploadedFile $file
+     * @param File $file
+     * @param Workspace $workspace (for the storage directory...)
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function createCustomIcon(UploadedFile $file, Workspace $workspace = null)
+    public function createCustomIcon(File $file, Workspace $workspace = null)
     {
         $this->om->startFlushSuite();
-        $iconName = $file->getClientOriginalName();
-        $extension = pathinfo($iconName, PATHINFO_EXTENSION);
+        $extension = pathinfo($file->getFilename(), PATHINFO_EXTENSION);
 
         if (is_null($workspace)) {
             $dest = $this->thumbDir;

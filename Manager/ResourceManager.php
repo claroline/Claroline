@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -1149,11 +1150,11 @@ class ResourceManager
      * Changes a node icon.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode  $node
-     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     * @param \Symfony\Component\HttpFoundation\File\File $file
      *
      * @return \Claroline\CoreBundle\Entity\Resource\ResourceIcon
      */
-    public function changeIcon(ResourceNode $node, UploadedFile $file)
+    public function changeIcon(ResourceNode $node, File $file)
     {
         $this->om->startFlushSuite();
         $icon = $this->iconManager->createCustomIcon($file, $node->getWorkspace());

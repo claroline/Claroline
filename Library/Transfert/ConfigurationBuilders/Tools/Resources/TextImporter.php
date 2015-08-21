@@ -110,7 +110,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         return !file_exists($rootpath . $ds . $v);
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
         $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\Revision')
             ->getLastRevision($object)->getContent();
@@ -118,7 +118,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $uid = uniqid() . '.txt';
         $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
         file_put_contents($tmpPath, $content);
-        $files[$uid] = $tmpPath;
+        $_files[$uid] = $tmpPath;
         $data = array(array('file' => array(
             'path' => $uid
         )));

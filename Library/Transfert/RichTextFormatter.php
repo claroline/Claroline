@@ -87,12 +87,12 @@ class RichTextFormatter
      * For now we only look parse .txt. in the archive.
      * It's way easier that way.
      *
-     * @param $data
+     * @param $_data
      * @param $files
      *
      * @return array
      */
-    public function setPlaceHolders(array $files)
+    public function setPlaceHolders(array $files, &$_data)
     {
         $formattedFiles = [];
 

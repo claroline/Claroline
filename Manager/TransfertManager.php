@@ -256,12 +256,12 @@ class TransfertManager
         $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
-        
+
         if ($owner) {
             $this->log('Set the owner...');
             $workspace->setCreator($owner);
         }
-        
+
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
@@ -320,7 +320,7 @@ class TransfertManager
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
 
         $files = $this->container->get('claroline.importer.rich_text_formatter')
-            ->setPlaceHolders($files);
+            ->setPlaceHolders($files, $data);
         //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
