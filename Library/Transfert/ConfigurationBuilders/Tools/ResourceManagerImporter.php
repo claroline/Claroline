@@ -693,17 +693,19 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     {
         $resourceImporter = null;
 
-        foreach ($data['data']['items'] as $item) {
-            foreach ($this->getListImporters() as $importer) {
-                if ($importer->getName() == $item['item']['type']) {
-                    $resourceImporter = $importer;
+        if (isset($data['data']['items'])) {
+            foreach ($data['data']['items'] as $item) {
+                foreach ($this->getListImporters() as $importer) {
+                    if ($importer->getName() == $item['item']['type']) {
+                        $resourceImporter = $importer;
+                    }
                 }
-            }
 
-            if ($resourceImporter && $resourceImporter instanceof RichTextInterface) {
-                if (isset($item['item']['data']) && $resourceImporter) {
-                    $itemData = $item['item']['data'];
-                    $resourceImporter->format($itemData);
+                if ($resourceImporter && $resourceImporter instanceof RichTextInterface) {
+                    if (isset($item['item']['data']) && $resourceImporter) {
+                        $itemData = $item['item']['data'];
+                        $resourceImporter->format($itemData);
+                    }
                 }
             }
         }

@@ -133,7 +133,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function format($data)
     {
-        if (isset($data[0]) {
+        if (isset($data[0])) {
             if ($path = $data[0]['file']['path']) {
                 $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
                 $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
