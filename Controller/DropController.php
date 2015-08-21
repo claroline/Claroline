@@ -975,38 +975,35 @@ class DropController extends DropzoneBaseController
          $this->getDoctrine()->getManager()
          ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
 
-//        var_dump($roles);
-//        die();
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
 //        $userRepo = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User');
-
 //        $users = $dropRepo->getUsersByWorkspacesAndRoles($workspace, $roles);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
         // Déclarations des nouveaux tableaux, qui seront passés à la vue
-        $userToCommentCount = array();
-        $userNbTextToRead = array();
+        $userNbDocDropped = array();
+        $userNbAdressedRequests = array();
 
         foreach ($dropzone->getDrops() as $drop) {
             /** InnovaERV : ajout pour calculer les 2 zones **/
 
             // Nombre de commentaires non lus/ Repo : Comment
-            $nbCommentsPerUser = $this->getDoctrine()
+            $nbDocDropped = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
 
             // Nombre de devoirs à corriger/ Repo : Document
-            $nbTextToRead = $this->getDoctrine()
+            $nbAdressedRequests = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
                                 ->countTextToRead($drop->getUser());
 
             // Affectations des résultats dans les tableaux
-            $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;
-            $userNbTextToRead[$drop->getUser()->getId()] = $nbTextToRead;
+            $userNbDocDropped[$drop->getUser()->getId()] = $nbDocDropped;
+            $userNbAdressedRequests[$drop->getUser()->getId()] = $nbAdressedRequests;
         }
 
         $adapter = new DoctrineORMAdapter($dropsQuery);
@@ -1041,8 +1038,8 @@ class DropController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'unterminated_drops' => $countUnterminatedDrops,
             'pager' => $pager,
-            'nbCommentNotRead' => $userToCommentCount,
-            'userNbTextToRead' => $userNbTextToRead,
+            'userNbDocDropped' => $userNbDocDropped,
+            'userNbAdressedRequests' => $userNbAdressedRequests,
             'adminInnova' => $adminInnova,
         ));
 
