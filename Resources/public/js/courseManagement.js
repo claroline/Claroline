@@ -366,6 +366,25 @@
             function() {}
         );
     });
+    
+    $('#sessions-box').on('click', '.default-session-btn', function () {
+        var sessionId = $(this).data('session-id');
+        var currentBtn = $(this);
+        
+        $.ajax({
+            url: Routing.generate(
+                'claro_cursus_course_session_default_switch',
+                {'session': sessionId}
+            ),
+            type: 'POST',
+            success: function (datas) {
+                var content = datas['default'] ?
+                    '<i class="fa fa-check-circle" style="color: #5CB85C"></i>' :
+                    '<i class="fa fa-times-circle" style="color: #D9534F"></i>';
+                currentBtn.html(content);
+            }
+        });
+    });
 
     var removeUserRow = function (event, sessionUserId) {
         $('#row-session-user-' + sessionUserId).remove();

@@ -891,4 +891,24 @@ class CourseController extends Controller
             );
         }
     }
+
+    /**
+     * @EXT\Route(
+     *     "cursus/course/session/{session}/default/switch",
+     *     name="claro_cursus_course_session_default_switch",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function courseSessionDefaultSwitchAction(CourseSession $session)
+    {
+        $isDefault = !$session->isDefaultSession();
+        $session->setDefaultSession($isDefault);
+        $this->cursusManager->persistCourseSession($session);
+
+        return new JsonResponse(
+            array('id' => $session->getId(), 'default' => $isDefault),
+            200
+        );
+    }
 }

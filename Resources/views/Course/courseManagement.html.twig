@@ -195,6 +195,9 @@
                                     {{ 'status'|trans({}, 'platform') }}
                                 </th>
                                 <th class="text-center">
+                                    {{ 'default_session'|trans({}, 'cursus') }}
+                                </th>
+                                <th class="text-center">
                                     {{ 'actions'|trans({}, 'platform') }}
                                 </th>
                             </tr>
@@ -203,15 +206,6 @@
                                 {% for session in sessionsTab[0] %}
                                 <tr id="row-session-{{ session.getId() }}">
                                     <td>
-                                        {% if session.isDefaultSession() %}
-                                            <i class="fa fa-flag"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                            >
-                                            </i>
-                                            &nbsp;
-                                        {% endif %}
                                         <span class="show-users-btn pointer-hand"
                                               data-session-id="{{ session.getId() }}"
                                         >
@@ -246,6 +240,16 @@
                                         </i>
                                     </td>
                                     <td class="text-center">
+                                        <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+                                            
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                            {% else %}
+                                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
                                         <i class="btn btn-default fa fa-envelope-o session-send-confirmation-mail-btn"
                                            data-toggle="tooltip"
                                            data-placement="top"
@@ -277,15 +281,6 @@
                                 {% for session in sessionsTab[1] %}
                                 <tr id="row-session-{{ session.getId() }}">
                                     <td>
-                                        {% if session.isDefaultSession() %}
-                                            <i class="fa fa-flag"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                            >
-                                            </i>
-                                            &nbsp;
-                                        {% endif %}
                                         <span class="show-users-btn pointer-hand"
                                               data-session-id="{{ session.getId() }}"
                                         >
@@ -318,6 +313,16 @@
                                            style="color: #5CB85C"
                                         >
                                         </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+                                            
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                            {% else %}
+                                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                            {% endif %}
+                                        </span>
                                     </td>
                                     <td class="text-center">
                                         <i class="btn btn-default fa fa-envelope-o session-send-confirmation-mail-btn"
@@ -396,6 +401,16 @@
                                                style="color: #D9534F"
                                             >
                                             </i>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+
+                                                {% if session.isDefaultSession() %}
+                                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                                {% else %}
+                                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                                {% endif %}
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             <i class="btn btn-default fa fa-edit edit-session-btn"
