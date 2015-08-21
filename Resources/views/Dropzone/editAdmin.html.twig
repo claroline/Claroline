@@ -1,46 +1,27 @@
-{#
-            {% block dropzone_edit_navTabs_criteria_block %}
-                <li class="hometab-element peer-review-options {% block dropzone_edit_navTabs_criteria_element_class %} {% endblock %}">
-                    <a id="editCriteriaLink" href="
-                    {% block dropzone_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_edit_criteria',{'resourceId':dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
-                        Critères d'évaluation par les pairs
-                    </a>
-                </li>
-            {% endblock %}
-#}
+{# Demandes adressées #}
+<li class="hometab-element {% block collecticiel_demandes_active %}active{% endblock %}">
+    <a href="{% block collecticiel_demandes_link %}
+       {{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }}
+       {% endblock %}">
+            {{ 'Requests'|trans({}, 'innova_collecticiel') }}
+        </a>
+    </li>
 
-            {# Demandes adressées #}
+    {# Espaces partagés #}
+    {# #63 : suppression de l'id car mauvaise navigation #}
+    <li class="hometab-element {% block collecticiel_shared_active %}{% endblock %}">
+        <a href="{% block collecticiel_shared_link %}
+           {{ path('innova_collecticiel_shared_spaces',{'resourceId':dropzone.id}) }}
+           {% endblock %}">
+                {{ 'Shared spaces'|trans({}, 'innova_collecticiel') }}
+            </a>
+        </li>
 
-
-            {# ne pas toucher : bloc d'origine qui sert d'exemple
-            Critères d'évaluation par l'enseignant #}
-            {#
-            {% block collecticiel_edit_navTabs_criteria_block %}
-                <!-- class "peer-review-options" make this tab hidden when peerReview is not activated.  -->
-                <li class="hometab-element peer-review-options {% block collecticiel_edit_navTabs_criteria_element_class %}active {% endblock %}">
-                    <a id="editCriteriaLink" href="
-                    {% block collecticiel_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_edit_criteria_innova',{'resourceId':dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
-                        Critères d'évaluation par l'enseignant
-                    </a>
-                </li>
-            {% endblock %}
-            #}
-
-            {# Vu avec Donovan : quand on est admin, on peut accéder à UN espace collecticiel d'UN étudiant
-            Accès à un espace collecticiel #}
-{#          Finalement, on enlève cet onglet mais je laisse le code car il servira ailleurs
-            {% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
-                <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}active {% endblock %}">
-                    <a id="editCriteriaLink" href="
-                    {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
-                        Accès à un espace collecticiel
-                    </a>
-                </li>
-            {% endblock %}
-#}
+        {# Paramètres #}
+        <li class="hometab-element {% block collecticiel_parametres_active %}{% endblock %}">
+            <a id="editParametresLink" href="{% block collecticiel_parametres_link %}
+               {{ path('innova_collecticiel_edit_common',{'resourceId':dropzone.id}) }}
+               {% endblock %}" >
+                    {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
+                </a>
+            </li>

@@ -56,7 +56,7 @@
         <ul class="nav nav-tabs  margin-bottom-md margin-top-md">
             <!-- InnovaERV : ajout du traitement car les onglets ne sont pas identiques -->
             <!-- suivant si on est ADMIN ou pas -->
-            {% if admin == true %}
+            {% if adminInnova %}
                 {% include "InnovaCollecticielBundle:Dropzone:editAdmin.html.twig" %}
             {% else %}
                 <!-- (Mon) Espace collecticiel -->
@@ -337,33 +337,9 @@
         {% endif %}
     </div>
 
-
-
-
-
-
-
-        {% block drop_zone_content_edit %}
+{% block drop_zone_content_edit %}
         {% endblock %}
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 {% block javascripts %}
     {{ parent() }}
