@@ -263,10 +263,11 @@ class PathManager
 
         // Get path data
         $pathData = array ();
-        $pathData['description'] = $path->getDescription();
-        $pathData['breadcrumbs'] = $path->hasBreadcrumbs();
-        $pathData['modified']    = $path->isModified();
-        $pathData['published']   = $path->isPublished();
+        $pathData['description']      = $path->getDescription();
+        $pathData['breadcrumbs']      = $path->hasBreadcrumbs();
+        $pathData['modified']         = $path->isModified();
+        $pathData['published']        = $path->isPublished();
+        $pathData['summaryDisplayed'] = $path->isSummaryDisplayed();
 
         // Get path structure into a file (to replace resources ID with placeholders)
         $uid = uniqid() . '.txt';
@@ -311,7 +312,8 @@ class PathManager
         $path->setBreadcrumbs(!empty($pathData['breadcrumbs']) ? $pathData['breadcrumbs'] : false);
         $path->setDescription($pathData['description']);
         $path->setModified($pathData['modified']);
-
+        $path->setSummaryDisplayed($pathData['summaryDisplayed']);
+        
         // Create steps
         $stepData = $data['data']['steps'];
         if (!empty($stepData)) {
