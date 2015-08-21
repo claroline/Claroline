@@ -2,18 +2,32 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriRetriever;
-use JsonSchema\Validator;
+use HeVinci\CompetencyBundle\Transfer\JsonValidator;
+
 
 class TransferManager
 {
+    private $jsonValidator;
+
+    public function __construct(JsonValidator $jsonValidator)
+    {
+        $this->jsonValidator = $jsonValidator;
+    }
+
     public function validate($framework)
     {
-        $validator = new Validator();
-        $validator->check($framework, $this->getSchema());
+        // json schema (structure only)
+        $this->jsonValidator->check($framework, $this->getSchema());
+        $errors = array_map(function ($error) {
+            return "{$error['message']} (path: {$error['property']})";
+        }, $this->jsonValidator->getErrors());
 
-        return $validator->getErrors();
+
+        // internal data constraints
+        $levels = $framework->scale->levels;
+
+
+        return $errors;
     }
 
     private function getSchema()
