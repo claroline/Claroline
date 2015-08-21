@@ -2,8 +2,9 @@
     {% set cursusId = cursus.getId() %}
     {% set cursusTitle = cursus.getTitle() %}
     {% set details = cursus.getDetails() %}
+    {% set course = cursus.getCourse() %}
 
-    {% if cursus.getCourse() is empty %}
+    {% if course is empty %}
         <div class="cursus-element" data-cursus-id="{{ cursusId }}">
             
             {% if details['color'] is defined and details['color'] is not empty %}
@@ -99,9 +100,14 @@
         </div>
     {% else %}
         <span>
+            <a href="{{ path('claro_cursus_course_management', {'course': course.getId(), 'cursusId': cursus.getRoot()}) }}">
             <span class="label label-primary">
-                {{ cursusTitle }}
+                {{ course.getTitle() }}
+                <small>
+                    [{{ course.getCode() }}]
+                </small>
             </span>
+            </a>
             <span class="label label-danger pointer-hand remove-course-btn"
                   data-cursus-id="{{ cursusId }}"
             >
@@ -173,8 +179,6 @@
     </div>
     <div id="cursus-management-body" class="panel-body">
         {{ macros.flashBox() }}
-        {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
-        <br>
         <div id="cursus-hierarchy">
             {{ showCursus(cursus, hierarchy) }}
         </div>

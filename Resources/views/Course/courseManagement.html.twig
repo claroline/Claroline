@@ -1,40 +1,81 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% set courseTitle = course.getTitle() %}
+
 {% block title %}
-    {{
-        parent() ~ 
-        ' - ' ~ 
-        'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
-        ' - ' ~ 
-        displayedWords['course'] ~ 
-        ' - ' ~ 
-        courseTitle 
-    }}
+    {% if type == 'course' %}
+        {{
+            parent() ~ 
+            ' - ' ~ 
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
+            ' - ' ~ 
+            displayedWords['course'] ~ 
+            ' - ' ~ 
+            courseTitle 
+        }}
+    {% else %}
+        {{
+            parent() ~ 
+            ' - ' ~ 
+            'claroline_cursus_tool' | trans({}, 'tools') | striptags | raw ~ 
+            ' - ' ~ 
+            displayedWords['cursus'] ~ 
+            ' - ' ~ 
+            courseTitle 
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumb %}
-    {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
-            {
-                'name': 'claroline_cursus_tool'|trans({}, 'tools'),
-                'href': path('claro_cursus_management_tool_menu')
-            },
-            {
-                'name': displayedWords['course'],
-                'href': path('claro_cursus_tool_course_index')
-            },
-            {
-                'name': courseTitle,
-                'href': ''
-            }
-        ])
-    }}
+    {% if type == 'course' %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['course'],
+                    'href': path('claro_cursus_tool_course_index')
+                },
+                {
+                    'name': courseTitle,
+                    'href': ''
+                }
+            ])
+        }}
+    {% else %}
+        {{
+            macros.breadcrumbs([
+                {
+                    'icon': 'fa fa-cog',
+                    'name': 'administration'|trans({}, 'platform'),
+                    'href': path('claro_admin_index')
+                },
+                {
+                    'name': 'claroline_cursus_tool'|trans({}, 'tools'),
+                    'href': path('claro_cursus_management_tool_menu')
+                },
+                {
+                    'name': displayedWords['cursus'],
+                    'href': path('claro_cursus_tool_index')
+                },
+                {
+                    'name': cursus.getTitle(),
+                    'href': path('claro_cursus_management', {'cursus': cursus.getId()})
+                },
+                {
+                    'name': courseTitle,
+                    'href': ''
+                }
+            ])
+        }}
+    {% endif %}
 {% endblock %}
 
 {% block section_content %}
@@ -46,9 +87,6 @@
     </div>
     <div class="panel-body">
         {{ macros.flashBox() }}
-        {% include 'ClarolineCursusBundle:Cursus:toolMenuIndexTabs.html.twig'%}
-        
-        <br>
         <div>
             <h3>
                 {{ courseTitle }}
@@ -66,7 +104,11 @@
                     </small>
                 {% endif %}
                 <small>
-                    <a href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 1}) }}"
+                    <a {% if type == 'course' %}
+                           href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 1}) }}"
+                       {% else %}
+                           href="{{ path('claro_cursus_course_edit_form', {'course': course.getId(), 'source': 2, 'cursusId': cursus.getId()}) }}"
+                       {% endif %}
                         <i class="fa fa-pencil"></i>
                     </a>
                 </small>
@@ -153,6 +195,9 @@
                                     {{ 'status'|trans({}, 'platform') }}
                                 </th>
                                 <th class="text-center">
+                                    {{ 'default_session'|trans({}, 'cursus') }}
+                                </th>
+                                <th class="text-center">
                                     {{ 'actions'|trans({}, 'platform') }}
                                 </th>
                             </tr>
@@ -161,20 +206,11 @@
                                 {% for session in sessionsTab[0] %}
                                 <tr id="row-session-{{ session.getId() }}">
                                     <td>
-                                        {% if session.isDefaultSession() %}
-                                            <i class="fa fa-flag"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                            >
-                                            </i>
-                                            &nbsp;
-                                        {% endif %}
-                                        <span class="show-users-btn pointer-hand"
-                                              data-session-id="{{ session.getId() }}"
+                                        <a class="show-users-btn pointer-hand"
+                                           data-session-id="{{ session.getId() }}"
                                         >
                                             {{ session.getName() }}
-                                        </span>
+                                        </a>
                                     </td>
                                     <td>
                                         {{ session.getCreationDate()|intl_date_format }}
@@ -202,6 +238,16 @@
                                            style="color: #706c6c"
                                         >
                                         </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+                                            
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                            {% else %}
+                                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                            {% endif %}
+                                        </span>
                                     </td>
                                     <td class="text-center">
                                         <i class="btn btn-default fa fa-envelope-o session-send-confirmation-mail-btn"
@@ -235,15 +281,6 @@
                                 {% for session in sessionsTab[1] %}
                                 <tr id="row-session-{{ session.getId() }}">
                                     <td>
-                                        {% if session.isDefaultSession() %}
-                                            <i class="fa fa-flag"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               title="{{ 'default_session'|trans({}, 'cursus') }}"
-                                            >
-                                            </i>
-                                            &nbsp;
-                                        {% endif %}
                                         <span class="show-users-btn pointer-hand"
                                               data-session-id="{{ session.getId() }}"
                                         >
@@ -276,6 +313,16 @@
                                            style="color: #5CB85C"
                                         >
                                         </i>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+                                            
+                                            {% if session.isDefaultSession() %}
+                                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                            {% else %}
+                                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                            {% endif %}
+                                        </span>
                                     </td>
                                     <td class="text-center">
                                         <i class="btn btn-default fa fa-envelope-o session-send-confirmation-mail-btn"
@@ -354,6 +401,16 @@
                                                style="color: #D9534F"
                                             >
                                             </i>
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="default-session-btn pointer-hand" data-session-id="{{ session.getId() }}">
+
+                                                {% if session.isDefaultSession() %}
+                                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                                {% else %}
+                                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                                {% endif %}
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             <i class="btn btn-default fa fa-edit edit-session-btn"
