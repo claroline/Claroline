@@ -49,7 +49,7 @@
 
                 /**
                  * Set ID of the current Path
-                 * @param value
+                 * @param {Number} value
                  */
                 setId: function setId(value) {
                     id = value;
@@ -65,22 +65,41 @@
 
                 /**
                  * Set current Path
-                 * @param value
+                 * @param {Object} value
                  */
                 setPath: function setPath(value) {
                     path = value;
                 },
 
+                /**
+                 * Get max depth of the Path
+                 * @returns {Number}
+                 */
                 getMaxDepth: function getMaxDepth() {
                     return maxDepth;
                 },
 
+                /**
+                 * Get summary state
+                 * @returns {Object}
+                 */
                 getSummaryState: function getSummaryState() {
                     return summary;
                 },
 
+                /**
+                 * Toggle summary state
+                 */
                 toggleSummaryState: function toggleSummaryState() {
                     summary.opened = !summary.opened;
+                },
+
+                /**
+                 * Set summary state
+                 * @param {Boolean} value
+                 */
+                setSummaryState: function setSummaryState(value) {
+                    summary.opened = value;
                 },
 
                 /**
@@ -110,10 +129,11 @@
                     // Transform data to make it acceptable by Symfony
                     var dataToSave = {
                         innova_path: {
-                            name:        path.name,
-                            description: path.description,
-                            breadcrumbs: path.breadcrumbs,
-                            structure:   angular.toJson(path)
+                            name:             path.name,
+                            description:      path.description,
+                            breadcrumbs:      path.breadcrumbs,
+                            summaryDisplayed: path.summaryDisplayed,
+                            structure:        angular.toJson(path)
                         }
                     };
 

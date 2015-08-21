@@ -76,12 +76,22 @@
                             </div>
                         </div>
 
-                        <!-- Description of the path -->
+                        <!-- Does the path have a breadcrumbs ?-->
                         <div class="row form-group">
                             <label class="control-label col-md-3" for="innova_path_breadcrumbs">{{ 'path_breadcrumbs'|trans:{}:'path_wizards' }}</label>
                             <div class="col-md-9">
                                 <div class="checkbox">
                                     <input type="checkbox" id="innova_path_breadcrumbs" name="innova_path[breadcrumbs]" data-ng-model="pathEditCtrl.path.breadcrumbs" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Is Summary opened by default ? -->
+                        <div class="row form-group">
+                            <label class="control-label col-md-3" for="innova_path_summaryDisplayed">{{ 'path_summary_displayed'|trans:{}:'path_wizards' }}</label>
+                            <div class="col-md-9">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="innova_path_summaryDisplayed" name="innova_path[summaryDisplayed]" data-ng-model="pathEditCtrl.path.summaryDisplayed" />
                                 </div>
                             </div>
                         </div>

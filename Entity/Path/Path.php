@@ -285,10 +285,11 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
     public function initializeStructure()
     {
         $structure = array (
-            'name'        => $this->getName(),
-            'description' => $this->getDescription(),
-            'breadcrumbs' => $this->breadcrumbs,
-            'steps'       => array (),
+            'name'             => $this->getName(),
+            'description'      => $this->getDescription(),
+            'breadcrumbs'      => $this->breadcrumbs,
+            'summaryDisplayed' => $this->summaryDisplayed,
+            'steps'            => array (),
         );
 
         $this->setStructure(json_encode($structure));
@@ -334,10 +335,11 @@ class Path extends AbstractResource implements PathInterface, \JsonSerializable
         }
 
         return array (
-            'name'        => $this->getResourceNode()->getName(),
-            'description' => $this->description,
-            'breadcrumbs' => $this->breadcrumbs,
-            'steps'       => $steps,
+            'name'             => $this->getResourceNode()->getName(),
+            'description'      => $this->description,
+            'breadcrumbs'      => $this->breadcrumbs,
+            'summaryDisplayed' => $this->summaryDisplayed,
+            'steps'            => $steps,
         );
     }
 }

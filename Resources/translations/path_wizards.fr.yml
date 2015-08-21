@@ -47,6 +47,7 @@ path_no_structure: Ce Parcours n'a aucune structure.
 path_status: Statut
 path_save_success: Le parcours a correctement été sauvegardé.
 path_save_error: Une erreur s'est produite lors de la sauvegarde du parcours.
+path_summary_displayed: Ouvrir le sommaire par défaut ?
 path_template_save_success: Le modèle a correctement été sauvegardé.
 path_template_save_error: Une erreur s'est produite lors de la sauvegarde du modèle.
 preview: Retour au Parcours

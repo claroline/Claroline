@@ -313,7 +313,7 @@ class PathManager
         $path->setDescription($pathData['description']);
         $path->setModified($pathData['modified']);
         $path->setSummaryDisplayed($pathData['summaryDisplayed']);
-        
+
         // Create steps
         $stepData = $data['data']['steps'];
         if (!empty($stepData)) {

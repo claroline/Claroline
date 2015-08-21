@@ -47,6 +47,7 @@ path_no_structure: There is no structure for this path.
 path_status: Status
 path_save_error: An error occurred while saving path.
 path_save_success: The path has been successfully saved.
+path_summary_displayed: Open summary by default ?
 path_template_save_error: An error occurred while saving template.
 path_template_save_success: The template has been successfully saved.
 preview: Back to Path

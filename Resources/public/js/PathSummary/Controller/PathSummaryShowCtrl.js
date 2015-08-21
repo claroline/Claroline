@@ -10,6 +10,16 @@ var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService
     this.userProgressionService = UserProgressionService;
     this.userProgression = this.userProgressionService.get();
 
+    // Check if summary is displayed by default or not
+    var path = this.pathService.getPath();
+    if (angular.isObject(path)) {
+        if (!path.summaryDisplayed) {
+            this.pathService.setSummaryState(false);
+        } else {
+            this.pathService.setSummaryState(true);
+        }
+    }
+
     return this;
 };
 
