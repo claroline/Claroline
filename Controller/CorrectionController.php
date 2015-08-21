@@ -910,6 +910,8 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
         $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
@@ -931,6 +933,7 @@ class CorrectionController extends DropzoneBaseController
                     'document' => $documentOri,
                     'comments' => $comments,
                     'user' => $user,
+                    'adminInnova' => $canEdit,
                 )
             );
         } else if ($state == 'preview') {
@@ -946,7 +949,8 @@ class CorrectionController extends DropzoneBaseController
                     'formComment' => $formComment->createView(),
                     'admin' => false,
                     'edit' => false,
-                    'state' => $state
+                    'state' => $state,
+                    'adminInnova' => $canEdit,
                 )
             );
         }
