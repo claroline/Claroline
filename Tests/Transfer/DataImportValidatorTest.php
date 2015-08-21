@@ -13,7 +13,7 @@ class DataImportValidatorTest extends RepositoryTestCase
     {
         parent::setUp();
         $this->validator = $this->client->getContainer()
-            ->get('hevinci.competency.data_import_validator');
+            ->get('hevinci.competency.data_conflict_validator');
     }
 
     public function testValidateChecksForFrameworkUniqueName()

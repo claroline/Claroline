@@ -25,6 +25,7 @@ framework:
   delete: Supprimer un référentiel
   do_select: 'Sélectionnez un référentiel '
   edit: Éditer un référentiel
+  import: Importer un référentiel
 framework_: Référentiel
 info:
   ability_search: Entrez ici la description de la capacité

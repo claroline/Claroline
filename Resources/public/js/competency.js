@@ -64,6 +64,26 @@
         );
     });
 
+    // framework import
+    $('button#import-framework').on('click', function () {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('hevinci_import_framework_form'),
+            function (data) {
+                $('div.alert.alert-info').hide();
+                $('table#framework-table')
+                    .css('display', 'table')
+                    .children('tbody')
+                    .append(Twig.render(FrameworkRow, data));
+                flasher.setMessage(trans('message.framework_created'));
+            },
+            refreshScaleElements,
+            'framework-import-form'
+        );
+    });
+
+
+
+
     // framework edition
     $(document).on('click', 'a.edit-framework', function (event) {
         var row = this.parentNode.parentNode;

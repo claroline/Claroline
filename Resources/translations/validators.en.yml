@@ -1,2 +1,8 @@
 "Each value must be unique.": Each value must be unique.
 "This ability does not exist.": This ability does not exist.
+framework_import:
+  conflict_issue: Some data in this framework are in conflict with existing data.
+  data_issue: Some data in this framework are inconsistent.
+  json_issue: This file can not be parsed. Check that it is a JSON file.
+  original_error: "Error : %msg%"
+  schema_issue: The data contained in this file does not meet the expected framework format.

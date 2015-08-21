@@ -6,9 +6,9 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("hevinci.competency.data_import_validator")
+ * @DI\Service("hevinci.competency.data_conflict_validator")
  */
-class DataImportValidator
+class DataConflictValidator
 {
     private $om;
 
@@ -26,9 +26,9 @@ class DataImportValidator
 
     /**
      * Validates a JSON decoded representation of a competency framework
-     * against already existing data constraints (i.e. uniqueness and
-     * correctness in references). This method *requires* that the data
-     * has been validated against the JSON schema.
+     * against already existing data (i.e. uniqueness and correctness in
+     * references). This method *requires* that the data has been
+     * validated against the JSON schema.
      *
      * @param \stdClass $framework
      * @return string[] An array of error messages

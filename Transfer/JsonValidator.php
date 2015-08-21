@@ -2,10 +2,15 @@
 
 namespace HeVinci\CompetencyBundle\Transfer;
 
+use JMS\DiExtraBundle\Annotation as DI;
 use JsonSchema\RefResolver;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 
+
+/**
+ * @DI\Service("hevinci.competency.json_validator")
+ */
 class JsonValidator
 {
     /**

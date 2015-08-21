@@ -24,7 +24,8 @@ framework:
   create: Create a framework
   delete: Delete a framework
   do_select: Select a framework
-  edit: Éditer un référentiel
+  edit: Edit a framework
+  import: Import a framework
 framework_: Framework
 info:
   ability_search: Enter here the description of the ability.

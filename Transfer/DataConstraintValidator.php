@@ -2,6 +2,11 @@
 
 namespace HeVinci\CompetencyBundle\Transfer;
 
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Service("hevinci.competency.data_validator")
+ */
 class DataConstraintValidator
 {
     /**

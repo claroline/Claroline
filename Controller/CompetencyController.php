@@ -96,6 +96,38 @@ class CompetencyController
     }
 
     /**
+     * Displays the framework import form.
+     *
+     * @EXT\Route("/frameworks/import", name="hevinci_import_framework_form")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkImportForm.html.twig")
+     *
+     * @return array
+     */
+    public function importFrameworkFormAction()
+    {
+        return ['form' => $this->formHandler->getView('hevinci_form_import_framework')];
+    }
+
+    /**
+     * Handles the framework import form submission.
+     *
+     * @EXT\Route("/frameworks/import", name="hevinci_import_framework")
+     * @EXT\Method("POST")
+     * @EXT\Template("HeVinciCompetencyBundle:Competency:frameworkImportForm.html.twig")
+     *
+     * @param Request $request
+     * @return array|JsonResponse
+     */
+    public function importFrameworkAction(Request $request)
+    {
+        if ($this->formHandler->isValid('hevinci_form_import_framework', $request)) {
+            return new JsonResponse();
+        }
+
+        return ['form' => $this->formHandler->getView()];
+    }
+
+    /**
      * Displays the management page for a given framework.
      *
      * @EXT\Route("/frameworks/{id}", name="hevinci_framework")
