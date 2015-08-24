@@ -95,12 +95,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <style type="text/css">
-        {% if workspace is defined and
-              workspace is not empty and
-              workspace.getOptions() is not empty and
-              workspace.getOptions().getDetails() is not empty and
-              workspace.getOptions().getDetails()['background_color'] is defined
-        %}
+        {% if workspace is defined and workspace.backgroundColor is not null %}
             body {
                 background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
             }

@@ -466,6 +466,9 @@ class Workspace
         return $this->name . ' [' . $this->code . ']';
     }
 
+    /**
+     * @return \Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions
+     */
     public function getOptions()
     {
         return $this->options;
@@ -474,5 +477,24 @@ class Workspace
     public function setOptions(WorkspaceOptions $options = null)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBackgroundColor()
+    {
+        $backgroundColor = null;
+        $workspaceOptions = $this->getOptions();
+
+        if (null !== $workspaceOptions) {
+            $workspaceOptionsDetails = $workspaceOptions->getDetails();
+
+            if (isset($workspaceOptionsDetails['background_color'])) {
+                $backgroundColor = $workspaceOptionsDetails['background_color'];
+            }
+        }
+
+        return $backgroundColor;
     }
 }
