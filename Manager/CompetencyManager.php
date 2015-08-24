@@ -9,7 +9,9 @@ use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\CompetencyAbility;
 use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
+use HeVinci\CompetencyBundle\Transfer\Converter;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -23,17 +25,24 @@ class CompetencyManager
     private $abilityRepo;
     private $competencyAbilityRepo;
     private $translator;
+    private $converter;
 
     /**
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "translator" = @DI\Inject("translator")
+     *     "translator" = @DI\Inject("translator"),
+     *     "converter"  = @DI\Inject("hevinci.competency.transfer_converter")
      * })
      *
-     * @param ObjectManager $om
-     * @param TranslatorInterface $translator
+     * @param ObjectManager         $om
+     * @param TranslatorInterface   $translator
+     * @param Converter             $converter
      */
-    public function __construct(ObjectManager $om, TranslatorInterface $translator)
+    public function __construct(
+        ObjectManager $om,
+        TranslatorInterface $translator,
+        Converter $converter
+    )
     {
         $this->om = $om;
         $this->competencyRepo = $om->getRepository('HeVinciCompetencyBundle:Competency');
@@ -41,6 +50,7 @@ class CompetencyManager
         $this->abilityRepo = $om->getRepository('HeVinciCompetencyBundle:Ability');
         $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
         $this->translator = $translator;
+        $this->converter = $converter;
     }
 
     /**
@@ -158,6 +168,20 @@ class CompetencyManager
         $this->om->flush();
 
         return $framework;
+    }
+
+    /**
+     * Imports a competency framework described in a JSON file.
+     *
+     * @param UploadedFile $frameworkFile
+     * @return Competency
+     */
+    public function importFramework(UploadedFile $frameworkFile)
+    {
+        $jsonData = file_get_contents($frameworkFile);
+        $framework = $this->converter->convertToEntity($jsonData);
+
+        return $this->persistFramework($framework);
     }
 
     /**

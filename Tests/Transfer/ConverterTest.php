@@ -28,6 +28,21 @@ class ConverterTest extends RepositoryTestCase
         $this->assertJsonStringEqualsJsonString($originalJson, $roundTripJson);
     }
 
+    public function testExistingScaleIsReusedWhenConvertingToEntity()
+    {
+        $scale = $this->persistScale('Civil service levels');
+        $this->persistLevel('Level 1', $scale);
+        $this->persistLevel('Level 2', $scale);
+        $this->persistLevel('Level 3', $scale);
+        $this->om->flush();
+
+        $converter = $this->client->getContainer()->get('hevinci.competency.transfer_converter');
+        $file = __DIR__ . '/../../Resources/format/valid/minimal-1.json';
+        $framework = $converter->convertToEntity(file_get_contents($file));
+
+        $this->assertEquals($scale, $framework->getScale());
+    }
+
     public function frameworkProvider()
     {
         return [

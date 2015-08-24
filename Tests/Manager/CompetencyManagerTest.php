@@ -13,6 +13,7 @@ class CompetencyManagerTest extends UnitTestCase
 {
     private $om;
     private $translator;
+    private $converter;
     private $competencyRepo;
     private $scaleRepo;
     private $abilityRepo;
@@ -23,6 +24,7 @@ class CompetencyManagerTest extends UnitTestCase
     {
         $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
+        $this->converter = $this->mock('HeVinci\CompetencyBundle\Transfer\Converter');
         $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
         $this->scaleRepo = $this->mock('HeVinci\CompetencyBundle\Repository\ScaleRepository');
         $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
@@ -41,7 +43,7 @@ class CompetencyManagerTest extends UnitTestCase
                 $this->abilityRepo,
                 $this->competencyAbilityRepo
             );
-        $this->manager = new CompetencyManager($this->om, $this->translator);
+        $this->manager = new CompetencyManager($this->om, $this->translator, $this->converter);
     }
 
     public function testListFrameworks()

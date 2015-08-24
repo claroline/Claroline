@@ -39,7 +39,7 @@ class Competency implements \JsonSerializable
      * @ORM\ManyToOne(
      *     targetEntity="Scale",
      *     inversedBy="competencies",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist"}
      * )
      */
     private $scale;

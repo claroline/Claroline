@@ -27,7 +27,7 @@ class CompetencyAbility
      * @ORM\ManyToOne(
      *     targetEntity="Ability",
      *     inversedBy="competencyAbilities",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */

@@ -121,7 +121,9 @@ class CompetencyController
     public function importFrameworkAction(Request $request)
     {
         if ($this->formHandler->isValid('hevinci_form_import_framework', $request)) {
-            return new JsonResponse();
+            return new JsonResponse(
+                $this->manager->importFramework($this->formHandler->getData()['file'])
+            );
         }
 
         return ['form' => $this->formHandler->getView()];
