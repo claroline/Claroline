@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Validator;
 
-use HeVinci\CompetencyBundle\Manager\TransferManager;
+use HeVinci\CompetencyBundle\Transfer\Validator;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -17,7 +17,7 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
     protected function setUp()
     {
         $this->context = $this->mock('Symfony\Component\Validator\Context\ExecutionContextInterface');
-        $this->manager = $this->mock('HeVinci\CompetencyBundle\Manager\TransferManager');
+        $this->manager = $this->mock('HeVinci\CompetencyBundle\Transfer\Validator');
         $this->fakeFile = $this->mock('Symfony\Component\HttpFoundation\File\UploadedFile');
         $this->validator = new ImportableFrameworkValidator($this->manager);
         $this->validator->initialize($this->context);
@@ -65,11 +65,11 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
     public function managerValidationProvider()
     {
         return [
-            [TransferManager::ERR_TYPE_NONE, []],
-            [TransferManager::ERR_TYPE_JSON, ['a', 'b']],
-            [TransferManager::ERR_TYPE_SCHEMA, ['a', 'b']],
-            [TransferManager::ERR_TYPE_INTERNAL, ['a', 'b']],
-            [TransferManager::ERR_TYPE_CONFLICT, ['a', 'b', 'c']]
+            [Validator::ERR_TYPE_NONE, []],
+            [Validator::ERR_TYPE_JSON, ['a', 'b']],
+            [Validator::ERR_TYPE_SCHEMA, ['a', 'b']],
+            [Validator::ERR_TYPE_INTERNAL, ['a', 'b']],
+            [Validator::ERR_TYPE_CONFLICT, ['a', 'b', 'c']]
         ];
     }
 }

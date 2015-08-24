@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Transfer;
+namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
 use JMS\DiExtraBundle\Annotation as DI;
 

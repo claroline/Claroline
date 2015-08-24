@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Transfer;
+namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
@@ -19,7 +19,7 @@ class DataConstraintValidatorTest extends UnitTestCase
      */
     public function testValidateWithValidData($dataFilename)
     {
-        $file = __DIR__ . '/../../Resources/format/valid/' . $dataFilename;
+        $file = __DIR__ . '/../../../Resources/format/valid/' . $dataFilename;
         $data = json_decode(file_get_contents($file));
         $errors = $this->validator->validate($data);
         $this->assertEquals([], $errors);
@@ -32,7 +32,7 @@ class DataConstraintValidatorTest extends UnitTestCase
      */
     public function testValidateWithInvalidData($dataFilename, $expectedError)
     {
-        $dataDir = realpath(__DIR__ . '/../../Resources/format/invalid/additional');
+        $dataDir = realpath(__DIR__ . '/../../../Resources/format/invalid/additional');
         $file = "{$dataDir}/{$dataFilename}";
         $data = json_decode(file_get_contents($file));
         $errors = $this->validator->validate($data);

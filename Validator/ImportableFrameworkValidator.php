@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Validator;
 
-use HeVinci\CompetencyBundle\Manager\TransferManager;
+use HeVinci\CompetencyBundle\Transfer\Validator;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraint;
@@ -15,18 +15,18 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class ImportableFrameworkValidator extends ConstraintValidator
 {
-    private $manager;
+    private $validator;
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("hevinci.competency.transfer_manager")
+     *     "validator" = @DI\Inject("hevinci.competency.transfer_validator")
      * })
      *
-     * @param TransferManager $manager
+     * @param Validator $validator
      */
-    public function __construct(TransferManager $manager)
+    public function __construct(Validator $validator)
     {
-        $this->manager = $manager;
+        $this->validator = $validator;
     }
 
     public function validate($value, Constraint $constraint)
@@ -35,22 +35,22 @@ class ImportableFrameworkValidator extends ConstraintValidator
             return;
         }
 
-        $errors = $this->manager->validate($value);
+        $errors = $this->validator->validate($value);
 
         switch ($errors['type']) {
-            case TransferManager::ERR_TYPE_JSON:
+            case Validator::ERR_TYPE_JSON:
                 $this->addViolations($constraint->jsonIssue, $errors['errors']);
                 break;
-            case TransferManager::ERR_TYPE_SCHEMA:
+            case Validator::ERR_TYPE_SCHEMA:
                 $this->addViolations($constraint->schemaIssue, $errors['errors']);
                 break;
-            case TransferManager::ERR_TYPE_INTERNAL:
+            case Validator::ERR_TYPE_INTERNAL:
                 $this->addViolations($constraint->dataIssue, $errors['errors']);
                 break;
-            case TransferManager::ERR_TYPE_CONFLICT:
+            case Validator::ERR_TYPE_CONFLICT:
                 $this->addViolations($constraint->conflictIssue, $errors['errors']);
                 break;
-            case TransferManager::ERR_TYPE_NONE:
+            case Validator::ERR_TYPE_NONE:
             default:
                 break;
         }

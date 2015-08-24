@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Transfer;
+namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
@@ -67,7 +67,7 @@ class DataImportValidatorTest extends RepositoryTestCase
 
     private function getValidData($fileName)
     {
-        $file = __DIR__ . '/../../Resources/format/valid/' . $fileName;
+        $file = __DIR__ . '/../../../Resources/format/valid/' . $fileName;
 
         return json_decode(file_get_contents($file));
     }

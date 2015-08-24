@@ -1,16 +1,16 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Manager;
+namespace HeVinci\CompetencyBundle\Transfer;
 
-use HeVinci\CompetencyBundle\Transfer\DataConflictValidator;
-use HeVinci\CompetencyBundle\Transfer\DataConstraintValidator;
-use HeVinci\CompetencyBundle\Transfer\JsonValidator;
+use HeVinci\CompetencyBundle\Transfer\Validator\DataConflictValidator;
+use HeVinci\CompetencyBundle\Transfer\Validator\DataConstraintValidator;
+use HeVinci\CompetencyBundle\Transfer\Validator\JsonValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("hevinci.competency.transfer_manager")
+ * @DI\Service("hevinci.competency.transfer_validator")
  */
-class TransferManager
+class Validator
 {
     const ERR_TYPE_NONE = 'err_type_none';
     const ERR_TYPE_JSON = 'err_type_json';
@@ -101,10 +101,5 @@ class TransferManager
             'type' => self::ERR_TYPE_NONE,
             'errors' => []
         ];
-    }
-
-    public function import($frameworkFile)
-    {
-
     }
 }

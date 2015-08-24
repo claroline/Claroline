@@ -1,6 +1,6 @@
 <?php
 
-namespace HeVinci\CompetencyBundle\Transfer;
+namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use JsonSchema\RefResolver;
@@ -33,7 +33,7 @@ class JsonValidator
         static $schema;
 
         if (!$schema) {
-            $schemaDir = realpath(__DIR__ . '/../Resources/format');
+            $schemaDir = realpath(__DIR__ . '/../../Resources/format');
             $retriever = new UriRetriever();
             $schema = $retriever->retrieve("file://{$schemaDir}/framework.json");
             $refResolver = new RefResolver($retriever);

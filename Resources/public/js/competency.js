@@ -103,6 +103,10 @@
             this.dataset.status = 'collapsed';
             $(this).text(trans('expand_all'));
         }
+
+        console.log(this)
+
+        $(this).removeClass('active');
     });
 
     // prevent hash change on disabled menu actions
