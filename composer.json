@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~5.0",
+        "claroline/core-bundle": "~6.0",
         "jms/serializer-bundle": "~0.12",
         "innova/angular-js-bundle": "~5.0"
     },
