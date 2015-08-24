@@ -49,40 +49,13 @@
 
     // framework creation
     $('button#create-framework').on('click', function () {
-        window.Claroline.Modal.displayForm(
-            Routing.generate('hevinci_new_framework'),
-            function (data) {
-                $('div.alert.alert-info').hide();
-                $('table#framework-table')
-                    .css('display', 'table')
-                    .children('tbody')
-                    .append(Twig.render(FrameworkRow, data));
-                flasher.setMessage(trans('message.framework_created'));
-            },
-            refreshScaleElements,
-            'framework-form'
-        );
+        handleFrameworkCreation(false);
     });
 
     // framework import
     $('button#import-framework').on('click', function () {
-        window.Claroline.Modal.displayForm(
-            Routing.generate('hevinci_import_framework_form'),
-            function (data) {
-                $('div.alert.alert-info').hide();
-                $('table#framework-table')
-                    .css('display', 'table')
-                    .children('tbody')
-                    .append(Twig.render(FrameworkRow, data));
-                flasher.setMessage(trans('message.framework_created'));
-            },
-            refreshScaleElements,
-            'framework-import-form'
-        );
+        handleFrameworkCreation(true);
     });
-
-
-
 
     // framework edition
     $(document).on('click', 'a.edit-framework', function (event) {
@@ -298,6 +271,25 @@
             function () {},
             'scale-form',
             false
+        );
+    }
+
+    function handleFrameworkCreation(isImport) {
+        var route = isImport ?
+            'hevinci_import_framework_form' :
+            'hevinci_new_framework';
+        window.Claroline.Modal.displayForm(
+            Routing.generate(route),
+            function (data) {
+                $('div.alert.alert-info').hide();
+                $('table#framework-table')
+                    .css('display', 'table')
+                    .children('tbody')
+                    .append(Twig.render(FrameworkRow, data));
+                flasher.setMessage(trans('message.framework_created'));
+            },
+            refreshScaleElements,
+            isImport ? 'framework-import-form' : 'framework-form'
         );
     }
 
