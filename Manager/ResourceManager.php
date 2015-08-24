@@ -229,8 +229,6 @@ class ResourceManager
             } else {
                 $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
             }
-
-
         }
 
         $this->dispatcher->dispatch('log', 'Log\LogResourceCreate', array($node));

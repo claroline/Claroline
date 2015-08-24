@@ -122,7 +122,7 @@ class SimpleTextWidgetListener
         $event->validateCopy();
         $event->stopPropagation();
     }
-    
+
     private function replaceLinks($content, $resourceInfos)
     {
         $baseUrl = $this->router->getContext()->getBaseUrl();
@@ -133,9 +133,9 @@ class SimpleTextWidgetListener
                 '/file/resource/media/' . $resource['copy']->getId(),
                 $content
             );
-            
+
             $type = $resource['original']->getResourceType()->getName();
-            
+
             $content = str_replace(
                 "/resource/open/{$type}/" . $resource['original']->getId(),
                 "/resource/open/{$type}/" . $resource['copy']->getId(),

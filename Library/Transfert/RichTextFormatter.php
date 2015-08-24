@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\TransfertManager;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 
 
 /**
@@ -38,6 +39,7 @@ class RichTextFormatter
     private $transferManager;
     private $maskManager;
     private $resourceManagerImporter;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +47,8 @@ class RichTextFormatter
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "transferManager" = @DI\Inject("claroline.manager.transfert_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager")
+     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -53,7 +56,8 @@ class RichTextFormatter
         ResourceManager $resourceManager,
         ObjectManager $om,
         TransfertManager $transferManager,
-        MaskManager $maskManager
+        MaskManager $maskManager,
+        StrictDispatcher $eventDispatcher
     )
     {
         $data = array();
@@ -65,6 +69,7 @@ class RichTextFormatter
         $this->listImporters = new ArrayCollection();
         $this->transferManager = $transferManager;
         $this->maskManager = $maskManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -95,7 +100,13 @@ class RichTextFormatter
             }
         }
 
-        return $text;
+        $event = $this->eventDispatcher->dispatch(
+            'rich_text_format_event_import',
+            'RichTextFormat',
+            array($text)
+        );
+
+        return $event->getText();
     }
 
     /**
@@ -181,6 +192,9 @@ class RichTextFormatter
             }
         }
 
+        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', array($text));
+        $text = $event->getText();
+
         return $text;
     }
 
@@ -226,7 +240,7 @@ class RichTextFormatter
         $this->workspace = $workspace;
     }
 
-    private function findParentFromDataUid($uid)
+    public function findParentFromDataUid($uid)
     {
         //we must find the resource whose uid in the data is $uid
         //this resource already has been persisted before, let's find it !
@@ -252,7 +266,7 @@ class RichTextFormatter
      * @todo remove this for claroline v6
      * use getItemFromUid($uid, $resManagerData) instead
      */
-    private function findItemFromUid($uid)
+    public function findItemFromUid($uid)
     {
         foreach ($this->resourceManagerData['data']['items'] as $item) {
             if ($item['item']['uid'] === $uid) return $item['item'];
