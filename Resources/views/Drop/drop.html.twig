@@ -62,11 +62,15 @@
         {% include 'InnovaCollecticielBundle:Drop:dropStatus.html.twig' %}
         #}
 
-        {# INSTRUCTIONS/CONSIGNES #}
-        {% if dropzone.instruction != null %}
-            {#{% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}#}
-                {{ dropzone.instruction|raw }}
-            <br/>
+        {# affichage : INSTRUCTIONS/CONSIGNES #}
+        {# innovaERV : JJQ veut que les consignes s'affichent #}
+        {# seulement si on est étudiant, pas enseignant #}
+        {% if not adminInnova %}
+            {% if dropzone.instruction != null %}
+                {#{% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}#}
+                    {{ dropzone.instruction|raw }}
+                <br/>
+            {% endif %}
         {% endif %}
 
         {# DOCUMENTS ALLREADY ADDED #}
