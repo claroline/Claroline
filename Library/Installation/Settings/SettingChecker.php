@@ -101,7 +101,7 @@ class SettingChecker
         $category->addRequirement(
             'Parameter %parameter% should be equal or greater than %value% in your php.ini',
             array('parameter' => 'max_execution_time', 'value' => 300),
-            ini_get('max_execution_time') >= 300 ? true: false
+            (ini_get('max_execution_time') >= 300 || ini_get('max_execution_time') == 0) ? true: false
         );
 
         $category->addRecommendation(
