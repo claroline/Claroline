@@ -102,7 +102,7 @@ class Competency implements \JsonSerializable
      * @ORM\OneToMany(
      *     targetEntity="Competency",
      *     mappedBy="parent",
-     *     cascade={"persist", "remove"}
+     *     cascade={"persist"}
      * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
