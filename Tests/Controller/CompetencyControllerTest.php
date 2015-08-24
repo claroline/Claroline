@@ -81,6 +81,18 @@ class CompetencyControllerTest extends UnitTestCase
         $this->assertEquals(['form' => 'FORM'], $this->controller->createFrameworkAction($request));
     }
 
+    public function testExportFrameworkAction()
+    {
+        $framework = new Competency();
+        $this->manager->expects($this->once())
+            ->method('exportFramework')
+            ->with($framework)
+            ->willReturn('{"name": "foo"}');
+        $response = $this->controller->exportFrameworkAction($framework);
+        $this->assertEquals('application/json', $response->headers->get('Content-Type'));
+        $this->assertEquals('{"name": "foo"}', $response->getContent());
+    }
+
     public function testFrameworkAction()
     {
         $framework = new Competency();

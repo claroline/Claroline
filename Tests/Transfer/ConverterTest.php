@@ -26,6 +26,15 @@ class ConverterTest extends RepositoryTestCase
         $roundTripJson = $converter->convertToJson($manager->loadCompetency($framework));
 
         $this->assertJsonStringEqualsJsonString($originalJson, $roundTripJson);
+
+        if ($frameworkFileName === 'non-ascii.json') {
+            // previous check doesn't cover encoding problems (data is json-decoded before assertion).
+            // the following is a raw assertion on "cleaned/normalized" strings
+            $this->assertEquals(
+                preg_replace('/\s/', '', $originalJson),
+                preg_replace('/\s/', '', $roundTripJson)
+            );
+        }
     }
 
     public function testExistingScaleIsReusedWhenConvertingToEntity()
@@ -49,7 +58,8 @@ class ConverterTest extends RepositoryTestCase
             ['minimal-1.json'],
             ['intermediate-1.json'],
             ['intermediate-2.json'],
-            ['full.json']
+            ['full.json'],
+            ['non-ascii.json']
         ];
     }
 }

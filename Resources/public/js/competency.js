@@ -57,6 +57,12 @@
         handleFrameworkCreation(true);
     });
 
+    // framework export
+    $(document).on('click', 'a.export-framework', function () {
+        var id = this.parentNode.parentNode.dataset.id;
+        window.location = Routing.generate('hevinci_export_framework', { id: id });
+    });
+
     // framework edition
     $(document).on('click', 'a.edit-framework', function (event) {
         var row = this.parentNode.parentNode;

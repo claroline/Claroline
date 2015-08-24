@@ -11,6 +11,8 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -127,6 +129,29 @@ class CompetencyController
         }
 
         return ['form' => $this->formHandler->getView()];
+    }
+
+    /**
+     * Exports a competency framework as a JSON file.
+     *
+     * @EXT\Route("/frameworks/{id}/export", name="hevinci_export_framework")
+     *
+     * @param Competency $framework
+     * @return JsonResponse
+     */
+    public function exportFrameworkAction(Competency $framework)
+    {
+        $this->manager->ensureIsRoot($framework);
+        $response = new Response($this->manager->exportFramework($framework));
+        $disposition = $response->headers->makeDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            "{$framework->getName()}.json",
+            "framework-{$framework->getId()}.json"
+        );
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Content-Disposition', $disposition);
+
+        return $response;
     }
 
     /**

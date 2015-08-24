@@ -185,6 +185,19 @@ class CompetencyManager
     }
 
     /**
+     * Returns the JSON representation of a competency framework.
+     *
+     * @param Competency $framework
+     * @return string
+     */
+    public function exportFramework(Competency $framework)
+    {
+        $loaded = $this->loadCompetency($framework);
+
+        return $this->converter->convertToJson($loaded);
+    }
+
+    /**
      * Returns a full array representation of a competency tree. Children
      * competencies and linked abilities are respectively stored under the
      * "__children" and "__abilities" keys of their corresponding competency

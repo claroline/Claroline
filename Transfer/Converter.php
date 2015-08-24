@@ -88,7 +88,7 @@ class Converter
 
         $this->walkArrayNodes($framework, $frameworkData);
 
-        return json_encode($frameworkData);
+        return json_encode($frameworkData, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE);
     }
 
     private function walkJsonNodes(\stdClass $parentData, Competency $parentCompetency, Scale $scale)
