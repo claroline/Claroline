@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -48,6 +49,55 @@ class CourseSessionType extends AbstractType
                 'widget' => 'single_text',
                 'attr' => $attr,
                 'input' => 'datetime'
+            )
+        );
+        $builder->add(
+            'sessionStatus',
+            'choice',
+            array(
+                'required' => true,
+                'choices' => array (
+                    0 => 'session_not_started',
+                    1 => 'session_open',
+                    2 => 'session_closed'
+                )
+            )
+        );
+        $builder->add(
+            'defaultSession',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'publicRegistration',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'publicUnregistration',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'registrationValidation',
+            'checkbox',
+            array('required' => true)
+        );
+        $builder->add(
+            'cursus',
+            'entity',
+            array(
+                'required' => false,
+                'class' => 'ClarolineCursusBundle:Cursus',
+                'query_builder' => function (EntityRepository $er) {
+
+                    return $er->createQueryBuilder('c')
+                        ->where('c.parent IS NULL')
+                        ->orderBy('c.title', 'ASC');
+                },
+                'property' => 'title',
+                'multiple' => true,
+                'expanded' => true
             )
         );
     }

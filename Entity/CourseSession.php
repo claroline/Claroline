@@ -196,7 +196,7 @@ class CourseSession
         return $this->cursus->toArray();
     }
 
-    public function addCursus(Cursus $cursus)
+    public function addCursu(Cursus $cursus)
     {
         if (!$this->cursus->contains($cursus)) {
             $this->cursus->add($cursus);
@@ -205,7 +205,7 @@ class CourseSession
         return $this;
     }
 
-    public function removeCursus(Cursus $cursus)
+    public function removeCursu(Cursus $cursus)
     {
         if ($this->cursus->contains($cursus)) {
             $this->cursus->removeElement($cursus);
