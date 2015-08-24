@@ -25,7 +25,7 @@
         "MIT"
     ],
     "require" : {
-        "claroline/core-bundle" : ">=5.1.10.3,<6.0",
+        "claroline/core-bundle" : ">=5.1.11.9,<6.0",
         "innova/angular-js-bundle" : "~5.1",
         "innova/angular-ui-bootstrap-bundle" : "~5.0",
         "innova/angular-ui-tinymce-bundle" : "~5.1",
