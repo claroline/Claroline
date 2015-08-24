@@ -712,10 +712,18 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $uow = $this->om->getUnitOfWork();
         $map = $uow->getIdentityMap();
 
+        //is it in the identity map ?
         $createdRights = $this->rightManager->getRightsFromIdentityMap(
             $role['role']['name'],
             $resourceEntity->getResourceNode()
         );
+
+        //is it already on the database ?
+        if ($createdRights === null) {
+            $createdRights = $this->rightManager
+                ->getOneByRoleAndResource($entityRole, $resourceEntity->getResourceNode());
+        }
+
         //There is no ResourceRight in the IdentityMap so we must create it
         if ($createdRights === null) {
             $this->rightManager->create(
@@ -778,7 +786,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         return $resElement;
     }
 
-    private function getResourceElement(
+    public function getResourceElement(
         ResourceNode $resourceNode,
         Workspace $workspace,
         &$_files,
