@@ -36,12 +36,20 @@ class Competency implements \JsonSerializable
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Scale", inversedBy="competencies")
+     * @ORM\ManyToOne(
+     *     targetEntity="Scale",
+     *     inversedBy="competencies",
+     *     cascade={"persist", "remove"}
+     * )
      */
     private $scale;
 
     /**
-     * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="competency")
+     * @ORM\OneToMany(
+     *     targetEntity="CompetencyAbility",
+     *     mappedBy="competency",
+     *     cascade={"persist", "remove"}
+     * )
      */
     private $competencyAbilities;
 
@@ -91,7 +99,11 @@ class Competency implements \JsonSerializable
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Competency", mappedBy="parent")
+     * @ORM\OneToMany(
+     *     targetEntity="Competency",
+     *     mappedBy="parent",
+     *     cascade={"persist", "remove"}
+     * )
      * @ORM\OrderBy({"lft" = "ASC"})
      */
     private $children;
@@ -103,6 +115,8 @@ class Competency implements \JsonSerializable
     {
         $this->levels = new ArrayCollection();
         $this->activities = new ArrayCollection();
+        $this->competencyAbilities = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -162,11 +176,28 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @param Competency $parent
+     * @param Competency    $parent     The parent competency
+     * @param boolean       $isImport   Whether we're in a framework import context
      */
-    public function setParent(Competency $parent = null)
+    public function setParent(Competency $parent = null, $isImport = false)
     {
         $this->parent = $parent;
+
+        if ($parent && $isImport) {
+            // allow child to be persisted by cascade
+            $parent->addChild($this);
+        }
+    }
+
+    /**
+     * Note: DON'T USE THIS METHOD DIRECTLY. It's only required when
+     *       building an import tree. Use *setParent* instead.
+     *
+     * @param Competency $competency
+     */
+    public function addChild(Competency $competency)
+    {
+        $this->children->add($competency);
     }
 
     /**
@@ -250,6 +281,14 @@ class Competency implements \JsonSerializable
     public function getActivities()
     {
         return $this->activities;
+    }
+
+    /**
+     * @param CompetencyAbility $link
+     */
+    public function addCompetencyAbility(CompetencyAbility $link)
+    {
+        $this->competencyAbilities->add($link);
     }
 
     public function jsonSerialize()

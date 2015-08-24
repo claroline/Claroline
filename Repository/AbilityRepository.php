@@ -35,7 +35,7 @@ class AbilityRepository extends EntityRepository
             ->where('c.root = :root')
             ->andWhere('c.lft >= :lft')
             ->andWhere('c.rgt <= :rgt')
-            ->orderBy('l.value')
+            ->orderBy('l.value, a.id')
             ->setParameters([
                 ':root' => $competency->getRoot(),
                 ':lft' => $competency->getLeft(),

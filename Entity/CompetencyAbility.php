@@ -24,7 +24,11 @@ class CompetencyAbility
     private $competency;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Ability", inversedBy="competencyAbilities")
+     * @ORM\ManyToOne(
+     *     targetEntity="Ability",
+     *     inversedBy="competencyAbilities",
+     *     cascade={"persist", "remove"}
+     * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $ability;
@@ -41,6 +45,7 @@ class CompetencyAbility
     public function setCompetency(Competency $competency)
     {
         $this->competency = $competency;
+        $competency->addCompetencyAbility($this);
     }
 
     /**

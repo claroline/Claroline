@@ -29,8 +29,16 @@ class Converter
         $this->om = $om;
     }
 
-    public function convertToEntity($frameworkData)
+    /**
+     * Converts a JSON representation of a competency framework
+     * into an entity graph (without persisting it).
+     *
+     * @param string $jsonFramework
+     * @return Competency
+     */
+    public function convertToEntity($jsonFramework)
     {
+        $frameworkData = json_decode($jsonFramework);
         $scaleRepo = $this->om->getRepository('HeVinciCompetencyBundle:Scale');
 
         if (!($scale = $scaleRepo->findOneBy(['name' => $frameworkData->scale->name]))) {
@@ -51,36 +59,46 @@ class Converter
         $framework->setDescription($frameworkData->description);
         $framework->setScale($scale);
 
-        return $this->walkNodes($framework, $frameworkData, $scale);
+        return $this->walkJsonNodes($frameworkData, $framework, $scale);
     }
 
-    public function convertToJson(Competency $framework)
+    /**
+     * Converts an array representation of a competency framework (as
+     * returned by CompetencyManager#loadCompetency) into its JSON
+     * representation.
+     *
+     * @param array $framework
+     * @return string
+     */
+    public function convertToJson(array $framework)
     {
+        $scale = $this->om->getRepository('HeVinciCompetencyBundle:Competency')
+            ->find($framework['id'])
+            ->getScale();
+
         $frameworkData = new \stdClass();
-        $frameworkData->name = $framework->getName();
-        $frameworkData->description = $framework->getDescription();
+        $frameworkData->name = $framework['name'];
+        $frameworkData->description = $framework['description'];
 
-        $scaleData = new \stdClass();
-        $scaleData->name = $framework->getScale()->getName();
-        $scaleData->levels = [];
+        $frameworkData->scale = new \stdClass();
+        $frameworkData->scale->name = $scale->getName();
+        $frameworkData->scale->levels = $scale->getLevels()->map(function ($level) {
+            return $level->getName();
+        })->toArray();
 
-        foreach ($framework->getScale()->getLevels() as $level) {
-            $scaleData->levels[] = $level->getName();
-        }
+        $this->walkArrayNodes($framework, $frameworkData);
 
-        $frameworkData->scale = $scaleData;
-
-        // reach children competencies...
+        return json_encode($frameworkData);
     }
 
-    private function walkNodes(Competency $parentCompetency, \stdClass $parentData, Scale $scale)
+    private function walkJsonNodes(\stdClass $parentData, Competency $parentCompetency, Scale $scale)
     {
         if (isset($parentData->competencies)) {
             foreach ($parentData->competencies as $competency) {
                 $newCompetency = new Competency();
                 $newCompetency->setName($competency->name);
-                $newCompetency->setParent($parentCompetency);
-                $this->walkNodes($newCompetency, $competency, $scale);
+                $newCompetency->setParent($parentCompetency, true);
+                $this->walkJsonNodes($competency, $newCompetency, $scale);
             }
         } else {
             foreach ($parentData->abilities as $ability) {
@@ -103,5 +121,28 @@ class Converter
         }
 
         return $parentCompetency;
+    }
+
+    private function walkArrayNodes(array $parentCompetency, \stdClass $parentData)
+    {
+        if (isset($parentCompetency['__abilities'])) {
+            $parentData->abilities = array_map(function ($ability) {
+                $abilityData = new \stdClass();
+                $abilityData->name = $ability['name'];
+                $abilityData->level = $ability['levelName'];
+
+                return $abilityData;
+            }, $parentCompetency['__abilities']);
+        } else {
+            $parentData->competencies = array_map(function ($competency) {
+                $competencyData = new \stdClass();
+                $competencyData->name = $competency['name'];
+                $this->walkArrayNodes($competency, $competencyData);
+
+                return $competencyData;
+            }, $parentCompetency['__children']);
+        }
+
+        return $parentData;
     }
 }
