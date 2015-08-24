@@ -18,11 +18,17 @@ agenda:
     sun: Dim
     sunday: Dimanche
   form:
+    description: Description
     duration: Durée de réservation
+    end_date: Date de fin
+    localisation: Localisation
+    max_time_reservation: Temps max de réservation
+    resource: Ressource
     resource_type: Type de ressource
-    select_resource_please: -- Veuillez sélectionner une ressource --
+    select_resource_pls: -- Veuillez sélectionner une ressource --
     start_date: Date de début
   modify_reservation: Modifier une réservation
+  month_: Mois
   month:
     jan: Janv
     january: Janvier
@@ -47,8 +53,13 @@ agenda:
     november: Novembre
     dec: Déc
     december: Décembre
+  popover:
+    author: Créé par
   today: Aujourd'hui
+  week: Semaine
   week_number_title: S
+confirm_reservation_deletion_content: Êtes-vous sûr de vouloir supprimer cette réservation ?
+confirm_reservation_deletion_title: Suppression d'une réservation
 confirm_resource_type_deletion_title: Suppression d'un type de ressources
 confirm_resource_type_deletion_content: Êtes-vous sûr de vouloir supprimer ce type de ressources ? Cette action supprimera toutes les ressources appartenant à ce type de ressources ainsi que les éventuelles réservations en cours de chaque ressource.
 confirm_resource_deletion_title: Suppression d'une ressource
@@ -72,3 +83,4 @@ modify_resource_type_name: Modifier le nom
 modify_resource: Modifier une ressource
 no_resources_type_yet: Il n'y a pas encore de ressources pour les réservations.
 no_resources_in_resource_type: Il n'y a pas encore de ressources dans cette catégorie.
+reservation: Réservation

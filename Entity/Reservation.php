@@ -5,10 +5,14 @@ namespace FormaLibre\ReservationBundle\Entity;
 use Claroline\AgendaBundle\Entity\Event;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use FormaLibre\ReservationBundle\Validator\Constraints as Validator;
 
 /**
  * @ORM\Table(name="formalibre_reservation")
  * @ORM\Entity()
+ * @Validator\DateRange()
+ * @Validator\Duration()
+ * @Validator\Reservation()
  */
 class Reservation
 {
@@ -20,7 +24,7 @@ class Reservation
     protected $id;
 
     /**
-     * @Assert\NotNull()
+     * @Assert\NotBlank()
      */
     private $duration;
 
@@ -32,15 +36,14 @@ class Reservation
     private $resource;
 
     /**
-     * @ORM\Column(name="last_update", type="integer")
-     */
-    private $lastUpdate;
-
-    /**
      * @ORM\OneToOne(targetEntity="Claroline\AgendaBundle\Entity\Event")
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", name="event_id")
      */
     private $event;
+
+    private $start;
+
+    private $end;
 
     public function getId()
     {
@@ -52,9 +55,11 @@ class Reservation
         return $this->duration;
     }
 
-    public function setDuration($hours, $minutes)
+    public function setDuration($duration)
     {
-        $this->duration = $hours * 60 + $minutes;
+        $this->duration = $duration;
+
+        return $this;
     }
 
     public function getResource()
@@ -69,30 +74,39 @@ class Reservation
         return $this;
     }
 
-    public function getLastUpdate()
-    {
-        $lastUpdate = Date('d-m-Y H:i', $this->lastUpdate);
-        return new \DateTime($lastUpdate);
-    }
-
-    public function setLastUpdate($lastUpdate)
-    {
-        if ($lastUpdate instanceof \Datetime) {
-            $this->lastUpdate = $lastUpdate->getTimestamp();
-        } elseif (is_int($lastUpdate)) {
-            $this->lastUpdate = $lastUpdate;
-        } else {
-            throw new \Exception('Not an integer nor a date.');
-        }
-    }
-
     public function getEvent()
     {
-        return $this->events;
+        return $this->event;
     }
 
-    public function set(Event $event)
+    public function setEvent(Event $event)
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    public function setStart($start)
+    {
+        $this->start = $start;
+
+        return $this;
+    }
+
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    public function setEnd($end)
+    {
+        $this->end = $end;
+
+        return $this;
     }
 }

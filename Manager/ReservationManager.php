@@ -58,5 +58,11 @@ class ReservationManager
         $this->container = $container;
     }
 
+    // Convert hh:mm to time in seconds
+    public function convertTimeToTimestamp($duration)
+    {
+        $durationArray = explode(':', $duration);
 
+        return $durationArray[0] * 3600 + $durationArray[1] * 60;
+    }
 }

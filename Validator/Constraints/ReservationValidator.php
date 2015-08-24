@@ -1,0 +1,43 @@
+<?php
+
+namespace FormaLibre\ReservationBundle\Validator\Constraints;
+
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+use JMS\DiExtraBundle\Annotation as DI;
+
+/**
+ * @DI\Validator("reservation_validator")
+ */
+class ReservationValidator extends ConstraintValidator
+{
+    private $em;
+
+    /**
+     * @DI\InjectParams({
+     *      "em" = @DI\Inject("doctrine.orm.entity_manager")
+     * })
+     */
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
+    public function validate($object, Constraint $constraint)
+    {
+        if ($object->getResource()) {
+            $reservations = $this->em->getRepository('FormaLibre\ReservationBundle\Entity\Reservation')
+                ->findBy([
+                    'resource' => $object->getResource(),
+                    'start' =>
+                ]);
+            $maxReservationAuthorized = $object->getResource()->getQuantity();
+
+            if ($object->getResource() && count($reservations) >= $maxReservationAuthorized) {
+                $this->context->addViolation('number_reservations_exceeded');
+            }
+        }
+
+    }
+}

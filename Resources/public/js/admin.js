@@ -2,16 +2,16 @@
     $('.add-new-resource-type').click(function() {
         var $resourceTypeInput = $('input[name="resource_type"]'),
             resourceTypeName = $resourceTypeInput.val(),
-            routing = window.Routing.generate('formalibre_add_new_resource_type', {'name': resourceTypeName});
+            routing = Routing.generate('formalibre_add_new_resource_type', {'name': resourceTypeName});
 
         $.ajax({
             url: routing,
             type: 'post',
             success: function(data) {
                 if (data.error == 'empty_string') {
-                    window.Claroline.Modal.confirmContainer(t('error_'), t('error.empty_input'));
+                    Claroline.Modal.confirmContainer(t('error_'), t('error.empty_input'));
                 } else if (data.error == 'resource_type_exists') {
-                    window.Claroline.Modal.confirmContainer(t('error_'), t('error.resource_type_already_exists'));
+                    Claroline.Modal.confirmContainer(t('error_'), t('error.resource_type_already_exists'));
                 } else {
                     var $newResourceType = $('<div class="col-sm-6">' +
                         '<div class="list-group">' +
@@ -44,9 +44,9 @@
         .on('click', '.delete-resource-type', function() {
             var $div = $(this).parents('div.active'),
                 resourceTypeId = $div.data('resource-type-id'),
-                routing = window.Routing.generate('formalibre_delete_resource_type', {id: resourceTypeId});
+                routing = Routing.generate('formalibre_delete_resource_type', {id: resourceTypeId});
 
-            window.Claroline.Modal.confirmRequest(
+            Claroline.Modal.confirmRequest(
                 routing, onResourceTypeDeleted,
                 resourceTypeId,
                 t('confirm_resource_type_deletion_content'),
@@ -56,31 +56,31 @@
         .on('click', '.modify-resource-type', function() {
             var $div = $(this).parents('div.active'),
                 resourceTypeId = $div.data('resource-type-id'),
-                routing = window.Routing.generate('formalibre_modify_resource_type_name', {id: resourceTypeId});
+                routing = Routing.generate('formalibre_modify_resource_type_name', {id: resourceTypeId});
 
-            window.Claroline.Modal.displayForm(routing, displayResourceTypeChanges, function(){}, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayResourceTypeChanges, function(){}, 'form-resource');
         })
         .on('click', '.add-new-resource', function() {
             var $div = $(this).parents('div.active'),
                 resourceTypeId = $div.data('resource-type-id'),
-                routing = window.Routing.generate('formalibre_add_new_resource', {id: resourceTypeId});
+                routing = Routing.generate('formalibre_add_new_resource', {id: resourceTypeId});
 
-            window.Claroline.Modal.displayForm(routing, displayNewResource, function() {}, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayNewResource, function() {}, 'form-resource');
         })
         // Show resource form when click on the name of the resource in the list-group
         .on('click', 'a[data-resource-id]', function(e) {
             e.preventDefault();
             var $a = $(this),
                 resourceId = $a.data('resource-id'),
-                routing = window.Routing.generate('formalibre_modification_resource', {id: resourceId});
+                routing = Routing.generate('formalibre_modification_resource', {id: resourceId});
 
-            window.Claroline.Modal.displayForm(routing, displayModificationResource, function(){}, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayModificationResource, function(){}, 'form-resource');
         })
         .on('click', '.delete-resource', function() {
             var resourceId = $(this).data('resource-id'),
-                routing = window.Routing.generate('formalibre_delete_resource', {id: resourceId});
+                routing = Routing.generate('formalibre_delete_resource', {id: resourceId});
 
-            window.Claroline.Modal.confirmRequest(
+            Claroline.Modal.confirmRequest(
                 routing, onResourceDeleted,
                 resourceId,
                 t('confirm_resource_deletion_content'),

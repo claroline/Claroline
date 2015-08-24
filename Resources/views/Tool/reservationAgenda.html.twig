@@ -46,6 +46,10 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+    "@FormaLibreReservationBundle/Resources/views/Tool/reservationContent.html.twig"
+    %}<script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'reservation' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>

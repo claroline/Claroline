@@ -6,7 +6,7 @@
         </div>
         <form method="post"
               action="{{ action }}"
-              id="form-resource" {{ form_enctype(form) }}
+              id="form-reservation" {{ form_enctype(form) }}
               role="form"
                 >
             <div class="modal-body">
@@ -15,9 +15,15 @@
             <div class="modal-footer">
                 <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>
                 {% if editMode %}
-                    <span class="btn btn-danger delete-resource" data-dismiss="modal" data-resource-id="{{ resource.getId() }}">{{ 'delete_resource'|trans({}, 'reservation') }}</span>
+                    <span class="btn btn-danger delete-reservation" data-dismiss="modal" data-reservation-id="{{ reservation.getId() }}" data-event-id="{{ reservation.getEvent().getId() }}">{{ 'delete_resource'|trans({}, 'reservation') }}</span>
                 {% endif %}
-                <button type="submit" class="btn btn-primary">{% if editMode %} {{ 'modify_resource'|trans({}, 'reservation') }} {% else %} {{ 'agenda.add_reservation'|trans({}, 'reservation') }} {% endif %}</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if editMode %}
+                        {{ 'modify_resource'|trans({}, 'reservation') }}
+                    {% else %}
+                        {{ 'agenda.add_reservation'|trans({}, 'reservation') }}
+                    {% endif %}
+                </button>
             </div>
         </form>
     </div>
