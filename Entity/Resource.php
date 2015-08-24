@@ -50,6 +50,12 @@ class Resource
      */
     private $localisation;
 
+    /**
+     * @ORM\Column(name="quantity", type="integer", nullable=false)
+     * @Assert\Range(min=1)
+     */
+    private $quantity;
+
     public function getId()
     {
         return $this->id;
@@ -72,16 +78,15 @@ class Resource
         return $this->maxTimeReservation;
     }
 
-    // maxTime must be store like 04:00:00
+    // maxTime must be store like hh:mm:ss
     public function setMaxTimeReservation($maxTime)
     {
         if ($maxTime === null) {
             $maxTime = '00:00:00';
         } elseif (count(explode(':', $maxTime)) === 2) {
             $maxTime = $maxTime . ':00';
-        } else {
-            $maxTime;
         }
+
         $this->maxTimeReservation = $maxTime;
 
         return $this;
@@ -118,6 +123,18 @@ class Resource
     public function setLocalisation($localisation)
     {
         $this->localisation = $localisation;
+
+        return $this;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
 
         return $this;
     }

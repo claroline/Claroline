@@ -27,7 +27,9 @@
                     </div>
                 </div>
             {% else %}
-                <div class="alert alert-info">{{ 'no_resources_type_yet'|trans({}, 'reservation') }}</div>
+                <div class="col-sm-12">
+                    <div class="alert alert-info">{{ 'no_resources_type_yet'|trans({}, 'reservation') }}</div>
+                </div>
             {% endfor %}
         </div>
 

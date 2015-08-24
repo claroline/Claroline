@@ -1,0 +1,56 @@
+{% set calendarExtends = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% extends calendarExtends %}
+
+{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.3.1/' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ "formalibre_reservation_agenda" | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+{% endblock %}
+{% block breadcrumb %}
+        {{
+        macros.desktopBreadcrumbs([
+        {
+            'name': 'formalibre_reservation_agenda'|trans({}, 'tools'),
+            'href': ''
+        }
+        ])
+        }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'formalibre_reservation_agenda'|trans({}, 'tools') }}</h3>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div id='calendar' class="col-md-9"></div>
+
+            <div class="col-md-3">
+                <div class="panel text-center">
+                    Filtres
+                </div>
+                <div class="panel panel-default">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'reservation' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/formalibrereservation/js/calendar.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
+{% endblock javascripts %}

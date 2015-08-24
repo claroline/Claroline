@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * @EXT\Security("has_role('ROLE_ADMIN')")
+ */
 class ReservationAdminController extends Controller
 {
     private $em;
@@ -43,7 +46,7 @@ class ReservationAdminController extends Controller
     }
 
     /**
-     * @EXT\Route("/admin/", name="formalibre_reservation_admin_index")
+     * @EXT\Route("/admin", name="formalibre_reservation_admin_index")
      */
     public function indexAction()
     {

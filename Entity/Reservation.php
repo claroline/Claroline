@@ -3,9 +3,8 @@
 namespace FormaLibre\ReservationBundle\Entity;
 
 use Claroline\AgendaBundle\Entity\Event;
-use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_reservation")
@@ -21,13 +20,14 @@ class Reservation
     protected $id;
 
     /**
-     * @ORM\Column(name="duration", type="integer")
+     * @Assert\NotNull()
      */
     private $duration;
 
     /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
      * @ORM\JoinColumn(name="resource", nullable=false)
+     * @Assert\NotNull()
      */
     private $resource;
 
@@ -37,8 +37,8 @@ class Reservation
     private $lastUpdate;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\AgendaBundle\Entity\Event")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\OneToOne(targetEntity="Claroline\AgendaBundle\Entity\Event")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", name="event_id")
      */
     private $event;
 
@@ -88,13 +88,11 @@ class Reservation
 
     public function getEvent()
     {
-        return $this->event;
+        return $this->events;
     }
 
-    public function setEvent(Event $event)
+    public function set(Event $event)
     {
         $this->event = $event;
-
-        return $this;
     }
 }

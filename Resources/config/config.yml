@@ -1,6 +1,10 @@
 plugin:
     has_options: false
     admin_tools:
-        -
-            name: reservation_tool
-            class: calendar
+        -  name: formalibre_reservation_tool
+           class: calendar
+    tools:
+        - name: formalibre_reservation_agenda
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          class: pencil-square-o

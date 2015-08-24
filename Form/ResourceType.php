@@ -6,25 +6,12 @@ use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("formalibre.form.resource")
  */
 class ResourceType extends AbstractType
 {
-    private $translator;
-
-    /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator")
-     * })
-     */
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
@@ -40,6 +27,11 @@ class ResourceType extends AbstractType
             'input' => 'string',
             'widget' => 'single_text',
             'label' => 'form.maxTime'
+        ));
+
+        $builder->add('quantity', 'integer', array(
+            'label' => 'form.quantity',
+            'empty_data' => 1
         ));
     }
 

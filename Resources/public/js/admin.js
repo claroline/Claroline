@@ -24,12 +24,20 @@
                         '</div>' +
                         '</div>').hide();
 
+                    $('.list-group-resource-type > .col-sm-12').slideUp('slow');
+
                     $newResourceType.appendTo('.list-group-resource-type').slideDown('slow');
                     $resourceTypeInput.val('');
                     $('[data-toggle="tooltip"]').tooltip();
                 }
             }
         });
+    });
+
+    $('[name="resource_type"]').keydown(function(e) {
+        if (e.keyCode === 13) {
+            $('.add-new-resource-type').click();
+        }
     });
 
     $('body')
@@ -116,7 +124,7 @@
                 $(this).remove();
             });
 
-        $listGroup.append($newResource);
+        $newResource.appendTo($listGroup);
     };
 
     var displayModificationResource = function(data) {
