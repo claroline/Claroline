@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -74,7 +75,12 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                                                 ->children()
                                                     ->scalarNode('name')->isRequired()->end()
                                                     ->scalarNode('type')->isRequired()->end()
-                                                    ->variableNode('data')->end()
+                                                    ->scalarNode('row')->defaultNull()->end()
+                                                    ->scalarNode('column')->defaultNull()->end()
+                                                    ->scalarNode('width')->defaultNull()->end()
+                                                    ->scalarNode('height')->defaultNull()->end()
+                                                    ->scalarNode('color')->defaultNull()->end()
+                                                    ->variableNode('data')->defaultNull()->end()
                                                     ->arrayNode('import')
                                                         ->prototype('array')
                                                                 ->children()
@@ -125,7 +131,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
         }
     }
 
-    public function import(array $array)
+    public function import(array $array, $workspace)
     {
         $homeTabOrder = 1;
 
@@ -156,6 +162,16 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $widgetInstance->setIsAdmin(false);
                 $widgetInstance->setIsDesktop(false);
                 $this->om->persist($widgetInstance);
+
+                $widgetConfig = new WidgetDisplayConfig();
+                $widgetConfig->setRow($widget['widget']['row']);
+                $widgetConfig->setColumn($widget['widget']['column']);
+                $widgetConfig->setWidth($widget['widget']['width']);
+                $widgetConfig->setHeight($widget['widget']['height']);
+                $widgetConfig->setColor($widget['widget']['color']);
+                $widgetConfig->setWorkspace($workspace);
+                $widgetConfig->setWidgetInstance($widgetInstance);
+                $this->om->persist($widgetConfig);
 
                 $widgetHomeTabConfig = new WidgetHomeTabConfig();
                 $widgetHomeTabConfig->setWidgetInstance($widgetInstance);
@@ -200,12 +216,25 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                     $data = $importer->export($workspace, $files, $widgetConfig->getWidgetInstance());
                 }
 
+                $widgetDisplayConfigs = $this->container->get('claroline.manager.widget_manager')->getWidgetDisplayConfigsByWorkspaceAndWidgets(
+                    $workspace,
+                    array($widgetConfig->getWidgetInstance())
+                );
+
+                $widgetDisplayConfig = $widgetDisplayConfigs[0];
+
                 //export the widget content here
                 $widgetData = array('widget' => array(
-                    'name' => $widgetConfig->getWidgetInstance()->getName(),
-                    'type' => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
-                    'data' => $data
+                    'name'   => $widgetConfig->getWidgetInstance()->getName(),
+                    'type'   => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
+                    'data'   => $data,
+                    'row'    => $widgetDisplayConfig->getRow(),
+                    'column' => $widgetDisplayConfig->getColumn(),
+                    'width'  => $widgetDisplayConfig->getWidth(),
+                    'height' => $widgetDisplayConfig->getHeight(),
+                    'color'  => $widgetDisplayConfig->getColor()
                 ));
+
                 $widgets[] = $widgetData;
             }
 

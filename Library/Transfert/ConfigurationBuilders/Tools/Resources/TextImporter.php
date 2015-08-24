@@ -110,7 +110,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         return !file_exists($rootpath . $ds . $v);
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
         $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\Revision')
             ->getLastRevision($object)->getContent();
@@ -118,7 +118,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         $uid = uniqid() . '.txt';
         $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
         file_put_contents($tmpPath, $content);
-        $files[$uid] = $tmpPath;
+        $_files[$uid] = $tmpPath;
         $data = array(array('file' => array(
             'path' => $uid
         )));
@@ -133,15 +133,17 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function format($data)
     {
-        if ($path = $data[0]['file']['path']) {
-            $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
-            $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
+        if (isset($data[0])) {
+            if ($path = $data[0]['file']['path']) {
+                $content = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
+                $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision')->findByContent($content);
 
-            foreach ($entities as $entity) {
-                $text = $entity->getContent();
-                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
-                $entity->setContent($text);
-                $this->om->persist($entity);
+                foreach ($entities as $entity) {
+                    $text = $entity->getContent();
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                    $entity->setContent($text);
+                    $this->om->persist($entity);
+                }
             }
         }
     }

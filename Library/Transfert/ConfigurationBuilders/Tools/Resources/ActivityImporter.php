@@ -135,14 +135,14 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         }
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
         $uid = uniqid() . '.txt';
         $uid = uniqid() . '.txt';
         $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
         $content = $object->getDescription();
         file_put_contents($tmpPath, $content);
-        $files[$uid] = $tmpPath;
+        $_files[$uid] = $tmpPath;
         $parameters = $object->getParameters();
         $resources = $parameters->getSecondaryResources();
         $secondaryResources = array();
