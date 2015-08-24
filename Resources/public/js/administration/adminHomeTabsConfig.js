@@ -297,6 +297,21 @@
         }
     });
     
+    $('#widgets-list-panel').on('mouseenter', '.widget-instance-content-header', function () {
+        var grid = $('.grid-stack').data('gridstack');
+        grid.movable('.grid-stack-item', true);
+    });
+    
+    $('#widgets-list-panel').on('mouseleave', '.widget-instance-content-header', function () {
+        var grid = $('.grid-stack').data('gridstack');
+        grid.movable('.grid-stack-item', false);
+    });
+    
+    $('#widgets-list-panel').on('mouseenter', '.widget-instance-content-body', function () {
+        var grid = $('.grid-stack').data('gridstack');
+        grid.movable('.grid-stack-item', false);
+    });
+    
     var openHomeTab = function (homeTabId) {
         window.location = Routing.generate(
             'claro_admin_home_tabs_configuration',
@@ -363,7 +378,7 @@
         }
         widgetElement +=
                 '>' +
-                    '<div class="panel-heading"' +
+                    '<div class="panel-heading widget-instance-content-header"' +
                         ' id="widget-element-header-' + whtcId + '"';
                      
         if (color !== null) {
@@ -408,7 +423,7 @@
                             '</span>' +
                         '</h3>' +
                     '</div>' +
-                    '<div id="widget-instance-content-' + wiId + '" class="panel-body">' +
+                    '<div id="widget-instance-content-' + wiId + '" class="panel-body widget-instance-content-body">' +
                     '</div>' +
                 '</div>' +
             '</div>';

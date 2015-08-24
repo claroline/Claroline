@@ -26,12 +26,12 @@
                  {% endif %}
                  data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                  data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
+                 data-gs-no-move="true"
                  {% if canEdit %}
                      id="widget-element-{{ whtcId }}"
                      data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
                  {% else %}
                      data-gs-no-resize="true"
-                     data-gs-no-move="true"
                  {% endif %}
             >
                 <div class="grid-stack-item-content panel panel-default"
@@ -42,7 +42,7 @@
                          style="border-color: {{ widgetColor }};"
                      {% endif %}
                 >
-                    <div class="panel-heading"
+                    <div class="panel-heading widget-instance-content-header"
                          {% if canEdit %}
                              id="widget-element-header-{{ whtcId }}"
                          {% endif %}
@@ -84,7 +84,7 @@
                             </span>
                         </h3>
                     </div>
-                    <div class="panel-body"
+                    <div class="panel-body widget-instance-content-body"
                          {% if canEdit %}
                              id="widget-instance-content-{{ widgetInstance.getId() }}"
                          {% endif %}
