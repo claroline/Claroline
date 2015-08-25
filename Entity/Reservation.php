@@ -23,11 +23,6 @@ class Reservation
     protected $id;
 
     /**
-     * @Assert\NotBlank()
-     */
-    private $duration;
-
-    /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
      * @ORM\JoinColumn(name="resource", nullable=false)
      * @Assert\NotNull()
@@ -39,6 +34,11 @@ class Reservation
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", name="event_id")
      */
     private $event;
+
+    /**
+     * @Assert\NotBlank()
+     */
+    private $duration;
 
     private $start;
 

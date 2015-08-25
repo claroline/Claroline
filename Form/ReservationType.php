@@ -62,7 +62,7 @@ class ReservationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        if ($this->editMode) {
+        if (!$this->editMode) {
             $resolver->setDefaults(
                 array(
                     'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',

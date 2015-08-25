@@ -13,9 +13,11 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
- * @EXT\Security("has_role('ROLE_ADMIN')")
+ * @@DI\Tag("security.secure_service")
+ * @SEC\PreAuthorize("canOpenAdminTool('claroline_cursus_tool')")
  */
 class ReservationAdminController extends Controller
 {

@@ -214,4 +214,9 @@ class ReservationController extends Controller
             'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation()
         ]);
     }
+
+    public function checkAccess()
+    {
+        return $this->isGranted('ROLE_TEACHER');
+    }
 }

@@ -35,6 +35,7 @@
         dayClick: onDayClick,
         eventClick: onEventClick,
         eventRender: onEventRender,
+        eventDrop: onEventDrop,
         eventDestroy: onEventDestroy,
         eventMouseover: onEventMouseover,
         eventMouseout: onEventMouseout
@@ -88,6 +89,11 @@
         createPopover(event, $element);
     }
 
+    function onEventDrop(event, delta, revertFunc, jsEvent, ui, view)
+    {
+        resizeOrDrop(event, delta, 'move');
+    }
+
     function onEventDestroy(event, $element)
     {
         $element.popover('destroy');
@@ -107,6 +113,24 @@
     {
         $calendar.fullCalendar('removeEvents', event.id);
         $calendar.fullCalendar('renderEvent', event);
+    }
+
+    function resizeOrDrop(event, delta, action)
+    {
+        var routeName = action === 'move' ? 'formalibre_reservation_agenda_move' : 'formalibre_reservation_agenda_resize',
+            deltaDays = delta._days,
+            deltaMinutes = delta._milliseconds / (1000 * 60),
+            routing = Routing.generate(routeName, {reservation: event.reservationId, day: deltaDays, minute: deltaMinutes});
+
+        //$.ajax({
+        //    url: routing,
+        //    type: 'post',
+        //    dataType: 'json',
+        //    success: function(event) {
+        //        $calendar.fullCalendar('removeEvents', event.id);
+        //        $calendar.fullCalendar('renderEvent', event);
+        //    }
+        //});
     }
 
     $('body')
