@@ -812,6 +812,8 @@ class RoleManager
 
     public function validateNewUserRolesInsert(array $roles)
     {
+        $unavailableRoles = array();
+
         foreach ($roles as $role) {
             $isAvailable = $this->validateRoleInsert(new User(), $role);
 
@@ -819,7 +821,7 @@ class RoleManager
                 $unavailableRoles[] = $role;
             }
         }
-
+        $roleUser = $this->getRoleByName('ROLE_USER');
         $isAvailable = $this->validateRoleInsert(new User(), $roleUser);
 
         if (!$isAvailable) {
