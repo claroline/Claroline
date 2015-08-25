@@ -1,0 +1,22 @@
+/*
+ * This file is part of the Claroline Connect package.
+ *
+ * (c) Claroline Consortium <consortium@claroline.net>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+.grid-stack-item-content {
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.widget-instance-content-header {
+    flex: none;
+}
+
+.widget-instance-content-body {
+    overflow: auto !important;
+}
