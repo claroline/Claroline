@@ -33,7 +33,11 @@ class DocumentType extends AbstractType
             );
         } else {
             $this->setName('innova_collecticiel_document_file_form_url');
-            $builder->add('document', 'url', array('required' => true, 'label' => 'url document'));
+            $builder->add('document', 'url', array(
+                'required' => true,
+                'label' => 'url document',
+                'default_protocol' => 'http'),
+            'protocols', array('http', 'https', 'www'));
         }
     }
 
