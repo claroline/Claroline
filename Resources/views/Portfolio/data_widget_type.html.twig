@@ -1,6 +1,6 @@
 <div data-widget-container="{{ widgetType.name }}">
     <p class="help_text">
-        {{ (widgetType.name ~ '_help_text')|trans({}, 'icap_portfolio') }}
+        {{ (widgetType.name ~ '_help_text')|trans({}, 'icap_portfolio')|raw }}
     </p>
     <button type="button" class="btn btn-default add_data_button" data-ng-click="create()">{{ 'add_data_widget'|trans({'%widgetType%': (widgetType.name ~ '_title')|trans({}, 'icap_portfolio')}, 'icap_portfolio') }}</button>
     <div class="panel-group ng-cloak" id="data_widget_list" role="tablist" data-ng-show="widgets.length && widgets.$resolved">
