@@ -118,10 +118,13 @@
             </div>
             <br>
             <br>
-            <br>
         {% endif %}
         
         {% if courses|length > 0 %}
+        
+            {% if courses.getNbPages() > 1 %}
+                {{ renderPager(courses, search, orderedBy, order, max) }}
+            {% endif %}
             <div class="table-responsive">
                 <table class="table">
                     <tr>

@@ -16,7 +16,22 @@
                   method="POST"
                   {{ form_enctype(form) }}
             > 
-                {{ form_widget(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.start_date) }}
+                {{ form_row(form.end_date) }}
+                <a data-toggle="collapse"
+                   href="#advanced-parameters-box"
+                   aria-expanded="false"
+                   class="pull-right"
+                >
+                    {{ 'advanced_parameters'|trans({}, 'platform') }}
+                    <i class="fa fa-caret-down"></i>
+                </a>
+                <br>
+                <div class="collapse" id="advanced-parameters-box">
+                    <br>
+                    {{ form_rest(form) }}
+                </div>
             </form>
         </div>
         <div class="modal-footer">

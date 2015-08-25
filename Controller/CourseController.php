@@ -22,7 +22,6 @@ use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
-use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CourseQueuedUserTransferType;
 use Claroline\CursusBundle\Form\CourseSessionEditType;
@@ -420,7 +419,11 @@ class CourseController extends Controller
      */
     public function courseSessionCreateFormAction(Course $course)
     {
-        $form = $this->formFactory->create(new CourseSessionType());
+        $session = new CourseSession();
+        $session->setPublicRegistration($course->getPublicRegistration());
+        $session->setPublicUnregistration($course->getPublicUnregistration());
+        $session->setRegistrationValidation($course->getRegistrationValidation());
+        $form = $this->formFactory->create(new CourseSessionType(), $session);
 
         return array('form' => $form->createView(), 'course' => $course);
     }
@@ -444,9 +447,6 @@ class CourseController extends Controller
             $creationDate = new \DateTime();
             $session->setCreationDate($creationDate);
             $session->setCourse($course);
-            $session->setPublicRegistration($course->getPublicRegistration());
-            $session->setPublicUnregistration($course->getPublicUnregistration());
-            $session->setRegistrationValidation($course->getRegistrationValidation());
             $workspace = $this->cursusManager->generateWorkspace(
                 $course,
                 $session,
