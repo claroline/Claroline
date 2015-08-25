@@ -3,10 +3,26 @@ hwi_oauth:
     firewall_name: main
     resource_owners:
         facebook:
-            type:          facebook
-            client_id:     <client_id>
-            client_secret: <client_secret>
-            scope:         "email"
+            type:           facebook
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "email"
+        twitter:
+            type:           twitter
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "email"
+        google:
+            type:           google
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "email profile"
+        linkedin:
+            type:           linkedin
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            scope:          "r_emailaddress r_basicprofile"
+
 
     # an optional setting to configure a query string parameter which can be used to redirect
     # the user after authentication, e.g. /connect/facebook?_destination=/my/destination will
@@ -25,9 +41,13 @@ security:
         main:
             oauth:
                 resource_owners:
-                    facebook: /login/check_facebook
+                    facebook:   /login/check_facebook
+                    twitter:    /login/check_twitter
+                    google:     /login/check_google
+                    linkedin:   /login/check_linkedin
+                success_handler:    icap.oauth.security_handler
+                failure_handler:    icap.oauth.security_handler
                 login_path: /login
-                failure_path: /login
-                use_forward: false
+                use_forward: true
                 oauth_user_provider:
-                    service: icap.oauth.facebook_provider
+                    service: icap.oauth.user_provider

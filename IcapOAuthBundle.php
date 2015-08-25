@@ -27,10 +27,8 @@ class IcapOAuthBundle extends PluginBundle  implements AutoConfigurableInterface
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'facebook');
+        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, null);
     }
-
-
 
     public function getRequiredFixturesDirectory($environment)
     {
@@ -46,11 +44,6 @@ class IcapOAuthBundle extends PluginBundle  implements AutoConfigurableInterface
         if (isset($simpleConfigs[$bundleClass])) {
             return $config->addContainerResource($this->buildPath($simpleConfigs[$bundleClass]));
         }
-    }
-
-    public function hasMigrations()
-    {
-        return false;
     }
 
     private function buildPath($file, $folder = 'suggested')

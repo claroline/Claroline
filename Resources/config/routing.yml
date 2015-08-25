@@ -1,8 +1,12 @@
-facebook_controller:
-    resource: "@IcapOAuthBundle/Controller/FacebookController.php"
+icap_oauth_controller:
+    resource: "@IcapOAuthBundle/Controller/OauthController.php"
     type: annotation
     prefix: /
 
+icap_oauth_connexion_controller:
+    resource: "@IcapOAuthBundle/Controller/ConnexionController.php"
+    type: annotation
+    prefix: /
 
 hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
@@ -13,4 +17,13 @@ hwi_oauth_redirect:
     prefix: /connect
 
 facebook_login:
-    pattern: /login/check_facebook
+    path: /login/check_facebook
+
+twitter_login:
+    path: /login/check_twitter
+
+google_login:
+    path: /login/check_google
+
+linkedin_login:
+    path: /login/check_linkedin

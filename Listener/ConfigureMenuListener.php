@@ -3,6 +3,7 @@
 namespace Icap\OAuthBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use Icap\OAuthBundle\Model\Configuration;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -19,10 +20,15 @@ class ConfigureMenuListener
     public function onTopBarLeftMenuConfigure(ConfigureMenuEvent $event)
     {
         $menu = $event->getMenu();
-        $menu->addChild(
-            'Facebook',
-            array('route' => 'claro_admin_facebook_form')
-        )->setExtra('name', 'Facebook');
+        foreach (Configuration::resourceOwners() as $resourceOwner) {
+            $menu->addChild(
+                $resourceOwner,
+                array(
+                    'route' => 'claro_admin_oauth_form',
+                    'routeParameters' => array('service' => strtolower($resourceOwner))
+                )
+            )->setExtra('name', $resourceOwner);
+        }
 
         return $menu;
     }

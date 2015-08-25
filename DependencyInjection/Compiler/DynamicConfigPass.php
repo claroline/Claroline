@@ -11,6 +11,7 @@
 
 namespace Icap\OAuthBundle\DependencyInjection\Compiler;
 
+use Icap\OAuthBundle\Model\Configuration;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -29,14 +30,16 @@ class DynamicConfigPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        //facebook
-        $facebook = new Definition();
-        $facebook->setClass('FacebookResourceOwner');
-        $facebook->setFactory(array(
-            new Reference('icap.oauth.hwi.facebook_owner_factory'),
-            'getFacebookResourceOwner'
-        ));
-        $container->removeDefinition('hwi_oauth.resource_owner.facebook');
-        $container->setDefinition('hwi_oauth.resource_owner.facebook', $facebook);
+        $factory = new Reference('icap.oauth.hwi.resource_owner_factory');
+        foreach (Configuration::resourceOwners() as $resourceOwner) {
+            $conf = new Definition();
+            $conf->setClass($resourceOwner.'ResourceOwner');
+            $conf->setFactory(array(
+                $factory,
+                "get{$resourceOwner}ResourceOwner"
+            ));
+            $container->removeDefinition('hwi_oauth.resource_owner.'.strtolower($resourceOwner));
+            $container->setDefinition('hwi_oauth.resource_owner.'.strtolower($resourceOwner), $conf);
+        }
     }
 }

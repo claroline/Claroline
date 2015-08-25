@@ -16,64 +16,71 @@ namespace Icap\OAuthBundle\Model;
 class Configuration
 {
 
-    private $facebookClientId;
-    private $facebookClientSecret;
-    private $facebookClientActive;
+    private $clientId;
+    private $clientSecret;
+    private $clientActive;
 
     public function __construct($id, $secret, $active)
     {
-        $this->facebookClientId = $id;
-        $this->facebookClientSecret = $secret;
-        $this->facebookClientActive = $active;
+        $this->clientId = $id;
+        $this->clientSecret = $secret;
+        $this->clientActive = $active;
     }
 
 
     /**
-     * @param integer $facebookClientId
+     * @param integer $clientId
      */
-    public function setFacebookClientId($facebookClientId)
+    public function setClientId($clientId)
     {
-        $this->facebookClientId = $facebookClientId;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getFacebookClientId()
-    {
-        return $this->facebookClientId;
-    }
-
-    /**
-     * @param integer $facebookClientSecret
-     */
-    public function setFacebookClientSecret($facebookClientSecret)
-    {
-        $this->facebookClientSecret = $facebookClientSecret;
+        $this->clientId = $clientId;
     }
 
     /**
      * @return integer
      */
-    public function getFacebookClientSecret()
+    public function getClientId()
     {
-        return $this->facebookClientSecret;
+        return $this->clientId;
     }
 
     /**
-     * @param boolean $facebookClientActive
+     * @param integer $clientSecret
      */
-    public function setFacebookClientActive($facebookClientActive)
+    public function setClientSecret($clientSecret)
     {
-        $this->facebookClientActive = $facebookClientActive;
+        $this->clientSecret = $clientSecret;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getClientSecret()
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param boolean $clientActive
+     */
+    public function setClientActive($clientActive)
+    {
+        $this->clientActive = $clientActive;
     }
 
     /**
      * @return boolean
      */
-    public function isFacebookClientActive()
+    public function isClientActive()
     {
-        return $this->facebookClientActive;
+        return $this->clientActive;
+    }
+
+    static public function resourceOwners()
+    {
+        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin'];
+
+        return $resourceOwners;
     }
 
 }

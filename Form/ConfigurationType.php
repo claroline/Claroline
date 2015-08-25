@@ -14,45 +14,49 @@ namespace Icap\OAuthBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class FacebookType extends AbstractType
+class ConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
-                'facebook_client_id',
-                'integer',
+                'client_id',
+                'text',
                 array(
                     'constraints' => array(
                         new NotBlank(),
                         new GreaterThanOrEqual(array('value' => 0))
                     ),
                     'attr' => array('min' => 0),
-                    'label' => 'fb_client_id'
+                    'label' => 'client_id'
                 )
             )
             ->add(
-                'facebook_client_secret',
+                'client_secret',
                 'text',
                 array(
                     'constraints' => new NotBlank(),
-                    'label' => 'fb_client_secret'
+                    'label' => 'client_secret'
                 )
             )
-            ->add('facebook_client_active', 'checkbox', array('label' => 'Active', 'required' => false));
+            ->add('client_active', 'checkbox', array('label' => 'client_active', 'required' => false));
     }
 
     public function getName()
     {
-        return 'platform_facebook_application_form';
+        return 'platform_oauth_application_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(array(
+            'translation_domain' => 'icap_oauth',
+            'csrf_protection' => true,
+            'csrf_field_name' => '_token'
+        ));
     }
 }

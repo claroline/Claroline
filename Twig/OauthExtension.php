@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @DI\Service
  * @DI\Tag("twig.extension")
  */
-class FacebookExtension extends \Twig_Extension
+class OauthExtension extends \Twig_Extension
 {
     private $container;
 
@@ -38,19 +38,19 @@ class FacebookExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            'is_facebook_available' => new \Twig_Function_Method($this, 'isFacebookAvailable'),
-            'get_facebook_app_id' => new \Twig_Function_Method($this, 'getAppIp')
+            'is_service_available' => new \Twig_Function_Method($this, 'isServiceAvailable'),
+            'get_oauth_app_id' => new \Twig_Function_Method($this, 'getAppIp')
         );
     }
 
-    public function isFacebookAvailable()
+    public function isServiceAvailable($service)
     {
-        return $this->container->get('icap.oauth.manager.facebook')->isFacebookAvailable();
+        return $this->container->get('icap.oauth.manager.facebook')->isServiceAvailable($service);
     }
 
-    public function getAppIp()
+    public function getAppIp($service)
     {
-        return $this->container->get('claroline.config.platform_config_handler')->getParameter('facebook_client_id');
+        return $this->container->get('claroline.config.platform_config_handler')->getParameter($service.'_client_id');
     }
 
     /**
@@ -60,6 +60,6 @@ class FacebookExtension extends \Twig_Extension
      */
     public function getName()
     {
-        return 'is_facebook_available_extension';
+        return 'is_oauth_available_extension';
     }
 }

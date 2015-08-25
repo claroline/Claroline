@@ -12,18 +12,18 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ExternalAuthenticationListener
 {
     private $templating;
-    private $facebookManager;
+    private $oauthManager;
 
     /**
      * @DI\InjectParams({
      *     "templating"      = @DI\Inject("templating"),
-     *     "facebookManager" = @Di\Inject("icap.oauth.manager.facebook")
+     *     "oauthManager" = @Di\Inject("icap.oauth.manager")
      * })
      */
-    public function __construct($templating, $facebookManager)
+    public function __construct($templating, $oauthManager)
     {
         $this->templating = $templating;
-        $this->facebookManager = $facebookManager;
+        $this->oauthManager = $oauthManager;
     }
 
     /**
@@ -34,31 +34,16 @@ class ExternalAuthenticationListener
      */
     public function onRenderButton(RenderAuthenticationButtonEvent $event)
     {
-        if ($this->facebookManager->isActive()) {
+        $services = $this->oauthManager->getActiveServices();
+        if (count($services)>0) {
             $content = $this->templating->render(
-                'IcapOAuthBundle:Facebook:button.html.twig',
-                array()
+                'IcapOAuthBundle::buttons.html.twig',
+                array('services'=>$services)
             );
 
             $event->addContent($content);
         }
     }
 
-    /**
-     * @DI\Observe("inject_javascript_layout")
-     *
-     * @param InjectJavascriptEvent $event
-     * @return string
-     */
-    public function onInjectJs(InjectJavascriptEvent $event)
-    {
-        if ($this->facebookManager->isActive()) {
-            $content = $this->templating->render(
-                'IcapOAuthBundle:Facebook:javascript_layout.html.twig',
-                array()
-            );
 
-            $event->addContent($content);
-        }
-    }
 }

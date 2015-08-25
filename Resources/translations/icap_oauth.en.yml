@@ -1,0 +1,10 @@
+client_id:  Application id
+client_secret: Application secret
+client_active: Active
+login_facebook: Connect with Facebook
+login_twitter: Connect with Twitter
+login_google: Connect with Google
+login_linkedin: Connect with Linkedin
+create_new_oauth_account: Create new account
+link_oauth_to_account: Link to existing account
+oauth_check_connexion_info: Do you wish to create a new account or link to an existing one?
