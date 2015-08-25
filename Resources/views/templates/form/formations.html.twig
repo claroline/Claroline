@@ -1,27 +1,34 @@
 <div data-collection-form="{'resource': ''}" data-editable="false" data-collection-form-widget="widget">
-    <p>
-        <label for="formation_name">{{ 'formation_title'|trans({}, 'icap_portfolio') }}</label>
-        <input type="text" class="form-control" id="formation_name"
-         name="formations[name]" data-ng-model="widget.name" required="required" />
-    </p>
-    <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
-        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
-               class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
-        <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
-        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
-               class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />
-    </p>
-    <p>
-        <label for="formation_establishmentName">{{ 'formation_establishmentName'|trans({}, 'icap_portfolio') }}</label>
-        <input type="text" class="form-control" id="formation_establishmentName"
-         name="formations[establishmentName]" data-ng-model="widget.establishmentName" required="required" />
-    </p>
-    <p>
-        <label for="formation_diploma">{{ 'formation_diploma'|trans({}, 'icap_portfolio') }}</label>
-        <input type="text" class="form-control" id="formation_diploma"
-         name="formations[diploma]" data-ng-model="widget.diploma" required="required" />
-    </p>
+    <div class="form-group">
+        <label for="formation_name" class="required col-md-2 control-label">{{ 'formation_title'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_name" name="formations[name]" data-ng-model="widget.name" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <p class="input-daterange input-group" data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}" id="datepicker">
+                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       class="input-sm form-control" name="startDate" data-ng-model="widget.startDate" required="required" />
+                <span class="input-group-addon">{{ 'date_range_to'|trans({}, 'icap_portfolio') }}</span>
+                <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                       class="input-sm form-control" name="endDate" data-ng-model="widget.endDate" />
+            </p>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="formation_establishmentName" class="required col-md-2 control-label">{{ 'formation_establishmentName'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_establishmentName" name="formations[establishmentName]" data-ng-model="widget.establishmentName" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="formation_diploma" class="required col-md-2 control-label">{{ 'formation_diploma'|trans({}, 'icap_portfolio') }}</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="formation_diploma" name="formations[diploma]" data-ng-model="widget.diploma" required="required" />
+        </div>
+    </div>
     <p>
         <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig" data-ui-resources="collection">
             {{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}
