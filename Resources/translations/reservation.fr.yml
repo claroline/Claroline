@@ -79,6 +79,7 @@ form:
   maxTimeOfReservation: Temps maximum par réservation (facultatif)
   name: Nom
   quantity: Quantité
+  information_about_quantity_modification: La modification de la quantité de ressources disponibles affectera uniquement les futurs réservations.
 modify_resource_type_name: Modifier le nom
 modify_resource: Modifier une ressource
 no_resources_type_yet: Il n'y a pas encore de ressources pour les réservations.

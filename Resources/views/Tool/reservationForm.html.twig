@@ -11,6 +11,50 @@
                 >
             <div class="modal-body">
                 {{ form_widget(form) }}
+                <div class="col-md-offset-3">
+                    <div>
+                        <span class="bold">{{ 'agenda.form.description'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_description">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getDescription is not empty %}
+                                    {{ reservation.getResource().getDescription() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="bold">{{ 'agenda.form.localisation'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_localisation">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getLocalisation() is not empty %}
+                                    {{ reservation.getResource().getLocalisation() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>
+                        <span class="bold">{{ 'agenda.form.max_time_reservation'|trans({}, 'reservation') }}: </span>
+                        <span id="reservation_form_resource_max_time">
+                            {% if reservation is not null and reservation.getResource() is not null %}
+                                {% if reservation.getResource().getMaxTimeReservation() != '00:00:00' %}
+                                    {{ reservation.getResource().getMaxTimeReservation() }}
+                                {% else %}
+                                    {{ 'none'|trans({}, 'platform') }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'none'|trans({}, 'platform') }}
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>

@@ -2,7 +2,9 @@
 
 namespace FormaLibre\ReservationBundle\Manager;
 
+use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use FormaLibre\ReservationBundle\Entity\Reservation;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -64,5 +66,26 @@ class ReservationManager
         $durationArray = explode(':', $duration);
 
         return $durationArray[0] * 3600 + $durationArray[1] * 60;
+    }
+
+    public function updateEvent(Event $event, Reservation $reservation)
+    {
+        $event->setStart($reservation->getStart());
+        $event->setEnd($reservation->getEnd());
+        $event->setTitle($this->translator->trans('reservation', [], 'reservation') .' - '. $reservation->getResource()->getName());
+
+        return $event;
+    }
+
+    // Add to the jsonSerialize, some reservations fields
+    public function completeJsonEventWithReservation(Reservation $reservation)
+    {
+        return array_merge(
+            $reservation->getEvent()->jsonSerialize(),
+            [
+                'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
+                'reservationId' => $reservation->getId()
+            ]
+        );
     }
 }

@@ -23,6 +23,10 @@ class ResourceType extends AbstractType
             'label' => 'form.description'
         ));
 
+        $builder->add('localisation', 'text', array(
+            'label' => 'form.localisation'
+        ));
+
         $builder->add('maxTimeReservation', 'time', array(
             'input' => 'string',
             'widget' => 'single_text',

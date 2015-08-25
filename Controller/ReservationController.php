@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
+use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -25,6 +26,7 @@ class ReservationController extends Controller
     private $router;
     private $request;
     private $agendaManager;
+    private $reservationManager;
     private $translator;
     private $reservationRepo;
     private $eventRepo;
@@ -37,6 +39,7 @@ class ReservationController extends Controller
      *      "router"      = @DI\Inject("router"),
      *      "request"     = @DI\Inject("request"),
      *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
      *      "translator"    = @DI\Inject("translator")
      * })
      */
@@ -47,6 +50,7 @@ class ReservationController extends Controller
         RouterInterface $router,
         Request $request,
         AgendaManager $agendaManager,
+        ReservationManager $reservationManager,
         TranslatorInterface $translator
     )
     {
@@ -56,6 +60,7 @@ class ReservationController extends Controller
         $this->router = $router;
         $this->request = $request;
         $this->agendaManager = $agendaManager;
+        $this->reservationManager = $reservationManager;
         $this->translator = $translator;
         $this->reservationRepo = $this->om->getRepository('FormaLibreReservationBundle:Reservation');
         $this->eventRepo = $this->om->getRepository('ClarolineAgendaBundle:Event');
@@ -76,24 +81,45 @@ class ReservationController extends Controller
 
         if ($form->isValid()) {
             $reservation = $form->getData();
-            $event = new Event();
-            $event->setStart($reservation->getStart());
-            $event->setEnd($reservation->getEnd());
-            $event->setTitle($this->translator->trans('reservation', [], 'reservation') . ' - ' . $reservation->getResource()->getName());
 
+            $event = $this->reservationManager->updateEvent(new Event(), $reservation);
             $this->agendaManager->addEvent($event);
 
             $reservation->setEvent($event);
             $this->om->persist($reservation);
             $this->om->flush();
 
-            return new JsonResponse($event->jsonSerialize());
+            return new JsonResponse($this->reservationManager->completeJsonEventWithReservation($reservation));
         }
 
         return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_add_reservation'),
+            'reservation' => $this->request->getMethod() === 'POST' ? $form->getData() : null,
             'editMode' => false
+        ));
+    }
+
+    /**
+     * @EXT\Route(
+     *      "/change/form/{id}",
+     *      name="formalibre_change_reservation_form",
+     *      options={"expose"=true}
+     * )
+     */
+    public function changeReservationFormAction(Reservation $reservation)
+    {
+        $formType = $this->get('formalibre.form.reservation');
+        $formType->setEditMode();
+        $reservation->setStart($reservation->getEvent()->getStart()->getTimestamp());
+        $reservation->setEnd($reservation->getEvent()->getEnd()->getTimestamp());
+        $form = $this->createForm($formType, $reservation);
+
+        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
+            'reservation' => $reservation,
+            'editMode' => true
         ));
     }
 
@@ -107,13 +133,17 @@ class ReservationController extends Controller
     public function changeReservationAction(Reservation $reservation)
     {
         $formType = $this->get('formalibre.form.reservation');
-        $reservation->setStart($reservation->getEvent()->getStart()->getTimestamp());
-        $reservation->setEnd($reservation->getEvent()->getEnd()->getTimestamp());
         $form = $this->createForm($formType, $reservation);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            return new JsonResponse();
+            $reservation = $form->getData();
+            $event = $this->reservationManager->updateEvent($reservation->getEvent(), $reservation);
+
+            $this->agendaManager->updateEvent($event);
+            $this->om->flush();
+
+            return new JsonResponse($this->reservationManager->completeJsonEventWithReservation($reservation));
         }
 
         return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
@@ -143,12 +173,22 @@ class ReservationController extends Controller
      * @EXT\Route(
      *      "/get-resource-info/{id}",
      *      name="formalibre_reservation_get_resource_info",
+     *      defaults={"id"=null},
      *      options={"expose"=true}
      * )
      */
-    public function getResourceInfoAction(Resource $resource)
+    public function getResourceInfoAction(Resource $resource = null)
     {
         $none = $this->translator->trans('none', [], 'platform');
+
+        if (!$resource) {
+            return new JsonResponse([
+                'description' => $none,
+                'localisation' => $none,
+                'maxTime' => $none
+            ]);
+        }
+
         return new JsonResponse([
             'description' => empty($resource->getDescription()) ? $none : $resource->getDescription(),
             'localisation' => empty($resource->getLocalisation()) ? $none : $resource->getLocalisation(),
@@ -169,13 +209,7 @@ class ReservationController extends Controller
 
         $events = [];
         foreach ($reservations as $reservation) {
-            $events[] = array_merge(
-                $reservation->getEvent()->jsonSerialize(),
-                [
-                    'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
-                    'reservationId' => $reservation->getId()
-                ]
-            );
+            $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
         }
 
         return new JsonResponse($events);

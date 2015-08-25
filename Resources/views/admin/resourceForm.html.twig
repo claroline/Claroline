@@ -11,6 +11,9 @@
         >
             <div class="modal-body">
                 {{ form_widget(form) }}
+                <div class="alert alert-info">
+                    <span class="fa fa-info-circle"></span> {{ 'form.information_about_quantity_modification'|trans({}, 'reservation') }}
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>

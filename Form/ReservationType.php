@@ -2,6 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Form;
 
+use FormaLibre\ReservationBundle\Validator\Constraints\Reservation;
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class ReservationType extends AbstractType
 {
+    private $editMode = false;
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('start', 'datetime', array(
@@ -47,6 +50,11 @@ class ReservationType extends AbstractType
         ));
     }
 
+    public function setEditMode()
+    {
+        $this->editMode = true;
+    }
+
     public function getName()
     {
         return 'reservation_form';
@@ -54,11 +62,21 @@ class ReservationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(
-            array(
-                'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
-                'translation_domain' => 'reservation'
-            )
-        );
+        if ($this->editMode) {
+            $resolver->setDefaults(
+                array(
+                    'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
+                    'translation_domain' => 'reservation',
+                    'constraints' => new Reservation()
+                )
+            );
+        } else {
+            $resolver->setDefaults(
+                array(
+                    'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
+                    'translation_domain' => 'reservation'
+                )
+            );
+        }
     }
 }

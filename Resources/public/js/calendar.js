@@ -55,7 +55,7 @@
 
     function onEventClick(event)
     {
-        var routing = Routing.generate('formalibre_change_reservation', {id: event.reservationId});
+        var routing = Routing.generate('formalibre_change_reservation_form', {id: event.reservationId});
 
         Claroline.Modal.displayForm(routing, onReservationChanged, function(){
             $('#reservation_form_end_time').change();
@@ -82,9 +82,10 @@
         $(this).popover('hide');
     }
 
-    function onReservationChanged(data)
+    function onReservationChanged(event)
     {
-
+        $calendar.fullCalendar('removeEvents', event.id);
+        $calendar.fullCalendar('renderEvent', event);
     }
 
     $('body')
@@ -99,16 +100,6 @@
                 type: 'get',
                 dataType: 'json',
                 success: function(data) {
-                    var $text = '<div id="reservation_form_resource_info">' +
-                        '<div>'+ trans("agenda.form.description")+': <span id="reservation_form_resource_description"></span></div>' +
-                        '<div>'+ trans("agenda.form.localisation") +': <span id="reservation_form_resource_localisation"></span></div>' +
-                        '<div>'+ trans("agenda.form.max_time_reservation") +': <span id="reservation_form_resource_max_time"></span></div>' +
-                        '</div>';
-
-                    if (!$this.next().is('#reservation_form_resource_info')) {
-                        $this.after($text);
-                    }
-
                     $('#reservation_form_resource_description').text(data.description);
                     $('#reservation_form_resource_localisation').text(data.localisation);
                     $('#reservation_form_resource_max_time').text(data.maxTime);
@@ -155,14 +146,14 @@
         })
     ;
 
-    function onReservationDeleted(eventId)
+    function onReservationDeleted(event, eventId)
     {
         $calendar.fullCalendar('removeEvents', eventId);
     }
 
-    function onReservationCreated(data)
+    function onReservationCreated(event)
     {
-        $calendar.fullCalendar('renderEvent', data);
+        $calendar.fullCalendar('renderEvent', event);
     }
 
     function createPopover(event, $element)

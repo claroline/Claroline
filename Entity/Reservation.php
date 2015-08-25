@@ -9,10 +9,9 @@ use FormaLibre\ReservationBundle\Validator\Constraints as Validator;
 
 /**
  * @ORM\Table(name="formalibre_reservation")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="FormaLibre\ReservationBundle\Repository\ReservationRepository")
  * @Validator\DateRange()
  * @Validator\Duration()
- * @Validator\Reservation()
  */
 class Reservation
 {
@@ -36,7 +35,7 @@ class Reservation
     private $resource;
 
     /**
-     * @ORM\OneToOne(targetEntity="Claroline\AgendaBundle\Entity\Event")
+     * @ORM\OneToOne(targetEntity="Claroline\AgendaBundle\Entity\Event", cascade={"remove"})
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE", name="event_id")
      */
     private $event;

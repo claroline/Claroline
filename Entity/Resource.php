@@ -46,7 +46,7 @@ class Resource
 
     /**
      * @ORM\Column(name="localisation", type="string", length=255, nullable=true)
-     * @Assert\Length(min="2", max="255")
+     * @Assert\Length(min="2", max="50")
      */
     private $localisation;
 

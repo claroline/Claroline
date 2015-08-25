@@ -69,11 +69,6 @@ class ReservationToolListener
      */
     public function onDisplayDesktopReservationAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->desktopReservationAgenda());
-    }
-
-    private function desktopReservationAgenda()
-    {
-        return $this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig');
+        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig'));
     }
 }
