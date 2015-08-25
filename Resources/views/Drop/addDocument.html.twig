@@ -6,69 +6,88 @@
 <h4>{{ 'Add a document'|trans({}, 'innova_collecticiel') }}</h4>
 
 <div class='div-test well'>
+
+    {# ****************************************************** #}
+    {# InnovaERV                                              #}
+    {# Partie "affichage des menus"                           #}
+    {# A noter : si l'ordre est changé                        #}
+    {# alors il faut modifier l'autre partie, voir ci-dessous #}
+    {# ****************************************************** #}
     {% if allowedTypes|length <= 0 %}
         <span class="text-danger">{{ 'No document type allowed'|trans({}, 'innova_collecticiel') }}</span>
     {% else %}
-
         {% set activeClass = " active " %}
-
         <ul class="nav nav-tabs">
-            {% if 'url' in allowedTypes %}
-                <li class="{{ activeClass }}"><a href="#url-tab"
-                                                 data-toggle="tab">{{ 'url' |trans({}, 'innova_collecticiel') }}</a></li>
-                {% set activeClass = "" %}
-            {% endif %}
-
+            {# Déposer un fichier #}
             {% if 'file' in allowedTypes %}
-                <li class="{{ activeClass }}"><a href="#file-tab"
-                                                 data-toggle="tab">{{ 'file' |trans({}, 'innova_collecticiel') }}</a></li>
+                <li class="{{ activeClass }}">
+                    <a href="#file-tab" data-toggle="tab">{{ 'file' |trans({}, 'innova_collecticiel') }}</a>
+                </li>
                 {% set activeClass = "" %}
             {% endif %}
-
+            {# Saisir une URL #}
+            {% if 'url' in allowedTypes %}
+                <li class="{{ activeClass }}">
+                    <a href="#url-tab" data-toggle="tab">{{ 'url' |trans({}, 'innova_collecticiel') }}</a>
+                </li>
+                {% set activeClass = "" %}
+            {% endif %}
+            {# Ajouter une ressource #}
             {% if 'resource' in allowedTypes %}
-                <li class="{{ activeClass }}"><a href="#resource-tab"
-                                                 data-toggle="tab">{{ 'resource' |trans({}, 'innova_collecticiel') }}</a></li>
+                <li class="{{ activeClass }}">
+                    <a href="#resource-tab" data-toggle="tab">{{ 'resource' |trans({}, 'innova_collecticiel') }}</a>
+                </li>
                 {% set activeClass = "" %}
             {% endif %}
-
+            {# Rédiger un texte #}
             {% if 'text' in allowedTypes %}
-                <li class="{{ activeClass }}"><a href="#text-tab"
-                                                 data-toggle="tab">{{ 'text' |trans({}, 'innova_collecticiel') }}</a></li>
+                <li class="{{ activeClass }}">
+                    <a href="#text-tab" data-toggle="tab">{{ 'text' |trans({}, 'innova_collecticiel') }}</a>
+                </li>
                 {% set activeClass = "" %}
             {% endif %}
         </ul>
-
     {% endif %}
 
+    {# ******************************************** #}
+    {# InnovaERV                                    #}
+    {# Partie "affichage des zones de saisies"      #}
+    {# A noter : c'est ici qu'il faut faire         #}
+    {# les modifications si on change l'ordre       #}
+    {# et que l'on veut garder les zones de saisies #}
+    {# ******************************************** #}
     {% if allowedTypes|length > 0 %}
-
         {% set activeClass = " active " %}
-
         <div class="tab-content">
-            {% if 'url' in allowedTypes %}
-                <div class="tab-pane {{ activeClass }}" id="url-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig' with {'form':form_url, 'documentType': 'url'} %}
-                </div>
-                {% set activeClass = "" %}
-            {% endif %}
-
+            {# Déposer un fichier #}
             {% if 'file' in allowedTypes %}
                 <div class="tab-pane {{ activeClass }}" id="file-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig' with {'form':form_file, 'documentType': 'file'} %}
+                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                    with {'form':form_file, 'documentType': 'file'} %}
                 </div>
                 {% set activeClass = "" %}
             {% endif %}
-
+            {# Saisir une URL #}
+            {% if 'url' in allowedTypes %}
+                <div class="tab-pane {{ activeClass }}" id="url-tab">
+                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                    with {'form':form_url, 'documentType': 'url'} %}
+                </div>
+                {% set activeClass = "" %}
+            {% endif %}
+            {# Ajouter une ressource #}
             {% if 'resource' in allowedTypes %}
                 <div class="tab-pane {{ activeClass }}" id="resource-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig' with {'form':form_resource, 'documentType': 'resource'} %}
+                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                    with {'form':form_resource, 'documentType': 'resource'} %}
                 </div>
                 {% set activeClass = "" %}
             {% endif %}
-
+            {# Rédiger un texte #}
             {% if 'text' in allowedTypes %}
                 <div class="tab-pane {{ activeClass }}" id="text-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig' with {'form':form_text, 'documentType': 'text'} %}
+                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                    with {'form':form_text, 'documentType': 'text'} %}
                 </div>
                 {% set activeClass = "" %}
             {% endif %}
