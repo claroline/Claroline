@@ -1,6 +1,6 @@
 <div data-collection-form="{'name': ''}" data-ng-model="widget.children">
-    <ul class="list-unstyled">
-        <li data-ng-repeat="skill in collection">
+    <ul class="list-unstyled list_skill">
+        <li data-ng-repeat="skill in collection" class="skill">
             <div data-ng-class="{'input-group': isAdded(skill)}">
                 {% verbatim %}
                 <input type="text" class="input-sm form-control" id="skill_{{ $index }}_name"
