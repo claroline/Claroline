@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\AbstractType;
@@ -45,7 +44,7 @@ class ProfileType extends AbstractType
     )
     {
         $this->accesses = $accesses;
-        $this->platformRoles = new ArrayCollection($platformRoles);
+        $this->platformRoles = $platformRoles;
         $this->isAdmin = $isAdmin;
         $this->isGrantedUserAdministration = $isGrantedUserAdministration;
         $this->langs = $localeManager->retrieveAvailableLocales();
