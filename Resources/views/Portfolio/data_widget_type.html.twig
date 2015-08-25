@@ -31,7 +31,7 @@
             <div class="panel-collapse" role="tabpanel" collapse="widget.isCollapsed">
                 <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
                 </div>
-                <form name="form" class="edit-container" data-loading-form="save(widget)" data-ng-show="widget.views.form && widget.isEditing">
+                <form name="form" class="edit-container form-horizontal" data-loading-form="save(widget)" data-ng-show="widget.views.form && widget.isEditing">
                     <div class="panel-body" data-bind-html="widget.views.form"></div>
                     <div class="panel-footer">
         {% endverbatim %}

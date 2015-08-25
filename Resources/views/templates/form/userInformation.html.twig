@@ -1,34 +1,54 @@
 <div class="form-group">
-    <label for="birthDate" class="required">{{ 'user_information_form_birth_date'|trans({}, 'icap_portfolio') }}</label>
-    <div class="input-group">
-        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
-        <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
-               class="input-sm form-control" name="userInformation[birthDate]"
-               data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}"
-               data-ng-model="widget.birthDate" />
+    <label for="birthDate" class="required col-md-2 control-label">{{ 'user_information_form_birth_date'|trans({}, 'icap_portfolio') }}</label>
+    <div class="col-md-10">
+        <div class="input-group">
+            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+            <input type="text" data-date-time-input="{{ 'date_field_format'|trans({}, 'icap_portfolio') }}"
+                   class="input-sm form-control" name="userInformation[birthDate]"
+                   data-b-datepicker="{{ 'datepicker_date_format'|trans({}, 'icap_portfolio') }}"
+                   data-ng-model="widget.birthDate" />
+        </div>
     </div>
 </div>
 <div class="form-group">
-    <label for="city" class="required">{{ 'user_information_form_city'|trans({}, 'icap_portfolio') }}</label>
-    <input type="text" class="form-control" id="city" name="userInformationbirthDate[city]" data-ng-model="widget.city" />
+    <label for="city" class="required col-md-2 control-label">{{ 'user_information_form_city'|trans({}, 'icap_portfolio') }}</label>
+    <div class="col-md-10">
+        <input type="text" class="form-control" id="city" name="userInformationbirthDate[city]" data-ng-model="widget.city" />
+    </div>
 </div>
-<div class="checkbox">
-    <label>
-        <input type="checkbox" name="userInformationbirthDate[show_avatar]" value="1" data-ng-model="widget.show_avatar"> {{ 'user_information_form_show_avatar'|trans({}, 'icap_portfolio') }}
-    </label>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="userInformationbirthDate[show_avatar]" value="1" data-ng-model="widget.show_avatar"> {{ 'user_information_form_show_avatar'|trans({}, 'icap_portfolio') }}
+            </label>
+        </div>
+    </div>
 </div>
-<div class="checkbox">
-    <label>
-        <input type="checkbox" name="userInformationbirthDate[show_mail]" value="1" data-ng-model="widget.show_mail"> {{ 'user_information_form_show_mail'|trans({}, 'icap_portfolio') }}
-    </label>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="userInformationbirthDate[show_mail]" value="1" data-ng-model="widget.show_mail"> {{ 'user_information_form_show_mail'|trans({}, 'icap_portfolio') }}
+            </label>
+        </div>
+    </div>
 </div>
-<div class="checkbox">
-    <label>
-        <input type="checkbox" name="userInformationbirthDate[show_phone]" value="1" data-ng-model="widget.show_phone"> {{ 'user_information_form_show_phone'|trans({}, 'icap_portfolio') }}
-    </label>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="userInformationbirthDate[show_phone]" value="1" data-ng-model="widget.show_phone"> {{ 'user_information_form_show_phone'|trans({}, 'icap_portfolio') }}
+            </label>
+        </div>
+    </div>
 </div>
-<div class="checkbox">
-    <label>
-        <input type="checkbox" name="userInformationbirthDate[show_description]" value="1" data-ng-model="widget.show_description"> {{ 'user_information_form_show_description'|trans({}, 'icap_portfolio') }}
-    </label>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="userInformationbirthDate[show_description]" value="1" data-ng-model="widget.show_description"> {{ 'user_information_form_show_description'|trans({}, 'icap_portfolio') }}
+            </label>
+        </div>
+    </div>
 </div>
