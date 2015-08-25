@@ -68,6 +68,25 @@ class ReservationController extends Controller
 
     /**
      * @EXT\Route(
+     *      "/agenda/show",
+     *      name="formalibre_reservation_agenda_show",
+     *      options={"expose"=true}
+     * )
+     */
+    public function agendaShowAction()
+    {
+        $reservations = $this->reservationRepo->findAll();
+
+        $events = [];
+        foreach ($reservations as $reservation) {
+            $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
+        }
+
+        return new JsonResponse($events);
+    }
+
+    /**
+     * @EXT\Route(
      *      "/add",
      *      name="formalibre_add_reservation",
      *      options={"expose"=true}
@@ -194,24 +213,5 @@ class ReservationController extends Controller
             'localisation' => empty($resource->getLocalisation()) ? $none : $resource->getLocalisation(),
             'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation()
         ]);
-    }
-
-    /**
-     * @EXT\Route(
-     *      "/agenda/show",
-     *      name="formalibre_reservation_agenda_show",
-     *      options={"expose"=true}
-     * )
-     */
-    public function agendaShowAction()
-    {
-        $reservations = $this->reservationRepo->findAll();
-
-        $events = [];
-        foreach ($reservations as $reservation) {
-            $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
-        }
-
-        return new JsonResponse($events);
     }
 }

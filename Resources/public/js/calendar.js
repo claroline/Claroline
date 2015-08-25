@@ -1,5 +1,6 @@
 (function() {
     var $calendar = $('#calendar');
+    var isFormShown = false;
 
     $calendar.fullCalendar({
         header: {
@@ -41,29 +42,49 @@
 
     function onDayClick(date)
     {
-        var routing = Routing.generate('formalibre_add_reservation'),
-            dateDate = moment(date).format('YYYY-MM-DD'),
-            dateTime = moment(date).format('HH:mm');
+        if (!isFormShown) {
+            var routing = Routing.generate('formalibre_add_reservation'),
+                dateDate = moment(date).format('YYYY-MM-DD'),
+                dateTime = moment(date).format('HH:mm');
 
-        var onReservationFormOpen = function(html) {
-            $('#reservation_form_start_date').val(dateDate);
-            $('#reservation_form_start_time').val(dateTime);
-        };
+            var onReservationFormOpen = function(html) {
+                $('#reservation_form_start_date').val(dateDate);
+                $('#reservation_form_start_time').val(dateTime);
+            };
 
-        Claroline.Modal.displayForm(routing, onReservationCreated, onReservationFormOpen, 'form-reservation');
+            Claroline.Modal.displayForm(
+                routing,
+                onReservationCreated,
+                onReservationFormOpen,
+                'form-reservation'
+            );
+
+            isFormShown = true;
+        }
     }
 
     function onEventClick(event)
     {
-        var routing = Routing.generate('formalibre_change_reservation_form', {id: event.reservationId});
+        if (event.editable && !isFormShown) {
+            var routing = Routing.generate('formalibre_change_reservation_form', {id: event.reservationId});
 
-        Claroline.Modal.displayForm(routing, onReservationChanged, function(){
-            $('#reservation_form_end_time').change();
-        }, 'form-reservation');
+            Claroline.Modal.displayForm(
+                routing,
+                onReservationChanged,
+                function() {
+                    $('#reservation_form_end_time').change();
+                },
+                'form-reservation'
+            );
+            isFormShown = true;
+        }
     }
 
     function onEventRender(event, $element)
     {
+        if (!event.visible && event.visible != undefined) {
+            return false;
+        }
         createPopover(event, $element);
     }
 
@@ -144,7 +165,56 @@
                 trans('confirm_reservation_deletion_title')
             );
         })
+        // Set isFormShown to false when the modal is closed
+        .on('hide.bs.modal', '.modal', function() {
+            isFormShown = false;
+        })
     ;
+
+    $('.filters-list > a').click(function(e) {
+        e.preventDefault();
+
+        $(this).is('.active') ? $(this).removeClass('active').next().children().removeClass('active') : $(this).addClass('active').next().children().addClass('active');
+
+        applyFilters();
+    });
+
+    $('.resources-filter > a').click(function(e) {
+        e.preventDefault();
+
+        if ($(this).is('.active')) {
+            $(this).removeClass('active');
+            $(this).parent().prev().removeClass('active');
+        } else {
+            $(this).addClass('active');
+
+            if ($(this).parent().children().length === $(this).parent().children('.active').length) {
+                $(this).parent().prev().addClass('active');
+            }
+        }
+
+        applyFilters();
+    });
+
+    function applyFilters()
+    {
+        var $resourcesChecked = $('.resources-filter > a.active'),
+            resourcesIdChecked = [];
+
+        $.each($resourcesChecked, function() {
+            resourcesIdChecked.push($(this).data('resource-id'));
+        });
+
+        $calendar.fullCalendar('clientEvents', function(event) {
+            if (resourcesIdChecked.length === 0) {
+                event.visible = 1;
+            } else {
+                event.visible = $.inArray(event.resourceId, resourcesIdChecked) === -1 ? 0 : 1;
+            }
+        });
+
+        $calendar.fullCalendar('rerenderEvents');
+    }
 
     function onReservationDeleted(event, eventId)
     {
@@ -158,8 +228,8 @@
 
     function createPopover(event, $element)
     {
-        event.start.string = moment(event.start._i).format('DD/MM/YYYY HH:mm');
-        event.end.string = moment(event.end._i).format('DD/MM/YYYY HH:mm');
+        event.start.string = event.start.format('DD/MM/YYYY HH:mm');
+        event.end.string = event.end.format('DD/MM/YYYY HH:mm');
 
         $element.popover({
             title: event.title,

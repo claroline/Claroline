@@ -83,8 +83,12 @@ class ReservationManager
         return array_merge(
             $reservation->getEvent()->jsonSerialize(),
             [
+                'resourceTypeId' => $reservation->getResource()->getResourceType()->getId(),
                 'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
-                'reservationId' => $reservation->getId()
+                'resourceId' => $reservation->getResource()->getId(),
+                'reservationId' => $reservation->getId(),
+                'editable' => $reservation->getEvent()->getUser() === $this->tokenStorage->getToken()->getUser(),
+                'durationEditable' => $reservation->getEvent()->getUser() === $this->tokenStorage->getToken()->getUser()
             ]
         );
     }

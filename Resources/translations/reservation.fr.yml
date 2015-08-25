@@ -45,7 +45,7 @@ agenda:
     july: Juillet
     aug: Août
     august: Août
-    sep: Sept
+    sept: Sept
     september: Septembre
     oct: Oct
     october: Octobre
@@ -70,6 +70,10 @@ error_: Erreur
 error:
   empty_input: Le champs ne doit pas être vide.
   resource_type_already_exists: Ce type de ressource existe déjà.
+filter:
+  by_resource: Filtrer par ressource
+  no_resource_found: Aucune ressource trouvée
+  no_resource_type_found: Aucun type de ressources trouvés
 form:
   change_resource_type_name_title: Modification du nom
   change_resource_type_name: Modifier le nom

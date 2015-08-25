@@ -3,6 +3,7 @@
 namespace FormaLibre\ReservationBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,26 +21,30 @@ class ReservationToolListener
     private $request;
     private $httpKernel;
     private $templating;
+    private $em;
 
     /**
      * @DI\InjectParams({
      *      "container"     = @DI\Inject("service_container"),
      *      "requestStack"  = @DI\Inject("request_stack"),
      *      "httpKernel"    = @DI\Inject("http_kernel"),
-     *      "templating"    = @DI\Inject("templating")
+     *      "templating"    = @DI\Inject("templating"),
+     *      "em"            = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(
         ContainerInterface $container,
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel,
-        TwigEngine $templating
+        TwigEngine $templating,
+        EntityManager $em
     )
     {
         $this->container = $container;
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
         $this->templating = $templating;
+        $this->em = $em;
     }
 
     /**
@@ -69,6 +74,8 @@ class ReservationToolListener
      */
     public function onDisplayDesktopReservationAgenda(DisplayToolEvent $event)
     {
-        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig'));
+        $resourcesType = $this->em->getRepository('FormaLibreReservationBundle:ResourceType')->findAll();
+
+        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig', ['resourcesType' => $resourcesType]));
     }
 }

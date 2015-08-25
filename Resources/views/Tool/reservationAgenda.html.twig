@@ -13,6 +13,11 @@
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+    <style>
+        .resources-filter > a, .resources-filter > div {
+            text-indent: 20px;
+        }
+    </style>
 {% endblock %}
 {% block breadcrumb %}
         {{
@@ -34,11 +39,25 @@
             <div id='calendar' class="col-md-9"></div>
 
             <div class="col-md-3">
-                <div class="panel text-center">
-                    Filtres
-                </div>
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{ 'filter.by_resource'|trans({}, 'reservation') }}
+                    </div>
+                    <div class="list-group filters-list">
+                        {% for resourceType in resourcesType %}
 
+                            <a href="#" class="list-group-item list-group-item-text" data-resource-type-id="{{ resourceType.getId() }}">{{ resourceType.getName() }}</a>
+                            <div class="resources-filter">
+                                {% for resource in resourceType.getResources() %}
+                                    <a href="#" class="list-group-item" data-resource-id="{{ resource.getId() }}">{{ resource.getName() }}</a>
+                                {% else %}
+                                    <div class="list-group-item">{{ 'filter.no_resource_found'|trans({}, 'reservation') }}</div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="list-group-item list-group-item-text">{{ 'filter.no_resource_type_found' }}</div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
