@@ -59,6 +59,13 @@ class UserInformationWidget extends AbstractWidget
     protected $showDescription = false;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $text;
+
+    /**
      * @param string $city
      *
      * @return UserInformationWidget
@@ -179,6 +186,26 @@ class UserInformationWidget extends AbstractWidget
     }
 
     /**
+     * @return string
+     */
+    public function getText()
+    {
+        return $this->text;
+    }
+
+    /**
+     * @param string $text
+     *
+     * @return UserInformationWidget
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getData()
@@ -191,8 +218,8 @@ class UserInformationWidget extends AbstractWidget
             'show_avatar' => $this->isShowAvatar(),
             'show_mail' => $this->isShowMail(),
             'show_phone' => $this->isShowPhone(),
-            'show_description' => $this->isShowDescription()
-
+            'show_description' => $this->isShowDescription(),
+            'text' => $this->getText()
         );
     }
 
@@ -207,7 +234,8 @@ class UserInformationWidget extends AbstractWidget
             'show_avatar' => false,
             'show_mail' => false,
             'show_phone' => false,
-            'show_description' => false
+            'show_description' => false,
+            'text' => null
         );
     }
 }

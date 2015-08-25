@@ -52,7 +52,8 @@ class UserInformationType extends AbstractWidgetType
             ))
             ->add('show_description', 'checkbox', array(
                 'required' => false,
-            ));
+            ))
+            ->add('text', 'tinymce');
     }
 
     public function getName()

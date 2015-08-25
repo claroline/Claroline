@@ -10,13 +10,13 @@
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group no-margin">
     <label for="city" class="required col-md-2 control-label">{{ 'user_information_form_city'|trans({}, 'icap_portfolio') }}</label>
     <div class="col-md-10">
         <input type="text" class="form-control" id="city" name="userInformationbirthDate[city]" data-ng-model="widget.city" />
     </div>
 </div>
-<div class="form-group">
+<div class="form-group no-margin">
     <div class="col-md-offset-2 col-md-10">
         <div class="checkbox">
             <label>
@@ -25,7 +25,7 @@
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group no-margin">
     <div class="col-md-offset-2 col-md-10">
         <div class="checkbox">
             <label>
@@ -34,7 +34,7 @@
         </div>
     </div>
 </div>
-<div class="form-group">
+<div class="form-group no-margin">
     <div class="col-md-offset-2 col-md-10">
         <div class="checkbox">
             <label>
@@ -50,5 +50,11 @@
                 <input type="checkbox" name="userInformationbirthDate[show_description]" value="1" data-ng-model="widget.show_description"> {{ 'user_information_form_show_description'|trans({}, 'icap_portfolio') }}
             </label>
         </div>
+    </div>
+</div>
+<div class="form-group">
+    <label for="text" class="col-md-2 control-label">{{ 'user_information_form_text'|trans({}, 'icap_portfolio') }}</label>
+    <div class="col-md-10">
+        <textarea ui-tinymce class="form-control" id="text" rows="3" name="userInformationbirthDate[text]" data-ng-model="widget.text"></textarea>
     </div>
 </div>
