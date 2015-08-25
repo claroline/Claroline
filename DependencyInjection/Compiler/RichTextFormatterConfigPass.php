@@ -15,15 +15,15 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ImportersConfigPass implements CompilerPassInterface
+class RichTextFormatterConfigPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (false === $container->hasDefinition('claroline.manager.transfert_manager')) {
+        if (false === $container->hasDefinition('claroline.importer.rich_text_formatter')) {
             return;
         }
 
-        $transfertManager = $container->getDefinition('claroline.manager.transfert_manager');
+        $transfertManager = $container->getDefinition('claroline.importer.rich_text_formatter');
 
         foreach ($container->findTaggedServiceIds('claroline.importer') as $id => $attributes) {
             $transfertManager->addMethodCall('addImporter', array(new Reference($id)));

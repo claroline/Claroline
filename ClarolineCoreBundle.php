@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RuleConstraintsConfigPass;
 use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use IDCI\Bundle\ExporterBundle\IDCIExporterBundle;
@@ -35,6 +36,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
 
         $container->addCompilerPass(new DynamicConfigPass());
         $container->addCompilerPass(new ImportersConfigPass());
+        $container->addCompilerPass(new RichTextFormatterConfigPass());
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
     }

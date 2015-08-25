@@ -87,7 +87,7 @@ class FileImporter extends Importer implements ConfigurationInterface
         $processor->processConfiguration($this, $data);
     }
 
-    public function import(array &$array, $name)
+    public function import(array $array, $name)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -101,15 +101,15 @@ class FileImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export(Workspace $workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
         $uid = uniqid() . '.' . pathinfo($hash, PATHINFO_EXTENSION);
-        $files[$uid] = $this->container
+        $_files[$uid] = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR . $hash;
         $data = array();
 
-        if (file_exists($files[$uid])) {
+        if (file_exists($_files[$uid])) {
             $data = array(array('file' => array(
                 'path' => $uid,
                 'mime_type' =>  $object->getResourceNode()->getMimeType()

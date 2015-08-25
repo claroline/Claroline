@@ -26,6 +26,7 @@ class ObjectManager extends ObjectManagerDecorator
     private $supportsTransactions = false;
     private $hasEventManager = false;
     private $hasUnitOfWork = false;
+    private $allowForceFlush;
 
     /**
      * Constructor.
@@ -41,6 +42,8 @@ class ObjectManager extends ObjectManagerDecorator
             = $this->hasEventManager
             = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
+
+        $this->allowForceFlush = true;
     }
 
     /**
@@ -116,7 +119,7 @@ class ObjectManager extends ObjectManagerDecorator
      */
     public function forceFlush()
     {
-        parent::flush();
+        if ($this->allowForceFlush) parent::flush();
     }
 
     /**
@@ -256,5 +259,13 @@ class ObjectManager extends ObjectManagerDecorator
                 "The method '{$method}' is not supported by the underlying object manager"
             );
         }
+    }
+
+    /**
+     * Please be carefull if you remove the force flush...
+     */
+    public function allowForceFlush($bool)
+    {
+        $this->allowForceFlush = $bool;
     }
 }

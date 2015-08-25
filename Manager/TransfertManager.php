@@ -256,12 +256,12 @@ class TransfertManager
         $this->log('Populating the workspace...');
         $this->populateWorkspace($workspace, $configuration, $root, $entityRoles, true, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
-        
+
         if ($owner) {
             $this->log('Set the owner...');
             $workspace->setCreator($owner);
         }
-        
+
         $this->om->endFlushSuite();
         $fs = new FileSystem();
 
@@ -274,6 +274,7 @@ class TransfertManager
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
         $data = $this->data;
+        //@todo remove the line for claroline v6
         $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
         $this->container->get('claroline.importer.rich_text_formatter')->setWorkspace($this->workspace);
 
@@ -318,9 +319,17 @@ class TransfertManager
         $files = [];
         $data['roles'] = $this->getImporterByName('roles')->export($workspace, $files, null);
         $data['tools'] = $this->getImporterByName('tools')->export($workspace, $files, null);
+        $_resManagerData = array();
 
+        foreach ($data['tools'] as &$_tool) {
+            if ($_tool['tool']['type'] === 'resource_manager') {
+                $_resManagerData = &$_tool['tool'];
+            }
+        }
+
+        //then we parse and replace the text, we also add missing files in $resManagerData
         $files = $this->container->get('claroline.importer.rich_text_formatter')
-            ->setPlaceHolders($files);
+            ->setPlaceHolders($files, $_resManagerData);
         //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
@@ -367,8 +376,11 @@ class TransfertManager
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
         $data['tools'] = array(0 => array('tool' => $tool));
 
-        $files = $this->container->get('claroline.importer.rich_text_formatter')
-            ->setPlaceHolders($files);
+        if ($parseAndReplace) {
+            $files = $this->container->get('claroline.importer.rich_text_formatter')
+                ->setPlaceHolders($files);
+        }
+
         //throw new \Exception();
         //generate the archive in a temp dir
         $content = Yaml::dump($data, 10);
