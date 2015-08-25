@@ -14,7 +14,6 @@ namespace Claroline\CoreBundle\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 
@@ -40,7 +39,7 @@ class ProfileCreationType extends AbstractType
         $authenticationDrivers = null
     )
     {
-        $this->platformRoles = new ArrayCollection($platformRoles);
+        $this->platformRoles = $platformRoles;
         $this->langs = $localeManager->retrieveAvailableLocales();
         $this->isAdmin = $isAdmin;
         $this->authenticationDrivers = $authenticationDrivers;
