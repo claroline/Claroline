@@ -186,6 +186,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $eval->setActivityParameters($params);
         $eval->setUser($user);
         $eval->setStatus($status);
+        $eval->setDate(new \DateTime());
 
         $this->om->persist($params);
         $this->om->persist($eval);

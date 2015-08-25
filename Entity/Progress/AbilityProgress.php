@@ -52,7 +52,7 @@ class AbilityProgress
     private $status = self::STATUS_NOT_ATTEMPTED;
 
     /**
-     * @ORM\Column(name="ability_name")
+     * @ORM\Column(name="ability_name", length=500)
      *
      * Note: this field retains the ability name in case it is deleted
      */

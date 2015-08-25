@@ -23,9 +23,9 @@ class Ability implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column(unique=true)
+     * @ORM\Column(length=500, unique=true)
      * @Assert\NotBlank
-     * @Assert\Length(max="255")
+     * @Assert\Length(max="500")
      */
     private $name;
 

@@ -46,7 +46,7 @@ abstract class AbstractCompetencyProgress
     protected $percentage = 0;
 
     /**
-     * @ORM\Column(name="competency_name")
+     * @ORM\Column(name="competency_name", length=500)
      *
      * Note: this field retains the competency name in case it is deleted
      */

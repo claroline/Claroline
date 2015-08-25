@@ -172,7 +172,7 @@ class AbilityRepository extends EntityRepository
                 $activityQb->getQuery()->getDQL()
             ))
             ->andWhere('u = :user')
-            ->orderBy('e.date', 'ASC')
+            ->orderBy('e.date, e.id, a.id', 'ASC')
             ->setParameters([
                 ':competency' => $competency,
                 ':user' => $user

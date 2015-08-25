@@ -213,6 +213,10 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals('l2', $result[1]['levelName']);
         $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[1]['status']);
 
+        // As an activity can be bound to multiple abilities, a same evaluation of
+        // an activity can be related to multiple abilities/levels as well. The repo
+        // builds evaluation data by joining actual "evaluation" records and framework
+        // structure. That's why the "e3" id appears twice in the result set.
         $this->assertEquals($e3->getId(), $result[2]['evaluationId']);
         $this->assertEquals('a3', $result[2]['abilityName']);
         $this->assertEquals('ac2', $result[2]['activityName']);

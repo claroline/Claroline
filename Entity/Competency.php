@@ -24,9 +24,9 @@ class Competency implements \JsonSerializable
     private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(length=500)
      * @Assert\NotBlank
-     * @Assert\Length(max="255")
+     * @Assert\Length(max="500")
      */
     private $name;
 
