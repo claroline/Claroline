@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use HeVinci\CompetencyBundle\Entity\Ability;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\AbilityProgressRepository")
  * @ORM\Table(name="hevinci_ability_progress")
  */
 class AbilityProgress

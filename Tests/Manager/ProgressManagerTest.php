@@ -44,8 +44,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval);
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -64,8 +63,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval);
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -84,9 +82,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -109,8 +106,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval);
 
         $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
@@ -132,8 +128,7 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->manager->handleEvaluation($eval);
 
         $summaries = $this->competencyProgressRepo->findBy([
@@ -145,6 +140,74 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->assertEquals('c2', $summaries[0]->getCompetency()->getName());
         $this->assertEquals('l1', $summaries[0]->getLevel()->getName());
         $this->assertEquals(100, $summaries[0]->getPercentage());
+    }
+
+    public function testHandleEvaluationDoesNotDecreaseCompetencyProgress()
+    {
+        $this->createFramework(['c1' => [
+            'a1' => [
+                'level' => 'l1',
+                'activities' => ['ac1']
+            ],
+            'a2' => [
+                'level' => 'l2',
+                'activities' => ['ac2']
+            ],
+        ]]);
+
+        $getSummary = function () {
+            return $this->competencyProgressRepo->findOneBy([
+                'user' => $this->testUser,
+                'competency' => $this->testData['competencies']['c1']
+            ]);
+        };
+
+        $eval1 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_COMPLETED);
+        $this->manager->handleEvaluation($eval1);
+        $this->assertEquals('l2', $getSummary()->getLevel()->getName());
+
+        $eval2 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
+        $this->manager->handleEvaluation($eval2);
+        $this->assertEquals('l2', $getSummary()->getLevel()->getName());
+    }
+
+    public function testHandleEvaluationRequiresAllSameLevelAbilitiesToBeCompleted()
+    {
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ],
+                'a2' => [
+                    'level' => 'l2',
+                    'activities' => ['ac2']
+                ],
+                'a3' => [
+                    'level' => 'l2',
+                    'activities' => ['ac3']
+                ]
+            ]
+        ]]);
+
+        $getSummary = function () {
+            return $this->competencyProgressRepo->findOneBy([
+                'user' => $this->testUser,
+                'competency' => $this->testData['competencies']['c2']
+            ]);
+        };
+
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
+        $this->manager->handleEvaluation($eval1);
+        $this->assertEquals('l1', $getSummary()->getLevel()->getName());
+
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_COMPLETED);
+        $this->manager->handleEvaluation($eval2);
+        $this->assertEquals('l1', $getSummary()->getLevel()->getName());
+
+        $eval3 = $this->createEvaluation('ac3', AbstractEvaluation::STATUS_COMPLETED);
+        $this->manager->handleEvaluation($eval3);
+        $this->assertEquals('l2', $getSummary()->getLevel()->getName());
     }
 
     public function testHandleEvaluationKeepsCompetencyProgressHistoryLogs()
@@ -162,9 +225,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -215,9 +277,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -263,9 +324,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -322,8 +382,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ]
         ]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval);
 
         $o1Summaries = $this->objectiveProgressRepo->findBy([
@@ -364,8 +423,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ]
         ]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval);
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
@@ -403,8 +461,7 @@ class ProgressManagerTest extends RepositoryTestCase
            ]
         ]);
 
-        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval);
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
@@ -445,9 +502,8 @@ class ProgressManagerTest extends RepositoryTestCase
            ]
         ]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -508,9 +564,8 @@ class ProgressManagerTest extends RepositoryTestCase
             ]
         ]);
 
-        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
-        $this->om->flush();
+        $eval1 = $this->createEvaluation('ac1', AbstractEvaluation::STATUS_PASSED, null, false);
+        $eval2 = $this->createEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
@@ -668,14 +723,30 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->om->flush();
     }
 
-    private function makeEvaluation($activityName, $status, Evaluation $previous = null)
+    /**
+     * Creates an evaluation for an activity. The activity MUST have been
+     * created using the "createFramework" method.
+     *
+     * @param string        $activityName
+     * @param string        $status
+     * @param Evaluation    $previous
+     * @param bool          $flush
+     * @return Evaluation
+     */
+    private function createEvaluation($activityName, $status, Evaluation $previous = null, $flush = true)
     {
-        return $this->persistEvaluation(
+        $evaluation = $this->persistEvaluation(
             $this->testData['activities'][$activityName],
             $this->testUser,
             $status,
             $previous
         );
+
+        if ($flush) {
+            $this->om->flush();
+        }
+
+        return $evaluation;
     }
 
     private function assertHasProgressLog(array $logs, $competencyName, $percentage, $level = null)

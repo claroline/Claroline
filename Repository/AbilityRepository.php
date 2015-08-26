@@ -5,7 +5,9 @@ namespace HeVinci\CompetencyBundle\Repository;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
+use HeVinci\CompetencyBundle\Entity\Level;
 
 class AbilityRepository extends EntityRepository
 {
@@ -43,6 +45,38 @@ class AbilityRepository extends EntityRepository
             ])
             ->getQuery()
             ->getArrayResult();
+    }
+
+    /**
+     * Returns the abilities directly linked to a given competency and
+     * a particular level, excluding a given ability.
+     *
+     * @param Competency    $competency
+     * @param Level         $level
+     * @return array
+     */
+    public function findOthersByCompetencyAndLevel(
+        Competency $competency,
+        Level $level,
+        Ability $abilityToExclude
+    )
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->join('a.competencyAbilities', 'ca')
+            ->join('ca.competency', 'c')
+            ->join('ca.level', 'l')
+            ->where('c = :competency')
+            ->andWhere('l = :level')
+            ->andWhere('a <> :excluded')
+            ->orderBy('l.value, a.id')
+            ->setParameters([
+                ':competency' => $competency,
+                ':level' => $level,
+                ':excluded' => $abilityToExclude
+            ])
+            ->getQuery()
+            ->getResult();
     }
 
     /**

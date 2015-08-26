@@ -46,6 +46,31 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals(1, count($this->repo->findByCompetency($f2)));
     }
 
+    public function testFindOthersByCompetencyAndLevel()
+    {
+        $scale = $this->persistScale('scale');
+        $l1 = $this->persistLevel('l1', $scale);
+        $l2 = $this->persistLevel('l2', $scale);
+        $c1 = $this->persistCompetency('c1', null, $scale);
+        $c2 = $this->persistCompetency('c2', $c1); // extra data
+        $a1 = $this->persistAbility('a1');
+        $a2 = $this->persistAbility('a2');
+        $a3 = $this->persistAbility('a3');
+        $a4 = $this->persistAbility('a4');
+        $this->persistLink($c1, $a1, $l1);
+        $this->persistLink($c1, $a2, $l1);
+        $this->persistLink($c1, $a3, $l2);
+        $this->persistLink($c1, $a4, $l2);
+
+        $this->om->flush();
+
+        $this->assertEquals(2, count($result = $this->repo->findOthersByCompetencyAndLevel($c1, $l1, $a3)));
+        $this->assertEquals($a1, $result[0]);
+        $this->assertEquals($a2, $result[1]);
+        $this->assertEquals(1, count($result = $this->repo->findOthersByCompetencyAndLevel($c1, $l2, $a4)));
+        $this->assertEquals($a3, $result[0]);
+    }
+
     public function testDeleteOrphans()
     {
         $this->createLink(1);

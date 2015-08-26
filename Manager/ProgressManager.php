@@ -181,8 +181,35 @@ class ProgressManager
         $competencyLinks = $this->competencyAbilityRepo->findBy(['ability' => $ability]);
 
         foreach ($competencyLinks as $link) {
+            // search abilities of same level connected the competency
+            $sameLevelAbilities = $this->abilityRepo->findOthersByCompetencyAndLevel(
+                $link->getCompetency(),
+                $link->getLevel(),
+                $ability
+            );
+            // search which ones have the status "acquired"
+            $sameLevelAcquired = $this->abilityProgressRepo->findByAbilitiesAndStatus(
+                $user,
+                $sameLevelAbilities,
+                AbilityProgress::STATUS_ACQUIRED
+            );
+
+            if (count($sameLevelAbilities) !== count($sameLevelAcquired)) {
+                // if they're not all acquired, competency progress cannot be computed
+                return;
+            }
+
             $competency = $link->getCompetency();
             $progress = $this->getCompetencyProgress($competency, $user);
+            $currentLevel = $progress->getLevel() ? $progress->getLevel()->getValue() : -1;
+
+            if ($currentLevel >= $link->getLevel()->getValue()) {
+                // we don't want to recompute pointlessly if the level
+                // is the same than the current one, nor to decrease
+                // the latter if it's inferior
+                return;
+            }
+
             $progress->setLevel($link->getLevel());
             $progress->setPercentage(100);
 
