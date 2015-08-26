@@ -162,7 +162,7 @@ class RichTextFormatter
                     $this->createDataFolder($_data);
                     $node = $this->resourceManager->getNode($match[1]);
 
-                    if ($node->getResourceType()->getName() === 'file') {
+                    if ($node && $node->getResourceType()->getName() === 'file') {
                         $el = $this->getImporterByName('resource_manager')->getResourceElement(
                             $node,
                             $node->getWorkspace(),
