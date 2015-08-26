@@ -441,7 +441,7 @@ class DocumentController extends DropzoneBaseController
 
     /**
      * @Route(
-     *      "/document/{documentId}",
+     *      "/undocument/{documentId}",
      *      name="innova_collecticiel_unvalidate_document",
      *      requirements={"documentId" = "\d+"},
      *      options={"expose"=true}
@@ -451,7 +451,7 @@ class DocumentController extends DropzoneBaseController
      */
     public function ajaxUnvalidateDocumentAction(Document $document) {
         
-        // Appel pour accés base         
+        // Appel pour accés base
         $em = $this->getDoctrine()->getManager();
 
         // Recherche en base des données du document à mettre à jour
