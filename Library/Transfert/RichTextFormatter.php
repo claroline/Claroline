@@ -89,6 +89,7 @@ class RichTextFormatter
 
         foreach ($matches as $match) {
             $uid = (int)$match[1];
+            //meh, fix the following lines late
             $parent = $this->findParentFromDataUid($uid);
             $el = $this->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
@@ -192,7 +193,7 @@ class RichTextFormatter
             }
         }
 
-        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', array($text));
+        $event = $this->eventDispatcher->dispatch('rich_text_format_event_export', 'RichTextFormat', array($text, $_data, $_files));
         $text = $event->getText();
 
         return $text;
@@ -206,7 +207,7 @@ class RichTextFormatter
         $matchReplaced = [];
 
         preg_match(
-            "#(<source|<a|<img)(.*){$fullMatch}(.*)(/>|</a>|</source>)#",
+            "#(<source|<a)(.*){$fullMatch}(.*)(</a>|</source>)#",
             $txt,
             $matchReplaced
         );
@@ -249,7 +250,7 @@ class RichTextFormatter
         if ($itemData) return $this->getResourceNodeFromPathData($this->getResourcePathFromItem($itemData));
     }
 
-    private function getResourceNodeFromPathData(array $path)
+    public function getResourceNodeFromPathData(array $path)
     {
         //first we find the root
         $node = $this->resourceManager->getWorkspaceRoot($this->workspace);
@@ -268,15 +269,19 @@ class RichTextFormatter
      */
     public function findItemFromUid($uid)
     {
-        foreach ($this->resourceManagerData['data']['items'] as $item) {
-            if ($item['item']['uid'] === $uid) return $item['item'];
+        if (isset($this->resourceManagerData['data']['items'])) {
+            foreach ($this->resourceManagerData['data']['items'] as $item) {
+                if ($item['item']['uid'] === $uid) return $item['item'];
+            }
         }
     }
 
-    private function getItemFromUid($uid, $resManagerData)
+    public function getItemFromUid($uid, $resManagerData)
     {
-        foreach ($resManagerData['data']['items'] as $item) {
-            if ($item['item']['uid'] === $uid) return $item['item'];
+        if (isset($resManagerData['data']['items'])) {
+            foreach ($resManagerData['data']['items'] as $item) {
+                if ($item['item']['uid'] === $uid) return $item['item'];
+            }
         }
     }
 
@@ -284,7 +289,7 @@ class RichTextFormatter
      * @todo remove this for claroline v6
      * use getDirectoryFromUid($uid, $resManagerData) instead
      */
-    private function findDirectoryFromUid($uid)
+    public function findDirectoryFromUid($uid)
     {
         if (isset($this->resourceManagerData['data']['directories'])) {
             foreach ($this->resourceManagerData['data']['directories'] as $item) {
@@ -293,16 +298,16 @@ class RichTextFormatter
         }
     }
 
-    private function getDirectoryFromUid($uid, $resManagerData)
+    public function getDirectoryFromUid($uid, $resManagerData)
     {
-            if (isset($resManagerData['data']['directories'])) {
-                foreach ($resManagerData['data']['directories'] as $item) {
-                    if ($item['directory']['uid'] === $uid) return $item['directory'];
-                }
+        if (isset($resManagerData['data']['directories'])) {
+            foreach ($resManagerData['data']['directories'] as $item) {
+                if ($item['directory']['uid'] === $uid) return $item['directory'];
             }
+        }
     }
 
-    private function getResourcePathFromItem(array $item, $path = array())
+    public function getResourcePathFromItem(array $item, $path = array())
     {
         $dir = $this->findDirectoryFromUid($item['parent']);
 
@@ -318,7 +323,7 @@ class RichTextFormatter
      * @todo find the method wich generate the url from tinymce
      * @param ResourceNode $node
      */
-    private function generateDisplayedUrlForTinyMce(ResourceNode $node)
+    public function generateDisplayedUrlForTinyMce(ResourceNode $node)
     {
         if (strpos('_' . $node->getMimeType(), 'image') > 0) {
             $url = $this->router->generate('claro_file_get_media', array('node' => $node->getId()));
@@ -346,7 +351,7 @@ class RichTextFormatter
         return $this->listImporters->add($importer);
     }
 
-    private function getImporterByName($name)
+    public function getImporterByName($name)
     {
         foreach ($this->listImporters as $importer) {
             if ($importer->getName() === $name) {
@@ -357,7 +362,7 @@ class RichTextFormatter
         return null;
     }
 
-    private function createDataFolder(array &$_data)
+    public function createDataFolder(array &$_data)
     {
         if ($this->dataFolderExists($_data)) return null;
 
@@ -382,6 +387,7 @@ class RichTextFormatter
 
     private function dataFolderExists($data)
     {
+        if (!isset($resManagerData['data']['directories'])) return false;
         foreach ($data['data']['directories'] as $directory) {
             if ($directory['directory']['uid'] === 'data_folder') return true;
         }

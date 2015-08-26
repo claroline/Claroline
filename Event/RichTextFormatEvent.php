@@ -18,9 +18,11 @@ class RichTextFormatEvent extends Event
 {
     private $text;
 
-    public function __construct($text)
+    public function __construct($text, &$_data = array(), &$_files = array())
     {
         $this->text = $text;
+        $this->_data = $_data;
+        $this->_files = $_files;
     }
 
     public function getText()
@@ -31,5 +33,25 @@ class RichTextFormatEvent extends Event
     public function setText($text)
     {
         $this->text = $text;
+    }
+
+    public function getData()
+    {
+        return $this->_data;
+    }
+
+    public function setData($_data)
+    {
+        $this->_data = $_data;
+    }
+
+    public function getFiles()
+    {
+        return $this->_files;
+    }
+
+    public function setFiles($_files)
+    {
+        $this->_files = $_files;
     }
 }

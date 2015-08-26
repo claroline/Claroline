@@ -187,6 +187,8 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
     public function format($data)
     {
+        if (!isset($data[0])) return;
+        
         if ($path = $data[0]['activity']['description']) {
             $description = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $path);
             $entities = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findByDescription($description);

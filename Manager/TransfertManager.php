@@ -271,6 +271,7 @@ class TransfertManager
     //refactor how workspace are created because this sucks
     public function importRichText()
     {
+        $this->log('Parsing rich texts...');
         //now we have to parse everything in case there is a rich text
         //rich texts must be located in the tools section
         $data = $this->data;
