@@ -272,6 +272,10 @@ class OauthManager
         }
     }
 
+    public function unlinkAccount($userId) {
+        $this->em->getRepository("Icap\OAuthBundle\Entity\OauthUser")->unlinkOAuthUser($userId);
+    }
+
     private function loginUser($user, $request)
     {
         //this is bad but I don't know any other way (yet)

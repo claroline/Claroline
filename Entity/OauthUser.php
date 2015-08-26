@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class OauthUser
  *
  * @ORM\Table(name="icap__oauth_user")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Icap\OAuthBundle\Repository\OauthUserRepository")
  */
 class OauthUser 
 {

@@ -2,6 +2,8 @@
 
 namespace Icap\OAuthBundle\Listener;
 
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -45,5 +47,18 @@ class ExternalAuthenticationListener
         }
     }
 
-
+    /**
+     * @DI\Observe("log")
+     *
+     * @param LogGenericEvent $event
+     */
+    public function onDeleteUser(LogGenericEvent $event)
+    {
+        if ($event instanceof LogUserDeleteEvent) {
+            $receiver = $event->getReceiver();
+            if ($receiver !== null) {
+                $this->oauthManager->unlinkAccount($receiver->getId());
+            }
+        }
+    }
 }
