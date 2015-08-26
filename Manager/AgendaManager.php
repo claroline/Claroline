@@ -273,15 +273,13 @@ class AgendaManager
         } else {
             // we get the hours value directly from the property wich has been setted by the form.
             // That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
-            // For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
-            // This couldn't be fixed be setting the timezone in the form field.
             // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
             if ($event->isTask()) {
-                $event->setStart($event->getEnd()->getTimestamp() + $event->endHours + 3600 -30*60);
+                $event->setStart($event->getEnd()->getTimestamp() + $event->endHours - 30*60);
             } else {
-                $event->setStart($event->getStart()->getTimestamp() + $event->startHours + 3600);
+                $event->setStart($event->getStart()->getTimestamp() + $event->startHours);
             }
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours + 3600);
+            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours);
         }
     }
 
