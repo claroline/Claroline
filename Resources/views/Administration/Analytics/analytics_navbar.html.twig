@@ -1,5 +1,6 @@
 <ul id="analytics-navbar" class="nav nav-tabs margin-bottom-md">
-    <li{% if path('claro_admin_analytics_show') == app.request.requesturi %} class="active"{% endif %}>
+    <li{% if path('claro_admin_analytics_show') == app.request.requesturi
+    or path('claro_admin_open_tool', {'toolName': 'platform_analytics'}) == app.request.requesturi %} class="active"{% endif %}>
         <a href="{{path('claro_admin_analytics_show')}}">{{ 'analytics_home' | trans({}, 'platform') }}</a>
     </li>
 
