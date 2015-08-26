@@ -87,8 +87,6 @@ $(document).ready(function () {
     $('a.cancel_button').on('click', function(event) {
         var docId = $(this).attr("data-document_id");
         
-        alert(docId);
-        
         $.ajax({
             url: Routing.generate('innova_collecticiel_unvalidate_document',
             {
