@@ -4,8 +4,6 @@ namespace HeVinci\CompetencyBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Activity\Evaluation;
-use HeVinci\CompetencyBundle\Entity\Competency;
-use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Progress\AbilityProgress;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
 
@@ -19,8 +17,8 @@ class ProgressManagerTest extends RepositoryTestCase
     private $objectiveProgressLogRepo;
     private $userProgressRepo;
     private $userProgressLogRepo;
-    private $user;
-    private $framework;
+    private $testUser;
+    private $testData;
 
     protected function setUp()
     {
@@ -33,160 +31,308 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->objectiveProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\ObjectiveProgressLog');
         $this->userProgressRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\UserProgress');
         $this->userProgressLogRepo = $this->om->getRepository('HeVinciCompetencyBundle:Progress\UserProgressLog');
-        $this->user = $this->persistUser('jdoe');
-        $this->framework = $this->persistFramework();
+        $this->testUser = $this->persistUser('jdoe');
+        $this->testData = [];
     }
 
     public function testHandleEvaluationTracksAbilityProgress()
     {
-        $eval = $this->makeEvaluation('ac3', AbstractEvaluation::STATUS_COMPLETED);
+        $this->createFramework(['c1' => [
+            'a1' => [
+                'level' => 'l1',
+                'activities' => ['ac1']
+            ]
+        ]]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
         $this->assertEquals(1, count($summaries));
+        $this->assertEquals('a1', $summaries[0]->getAbility()->getName());
         $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $summaries[0]->getStatus());
     }
 
     public function testHandleEvaluationSetsAbilityProgressToPendingIfUnderActivityCount()
     {
-        $eval = $this->makeEvaluation('ac5', AbstractEvaluation::STATUS_COMPLETED);
+        $this->createFramework(['c1' => [
+            'a1' => [
+                'level' => 'l1',
+                'activities' => ['ac1', 'ac2'],
+                'required' => 2
+            ]
+        ]]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->user]);
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
         $this->assertEquals(1, count($summaries));
+        $this->assertEquals('a1', $summaries[0]->getAbility()->getName());
         $this->assertEquals(AbilityProgress::STATUS_PENDING, $summaries[0]->getStatus());
     }
 
     public function testHandleEvaluationUpdatesPendingAbilityRecordIfAny()
     {
-        $eval1 = $this->makeEvaluation('ac5', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'a1' => [
+                'level' => 'l1',
+                'activities' => ['ac1', 'ac2'],
+                'required' => 2
+            ]
+        ]]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
-        $records = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(1, count($records));
-        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $records[0]->getStatus());
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
+        $this->assertEquals(1, count($summaries));
+        $this->assertEquals('a1', $summaries[0]->getAbility()->getName());
+        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $summaries[0]->getStatus());
     }
 
     public function testHandleEvaluationCreatesAnAbilityRecordForEachAbility()
     {
+        $this->createFramework(['c1' => [
+            'a1' => [
+                'level' => 'l1',
+                'activities' => ['ac1']
+            ],
+            'a2' => [
+                'level' => 'l2',
+                'activities' => ['ac1']
+            ]
+        ]]);
+
         $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $records = $this->abilityProgressRepo->findBy(['user' => $this->user]);
-        $this->assertEquals(2, count($records));
-        $this->assertEquals($this->framework['abilities']['a1'], $records[0]->getAbility());
-        $this->assertEquals($this->framework['abilities']['a5'], $records[1]->getAbility());
+        $summaries = $this->abilityProgressRepo->findBy(['user' => $this->testUser]);
+        $this->assertEquals(2, count($summaries));
+        $this->assertEquals('a1', $summaries[0]->getAbility()->getName());
+        $this->assertEquals('a2', $summaries[1]->getAbility()->getName());
+        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $summaries[0]->getStatus());
+        $this->assertEquals(AbilityProgress::STATUS_ACQUIRED, $summaries[1]->getStatus());
     }
 
     public function testHandleEvaluationTracksDirectCompetencyProgress()
     {
-        $eval = $this->makeEvaluation('ac8', AbstractEvaluation::STATUS_COMPLETED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ]
+        ]]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_COMPLETED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
-        $competency = $this->framework['competencies']['c6'];
         $summaries = $this->competencyProgressRepo->findBy([
-            'user' => $this->user,
-            'competency' => $competency
+            'user' => $this->testUser,
+            'competency' => $this->testData['competencies']['c2']
         ]);
 
         $this->assertEquals(1, count($summaries));
-        $this->assertEquals($competency, $summaries[0]->getCompetency());
-        $this->assertEquals($this->framework['levels']['l1'], $summaries[0]->getLevel());
+        $this->assertEquals('c2', $summaries[0]->getCompetency()->getName());
+        $this->assertEquals('l1', $summaries[0]->getLevel()->getName());
         $this->assertEquals(100, $summaries[0]->getPercentage());
     }
 
     public function testHandleEvaluationKeepsCompetencyProgressHistoryLogs()
     {
-        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ],
+                'a2' => [
+                    'level' => 'l2',
+                    'activities' => ['ac2']
+                ]
+            ]
+        ]]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
-        $competency = $this->framework['competencies']['c9'];
+        $competency = $this->testData['competencies']['c2'];
         $summaries = $this->competencyProgressRepo->findBy([
-            'user' => $this->user,
-            'competency' => $competency]
-        );
+            'user' => $this->testUser,
+            'competency' => $competency
+        ]);
         $logs = $this->competencyProgressLogRepo->findBy([
-            'user' => $this->user,
+            'user' => $this->testUser,
             'competency' => $competency
         ]);
 
         $this->assertEquals(1, count($summaries));
-        $this->assertEquals($this->framework['competencies']['c9'], $summaries[0]->getCompetency());
-        $this->assertEquals($this->framework['levels']['l2'], $summaries[0]->getLevel());
+        $this->assertEquals('c2', $summaries[0]->getCompetency()->getName());
+        $this->assertEquals('l2', $summaries[0]->getLevel()->getName());
         $this->assertEquals(1, count($logs));
-        $this->assertEquals($this->framework['competencies']['c9'], $logs[0]->getCompetency());
-        $this->assertEquals($this->framework['levels']['l1'], $logs[0]->getLevel());
+        $this->assertEquals('c2', $logs[0]->getCompetency()->getName());
+        $this->assertEquals('l1', $logs[0]->getLevel()->getName());
     }
 
     public function testHandleEvaluationComputesParentCompetenciesProgress()
     {
-        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'c4' => [
+                    'a2' => [
+                        'level' => 'l1',
+                        'activities' => ['ac2']
+                    ]
+                ],
+                'c5' => [
+                    'a3' => [
+                        'level' => 'l1',
+                        'activities' => ['ac3']
+                    ],
+                    'a4' => [
+                        'level' => 'l2',
+                        'activities' => ['ac4']
+                    ]
+                ]
+            ]
+        ]]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
-        $summaries = $this->competencyProgressRepo->findBy(['user' => $this->user]);
-        $comps = $this->framework['competencies'];
-        $levels = $this->framework['levels'];
-
-        $this->assertEquals(8, count($summaries));
-        $this->assertHasProgressLog($summaries, $comps['c10'], 100, $levels['l3']);
-        $this->assertHasProgressLog($summaries, $comps['c9'], 100, $levels['l1']);
-        $this->assertHasProgressLog($summaries, $comps['c8'], 0, null);
-        $this->assertHasProgressLog($summaries, $comps['c7'], 0, null);
-        $this->assertHasProgressLog($summaries, $comps['c6'], 0, null);
-        $this->assertHasProgressLog($summaries, $comps['c3'], 40, $levels['l2']);
-        $this->assertHasProgressLog($summaries, $comps['c2'], 0, null);
-        $this->assertHasProgressLog($summaries, $comps['c1'], 20, $levels['l2']);
+        $summaries = $this->competencyProgressRepo->findBy(['user' => $this->testUser]);
+        $this->assertEquals(5, count($summaries));
+        $this->assertHasProgressLog($summaries, 'c2', 100, 'l1');
+        $this->assertHasProgressLog($summaries, 'c5', 100, 'l2');
+        $this->assertHasProgressLog($summaries, 'c4', 0, null);
+        $this->assertHasProgressLog($summaries, 'c3', 50, 'l2');
+        $this->assertHasProgressLog($summaries, 'c1', 75, 'l1');
     }
 
     public function testHandleEvaluationKeepsParentCompetenciesHistory()
     {
-        $eval1 = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'a2' => [
+                    'level' => 'l1',
+                    'activities' => ['ac2']
+                ],
+                'a3' => [
+                    'level' => 'l2',
+                    'activities' => ['ac3']
+                ],
+                'a4' => [
+                    'level' => 'l3',
+                    'activities' => ['ac4']
+                ],
+                'a5' => [
+                    'level' => 'l4',
+                    'activities' => ['ac5']
+                ],
+                'a6' => [
+                    'level' => 'l5',
+                    'activities' => ['ac6']
+                ]
+            ]
+        ]]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac6', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
+        $competency = $this->testData['competencies']['c1'];
         $summaries = $this->competencyProgressRepo->findBy([
-            'user' => $this->user,
-            'competency' => $this->framework['competencies']['c1']
+            'user' => $this->testUser,
+            'competency' => $competency
         ]);
         $logs = $this->competencyProgressLogRepo->findBy([
-            'user' => $this->user,
-            'competency' => $this->framework['competencies']['c1']
+            'user' => $this->testUser,
+            'competency' => $competency
         ]);
 
         $this->assertEquals(1, count($summaries));
-        $this->assertEquals($this->framework['levels']['l2'], $summaries[0]->getLevel());
+        $this->assertEquals(100, $summaries[0]->getPercentage());
+        $this->assertEquals('l3', $summaries[0]->getLevel()->getName());
         $this->assertEquals(1, count($logs));
-        $this->assertEquals($this->framework['levels']['l1'], $logs[0]->getLevel());
+        $this->assertEquals(50, $logs[0]->getPercentage());
+        $this->assertEquals('l1', $logs[0]->getLevel()->getName());
     }
 
     public function testHandleEvaluationTracksObjectivesProgress()
     {
-        $eval = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'c4' => [
+                    'a2' => [
+                        'level' => 'l1',
+                        'activities' => ['ac2']
+                    ]
+                ],
+                'c5' => [
+                    'a2' => [
+                        'level' => 'l2',
+                        'activities' => ['ac1']
+                    ]
+                ]
+            ]
+        ]]);
+
+        $this->createObjectives('c1', [
+           'o1' => [
+               ['c2', 'l1']
+           ],
+           'o2' => [
+               ['c2', 'l1'],
+               ['c3', 'l2']
+           ]
+        ]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
         $o1Summaries = $this->objectiveProgressRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o1']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o1']
         ]);
         $o2Summaries = $this->objectiveProgressRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o2']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o2']
         ]);
 
         $this->assertEquals(1, count($o1Summaries));
@@ -197,17 +343,38 @@ class ProgressManagerTest extends RepositoryTestCase
 
     public function testHandleEvaluationDoesNotComputeObjectivesForIncompleteCompetencies()
     {
-        $eval = $this->makeEvaluation('ac4', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'a2' => [
+                    'level' => 'l1',
+                    'activities' => ['ac2']
+                ]
+            ]
+        ]]);
+
+        $this->createObjectives('c1', [
+           'o1' => [
+               ['c1', 'l1']
+           ]
+        ]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
-            'user' => $this->user,
-            'competency' => $this->framework['competencies']['c2']
+            'user' => $this->testUser,
+            'competency' => $this->testData['competencies']['c1']
         ]);
         $objectiveSummaries = $this->objectiveProgressRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o3']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o1']
         ]);
 
         $this->assertEquals(1, count($competencySummaries));
@@ -217,39 +384,80 @@ class ProgressManagerTest extends RepositoryTestCase
 
     public function testHandleEvaluationDoesNotComputeObjectivesForInsufficientCompetencies()
     {
-        $eval = $this->makeEvaluation('ac15', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ],
+                'a2' => [
+                    'level' => 'l2',
+                    'activities' => ['ac2']
+                ]
+            ]
+        ]]);
+
+        $this->createObjectives('c1', [
+           'o1' => [
+               ['c1', 'l2']
+           ]
+        ]);
+
+        $eval = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval);
 
         $competencySummaries = $this->competencyProgressRepo->findBy([
-            'user' => $this->user,
-            'competency' => $this->framework['competencies']['c9']
+            'user' => $this->testUser,
+            'competency' => $this->testData['competencies']['c2']
         ]);
         $objectiveSummaries = $this->objectiveProgressRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o2']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o1']
         ]);
 
         $this->assertEquals(1, count($competencySummaries));
-        $this->assertEquals($this->framework['levels']['l1'], $competencySummaries[0]->getLevel());
+        $this->assertEquals('l1', $competencySummaries[0]->getLevel()->getName());
         $this->assertEquals(0, count($objectiveSummaries));
     }
 
     public function testHandleEvaluationKeepsObjectivesProgressHistory()
     {
-        $eval1 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'a2' => [
+                    'level' => 'l1',
+                    'activities' => ['ac2']
+                ]
+            ]
+        ]]);
+
+        $this->createObjectives('c1', [
+           'o1' => [
+               ['c2', 'l1'],
+               ['c3', 'l1']
+           ]
+        ]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
         $summaries = $this->objectiveProgressRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o2']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o1']
         ]);
         $logs = $this->objectiveProgressLogRepo->findBy([
-            'user' => $this->user,
-            'objective' => $this->framework['objectives']['o2']
+            'user' => $this->testUser,
+            'objective' => $this->testData['objectives']['o1']
         ]);
 
         $this->assertEquals(1, count($summaries));
@@ -260,14 +468,54 @@ class ProgressManagerTest extends RepositoryTestCase
 
     public function testHandleEvaluationTracksUserProgress()
     {
-        $eval1 = $this->makeEvaluation('ac17', AbstractEvaluation::STATUS_PASSED);
-        $eval2 = $this->makeEvaluation('ac16', AbstractEvaluation::STATUS_PASSED);
+        $this->createFramework(['c1' => [
+            'c2' => [
+                'a1' => [
+                    'level' => 'l1',
+                    'activities' => ['ac1']
+                ]
+            ],
+            'c3' => [
+                'c4' => [
+                    'a2' => [
+                        'level' => 'l1',
+                        'activities' => ['ac2']
+                    ]
+                ],
+                'c5' => [
+                    'a3' => [
+                        'level' => 'l1',
+                        'activities' => ['ac3']
+                    ]
+                ],
+                'c6' => [
+                    'a4' => [
+                        'level' => 'l1',
+                        'activities' => ['ac4']
+                    ]
+                ]
+            ]
+        ]]);
+
+        $this->createObjectives('c1', [
+            'o1' => [
+                ['c2', 'l1']
+            ],
+            'o2' => [
+                ['c4', 'l1'],
+                ['c5', 'l1'],
+                ['c6', 'l1']
+            ]
+        ]);
+
+        $eval1 = $this->makeEvaluation('ac1', AbstractEvaluation::STATUS_PASSED);
+        $eval2 = $this->makeEvaluation('ac2', AbstractEvaluation::STATUS_PASSED);
         $this->om->flush();
         $this->manager->handleEvaluation($eval1);
         $this->manager->handleEvaluation($eval2);
 
-        $summaries = $this->userProgressRepo->findBy(['user' => $this->user]);
-        $logs = $this->userProgressLogRepo->findBy(['user' => $this->user]);
+        $summaries = $this->userProgressRepo->findBy(['user' => $this->testUser]);
+        $logs = $this->userProgressLogRepo->findBy(['user' => $this->testUser]);
 
         $this->assertEquals(1, count($summaries));
         $this->assertEquals(66, $summaries[0]->getPercentage());
@@ -275,268 +523,191 @@ class ProgressManagerTest extends RepositoryTestCase
         $this->assertEquals(50, $logs[0]->getPercentage());
     }
 
-    private function persistFramework()
+
+    /**
+     * Creates a competency framework from an array for testing purposes.
+     *
+     * For example, the following array:
+     *
+     * [
+     *   'c1' => [
+     *     'c2' => [
+     *       'a1' => [
+     *         'level' => 'l1'
+     *         'activities' => ['ac1']
+     *       ]
+     *     ],
+     *     'c3' => [
+     *       'a2' => [
+     *         'level' => 'l1'
+     *         'activities' => ['ac2']
+     *       ],
+     *       'a3' => [
+     *         'level' => 'l2'
+     *         'activities' => ['ac3', 'ac4'],
+     *         'required' => 2
+     *       ]
+     *     ],
+     *   ]
+     * ]
+     *
+     * will produce a framework called "c1", containing two competencies,
+     * "c2" and "c3". The first competency will contain one ability, "a1",
+     * of level "l1", linked with one activity "ac1". The second competency
+     * will contain two abilities "a2" and "a3", and so on.
+     *
+     * Note that:
+     *
+     * 1) All these objects are created from scratch.
+     * 2) A default scale is created and associated with the framework.
+     * 3) Scale levels are persisted as encountered in the array structure
+     *    (beware of the order).
+     * 4) Competency keys MUST match the "/^c\d+$/" pattern.
+     * 5) The required number of activities for an ability defaults to 1
+     *    but can be changed using the "required" key.
+     *
+     * @param array $framework
+     */
+    private function createFramework(array $framework)
     {
-        // Framework:
-        //
-        // c1
-        //  - c2
-        //    - c4
-        //      - a1 (l1)
-        //        - ac1
-        //        - ac2
-        //      - a2 (l2)
-        //        - ac3
-        //      - a3 (l3)
-        //        - ac4
-        //    - c5
-        //      - a4 (l1) * req 2
-        //        - ac5
-        //        - ac6
-        //      - a5 (l2)
-        //        - ac1
-        //      - a6 (l3)
-        //        - ac7
-        //  - c3
-        //    - c6
-        //      - a7 (l1))
-        //        - ac8
-        //      - a8 (l2)
-        //        - ac9
-        //      - a9 (l3)
-        //        - ac10
-        //        - ac11
-        //    - c7
-        //      - a3 (l1)
-        //        - ac12
-        //      - a2 (l2)
-        //        - ac13
-        //      - a1 (l3)
-        //        - ac14
-        //    - c8
-        //      - a10 (l1)
-        //        - ac7
-        //        - ac9
-        //      - a11 (l2)
-        //        - ac10
-        //      - a12 (l3)
-        //        - ac11
-        //    - c9
-        //      - a13
-        //        - ac15 (l1)
-        //      - a14
-        //        - ac16 (l2)
-        //    - c10
-        //      - a15
-        //        - ac17 (l3)
-        //
-        // Objectives:
-        //
-        // - o1
-        //   - c10 (l3)
-        // - o2
-        //   - c9 (l2)
-        //   - c10 (l3)
-        // - o3
-        //   - c2 (l2)
+        $rootName = array_keys($framework)[0];
+        $scale = $this->persistScale('s1');
+        $root = $this->persistCompetency($rootName);
+        $root->setScale($scale);
+        $levelIndex = 0;
 
-        $c1 = $this->persistCompetency('c1');
-        $c2 = $this->persistCompetency('c2', $c1);
-        $c3 = $this->persistCompetency('c3', $c1);
-        $c4 = $this->persistCompetency('c4', $c2);
-        $c5 = $this->persistCompetency('c5', $c2);
-        $c6 = $this->persistCompetency('c6', $c3);
-        $c7 = $this->persistCompetency('c7', $c3);
-        $c8 = $this->persistCompetency('c8', $c3);
-        $c9 = $this->persistCompetency('c9', $c3);
-        $c10 = $this->persistCompetency('c10', $c3);
+        $walkNodes = function ($parent, $nodes) use (&$walkNodes, $scale, &$levelIndex) {
+            $subNodes = array_keys($nodes);
 
-        $a1 = $this->persistAbility('a1');
-        $a2 = $this->persistAbility('a2');
-        $a3 = $this->persistAbility('a3');
-        $a4 = $this->persistAbility('a4', 2);
-        $a5 = $this->persistAbility('a5');
-        $a6 = $this->persistAbility('a6');
-        $a7 = $this->persistAbility('a7');
-        $a8 = $this->persistAbility('a8');
-        $a9 = $this->persistAbility('a9');
-        $a10 = $this->persistAbility('a10');
-        $a11 = $this->persistAbility('a11');
-        $a12 = $this->persistAbility('a12');
-        $a13 = $this->persistAbility('a13');
-        $a14 = $this->persistAbility('a14');
-        $a15 = $this->persistAbility('a15');
+            foreach ($subNodes as $nodeName) {
+                if (preg_match('#^(c\d+)$#', $nodeName, $matches)) {
+                    $this->testData['competencies'][$nodeName] = $this->persistCompetency($nodeName, $parent);
+                    $walkNodes($this->testData['competencies'][$nodeName], $nodes[$nodeName]);
+                } else {
+                    $required = isset($nodes[$nodeName]['required']) ?
+                        $nodes[$nodeName]['required'] :
+                        1;
 
-        $ac1 = $this->persistActivity('ac1');
-        $ac2 = $this->persistActivity('ac2');
-        $ac3 = $this->persistActivity('ac3');
-        $ac4 = $this->persistActivity('ac4');
-        $ac5 = $this->persistActivity('ac5');
-        $ac6 = $this->persistActivity('ac6');
-        $ac7 = $this->persistActivity('ac7');
-        $ac8 = $this->persistActivity('ac8');
-        $ac9 = $this->persistActivity('ac9');
-        $ac10 = $this->persistActivity('ac10');
-        $ac11 = $this->persistActivity('ac11');
-        $ac12 = $this->persistActivity('ac12');
-        $ac13 = $this->persistActivity('ac13');
-        $ac14 = $this->persistActivity('ac14');
-        $ac15 = $this->persistActivity('ac15');
-        $ac16 = $this->persistActivity('ac16');
-        $ac17 = $this->persistActivity('ac17');
+                    if (!isset($this->testData['abilities'][$nodeName])) {
+                        $this->testData['abilities'][$nodeName] = $this->persistAbility($nodeName, $required);
+                    }
 
-        $s = $this->persistScale('s');
-        $l1 = $this->persistLevel('l1', $s, 0);
-        $l2 = $this->persistLevel('l2', $s, 1);
-        $l3 = $this->persistLevel('l3', $s, 2);
+                    if (!isset($this->testData['levels'][$nodes[$nodeName]['level']])) {
+                        $levelName = $nodes[$nodeName]['level'];
+                        $this->testData['levels'][$levelName] = $this->persistLevel($levelName, $scale, $levelIndex);
+                        $levelIndex++;
+                    }
 
-        $c1->setScale($s);
+                    $this->persistLink(
+                        $parent,
+                        $this->testData['abilities'][$nodeName],
+                        $this->testData['levels'][$nodes[$nodeName]['level']]
+                    );
 
-        $this->persistLink($c4, $a1, $l1);
-        $this->persistLink($c4, $a2, $l2);
-        $this->persistLink($c4, $a3, $l3);
-        $this->persistLink($c5, $a4, $l1);
-        $this->persistLink($c5, $a5, $l2);
-        $this->persistLink($c5, $a6, $l3);
-        $this->persistLink($c6, $a7, $l1);
-        $this->persistLink($c6, $a8, $l2);
-        $this->persistLink($c6, $a9, $l3);
-        $this->persistLink($c7, $a3, $l1);
-        $this->persistLink($c7, $a2, $l2);
-        $this->persistLink($c7, $a1, $l3);
-        $this->persistLink($c8, $a10, $l1);
-        $this->persistLink($c8, $a11, $l2);
-        $this->persistLink($c8, $a12, $l3);
-        $this->persistLink($c9, $a13, $l1);
-        $this->persistLink($c9, $a14, $l2);
-        $this->persistLink($c10, $a15, $l3);
+                    foreach ($nodes[$nodeName]['activities'] as $activityName) {
+                        if (!isset($this->testData['activities'][$activityName])) {
+                            $this->testData['activities'][$activityName] = $this->persistActivity($activityName);
+                        }
 
-        $a1->linkActivity($ac1);
-        $a1->linkActivity($ac2);
-        $a2->linkActivity($ac3);
-        $a3->linkActivity($ac4);
-        $a4->linkActivity($ac5);
-        $a4->linkActivity($ac6);
-        $a5->linkActivity($ac1);
-        $a6->linkActivity($ac7);
-        $a7->linkActivity($ac8);
-        $a8->linkActivity($ac9);
-        $a9->linkActivity($ac10);
-        $a9->linkActivity($ac11);
-        $a3->linkActivity($ac12);
-        $a2->linkActivity($ac13);
-        $a1->linkActivity($ac14);
-        $a10->linkActivity($ac7);
-        $a10->linkActivity($ac9);
-        $a11->linkActivity($ac10);
-        $a12->linkActivity($ac11);
-        $a13->linkActivity($ac15);
-        $a14->linkActivity($ac16);
-        $a15->linkActivity($ac17);
+                        $this->testData['abilities'][$nodeName]->linkActivity($this->testData['activities'][$activityName]);
+                    }
+                }
+            }
+        };
 
-        $o1 = $this->persistObjective('o1', [
-            [$c10, $c1, $l3]
-        ]);
-        $o2 = $this->persistObjective('o2', [
-            [$c9, $c1, $l2],
-            [$c10, $c1, $l3]
-        ]);
-        $o3 = $this->persistObjective('o3', [
-            [$c2, $c1, $l2]
-        ]);
+        $this->testData['competencies'][$rootName] = $root;
+        $walkNodes($root, $framework[$rootName]);
 
-        $o1->addUser($this->user);
-        $o2->addUser($this->user);
-        $o3->addUser($this->user);
+        $this->om->flush();
+    }
 
-        return [
-            'competencies' => [
-                'c1' => $c1,
-                'c2' => $c2,
-                'c3' => $c3,
-                'c4' => $c4,
-                'c5' => $c5,
-                'c6' => $c6,
-                'c7' => $c7,
-                'c8' => $c8,
-                'c9' => $c9,
-                'c10' => $c10
-            ],
-            'abilities' => [
-                'a1' => $a1,
-                'a2' => $a2,
-                'a3' => $a3,
-                'a4' => $a4,
-                'a5' => $a5,
-                'a6' => $a6,
-                'a7' => $a7,
-                'a8' => $a8,
-                'a9' => $a9,
-                'a10' => $a10,
-                'a11' => $a11,
-                'a12' => $a12,
-                'a13' => $a13,
-                'a14' => $a14,
-                'a15' => $a15
-            ],
-            'activities' => [
-                'ac1' => $ac1,
-                'ac2' => $ac2,
-                'ac3' => $ac3,
-                'ac4' => $ac4,
-                'ac5' => $ac5,
-                'ac6' => $ac6,
-                'ac7' => $ac7,
-                'ac8' => $ac8,
-                'ac9' => $ac9,
-                'ac10' => $ac10,
-                'ac11' => $ac11,
-                'ac12' => $ac12,
-                'ac13' => $ac13,
-                'ac14' => $ac14,
-                'ac15' => $ac15,
-                'ac16' => $ac16,
-                'ac17' => $ac17
-            ],
-            'levels' => [
-                'l1' => $l1,
-                'l2' => $l2,
-                'l3' => $l3
-            ],
-            'objectives' => [
-                'o1' => $o1,
-                'o2' => $o2,
-                'o3' => $o3
-            ]
-        ];
+    /**
+     * Creates learning objectives for testing purposes.
+     *
+     * For example, the following array of objectives:
+     *
+     * [
+     *   'o1' => [
+     *     ['c1', 'l1']
+     *   ],
+     *   'o2' => [
+     *     ['c2', 'l1'],
+     *     ['c3', 'l2']
+     *   ]
+     * ]
+     *
+     * will create two objectives "o1" and "o2". The first objective
+     * is to attain level "l1" of competency "c1". The second one,
+     * level "l1" of competency "c2" and level "l2" of competency "c3".
+     *
+     * Note that:
+     *
+     * 1) the competency and level objects MUST have been created with
+     *    the "createFramework" method.
+     * 2) objectives are automatically assigned to the test user created
+     *    in the "setUp" method.
+     *
+     * @param string    $frameworkName
+     * @param array     $objectives
+     */
+    private function createObjectives($frameworkName, array $objectives)
+    {
+        foreach ($objectives as $name => $competencies) {
+            $competencyData = array_map(function ($competency) use ($frameworkName) {
+                return [
+                    $this->testData['competencies'][$competency[0]],
+                    $this->testData['competencies'][$frameworkName],
+                    $this->testData['levels'][$competency[1]]
+                ];
+            }, $competencies);
+
+            $this->testData['objectives'][$name] = $this->persistObjective($name, $competencyData);
+            $this->testData['objectives'][$name]->addUser($this->testUser);
+        }
+
+        $this->om->flush();
     }
 
     private function makeEvaluation($activityName, $status, Evaluation $previous = null)
     {
         return $this->persistEvaluation(
-            $this->framework['activities'][$activityName],
-            $this->user,
+            $this->testData['activities'][$activityName],
+            $this->testUser,
             $status,
             $previous
         );
     }
 
-    private function assertHasProgressLog(array $logs, Competency $competency, $percentage, Level $level = null)
+    private function assertHasProgressLog(array $logs, $competencyName, $percentage, $level = null)
     {
         $targetLog = null;
 
         foreach ($logs as $log) {
-            if ($log->getCompetency() === $competency && $log->getUser() === $this->user) {
+            if ($log->getCompetency()->getName() === $competencyName && $log->getUser() === $this->testUser) {
                 $targetLog = $log;
                 break;
             }
         }
 
         if (!$targetLog) {
-            $this->assertTrue(false); // make the assertion fail (hacky...)
+            // make the assertion fail (hacky...)
+            $this->assertTrue(false, 'No progress log matches the given criteria.');
         }
 
         $this->assertEquals($percentage, $targetLog->getPercentage());
-        $this->assertEquals($level, $targetLog->getLevel());
+
+        if ($level === null) {
+            // "assertNull" dumps the whole entity if the assertion fails...
+            $this->assertEquals(
+                'NULL',
+                gettype($targetLog->getLevel()),
+                sprintf(
+                    'Level was supposed to be null, "%s" received',
+                    $targetLog->getLevel() ? $targetLog->getLevel()->getName() : 'null'
+                )
+            );
+        } else {
+            $this->assertEquals($level, $targetLog->getLevel()->getName());
+        }
     }
 }
