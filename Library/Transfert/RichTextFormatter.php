@@ -93,7 +93,13 @@ class RichTextFormatter
             $parent = $this->findParentFromDataUid($uid);
             $el = $this->findItemFromUid($uid);
             $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(array('parent' => $parent, 'name' => $el['name']));
+                ->findOneBy(
+                    array(
+                        'parent' => $parent,
+                        'name' => $el['name'],
+                        'resourceType' => $this->resourceManager->getResourceTypeByName($el['type'])
+                    )
+                );
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node);
