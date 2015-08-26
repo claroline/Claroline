@@ -83,5 +83,24 @@ $(document).ready(function () {
     // Mise à jour de la colonne "validate"
     $('.document_validate').on('click', function(event) {
     });
+    
+    $('a.cancel_button').on('click', function(event) {
+        var docId = $(this).attr("data-document_id");
+        
+        $.ajax({
+            url: Routing.generate('innova_collecticiel_unvalidate_document',
+            {
+                documentId: docId
+            }),
+        method: "POST",
+        data:
+        {
+            documentId: docId
+        },
+        complete: function(data) {
+            $("#is-validate-"+docId).html(data.responseText);
+        }
+        });
+    });
 
 });
