@@ -62,7 +62,7 @@
                 {{ 'Delete'|trans({}, 'innova_collecticiel') }}
             </a>
         {% elseif document.validate and not adminInnova and document.comments|length == 0 %}
-            <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
+            <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
         {% endif %}
         </td>
     {% endif %}
