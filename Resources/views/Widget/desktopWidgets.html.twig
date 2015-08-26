@@ -33,9 +33,9 @@
                      data-gs-width="{{ widgetDisplayConfig.getWidth() }}"
                      data-gs-height="{{ widgetDisplayConfig.getHeight() }}"
                      data-widget-display-config-id="{{ widgetDisplayConfig.getId() }}"
+                     data-gs-no-move="true"
                      {% if widgetHomeTabConfig.isLocked() or not editionMode or isHomeLocked %}
                          data-gs-no-resize="true"
-                         data-gs-no-move="true"
                      {% endif %}
                 >
                     <div class="grid-stack-item-content panel panel-default"
@@ -44,11 +44,11 @@
                              style="border-color: {{ widgetColor }};"
                         {% endif %}
                     >
-                        <div class="panel-heading"
-                         id="widget-element-header-{{ whtcId }}"
-                            {% if widgetColor is not empty %}
+                        <div class="panel-heading widget-instance-content-header"
+                             id="widget-element-header-{{ whtcId }}"
+                             {% if widgetColor is not empty %}
                                  style="background-color: {{ widgetColor }};"
-                            {% endif %}
+                             {% endif %}
                         >
                             <h3 class="panel-title">
 
@@ -81,7 +81,9 @@
                                 </span>
                             </h3>
                         </div>
-                        <div id="widget-instance-content-{{ widgetInstance.getId() }}" class="panel-body">
+                        <div id="widget-instance-content-{{ widgetInstance.getId() }}"
+                             class="panel-body widget-instance-content-body"
+                        >
                             {{ widgetDatas.content|raw }}
                         </div>
                     </div>

@@ -360,7 +360,7 @@ class TransfertManager
     /**
      * Partial export for ressources
      */
-    public function exportResources(Workspace $workspace, array $resourceNodes)
+    public function exportResources(Workspace $workspace, array $resourceNodes, $parseAndReplace = true)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
