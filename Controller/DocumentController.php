@@ -438,4 +438,39 @@ class DocumentController extends DropzoneBaseController
         // Retour du template actualisé à l'Ajax et non plus du Json.
         return new Response($template);
     }
+
+    /**
+     * @Route(
+     *      "/document/{documentId}",
+     *      name="innova_collecticiel_unvalidate_document",
+     *      requirements={"documentId" = "\d+"},
+     *      options={"expose"=true}
+     * )
+     * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
+     * @Template()
+     */
+    public function ajaxUnvalidateDocumentAction(Document $document) {
+        
+        // Appel pour accés base         
+        $em = $this->getDoctrine()->getManager();
+
+        // Recherche en base des données du document à mettre à jour
+        $doc = $this->getDoctrine()->getRepository('InnovaCollecticielBundle:Document')->find($document->getId());
+        
+        // Mise à jour du booléen de Validation de true à false
+        $doc->setvalidate(false);
+
+        // Mise à jour de la base de données
+        $em->persist($doc);
+        $em->flush();
+
+        // Ajout afin d'afficher la partie du code avec "Demande transmise"
+        $template = $this->get("templating")->
+        render('InnovaCollecticielBundle:Document:documentIsValidate.html.twig',
+                array('document' => $document)
+               );
+
+        // Retour du template actualisé à l'Ajax et non plus du Json.
+        return new Response($template);
+    }
 }
