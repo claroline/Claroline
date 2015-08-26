@@ -85,6 +85,7 @@ class Reservation
         return $this;
     }
 
+    //Returns a String for the DateTimePicker of the ReservationType
     public function getStart()
     {
         return date('d/m/Y H:i', $this->start);
@@ -111,6 +112,7 @@ class Reservation
         return $this->start;
     }
 
+    //Returns a String for the DateTimePicker of the ReservationType
     public function getEnd()
     {
         return date('d/m/Y H:i', $this->end);

@@ -174,6 +174,42 @@ class ReservationController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *      "/{id}/move/{minutes}",
+     *      name="formalibre_reservation_move",
+     *      options={"expose"=true}
+     * )
+     */
+    public function moveReservationAction(Reservation $reservation, $minutes)
+    {
+        $newStart = $reservation->getEvent()->getStart()->getTimestamp() + $minutes * 60;
+        $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
+
+        return $this->reservationManager->updateReservation($reservation, $newStart, $newEnd);
+    }
+
+    /**
+     * @EXT\Route(
+     *      "/{id}/resize/{minutes}",
+     *      name="formalibre_resize_reservation",
+     *      options={"expose"=true}
+     * )
+     */
+    public function resizeReservationAction(Reservation $reservation, $minutes)
+    {
+        $start = $reservation->getEvent()->getStart()->getTimestamp();
+        $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
+        $maxTimeArray = explode(':', $reservation->getResource()->getMaxTimeReservation());
+        $maxTime = $maxTimeArray[0] * 3600 + $maxTimeArray[2] * 60;
+
+        if ($newEnd - $start > $maxTime && $maxTime !== 0) {
+            return new JsonResponse(['error' => 'error.max_time_reservation_exceeded']);
+        }
+
+        return $this->reservationManager->updateReservation($reservation, $start, $newEnd);
+    }
+
+    /**
      * @ext\Route(
      *      "/delete/{id}",
      *      name="formalibre_delete_reservation",
@@ -213,10 +249,5 @@ class ReservationController extends Controller
             'localisation' => empty($resource->getLocalisation()) ? $none : $resource->getLocalisation(),
             'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation()
         ]);
-    }
-
-    public function checkAccess()
-    {
-        return $this->isGranted('ROLE_TEACHER');
     }
 }

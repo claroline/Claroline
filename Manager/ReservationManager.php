@@ -4,9 +4,11 @@ namespace FormaLibre\ReservationBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -26,6 +28,7 @@ class ReservationManager
     private $translator;
     private $su;
     private $container;
+    private $em;
 
     /**
      * @DI\InjectParams({
@@ -36,7 +39,8 @@ class ReservationManager
      *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"   = @DI\Inject("translator"),
      *     "su"           = @DI\Inject("claroline.security.utilities"),
-     *     "container"    = @DI\Inject("service_container")
+     *     "container"    = @DI\Inject("service_container"),
+     *      "em"          = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(
@@ -47,7 +51,8 @@ class ReservationManager
         RoleManager $rm,
         TranslatorInterface $translator,
         Utilities $su,
-        ContainerInterface $container
+        ContainerInterface $container,
+        EntityManager $em
     )
     {
         $this->rootDir = $rootDir;
@@ -58,6 +63,7 @@ class ReservationManager
         $this->translator = $translator;
         $this->su = $su;
         $this->container = $container;
+        $this->em = $em;
     }
 
     // Convert hh:mm to time in seconds
@@ -91,5 +97,23 @@ class ReservationManager
                 'durationEditable' => $reservation->getEvent()->getUser() === $this->tokenStorage->getToken()->getUser()
             ]
         );
+    }
+
+    public function updateReservation(Reservation $reservation, $newStart, $newEnd)
+    {
+        $reservation->setStart($newStart);
+        $reservation->setEnd($newEnd);
+
+        $reservations = $this->em->getRepository('FormaLibreReservationBundle:Reservation')->findByDateAndResource($reservation, true);
+        if (count($reservations) >= $reservation->getResource()->getQuantity()) {
+            return new JsonResponse(['error' => 'error.number_reservations_exceeded']);
+        }
+
+        $event = $reservation->getEvent();
+        $event->setStart($newStart);
+        $event->setEnd($newEnd);
+        $this->om->flush();
+
+        return new JsonResponse($this->completeJsonEventWithReservation($reservation));
     }
 }

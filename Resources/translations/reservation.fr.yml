@@ -2,6 +2,7 @@ add_new_resource_type: Ajouter un nouveau type de ressources
 add_resource: Ajouter une ressource
 agenda:
   add_reservation: Ajouter une réservation
+  day_: Jour
   day:
     mon: Lun
     monday: Lundi
@@ -70,6 +71,8 @@ error_: Erreur
 error:
   empty_input: Le champs ne doit pas être vide.
   resource_type_already_exists: Ce type de ressource existe déjà.
+  number_reservations_exceeded: Nombre des réservations dépassées avec cette ressource. Veuillez changer la date à laquelle vous voulez réserver cette ressource.
+  max_time_reservation_exceeded: Vous avez dépassé le temps maximum de réservation de cette ressource.
 filter:
   by_resource: Filtrer par ressource
   no_resource_found: Aucune ressource trouvée

@@ -6,7 +6,7 @@
         header: {
             left: 'prev,next, today',
             center: 'title',
-            right: 'month,agendaWeek'
+            right: 'month,agendaWeek,agendaDay'
         },
         columnFormat: {
             month: 'ddd',
@@ -25,7 +25,8 @@
         buttonText: {
             today: trans('agenda.today'),
             month: trans('agenda.month_'),
-            agendaWeek: trans('agenda.week')
+            agendaWeek: trans('agenda.week'),
+            agendaDay: trans('agenda.day_')
         },
         monthNames: trans(['agenda.month.january', 'agenda.month.february', 'agenda.month.march', 'agenda.month.april', 'agenda.month.may', 'agenda.month.june', 'agenda.month.july', 'agenda.month.august', 'agenda.month.september', 'agenda.month.october', 'agenda.month.november', 'agenda.month.december']),
         monthNamesShort: trans(['agenda.month.jan', 'agenda.month.feb', 'agenda.month.mar', 'agenda.month.apr', 'agenda.month.may', 'agenda.month.ju', 'agenda.month.jul', 'agenda.month.aug', 'agenda.month.sept',  'agenda.month.oct', 'agenda.month.nov', 'agenda.month.dec']),
@@ -36,6 +37,7 @@
         eventClick: onEventClick,
         eventRender: onEventRender,
         eventDrop: onEventDrop,
+        eventResize: onEventResize,
         eventDestroy: onEventDestroy,
         eventMouseover: onEventMouseover,
         eventMouseout: onEventMouseout
@@ -45,11 +47,11 @@
     {
         if (!isFormShown) {
             var routing = Routing.generate('formalibre_add_reservation'),
-                completeDate = moment(date).format('DD-MM-YYYY HH:mm');
+                momentDate = moment(date);
 
             var onReservationFormOpen = function(html) {
-                $('#reservation_form_start').val(completeDate);
-                $('#reservation_form_end').val(completeDate);
+                $('#reservation_form_start').val(momentDate.format('DD/MM/YYYY HH:mm'));
+                $('#reservation_form_end').val(momentDate.add(1, 'hour').format('DD/MM/YYYY HH:mm'));
 
                 initializeDateTimePicker();
             };
@@ -91,9 +93,14 @@
         createPopover(event, $element);
     }
 
-    function onEventDrop(event, delta)
+    function onEventDrop(event, delta, revertFunc)
     {
-        resizeOrDrop(event, delta, 'move');
+        resizeOrDrop(event, delta, 'move', revertFunc);
+    }
+
+    function onEventResize(event, delta, revertFunc)
+    {
+        resizeOrDrop(event, delta, '', revertFunc);
     }
 
     function onEventDestroy(event, $element)
@@ -113,26 +120,28 @@
 
     function onReservationChanged(event)
     {
-        $calendar.fullCalendar('removeEvents', event.id);
-        $calendar.fullCalendar('renderEvent', event);
+        updateEvent(event);
     }
 
-    function resizeOrDrop(event, delta, action)
+    function resizeOrDrop(event, delta, action, revertFunc)
     {
-        var routeName = action === 'move' ? 'formalibre_reservation_agenda_move' : 'formalibre_reservation_agenda_resize',
-            deltaDays = delta._days,
-            deltaMinutes = delta._milliseconds / (1000 * 60),
-            routing = Routing.generate(routeName, {reservation: event.reservationId, day: deltaDays, minute: deltaMinutes});
+        var minutes = moment.duration(delta).asMinutes(),
+            routeName = action === 'move' ? 'formalibre_reservation_move' : 'formalibre_resize_reservation',
+            routing = Routing.generate(routeName, {id: event.reservationId, minutes: minutes});
 
-        //$.ajax({
-        //    url: routing,
-        //    type: 'post',
-        //    dataType: 'json',
-        //    success: function(event) {
-        //        $calendar.fullCalendar('removeEvents', event.id);
-        //        $calendar.fullCalendar('renderEvent', event);
-        //    }
-        //});
+        $.ajax({
+            url: routing,
+            type: 'post',
+            dataType: 'json',
+            success: function(data) {
+                if (data.error == undefined) {
+                    updateEvent(data);
+                } else {
+                    revertFunc();
+                    Claroline.Modal.simpleContainer(trans('error_'), trans(data.error));
+                }
+            }
+        });
     }
 
     $('body')
@@ -304,6 +313,12 @@
             container: 'body',
             placement: 'top'
         });
+    }
+
+    function updateEvent(event)
+    {
+        $calendar.fullCalendar('removeEvents', event.id);
+        $calendar.fullCalendar('renderEvent', event);
     }
 
     function trans(key)
