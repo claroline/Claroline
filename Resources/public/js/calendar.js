@@ -45,12 +45,13 @@
     {
         if (!isFormShown) {
             var routing = Routing.generate('formalibre_add_reservation'),
-                dateDate = moment(date).format('YYYY-MM-DD'),
-                dateTime = moment(date).format('HH:mm');
+                completeDate = moment(date).format('DD-MM-YYYY HH:mm');
 
             var onReservationFormOpen = function(html) {
-                $('#reservation_form_start_date').val(dateDate);
-                $('#reservation_form_start_time').val(dateTime);
+                $('#reservation_form_start').val(completeDate);
+                $('#reservation_form_end').val(completeDate);
+
+                initializeDateTimePicker();
             };
 
             Claroline.Modal.displayForm(
@@ -73,7 +74,8 @@
                 routing,
                 onReservationChanged,
                 function() {
-                    $('#reservation_form_end_time').change();
+                    $('#reservation_form_end').change();
+                    initializeDateTimePicker();
                 },
                 'form-reservation'
             );
@@ -89,7 +91,7 @@
         createPopover(event, $element);
     }
 
-    function onEventDrop(event, delta, revertFunc, jsEvent, ui, view)
+    function onEventDrop(event, delta)
     {
         resizeOrDrop(event, delta, 'move');
     }
@@ -152,9 +154,9 @@
             });
         })
         // Change the duration input when the end input is changed
-        .on('change', '#reservation_form_start_date, #reservation_form_start_time, #reservation_form_end_date, #reservation_form_end_time', function() {
-            var end = moment($('#reservation_form_end_date').val() +' '+ $('#reservation_form_end_time').val()),
-                start = moment($('#reservation_form_start_date').val() +' '+ $('#reservation_form_start_time').val()),
+        .on('dp.change', '#reservation_form_start, #reservation_form_end', function() {
+            var end = moment($('#reservation_form_end').val(), 'DD/MM/YYYY HH:mm'),
+                start = moment($('#reservation_form_start').val(), 'DD/MM/YYYY HH:mm'),
                 duration = end.diff(start, 'minutes'),
                 hours = Math.floor(duration / 60),
                 minutes = duration - hours * 60  < 10 ? '0'+ (duration - hours * 60) : duration - hours * 60;
@@ -169,11 +171,10 @@
             if (durationArray.length === 2) {
                 var hours = isNaN(durationArray[0]) ? 0 : durationArray[0],
                     minutes = isNaN(durationArray[1]) ? 0 : durationArray[1],
-                    start = moment($('#reservation_form_start_date').val() +' '+ $('#reservation_form_start_time').val()),
+                    start = moment($('#reservation_form_start').val(), 'DD/MM/YYYY HH:mm'),
                     newEnd = start.add({hours: hours, minutes: minutes});
 
-                $('#reservation_form_end_date').val(newEnd.format('YYYY-MM-DD'));
-                $('#reservation_form_end_time').val(newEnd.format('HH:mm'));
+                $('#reservation_form_end').val(newEnd.format('DD/MM/YYYY HH:mm'));
             }
         })
         // Delete a reservation
@@ -219,6 +220,47 @@
 
         applyFilters();
     });
+
+    function initializeDateTimePicker()
+    {
+        var dateTimePickerOptions = {
+            format: 'DD/MM/YYYY HH:mm',
+            useCurrent: false,
+            locale: trans('picker.locale'),
+            icons: {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-dot-circle-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            stepping: 5,
+            showTodayButton: true,
+            showClose: true,
+            tooltips: {
+                today: trans('picker.go_to_today'),
+                close: trans('picker.close'),
+                selectMonth: trans('picker.select_month'),
+                prevMonth: trans('picker.prev_month'),
+                nextMonth: trans('picker.next_month'),
+                selectYear: trans('picker.select_year'),
+                prevYear: trans('picker.prev_year'),
+                nextYear: trans('picker.next_year'),
+                selectDecade: trans('picker.select_decade'),
+                prevDecade: trans('picker.prev_decade'),
+                nextDecade: trans('picker.next_decade'),
+                prevCentury: trans('picker.prev_century'),
+                nextCentury: trans('picker.next_century')
+            }
+        };
+
+        $('#reservation_form_start').datetimepicker(dateTimePickerOptions);
+        $('#reservation_form_end').datetimepicker(dateTimePickerOptions);
+    }
 
     function applyFilters()
     {

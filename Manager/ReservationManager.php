@@ -70,8 +70,8 @@ class ReservationManager
 
     public function updateEvent(Event $event, Reservation $reservation)
     {
-        $event->setStart($reservation->getStart());
-        $event->setEnd($reservation->getEnd());
+        $event->setStart($reservation->getStartInTimestamp());
+        $event->setEnd($reservation->getEndInTimestamp());
         $event->setTitle($this->translator->trans('reservation', [], 'reservation') .' - '. $reservation->getResource()->getName());
 
         return $event;

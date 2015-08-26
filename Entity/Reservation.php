@@ -87,24 +87,52 @@ class Reservation
 
     public function getStart()
     {
-        return $this->start;
+        return date('d/m/Y H:i', $this->start);
     }
 
     public function setStart($start)
     {
-        $this->start = $start;
+        if (is_string($start)) {
+            $dateTime = \DateTime::createFromFormat('d/m/Y H:i', $start);
+            if (!$dateTime) {
+                $this->start = null;
+            } else {
+                $this->start = $dateTime->getTimestamp();
+            }
+        } else {
+            $this->start = $start;
+        }
 
         return $this;
     }
 
+    public function getStartInTimestamp()
+    {
+        return $this->start;
+    }
+
     public function getEnd()
+    {
+        return date('d/m/Y H:i', $this->end);
+    }
+
+    public function getEndInTimestamp()
     {
         return $this->end;
     }
 
     public function setEnd($end)
     {
-        $this->end = $end;
+        if (is_string($end)) {
+            $dateTime = \DateTime::createFromFormat('d/m/Y H:i', $end);
+            if (!$dateTime) {
+                $this->end = null;
+            }else {
+                $this->end = $dateTime->getTimestamp();
+            }
+        } else {
+            $this->end = $end;
+        }
 
         return $this;
     }

@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
  * @@DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('claroline_cursus_tool')")
+ * @SEC\PreAuthorize("canOpenAdminTool('formalibre_reservation_tool')")
  */
 class ReservationAdminController extends Controller
 {

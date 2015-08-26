@@ -13,15 +13,15 @@ class DateRangeValidator extends ConstraintValidator
 {
     public function validate($object, Constraint $constraint)
     {
-        if (!$object->getStart()) {
+        if (!$object->getStartInTimestamp()) {
             $this->context->addViolation('valid_start_date_required');
         }
 
-        if ($object->getStart() && $object->getEnd() !== null && $object->getStart() > $object->getEnd()) {
-            $this->context->addViolation($constraint->message);
+        if ($object->getStartInTimestamp() && $object->getEndInTimestamp() !== null && $object->getStartInTimestamp() >= $object->getEndInTimestamp()) {
+            $this->context->addViolation('valid_date_range_required');
         }
 
-        if (!$object->getEnd()) {
+        if (!$object->getEndInTimestamp()) {
             $this->context->addViolation('valid_end_date_required');
         }
     }

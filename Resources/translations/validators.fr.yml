@@ -1,3 +1,4 @@
+valid_date_range_required: La date de fin ne peut pas précéder ou être égale à la date de début
 valid_max_duration_required: Le temps maximal de réservation de cette ressource est dépassé.
 valid_duration_format_required: Format invalide de la durée de réservation. Doit être sous la forme hh:mm.
 number_reservations_exceeded: Nombre des réservations dépassées avec cette ressource. Veuillez changer la date ou la ressource que vous voulez réserver.
