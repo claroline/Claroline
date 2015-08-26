@@ -172,7 +172,7 @@ class ImgFormatListener
         if ($height !== '') $img .= "height='{$height}' ";
         if ($style !== '') $img .= "style='{$style}' ";
 
-        $img .= "'src='{$url}' alt='{$node->getName()}'>";
+        $img .= "src='{$url}' alt='{$node->getName()}'>";
 
         return $img;
     }
