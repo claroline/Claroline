@@ -58,7 +58,7 @@ class ScormManager
         $this->scorm2004ScoTrackingRepo =
             $om->getRepository('ClarolineScormBundle:Scorm2004ScoTracking');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->filePath = $this->container
             ->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
     }

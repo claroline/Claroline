@@ -90,7 +90,7 @@ class Scorm12Listener
         $this->router = $router;
         $this->scormResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
         $this->scormResourcesPath = $this->container
-            ->getParameter('kernel.root_dir') . '/../web/uploads/scormresources/';
+            ->getParameter('claroline.param.uploads_directory') . '/scormresources/';
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
