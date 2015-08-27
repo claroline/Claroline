@@ -22,7 +22,6 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Form\ScormType;
-use Claroline\ScormBundle\Manager\ScormManager;
 use Claroline\ScormBundle\Listener\Exception\InvalidScormArchiveException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
@@ -54,7 +53,6 @@ class Scorm12Listener
     private $scorm12ScoTrackingRepo;
     private $templating;
     private $translator;
-    private $scormManager;
 
     /**
      * @DI\InjectParams({
@@ -65,8 +63,7 @@ class Scorm12Listener
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
      *     "templating"         = @DI\Inject("templating"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "scormManager"       = @DI\Inject("claroline.manager.scorm_manager")
+     *     "translator"         = @DI\Inject("translator")
      * })
      */
     public function __construct(
@@ -134,11 +131,12 @@ class Scorm12Listener
         try {
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
+                $workspace = $event->getParent()->getWorkspace();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container
                         ->get('claroline.manager.scorm_manager')
-                        ->createScorm12($tmpFile, $form->get('name')->getData());
+                        ->createScorm12($tmpFile, $form->get('name')->getData(), $workspace);
                     $event->setResources(array($scormResource));
                     $event->stopPropagation();
 
@@ -279,7 +277,7 @@ class Scorm12Listener
     /**
      * Deletes recursively a directory and its content.
      *
-     * @param $dir The path to the directory to delete.
+     * @param $dirPath The path to the directory to delete.
      */
     private function deleteFiles($dirPath)
     {
