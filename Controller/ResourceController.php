@@ -970,7 +970,6 @@ class ResourceController
     public function exportAction(array $nodes)
     {
         if (count($nodes) === 0) {
-
             throw new \Exception('No resource to export');
         }
 
