@@ -277,6 +277,10 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
+        if ($event->isEditable() === false) {
+            throw new AccessDeniedException("You cannot edit this event");
+        }
+
         if ($event->getWorkspace()) {
             if (!$this->authorization->isGranted(array('agenda_', 'edit'), $event->getWorkspace())) {
                 throw new AccessDeniedException("You cannot edit the agenda");

@@ -107,7 +107,7 @@
      function onEventClick(event, jsEvent)
      {
          var workspaceId = event.workspace_id ? event.workspace_id : 0;
-         if (workspacePermissions[workspaceId]) {
+         if (workspacePermissions[workspaceId] && event.edibable) {
              // If the user can edit the event
              var $this = $(this);
              // If click on the check symbol of a task, mark this task as "to do"
@@ -170,11 +170,13 @@
         createPopover(event, $element);
         // Check if the user is allowed to modify the agenda
         var workspaceId = event.workspace_id ? event.workspace_id : 0;
-        event.editable = workspacePermissions[workspaceId];
+
+        event.editable = event.isEditable == false ? false : workspacePermissions[workspaceId];
         if (event.editable) {
             $element.addClass('fc-draggable');
         }
-        event.durationEditable = event.durationEditable && workspacePermissions[workspaceId];
+
+        event.durationEditable = event.durationEditable && workspacePermissions[workspaceId] && event.isEditable !== false;
 
         // If it's a task
         if (event.isTask) {

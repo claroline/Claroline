@@ -65,11 +65,12 @@ class DesktopAgendaController extends Controller
         $this->agendaManager = $agendaManager;
         $this->router = $router;
     }
+
     /**
      * @EXT\Route(
      *     "/show",
      *     name="claro_desktop_agenda_show",
-     *     options = {"expose"=true}
+     *     options={"expose"=true}
      * )
      */
     public function desktopShowAction()

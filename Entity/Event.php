@@ -96,6 +96,13 @@ class Event implements \JsonSerializable
      * @ORM\Column(nullable=true)
      */
     private $priority;
+
+    //If this parameter is set to false, NOBODY could modify the event. This parameter is useful for displaying an event of another bundle without possibility of modification.
+    /**
+     * @ORM\Column(name="is_editable", nullable=true, type="boolean")
+     */
+    private $isEditable;
+
     private $recurring;
     //public because of the symfony2 form does't use the appropriate setter and we need that value.
     //@see AgendaManager::setEventDate
@@ -319,6 +326,18 @@ class Event implements \JsonSerializable
         return $this->isTaskDone;
     }
 
+    public function setIsEditable($isEditable)
+    {
+        $this->isEditable = $isEditable;
+
+        return $this;
+    }
+
+    public function isEditable()
+    {
+        return $this->isEditable;
+    }
+
     public function jsonSerialize()
     {
         $start = is_null($this->getStart()) ? null : $this->getStart()->getTimestamp();
@@ -346,7 +365,8 @@ class Event implements \JsonSerializable
             'endHours' => $this->getEndHours(),
             'startHours' => $this->getStartHours(),
             'className' => 'event_' . $this->getId(),
-            'durationEditable' => !$this->isTask() // If it's a task, disable resizing
+            'isEditable' => $this->isEditable(),
+            'durationEditable' => !$this->isTask() && $this->isEditable() !== false // If it's a task, disable resizing
         ];
     }
 }
