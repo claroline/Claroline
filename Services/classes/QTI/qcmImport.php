@@ -244,4 +244,16 @@ class qcmImport extends qtiImport {
         $this->interactionQCM->setScoreFalseResponse($val);
     }
 
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+
+    }
+
 }

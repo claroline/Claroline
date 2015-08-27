@@ -174,7 +174,7 @@ class qtiRepository {
                                 return 'qti_unsupported_format';
                             }
                         }
-                        if ($this->exercise != null) {
+                        if ($this->exercise != null && $interX !== false) {
                             $this->exerciseQuestions[] = $file;
                             $this->importedQuestions[$file] = $interX;
                         }

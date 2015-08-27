@@ -29,6 +29,11 @@ class graphicImport extends qtiImport {
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
 
+        if ($this->qtiIsValid() === false) {
+
+            return false;
+        }
+
         $this->createQuestion();
 
         $this->createInteraction();
@@ -96,9 +101,8 @@ class graphicImport extends qtiImport {
      *
      */
     protected function createPicture($objectTag) {
-        $uploadDirectory = $this->container->getParameter('claroline.param.uploads_directory');
         $user    = $this->container->get('security.token_storage')->getToken()->getUser();
-        $userDir = $uploadDirectory . '/ujmexo/users_documents/'.$user->getUsername();
+        $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
         $document = new Document();
@@ -193,5 +197,30 @@ class graphicImport extends qtiImport {
         }
 
         return $text;
+    }
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+        $qtiIsValid = true;
+
+        $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
+        if (!$am) {
+            $qtiIsValid = false;
+        } else {
+            foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+                    if ($areaMapEntry->getAttribute('coords') == '') {
+                        $qtiIsValid = false;
+                    }
+            }
+        }
+
+        return $qtiIsValid;
     }
 }
