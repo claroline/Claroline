@@ -361,7 +361,7 @@ class TransfertManager
     /**
      * Partial export for ressources
      */
-    public function exportResources(Workspace $workspace, array $resourceNodes)
+    public function exportResources(Workspace $workspace, array $resourceNodes, $parseAndReplace = true)
     {
         foreach ($this->listImporters as $importer) {
             $importer->setListImporters($this->listImporters);
@@ -376,10 +376,17 @@ class TransfertManager
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
         $data['tools'] = array(0 => array('tool' => $tool));
+        $_resManagerData = array();
+
+        foreach ($data['tools'] as &$_tool) {
+            if ($_tool['tool']['type'] === 'resource_manager') {
+                $_resManagerData = &$_tool['tool'];
+            }
+        }
 
         if ($parseAndReplace) {
             $files = $this->container->get('claroline.importer.rich_text_formatter')
-                ->setPlaceHolders($files);
+                ->setPlaceHolders($files, $_resManagerData);
         }
 
         //throw new \Exception();
