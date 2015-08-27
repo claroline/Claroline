@@ -6,7 +6,7 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=5.4.1",
-        "claroline/core-bundle": "~5.0",
+        "claroline/core-bundle": "~6.0",
         "hwi/oauth-bundle": "0.4.*@dev"
     },
     "autoload": {
