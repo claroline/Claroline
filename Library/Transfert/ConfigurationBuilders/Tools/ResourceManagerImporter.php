@@ -351,7 +351,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $data
                 );
             } else {
-                $data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, true);
+                if ($this->container->get('security.context')->isGranted('EXPORT', $resourceNode)) {
+                    $data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, true);
+                }
             }
         }
 
@@ -369,7 +371,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $resourceTypeName = $child->getResourceType()->getName();
 
             if ($resourceTypeName === 'directory') {
-                $data['directories'][] = $this->getDirectoryElement($child, $_files);
+                $_data['directories'][] = $this->getDirectoryElement($child, $_files);
                 $this->exportChildrenResources(
                     $workspace,
                     $child->getChildren()->toArray(),
@@ -377,7 +379,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $_data
                 );
             } else {
-                $data['items'][] = $this->getResourceElement($child, $workspace, $_files);
+                if ($this->container->get('security.context')->isGranted('EXPORT', $child)) {
+                    $_data['items'][] = $this->getResourceElement($child, $workspace, $_files);
+                }
             }
         }
     }
