@@ -35,7 +35,7 @@ class ImportableFrameworkValidator extends ConstraintValidator
             return;
         }
 
-        $errors = $this->validator->validate($value);
+        $errors = $this->validator->validate(file_get_contents($value));
 
         switch ($errors['type']) {
             case Validator::ERR_TYPE_JSON:

@@ -55,6 +55,26 @@ class CompetencyManagerTest extends UnitTestCase
         $this->assertEquals(['foo'], $this->manager->listFrameworks());
     }
 
+    public function testListFrameworksAsShortArrays()
+    {
+        $c1 = new Competency();
+        $c1->setName('Foo');
+        $c1->setDescription('Foo desc');
+        $c2 = new Competency();
+        $c2->setName('Bar');
+        $c2->setDescription('Bar desc');
+
+        $this->competencyRepo->expects($this->once())
+            ->method('findBy')
+            ->with(['parent' => null])
+            ->willReturn([$c1, $c2]);
+        $expected = [
+            ['id' => null, 'name' => 'Foo', 'description' => 'Foo desc'],
+            ['id' => null, 'name' => 'Bar', 'description' => 'Bar desc']
+        ];
+        $this->assertEquals($expected, $this->manager->listFrameworks(true));
+    }
+
     public function testHasScales()
     {
         $this->om->expects($this->exactly(2))

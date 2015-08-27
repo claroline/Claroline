@@ -46,22 +46,18 @@ class Validator
 
     /**
      * Validates a JSON representation of a competency framework contained
-     * in a file. Returns an array containing:
+     * in a string. Returns an array containing:
      *
      * 1) The type of the errors returned (see class constants)
      * 2) An array containing error message strings
      *
-     * @param string $frameworkFile
+     * @param string $frameworkData
      * @return array
      * @throws \RuntimeException if the file doesn't exist
      */
-    public function validate($frameworkFile)
+    public function validate($frameworkData)
     {
-        if (!file_exists($frameworkFile)) {
-            throw new \RuntimeException("'{$frameworkFile}' is not a valid file");
-        }
-
-        $framework = json_decode(file_get_contents($frameworkFile));
+        $framework = json_decode($frameworkData);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             return [

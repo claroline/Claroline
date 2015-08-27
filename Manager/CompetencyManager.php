@@ -11,7 +11,6 @@ use HeVinci\CompetencyBundle\Entity\Level;
 use HeVinci\CompetencyBundle\Entity\Scale;
 use HeVinci\CompetencyBundle\Transfer\Converter;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -56,11 +55,22 @@ class CompetencyManager
     /**
      * Returns the list of registered frameworks.
      *
+     * @param bool $shortArrays Whether full entities or minimal arrays should be returned
      * @return array
      */
-    public function listFrameworks()
+    public function listFrameworks($shortArrays = false)
     {
-        return $this->competencyRepo->findBy(['parent' => null]);
+        $frameworks = $this->competencyRepo->findBy(['parent' => null]);
+
+        return !$shortArrays ?
+            $frameworks :
+            array_map(function ($framework) {
+                return [
+                    'id' => $framework->getId(),
+                    'name' => $framework->getName(),
+                    'description' => $framework->getDescription()
+                ];
+            }, $frameworks);
     }
 
     /**
@@ -171,15 +181,14 @@ class CompetencyManager
     }
 
     /**
-     * Imports a competency framework described in a JSON file.
+     * Imports a competency framework described in a JSON string.
      *
-     * @param UploadedFile $frameworkFile
+     * @param string $frameworkData
      * @return Competency
      */
-    public function importFramework(UploadedFile $frameworkFile)
+    public function importFramework($frameworkData)
     {
-        $jsonData = file_get_contents($frameworkFile);
-        $framework = $this->converter->convertToEntity($jsonData);
+        $framework = $this->converter->convertToEntity($frameworkData);
 
         return $this->persistFramework($framework);
     }

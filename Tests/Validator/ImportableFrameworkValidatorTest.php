@@ -4,6 +4,7 @@ namespace HeVinci\CompetencyBundle\Validator;
 
 use HeVinci\CompetencyBundle\Transfer\Validator;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
+use org\bovigo\vfs\vfsStream;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -18,9 +19,14 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
     {
         $this->context = $this->mock('Symfony\Component\Validator\Context\ExecutionContextInterface');
         $this->manager = $this->mock('HeVinci\CompetencyBundle\Transfer\Validator');
-        $this->fakeFile = $this->mock('Symfony\Component\HttpFoundation\File\UploadedFile');
         $this->validator = new ImportableFrameworkValidator($this->manager);
         $this->validator->initialize($this->context);
+
+        vfsStream::setup('root');
+        $path = vfsStream::url('root/framework.json');
+        file_put_contents($path, '{}');
+
+        $this->fakeFile = new UploadedFile($path, 'framework.json');
     }
 
     public function testValidatorIgnoresNonFileValue()
@@ -44,7 +50,7 @@ class ImportableFrameworkValidatorTest extends UnitTestCase
     {
         $this->manager->expects($this->once())
             ->method('validate')
-            ->with($this->fakeFile)
+            ->with('{}')
             ->willReturn([
                 'type' => $errorType,
                 'errors' => $errors
