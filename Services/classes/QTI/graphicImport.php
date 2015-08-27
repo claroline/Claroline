@@ -96,9 +96,9 @@ class graphicImport extends qtiImport {
      *
      */
     protected function createPicture($objectTag) {
-
+        $uploadDirectory = $this->container->getParameter('claroline.param.uploads_directory');
         $user    = $this->container->get('security.token_storage')->getToken()->getUser();
-        $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
+        $userDir = $uploadDirectory . '/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
         $document = new Document();
@@ -126,12 +126,13 @@ class graphicImport extends qtiImport {
      */
     protected function cpPicture($picture, $userDir) {
         $src = $this->qtiRepos->getUserDir().'/'.$picture;
+        $uploadDirectory = $this->container->getParameter('claroline.param.uploads_directory');
 
-        if (!is_dir('./uploads/ujmexo/')) {
-            mkdir('./uploads/ujmexo/');
+        if (!is_dir($uploadDirectory . '/ujmexo/')) {
+            mkdir($uploadDirectory . '/ujmexo/');
         }
-        if (!is_dir('./uploads/ujmexo/users_documents/')) {
-            mkdir('./uploads/ujmexo/users_documents/');
+        if (!is_dir($uploadDirectory . '/ujmexo/users_documents/')) {
+            mkdir($uploadDirectory . '/ujmexo/users_documents/');
         }
 
         if (!is_dir($userDir)) {
