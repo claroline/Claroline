@@ -267,4 +267,16 @@ class matchingImport extends qtiImport {
             $this->interactionMatching->setTypeMatching($type);
         }
     }
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+
+    }
 }

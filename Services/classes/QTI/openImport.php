@@ -87,4 +87,16 @@ class openImport extends qtiImport
 
         return $this->getPromptChild();
     }
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+
+    }
 }

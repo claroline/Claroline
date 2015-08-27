@@ -47,6 +47,34 @@ abstract class qtiImport
     }
 
     /**
+     * Search pictures tags to create objects tags use by QTI
+     *
+     * @access private
+     */
+    private function pictureTagToObectTag()
+    {
+        $elements = array();
+        $imgs = $this->assessmentItem->getElementsByTagName('img');
+        foreach ($imgs as $node){
+            $fileName = $node->getAttribute('src');echo $fileName.' ';
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+
+            $objectTag = $this->assessmentItem->ownerDocument->createElement('object');
+            $typeAttr = $this->assessmentItem->ownerDocument->createAttribute('type');
+            $typeAttr->value = 'image/'.$extension;
+            $dataAttr = $this->assessmentItem->ownerDocument->createAttribute('data');
+            $dataAttr->value = $fileName;
+            $objectTag->appendChild($typeAttr);
+            $objectTag->appendChild($dataAttr);
+
+            $elements[] = array($objectTag, $node);
+        }
+        foreach ($elements as $el) {
+            $el[1]->parentNode->replaceChild($el[0], $el[1]);
+        }
+    }
+
+    /**
      * Create the question objet
      *
      * @access protected
@@ -148,6 +176,7 @@ abstract class qtiImport
     protected function initAssessmentItem($assessmentItem)
     {
         $this->assessmentItem = $assessmentItem;
+        $this->pictureTagToObectTag();
     }
 
     /**
@@ -400,5 +429,14 @@ abstract class qtiImport
      * @access protected
      */
     abstract protected function getPrompt();
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    abstract protected function qtiIsValid();
 
 }

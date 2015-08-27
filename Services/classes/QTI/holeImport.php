@@ -360,4 +360,16 @@ class holeImport extends qtiImport
 
         return $text;
     }
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+
+    }
 }

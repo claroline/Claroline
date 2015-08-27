@@ -74,4 +74,16 @@ class openOneWordImport extends openImport
         }
         $this->om->flush();
     }
+
+    /**
+     * abstract method verify the qti
+     *
+     * @access protected
+     *
+     * @return boolean
+     */
+    protected function qtiIsValid()
+    {
+
+    }
 }
