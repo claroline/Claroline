@@ -132,7 +132,7 @@ class holeImport extends qtiImport
     {
         $correctResponse = '';
         foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
-            if ($rp->getAttribute("identifier") == $identifier) {
+            if ($rp->getAttribute("identifier") == $identifier && $rp->getElementsByTagName("correctResponse")->item(0)->getElementsByTagName("value")->item(0)) {
                 $correctResponse = $rp->getElementsByTagName("correctResponse")
                                       ->item(0)->getElementsByTagName("value")
                                       ->item(0)->nodeValue;
@@ -177,20 +177,23 @@ class holeImport extends qtiImport
         $regex = '(<select.*?class="blank".*?</select>)';
         preg_match_all($regex, $htmlWithoutValue, $selects);
         foreach ($selects[0] as $select) {
-            $newSelect = $select;
-            $regexOpt = '(<option.*?</option>)';
-            preg_match_all($regexOpt, $select, $options);
-            foreach ($options[0] as $option) {
-                $domOpt = new \DOMDocument();
-                $domOpt->loadXML($option);
-                $opt = $domOpt->getElementsByTagName('option')->item(0);
-                $opt->removeAttribute('holeCorrectResponse');
-                $wr = $this->tabWrOpt[$numOpt];
-                $optVal = $domOpt->createAttribute('value');
-                $optVal->value = $wr->getId();
-                $opt->appendChild($optVal);
-                $newSelect = str_replace($option, $domOpt->saveHTML(), $newSelect);
-                $numOpt++;
+            $newSelect = '';
+            if (isset($this->tabWrOpt[$numOpt])) {
+                $newSelect = $select;
+                $regexOpt = '(<option.*?</option>)';
+                preg_match_all($regexOpt, $select, $options);
+                foreach ($options[0] as $option) {
+                    $domOpt = new \DOMDocument();
+                    $domOpt->loadXML($option);
+                    $opt = $domOpt->getElementsByTagName('option')->item(0);
+                    $opt->removeAttribute('holeCorrectResponse');
+                    $wr = $this->tabWrOpt[$numOpt];
+                    $optVal = $domOpt->createAttribute('value');
+                    $optVal->value = $wr->getId();
+                    $opt->appendChild($optVal);
+                    $newSelect = str_replace($option, $domOpt->saveHTML(), $newSelect);
+                    $numOpt++;
+                }
             }
             $htmlWithoutValue = str_replace($select, $newSelect,  $htmlWithoutValue);
         }
@@ -240,7 +243,9 @@ class holeImport extends qtiImport
                     $this->wordResponseForSimpleHole($mapping, $hole);
                 } else {
                     $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-                    $this->wordResponseForList($qtiId, $ib, $mapping, $hole);
+                    if ($mapping != null) {
+                        $this->wordResponseForList($qtiId, $ib, $mapping, $hole);
+                    }
                 }
             }
         }

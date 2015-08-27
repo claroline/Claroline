@@ -72,20 +72,20 @@ class graphicImport extends qtiImport {
     protected function createCoords() {
         $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
 
-        foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
-            $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
-            $coords = new Coords();
-            $x = $tabCoords[0] - $tabCoords[2];
-            $y = $tabCoords[1] - $tabCoords[2];
-            $coords->setValue($x.','.$y);
-            $coords->setSize($tabCoords[2] * 2);
-            $coords->setShape($areaMapEntry->getAttribute('shape'));
-            $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
-            $coords->setColor('white');
-            $coords->setInteractionGraphic($this->interactionGraph);
-            $this->om->persist($coords);
-        }
-        $this->om->flush();
+            foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+                $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
+                $coords = new Coords();
+                $x = $tabCoords[0] - $tabCoords[2];
+                $y = $tabCoords[1] - $tabCoords[2];
+                $coords->setValue($x.','.$y);
+                $coords->setSize($tabCoords[2] * 2);
+                $coords->setShape($areaMapEntry->getAttribute('shape'));
+                $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
+                $coords->setColor('white');
+                $coords->setInteractionGraphic($this->interactionGraph);
+                $this->om->persist($coords);
+            }
+            $this->om->flush();
     }
 
     /**

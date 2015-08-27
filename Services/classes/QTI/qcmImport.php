@@ -71,11 +71,12 @@ class qcmImport extends qtiImport {
      */
     protected function createInteractionQCM() {
         $rp = $this->assessmentItem->getElementsByTagName("responseProcessing");
+        $mapping = $this->assessmentItem->getElementsByTagName("mapping");
         $this->interactionQCM = new InteractionQCM();
         $this->interactionQCM->setInteraction($this->interaction);
         $this->getShuffle();
         $this->getQCMType();
-        if ($rp->item(0) && $rp->item(0)->getElementsByTagName("responseCondition")->item(0)) {
+        if ( !$mapping->item(0) && $rp->item(0) && $rp->item(0)->getElementsByTagName("responseCondition")->item(0)) {
             $this->interactionQCM->setWeightResponse(false);
             $this->getGlobalScore();
         } else {
