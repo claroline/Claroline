@@ -56,6 +56,11 @@ agenda:
     december: Décembre
   popover:
     author: Créé par
+  resource:
+    cannot_see: Pas accès
+    visualize: Visionnage
+    edit: Edition
+    admin: Admin
   today: Aujourd'hui
   week: Semaine
   week_number_title: S

@@ -3,9 +3,12 @@
 namespace FormaLibre\ReservationBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Reservation;
+use FormaLibre\ReservationBundle\Entity\Resource;
+use FormaLibre\ReservationBundle\Entity\ResourceRights;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -115,5 +118,23 @@ class ReservationManager
         $this->om->flush();
 
         return new JsonResponse($this->completeJsonEventWithReservation($reservation));
+    }
+
+    public function getResourceRightsByRoleAndResource(Resource $resource, Role $role)
+    {
+        $resourceRights = $this->em->getRepository('FormaLibreReservationBundle:ResourceRights')->findOneBy([
+            'resource' => $resource,
+            'role' => $role
+        ]);
+
+        if (!$resourceRights) {
+            $resourceRights = new ResourceRights();
+            $resourceRights->setResource($resource);
+            $resourceRights->setRole($role);
+
+            $this->em->persist($resourceRights);
+        }
+
+        return $resourceRights;
     }
 }

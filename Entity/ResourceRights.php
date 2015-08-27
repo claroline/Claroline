@@ -1,0 +1,125 @@
+<?php
+
+namespace FormaLibre\ReservationBundle\Entity;
+
+use Claroline\CoreBundle\Entity\Role;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Table(name="formalibre_reservation_resource_rights")
+ * @ORM\Entity()
+ */
+class ResourceRights
+{
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @Assert\Range(min=0)
+     * @Assert\NotNull()
+     */
+    private $mask = 0;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource", inversedBy="resourcesRights")
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull()
+     */
+    private $resource;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull()
+     */
+    private $role;
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set mask
+     *
+     * @param integer $mask
+     *
+     * @return ResourceRights
+     */
+    public function setMask($mask)
+    {
+        $this->mask = $mask;
+
+        return $this;
+    }
+
+    /**
+     * Get mask
+     *
+     * @return integer
+     */
+    public function getMask()
+    {
+        return $this->mask;
+    }
+
+    /**
+     * Set resource
+     *
+     * @param \FormaLibre\ReservationBundle\Entity\Resource $resource
+     *
+     * @return ResourceRights
+     */
+    public function setResource(Resource $resource)
+    {
+        $this->resource = $resource;
+
+        return $this;
+    }
+
+    /**
+     * Get resource
+     *
+     * @return \FormaLibre\ReservationBundle\Entity\Resource
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * Set role
+     *
+     * @param \Claroline\CoreBundle\Entity\Role $role
+     *
+     * @return ResourceRights
+     */
+    public function setRole(Role $role)
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get role
+     *
+     * @return \Claroline\CoreBundle\Entity\Role
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+}

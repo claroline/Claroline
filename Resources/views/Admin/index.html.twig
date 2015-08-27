@@ -1,5 +1,16 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .roles-list {
+            max-height: 200px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+    </style>
+{% endblock %}
+
 {% block section_content %}
     <div class="panel-heading">
         <h1>{{ 'admin_resources_reservation'|trans({}, 'tools') }}</h1>

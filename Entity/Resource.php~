@@ -2,7 +2,6 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -61,11 +60,6 @@ class Resource
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $resourcesRights;
-
-    public function __construct()
-    {
-        $this->resourcesRights = new ArrayCollection();
-    }
 
     public function getId()
     {
@@ -148,22 +142,5 @@ class Resource
         $this->quantity = $quantity;
 
         return $this;
-    }
-
-    public function addResourcesRight(ResourceRights $resourcesRight)
-    {
-        $this->resourcesRights[] = $resourcesRight;
-
-        return $this;
-    }
-
-    public function removeResourcesRight(ResourceRights $resourcesRight)
-    {
-        $this->resourcesRights->removeElement($resourcesRight);
-    }
-
-    public function getResourcesRights()
-    {
-        return $this->resourcesRights;
     }
 }

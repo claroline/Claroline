@@ -1,4 +1,6 @@
 (function() {
+    var rolesList = [];
+
     $('.add-new-resource-type').click(function() {
         var $resourceTypeInput = $('input[name="resource_type"]'),
             resourceTypeName = $resourceTypeInput.val(),
@@ -65,7 +67,7 @@
                 resourceTypeId = $div.data('resource-type-id'),
                 routing = Routing.generate('formalibre_add_new_resource', {id: resourceTypeId});
 
-            Claroline.Modal.displayForm(routing, displayNewResource, function() {}, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayNewResource, clearRolesList, 'form-resource');
         })
         // Show resource form when click on the name of the resource in the list-group
         .on('click', 'a[data-resource-id]', function(e) {
@@ -74,7 +76,7 @@
                 resourceId = $a.data('resource-id'),
                 routing = Routing.generate('formalibre_modification_resource', {id: resourceId});
 
-            Claroline.Modal.displayForm(routing, displayModificationResource, function(){}, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayModificationResource, clearRolesList, 'form-resource');
         })
         .on('click', '.delete-resource', function() {
             var resourceId = $(this).data('resource-id'),
@@ -86,6 +88,17 @@
                 t('confirm_resource_deletion_content'),
                 t('confirm_resource_deletion_title')
             );
+        })
+        //Stored the mask select for each role in the rolesList variable
+        .on('click', '.roles-list-btn > span', function() {
+            var maskValue = $(this).data('mask'),
+                $btnList = $(this).parent().children(),
+                roleId = $(this).parents('.row').data('role-id');
+
+            $btnList.removeClass('btn-primary').addClass('btn-default');
+            $(this).addClass('btn-primary');
+
+            rolesList[roleId] = maskValue;
         })
     ;
 
@@ -125,14 +138,37 @@
             });
 
         $newResource.appendTo($listGroup);
+
+        updateResourceRoles(data.resource.id);
     };
 
     var displayModificationResource = function(data) {
         $('a[data-resource-id="'+ data.id +'"]').text(data.name);
+        updateResourceRoles(data.id);
     };
 
     function t(key)
     {
         return Translator.trans(key, {}, 'reservation');
+    }
+
+    function clearRolesList()
+    {
+        $('.roles-list-btn').children().each(function() {
+             if ($(this).hasClass('btn-primary')) {
+                 $(this).click();
+             }
+        });
+    }
+
+    function updateResourceRoles(resourceId)
+    {
+        $.ajax({
+            url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesList}),
+            type: 'post',
+            success: function() {
+
+            }
+        });
     }
 }) ();

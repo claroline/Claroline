@@ -2,16 +2,33 @@
 
 namespace FormaLibre\ReservationBundle\Form;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("formalibre.form.resource")
  */
 class ResourceType extends AbstractType
 {
+    private $em;
+    private $translator;
+
+    /**
+     * @DI\InjectParams({
+     *      "em"         = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "translator" = @DI\Inject("translator")
+     * })
+     */
+    public function __construct(EntityManager $em, TranslatorInterface $translator)
+    {
+        $this->em = $em;
+        $this->translator = $translator;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
