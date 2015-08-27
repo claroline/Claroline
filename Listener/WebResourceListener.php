@@ -75,7 +75,7 @@ class WebResourceListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->zipPath = __DIR__ . '/../../../../../../web/uploads/webresource/';
+        $this->zipPath = $this->container->getParameter('claroline.param.uploads_directory') . '/webresource/';
         $this->filesPath = $this->container->getParameter('claroline.param.files_directory') . DIRECTORY_SEPARATOR;
     }
 
