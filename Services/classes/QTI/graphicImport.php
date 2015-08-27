@@ -72,20 +72,20 @@ class graphicImport extends qtiImport {
     protected function createCoords() {
         $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
 
-        foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
-            $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
-            $coords = new Coords();
-            $x = $tabCoords[0] - $tabCoords[2];
-            $y = $tabCoords[1] - $tabCoords[2];
-            $coords->setValue($x.','.$y);
-            $coords->setSize($tabCoords[2] * 2);
-            $coords->setShape($areaMapEntry->getAttribute('shape'));
-            $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
-            $coords->setColor('white');
-            $coords->setInteractionGraphic($this->interactionGraph);
-            $this->om->persist($coords);
-        }
-        $this->om->flush();
+            foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+                $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
+                $coords = new Coords();
+                $x = $tabCoords[0] - $tabCoords[2];
+                $y = $tabCoords[1] - $tabCoords[2];
+                $coords->setValue($x.','.$y);
+                $coords->setSize($tabCoords[2] * 2);
+                $coords->setShape($areaMapEntry->getAttribute('shape'));
+                $coords->setScoreCoords($areaMapEntry->getAttribute('mappedValue'));
+                $coords->setColor('white');
+                $coords->setInteractionGraphic($this->interactionGraph);
+                $this->om->persist($coords);
+            }
+            $this->om->flush();
     }
 
     /**
@@ -96,9 +96,9 @@ class graphicImport extends qtiImport {
      *
      */
     protected function createPicture($objectTag) {
-
+        $uploadDirectory = $this->container->getParameter('claroline.param.uploads_directory');
         $user    = $this->container->get('security.token_storage')->getToken()->getUser();
-        $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
+        $userDir = $uploadDirectory . '/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
         $document = new Document();
@@ -126,12 +126,13 @@ class graphicImport extends qtiImport {
      */
     protected function cpPicture($picture, $userDir) {
         $src = $this->qtiRepos->getUserDir().'/'.$picture;
+        $uploadDirectory = $this->container->getParameter('claroline.param.uploads_directory');
 
-        if (!is_dir('./uploads/ujmexo/')) {
-            mkdir('./uploads/ujmexo/');
+        if (!is_dir($uploadDirectory . '/ujmexo/')) {
+            mkdir($uploadDirectory . '/ujmexo/');
         }
-        if (!is_dir('./uploads/ujmexo/users_documents/')) {
-            mkdir('./uploads/ujmexo/users_documents/');
+        if (!is_dir($uploadDirectory . '/ujmexo/users_documents/')) {
+            mkdir($uploadDirectory . '/ujmexo/users_documents/');
         }
 
         if (!is_dir($userDir)) {
