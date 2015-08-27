@@ -393,7 +393,7 @@ class RichTextFormatter
 
     private function dataFolderExists($data)
     {
-        if (!isset($resManagerData['data']['directories'])) return false;
+        if (!isset($data['data']['directories'])) return false;
         foreach ($data['data']['directories'] as $directory) {
             if ($directory['directory']['uid'] === 'data_folder') return true;
         }
