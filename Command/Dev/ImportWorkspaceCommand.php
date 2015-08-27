@@ -30,4 +30,4 @@ class ImportWorkspaceCommand extends ContainerAwareCommand
         $config = Configuration::fromTemplate($archive);
         $this->getContainer()->get('claroline.manager.transfert_manager')->import($config);
     }
-} 
+}
