@@ -149,6 +149,7 @@
                 url: route,
                 type: 'POST',
                 success: function () {
+                    $('.workspace-chk').removeAttr('checked');
                     window.location.reload();
                 }
             });
