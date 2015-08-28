@@ -54,17 +54,17 @@ class Resource
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      * @Assert\Range(min=1)
      */
-    private $quantity;
+    private $quantity = 1;
 
     /**
      * @ORM\OneToMany(targetEntity="FormaLibre\ReservationBundle\Entity\ResourceRights", mappedBy="resource")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $resourcesRights;
+    private $resourceRights;
 
     public function __construct()
     {
-        $this->resourcesRights = new ArrayCollection();
+        $this->resourceRights = new ArrayCollection();
     }
 
     public function getId()
@@ -92,7 +92,7 @@ class Resource
     // maxTime must be store like hh:mm:ss
     public function setMaxTimeReservation($maxTime)
     {
-        if ($maxTime === null) {
+        if (!$maxTime || empty($maxTime)) {
             $maxTime = '00:00:00';
         } elseif (count(explode(':', $maxTime)) === 2) {
             $maxTime = $maxTime . ':00';
@@ -150,20 +150,20 @@ class Resource
         return $this;
     }
 
-    public function addResourcesRight(ResourceRights $resourcesRight)
+    public function addResourceRight(ResourceRights $resourceRight)
     {
-        $this->resourcesRights[] = $resourcesRight;
+        $this->resourceRights[] = $resourceRight;
 
         return $this;
     }
 
-    public function removeResourcesRight(ResourceRights $resourcesRight)
+    public function removeResourceRight(ResourceRights $resourceRight)
     {
-        $this->resourcesRights->removeElement($resourcesRight);
+        $this->resourceRights->removeElement($resourceRight);
     }
 
-    public function getResourcesRights()
+    public function getResourceRights()
     {
-        return $this->resourcesRights;
+        return $this->resourceRights;
     }
 }

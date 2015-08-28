@@ -27,19 +27,20 @@
                                     {% set classNameMask3 = 'btn-default' %}
                                     {% set classNameMask7 = 'btn-default' %}
                                     {% if resourcesRights is defined %}
-                                        {% for resourceRights in resourcesRights %}
-                                            {% if role == resourceRights.getRole() and resourceRights.getMask() == 0 %}
-                                                {% set classNameMask0 = 'btn-primary' %}
-                                            {% elseif role == resourceRights.getRole() and resourceRights.getMask() == 1 %}
+                                        {% if resourcesRights[role.getId()] is defined %}
+                                            {% set mask = resourcesRights[role.getId()] %}
+                                            {% if mask == 0 %}
+                                                {% set classNameMask0 = 'btn-primary'%}
+                                            {% elseif mask == 1 %}
                                                 {% set classNameMask1 = 'btn-primary' %}
-                                            {% elseif role == resourceRights.getRole() and resourceRights.getMask() == 3 %}
+                                            {% elseif mask == 3 %}
                                                 {% set classNameMask3 = 'btn-primary' %}
-                                            {% elseif role == resourceRights.getRole() and resourceRights.getMask() == 7 %}
-                                                {% set classNameMask7 = 'btn-primary' %}
                                             {% else %}
-                                                {% set classNameMask0 = 'btn-primary' %}
+                                                {% set classNameMask7 = 'btn-primary' %}
                                             {% endif %}
-                                        {% endfor %}
+                                        {% else %}
+                                            {% set classNameMask0 = 'btn-primary' %}
+                                        {% endif %}
                                     {% else %}
                                         {% set classNameMask0 = 'btn-primary' %}
                                     {% endif %}

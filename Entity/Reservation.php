@@ -24,7 +24,7 @@ class Reservation
 
     /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
-     * @ORM\JoinColumn(name="resource", nullable=false)
+     * @ORM\JoinColumn(name="resource", nullable=false, onDelete="cascade")
      * @Assert\NotNull()
      */
     private $resource;

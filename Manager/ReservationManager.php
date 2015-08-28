@@ -6,6 +6,7 @@ use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
+use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceRights;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Claroline\CoreBundle\Manager\RoleManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -82,6 +84,7 @@ class ReservationManager
         $event->setStart($reservation->getStartInTimestamp());
         $event->setEnd($reservation->getEndInTimestamp());
         $event->setTitle($this->translator->trans('reservation', [], 'reservation') .' - '. $reservation->getResource()->getName());
+        $event->setIsEditable(false);
 
         return $event;
     }
@@ -96,8 +99,8 @@ class ReservationManager
                 'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
                 'resourceId' => $reservation->getResource()->getId(),
                 'reservationId' => $reservation->getId(),
-                'editable' => $reservation->getEvent()->getUser() === $this->tokenStorage->getToken()->getUser(),
-                'durationEditable' => $reservation->getEvent()->getUser() === $this->tokenStorage->getToken()->getUser()
+                'editable' => $this->hasAccess($reservation->getResource(), ReservationController::EDIT),
+                'durationEditable' => $this->hasAccess($reservation->getResource(), ReservationController::EDIT)
             ]
         );
     }
@@ -136,5 +139,30 @@ class ReservationManager
         }
 
         return $resourceRights;
+    }
+
+    public function hasAccess(Resource $resource, $mask)
+    {
+        $resourceRights = $resource->getResourceRights();
+        $userRoles = $this->tokenStorage->getToken()->getRoles();
+
+        $hasAccess = false;
+        foreach ($userRoles as $userRole) {
+            foreach ($resourceRights as $resourceRight) {
+                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
+                    $hasAccess = true;
+                    break;
+                }
+            }
+        }
+
+        return $hasAccess;
+    }
+
+    public function checkAccess(Reservation $reservation, $mask)
+    {
+        if (!$this->hasAccess($reservation->getResource(), $mask)) {
+            throw new AccessDeniedException();
+        }
     }
 }

@@ -213,13 +213,21 @@ class ReservationAdminController extends Controller
             ]);
         }
 
+        $roles = $this->roleRepo->findBy(['type' => 1]);
+        $resourcesRights = $this->resourceRightsRepo->findBy(['resource' => $resource]);
+
+        $resourcesRightsArray = [];
+        foreach ($resourcesRights as $resourceRights) {
+            $resourcesRightsArray[$resourceRights->getRole()->getId()] = $resourceRights->getMask();
+        }
+
         return $this->render('FormaLibreReservationBundle:Admin:resourceForm.html.twig', array(
             'resource' => $resource,
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_modification_resource', ['id' => $resource->getId()]),
             'editMode' => true,
-            'roles' => $this->roleRepo->findBy(['type' => 1]),
-            'resourcesRights' => $this->resourceRightsRepo->findBy(['resource' => $resource])
+            'roles' => $roles,
+            'resourcesRights' => $resourcesRightsArray
         ));
     }
 

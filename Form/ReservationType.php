@@ -2,6 +2,9 @@
 
 namespace FormaLibre\ReservationBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use FormaLibre\ReservationBundle\Controller\ReservationController;
+use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use FormaLibre\ReservationBundle\Validator\Constraints\Reservation;
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -15,6 +18,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class ReservationType extends AbstractType
 {
     private $editMode = false;
+    private $reservationManager;
+
+    /**
+     * @DI\InjectParams({
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager")
+     * })
+     */
+    public function __construct(ReservationManager $reservationManager)
+    {
+        $this->reservationManager = $reservationManager;
+    }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -36,6 +50,18 @@ class ReservationType extends AbstractType
         $builder->add('resource', 'entity', array(
             'label' => 'agenda.form.resource',
             'class' => 'FormaLibre\ReservationBundle\Entity\Resource',
+            'query_builder' => function(EntityRepository $er) {
+                $resources =  $er->createQueryBuilder('r');
+
+                $mask = $this->editMode ? ReservationController::EDIT : ReservationController::ADMIN;
+                foreach ($resources as $key => $resource) {
+                    if (!$this->reservationManager->hasAccess($resource, $mask)) {
+                        unset($resources[$key]);
+                    }
+                }
+
+                return $resources;
+            },
             'property' => 'name',
             'group_by' => 'resource_type.name',
             'empty_value' => 'agenda.form.select_resource_pls'

@@ -5,10 +5,12 @@ namespace FormaLibre\ReservationBundle\Entity;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="formalibre_reservation_resource_rights")
  * @ORM\Entity()
+ * @UniqueEntity({"role", "resource"})
  */
 class ResourceRights
 {
@@ -27,15 +29,15 @@ class ResourceRights
     private $mask = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource", inversedBy="resourcesRights")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource", inversedBy="resourceRights")
+     * @ORM\JoinColumn(nullable=false, onDelete="cascade")
      * @Assert\NotNull()
      */
     private $resource;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role", cascade={"remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinColumn(nullable=false, onDelete="cascade")
      * @Assert\NotNull()
      */
     private $role;

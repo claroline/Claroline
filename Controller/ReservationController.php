@@ -16,10 +16,16 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ReservationController extends Controller
 {
+    const SEE = 1;
+    const EDIT = 2;
+    const ADMIN = 4;
+
     private $em;
     private $om;
     private $formFactory;
@@ -28,6 +34,7 @@ class ReservationController extends Controller
     private $agendaManager;
     private $reservationManager;
     private $translator;
+    private $tokenStorage;
     private $reservationRepo;
     private $eventRepo;
 
@@ -40,7 +47,8 @@ class ReservationController extends Controller
      *      "request"     = @DI\Inject("request"),
      *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
-     *      "translator"    = @DI\Inject("translator")
+     *      "translator"    = @DI\Inject("translator"),
+     *      "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
@@ -51,7 +59,8 @@ class ReservationController extends Controller
         Request $request,
         AgendaManager $agendaManager,
         ReservationManager $reservationManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->em = $em;
@@ -62,6 +71,7 @@ class ReservationController extends Controller
         $this->agendaManager = $agendaManager;
         $this->reservationManager = $reservationManager;
         $this->translator = $translator;
+        $this->tokenStorage = $tokenStorage;
         $this->reservationRepo = $this->om->getRepository('FormaLibreReservationBundle:Reservation');
         $this->eventRepo = $this->om->getRepository('ClarolineAgendaBundle:Event');
     }
@@ -78,8 +88,10 @@ class ReservationController extends Controller
         $reservations = $this->reservationRepo->findAll();
 
         $events = [];
-        foreach ($reservations as $reservation) {
-            $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
+        foreach ($reservations as $key => $reservation) {
+             if($this->reservationManager->hasAccess($reservation->getResource(), $this::SEE)) {
+                 $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
+             }
         }
 
         return new JsonResponse($events);
@@ -100,6 +112,7 @@ class ReservationController extends Controller
 
         if ($form->isValid()) {
             $reservation = $form->getData();
+            $this->reservationManager->checkAccess($reservation, $this::ADMIN);
 
             $event = $this->reservationManager->updateEvent(new Event(), $reservation);
             $this->agendaManager->addEvent($event);
@@ -128,6 +141,8 @@ class ReservationController extends Controller
      */
     public function changeReservationFormAction(Reservation $reservation)
     {
+        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+
         $formType = $this->get('formalibre.form.reservation');
         $formType->setEditMode();
         $reservation->setStart($reservation->getEvent()->getStart()->getTimestamp());
@@ -151,6 +166,8 @@ class ReservationController extends Controller
      */
     public function changeReservationAction(Reservation $reservation)
     {
+        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+
         $formType = $this->get('formalibre.form.reservation');
         $form = $this->createForm($formType, $reservation);
         $form->handleRequest($this->request);
@@ -182,6 +199,8 @@ class ReservationController extends Controller
      */
     public function moveReservationAction(Reservation $reservation, $minutes)
     {
+        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+
         $newStart = $reservation->getEvent()->getStart()->getTimestamp() + $minutes * 60;
         $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
 
@@ -197,6 +216,8 @@ class ReservationController extends Controller
      */
     public function resizeReservationAction(Reservation $reservation, $minutes)
     {
+        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+
         $start = $reservation->getEvent()->getStart()->getTimestamp();
         $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
         $maxTimeArray = explode(':', $reservation->getResource()->getMaxTimeReservation());
@@ -218,6 +239,8 @@ class ReservationController extends Controller
      */
     public function deleteReservationAction(Reservation $reservation)
     {
+        $this->reservationManager->checkAccess($reservation, $this::ADMIN);
+
         $this->om->remove($reservation);
         $this->om->flush();
 

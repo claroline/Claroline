@@ -52,7 +52,10 @@ class ResourceType extends AbstractType
 
         $builder->add('quantity', 'integer', array(
             'label' => 'form.quantity',
-            'empty_data' => 1
+            'empty_data' => 1,
+            'attr' => [
+                'min' => 1
+            ]
         ));
     }
 
