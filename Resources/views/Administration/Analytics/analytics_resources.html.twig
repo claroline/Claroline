@@ -51,6 +51,18 @@
                             {% for resource in resourceCount %}
                                 <tr><td>{{resource.name|trans({}, 'resource')}}</td><td>{{resource.total}}</td></tr>
                             {% endfor %}
+                            {% if otherItems|length > 0 %}
+                            <tr><th>Autres</th><th>#</th></tr>
+                                {% for otherItem in otherItems %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ path('claro_admin_analytics_other_details', {item: otherItem.item}) }}"
+                                           title="{{ ('analytics_other_details_' ~ otherItem.item)|trans({}, 'analytics') }}">{{ otherItem.label }}</a>
+                                    </td>
+                                    <td>{{ otherItem.value }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
                         </table>
                     </div>
                 </div>

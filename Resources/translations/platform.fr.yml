@@ -93,6 +93,7 @@ analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue d''ensemble'
 analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
+analytics_return_platform_content: "Retour aux statistiques globales du contenu plateforme"
 anonymous: Anonyme
 answer: Répondre
 anywhere: 'N''importe où'
