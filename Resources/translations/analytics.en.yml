@@ -1,2 +1,8 @@
 portfolio_analytics_title: "Portfolio usage statistics"
 analytics_other_details_portfolio: "See portfolio usage statistics"
+portfolios: "portfolio|portfolios"
+closed_mode_portfolio: "in close mode"
+open_mode_portfolio: "in open mode"
+private_mode_portfolio: "in private mode"
+platform_mode_portfolio: "in platform mode"
+deleted_portfolio: "deleted|deleted"
