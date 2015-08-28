@@ -1,0 +1,10 @@
+{% extends "ClarolineCoreBundle:Administration/Analytics:analytics_resources_item.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'portfolio_analytics_title' | trans({}, 'analytics') }}{% endblock %}
+
+{% block itemContent %}
+<h1>{{ 'portfolio_analytics_title'|trans({}, 'analytics') }}</h1>
+<div class="margin">
+    <h1>{{ countPortfolio }} <span class="small"><i class="fa fa-list-alt"></i> {{'portfolios'|trans({}, 'icap_portfolio')}}</span></h1>
+</div>
+{% endblock %}

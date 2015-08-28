@@ -433,4 +433,15 @@ class PortfolioManager
 
         $this->entityManager->flush($portfolio);
     }
+
+    /**
+     * @return int
+     */
+    public function countAll()
+    {
+        /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
+        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+
+        return $portfolioRepository->countAll();
+    }
 }

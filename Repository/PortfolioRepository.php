@@ -76,4 +76,14 @@ class PortfolioRepository extends EntityRepository
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
     }
+    /**
+     * @return int
+     */
+    public function countAll()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
