@@ -1417,11 +1417,13 @@ class CursusManager
     public function importCourses(array $datas)
     {
         $i = 0;
+        $usedCodes = $this->getAllCoursesCodes();
         $this->om->startFlushSuite();
 
         foreach ($datas as $data) {
             $course = new Course();
-            $course->setCode($data['code']);
+            $code = $this->generateValidCode($data['code'], $usedCodes);
+            $course->setCode($code);
             $course->setTitle($data['title']);
             $course->setDescription($data['description']);
             $course->setPublicRegistration($data['publicRegistration']);
@@ -1439,6 +1441,34 @@ class CursusManager
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    private function getAllCoursesCodes()
+    {
+        $codes = array();
+        $courses = $this->getAllCourses('', 'id', 'ASC', false);
+
+        foreach ($courses as $course) {
+            $codes[$course->getCode()] = true;
+        }
+
+        return $codes;
+    }
+
+    private function generateValidCode($code, array $existingCodes)
+    {
+        $result = $code;
+
+        if (isset($existingCodes[$code])) {
+            $i = 0;
+
+            do {
+                $i++;
+                $result = $code . '_' . $i;
+            } while (isset($existingCodes[$result]));
+        }
+
+        return $result;
     }
 
 
