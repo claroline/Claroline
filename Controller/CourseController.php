@@ -997,8 +997,30 @@ class CourseController extends Controller
             while (!feof($stream)) {
                 $contents .= fread($stream, 2);
             }
+            fclose($stream);
             $courses = json_decode($contents, true);
             $this->cursusManager->importCourses($courses);
+
+            $iconsDir = $this->container->getParameter('claroline.param.web_directory') .
+                '/files/cursusbundle/icons/';
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
+
+                if (strpos($name, 'icons/') !== 0) {
+                    continue;
+                }
+                $iconFileName = $iconsDir . substr($name, 6);
+                $stream = $zip->getStream($name);
+                $destStream = fopen($iconFileName, 'w');
+
+                while ($data = fread($stream, 1024)) {
+                    fwrite($destStream, $data);
+                }
+                fclose($stream);
+                fclose($destStream);
+            }
+            $zip->close();
 
             return new RedirectResponse(
                 $this->router->generate('claro_cursus_tool_course_index')

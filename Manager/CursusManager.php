@@ -1395,8 +1395,19 @@ class CursusManager
         $archive = new \ZipArchive();
         $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
-        $archive->addEmptyDir('icons');
         $archive->addFromString('courses.json', $json);
+
+        foreach ($courses as $course) {
+            $icon = $course->getIcon();
+
+            if (!is_null($icon)) {
+                $path = $this->iconsDirectory . $icon;
+                $archive->addFile(
+                    $path,
+                    'icons' . DIRECTORY_SEPARATOR . $icon
+                );
+            }
+        }
         $archive->close();
         file_put_contents($this->archiveDir, $pathArch . "\n", FILE_APPEND);
 
