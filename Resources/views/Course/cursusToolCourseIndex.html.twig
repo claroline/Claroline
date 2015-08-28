@@ -75,6 +75,14 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
+            <a href="{{ path('claro_cursus_courses_export') }}"
+               class="pull-right"
+               data-toggle="tooltip"
+               data-placement="left"
+               title="{{ 'export'|trans({}, 'platform') }}"
+            >
+                <i class="fa fa-sign-out"></i>
+            </a>
             {{ displayedWords['course'] }}
         </h3>
     </div>
@@ -88,13 +96,23 @@
             </div>
         {% endif %}
         
-        <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-primary">
-            <i class="fa fa-plus-circle"></i>
-            {{ 'create_course'|trans({}, 'cursus') }}
-        </a>
+        <div class="btn-group margin-top-sm" role="group">
+            <a href="{{ path('claro_cursus_course_create_form') }}" class="btn btn-primary">
+                <i class="fa fa-plus-circle"></i>
+                {{ 'create_course'|trans({}, 'cursus') }}
+            </a>
+            <a href="{{ path('claro_cursus_courses_import_form') }}"class="btn btn-default">
+                <i class="fa fa-sign-in"></i>
+                {{ 'import'|trans({}, 'platform') }}
+            </a>
+            <a href="{{ path('claro_cursus_courses_export') }}"class="btn btn-default">
+                <i class="fa fa-sign-out"></i>
+                {{ 'export'|trans({}, 'platform') }}
+            </a>
+        </div>
         
         {% if search != '' or courses|length > 0 %}
-            <div class="input-group col-md-6 pull-right">
+            <div class="input-group col-md-6 pull-right margin-top-sm">
                 <input class="form-control search-course"
                        type="text"
                        id="search-course-input"
@@ -179,67 +197,72 @@
                     </tr>
                     
                     {% for course in courses %}
-                    {% set courseId = course.getId() %}
-                    <tr>
-                        <td>
-                            <a href="{{ path('claro_cursus_course_management', {'course': courseId}) }}">
-                                {{ course.getTitle() }}
-                            </a>
-                        </td>
-                        <td>
-                            {{ course.getCode() }}
-                        </td>
-                        <td class="text-center">
-                            {% if course.getDescription() is not empty %}
-                                <i class="fa fa-eye view-course-description-btn pointer-hand"
-                                   data-course-id="{{ courseId }}"
-                                   data-course-title="{{ course.getTitle() }}"
+                        {% set courseId = course.getId() %}
+                        {% set icon = course.getIcon() %}
+                        <tr>
+                            <td>
+                                {% if icon is not empty %}
+                                    {% set iconPath = asset('files/cursusbundle/icons/' ~ icon) %}
+                                    <img src="{{ iconPath }}" alt="" width="20px">
+                                {% endif %}
+                                <a href="{{ path('claro_cursus_course_management', {'course': courseId}) }}">
+                                    {{ course.getTitle() }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ course.getCode() }}
+                            </td>
+                            <td class="text-center">
+                                {% if course.getDescription() is not empty %}
+                                    <i class="fa fa-eye view-course-description-btn pointer-hand"
+                                       data-course-id="{{ courseId }}"
+                                       data-course-title="{{ course.getTitle() }}"
+                                    >
+                                    </i>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if course.getPublicRegistration() %}
+                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                {% else %}
+                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if course.getPublicUnregistration() %}
+                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                {% else %}
+                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if course.getRegistrationValidation() %}
+                                    <i class="fa fa-check-circle" style="color: #5CB85C"></i>
+                                {% else %}
+                                    <i class="fa fa-times-circle" style="color: #D9534F"></i>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ path('claro_cursus_course_edit_form', {'course': courseId}) }}"
+                                   class="btn btn-default btn-sm"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   title="{{ 'edit_course'|trans({}, 'cursus') }}"
                                 >
-                                </i>
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if course.getPublicRegistration() %}
-                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
-                            {% else %}
-                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if course.getPublicUnregistration() %}
-                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
-                            {% else %}
-                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if course.getRegistrationValidation() %}
-                                <i class="fa fa-check-circle" style="color: #5CB85C"></i>
-                            {% else %}
-                                <i class="fa fa-times-circle" style="color: #D9534F"></i>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            <a href="{{ path('claro_cursus_course_edit_form', {'course': courseId}) }}"
-                               class="btn btn-default btn-sm"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               title="{{ 'edit_course'|trans({}, 'cursus') }}"
-                            >
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <span class="btn btn-danger btn-sm delete-course-btn"
-                                  data-course-id="{{ courseId }}"
-                                  data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="{{ 'delete_course'|trans({}, 'cursus') }}"
-                            >
-                                <i class="fa fa-trash"></i>
-                            </span>
-                        </td>
-                    </tr>
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <span class="btn btn-danger btn-sm delete-course-btn"
+                                      data-course-id="{{ courseId }}"
+                                      data-toggle="tooltip"
+                                      data-placement="top"
+                                      title="{{ 'delete_course'|trans({}, 'cursus') }}"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </table>
             </div>

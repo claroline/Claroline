@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Workspace\Configuration;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -38,6 +39,8 @@ use Claroline\CursusBundle\Event\Log\LogCourseSessionUserUnregistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserRegistrationEvent;
 use Claroline\CursusBundle\Event\Log\LogCursusUserUnregistrationEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -48,6 +51,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class CursusManager
 {
+    private $archiveDir;
     private $container;
     private $contentManager;
     private $eventDispatcher;
@@ -55,8 +59,10 @@ class CursusManager
     private $om;
     private $pagerFactory;
     private $roleManager;
+    private $serializer;
     private $templateDir;
     private $translator;
+    private $ut;
     private $workspaceManager;
 
     private $courseRepo;
@@ -79,8 +85,10 @@ class CursusManager
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
      *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "serializer"       = @DI\Inject("jms_serializer"),
      *     "templateDir"      = @DI\Inject("%claroline.param.templates_directory%"),
      *     "translator"       = @DI\Inject("translator"),
+     *     "ut"               = @DI\Inject("claroline.utilities.misc"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
@@ -91,22 +99,28 @@ class CursusManager
         ObjectManager $om,
         PagerFactory $pagerFactory,
         RoleManager $roleManager,
+        Serializer $serializer,
         $templateDir,
         TranslatorInterface $translator,
+        ClaroUtilities $ut,
         WorkspaceManager $workspaceManager
     )
     {
+        $this->archiveDir = $container->getParameter('claroline.param.platform_generated_archive_path');
         $this->container = $container;
         $this->contentManager = $contentManager;
         $this->eventDispatcher = $eventDispatcher;
-        $this->iconsDirectory = $this->container->getParameter('kernel.root_dir') .
-            '/../web/files/cursusbundle/icons/';
+        $this->iconsDirectory = $this->container->getParameter('claroline.param.web_directory') .
+            '/files/cursusbundle/icons/';
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
         $this->roleManager = $roleManager;
+        $this->serializer = $serializer;
         $this->templateDir = $templateDir;
         $this->translator = $translator;
+        $this->ut = $ut;
         $this->workspaceManager = $workspaceManager;
+
         $this->courseRepo =
             $om->getRepository('ClarolineCursusBundle:Course');
         $this->courseQueueRepo =
@@ -1369,6 +1383,51 @@ class CursusManager
                 }
             }
         }
+    }
+
+    public function zipCourses(array $courses)
+    {
+        $json = $this->serializer->serialize(
+            $courses,
+            'json',
+            SerializationContext::create()->setGroups(array('api'))
+        );
+        $archive = new \ZipArchive();
+        $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+        $archive->addEmptyDir('icons');
+        $archive->addFromString('courses.json', $json);
+        $archive->close();
+        file_put_contents($this->archiveDir, $pathArch . "\n", FILE_APPEND);
+
+        return $pathArch;
+    }
+
+    public function importCourses(array $datas)
+    {
+        $i = 0;
+        $this->om->startFlushSuite();
+
+        foreach ($datas as $data) {
+            $course = new Course();
+            $course->setCode($data['code']);
+            $course->setTitle($data['title']);
+            $course->setDescription($data['description']);
+            $course->setPublicRegistration($data['publicRegistration']);
+            $course->setPublicUnregistration($data['publicUnregistration']);
+            $course->setRegistrationValidation($data['registrationValidation']);
+
+            if (isset($data['icon'])) {
+                $course->setIcon($data['icon']);
+            }
+            $this->om->persist($course);
+            $i++;
+
+            if ($i % 50 === 0) {
+                $this->om->forceFlush();
+            }
+        }
+        $this->om->endFlushSuite();
     }
 
 

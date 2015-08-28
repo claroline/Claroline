@@ -27,17 +27,21 @@ use Claroline\CursusBundle\Form\CourseQueuedUserTransferType;
 use Claroline\CursusBundle\Form\CourseSessionEditType;
 use Claroline\CursusBundle\Form\CourseSessionType;
 use Claroline\CursusBundle\Form\CourseType;
+use Claroline\CursusBundle\Form\FileSelectType;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -910,5 +914,104 @@ class CourseController extends Controller
             array('id' => $session->getId(), 'default' => $isDefault),
             200
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/export",
+     *     name="claro_cursus_courses_export",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function coursesExportAction()
+    {
+        $courses = $this->cursusManager->getAllCourses('', 'id', 'ASC', false);
+        $zipName = 'courses.zip';
+        $mimeType = 'application/zip';
+        $file = $this->cursusManager->zipCourses($courses);;
+
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($zipName));
+        $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Connection', 'close');
+        $response->send();
+
+        return new Response();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/import/form",
+     *     name="claro_cursus_courses_import_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function coursesImportFormAction()
+    {
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+        $form = $this->formFactory->create(new FileSelectType());
+
+        return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/import",
+     *     name="claro_cursus_courses_import",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Course:coursesImportForm.html.twig")
+     */
+    public function coursesImportAction()
+    {
+        $form = $this->formFactory->create(new FileSelectType());
+        $form->handleRequest($this->request);
+        $file = $form->get('archive')->getData();
+        $zip = new \ZipArchive();
+
+        if (empty($file) || !$zip->open($file) || !$zip->getStream('courses.json')) {
+            $form->get('archive')->addError(
+                new FormError($this->translator->trans('invalid_file', array(), 'cursus'))
+            );
+        }
+
+        if ($form->isValid()) {
+            $stream = $zip->getStream('courses.json');
+            $contents = '';
+
+            while (!feof($stream)) {
+                $contents .= fread($stream, 2);
+            }
+            $courses = json_decode($contents, true);
+            $this->cursusManager->importCourses($courses);
+
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_course_index')
+            );
+        } else {
+            $displayedWords = array();
+
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
+
+            return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+        }
+
     }
 }
