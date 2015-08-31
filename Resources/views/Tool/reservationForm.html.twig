@@ -58,7 +58,7 @@
             </div>
             <div class="modal-footer">
                 <div class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'platform') }}</div>
-                {% if editMode %}
+                {% if editMode and canDelete %}
                     <span class="btn btn-danger delete-reservation" data-dismiss="modal" data-reservation-id="{{ reservation.getId() }}" data-event-id="{{ reservation.getEvent().getId() }}">{{ 'delete_resource'|trans({}, 'reservation') }}</span>
                 {% endif %}
                 <button type="submit" class="btn btn-primary">

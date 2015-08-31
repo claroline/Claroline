@@ -2,6 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -53,13 +54,24 @@ class Resource
      * @ORM\Column(name="quantity", type="integer", nullable=false)
      * @Assert\Range(min=1)
      */
-    private $quantity;
+    private $quantity = 1;
 
     /**
      * @ORM\OneToMany(targetEntity="FormaLibre\ReservationBundle\Entity\ResourceRights", mappedBy="resource")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $resourcesRights;
+    private $resourceRights;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FormaLibre\ReservationBundle\Entity\Reservation", mappedBy="resource")
+     * @ORM\JoinColumn(onDelete="cascade")
+     */
+    private $reservations;
+
+    public function __construct()
+    {
+        $this->resourceRights = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -86,7 +98,7 @@ class Resource
     // maxTime must be store like hh:mm:ss
     public function setMaxTimeReservation($maxTime)
     {
-        if ($maxTime === null) {
+        if (!$maxTime || empty($maxTime)) {
             $maxTime = '00:00:00';
         } elseif (count(explode(':', $maxTime)) === 2) {
             $maxTime = $maxTime . ':00';
@@ -142,5 +154,22 @@ class Resource
         $this->quantity = $quantity;
 
         return $this;
+    }
+
+    public function addResourceRight(ResourceRights $resourceRight)
+    {
+        $this->resourceRights[] = $resourceRight;
+
+        return $this;
+    }
+
+    public function removeResourceRight(ResourceRights $resourceRight)
+    {
+        $this->resourceRights->removeElement($resourceRight);
+    }
+
+    public function getResourceRights()
+    {
+        return $this->resourceRights;
     }
 }

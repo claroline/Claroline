@@ -89,7 +89,7 @@ class ReservationController extends Controller
 
         $events = [];
         foreach ($reservations as $key => $reservation) {
-             if($this->reservationManager->hasAccess($reservation->getResource(), $this::SEE)) {
+             if ($this->reservationManager->hasAccess($reservation->getResource(), $this::SEE)) {
                  $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
              }
         }
@@ -153,7 +153,8 @@ class ReservationController extends Controller
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
-            'editMode' => true
+            'editMode' => true,
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getResource(), ReservationController::ADMIN)
         ));
     }
 
@@ -174,6 +175,8 @@ class ReservationController extends Controller
 
         if ($form->isValid()) {
             $reservation = $form->getData();
+            $this->reservationManager->checkAccess($reservation, $this::EDIT);
+
             $event = $this->reservationManager->updateEvent($reservation->getEvent(), $reservation);
 
             $this->agendaManager->updateEvent($event);
@@ -186,7 +189,8 @@ class ReservationController extends Controller
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
-            'editMode' => true
+            'editMode' => true,
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getResource(), ReservationController::ADMIN)
         ));
     }
 

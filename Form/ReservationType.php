@@ -2,7 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Form;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use FormaLibre\ReservationBundle\Validator\Constraints\Reservation;
@@ -19,15 +19,18 @@ class ReservationType extends AbstractType
 {
     private $editMode = false;
     private $reservationManager;
+    private $em;
 
     /**
      * @DI\InjectParams({
-     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager")
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
+     *      "em"                 = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(ReservationManager $reservationManager)
+    public function __construct(ReservationManager $reservationManager, EntityManager $em)
     {
         $this->reservationManager = $reservationManager;
+        $this->em = $em;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -50,22 +53,25 @@ class ReservationType extends AbstractType
         $builder->add('resource', 'entity', array(
             'label' => 'agenda.form.resource',
             'class' => 'FormaLibre\ReservationBundle\Entity\Resource',
-            'query_builder' => function(EntityRepository $er) {
-                $resources =  $er->createQueryBuilder('r');
-
-                $mask = $this->editMode ? ReservationController::EDIT : ReservationController::ADMIN;
-                foreach ($resources as $key => $resource) {
-                    if (!$this->reservationManager->hasAccess($resource, $mask)) {
-                        unset($resources[$key]);
-                    }
-                }
-
-                return $resources;
-            },
+            'choices' => $this->getResourceByMask(),
             'property' => 'name',
             'group_by' => 'resource_type.name',
             'empty_value' => 'agenda.form.select_resource_pls'
         ));
+    }
+
+    public function getResourceByMask()
+    {
+        $resources = $this->em->getRepository('FormaLibreReservationBundle:Resource')->findAll();
+        $mask = $this->editMode ? ReservationController::EDIT : ReservationController::ADMIN;
+
+        foreach ($resources as $key => $resource) {
+            if (!$this->reservationManager->hasAccess($resource, $mask)) {
+                unset($resources[$key]);
+            }
+        }
+
+        return $resources;
     }
 
     public function setEditMode()

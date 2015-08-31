@@ -3,7 +3,10 @@
 namespace FormaLibre\ReservationBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Doctrine\ORM\EntityManager;
+use FormaLibre\ReservationBundle\Controller\ReservationController;
+use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,6 +25,7 @@ class ReservationToolListener
     private $httpKernel;
     private $templating;
     private $em;
+    private $reservationManager;
 
     /**
      * @DI\InjectParams({
@@ -29,7 +33,8 @@ class ReservationToolListener
      *      "requestStack"  = @DI\Inject("request_stack"),
      *      "httpKernel"    = @DI\Inject("http_kernel"),
      *      "templating"    = @DI\Inject("templating"),
-     *      "em"            = @DI\Inject("doctrine.orm.entity_manager")
+     *      "em"            = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager")
      * })
      */
     public function __construct(
@@ -37,7 +42,8 @@ class ReservationToolListener
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel,
         TwigEngine $templating,
-        EntityManager $em
+        EntityManager $em,
+        ReservationManager $reservationManager
     )
     {
         $this->container = $container;
@@ -45,6 +51,7 @@ class ReservationToolListener
         $this->httpKernel = $httpKernel;
         $this->templating = $templating;
         $this->em = $em;
+        $this->reservationManager = $reservationManager;
     }
 
     /**
@@ -74,8 +81,31 @@ class ReservationToolListener
      */
     public function onDisplayDesktopReservationAgenda(DisplayToolEvent $event)
     {
-        $resourcesType = $this->em->getRepository('FormaLibreReservationBundle:ResourceType')->findAll();
+        $resourcesTypes = $this->em->getRepository('FormaLibreReservationBundle:ResourceType')->findAll();
 
-        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig', ['resourcesType' => $resourcesType]));
+        foreach ($resourcesTypes as $resourcesTypeKey => $resourcesType) {
+            foreach ($resourcesType->getResources() as $resourceKey => $resource) {
+                if (!$this->reservationManager->hasAccess($resource, ReservationController::SEE)) {
+                    $resourcesType->removeResource($resource);
+                }
+            }
+        }
+
+        $event->setContent($this->templating->render('FormaLibreReservationBundle:Tool:reservationAgenda.html.twig', ['resourcesType' => $resourcesTypes]));
+    }
+
+    /**
+     * @DI\Observe("formalibre_delete_event_from_resource")
+     */
+    public function onResourceDeleted(GenericDatasEvent $event)
+    {
+        $resource = $event->getDatas()->getDatas();
+
+        foreach ($resource->getReservations() as $reservation) {
+            $this->em->remove($reservation->getEvent());
+        }
+        $this->em->flush();
+
+        $event->stopPropagation();
     }
 }

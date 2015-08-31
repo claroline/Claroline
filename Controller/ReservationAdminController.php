@@ -2,6 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Controller;
 
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Resource;
@@ -28,6 +29,7 @@ class ReservationAdminController extends Controller
     private $router;
     private $request;
     private $reservationManager;
+    private $eventDispatcher;
     private $resourceTypeRepo;
     private $resourceRightsRepo;
     private $roleRepo;
@@ -39,7 +41,8 @@ class ReservationAdminController extends Controller
      *      "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *      "router"      = @DI\Inject("router"),
      *      "request"     = @DI\Inject("request"),
-     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager")
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
+     *      "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -48,7 +51,8 @@ class ReservationAdminController extends Controller
         ObjectManager $om,
         RouterInterface $router,
         Request $request,
-        ReservationManager $reservationManager
+        ReservationManager $reservationManager,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->em = $em;
@@ -57,6 +61,7 @@ class ReservationAdminController extends Controller
         $this->router = $router;
         $this->request = $request;
         $this->reservationManager = $reservationManager;
+        $this->eventDispatcher = $eventDispatcher;
         $this->resourceTypeRepo = $this->om->getRepository('FormaLibreReservationBundle:ResourceType');
         $this->resourceRightsRepo = $this->om->getRepository('FormaLibreReservationBundle:ResourceRights');
         $this->roleRepo = $this->em->getRepository('ClarolineCoreBundle:Role');
@@ -147,6 +152,9 @@ class ReservationAdminController extends Controller
      */
     public function deleteResourceTypeAction(ResourceType $resourceType)
     {
+        // We have to manually delete the events because doctrine doesn't remove them even if there is a cascade parameter (@see Reservation Entity)
+        $this->reservationManager->deleteEventsBoundToResourcesType($resourceType);
+
         $this->em->remove($resourceType);
         $this->em->flush();
 
@@ -160,6 +168,7 @@ class ReservationAdminController extends Controller
      *     options={"expose"=true}
      * )
      */
+    //The resourceRights are handled by the updateResourceRolesAction() action. This function is executed by an ajax query -> See Resources/public/js/admin.js updateResourceRoles() method. We do this like that for a better form design and user experience
     public function addResourceAction(ResourceType $resourceType)
     {
         $formType = $this->get('formalibre.form.resource');
@@ -197,6 +206,7 @@ class ReservationAdminController extends Controller
      *      options={"expose"=true}
      * )
      */
+    //The resourceRights are handled by the updateResourceRolesAction() action. This function is executed by an ajax query -> See Resources/public/js/admin.js updateResourceRoles() method. We do this like that for a better form design and user experience
     public function modifyResourceAction(Resource $resource)
     {
         $formType = $this->get('formalibre.form.resource');
@@ -240,6 +250,9 @@ class ReservationAdminController extends Controller
      */
     public function deleteResourceAction(Resource $resource)
     {
+        // We have to manually delete the events because doctrine doesn't remove them even if there is a cascade parameter (@see Reservation Entity)
+        $this->reservationManager->deleteEventsBoundToResource($resource);
+
         $this->em->remove($resource);
         $this->em->flush();
 

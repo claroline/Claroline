@@ -23,7 +23,7 @@ class Reservation
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
+     * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource", inversedBy="reservations")
      * @ORM\JoinColumn(name="resource", nullable=false, onDelete="cascade")
      * @Assert\NotNull()
      */

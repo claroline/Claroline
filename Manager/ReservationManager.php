@@ -4,12 +4,15 @@ namespace FormaLibre\ReservationBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceRights;
+use FormaLibre\ReservationBundle\Entity\ResourceType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +37,7 @@ class ReservationManager
     private $su;
     private $container;
     private $em;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -45,7 +49,8 @@ class ReservationManager
      *     "translator"   = @DI\Inject("translator"),
      *     "su"           = @DI\Inject("claroline.security.utilities"),
      *     "container"    = @DI\Inject("service_container"),
-     *      "em"          = @DI\Inject("doctrine.orm.entity_manager")
+     *      "em"          = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -57,7 +62,8 @@ class ReservationManager
         TranslatorInterface $translator,
         Utilities $su,
         ContainerInterface $container,
-        EntityManager $em
+        EntityManager $em,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->rootDir = $rootDir;
@@ -69,6 +75,7 @@ class ReservationManager
         $this->su = $su;
         $this->container = $container;
         $this->em = $em;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     // Convert hh:mm to time in seconds
@@ -163,6 +170,25 @@ class ReservationManager
     {
         if (!$this->hasAccess($reservation->getResource(), $mask)) {
             throw new AccessDeniedException();
+        }
+    }
+
+    public function deleteEventsBoundToResource(Resource $resource)
+    {
+        $genericDatas = new GenericDatasEvent();
+        $genericDatas->setDatas($resource);
+
+        $this->eventDispatcher->dispatch(
+            'formalibre_delete_event_from_resource',
+            'GenericDatas',
+            ['datas' => $genericDatas]
+        );
+    }
+
+    public function deleteEventsBoundToResourcesType(ResourceType $resourceType)
+    {
+        foreach ($resourceType->getResources() as $resource) {
+            $this->deleteEventsBoundToResource($resource);
         }
     }
 }

@@ -55,7 +55,7 @@
                                 {% endfor %}
                             </div>
                         {% else %}
-                            <div class="list-group-item list-group-item-text">{{ 'filter.no_resource_type_found' }}</div>
+                            <div class="list-group-item list-group-item-text">{{ 'filter.no_resource_type_found'|trans({}, 'reservation') }}</div>
                         {% endfor %}
                     </div>
                 </div>

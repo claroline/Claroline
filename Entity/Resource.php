@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Table(name="formalibre_reservation_resource")
  * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity({"name", "resourceType"})
  */
 class Resource
@@ -61,6 +62,12 @@ class Resource
      * @ORM\JoinColumn(nullable=false)
      */
     private $resourceRights;
+
+    /**
+     * @ORM\OneToMany(targetEntity="FormaLibre\ReservationBundle\Entity\Reservation", mappedBy="resource")
+     * @ORM\JoinColumn(nullable=true, onDelete="cascade")
+     */
+    private $reservations;
 
     public function __construct()
     {
@@ -165,5 +172,22 @@ class Resource
     public function getResourceRights()
     {
         return $this->resourceRights;
+    }
+
+    public function addReservation(Reservation $reservation)
+    {
+        $this->reservations[] = $reservation;
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation)
+    {
+        $this->reservations->removeElement($reservation);
+    }
+
+    public function getReservations()
+    {
+        return $this->reservations;
     }
 }

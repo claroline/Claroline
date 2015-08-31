@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/08/21 01:45:48
+ * Generation date: 2015/08/31 12:08:20
  */
-class Version20150821134548 extends AbstractMigration
+class Version20150831120820 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -18,6 +18,17 @@ class Version20150821134548 extends AbstractMigration
             CREATE TABLE formalibre_reservation_resource_type (
                 id INT AUTO_INCREMENT NOT NULL, 
                 name VARCHAR(50) NOT NULL, 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            CREATE TABLE formalibre_reservation_resource_rights (
+                id INT AUTO_INCREMENT NOT NULL, 
+                resource_id INT NOT NULL, 
+                role_id INT NOT NULL, 
+                mask INT NOT NULL, 
+                INDEX IDX_92EF974689329D25 (resource_id), 
+                INDEX IDX_92EF9746D60322AC (role_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -39,12 +50,22 @@ class Version20150821134548 extends AbstractMigration
                 id INT AUTO_INCREMENT NOT NULL, 
                 resource INT NOT NULL, 
                 event_id INT NOT NULL, 
-                duration INT NOT NULL, 
-                last_update INT NOT NULL, 
                 INDEX IDX_71058F70BC91F416 (resource), 
                 UNIQUE INDEX UNIQ_71058F7071F7E88B (event_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
+            ALTER TABLE formalibre_reservation_resource_rights 
+            ADD CONSTRAINT FK_92EF974689329D25 FOREIGN KEY (resource_id) 
+            REFERENCES formalibre_reservation_resource (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE formalibre_reservation_resource_rights 
+            ADD CONSTRAINT FK_92EF9746D60322AC FOREIGN KEY (role_id) 
+            REFERENCES claro_role (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE formalibre_reservation_resource 
@@ -55,7 +76,8 @@ class Version20150821134548 extends AbstractMigration
         $this->addSql("
             ALTER TABLE formalibre_reservation 
             ADD CONSTRAINT FK_71058F70BC91F416 FOREIGN KEY (resource) 
-            REFERENCES formalibre_reservation_resource (id)
+            REFERENCES formalibre_reservation_resource (id) 
+            ON DELETE CASCADE
         ");
         $this->addSql("
             ALTER TABLE formalibre_reservation 
@@ -72,11 +94,18 @@ class Version20150821134548 extends AbstractMigration
             DROP FOREIGN KEY FK_7AAF141683FEF793
         ");
         $this->addSql("
+            ALTER TABLE formalibre_reservation_resource_rights 
+            DROP FOREIGN KEY FK_92EF974689329D25
+        ");
+        $this->addSql("
             ALTER TABLE formalibre_reservation 
             DROP FOREIGN KEY FK_71058F70BC91F416
         ");
         $this->addSql("
             DROP TABLE formalibre_reservation_resource_type
+        ");
+        $this->addSql("
+            DROP TABLE formalibre_reservation_resource_rights
         ");
         $this->addSql("
             DROP TABLE formalibre_reservation_resource

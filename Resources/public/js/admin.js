@@ -152,6 +152,7 @@
         return Translator.trans(key, {}, 'reservation');
     }
 
+    //Initialize the rolesList variable when a form is rendered
     function clearRolesList()
     {
         $('.roles-list-btn').children().each(function() {
@@ -165,10 +166,7 @@
     {
         $.ajax({
             url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesList}),
-            type: 'post',
-            success: function() {
-
-            }
+            type: 'post'
         });
     }
 }) ();
