@@ -15,13 +15,13 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Themes\ThemeService;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as baseTemplateLocator;
+use Symfony\Bundle\FrameworkBundle\Templating\Loader\TemplateLocator as BaseTemplateLocator;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 
 /**
  * {@inheritDoc}
  */
-class TemplateLocator extends baseTemplateLocator
+class TemplateLocator extends BaseTemplateLocator
 {
     protected $locator;
     protected $cache;
@@ -62,6 +62,12 @@ class TemplateLocator extends baseTemplateLocator
 
         $name = ucwords(str_replace('-', ' ', $this->configHandler->getParameter('theme')));
         $theme = $this->themeService->getThemeBy(array('name' => $name));
+
+        if (!$theme) {
+            // no custom localization if no theme (e.g. in test environment)
+            return parent::locate($template, $currentPath, $first);
+        }
+
         $bundle = $this->getBundle($theme);
         $template = $this->locateTemplate($template, $bundle, $theme, $currentPath);
         $key = $this->getCacheKey($template);
@@ -111,22 +117,10 @@ class TemplateLocator extends baseTemplateLocator
         return $newTemplate;
     }
 
-    /**
-     * Get the th of a theme
-     */
-    private function getPath($theme)
+    private function getBundle(Theme $theme)
     {
-        return ($theme instanceof Theme) ? $theme->getPath() : null;
-    }
+        $plugin = $theme->getPlugin();
 
-    private function getBundle($theme)
-    {
-        if (!$theme) return 'ClarolineCoreBundle';
-
-        if ($theme instanceof Theme) {
-            $plugin = $theme->getPlugin();
-        }
-
-        return $plugin !== null ? $plugin->getSfName(): 'ClarolineCoreBundle';
+        return $plugin ? $plugin->getSfName(): 'ClarolineCoreBundle';
     }
 }
