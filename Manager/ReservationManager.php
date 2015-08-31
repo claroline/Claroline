@@ -14,14 +14,11 @@ use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceRights;
 use FormaLibre\ReservationBundle\Entity\ResourceType;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Library\Security\Utilities;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 
 /**
@@ -31,11 +28,7 @@ class ReservationManager
 {
     private $om;
     private $tokenStorage;
-    private $authorization;
-    private $rm;
     private $translator;
-    private $su;
-    private $container;
     private $em;
     private $eventDispatcher;
 
@@ -43,12 +36,8 @@ class ReservationManager
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "rootDir"      = @DI\Inject("%kernel.root_dir%"),
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "rm"           = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"   = @DI\Inject("translator"),
-     *     "su"           = @DI\Inject("claroline.security.utilities"),
-     *     "container"    = @DI\Inject("service_container"),
      *      "em"          = @DI\Inject("doctrine.orm.entity_manager"),
      *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
@@ -57,11 +46,7 @@ class ReservationManager
         ObjectManager $om,
         $rootDir,
         TokenStorageInterface $tokenStorage,
-        AuthorizationCheckerInterface $authorization,
-        RoleManager $rm,
         TranslatorInterface $translator,
-        Utilities $su,
-        ContainerInterface $container,
         EntityManager $em,
         StrictDispatcher $eventDispatcher
     )
@@ -69,11 +54,7 @@ class ReservationManager
         $this->rootDir = $rootDir;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
-        $this->authorization = $authorization;
-        $this->rm = $rm;
         $this->translator = $translator;
-        $this->su = $su;
-        $this->container = $container;
         $this->em = $em;
         $this->eventDispatcher = $eventDispatcher;
     }

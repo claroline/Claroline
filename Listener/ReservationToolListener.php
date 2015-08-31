@@ -9,10 +9,8 @@ use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -20,7 +18,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class ReservationToolListener
 {
-    private $container;
     private $request;
     private $httpKernel;
     private $templating;
@@ -29,7 +26,6 @@ class ReservationToolListener
 
     /**
      * @DI\InjectParams({
-     *      "container"     = @DI\Inject("service_container"),
      *      "requestStack"  = @DI\Inject("request_stack"),
      *      "httpKernel"    = @DI\Inject("http_kernel"),
      *      "templating"    = @DI\Inject("templating"),
@@ -38,7 +34,6 @@ class ReservationToolListener
      * })
      */
     public function __construct(
-        ContainerInterface $container,
         RequestStack $requestStack,
         HttpKernelInterface $httpKernel,
         TwigEngine $templating,
@@ -46,7 +41,6 @@ class ReservationToolListener
         ReservationManager $reservationManager
     )
     {
-        $this->container = $container;
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
         $this->templating = $templating;

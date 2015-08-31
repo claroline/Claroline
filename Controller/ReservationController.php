@@ -5,19 +5,16 @@ namespace FormaLibre\ReservationBundle\Controller;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ReservationController extends Controller
@@ -26,52 +23,40 @@ class ReservationController extends Controller
     const EDIT = 2;
     const ADMIN = 4;
 
-    private $em;
     private $om;
-    private $formFactory;
     private $router;
     private $request;
     private $agendaManager;
     private $reservationManager;
     private $translator;
-    private $tokenStorage;
     private $reservationRepo;
     private $eventRepo;
 
     /**
      * @DI\InjectParams({
-     *      "em"          = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "formFactory" = @DI\Inject("form.factory"),
      *      "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *      "router"      = @DI\Inject("router"),
      *      "request"     = @DI\Inject("request"),
      *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
-     *      "translator"    = @DI\Inject("translator"),
-     *      "tokenStorage"  = @DI\Inject("security.token_storage")
+     *      "translator"    = @DI\Inject("translator")
      * })
      */
     public function __construct(
-        EntityManager $em,
-        FormFactory $formFactory,
         ObjectManager $om,
         RouterInterface $router,
         Request $request,
         AgendaManager $agendaManager,
         ReservationManager $reservationManager,
-        TranslatorInterface $translator,
-        TokenStorageInterface $tokenStorage
+        TranslatorInterface $translator
     )
     {
-        $this->em = $em;
-        $this->formFactory = $formFactory;
         $this->om = $om;
         $this->router = $router;
         $this->request = $request;
         $this->agendaManager = $agendaManager;
         $this->reservationManager = $reservationManager;
         $this->translator = $translator;
-        $this->tokenStorage = $tokenStorage;
         $this->reservationRepo = $this->om->getRepository('FormaLibreReservationBundle:Reservation');
         $this->eventRepo = $this->om->getRepository('ClarolineAgendaBundle:Event');
     }
