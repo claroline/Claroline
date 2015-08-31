@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Listener;
 
 use Claroline\CoreBundle\Event\Analytics\PlatformContentItemDetailsEvent;
 use Claroline\CoreBundle\Event\Analytics\PlatformContentItemEvent;
+use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -31,17 +32,25 @@ class AdministrationAnalyticsListener
     private $portfolioManager;
 
     /**
+     * @var \Doctrine\ORM\EntityManager
+     */
+    protected $entityManager;
+
+    /**
      * @DI\InjectParams({
      *     "twig" = @DI\Inject("templating"),
      *     "translator" = @DI\Inject("translator"),
-     *     "portfolioManager" = @DI\Inject("icap_portfolio.manager.portfolio")
+     *     "portfolioManager" = @DI\Inject("icap_portfolio.manager.portfolio"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
-    public function __construct(TwigEngine $twig, TranslatorInterface $translator, PortfolioManager $portfolioManager)
+    public function __construct(TwigEngine $twig, TranslatorInterface $translator, PortfolioManager $portfolioManager,
+        EntityManager $entityManager)
     {
         $this->twig = $twig;
         $this->translator = $translator;
         $this->portfolioManager = $portfolioManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -65,6 +74,8 @@ class AdministrationAnalyticsListener
      */
     public function onPlatformContentItemDetailsPortfolio(PlatformContentItemDetailsEvent $event)
     {
+        $this->entityManager->getFilters()->disable('softdeleteable');
+
         $countPortfolio = $this->portfolioManager->countAll();
         $countDeletedPortfolio = $this->portfolioManager->countAllDeleted();
 
@@ -93,13 +104,33 @@ class AdministrationAnalyticsListener
             }
         }
 
+        $countPortfolioByVisibilityStatusGraphData = [
+            [
+                'name' => 'closed_mode_portfolio',
+                'value' => $countClosedPortfolio
+            ],
+            [
+                'name' => 'open_mode_portfolio',
+                'value' => $countOpenPortfolio
+            ],
+            [
+                'name' => 'private_mode_portfolio',
+                'value' => $countPrivatePortfolio
+            ],
+            [
+                'name' => 'platform_mode_portfolio',
+                'value' => $countPlatformPortfolio
+            ],
+        ];
+
         $event->setContent($this->twig->render('IcapPortfolioBundle:analytics:platform_content_item_details.html.twig', [
             'countPortfolio' => $countPortfolio,
             'countClosedPortfolio' => $countClosedPortfolio,
             'countOpenPortfolio' => $countOpenPortfolio,
             'countPrivatePortfolio' => $countPrivatePortfolio,
             'countPlatformPortfolio' => $countPlatformPortfolio,
-            'countDeletedPortfolio' => $countDeletedPortfolio
+            'countDeletedPortfolio' => $countDeletedPortfolio,
+            'portfolioRepartitionStatuss' => $countPortfolioByVisibilityStatusGraphData
         ]));
         $event->stopPropagation();
     }

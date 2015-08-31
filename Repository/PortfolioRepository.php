@@ -111,7 +111,6 @@ class PortfolioRepository extends EntityRepository
     {
         return $this->createQueryBuilder('p')
             ->select('COUNT(p) as number, p.visibility')
-            ->where('p.deletedAt IS NULL')
             ->groupBy('p.visibility')
             ->getQuery()
             ->getArrayResult()
