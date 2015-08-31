@@ -37,16 +37,13 @@
     if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) {
         bg_color = "#fff";
     }
-    var numberRows = 7;
-    {% if numberRows is defined and numberRows is not empty %}
-    numberRows = {{ numberRows }};
-    {% endif %}
     $(document).ready(function(){
-        if (pieChartData.length>0) {
+        if (pieChartData.length > 0) {
             var resourcesPlot = $.jqplot(
                     'resources-pie-chart',
                     [pieChartData],
                     {
+                        seriesColors: ["#d9534f", "#5cb85c", "#ed9c28", "#428bca"],
                         title: {show: false},
                         grid: {
                             drawBorder: false,
@@ -63,29 +60,29 @@
                             showTooltip: false
                         },
                         seriesDefaults: {
-                            showMarker:true,
-                            renderer:$.jqplot.PieRenderer,
-                            rendererOptions:{
+                            showMarker: true,
+                            renderer: $.jqplot.PieRenderer,
+                            rendererOptions: {
                                 showDataLabels: true,
                                 dataLabelThreshold: 2,
                                 dataLabels: 'percent',
-                                sliceMargin:0.3,
+                                sliceMargin: 0.3,
                                 dataLabelFormatString: '%.1f%%',
-                                highlightMouseOver:false
+                                highlightMouseOver: false
                             },
-                            shadow:false
+                            shadow: false
                         },
                         legend:{
                             location: 's',
-                            border:'none',
+                            border: 'none',
                             renderer: $.jqplot.CavasTextRenderer,
-                            show:true,
-                            showMarker:true,
-                            rendererOptions:{
-                                numberRows:numberRows
+                            show: true,
+                            showMarker: true,
+                            rendererOptions: {
+                                numberRows: 4
                             },
-                            backgroundColor:bg_color,
-                            placement:'outsideGrid'
+                            backgroundColor: bg_color,
+                            placement: 'outsideGrid'
                         }
                     }
             );
