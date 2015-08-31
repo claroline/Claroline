@@ -93,6 +93,7 @@ analytics_connections: Connections
 analytics_home: Home
 analytics_resources: Resources
 analytics_top: Top
+analytics_return_platform_content: "Back to global platform content statistics"
 anonymous: Anonymous
 answer: Answer
 anywhere: Anywhere
