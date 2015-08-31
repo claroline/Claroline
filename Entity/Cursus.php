@@ -220,7 +220,7 @@ class Cursus
         return $this->course;
     }
 
-    public function setCourse(Course $course)
+    public function setCourse(Course $course = null)
     {
         $this->course = $course;
     }
@@ -250,7 +250,7 @@ class Cursus
         return $this->parent;
     }
 
-    public function setParent(Cursus $parent)
+    public function setParent(Cursus $parent = null)
     {
         $this->parent = $parent;
     }

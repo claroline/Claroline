@@ -22,6 +22,7 @@ use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\CursusCourseType;
 use Claroline\CursusBundle\Form\CursusType;
+use Claroline\CursusBundle\Form\FileSelectType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CursusBundle\Manager\CursusManager;
@@ -31,8 +32,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -43,6 +47,7 @@ class CursusController extends Controller
     private $formFactory;
     private $platformConfigHandler;
     private $request;
+    private $router;
     private $toolManager;
     private $translator;
 
@@ -53,6 +58,7 @@ class CursusController extends Controller
      *     "formFactory"           = @DI\Inject("form.factory"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "router"                = @DI\Inject("router"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -63,6 +69,7 @@ class CursusController extends Controller
         FormFactory $formFactory,
         PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
+        RouterInterface $router,
         ToolManager $toolManager,
         TranslatorInterface $translator
     )
@@ -72,6 +79,7 @@ class CursusController extends Controller
         $this->formFactory = $formFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
+        $this->router = $router;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
     }
@@ -1187,6 +1195,144 @@ class CursusController extends Controller
             'order' => $order,
             'workspacesList' => $workspacesList
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/cursus/export",
+     *     name="claro_cursus_export",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function cursusExportAction()
+    {
+        $this->checkToolAccess();
+        $cursus = $this->cursusManager->getAllCursus();
+        $zipName = 'cursus.zip';
+        $mimeType = 'application/zip';
+        $file = $this->cursusManager->zipDatas($cursus, 'cursus');;
+
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename=' . urlencode($zipName));
+        $response->headers->set('Content-Type', $mimeType);
+        $response->headers->set('Connection', 'close');
+        $response->send();
+
+        return new Response();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/cursus/import/form",
+     *     name="claro_cursus_import_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function cursusImportFormAction()
+    {
+        $this->checkToolAccess();
+        $displayedWords = array();
+
+        foreach (CursusDisplayedWord::$defaultKey as $key) {
+            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+        }
+        $form = $this->formFactory->create(new FileSelectType());
+
+        return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/cursus/import",
+     *     name="claro_cursus_import",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportForm.html.twig")
+     */
+    public function cursusImportAction()
+    {
+        $this->checkToolAccess();
+        $form = $this->formFactory->create(new FileSelectType());
+        $form->handleRequest($this->request);
+        $file = $form->get('archive')->getData();
+        $zip = new \ZipArchive();
+
+        if (empty($file) || 
+            !$zip->open($file)||
+            !$zip->getStream('cursus.json') ||
+            !$zip->getStream('courses.json')) {
+
+            $form->get('archive')->addError(
+                new FormError($this->translator->trans('invalid_file', array(), 'cursus'))
+            );
+        }
+
+        if ($form->isValid()) {
+            $coursesStream = $zip->getStream('courses.json');
+            $coursesContents = '';
+
+            while (!feof($coursesStream)) {
+                $coursesContents .= fread($coursesStream, 2);
+            }
+            fclose($coursesStream);
+            $courses = json_decode($coursesContents, true);
+            $importedCourses = $this->cursusManager->importCourses($courses);
+
+            $iconsDir = $this->container->getParameter('claroline.param.web_directory') .
+                '/files/cursusbundle/icons/';
+
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $name = $zip->getNameIndex($i);
+
+                if (strpos($name, 'icons/') !== 0) {
+                    continue;
+                }
+                $iconFileName = $iconsDir . substr($name, 6);
+                $stream = $zip->getStream($name);
+                $destStream = fopen($iconFileName, 'w');
+
+                while ($data = fread($stream, 1024)) {
+                    fwrite($destStream, $data);
+                }
+                fclose($stream);
+                fclose($destStream);
+            }
+            $cursusStream = $zip->getStream('cursus.json');
+            $cursuscontents = '';
+
+            while (!feof($cursusStream)) {
+                $cursuscontents .= fread($cursusStream, 2);
+            }
+            fclose($cursusStream);
+            $cursus = json_decode($cursuscontents, true);
+            $this->cursusManager->importCursus($cursus, $importedCourses);
+
+            $zip->close();
+
+            return new RedirectResponse(
+                $this->router->generate('claro_cursus_tool_index')
+            );
+        } else {
+            $displayedWords = array();
+
+            foreach (CursusDisplayedWord::$defaultKey as $key) {
+                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
+            }
+
+            return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+        }
+
     }
 
     private function checkToolAccess()

@@ -929,7 +929,7 @@ class CourseController extends Controller
         $courses = $this->cursusManager->getAllCourses('', 'id', 'ASC', false);
         $zipName = 'courses.zip';
         $mimeType = 'application/zip';
-        $file = $this->cursusManager->zipCourses($courses);;
+        $file = $this->cursusManager->zipDatas($courses, 'course');;
 
         $response = new StreamedResponse();
         $response->setCallBack(

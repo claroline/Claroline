@@ -1385,16 +1385,30 @@ class CursusManager
         }
     }
 
-    public function zipCourses(array $courses)
+    public function zipDatas(array $datas, $type)
+    {
+        $archive = new \ZipArchive();
+        $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+
+        if ($type === 'cursus') {
+            $this->zipCursus($datas, $archive);
+        } elseif ($type === 'course') {
+            $this->zipCourses($datas, $archive);
+        }
+        $archive->close();
+        file_put_contents($this->archiveDir, $pathArch . "\n", FILE_APPEND);
+
+        return $pathArch;
+    }
+
+    public function zipCourses(array $courses, \ZipArchive $archive)
     {
         $json = $this->serializer->serialize(
             $courses,
             'json',
             SerializationContext::create()->setGroups(array('api'))
         );
-        $archive = new \ZipArchive();
-        $pathArch = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->ut->generateGuid() . '.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
         $archive->addFromString('courses.json', $json);
 
         foreach ($courses as $course) {
@@ -1408,14 +1422,33 @@ class CursusManager
                 );
             }
         }
-        $archive->close();
-        file_put_contents($this->archiveDir, $pathArch . "\n", FILE_APPEND);
+    }
 
-        return $pathArch;
+    public function zipCursus(array $cursusList, \ZipArchive $archive)
+    {
+        $cursusJson = $this->serializer->serialize(
+            $cursusList,
+            'json',
+            SerializationContext::create()->setGroups(array('api'))
+        );
+        $archive->addFromString('cursus.json', $cursusJson);
+
+        $courses = array();
+
+        foreach ($cursusList as $cursus) {
+
+            $course = $cursus->getCourse();
+
+            if (!is_null($course)) {
+                $courses[$course->getId()] = $course;
+            }
+        }
+        $this->zipCourses($courses, $archive);
     }
 
     public function importCourses(array $datas)
     {
+        $courses = array();
         $i = 0;
         $usedCodes = $this->getAllCoursesCodes();
         $this->om->startFlushSuite();
@@ -1434,6 +1467,7 @@ class CursusManager
                 $course->setIcon($data['icon']);
             }
             $this->om->persist($course);
+            $courses[$data['id']] = $course;
             $i++;
 
             if ($i % 50 === 0) {
@@ -1441,6 +1475,66 @@ class CursusManager
             }
         }
         $this->om->endFlushSuite();
+
+        return $courses;
+    }
+
+    public function importCursus(array $datas, array $courses = array())
+    {
+        $roots = array();
+        $cursusChildren = array();
+
+        foreach ($datas as $cursus) {
+            $root = $cursus['root'];
+            $lvl = $cursus['lvl'];
+            $id = $cursus['id'];
+
+            if ($lvl === 0) {
+                $roots[$id] = array(
+                    'id' => $id,
+                    'code' => isset($cursus['code']) ? $cursus['code'] : null,
+                    'description' => isset($cursus['description']) ? 
+                        $cursus['description'] :
+                        null,
+                    'title' => $cursus['title'],
+                    'blocking' => $cursus['blocking'],
+                    'cursus_order' => $cursus['cursusOrder'],
+                    'root' => $root,
+                    'lvl' => $lvl,
+                    'lft' => $cursus['lft'],
+                    'rgt' => $cursus['rgt'],
+                    'details' => $cursus['details'],
+                    'course' => isset($cursus['course']) && isset($cursus['course']['id']) ?
+                        $cursus['course']['id'] :
+                        null
+                );
+            } else {
+                $parentId = $cursus['parentId'];
+
+                if (!isset($cursusChildren[$parentId])) {
+                    $cursusChildren[$parentId] = array();
+                }
+                $cursusChildren[$parentId][$id] = array(
+                    'id' => $id,
+                    'code' => isset($cursus['code']) ? $cursus['code'] : null,
+                    'description' => isset($cursus['description']) ? 
+                        $cursus['description'] :
+                        null,
+                    'title' => $cursus['title'],
+                    'blocking' => $cursus['blocking'],
+                    'cursus_order' => $cursus['cursusOrder'],
+                    'root' => $root,
+                    'lvl' => $lvl,
+                    'lft' => $cursus['lft'],
+                    'rgt' => $cursus['rgt'],
+                    'details' => $cursus['details'],
+                    'course' => isset($cursus['course']) && isset($cursus['course']['id']) ?
+                        $cursus['course']['id'] :
+                        null
+                );
+            }
+        }
+        $this->importRootCursus($roots, $cursusChildren, $courses);
     }
 
     private function getAllCoursesCodes()
@@ -1450,6 +1544,22 @@ class CursusManager
 
         foreach ($courses as $course) {
             $codes[$course->getCode()] = true;
+        }
+
+        return $codes;
+    }
+
+    private function getAllCursusCodes()
+    {
+        $codes = array();
+        $allCursus = $this->getAllCursus();
+
+        foreach ($allCursus as $cursus) {
+            $code = $cursus->getCode();
+
+            if (!empty($code)) {
+                $codes[$code] = true;
+            }
         }
 
         return $codes;
@@ -1469,6 +1579,106 @@ class CursusManager
         }
 
         return $result;
+    }
+
+    private function importRootCursus(array $roots, array $children, array $courses)
+    {
+        $this->om->startFlushSuite();
+        $codes = $this->getAllCursusCodes();
+        $createdCursus = array();
+
+        $index = 0;
+
+        foreach ($roots as $root) {
+            $cursus = new Cursus();
+            $cursus->setTitle($root['title']);
+            $cursus->setDescription($root['description']);
+            $cursus->setBlocking($root['blocking']);
+            $cursus->setCursusOrder($root['cursus_order']);
+            $cursus->setDetails($root['details']);
+
+            if (!empty($root['course']) && isset($courses[$root['course']])) {
+                $cursus->setCourse($courses[$root['course']]);
+            }
+
+            if (!empty($root['code'])) {
+                $code = $this->generateValidCode($root['code'], $codes);
+                $cursus->setCode($code);
+            }
+            $this->om->persist($cursus);
+            $createdCursus[$root['id']] = $cursus;
+            $index++;
+
+            if ($index % 50 === 0) {
+                $this->om->forceFlush();
+            }
+
+            if (isset($children[$root['id']])) {
+                $this->importCursusChildren(
+                    $root,
+                    $children,
+                    $courses,
+                    $codes,
+                    $createdCursus,
+                    $index
+                );
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    private function importCursusChildren(
+        array $parent,
+        array $children,
+        array $courses,
+        array $codes,
+        array &$createdCursus,
+        &$index
+    )
+    {
+        if (isset($parent['id']) && isset($children[$parent['id']])) {
+
+            foreach ($children[$parent['id']] as $child) {
+                $cursus = new Cursus();
+                $cursus->setTitle($child['title']);
+                $cursus->setDescription($child['description']);
+                $cursus->setBlocking($child['blocking']);
+                $cursus->setCursusOrder($child['cursus_order']);
+                $cursus->setDetails($child['details']);
+
+                if (isset($createdCursus[$parent['id']])) {
+                    $cursus->setParent($createdCursus[$parent['id']]);
+                }
+
+                if (!empty($child['course']) && isset($courses[$child['course']])) {
+                    $cursus->setCourse($courses[$child['course']]);
+                }
+
+                if (!empty($child['code'])) {
+                    $code = $this->generateValidCode($child['code'], $codes);
+                    $cursus->setCode($code);
+                }
+                $this->om->persist($cursus);
+                $createdCursus[$child['id']] = $cursus;
+                $index++;
+
+                if ($index % 50 === 0) {
+                    $this->om->forceFlush();
+                }
+
+                if (isset($children[$child['id']])) {
+                    $this->importCursusChildren(
+                        $child,
+                        $children,
+                        $courses,
+                        $codes,
+                        $createdCursus,
+                        $index
+                    );
+                }
+
+            }
+        }
     }
 
 
