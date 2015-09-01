@@ -1,0 +1,23 @@
+{
+    "name": "claroline/tag-bundle",
+    "description": "Claroline tag tool plugin",
+    "keywords": ["Claroline", "Plugin", "Tag", "Tool"],
+    "homepage": "http://www.claroline.net",
+    "type": "claroline-plugin",
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "Claroline development team",
+            "email": "dev@claroline.net",
+            "homepage": "http://github.com/claroline"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.1",
+        "claroline/core-bundle": "~6.0"
+    },
+    "autoload": {
+        "psr-0": { "Claroline\\TagBundle": "" }
+    },
+    "target-dir": "Claroline/TagBundle"
+}
