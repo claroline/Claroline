@@ -107,7 +107,7 @@
      function onEventClick(event, jsEvent)
      {
          var workspaceId = event.workspace_id ? event.workspace_id : 0;
-         if (workspacePermissions[workspaceId] && event.edibable) {
+         if (workspacePermissions[workspaceId] && event.editable !== false) {
              // If the user can edit the event
              var $this = $(this);
              // If click on the check symbol of a task, mark this task as "to do"
