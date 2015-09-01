@@ -69,6 +69,8 @@ class DocumentRepository extends EntityRepository {
             ->leftJoin('document.drop', 'drop')
             ->andWhere('drop.user = :user')
             ->andWhere('drop.dropzone = :dropzone')
+        /* InnovaERV : ajout de cette condition car on ne compte pas les documents déposés par l'enseignant */
+            ->andWhere('drop.user != document.sender')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
