@@ -511,10 +511,10 @@ class DropController extends DropzoneBaseController
                                 ->getRepository('InnovaCollecticielBundle:Comment')
                                 ->countCommentNotRead($drop->getUser());
 
-            // Nombre de devoirs à corriger/ Repo : Document
+            // Nombre de demandes adressées/ Repo : Document
             $nbTextToRead = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
-                                ->countTextToRead($drop->getUser());
+                                ->countTextToRead($drop->getUser(), $drop->getDropZone());
 
             // Affectations des résultats dans les tableaux
             $userToCommentCount[$drop->getUser()->getId()] = $nbCommentsPerUser;

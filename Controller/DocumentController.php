@@ -191,10 +191,6 @@ class DocumentController extends DropzoneBaseController
         $document = new Document();
         $document->setType($documentType);
 
-
-echo "createDocument";
-echo "userId :" . $drop->getId();
-die();
         $node = null;
         if ($documentType == 'url') {
             $data = $form->getData();
@@ -274,12 +270,20 @@ die();
             if ($form->isValid()) {
                 $this->createDocument($dropzone, $drop, $form, $documentType);
 
+/*
+InnoERV : demande de JJQ dans son document d'août 2015
+Quand un enseignant dépose un document (Fichier, URl, ressource ou texte)
+dans l'espace collecticiel d'un étudiant
+alors il faut revenir sur l'espace collecticiel de l'étudiant
+Travail effectué : changement de route et ajout d'un paramètre pour cette nouvelle route
+*/
                 return $this->redirect(
                     $this->generateUrl(
-                        'innova_collecticiel_drop',
+                        'innova_collecticiel_drop_switch',
                         array(
-                            'resourceId' => $dropzone->getId()
-                        )
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $drop->getUser()->getId()
+                             )
                     )
                 );
             }
