@@ -989,17 +989,19 @@ class DropController extends DropzoneBaseController
         $userNbAdressedRequests = array();
 
         foreach ($dropzone->getDrops() as $drop) {
+
+            //var_dump($drop->getDropZone()->getId());die();
             /** InnovaERV : ajout pour calculer les 2 zones **/
 
-            // Nombre de commentaires non lus/ Repo : Comment
+            // Nombre de documents déposés/ Repo : Document
             $nbDocDropped = $this->getDoctrine()
-                                ->getRepository('InnovaCollecticielBundle:Comment')
-                                ->countCommentNotRead($drop->getUser());
+                                ->getRepository('InnovaCollecticielBundle:Document')
+                                ->countDocSubmissions($drop->getUser(), $drop->getDropZone());
 
-            // Nombre de devoirs à corriger/ Repo : Document
+            // Nombre de demandes adressées/ Repo : Document
             $nbAdressedRequests = $this->getDoctrine()
                                 ->getRepository('InnovaCollecticielBundle:Document')
-                                ->countTextToRead($drop->getUser());
+                                ->countTextToRead($drop->getUser(), $drop->getDropZone());
 
             // Affectations des résultats dans les tableaux
             $userNbDocDropped[$drop->getUser()->getId()] = $nbDocDropped;

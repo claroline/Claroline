@@ -32,6 +32,11 @@ class CommentRepository extends EntityRepository {
             ->andWhere('comment.user = :user')
             ->setParameter('user', $user);
 
+      $qb = $this->createQueryBuilder('comment')
+            ->select('comment')
+            ->andWhere('comment.user = :user')
+            ->setParameter('user', $user);
+
         return count($qb->getQuery()->getResult());
     }
 

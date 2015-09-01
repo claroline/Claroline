@@ -9,6 +9,7 @@ namespace Innova\CollecticielBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\User;
+use Innova\CollecticielBundle\Entity\Dropzone;
 
 class DocumentRepository extends EntityRepository {
 
@@ -21,10 +22,10 @@ class DocumentRepository extends EntityRepository {
     */
 
     /**
-     *  Pour compter les devoirs à corriger pour l'utilisateur indiqué
+     *  Pour compter les demandes addressées pour l'utilisateur indiqué
      * @param $userId
     */
-    public function countTextToRead(User $user)
+    public function countTextToRead(User $user, Dropzone $dropzone)
     {
 
         /* requête SQL :
@@ -42,11 +43,37 @@ class DocumentRepository extends EntityRepository {
             ->leftJoin('document.drop', 'drop')
             ->andWhere('document.validate = true')
             ->andWhere('drop.user = :user')
-            ->setParameter('user', $user);
+            ->andWhere('drop.dropzone = :dropzone')
+            ->setParameter('user', $user)
+            ->setParameter('dropzone', $dropzone);
             ;
 
         $numberDocuments = count($qb->getQuery()->getResult());
 //        echo "Utilisateur numéro " . $user->getId() . " a " . $numberDocuments . " document(s)";die();
+
+        return $numberDocuments;
+
+    }
+
+    /**
+     *  Pour compter les documents déposés pour l'utilisateur indiqué et le dropzone indiqué
+     * @param $userId
+     * @param $dropzoneId
+    */
+    public function countDocSubmissions(User $user, Dropzone $dropzone)
+    {
+
+        /* requête avec CreateQuery : */
+        $qb = $this->createQueryBuilder('document')
+            ->select('document')
+            ->leftJoin('document.drop', 'drop')
+            ->andWhere('drop.user = :user')
+            ->andWhere('drop.dropzone = :dropzone')
+            ->setParameter('user', $user)
+            ->setParameter('dropzone', $dropzone);
+            ;
+
+        $numberDocuments = count($qb->getQuery()->getResult());
 
         return $numberDocuments;
 

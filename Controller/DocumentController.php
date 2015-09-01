@@ -191,6 +191,10 @@ class DocumentController extends DropzoneBaseController
         $document = new Document();
         $document->setType($documentType);
 
+
+echo "createDocument";
+echo "userId :" . $drop->getId();
+die();
         $node = null;
         if ($documentType == 'url') {
             $data = $form->getData();

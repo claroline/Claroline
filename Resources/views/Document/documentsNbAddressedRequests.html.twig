@@ -5,7 +5,7 @@
 {# Parcours du tableau pour afficher le nombre de commentaires de l'utilisateur en train d'être traité #}
 {% for key,value in userNbAdressedRequests %}
     {% if drop.user.id == key %}
-        {% set nbComment = value + 1 %}
+        {% set nbComment = value %}
     {% endif %}
 {% endfor %}
 
