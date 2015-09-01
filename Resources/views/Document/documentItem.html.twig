@@ -1,8 +1,12 @@
 {# InnovaERV : Affichage de la ligne du tableau en fonction du type : admin ou pas #}
-{% if document.sender.id == document.drop.user.id %}
-    {% set classArray="warning" %}
+{% if adminInnova %}
+    {% if document.sender.id == document.drop.user.id %}
+        {% set classArray="warning" %}
+    {% else %}
+        {% set classArray="info" %}
+    {% endif %}
 {% else %}
-    {% set classArray="info" %}
+    {% set classArray="warning" %}
 {% endif %}
 
 {% if adminInnova and not document.validate %}
