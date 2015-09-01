@@ -149,8 +149,3 @@ PathSummaryEditCtrl.prototype.removeStep = function (step) {
         }.bind(this)
     );
 };
-
-PathSummaryEditCtrl.prototype.goTo = function goTo(step) {
-    console.log('coucou je suis PathSummaryEdit');
-    this.pathService.goTo(step);
-};

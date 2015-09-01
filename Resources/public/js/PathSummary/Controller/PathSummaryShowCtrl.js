@@ -40,8 +40,3 @@ PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
         this.userProgressionService.update(step, newStatus);
     }
 };
-
-PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
-    console.log('coucou je suis PathSummaryShow');
-    this.pathService.goTo(step);
-};
