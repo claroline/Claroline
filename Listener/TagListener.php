@@ -9,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\TagBundle;
+namespace Claroline\TagBundle\Listener;
 
-use Claroline\CoreBundle\Library\PluginBundle;
-
-class ClarolineTagBundle extends PluginBundle
+/**
+ * @DI\Service
+ */
+class TagListener
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
 }

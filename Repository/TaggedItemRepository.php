@@ -9,14 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\TagBundle;
+namespace Claroline\TagBundle\Repository;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Doctrine\ORM\EntityRepository;
 
-class ClarolineTagBundle extends PluginBundle
+class TaggedItemRepository extends EntityRepository
 {
-    public function hasMigrations()
-    {
-        return true;
-    }
 }
