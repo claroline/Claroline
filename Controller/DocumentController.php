@@ -214,6 +214,10 @@ class DocumentController extends DropzoneBaseController
         $document->setDocumentDate(new \DateTime());
         
         $sender = $this->get('security.token_storage')->getToken()->getUser();
+        
+        if ($sender->getId() !== $drop->getUser()->getId()) {
+            $document->setValidate(true);
+        }
 
         $document->setDrop($drop);
         $document->setSender($sender);
