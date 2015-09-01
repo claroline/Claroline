@@ -1,22 +1,20 @@
 <!-- Vue donnant la liste des espaces partagés. Exemple d'URL : innovacollecticielbundle/4/shared/spaces -->
-<div class="table-responsive">
-    <table class="table table-striped table-hover sharedSpacesTable">
-        <thead>
-        <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
-        <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
-        <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
-        <th style="width:120px;" class="centered">{{ 'Submissions'|trans({},'innova_collecticiel') }}</th>
-        <th style="width:120px;" class="centered">{{ 'Addressed requests'|trans({},'innova_collecticiel') }}</th>
-        <th style="width:120px;" class="centered">{{ 'Spaces collecticiel'|trans({},'innova_collecticiel') }}</th>
-        </thead>
-        <tbody>
-            {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
-            {% for drop in pager.currentPageResults %}
-                {# Séparation de l'affichage de la vue. InnovaERV #}
-                {% include 'InnovaCollecticielBundle:Drop:Shared/dropsSharedList.html.twig'%}
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<table class="table table-striped table-hover sharedSpacesTable datatable">
+    <thead>
+    <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
+    <th class="nameColumn">{{ 'First name'|trans({},'innova_collecticiel') }}</th>
+    <th class="usernameColumn">{{ 'Nickname'|trans({},'innova_collecticiel') }}</th>
+    <th style="width:120px;" class="centered">{{ 'Submissions'|trans({},'innova_collecticiel') }}</th>
+    <th style="width:120px;" class="centered">{{ 'Addressed requests'|trans({},'innova_collecticiel') }}</th>
+    <th style="width:120px;" class="centered no-sort">{{ 'Spaces collecticiel'|trans({},'innova_collecticiel') }}</th>
+    </thead>
+    <tbody>
+        {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
+        {% for drop in pager.currentPageResults %}
+            {# Séparation de l'affichage de la vue. InnovaERV #}
+            {% include 'InnovaCollecticielBundle:Drop:Shared/dropsSharedList.html.twig'%}
+        {% endfor %}
+    </tbody>
+</table>
 
 <script src="{{ asset('bundles/innovacollecticiel/js/tooltip.js') }}"></script>

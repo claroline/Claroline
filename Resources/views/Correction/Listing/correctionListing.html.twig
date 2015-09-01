@@ -3,177 +3,176 @@
 {% else %}
     {% set viewState_var = 'preview' %}
 {% endif %}
-{##}
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead>
-        <th>Etat</th>
-        <th>
-            {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
-                {{ "copy author's"|trans({},'innova_collecticiel') }}
-            {% elseif byUserMod == 0 %}
-                {% set adminCorrectionByUserMod = 0 %}
-                {{ 'Examiner'|trans({},'innova_collecticiel') }}
-            {% endif %}
 
-        </th>
-        <th>Commencée</th>
-        <th>Dernière Ouverture</th>
-        <th>Terminée</th>
-        <th>Note</th>
-        <th>Outils</th>
-        </thead>
-        <tbody>
-        {% set validCorrections = 0 %}
-        {% for correction in corrections %}
-            <tr class="{% if not  correction.valid %}danger{% endif %} ">
-                <td>
+<table class="table table-striped table-hover">
+    <thead>
+    <th>Etat</th>
+    <th>
+        {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+            {{ "copy author's"|trans({},'innova_collecticiel') }}
+        {% elseif byUserMod == 0 %}
+            {% set adminCorrectionByUserMod = 0 %}
+            {{ 'Examiner'|trans({},'innova_collecticiel') }}
+        {% endif %}
+
+    </th>
+    <th>Commencée</th>
+    <th>Dernière Ouverture</th>
+    <th>Terminée</th>
+    <th>Note</th>
+    <th>Outils</th>
+    </thead>
+    <tbody>
+    {% set validCorrections = 0 %}
+    {% for correction in corrections %}
+        <tr class="{% if not  correction.valid %}danger{% endif %} ">
+            <td>
 
 
-                    {% if not correction.valid %}
+                {% if not correction.valid %}
 
-                        <span class=" fa fa-minus" data-toggle="tooltip"
-                              data-original-title="{{ 'Invalidated'|trans({}, 'innova_collecticiel') }}"></span>
-                    {% else %}
-                        {% set validCorrections = validCorrections+1 %}
-                        {% if correction.reporter %}
-                            <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip"
-                                  data-original-title="{{ 'Reported'|trans({}, 'innova_collecticiel') }}"></span>
-                        {% endif %}
-                        {% if correction.correctionDenied %}
-                            <span class="text-warning fa fa-exclamation-triangle" data-toggle="tooltip"
-                                  data-original-title="{{ 'Correction denied'|trans({}, 'innova_collecticiel') }}"></span>
-                        {% endif %}
+                    <span class=" fa fa-minus" data-toggle="tooltip"
+                          data-original-title="{{ 'Invalidated'|trans({}, 'innova_collecticiel') }}"></span>
+                {% else %}
+                    {% set validCorrections = validCorrections+1 %}
+                    {% if correction.reporter %}
+                        <span class="text-danger fa fa-exclamation-triangle" data-toggle="tooltip"
+                              data-original-title="{{ 'Reported'|trans({}, 'innova_collecticiel') }}"></span>
                     {% endif %}
-                </td>
-                <td>
+                    {% if correction.correctionDenied %}
+                        <span class="text-warning fa fa-exclamation-triangle" data-toggle="tooltip"
+                              data-original-title="{{ 'Correction denied'|trans({}, 'innova_collecticiel') }}"></span>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td>
 
-                    {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
-                        {% set backPage = 'adminCorrectionByUserMod' %}
-                        {% if  backUserId is not defined %}
-                            {% set backUserId = -1 %}
-                        {% endif %}
-                        {% if  correction.drop is defined and correction.drop != null %}
-                            <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
-                               class="" data-toggle="tooltip"
-                               data-original-title="{{ 'See correction'|trans({},'innova_collecticiel') }}">
-
-                                {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
-                            </a>
-                        {% else %}
-                            {# case where a drop was deleted ( we keep the corrections ) #}
-                            <span class="" data-toggle="tooltip"
-                                  data-original-title="{{ 'The drop was deleted by administator'|trans({},'innova_collecticiel') }}">
-
-                               {{ 'Deleted drop'|trans({},'innova_collecticiel') }}
-                            </span>
-                        {% endif %}
-                    {% else %}
-                        {% set backPage = 'default' %}
-                        {% if correction.editable and byUserMod == 0 %}
-                            <span class="text-muted fa fa-users" data-toggle="tooltip"
-                                  data-original-title="{{ 'created by a manager'|trans({}, 'innova_collecticiel') }}">
-                            </span>
-                        {% endif %}
-                        <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
+                {% if  adminCorrectionByUserMod is defined and  adminCorrectionByUserMod == 1 %}
+                    {% set backPage = 'adminCorrectionByUserMod' %}
+                    {% if  backUserId is not defined %}
+                        {% set backUserId = -1 %}
+                    {% endif %}
+                    {% if  correction.drop is defined and correction.drop != null %}
+                        <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'state':'show', 'backUserId':backUserId}) }}"
                            class="" data-toggle="tooltip"
                            data-original-title="{{ 'See correction'|trans({},'innova_collecticiel') }}">
 
-
-                            {% if(byUserMod == 0) %}
-                                {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
-                            {% else %}
-                                {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'innova_collecticiel') }}
-                            {% endif %}
+                            {{ correction.drop.user.firstName|capitalize ~' '~ correction.drop.user.lastName|upper }}
                         </a>
-                    {% endif %}
-                </td>
-                <td>
-                    {{ correction.startDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
-                </td>
-                <td>
-                    {{ correction.lastOpenDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
-                </td>
-                <td>
-                    {% if correction.endDate != null %}
-                        {{ correction.endDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
                     {% else %}
-                        --
+                        {# case where a drop was deleted ( we keep the corrections ) #}
+                        <span class="" data-toggle="tooltip"
+                              data-original-title="{{ 'The drop was deleted by administator'|trans({},'innova_collecticiel') }}">
+
+                           {{ 'Deleted drop'|trans({},'innova_collecticiel') }}
+                        </span>
                     {% endif %}
-                </td>
-                <td>
-                    {% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
-                    /20
-                </td>
-                <td>
-                    <div class="btn-group correction-tools">
-                        {#
-                        <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}" class="btn btn-default btn-xs" >
-                            {{ 'See correction'|trans({},'innova_collecticiel')}}
-                        </a>
-                        #}
+                {% else %}
+                    {% set backPage = 'default' %}
+                    {% if correction.editable and byUserMod == 0 %}
+                        <span class="text-muted fa fa-users" data-toggle="tooltip"
+                              data-original-title="{{ 'created by a manager'|trans({}, 'innova_collecticiel') }}">
+                        </span>
+                    {% endif %}
+                    <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}"
+                       class="" data-toggle="tooltip"
+                       data-original-title="{{ 'See correction'|trans({},'innova_collecticiel') }}">
 
-                        {% if byUserMod == 0 %}
 
-                            {% if dropzone.peerReview %}
-                                {# <a href="{{ path('innova_collecticiel_recalculate_score',
-                                 {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
-                                    class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
-                                    data-container="body"
-                                    title="{{ 'recalculate_helper'|trans({},'innova_collecticiel') }}">
-                                     {{ 'Recalculate the score'|trans({}, 'innova_collecticiel') }}</a>#}
-                            {% endif %}
-                            {% if correction.finished %}
-                                {% if correction.valid %}
-                                    {% set path_invalidate_link = 'innova_collecticiel_drops_detail_correction_validation' %}
-                                    {% if  adminCorrectionByUserMod == 1 %}
-                                        {% set path_invalidate_link = 'innova_collecticiel_drops_detail_correction_validation_by_user' %}
-                                    {% endif %}
-                                    <a href="{{ path(path_invalidate_link,
-                                    {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}"
-                                       class="btn btn-default btn-xs dropzone_invalidate_link ">{{ 'Invalidate'|trans({}, 'innova_collecticiel') }}</a>
-                                {% else %}
-                                    <a href="{{ path('innova_collecticiel_revalidateCorrection',
-                                    {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
-                                       class="btn btn-default btn-xs launch-modal ">{{ 'revalidate'|trans({}, 'innova_collecticiel') }}</a>
+                        {% if(byUserMod == 0) %}
+                            {{ correction.user.firstName|capitalize ~' '~ correction.user.lastName|upper }}
+                        {% else %}
+                            {{ 'Correction number %num%'|trans({'%num%': loop.index}, 'innova_collecticiel') }}
+                        {% endif %}
+                    </a>
+                {% endif %}
+            </td>
+            <td>
+                {{ correction.startDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+            </td>
+            <td>
+                {{ correction.lastOpenDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+            </td>
+            <td>
+                {% if correction.endDate != null %}
+                    {{ correction.endDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
+                {% else %}
+                    --
+                {% endif %}
+            </td>
+            <td>
+                {% if correction.totalGrade != null %}{{ correction.totalGrade|number_format(2) }}{% else %}--{% endif %}
+                /20
+            </td>
+            <td>
+                <div class="btn-group correction-tools">
+                    {#
+                    <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': viewState_var}) }}" class="btn btn-default btn-xs" >
+                        {{ 'See correction'|trans({},'innova_collecticiel')}}
+                    </a>
+                    #}
+
+                    {% if byUserMod == 0 %}
+
+                        {% if dropzone.peerReview %}
+                            {# <a href="{{ path('innova_collecticiel_recalculate_score',
+                             {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="left"
+                                data-container="body"
+                                title="{{ 'recalculate_helper'|trans({},'innova_collecticiel') }}">
+                                 {{ 'Recalculate the score'|trans({}, 'innova_collecticiel') }}</a>#}
+                        {% endif %}
+                        {% if correction.finished %}
+                            {% if correction.valid %}
+                                {% set path_invalidate_link = 'innova_collecticiel_drops_detail_correction_validation' %}
+                                {% if  adminCorrectionByUserMod == 1 %}
+                                    {% set path_invalidate_link = 'innova_collecticiel_drops_detail_correction_validation_by_user' %}
                                 {% endif %}
-                            {% endif %}
-                            {% if correction.editable %}
-                                <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}"
-                                   class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'innova_collecticiel') }}</a>
-                                {% if backUserId is defined %}
-                                    <a href="{{ path('innova_collecticiel_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
-                                       class="btn btn-danger btn-xs launch-modal"><span
-                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'innova_collecticiel') }}
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('innova_collecticiel_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
-                                       class="btn btn-danger btn-xs launch-modal"><span
-                                                class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'innova_collecticiel') }}
-                                    </a>
-                                {% endif %}
+                                <a href="{{ path(path_invalidate_link,
+                                {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'no'}) }}"
+                                   class="btn btn-default btn-xs dropzone_invalidate_link ">{{ 'Invalidate'|trans({}, 'innova_collecticiel') }}</a>
                             {% else %}
-                                <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
-                                   data-toggle="tooltip"
-                                   title="{{ 'Need to be the author'|trans({}, 'innova_collecticiel') }}"
-                                   data-container="body">
-                                    {{ 'dropzone_edit'|trans({}, 'innova_collecticiel') }}
-                                </a>
-                                <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
-                                   data-toggle="tooltip"
-                                   title="{{ 'Need to be the author'|trans({}, 'innova_collecticiel') }}"
-                                   data-container="body"><span class="fa fa-trash-o"></span>
-                                    {{ 'Delete'|trans({}, 'innova_collecticiel') }}
-                                </a>
+                                <a href="{{ path('innova_collecticiel_revalidateCorrection',
+                                {'resourceId': dropzone.id, 'correctionId': correction.id, 'value': 'yes'}) }}"
+                                   class="btn btn-default btn-xs launch-modal ">{{ 'revalidate'|trans({}, 'innova_collecticiel') }}</a>
                             {% endif %}
                         {% endif %}
-                    </div>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
+                        {% if correction.editable %}
+                            <a href="{{ path('innova_collecticiel_drops_detail_correction', {'resourceId': dropzone.id, 'correctionId': correction.id, 'state': 'edit'}) }}"
+                               class="btn btn-default btn-xs">{{ 'dropzone_edit'|trans({}, 'innova_collecticiel') }}</a>
+                            {% if backUserId is defined %}
+                                <a href="{{ path('innova_collecticiel_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id,'backUserId': backUserId }) }}"
+                                   class="btn btn-danger btn-xs launch-modal"><span
+                                            class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                                </a>
+                            {% else %}
+                                <a href="{{ path('innova_collecticiel_drops_detail_delete_correction', {'resourceId': dropzone.id, 'correctionId': correction.id}) }}"
+                                   class="btn btn-danger btn-xs launch-modal"><span
+                                            class="fa fa-trash-o "></span>{{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                                </a>
+                            {% endif %}
+                        {% else %}
+                            <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
+                               data-toggle="tooltip"
+                               title="{{ 'Need to be the author'|trans({}, 'innova_collecticiel') }}"
+                               data-container="body">
+                                {{ 'dropzone_edit'|trans({}, 'innova_collecticiel') }}
+                            </a>
+                            <a href="#" class="btn btn-default btn-xs disabled" disabled="disabled"
+                               data-toggle="tooltip"
+                               title="{{ 'Need to be the author'|trans({}, 'innova_collecticiel') }}"
+                               data-container="body"><span class="fa fa-trash-o"></span>
+                                {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 
 
 <div style="display:none">
