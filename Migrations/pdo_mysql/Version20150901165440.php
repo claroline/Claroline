@@ -8,15 +8,15 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/01 10:47:51
+ * Generation date: 2015/09/01 04:54:41
  */
-class Version20150901104749 extends AbstractMigration
+class Version20150901165440 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
             ALTER TABLE innova_collecticielbundle_document 
-            ADD sender_id INT NOT NULL
+            ADD sender_id INT DEFAULT NULL
         ");
         $this->addSql("
             ALTER TABLE innova_collecticielbundle_document 
