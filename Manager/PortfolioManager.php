@@ -433,4 +433,37 @@ class PortfolioManager
 
         $this->entityManager->flush($portfolio);
     }
+
+    /**
+     * @return int
+     */
+    public function countAll()
+    {
+        /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
+        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+
+        return $portfolioRepository->countAll();
+    }
+
+    /**
+     * @return int
+     */
+    public function countAllDeleted()
+    {
+        /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
+        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+
+        return $portfolioRepository->countAllDeleted();
+    }
+
+    /**
+     * @return int
+     */
+    public function countAllByVisibilityStatus()
+    {
+        /** @var \Icap\PortfolioBundle\Repository\PortfolioRepository $portfolioRepository */
+        $portfolioRepository = $this->entityManager->getRepository("IcapPortfolioBundle:Portfolio");
+
+        return $portfolioRepository->countAllByVisibilityStatus();
+    }
 }

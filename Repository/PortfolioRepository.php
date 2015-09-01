@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Repository;
 
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 class PortfolioRepository extends EntityRepository
 {
@@ -75,5 +76,44 @@ class PortfolioRepository extends EntityRepository
         ;
 
         return $executeQuery ? $queryBuilder->getQuery()->getResult(): $queryBuilder->getQuery();
+    }
+
+    /**
+     * @param bool $executeQuery
+     *
+     * @return int|QueryBuilder
+     */
+    public function countAll($executeQuery = true)
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->select('COUNT(p)');
+
+
+        return $executeQuery ? $queryBuilder->getQuery()->getSingleScalarResult() : $queryBuilder;
+    }
+
+    /**
+     * @return int
+     */
+    public function countAllDeleted()
+    {
+        $queryBuilder = $this->countAll(false);
+        return $queryBuilder
+            ->where('p.deletedAt IS NOT NULL')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function countAllByVisibilityStatus()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p) as number, p.visibility')
+            ->groupBy('p.visibility')
+            ->getQuery()
+            ->getArrayResult()
+        ;
     }
 }
