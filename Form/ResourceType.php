@@ -57,6 +57,12 @@ class ResourceType extends AbstractType
                 'min' => 1
             ]
         ));
+
+        $builder->add('color', 'text', [
+            'label' => 'form.color',
+            'required' => false,
+            'empty_data' => '#3a87ad'
+        ]);
     }
 
     public function getName()

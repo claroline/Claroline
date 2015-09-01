@@ -12,6 +12,7 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  *  @DI\Service()
@@ -23,6 +24,7 @@ class ReservationToolListener
     private $templating;
     private $em;
     private $reservationManager;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
@@ -30,7 +32,8 @@ class ReservationToolListener
      *      "httpKernel"    = @DI\Inject("http_kernel"),
      *      "templating"    = @DI\Inject("templating"),
      *      "em"            = @DI\Inject("doctrine.orm.entity_manager"),
-     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager")
+     *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
+     *      "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
@@ -38,7 +41,8 @@ class ReservationToolListener
         HttpKernelInterface $httpKernel,
         TwigEngine $templating,
         EntityManager $em,
-        ReservationManager $reservationManager
+        ReservationManager $reservationManager,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->request = $requestStack->getCurrentRequest();
@@ -46,6 +50,7 @@ class ReservationToolListener
         $this->templating = $templating;
         $this->em = $em;
         $this->reservationManager = $reservationManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -79,7 +84,7 @@ class ReservationToolListener
 
         foreach ($resourcesTypes as $resourcesTypeKey => $resourcesType) {
             foreach ($resourcesType->getResources() as $resourceKey => $resource) {
-                if (!$this->reservationManager->hasAccess($resource, ReservationController::SEE)) {
+                if (!$this->reservationManager->hasAccess($this->tokenStorage->getToken()->getUser(), $resource, ReservationController::SEE)) {
                     $resourcesType->removeResource($resource);
                 }
             }

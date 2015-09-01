@@ -36,8 +36,7 @@ class Reservation
     private $event;
 
     /**
-     * @ORM\Column(type="string", nullable=true, length=255)
-     * @Assert\Length(max=255)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $comment;
 
@@ -143,17 +142,5 @@ class Reservation
         }
 
         return $this;
-    }
-
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-
-        return $this;
-    }
-
-    public function getComment()
-    {
-        return $this->comment;
     }
 }

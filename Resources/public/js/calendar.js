@@ -208,7 +208,21 @@
     $('.filters-list > a').click(function(e) {
         e.preventDefault();
 
-        $(this).is('.active') ? $(this).removeClass('active').next().children().removeClass('active') : $(this).addClass('active').next().children().addClass('active');
+        if ($(this).is('.active-filter')) {
+            $(this).removeClass('active-filter').next().children()
+                .each(function() {
+                    if ($(this).is('.active-filter')) {
+                       $(this).click();
+                    }
+                });
+        } else {
+            $(this).addClass('active-filter').next().children()
+                .each(function() {
+                    if (!$(this).is('.active-filter')) {
+                        $(this).click();
+                    }
+                });
+        }
 
         applyFilters();
     });
@@ -216,14 +230,28 @@
     $('.resources-filter > a').click(function(e) {
         e.preventDefault();
 
-        if ($(this).is('.active')) {
-            $(this).removeClass('active');
-            $(this).parent().prev().removeClass('active');
+        if ($(this).is('.active-filter')) {
+            $(this)
+                .css({
+                    'background-color': '#FFF',
+                    'border-color': '#ddd',
+                    color: $(this).css('background-color')
+                })
+                .removeClass('active-filter')
+                .parent().prev().removeClass('active-filter')
+            ;
         } else {
-            $(this).addClass('active');
+            $(this)
+                .addClass('active-filter')
+                .css({
+                    'background-color': $(this).css('color'),
+                    'border-color': $(this).css('color'),
+                    color: '#FFF'
+                })
+            ;
 
-            if ($(this).parent().children().length === $(this).parent().children('.active').length) {
-                $(this).parent().prev().addClass('active');
+            if ($(this).parent().children().length === $(this).parent().children('.active-filter').length) {
+                $(this).parent().prev().addClass('active-filter');
             }
         }
 
@@ -273,7 +301,7 @@
 
     function applyFilters()
     {
-        var $resourcesChecked = $('.resources-filter > a.active'),
+        var $resourcesChecked = $('.resources-filter > a.active-filter'),
             resourcesIdChecked = [];
 
         $.each($resourcesChecked, function() {

@@ -27,7 +27,8 @@ class ReservationValidator extends ConstraintValidator
     public function validate($object, Constraint $constraint)
     {
         if ($object->getResource()) {
-            $reservations = $this->em->getRepository('FormaLibreReservationBundle:Reservation')->findByDateAndResource($object);
+            $reservations = $this->em->getRepository('FormaLibreReservationBundle:Reservation')
+                ->findByDateAndResource($object->getStartInTimestamp(), $object->getEndInTimestamp(), $object->getResource());
             $maxReservationAuthorized = $object->getResource()->getQuantity();
 
             if (count($reservations) >= $maxReservationAuthorized) {

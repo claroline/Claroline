@@ -17,7 +17,7 @@ use Symfony\Component\Routing\RouterInterface;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 
 /**
- * @@DI\Tag("security.secure_service")
+ * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('formalibre_reservation_tool')")
  */
 class ReservationAdminController extends Controller

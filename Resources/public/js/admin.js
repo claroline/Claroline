@@ -67,7 +67,7 @@
                 resourceTypeId = $div.data('resource-type-id'),
                 routing = Routing.generate('formalibre_add_new_resource', {id: resourceTypeId});
 
-            Claroline.Modal.displayForm(routing, displayNewResource, clearRolesList, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayNewResource, initResourceForm, 'form-resource');
         })
         // Show resource form when click on the name of the resource in the list-group
         .on('click', 'a[data-resource-id]', function(e) {
@@ -76,7 +76,7 @@
                 resourceId = $a.data('resource-id'),
                 routing = Routing.generate('formalibre_modification_resource', {id: resourceId});
 
-            Claroline.Modal.displayForm(routing, displayModificationResource, clearRolesList, 'form-resource');
+            Claroline.Modal.displayForm(routing, displayModificationResource, initResourceForm, 'form-resource');
         })
         .on('click', '.delete-resource', function() {
             var resourceId = $(this).data('resource-id'),
@@ -152,13 +152,17 @@
         return Translator.trans(key, {}, 'reservation');
     }
 
-    //Initialize the rolesList variable when a form is rendered
-    function clearRolesList()
+    //Initialize the rolesList variable and the color-picker when the resource form is rendered
+    function initResourceForm()
     {
         $('.roles-list-btn').children().each(function() {
              if ($(this).hasClass('btn-primary')) {
                  $(this).click();
              }
+        });
+
+        $('.color-picker').colorpicker({
+            format: 'hex'
         });
     }
 

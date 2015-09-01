@@ -19,11 +19,13 @@ agenda:
     sun: Dim
     sunday: Dimanche
   form:
+    comment: Commentaire
     description: Description
     duration: Durée de réservation
     end_date: Date de fin
     localisation: Localisation
     max_time_reservation: Temps max de réservation
+    max_255_characters: Maximum 255 caractères
     resource: Ressource
     resource_type: Type de ressource
     select_resource_pls: -- Veuillez sélectionner une ressource --
@@ -57,10 +59,15 @@ agenda:
   popover:
     author: Créé par
   resource:
-    cannot_see: Pas accès
-    visualize: Visionnage
-    edit: Edition
     admin: Admin
+    admin_info: Peut créer, modifier et supprimer n'importe quelles réservations.
+    book: Réserver
+    book_info: Peut créer des réservations, les modifier et les supprimer.
+    cannot_see: Pas accès
+    cannot_see_info: Ne peut ni voir, ni modifier les réservations.
+    rights_info: Les droits d'accès varient pour chaque ressource.
+    see: Visionner
+    see_info: Peut uniquement voir les réservations.
   today: Aujourd'hui
   week: Semaine
   week_number_title: S
@@ -85,6 +92,7 @@ filter:
 form:
   change_resource_type_name_title: Modification du nom
   change_resource_type_name: Modifier le nom
+  color: Couleur
   description: Description
   localisation: Localisation
   maxTime: Temps maximum de réservation

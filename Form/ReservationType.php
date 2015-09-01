@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -20,17 +21,20 @@ class ReservationType extends AbstractType
     private $editMode = false;
     private $reservationManager;
     private $em;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
-     *      "em"                 = @DI\Inject("doctrine.orm.entity_manager")
+     *      "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(ReservationManager $reservationManager, EntityManager $em)
+    public function __construct(ReservationManager $reservationManager, EntityManager $em, TokenStorageInterface $tokenStorage)
     {
         $this->reservationManager = $reservationManager;
         $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -50,6 +54,15 @@ class ReservationType extends AbstractType
             )
         ));
 
+        $builder->add('comment', 'textarea', [
+            'label' => 'agenda.form.comment',
+            'required' => false,
+            'max_length' => 255,
+            'attr' => [
+                'placeholder' => 'agenda.form.max_255_characters'
+            ]
+        ]);
+
         $builder->add('resource', 'entity', array(
             'label' => 'agenda.form.resource',
             'class' => 'FormaLibre\ReservationBundle\Entity\Resource',
@@ -66,7 +79,7 @@ class ReservationType extends AbstractType
         $mask = $this->editMode ? ReservationController::EDIT : ReservationController::ADMIN;
 
         foreach ($resources as $key => $resource) {
-            if (!$this->reservationManager->hasAccess($resource, $mask)) {
+            if (!$this->reservationManager->hasAccess($this->tokenStorage->getToken()->getUser(), $resource, $mask)) {
                 unset($resources[$key]);
             }
         }
@@ -86,7 +99,6 @@ class ReservationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        if (!$this->editMode) {
             $resolver->setDefaults(
                 array(
                     'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
@@ -94,13 +106,5 @@ class ReservationType extends AbstractType
                     'constraints' => new Reservation()
                 )
             );
-        } else {
-            $resolver->setDefaults(
-                array(
-                    'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
-                    'translation_domain' => 'reservation'
-                )
-            );
-        }
     }
 }

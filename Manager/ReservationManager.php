@@ -4,6 +4,7 @@ namespace FormaLibre\ReservationBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -83,12 +84,14 @@ class ReservationManager
         return array_merge(
             $reservation->getEvent()->jsonSerialize(),
             [
+                'color' => !empty($reservation->getResource()->getColor()) ? $reservation->getResource()->getColor() : '#3a87ad',
+                'comment' => $reservation->getComment(),
                 'resourceTypeId' => $reservation->getResource()->getResourceType()->getId(),
                 'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
                 'resourceId' => $reservation->getResource()->getId(),
                 'reservationId' => $reservation->getId(),
-                'editable' => $this->hasAccess($reservation->getResource(), ReservationController::EDIT),
-                'durationEditable' => $this->hasAccess($reservation->getResource(), ReservationController::EDIT)
+                'editable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::EDIT),
+                'durationEditable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::EDIT)
             ]
         );
     }
@@ -98,7 +101,8 @@ class ReservationManager
         $reservation->setStart($newStart);
         $reservation->setEnd($newEnd);
 
-        $reservations = $this->em->getRepository('FormaLibreReservationBundle:Reservation')->findByDateAndResource($reservation, true);
+        $reservations = $this->em->getRepository('FormaLibreReservationBundle:Reservation')
+            ->findByReservationDateAndResource($reservation, $newStart, $newEnd, $reservation->getResource());
         if (count($reservations) >= $reservation->getResource()->getQuantity()) {
             return new JsonResponse(['error' => 'error.number_reservations_exceeded']);
         }
@@ -129,7 +133,7 @@ class ReservationManager
         return $resourceRights;
     }
 
-    public function hasAccess(Resource $resource, $mask)
+    public function hasAccess(User $user, Resource $resource, $mask)
     {
         $resourceRights = $resource->getResourceRights();
         $userRoles = $this->tokenStorage->getToken()->getRoles();
@@ -138,6 +142,14 @@ class ReservationManager
         foreach ($userRoles as $userRole) {
             foreach ($resourceRights as $resourceRight) {
                 if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
+                    if (5 == $resourceRight->getMask() && $this->tokenStorage->getToken()->getUser() == $user) {
+                        $hasAccess = true;
+                        break;
+                    } elseif (5 == $resourceRight->getMask() && $this->tokenStorage->getToken()->getUser() != $user) {
+                        $hasAccess = false;
+                        break;
+                    }
+
                     $hasAccess = true;
                     break;
                 }
@@ -149,7 +161,7 @@ class ReservationManager
 
     public function checkAccess(Reservation $reservation, $mask)
     {
-        if (!$this->hasAccess($reservation->getResource(), $mask)) {
+        if (!$this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $mask)) {
             throw new AccessDeniedException();
         }
     }

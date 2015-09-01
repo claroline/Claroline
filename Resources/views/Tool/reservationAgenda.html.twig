@@ -18,7 +18,7 @@
             text-indent: 20px;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/formalibrereservation/css/bootstrap-datetimepicker.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }}">
 {% endblock %}
 {% block breadcrumb %}
         {{
@@ -49,7 +49,7 @@
                             <a href="#" class="list-group-item list-group-item-text" data-resource-type-id="{{ resourceType.getId() }}">{{ resourceType.getName() }}</a>
                             <div class="resources-filter">
                                 {% for resource in resourceType.getResources() %}
-                                    <a href="#" class="list-group-item" data-resource-id="{{ resource.getId() }}">{{ resource.getName() }}</a>
+                                    <a href="#" class="list-group-item" style="color: {{ resource.getColor() }}" data-resource-id="{{ resource.getId() }}">{{ resource.getName() }}</a>
                                 {% else %}
                                     <div class="list-group-item">{{ 'filter.no_resource_found'|trans({}, 'reservation') }}</div>
                                 {% endfor %}
@@ -73,7 +73,7 @@
     <script type="text/javascript" src="{{ asset('bundles/frontend/moment-with-locales.min.js') }}"></script>
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/formalibrereservation/js/calendar.js') }}'></script>
-    <script type="text/javascript" src="{{ asset('bundles/formalibrereservation/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.draggable.min.js') }}"> </script>
     <script type="text/javascript" src="{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2/components/jquery.ui.resizable.min.js') }}"> </script>
 {% endblock javascripts %}

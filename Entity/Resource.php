@@ -69,6 +69,11 @@ class Resource
      */
     private $reservations;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $color;
+
     public function __construct()
     {
         $this->resourceRights = new ArrayCollection();
@@ -189,5 +194,17 @@ class Resource
     public function getReservations()
     {
         return $this->reservations;
+    }
+
+    public function setColor($color)
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function getColor()
+    {
+        return $this->color;
     }
 }

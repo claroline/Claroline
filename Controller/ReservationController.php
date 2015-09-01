@@ -68,13 +68,13 @@ class ReservationController extends Controller
      *      options={"expose"=true}
      * )
      */
-    public function agendaShowAction()
+    public function getReservationsAction()
     {
         $reservations = $this->reservationRepo->findAll();
 
         $events = [];
         foreach ($reservations as $key => $reservation) {
-             if ($this->reservationManager->hasAccess($reservation->getResource(), $this::SEE)) {
+             if ($this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $this::SEE)) {
                  $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
              }
         }
@@ -139,7 +139,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getResource(), ReservationController::ADMIN)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::ADMIN)
         ));
     }
 
@@ -155,6 +155,7 @@ class ReservationController extends Controller
         $this->reservationManager->checkAccess($reservation, $this::EDIT);
 
         $formType = $this->get('formalibre.form.reservation');
+        $formType->setEditMode();
         $form = $this->createForm($formType, $reservation);
         $form->handleRequest($this->request);
 
@@ -175,7 +176,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getResource(), ReservationController::ADMIN)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::ADMIN)
         ));
     }
 

@@ -10,7 +10,20 @@
               role="form"
         >
             <div class="modal-body">
-                {{ form_widget(form) }}
+                {{ form_row(form.name) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.localisation) }}
+                {{ form_row(form.maxTimeReservation) }}
+                {{ form_row(form.quantity) }}
+                <div class="form-group row">
+                    <label for="resource_form_color" class="col-md-3 control-label">{{ 'form.color'|trans({}, 'reservation') }}</label>
+                    <div class="col-md-9">
+                        <div class="input-group color-picker">
+                            {{ form_widget(form.color) }}
+                            <span class="input-group-addon"><i></i></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="alert alert-info">
                     <span class="fa fa-info-circle"></span> {{ 'form.information_about_quantity_modification'|trans({}, 'reservation') }}
                 </div>
@@ -45,13 +58,20 @@
                                         {% set classNameMask0 = 'btn-primary' %}
                                     {% endif %}
                                     <span class="btn {{ classNameMask0 }}" data-mask="0">{{ 'agenda.resource.cannot_see'|trans({}, 'reservation') }}</span>
-                                    <span class="btn {{ classNameMask1 }}" data-mask="1">{{ 'agenda.resource.visualize'|trans({}, 'reservation') }}</span>
-                                    <span class="btn {{ classNameMask3 }}" data-mask="3">{{ 'agenda.resource.edit'|trans({}, 'reservation') }}</span>
+                                    <span class="btn {{ classNameMask1 }}" data-mask="1">{{ 'agenda.resource.see'|trans({}, 'reservation') }}</span>
+                                    <span class="btn {{ classNameMask3 }}" data-mask="3">{{ 'agenda.resource.book'|trans({}, 'reservation') }}</span>
                                     <span class="btn {{ classNameMask7 }}" data-mask="7">{{ 'agenda.resource.admin'|trans({}, 'reservation') }}</span>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
+                    <div>
+                        <div>{{ 'agenda.resource.cannot_see'|trans({}, 'reservation') }}: {{ 'agenda.resource.cannot_see_info'|trans({}, 'reservation') }}</div>
+                        <div>{{ 'agenda.resource.see'|trans({}, 'reservation') }}: {{ 'agenda.resource.see_info'|trans({}, 'reservation') }}</div>
+                        <div>{{ 'agenda.resource.book'|trans({}, 'reservation') }}: {{ 'agenda.resource.book_info'|trans({}, 'reservation') }}</div>
+                        <div>{{ 'agenda.resource.admin'|trans({}, 'reservation') }}: {{ 'agenda.resource.admin_info'|trans({}, 'reservation') }}</div>
+                        <div class="bold">{{ 'agenda.resource.rights_info'|trans({}, 'reservation') }}</div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
