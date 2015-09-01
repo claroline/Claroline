@@ -44,6 +44,8 @@ class DocumentRepository extends EntityRepository {
             ->andWhere('document.validate = true')
             ->andWhere('drop.user = :user')
             ->andWhere('drop.dropzone = :dropzone')
+            /* InnovaERV : ajout de cette condition car on ne compte pas les documents déposés par l'enseignant */
+            ->andWhere('drop.user != document.sender')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
@@ -70,7 +72,7 @@ class DocumentRepository extends EntityRepository {
             ->andWhere('drop.user = :user')
             ->andWhere('drop.dropzone = :dropzone')
         /* InnovaERV : ajout de cette condition car on ne compte pas les documents déposés par l'enseignant */
-            ->andWhere('drop.user != document.sender')
+            ->andWhere('drop.user = document.sender')
             ->setParameter('user', $user)
             ->setParameter('dropzone', $dropzone);
             ;
