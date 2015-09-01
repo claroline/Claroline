@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-line-chart"></i>
+                {{'portfolio_view_statistics'|trans({}, 'icap_portfolio')}}
+            </div>
+            {% verbatim %}
+            <div class="panel-body statistics-view-container">
+                <div data-ng-show="!portfolios.$resolved">
+                    <span class="fa fa-spinner fa-pulse"></span>
+                </div>
+                <select class="ng-cloak form-control portfolio-selector" data-ng-options="portfolio.title for portfolio in portfolios track by portfolio.id" data-ng-model="selectedPortfolio"
+                    data-ng-change="clickOnPortolio()" data-ng-show="portfolios.$resolved">
+                    <option value="">Select a portfolio</option>
+                </select>
+                <div id="chart" data-ng-show="selectedPortfolio != null"></div>
+                <div class="empty_chart" data-ng-show="selectedPortfolio == null"><span class="fa fa-line-chart"></span></div>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>

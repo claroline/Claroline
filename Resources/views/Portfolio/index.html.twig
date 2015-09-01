@@ -41,6 +41,15 @@
                     </span>
                 </a>
             </li>
+            <li class="statistics-tab">
+                <a href="#statistics" aria-controls="statistics" role="tab" data-toggle="tab">
+                    <span class="icon-bg"></span>
+                    <span class="option-text">
+                        <i class="fa fa-line-chart"></i>
+                        <span class="visible-md-inline visible-lg-inline">{{ 'statistics'|trans({}, 'icap_portfolio') }}</span>
+                    </span>
+                </a>
+            </li>
         </ul>
 
         <div data-ng-app="indexApp">
@@ -48,16 +57,6 @@
                 <div role="tabpanel" class="tab-pane active" id="presentation">
                     <div>
                         {{ 'presentation_message'|trans({}, 'icap_portfolio')|raw }}
-                    </div>
-                </div>
-                <div role="tabpanel" class="tab-pane" id="list">
-                    {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}
-                </div>
-                <div role="tabpanel" class="tab-pane" id="exchange_space">
-                    <div class="row">
-                        <div class="col-md-12">
-                            {% include 'IcapPortfolioBundle:Portfolio:exchange_space.html.twig' %}
-                        </div>
                     </div>
                 </div>
                 {% for widgetType in widgetTypes %}
@@ -69,6 +68,23 @@
                         </div>
                     </div>
                 {% endfor %}
+                <div role="tabpanel" class="tab-pane" id="list">
+                    {% include 'IcapPortfolioBundle:Portfolio:list_content.html.twig' %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="exchange_space">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% include 'IcapPortfolioBundle:Portfolio:exchange_space.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="statistics">
+                    <div class="row">
+                        <div class="col-md-12">
+                            {% include 'IcapPortfolioBundle:Portfolio:statistics.html.twig' %}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,7 +94,9 @@
     {{ parent() }}
     {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/comments.css'
       '@IcapPortfolioBundle/Resources/views/less/comments.less'
+      '@IcapPortfolioBundle/Resources/views/less/statistics.less'
       '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.less'
+      '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/less/jquery.jqplot.less'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -124,6 +142,8 @@
         '@FrontEndBundle/Resources/public/jquery/plugin/datepicker/js/bootstrap-datepicker.js'
         '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.js'
         '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/jquery.jqplot.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -157,6 +177,9 @@
         '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormController.js'
         '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormDirective.js'
+        '@IcapPortfolioBundle/Resources/public/js/statistics/statisticsApp.js'
+        '@IcapPortfolioBundle/Resources/public/js/statistics/controllers/statisticsViewController.js'
+        '@IcapPortfolioBundle/Resources/public/js/statistics/directives/statisticsViewDirective.js'
         '@IcapPortfolioBundle/Resources/public/js/index/indexApp.js'
         '@IcapPortfolioBundle/Resources/public/js/index/indexDirective.js'
         '@IcapPortfolioBundle/Resources/public/js/index/indexController.js'
