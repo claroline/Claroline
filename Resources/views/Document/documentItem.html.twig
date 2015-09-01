@@ -11,13 +11,13 @@
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
     <td class="{{ classArray }}">
-        {{ document.drop.user.lastName }}
+        {{ document.sender.lastName }}
     </td>
     <td class={{ classArray }}>
-        {{ document.drop.user.firstName }}
+        {{ document.sender.firstName }}
     </td>
     <td class={{ classArray }}>
-        {{ document.drop.user.username }}
+        {{ document.sender.username }}
     </td>
     <td class={{ classArray }}>
         {% if document.url is not null %}
@@ -61,7 +61,7 @@
                 <span class="fa fa-trash-o"></span>
                 {{ 'Delete'|trans({}, 'innova_collecticiel') }}
             </a>
-        {% elseif document.validate and not adminInnova and document.comments|length == 0 %}
+        {% elseif document.validate and not adminInnova and document.comments|length == 0 and document.sender.id == document.drop.user.id %}
             <a href="" class="btn btn-default cancel_button" id="cancel_{{ document.id }}" data-document_id="{{ document.id }}" >{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</a>
         {% endif %}
         </td>

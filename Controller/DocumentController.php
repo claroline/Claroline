@@ -212,8 +212,15 @@ class DocumentController extends DropzoneBaseController
 
         // #19. Ajout de la valorisation de la Date. InnovaERV.
         $document->setDocumentDate(new \DateTime());
+        
+        $sender = $this->get('security.token_storage')->getToken()->getUser();
+        
+        if ($sender->getId() !== $drop->getUser()->getId()) {
+            $document->setValidate(true);
+        }
 
         $document->setDrop($drop);
+        $document->setSender($sender);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($document);
