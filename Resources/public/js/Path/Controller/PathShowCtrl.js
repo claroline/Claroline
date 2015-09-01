@@ -18,7 +18,7 @@ var PathShowCtrl = function PathShowCtrl($window, $route, $routeParams, PathServ
 };
 
 // Extends the base controller
-PathShowCtrl.prototype = PathBaseCtrl.prototype;
+PathShowCtrl.prototype = Object.create(PathBaseCtrl.prototype);
 PathShowCtrl.prototype.constructor = PathShowCtrl;
 
 /**

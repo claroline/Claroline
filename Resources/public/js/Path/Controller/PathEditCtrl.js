@@ -32,7 +32,7 @@ var PathEditCtrl = function PathEditCtrl($window, $route, $routeParams, PathServ
 };
 
 // Extends the base controller
-PathEditCtrl.prototype = PathBaseCtrl.prototype;
+PathEditCtrl.prototype = Object.create(PathBaseCtrl.prototype);
 PathEditCtrl.prototype.constructor = PathEditCtrl;
 
 /**

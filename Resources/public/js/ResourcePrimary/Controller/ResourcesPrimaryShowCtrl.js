@@ -25,7 +25,7 @@ var ResourcesPrimaryShowCtrl = function ResourcesPrimaryShowCtrl($sce) {
 };
 
 // Extends the base controller
-ResourcesPrimaryShowCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
+ResourcesPrimaryShowCtrl.prototype = Object.create(ResourcesPrimaryBaseCtrl.prototype);
 ResourcesPrimaryShowCtrl.prototype.constructor = ResourcesPrimaryShowCtrl;
 
 ResourcesPrimaryShowCtrl.prototype.resourceUrl = {};
