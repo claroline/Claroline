@@ -38,7 +38,7 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
 };
 
 // Extends the base controller
-PathSummaryEditCtrl.prototype = PathSummaryBaseCtrl.prototype;
+PathSummaryEditCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
 PathSummaryEditCtrl.prototype.constructor = PathSummaryEditCtrl;
 
 /**
@@ -148,4 +148,9 @@ PathSummaryEditCtrl.prototype.removeStep = function (step) {
             }
         }.bind(this)
     );
+};
+
+PathSummaryEditCtrl.prototype.goTo = function goTo(step) {
+    console.log('coucou je suis PathSummaryEdit');
+    this.pathService.goTo(step);
 };

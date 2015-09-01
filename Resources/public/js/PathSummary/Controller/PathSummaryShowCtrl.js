@@ -24,7 +24,7 @@ var PathSummaryShowCtrl = function PathSummaryShowCtrl($routeParams, PathService
 };
 
 // Extends the base controller
-PathSummaryShowCtrl.prototype = PathSummaryBaseCtrl.prototype;
+PathSummaryShowCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
 PathSummaryShowCtrl.prototype.constructor = PathSummaryShowCtrl;
 
 /**
@@ -39,4 +39,9 @@ PathSummaryShowCtrl.prototype.updateProgression = function (step, newStatus) {
     } else {
         this.userProgressionService.update(step, newStatus);
     }
+};
+
+PathSummaryShowCtrl.prototype.goTo = function goTo(step) {
+    console.log('coucou je suis PathSummaryShow');
+    this.pathService.goTo(step);
 };
