@@ -12,7 +12,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class InteractionQCMRepository extends EntityRepository
 {
-
     /**
      * Get InteractionQCM linked with an interaction
      *

@@ -2,6 +2,8 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,21 +31,21 @@ class Question
     private $title;
 
     /**
-     * @var text $description
+     * @var string $description
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var datetime $dateCreate
+     * @var \Datetime $dateCreate
      *
      * @ORM\Column(name="date_create", type="datetime")
      */
     private $dateCreate;
 
     /**
-     * @var datetime $dateModify
+     * @var \Datetime $dateModify
      *
      * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      */
@@ -92,13 +94,16 @@ class Question
      */
     private $category;
 
-
     /**
-     * Constructs a new instance of Expertises / Documents
+     * Note: used for joins only.
+     *
+     * @ORM\OneToMany(targetEntity="ExerciseQuestion", mappedBy="question")
      */
+    private $exerciseQuestions;
+
     public function __construct()
     {
-        $this->documents = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->documents = new ArrayCollection();
         $this->setLocked(false);
         $this->setModel(false);
     }
@@ -136,7 +141,7 @@ class Question
     /**
      * Set description
      *
-     * @param text $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -146,7 +151,7 @@ class Question
     /**
      * Get description
      *
-     * @return text
+     * @return string
      */
     public function getDescription()
     {
@@ -156,9 +161,9 @@ class Question
     /**
      * Set dateCreate
      *
-     * @param datetime $dateCreate
+     * @param \Datetime $dateCreate
      */
-    public function setDateCreate($dateCreate)
+    public function setDateCreate(\DateTime $dateCreate)
     {
         $this->dateCreate = $dateCreate;
     }
@@ -166,7 +171,7 @@ class Question
     /**
      * Get dateCreate
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getDateCreate()
     {
@@ -176,9 +181,9 @@ class Question
     /**
      * Set dateModify
      *
-     * @param datetime $dateModify
+     * @param \Datetime $dateModify
      */
-    public function setDateModify($dateModify)
+    public function setDateModify(\DateTime $dateModify)
     {
         $this->dateModify = $dateModify;
     }
@@ -186,7 +191,7 @@ class Question
     /**
      * Get dateModify
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getDateModify()
     {
@@ -234,7 +239,7 @@ class Question
         return $this->expertise;
     }
 
-    public function setExpertise(\UJM\ExoBundle\Entity\Expertise $expertise)
+    public function setExpertise(Expertise $expertise)
     {
         $this->expertise = $expertise;
     }
@@ -250,11 +255,11 @@ class Question
     }
 
     /**
-     * Add $Document
+     * Add document
      *
-     * @param UJM\ExoBundle\Entity\Document $Document
+     * @param Document $document
      */
-    public function addDocument(\UJM\ExoBundle\Entity\Document $document)
+    public function addDocument(Document $document)
     {
         $this->document[] = $document;
     }
@@ -264,7 +269,7 @@ class Question
         return $this->user;
     }
 
-    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -274,7 +279,7 @@ class Question
         return $this->category;
     }
 
-    public function setCategory(\UJM\ExoBundle\Entity\Category $category)
+    public function setCategory(Category $category)
     {
         $this->category = $category;
     }
