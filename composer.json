@@ -1,7 +1,7 @@
 {
     "name": "claroline/tag-bundle",
-    "description": "Claroline tag tool plugin",
-    "keywords": ["Claroline", "Plugin", "Tag", "Tool"],
+    "description": "Claroline tag plugin",
+    "keywords": ["Claroline", "Plugin", "Tag"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-plugin",
     "license": "GPL-3.0+",
