@@ -106,6 +106,12 @@
 
     &:hover, &.active-step {
         background-color: white;
+
+        .step-progression {
+            > a {
+                background-color: white;
+            }
+        }
     }
 
     .lvl-indicator {
@@ -181,8 +187,11 @@
 
     .step-progression {
         height: 100%;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
 
         > a {
+            background-color: @panel-default-heading-bg;
             vertical-align: bottom;
             height: 100%;
             display: inline-block;
