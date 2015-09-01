@@ -188,6 +188,7 @@ class DocumentController extends DropzoneBaseController
 
     private function createDocument(Dropzone $dropzone, Drop $drop, $form, $documentType)
     {
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
         $document = new Document();
         $document->setType($documentType);
 
@@ -215,7 +216,9 @@ class DocumentController extends DropzoneBaseController
         
         $sender = $this->get('security.token_storage')->getToken()->getUser();
         
-        if ($sender->getId() !== $drop->getUser()->getId()) {
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
+        
+        if ($canEdit) {
             $document->setValidate(true);
         }
 
