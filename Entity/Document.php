@@ -8,6 +8,7 @@
 namespace Innova\CollecticielBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -70,6 +71,16 @@ class Document {
      * )
      */
     protected $drop;
+    
+    
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", nullable=false)
+     */
+    protected $sender;
+
 
 
     /**
@@ -273,6 +284,22 @@ class Document {
         }
 
         return $unReadComments;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSender()
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param User $sender
+     */
+    public function setSender($sender)
+    {
+        $this->sender = $sender;
     }
 
 }

@@ -11,13 +11,13 @@
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
     <td class="{{ classArray }}">
-        {{ document.drop.user.lastName }}
+        {{ document.sender.lastName }}
     </td>
     <td class={{ classArray }}>
-        {{ document.drop.user.firstName }}
+        {{ document.sender.firstName }}
     </td>
     <td class={{ classArray }}>
-        {{ document.drop.user.username }}
+        {{ document.sender.username }}
     </td>
     <td class={{ classArray }}>
         {% if document.url is not null %}
