@@ -6,7 +6,7 @@
             {% endif %}
 
 
-            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well">
+            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
                 {% if drop.documents|length <= 0 %}
                     <tr>
                         <td>{{ 'No document associated'|trans({},'innova_collecticiel') }}</td>
@@ -23,7 +23,7 @@
                             <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
                             <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
                             <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                            <th style="width: 120px;"></th>
+                            <th class="no-sort" style="width: 120px;"></th>
                         </tr>
                     </thead>
                     <tbody>

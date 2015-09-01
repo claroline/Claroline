@@ -33,18 +33,15 @@
                                        href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
                                 {% endif %}
                             </td>
-
-                            {% if mode == 'complete' %}
-                                <td>
-                                {# Si la document a été validé alors je ne peux pas le supprimer #}
-                                {% if not document.validate %}
-                                    <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal">
-                                        <span class="fa fa-trash-o"></span>
-                                        {{ 'Delete'|trans({}, 'innova_collecticiel') }}
-                                    </a>
-                                {% endif %}
-                                </td>
+                            <td>
+                            {# Si la document a été validé alors je ne peux pas le supprimer #}
+                            {% if mode == 'complete' and not document.validate %}
+                                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" class="btn btn-danger btn-sm pull-right launch-modal">
+                                    <span class="fa fa-trash-o"></span>
+                                    {{ 'Delete'|trans({}, 'innova_collecticiel') }}
+                                </a>
                             {% endif %}
+                            </td>
                         </tr>
                     </tbody>
                 {% endif %}
