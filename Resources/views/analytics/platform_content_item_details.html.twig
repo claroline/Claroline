@@ -1,0 +1,58 @@
+{% extends "ClarolineCoreBundle:Administration/Analytics:analytics_resources_item.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'portfolio_analytics_title' | trans({}, 'analytics') }}{% endblock %}
+
+{% block itemContent %}
+    <h1>{{ 'portfolio_analytics_title'|trans({}, 'analytics') }}</h1>
+    <div class="row stats">
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countPortfolio }}</span><br>
+                {{'portfolios'|transchoice(countPortfolio, {}, 'analytics')}}</span>
+            </p>
+        </div>
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countClosedPortfolio }}</span><br>
+                <span class="badge visibile_to_me"></span> {{'closed_mode_portfolio'|trans({}, 'analytics')}}
+            </p>
+        </div>
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countOpenPortfolio }}</span><br>
+                <span class="badge visible_for_everybody"></span> {{'open_mode_portfolio'|trans({}, 'analytics')}}
+            </p>
+        </div>
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countPrivatePortfolio }}</span><br>
+                <span class="badge visible_for_some_users"></span> {{'private_mode_portfolio'|trans({}, 'analytics')}}
+            </p>
+        </div>
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countPlatformPortfolio }}</span><br>
+                <span class="badge visible_for_platform_user"></span> {{'platform_mode_portfolio'|trans({}, 'analytics')}}
+            </p>
+        </div>
+        <div class="col-md-2 stat">
+            <p>
+                <span class="count">{{ countDeletedPortfolio }}</span><br>
+                <span class="fa fa-trash"></span> {{'deleted_portfolio'|transchoice(countDeletedPortfolio, {}, 'analytics')}}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            {% include 'IcapPortfolioBundle:analytics:portfolio_usage_visibility_chart.html.twig' %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/admin_analytics.css'
+    "@IcapPortfolioBundle/Resources/views/less/admin_analytics.less" %}
+    <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+    {% endstylesheets %}
+{% endblock %}

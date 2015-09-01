@@ -1,0 +1,91 @@
+<style type="text/css">
+    .pie-chart{
+        {% if chartHeight is not defined or chartHeight is empty %}
+        height:600px;
+        {% else %}
+        height: {{ chartHeight }}px;
+        {% endif %}
+    }
+</style>
+<link rel="stylesheet" href="{{ asset('bundles/clarolinecore/css/common/jqplot/jquery.jqplot.css') }}" type="text/css" />
+{% if filesImported is not defined or filesImported is empty %}
+<!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/excanvas.min.js') }}"></script><![endif]-->
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/jquery.jqplot.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js') }}"></script>
+{% else %}
+<script type="text/javascript" src="{{ asset('bundles/frontend/jquery/plugin/jqplot/plugins/jqplot.pieRenderer.min.js') }}"></script>
+{% endif %}
+
+<div id="analytics-resources-piechart" class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-pie-chart"></i>
+        {{'portfolio_status_repartition'|trans({}, 'analytics')}}
+    </div>
+    <div id="collapse-piechart" class="panel-body">
+        <div id="container-piechart">
+            <div id="resources-pie-chart" class="pie-chart"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var pieChartData = [];
+    {% for portfolioRepartitionStatus in portfolioRepartitionStatuss %}
+    pieChartData.push(["{{portfolioRepartitionStatus.name|trans({}, 'analytics')}}",{{portfolioRepartitionStatus.value}}]);
+    {% endfor %}
+    var bg_color = "transparent";
+    if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) {
+        bg_color = "#fff";
+    }
+    $(document).ready(function(){
+        if (pieChartData.length > 0) {
+            var resourcesPlot = $.jqplot(
+                    'resources-pie-chart',
+                    [pieChartData],
+                    {
+                        seriesColors: ["#d9534f", "#5cb85c", "#ed9c28", "#428bca"],
+                        title: {show: false},
+                        grid: {
+                            drawBorder: false,
+                            shadow: false,
+                            background: bg_color,
+                            useNegativeColors: false
+                        },
+                        highlighter: {
+                            show: false
+                        },
+                        cursor: {
+                            show: false,
+                            zoom: false,
+                            showTooltip: false
+                        },
+                        seriesDefaults: {
+                            showMarker: true,
+                            renderer: $.jqplot.PieRenderer,
+                            rendererOptions: {
+                                showDataLabels: true,
+                                dataLabelThreshold: 2,
+                                dataLabels: 'percent',
+                                sliceMargin: 0.3,
+                                dataLabelFormatString: '%.1f%%',
+                                highlightMouseOver: false
+                            },
+                            shadow: false
+                        },
+                        legend:{
+                            location: 's',
+                            border: 'none',
+                            renderer: $.jqplot.CavasTextRenderer,
+                            show: true,
+                            showMarker: true,
+                            rendererOptions: {
+                                numberRows: 4
+                            },
+                            backgroundColor: bg_color,
+                            placement: 'outsideGrid'
+                        }
+                    }
+            );
+        }
+    });
+</script>
