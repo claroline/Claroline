@@ -112,10 +112,10 @@
                     <i class="fa fa-plus-circle"></i>
                     {{ 'create_cursus'|trans({'%cursusWord%': displayedWords['cursus']}, 'cursus') }}
                 </span>
-                <a href="{{ path('claro_cursus_import_form') }}" class="btn btn-default">
+                <span id="import-cursus-btn" class="btn btn-default">
                     <i class="fa fa-sign-in"></i>
                     {{ 'import'|trans({}, 'platform') }}
-                </a>
+                </span>
                 <a href="{{ path('claro_cursus_export') }}" class="btn btn-default">
                     <i class="fa fa-sign-out"></i>
                     {{ 'export'|trans({}, 'platform') }}

@@ -30,9 +30,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -1236,19 +1236,14 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportModalForm.html.twig")
      */
     public function cursusImportFormAction()
     {
         $this->checkToolAccess();
-        $displayedWords = array();
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
         $form = $this->formFactory->create(new FileSelectType());
 
-        return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+        return array('form' => $form->createView());
     }
 
     /**
@@ -1258,7 +1253,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportModalForm.html.twig")
      */
     public function cursusImportAction()
     {
@@ -1320,17 +1315,10 @@ class CursusController extends Controller
 
             $zip->close();
 
-            return new RedirectResponse(
-                $this->router->generate('claro_cursus_tool_index')
-            );
+            return new JsonResponse('success', 200);
         } else {
-            $displayedWords = array();
 
-            foreach (CursusDisplayedWord::$defaultKey as $key) {
-                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-            }
-
-            return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+            return array('form' => $form->createView());
         }
 
     }

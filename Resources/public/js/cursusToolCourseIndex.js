@@ -95,6 +95,15 @@
             window.location.href = route;
         }
     });
+
+    $('#import-courses-btn').on('click', function () {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_cursus_courses_import_form'),
+            refreshPage,
+            function() {},
+            'courses-import-form'
+        );
+    });
     
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
