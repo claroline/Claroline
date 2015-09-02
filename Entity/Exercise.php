@@ -32,14 +32,14 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
-    private $shuffle;
+    private $shuffle = false;
 
     /**
      * @var integer $nbQuestion
      *
      * @ORM\Column(name="nb_question", type="integer")
      */
-    private $nbQuestion;
+    private $nbQuestion = 0;
 
     /**
      * @var boolean $keepSameQuestion
@@ -60,35 +60,37 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="duration", type="integer")
      */
-    private $duration;
+    private $duration = 0;
 
     /**
      * @var integer $nbQuestionPage
      *
      * @ORM\Column(name="nb_question_page", type="integer")
      */
-    private $nbQuestionPage;
+    private $nbQuestionPage = 0;
 
     /**
      * @var boolean $doprint
      *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
      */
-    private $doprint;
+    private $doprint = false;
 
     /**
      * @var integer $maxAttempts
      *
      * @ORM\Column(name="max_attempts", type="integer")
      */
-    private $maxAttempts;
+    private $maxAttempts = 0;
 
     /**
+     * @todo mode should be at least a class constant
+     *
      * @var string $correctionMode
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
-    private $correctionMode;
+    private $correctionMode = '1';
 
     /**
      * @var datetime $dateCorrection
@@ -98,11 +100,13 @@ class Exercise extends AbstractResource
     private $dateCorrection;
 
     /**
+     * @todo mode should be at least a class constant
+     *
      * @var string $markMode
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode;
+    private $markMode = '1';
 
     /**
      * @var datetime $startDate
@@ -130,14 +134,14 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
-    private $dispButtonInterrupt;
+    private $dispButtonInterrupt = false;
 
     /**
      * @var boolean $lockAttempt
      *
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
-    private $lockAttempt;
+    private $lockAttempt = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Groupes")
@@ -162,10 +166,12 @@ class Exercise extends AbstractResource
     public function __construct()
     {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->lockAttempt = false;
-        $this->dispButtonInterrupt  = false;
-        $this->doprint = false;
-        $this->shuffle = false;
+
+        // todo: remove these default values (coming from listener#createForm)
+        $this->dateCreate = new \DateTime();
+        $this->startDate = new \DateTime();
+        $this->endDate = new \DateTime();
+        $this->dateCorrection = new \DateTime();
     }
 
     /**

@@ -22,24 +22,18 @@ class ExerciseListener extends ContainerAware
 {
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $exercise = new Exercise();
-        $exercise->setNbQuestion(0);
-        $exercise->setDuration(0);
-        $exercise->setMaxAttempts(0);
-        $exercise->setStartDate(new \Datetime());
-        $exercise->setEndDate(new \Datetime());
-        $exercise->setDateCorrection(new \Datetime());
         $form = $this->container->get('form.factory')
-            ->create(new ExerciseType(), $exercise);
+            ->create(new ExerciseType(true));
         $twig = $this->container->get('templating');
         $content = $twig->render(
-            'UJMExoBundle:Exercise:new.html.twig',
-            array(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            [
                 'form'  => $form->createView(),
                 'resourceType' => 'ujm_exercise'
-            )
+            ]
         );
         $event->setResponseContent($content);
+        $event->stopPropagation();
     }
 
     public function onCreate(CreateResourceEvent $event)
@@ -47,7 +41,7 @@ class ExerciseListener extends ContainerAware
         $request = $this->container->get('request');
         $form = $this->container
             ->get('form.factory')
-            ->create(new ExerciseType, new Exercise());
+            ->create(new ExerciseType(true), new Exercise());
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -56,9 +50,9 @@ class ExerciseListener extends ContainerAware
 
             $exercise = $form->getData();
             $exercise->setName($exercise->getTitle());
-            $exercise->setDateCreate(new \Datetime());
-            $exercise->setNbQuestionPage(1);
-            $exercise->setPublished(FALSE);
+            $publish = (bool) $form->get('publish')->getData();
+            $exercise->setPublished($publish);
+            $event->setPublished($publish);
 
             $subscription = new Subscription($user, $exercise);
             $subscription->setAdmin(true);
@@ -74,11 +68,11 @@ class ExerciseListener extends ContainerAware
         }
 
         $content = $this->container->get('templating')->render(
-            'UJMExoBundle:Exercise:new.html.twig',
-            array(
+            'ClarolineCoreBundle:Resource:createForm.html.twig',
+            [
                 'resourceType' => 'ujm_exercise',
                 'form'   => $form->createView()
-            )
+            ]
         );
 
         $event->setErrorFormContent($content);

@@ -4,7 +4,7 @@
 
         <div class='modal-header'>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title">{{ 'Create a new resource' | trans({}, 'platform') }} ({{ resourceType | trans({}, 'resource') }})</h4>
+            <h4 class="modal-title">{{ 'create_resource'|trans({}, 'platform') }} ({{ resourceType|trans({}, 'resource') }})</h4>
         </div>
         <div class='modal-body'>
             {{ form_row(form.title) }}
