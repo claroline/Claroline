@@ -405,12 +405,20 @@ class UserManager
     {
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
+        $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
+        
+        if (count($created) > 0) {
+            $code = $user->getUsername() . '~' . uniqid();
+        } else {
+            $code = $user->getUsername();
+        }
+        
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . ' - ' . $user->getUsername();
 
         if (!$model) {
             $config = Configuration::fromTemplate($this->personalWsTemplateFile);
             $config->setWorkspaceName($personalWorkspaceName);
-            $config->setWorkspaceCode($user->getUsername());
+            $config->setWorkspaceCode($code);
             $workspace = $this->transfertManager->createWorkspace($config, $user, true);
         } else {
             $workspace = $this->workspaceManager->createWorkspaceFromModel(
