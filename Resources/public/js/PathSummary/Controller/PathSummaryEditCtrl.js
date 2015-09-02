@@ -102,6 +102,12 @@ PathSummaryEditCtrl.prototype.paste = function (step) {
         this.pathService.browseSteps([ clipboardData ], function (parentStep, step) {
             step.id = this.identifierService.generateUUID();
 
+            // Reset server step ID
+            step.resourceId = null;
+
+            // Reset Activity ID to generate a new one when publishing path
+            step.activityId = null;
+
             // Override name
             step.name  = step.name ? step.name + ' ' : '';
             step.name += '(' + Translator.trans('copy', {}, 'path_wizards') + ')';
