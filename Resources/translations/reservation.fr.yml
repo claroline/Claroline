@@ -100,6 +100,15 @@ form:
   name: Nom
   quantity: Quantité
   information_about_quantity_modification: La modification de la quantité de ressources disponibles affectera uniquement les futurs réservations.
+import_: Importer
+import:
+  resources: Importer des ressources
+  resources_submit: Importer les ressources
+  resources_title: Importer des ressources
+  resources_info: Veuillez sélectionner un fichier au format csv utilisant la virgule comme caractère de séparation. La première ligne du fichier doit posséder le nom des 7 colonnes (cf. exemple ci-dessous). Le nom du type de ressources existant, le nom de la nouvelle ressource, le temps maximum de réservation au format hh:mm ou hh:mm:ss, la description, la localisation, la quantité et la couleur de la ressource.
+  file: Fichier des ressources
+  tv: Télévision
+  tv_localisation: Salle des prof
 modify_resource_type_name: Modifier le nom
 modify_resource: Modifier une ressource
 no_resources_type_yet: Il n'y a pas encore de ressources pour les réservations.

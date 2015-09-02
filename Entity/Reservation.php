@@ -10,6 +10,7 @@ use FormaLibre\ReservationBundle\Validator\Constraints as Validator;
 /**
  * @ORM\Table(name="formalibre_reservation")
  * @ORM\Entity(repositoryClass="FormaLibre\ReservationBundle\Repository\ReservationRepository")
+ * @ORM\HasLifecycleCallbacks()
  * @Validator\DateRange()
  * @Validator\Duration()
  */
@@ -42,6 +43,11 @@ class Reservation
     private $comment;
 
     /**
+     * @ORM\Column(name="last_modification", type="datetime")
+     */
+    private $lastModification;
+
+    /**
      * @Assert\NotBlank()
      */
     private $duration;
@@ -49,6 +55,15 @@ class Reservation
     private $start;
 
     private $end;
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateLastModification()
+    {
+        $this->lastModification = new \DateTime();
+    }
 
     public function getId()
     {
@@ -155,5 +170,29 @@ class Reservation
     public function getComment()
     {
         return $this->comment;
+    }
+
+    /**
+     * Set lastModification
+     *
+     * @param \DateTime $lastModification
+     *
+     * @return Reservation
+     */
+    public function setLastModification($lastModification)
+    {
+        $this->lastModification = $lastModification;
+
+        return $this;
+    }
+
+    /**
+     * Get lastModification
+     *
+     * @return \DateTime
+     */
+    public function getLastModification()
+    {
+        return $this->lastModification;
     }
 }

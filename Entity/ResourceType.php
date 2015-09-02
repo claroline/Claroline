@@ -22,7 +22,7 @@ class ResourceType
     /**
      * @ORM\Column(name="name", type="string", length=50)
      * @Assert\NotNull()
-     * @Assert\Length(min=2, max=50)
+     * @Assert\Length(min="2", max="50")
      */
     private $name;
 

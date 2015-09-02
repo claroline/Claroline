@@ -2,7 +2,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 id="agendaModalLabel">{% if editMode %} {{ 'modify_resource'|trans({}, 'reservation') }} {% else %}{{ 'add_resource'|trans({}, 'reservation') }} {% endif %}</h4>
+            <h4>{% if editMode %} {{ 'modify_resource'|trans({}, 'reservation') }} {% else %}{{ 'add_resource'|trans({}, 'reservation') }} {% endif %}</h4>
         </div>
         <form method="post"
               action="{{ action }}"

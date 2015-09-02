@@ -90,8 +90,8 @@ class ReservationManager
                 'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
                 'resourceId' => $reservation->getResource()->getId(),
                 'reservationId' => $reservation->getId(),
-                'editable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::EDIT),
-                'durationEditable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::EDIT)
+                'editable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK),
+                'durationEditable' => $this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
             ]
         );
     }
@@ -141,17 +141,16 @@ class ReservationManager
         $hasAccess = false;
         foreach ($userRoles as $userRole) {
             foreach ($resourceRights as $resourceRight) {
-                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
-                    if (5 == $resourceRight->getMask() && $this->tokenStorage->getToken()->getUser() == $user) {
-                        $hasAccess = true;
-                        break;
-                    } elseif (5 == $resourceRight->getMask() && $this->tokenStorage->getToken()->getUser() != $user) {
-                        $hasAccess = false;
-                        break;
-                    }
-
+                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() >= ReservationController::ADMIN) {
                     $hasAccess = true;
                     break;
+                }
+
+                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
+                    if ((ReservationController::BOOK === $mask && $this->tokenStorage->getToken()->getUser() === $user) || ReservationController::BOOK !== $mask) {
+                        $hasAccess = true;
+                        break;
+                    }
                 }
             }
         }
@@ -159,9 +158,9 @@ class ReservationManager
         return $hasAccess;
     }
 
-    public function checkAccess(Reservation $reservation, $mask)
+    public function checkAccess(User $user, Reservation $reservation, $mask)
     {
-        if (!$this->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $mask)) {
+        if (!$this->hasAccess($user, $reservation->getResource(), $mask)) {
             throw new AccessDeniedException();
         }
     }

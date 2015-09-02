@@ -42,6 +42,14 @@
         }
     });
 
+    $('.import-resources').click(function(e) {
+        e.preventDefault();
+
+        var routing = Routing.generate('formalibre_reservation_import_resources_form');
+
+        Claroline.Modal.displayForm(routing, onImportSucceded, function() {}, 'import-resources')
+    });
+
     $('body')
         .on('click', '.delete-resource-type', function() {
             var $div = $(this).parents('div.active'),
@@ -172,5 +180,10 @@
             url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesList}),
             type: 'post'
         });
+    }
+
+    function onImportSucceded()
+    {
+
     }
 }) ();

@@ -4,9 +4,11 @@ namespace FormaLibre\ReservationBundle\Controller;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Ddeboer\DataImport\Reader\CsvReader;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceType;
+use FormaLibre\ReservationBundle\Form\ImportResourcesViaCsvFileType;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -276,5 +278,46 @@ class ReservationAdminController extends Controller
 
         $this->em->flush();
         return new JsonResponse();
+    }
+
+    /**
+     * @EXT\Route(
+     *      "/import",
+     *      name="formalibre_reservation_import_resources_form",
+     *      options={"expose"=true}
+     * )
+     */
+    public function importResourcesModalFormAction()
+    {
+        $form = $this->createForm(new ImportResourcesViaCsvFileType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->importResourcesAction($form->get('file')->getData());
+            return new JsonResponse();
+        }
+
+        return $this->render('FormaLibreReservationBundle:Admin:importForm.html.twig', [
+                'form' => $form->createView(),
+                'action' => $this->generateUrl('formalibre_reservation_import_resources_form')
+            ]
+        );
+    }
+
+    public function importResourcesAction($file)
+    {
+        $file = new \SplFileObject($file->getPathname());
+        $reader = new CsvReader($file);
+        $reader->setHeaderRowNumber(0);
+
+        foreach ($reader as $row) {
+            $resourceTypeName = $row['resource_type'];
+            $resourceName = $row['name'];
+            $maxTimeReservation = $row['max_time_reservation'];
+            $description = $row['description'];
+            $localisation = $row['localisation'];
+            $quantity = $row['quantity'];
+            $color = $row['color'];
+        }
     }
 }

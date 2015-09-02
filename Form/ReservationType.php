@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use FormaLibre\ReservationBundle\Validator\Constraints\Reservation;
+use FormaLibre\ReservationBundle\Validator\Constraints\ReservationModify;
 use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -76,7 +77,7 @@ class ReservationType extends AbstractType
     public function getResourceByMask()
     {
         $resources = $this->em->getRepository('FormaLibreReservationBundle:Resource')->findAll();
-        $mask = $this->editMode ? ReservationController::EDIT : ReservationController::ADMIN;
+        $mask = ReservationController::BOOK;
 
         foreach ($resources as $key => $resource) {
             if (!$this->reservationManager->hasAccess($this->tokenStorage->getToken()->getUser(), $resource, $mask)) {
@@ -99,6 +100,15 @@ class ReservationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        if ($this->editMode) {
+            $resolver->setDefaults(
+                array(
+                    'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
+                    'translation_domain' => 'reservation',
+                    'constraints' => new ReservationModify()
+                )
+            );
+        } else {
             $resolver->setDefaults(
                 array(
                     'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
@@ -106,5 +116,6 @@ class ReservationType extends AbstractType
                     'constraints' => new Reservation()
                 )
             );
+        }
     }
 }

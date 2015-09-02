@@ -20,7 +20,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReservationController extends Controller
 {
     const SEE = 1;
-    const EDIT = 2;
+    const BOOK = 2;
     const ADMIN = 4;
 
     private $om;
@@ -29,6 +29,7 @@ class ReservationController extends Controller
     private $agendaManager;
     private $reservationManager;
     private $translator;
+    private $tokenStorage;
     private $reservationRepo;
     private $eventRepo;
 
@@ -39,7 +40,8 @@ class ReservationController extends Controller
      *      "request"     = @DI\Inject("request"),
      *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
-     *      "translator"    = @DI\Inject("translator")
+     *      "translator"    = @DI\Inject("translator"),
+     *      "tokenStorage"  = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
@@ -48,7 +50,8 @@ class ReservationController extends Controller
         Request $request,
         AgendaManager $agendaManager,
         ReservationManager $reservationManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        TokenStorageInterface $tokenStorage
     )
     {
         $this->om = $om;
@@ -57,6 +60,7 @@ class ReservationController extends Controller
         $this->agendaManager = $agendaManager;
         $this->reservationManager = $reservationManager;
         $this->translator = $translator;
+        $this->tokenStorage = $tokenStorage;
         $this->reservationRepo = $this->om->getRepository('FormaLibreReservationBundle:Reservation');
         $this->eventRepo = $this->om->getRepository('ClarolineAgendaBundle:Event');
     }
@@ -97,7 +101,7 @@ class ReservationController extends Controller
 
         if ($form->isValid()) {
             $reservation = $form->getData();
-            $this->reservationManager->checkAccess($reservation, $this::ADMIN);
+            $this->reservationManager->checkAccess($this->tokenStorage->getToken()->getUser(), $reservation, $this::BOOK);
 
             $event = $this->reservationManager->updateEvent(new Event(), $reservation);
             $this->agendaManager->addEvent($event);
@@ -126,7 +130,7 @@ class ReservationController extends Controller
      */
     public function changeReservationFormAction(Reservation $reservation)
     {
-        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+        $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
         $formType = $this->get('formalibre.form.reservation');
         $formType->setEditMode();
@@ -139,7 +143,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::ADMIN)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
         ));
     }
 
@@ -152,7 +156,7 @@ class ReservationController extends Controller
      */
     public function changeReservationAction(Reservation $reservation)
     {
-        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+        $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
         $formType = $this->get('formalibre.form.reservation');
         $formType->setEditMode();
@@ -161,7 +165,7 @@ class ReservationController extends Controller
 
         if ($form->isValid()) {
             $reservation = $form->getData();
-            $this->reservationManager->checkAccess($reservation, $this::EDIT);
+            $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
             $event = $this->reservationManager->updateEvent($reservation->getEvent(), $reservation);
 
@@ -176,7 +180,7 @@ class ReservationController extends Controller
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
-            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::ADMIN)
+            'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), ReservationController::BOOK)
         ));
     }
 
@@ -189,7 +193,7 @@ class ReservationController extends Controller
      */
     public function moveReservationAction(Reservation $reservation, $minutes)
     {
-        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+        $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
         $newStart = $reservation->getEvent()->getStart()->getTimestamp() + $minutes * 60;
         $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
@@ -206,7 +210,7 @@ class ReservationController extends Controller
      */
     public function resizeReservationAction(Reservation $reservation, $minutes)
     {
-        $this->reservationManager->checkAccess($reservation, $this::EDIT);
+        $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
         $start = $reservation->getEvent()->getStart()->getTimestamp();
         $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
@@ -229,7 +233,7 @@ class ReservationController extends Controller
      */
     public function deleteReservationAction(Reservation $reservation)
     {
-        $this->reservationManager->checkAccess($reservation, $this::ADMIN);
+        $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
         $this->om->remove($reservation);
         $this->om->flush();
