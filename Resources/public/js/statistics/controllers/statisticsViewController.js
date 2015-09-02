@@ -33,7 +33,7 @@ statisticsApp
                 {
                     // Change our line width and use a diamond shaped marker.
                     lineWidth:2,
-                    markerOptions: { style:'dimaond' }
+                    markerOptions: { style:'diamond' }
                 },
                 {
                     // Don't show a line, just show markers.
@@ -56,11 +56,8 @@ statisticsApp
 
         $scope.clickOnPortolio = function() {
             if ($scope.selectedPortfolio !== null) {
-                console.log('pouet');
                 $('#chart').html('');
                 $.jqplot('chart', $scope.chartData, $scope.chartOptions);
             }
         };
-            console.log('pouet');
-        $.jqplot('chart', $scope.chartData, $scope.chartOptions);
     }]);
