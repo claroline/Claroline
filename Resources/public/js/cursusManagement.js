@@ -102,9 +102,14 @@
                         datas[i]['id'] +
                         '">' +      
                             '<span>' +
-                                '<span class="label label-primary">' +
-                                    datas[i]['title'] +
-                                '</span>' +
+                                '<a href="' + Routing.generate('claro_cursus_course_management', {'course': datas[i]['course_id'], 'cursusId': datas[i]['root']}) + '">' +
+                                    '<span class="label label-primary">' +
+                                        datas[i]['title'] +
+                                        '&nbsp;<small>' +
+                                            '[' + datas[i]['code'] + ']' +
+                                        '</small>' +
+                                    '</span>' +
+                                '</a>' +
                                 '<span class="label label-danger pointer-hand remove-course-btn" data-cursus-id="' +
                                 datas[i]['id'] +
                                 '">' +
@@ -116,7 +121,8 @@
                     $('#collapse-' + cursusId).removeClass('hidden');
                 }
             },
-            function() {}
+            function() {},
+            'course-create-form'
         );
     });
 
