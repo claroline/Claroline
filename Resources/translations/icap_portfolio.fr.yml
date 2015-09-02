@@ -132,3 +132,4 @@ my_portfolios_help_text: "Voici la liste des différentes vues de votre portfoli
 exchange_space_help_text: "Retrouvez ici de manière centralisée tous les échanges sur les accompagnements de vos portfolios, et ceux que vous suivez."
 statistics: "Statistiques"
 portfolio_view_statistics: "Statistiques des visites"
+select_portfolio: "Sélectionner un portfolio"

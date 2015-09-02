@@ -55,8 +55,8 @@ statisticsApp
         };
 
         $scope.clickOnPortolio = function() {
+            $('#chart').replaceWith('<div id="chart"></div>');
             if ($scope.selectedPortfolio !== null) {
-                $('#chart').html('');
                 $.jqplot('chart', $scope.chartData, $scope.chartOptions);
             }
         };
