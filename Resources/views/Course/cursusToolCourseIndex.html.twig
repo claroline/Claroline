@@ -101,11 +101,11 @@
                 <i class="fa fa-plus-circle"></i>
                 {{ 'create_course'|trans({}, 'cursus') }}
             </a>
-            <a href="{{ path('claro_cursus_courses_import_form') }}"class="btn btn-default">
+            <span id="import-courses-btn" class="btn btn-default">
                 <i class="fa fa-sign-in"></i>
                 {{ 'import'|trans({}, 'platform') }}
-            </a>
-            <a href="{{ path('claro_cursus_courses_export') }}"class="btn btn-default">
+            </span>
+            <a href="{{ path('claro_cursus_courses_export') }}" class="btn btn-default">
                 <i class="fa fa-sign-out"></i>
                 {{ 'export'|trans({}, 'platform') }}
             </a>

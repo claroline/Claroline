@@ -69,6 +69,15 @@
         );
     });
 
+    $('#import-cursus-btn').on('click', function () {
+        window.Claroline.Modal.displayForm(
+            Routing.generate('claro_cursus_import_form'),
+            refreshPage,
+            function() {},
+            'cursus-import-form'
+        );
+    });
+
     var refreshPage = function () {
         window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();

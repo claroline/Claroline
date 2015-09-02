@@ -954,18 +954,13 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCursusBundle:Course:coursesImportModalForm.html.twig")
      */
     public function coursesImportFormAction()
     {
-        $displayedWords = array();
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
         $form = $this->formFactory->create(new FileSelectType());
 
-        return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+        return array('form' => $form->createView());
     }
 
     /**
@@ -975,7 +970,7 @@ class CourseController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Course:coursesImportForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:Course:coursesImportModalForm.html.twig")
      */
     public function coursesImportAction()
     {
@@ -1022,17 +1017,10 @@ class CourseController extends Controller
             }
             $zip->close();
 
-            return new RedirectResponse(
-                $this->router->generate('claro_cursus_tool_course_index')
-            );
+            return new JsonResponse('success', 200);
         } else {
-            $displayedWords = array();
 
-            foreach (CursusDisplayedWord::$defaultKey as $key) {
-                $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-            }
-
-            return array('form' => $form->createView(), 'displayedWords' => $displayedWords);
+            return array('form' => $form->createView());
         }
 
     }
