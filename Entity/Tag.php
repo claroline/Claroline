@@ -11,14 +11,13 @@
 
 namespace Claroline\TagBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TagRepository")
  * @ORM\Table(name="claro_tagbundle_tag")
- * @DoctrineAssert\UniqueEntity("name")
  */
 class Tag
 {
@@ -30,10 +29,18 @@ class Tag
     protected $id;
 
     /**
-     * @ORM\Column(name="tag_name", unique=true)
+     * @ORM\Column(name="tag_name")
      * @Assert\NotBlank()
      */
     protected $name;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", nullable=true, onDelete="CASCADE")
+     */
+    protected $user;
 
     public function getId()
     {
@@ -53,5 +60,15 @@ class Tag
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user = null)
+    {
+        $this->user = $user;
     }
 }

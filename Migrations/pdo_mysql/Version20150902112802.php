@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/01 04:13:35
+ * Generation date: 2015/09/02 11:28:04
  */
-class Version20150901161334 extends AbstractMigration
+class Version20150902112802 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -27,8 +27,9 @@ class Version20150901161334 extends AbstractMigration
         $this->addSql("
             CREATE TABLE claro_tagbundle_tag (
                 id INT AUTO_INCREMENT NOT NULL, 
+                user_id INT DEFAULT NULL, 
                 tag_name VARCHAR(255) NOT NULL, 
-                UNIQUE INDEX UNIQ_6E5EC9DB02CC1B0 (tag_name), 
+                INDEX IDX_6E5EC9DA76ED395 (user_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -36,6 +37,12 @@ class Version20150901161334 extends AbstractMigration
             ALTER TABLE claro_tagbundle_tagged_item 
             ADD CONSTRAINT FK_C8B7E80FBAD26311 FOREIGN KEY (tag_id) 
             REFERENCES claro_tagbundle_tag (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_tagbundle_tag 
+            ADD CONSTRAINT FK_6E5EC9DA76ED395 FOREIGN KEY (user_id) 
+            REFERENCES claro_user (id) 
             ON DELETE CASCADE
         ");
     }
