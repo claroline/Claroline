@@ -290,8 +290,9 @@ class DropRepository extends EntityRepository
     //
     // Appel dans dropsAwaitingAction du controller DropController. InnovaERV.
     //
-    public function getDropsAwaitingCorrectionQuery($dropzone)
+    public function getDropsAwaitingCorrectionQuery($dropzone, $case)
     {
+
         // getDropIdsFullyCorrectedQuery : fonction définie dans ce repository
         $lines = $this->getDropIdsFullyCorrectedQuery($dropzone)->getResult();
 
@@ -300,20 +301,37 @@ class DropRepository extends EntityRepository
             $dropIds[] = $line['did'];
         }
 
-        $qb = $this
-            ->createQueryBuilder('drop')
-            ->select('drop, document, correction, user')
-            ->andWhere('drop.dropzone = :dropzone')
-            ->andWhere('document.validate = 1')
-            ->andWhere('drop.user = document.sender')
+        // On vient via l'onglet "Demandes adressées"
+        if ($case == 1)
+        {
+            $qb = $this
+                ->createQueryBuilder('drop')
+                ->select('drop, document, correction, user')
+                ->andWhere('drop.dropzone = :dropzone')
+                ->andWhere('document.validate = 1')
+                ->andWhere('drop.user = document.sender')
+                ->join('drop.user', 'user')
+                ->leftJoin('drop.documents', 'document')
+                ->leftJoin('drop.corrections', 'correction')
+                ->orderBy('drop.reported desc, user.lastName, user.firstName')
+                ->setParameter('dropzone', $dropzone);
+        }    
             // #65 InnovaERV : commentaire car critères ne sont pas utiles. 
             // ->andWhere('drop.finished = true')
             // ->andWhere('drop.unlockedDrop = false')
-            ->join('drop.user', 'user')
-            ->leftJoin('drop.documents', 'document')
-            ->leftJoin('drop.corrections', 'correction')
-            ->orderBy('drop.reported desc, user.lastName, user.firstName')
-            ->setParameter('dropzone', $dropzone);
+        // On vient via l'onglet "Espaces partagés"
+        else
+        {
+            $qb = $this
+                ->createQueryBuilder('drop')
+                ->select('drop, document, correction, user')
+                ->andWhere('drop.dropzone = :dropzone')
+                ->join('drop.user', 'user')
+                ->leftJoin('drop.documents', 'document')
+                ->leftJoin('drop.corrections', 'correction')
+                ->orderBy('drop.reported desc, user.lastName, user.firstName')
+                ->setParameter('dropzone', $dropzone);
+        }
 
         if (count($dropIds) > 0) {
             $qb = $qb

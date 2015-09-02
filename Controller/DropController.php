@@ -495,7 +495,7 @@ class DropController extends DropzoneBaseController
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
-        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
+        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 1);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
@@ -964,6 +964,7 @@ class DropController extends DropzoneBaseController
      */
     public function sharedSpacesAction($dropzone, $page)
     {
+// Onglet "Espaces partagés"
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
@@ -978,7 +979,9 @@ class DropController extends DropzoneBaseController
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
-        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone);
+        $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 2);
+
+//        var_dump($dropsQuery);die();
 //        $userRepo = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User');
 //        $users = $dropRepo->getUsersByWorkspacesAndRoles($workspace, $roles);
 
@@ -989,8 +992,6 @@ class DropController extends DropzoneBaseController
         $userNbAdressedRequests = array();
 
         foreach ($dropzone->getDrops() as $drop) {
-
-            //var_dump($drop->getDropZone()->getId());die();
             /** InnovaERV : ajout pour calculer les 2 zones **/
 
             // Nombre de documents déposés/ Repo : Document
