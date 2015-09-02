@@ -324,6 +324,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
      */
     public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
+
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         if ($drop->getId() != $document->getDrop()->getId()) {
@@ -340,6 +341,12 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
             $form->handleRequest($this->getRequest());
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
+
+                // InnovaERV : vu avec Axel car souci lors de la suppression
+                if ('url' !== $document->getType()) {
+                    // There is no ResourceNode for URL
+                    $this->container->get('claroline.manager.resource_manager')->delete($document->getResourceNode());
+                }
 
                 $em->remove($document);
                 $em->flush();

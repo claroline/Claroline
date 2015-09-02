@@ -3,6 +3,8 @@
  * Created by : Vincent SAISSET
  * Date: 21/08/13
  * Time: 15:58
+ * InnovaERV : vu avec Axel car souci lors de la suppression
+ * ajout de "cascade= {"remove", "persist"} pour resourceNode. Voir également deleteDocumentAction
  */
 
 namespace Innova\CollecticielBundle\Entity;
@@ -33,7 +35,8 @@ class Document {
     protected $url;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
+     *      cascade= {"remove", "persist"}
      * )
      * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", onDelete="SET NULL")
      */
