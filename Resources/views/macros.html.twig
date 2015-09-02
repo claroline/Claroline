@@ -5,13 +5,8 @@
                 <div class="text-muted">{{ documentListText }}</div>
             {% endif %}
 
-
+            {% if drop.documents|length > 0 %}
             <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
-                {% if drop.documents|length <= 0 %}
-                    <tr>
-                        <td>{{ 'No document associated'|trans({},'innova_collecticiel') }}</td>
-                    </tr>
-                {% else %}
                     <thead>
                         <tr class="text-left">
 {#                            <th></th> #}
@@ -31,8 +26,10 @@
                             {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
                         {% endfor %}
                     </tbody>
-                {% endif %}
             </table>
+            {% else %}
+                <p>{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
+            {% endif %}
         </div>
     </div>
 
