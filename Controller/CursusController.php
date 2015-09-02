@@ -20,7 +20,7 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
-use Claroline\CursusBundle\Form\CursusCourseType;
+use Claroline\CursusBundle\Form\CourseType;
 use Claroline\CursusBundle\Form\CursusType;
 use Claroline\CursusBundle\Form\FileSelectType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
@@ -673,7 +673,7 @@ class CursusController extends Controller
     public function cursusCourseCreateFormAction(User $authenticatedUser, Cursus $cursus)
     {
         $this->checkToolAccess();
-        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), new Course());
+        $form = $this->formFactory->create(new CourseType($authenticatedUser), new Course());
 
         return array(
             'form' => $form->createView(),
@@ -694,16 +694,28 @@ class CursusController extends Controller
     {
         $this->checkToolAccess();
         $course = new Course();
-        $form = $this->formFactory->create(new CursusCourseType($authenticatedUser), $course);
+        $form = $this->formFactory->create(new CourseType($authenticatedUser), $course);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $icon = $form->get('icon')->getData();
+
+            if (!is_null($icon)) {
+                $hashName = $this->cursusManager->saveIcon($icon);
+                $course->setIcon($hashName);
+            }
             $this->cursusManager->persistCourse($course);
             $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, array($course));
             $results = array();
 
             foreach ($createdCursus as $created) {
-                $results[] = array('id' => $created->getId(), 'title' => $created->getTitle());
+                $results[] = array(
+                    'id' => $created->getId(),
+                    'title' => $created->getTitle(),
+                    'course_id' => $course->getId(),
+                    'code' => $course->getCode(),
+                    'root' => $cursus->getRoot()
+                );
             }
 
             return new JsonResponse($results, 200);

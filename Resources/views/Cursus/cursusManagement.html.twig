@@ -101,12 +101,12 @@
     {% else %}
         <span>
             <a href="{{ path('claro_cursus_course_management', {'course': course.getId(), 'cursusId': cursus.getRoot()}) }}">
-            <span class="label label-primary">
-                {{ course.getTitle() }}
-                <small>
-                    [{{ course.getCode() }}]
-                </small>
-            </span>
+                <span class="label label-primary">
+                    {{ course.getTitle() }}
+                    <small>
+                        [{{ course.getCode() }}]
+                    </small>
+                </span>
             </a>
             <span class="label label-danger pointer-hand remove-course-btn"
                   data-cursus-id="{{ cursusId }}"
