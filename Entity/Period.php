@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping as ORM;
      */
     protected $numPeriod;
     /**
-     * @ORM\Column(name="name")
+     * @ORM\Column(name="name",nullable=true)
      */
     protected $name;
     /**
@@ -72,7 +72,7 @@ use Doctrine\ORM\Mapping as ORM;
     }
     public function setName($name)
     {
-        $this->day = $name;
+        $this->name = $name;
     }
      public function getBeginHour()
     {

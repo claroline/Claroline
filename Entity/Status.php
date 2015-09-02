@@ -24,14 +24,14 @@ class Status
     /**
      * @var string
      *
-     * @ORM\Column(name="statusName", type="string", length=255)
+     * @ORM\Column(name="statusName", type="string", length=255, nullable=true)
      */
     private $statusName;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="statusColor", type="string", length=255)
+     * @ORM\Column(name="statusColor", type="string", length=255, nullable=true)
      */
     private $statusColor;
 

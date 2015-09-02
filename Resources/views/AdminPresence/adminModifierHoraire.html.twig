@@ -1,0 +1,64 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                Modifier une période
+            </h3>
+        </div>
+        <div class="modal-body">
+
+            <form method="post" {{ form_enctype(NewPeriodForm) }}>    
+                
+                        Jour(s):{{form_widget(NewPeriodForm.day)}}
+                        N° de la période:{{form_widget(NewPeriodForm.number,{ 'attr': {'value': periods.getNumPeriod()} } )}}
+                        Nom de la période:{{form_widget(NewPeriodForm.name,{ 'attr': {'value': periods.getName()} } )}}
+                        Heure de début:{{form_widget(NewPeriodForm.startMod,{ 'attr': {'value':periods.getBeginHour()|date('H:i')} } )}}
+                        Heure de fin:{{form_widget(NewPeriodForm.endMod,{ 'attr': {'value': periods.getEndHour()|date('H:i')} } )}}
+                        <br />
+                        <div class="row">
+                            <button class="btn btn-primary col-md-4 col-md-offset-1" type="submit" name="Releve[Pres]">Modifier la période</button> 
+                            <button class="btn btn-primary col-md-4 col-md-offset-2" type="submit" name="Releve[Pres]">Supprimer la période</button> 
+                        </div>
+                    </div>
+                    <br />
+                </div>
+            </form>
+         
+
+        </div>
+    </div>
+</div>
+{% block javascripts %}
+            <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
+            <script>
+                $(function () {
+                    $('#form_startMod').datetimepicker({
+                        format: 'LT',
+                         icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+                    });
+                });
+                $(function () {
+                    $('#form_endMod').datetimepicker({
+                        format: 'LT',
+                         icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+                    });
+                });
+            </script>
+{% endblock %}

@@ -1,0 +1,171 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set duration ='00:50:00' %}
+{% set startday ='08:00:00' %}
+{% set endday ='16:00:00' %}
+
+
+{% block section_content %} 
+  
+
+    <div class="panel panel-default">
+        <div class="panel-body">   
+             <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}">Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_horaire")}}">Horaire</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}">Configurations</a></li>
+                </ul>
+            </div>
+            
+            <br /><br />
+            <div style="text-align:center;font-size:36px";>Horaire type: </div>
+            <form method="post" {{ form_enctype(NewPeriodForm) }}>    
+                <div class="row">
+                    <div class="col-md-1"  style="text-align: left;">
+                        Jour(s):{{form_widget(NewPeriodForm.day)}}
+                    </div>
+                    <div class="col-md-2"  style="text-align: left;">    
+                        N° de la période:{{form_widget(NewPeriodForm.number)}}
+                        Nom de la période:{{form_widget(NewPeriodForm.name)}}
+                    </div>
+                    <div class="col-md-2"  style="text-align: left;"> 
+                        Heure de début:{{form_widget(NewPeriodForm.start)}}
+                        Heure de fin:{{form_widget(NewPeriodForm.end)}}
+                    </div>
+                    <div class="col-md-2 col-md-offset-0"  style="text-align: left;"> 
+                        <br />
+                        <button class="btn btn-primary" type="submit" name="Releve[Pres]">Ajouter la tranche horaire</button> 
+                    </div>
+                    <br />
+                </div>
+            </form>
+            <div id='calendar'></div>
+       </div> 
+    </div> 
+           {% block stylesheets %}
+            {{ parent() }}
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.print.css') }}' media='print' />
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
+            <link rel='stylesheet' type='text/css' href='{{ asset('bundles/formalibrepresence/css/bootstrap-datetimepicker.min.css') }}'>
+            
+            <style>
+                .fc-day-grid-event > .fc-content {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    max-width: 100%;
+                }
+                .is-task {
+                    padding-right: 3px;
+                }
+            </style>
+            {% endblock %}
+            
+            {% block javascripts %}
+            {{ parent() }}
+                <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
+                <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.js') }}' ></script>
+                <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+                <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
+                <script type='text/javascript' src='{{ asset('bundles/frontend/moment-with-locales.min.js') }}'></script> 
+                <script type='text/javascript' src='{{ asset('bundles/formalibrepresence/js/fr.js') }}'></script>
+         
+            <script>
+                
+               
+                $(document).ready(function() {
+                        
+                        $('#calendar').fullCalendar({
+                                header: {   
+                                            left:   'false',
+                                            center: 'false',
+                                            right:  'false'
+                                        },
+                                defaultView: 'basicWeek',
+                                lang: 'fr',
+                                weekends: true,
+                                editable: false,
+                                firstDay:1,
+                                businessHours:{dow:[1,2,3,4,5,6]},
+                                defaultTimedEventDuration:'{{duration}}',
+                                forceEventDuration:true,
+                                timeFormat:'H(:mm)',
+                                columnFormat: 'dddd',
+                                titleFormat:'Horaire type',
+                                minTime:'{{startday}}',
+                                maxTime:'{{endday}}',
+                                dayNames:['Dimanche', 'Lundi', 'Mardi', 'Mercredi',
+ 'Jeudi', 'Vendredi', 'Samedi'],    
+                                //slotDuration:'{{duration}}',
+                                eventLimit: true, // allow "more" link when too many events
+                                
+                                 events: [
+                                    {% for item in periods %}
+                                       {
+                                       id: {{ item.getId }},
+                                       title: '{{ item.getName()}}',
+                                       start: '{{item.getDay()}}T{{item.getBeginHour()|date('H:i:s')}}',
+                                       end: '{{item.getDay()}}T{{item.getEndHour()|date('H:i:s')}}',
+                                       url:'{{path("formalibre_presence_modifier_horaire", {"period":item.getId()})}}',
+                                      
+                
+                                        }
+                                      {% if loop.last %}{% else %},{% endif %}{% endfor %}
+
+                        ],
+                            eventClick: function(calEvent, jsEvent, view) {
+                         jsEvent.preventDefault();
+                        window.Claroline.Modal.displayForm(
+                            calEvent.url,
+                            function() {},
+                            function() {}
+                        );
+                
+                     }
+                        });
+                        
+                        
+  
+                });
+
+            </script>
+            <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
+            <script>
+                $(function () {
+                    $('#form_start').datetimepicker({
+                        format: 'HH:mm',
+                        locale:'fr',
+                         icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+                    });
+                });
+                $(function () {
+                    $('#form_end').datetimepicker({
+                        format: 'HH:mm',
+                        locale:'fr',
+                         icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+                    });
+                });
+            </script>
+                
+            {% endblock javascripts %}
+
+        </div>
+    </div>
+
+{% endblock %}
+

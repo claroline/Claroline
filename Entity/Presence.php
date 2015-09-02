@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Entity\Group;
 use FormaLibre\PresenceBundle\Entity\Period;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="FormaLibre\PresenceBundle\Repository\PresenceRepository")
  * @ORM\Table(name="formalibre_presencebundle_presence")
  */
  class Presence
@@ -128,5 +128,6 @@ use FormaLibre\PresenceBundle\Entity\Period;
     public function setGroup(Group $group)
     {
         $this->group = $group;
-    }
+    }  
+    
  }

@@ -1,21 +1,33 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+ >
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                Choisissez une classe
+            </h3>
+        </div>
+        <div class="modal-body">
 
-{% block section_content %}
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <br /><br />
             Vous souhaitez faire l'appel pour la <a  href="{{path("formalibre_presence_admin_tool_index")}}" role="button">{{period.getNumPeriod()}} période du {{date|date('d-m-y')}}</a>
             
-            <form method="post" {{ form_enctype(form) }}>
-                <br /><br /> <br /><br />
-                <div class="col-md-1">
+            <form action="{{ path('formalibre_choix_classe', {'period': period.getId(), 'date':date|date('d-m-y')}) }}" method="post" {{ form_enctype(form) }}>
+                <br /><br />
+                <div class="col-md-2">
                 {{form_label(form.selection)}}
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                 {{form_widget(form.selection)}}
                 </div>
                <input type="submit" class="btn btn-primary" />
+               <br /><br />
            </form>
+
         </div>
     </div>
-{% endblock %}
+</div>

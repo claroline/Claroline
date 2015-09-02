@@ -1,21 +1,96 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
+{% block section_content %} 
 
-{% block section_content %}
-    <div class="panel panel-default">
-        <div class="panel-body"> 
-            
-            <div>
+<div class="panel panel-default">
+    <div class="panel-body">   
+        
+        <div>
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}"  role="tab" data-toggle="tab">Appel</a></li>
-                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  role="tab" data-toggle="tab">Archives</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" role="tab" data-toggle="tab">Configurations</a></li>
+                <ul class="nav nav-tabs">
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Appel</a></li>
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" >Configurations</a></li>
                 </ul>
-            </div>
-            
-            <br /><br />
-        pages d'archives
         </div>
+        </br> </br> </br>
+        <table id="archivesList" class="cell-border" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Period</th>
+                            {#<th>Cours</th>#}
+                            <th>Classe</th>
+                            <th>Nom de l'étudiant</th>
+                            <th>Prénom de l'étudiant</th>
+                            <th>Status</th>
+                            <th>Responsable de l'appel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presence in presences%}
+                            <tr>
+                                <td>{{presence.getDate()|date("D d/m/Y")}}</td>
+                                <td>{{presence.getPeriod.getNumPeriod()}}</td>
+            {#                    <td>{{presence.getPeriod.getName()}}</td>#}
+                                <td>{{presence.getGroup.getName()}}</td>
+                                <td>{{presence.getUserStudent.getLastName()}}</td>
+                                <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                {% if presence.getStatus() is null %}
+                                    <td>Non communiqué</td>
+                                {% else %}
+                                <td>{{presence.getStatus.getStatusName()}}</td>
+                                {% endif %}
+                                <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                            </tr>
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+         </div>
     </div>
-{% endblock %}
+{% endblock %}   
+{#{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.6/css/dataTables.responsive.css">
+{% endblock %}#}
+    
+{% block javascripts %}
+    
+    {{ parent() }}
+    
+    <!-- jQuery -->
+    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+
+    <!-- DataTables -->
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+
+    <!-- outils -->
+    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.js"></script>
+    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
+{#    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"></script>#}
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
+    <script>
+            
+    $(document).ready(function() {
+        $('#archivesList').DataTable( {
+            
+             "language": {
+                "lengthMenu": "Afficher _MENU_ presences par page",
+                "zeroRecords": "Rien trouvé - Désolé",
+                "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                "infoEmpty": "Pas de présence valide",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            }
+        } );
+    } );
+
+
+    </script>
+
+{% endblock javascripts %}
+   
