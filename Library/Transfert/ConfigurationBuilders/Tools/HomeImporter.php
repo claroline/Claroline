@@ -221,18 +221,18 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                     array($widgetConfig->getWidgetInstance())
                 );
 
-                $widgetDisplayConfig = $widgetDisplayConfigs[0];
+                $widgetDisplayConfig = isset($widgetDisplayConfigs[0]) ? $widgetDisplayConfigs[0]: null;
 
                 //export the widget content here
                 $widgetData = array('widget' => array(
                     'name'   => $widgetConfig->getWidgetInstance()->getName(),
                     'type'   => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
                     'data'   => $data,
-                    'row'    => $widgetDisplayConfig->getRow(),
-                    'column' => $widgetDisplayConfig->getColumn(),
-                    'width'  => $widgetDisplayConfig->getWidth(),
-                    'height' => $widgetDisplayConfig->getHeight(),
-                    'color'  => $widgetDisplayConfig->getColor()
+                    'row'    => $widgetDisplayConfig ? $widgetDisplayConfig->getRow(): null,
+                    'column' => $widgetDisplayConfig ? $widgetDisplayConfig->getColumn(): null,
+                    'width'  => $widgetDisplayConfig ? $widgetDisplayConfig->getWidth(): null,
+                    'height' => $widgetDisplayConfig ? $widgetDisplayConfig->getHeight(): null,
+                    'color'  => $widgetDisplayConfig ? $widgetDisplayConfig->getColor(): null
                 ));
 
                 $widgets[] = $widgetData;
