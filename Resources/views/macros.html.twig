@@ -24,7 +24,9 @@
                                 <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
                                 <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
                                 <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
+                                {% if not adminInnova %}
                                 <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
+                                {% endif %}
                                 <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
                                 <th class="no-sort" style="width: 120px;"></th>
                             </tr>
