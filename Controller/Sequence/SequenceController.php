@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use UJM\ExoBundle\Entity\Sequence\Sequence;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * Description of SequenceController
@@ -18,6 +19,19 @@ use UJM\ExoBundle\Entity\Sequence\Sequence;
  */
 class SequenceController extends Controller {
 
+    
+    /**
+     * Play the selected Exercise
+     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     */
+    public function playAction(Exercise $exercise){
+        $name = $exercise->getTitle();
+        die('yep yep '.$name);
+        return null;
+    }
+    
+    
     /**
      * display a sequence
      * @Route("/get/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_open")

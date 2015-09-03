@@ -12,6 +12,7 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
@@ -85,7 +86,25 @@ class ExerciseListener extends ContainerAware
         $event->stopPropagation();
     }
 
+    /**
+     * Event launch when clicking the resource icon
+     * @param OpenResourceEvent $event
+     */
     public function onOpen(OpenResourceEvent $event)
+    {
+        //Redirection to the controller.
+        $route = $this->container
+            ->get('router')
+            ->generate('ujm_exercise_play', array('id' => $event->getResource()->getId()));
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+    
+    /**
+     * Event launch when choosing Administrate exercise from the resource icon contextual menu
+     * @param CustomActionResourceEvent $event
+     */
+    public function onAdministrate(CustomActionResourceEvent $event)
     {
         //Redirection to the controller.
         $route = $this->container
