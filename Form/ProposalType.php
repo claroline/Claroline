@@ -22,7 +22,8 @@ class ProposalType extends AbstractType
                         'class'=>'form-control',
                         'style' => 'height:34px;',
                         'placeholder' => 'choice'
-                    )
+                    ),
+                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(

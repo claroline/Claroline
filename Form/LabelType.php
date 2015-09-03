@@ -21,14 +21,16 @@ class LabelType extends AbstractType
                         'class' => 'labelVal form-control',
                         'style' => 'height:34px;',
                         'placeholder' => 'choice'
-                    )
+                    ),
+                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
                 'scoreRightResponse', 'text', array(
                     'required' => true,
                     'label' => ' ', 'attr' => array('class' => 'labelScore', 'placeholder' => 'points'
-                  )))
+                  ),
+                    'translation_domain' => 'ujm_exo'))
                 //add a field for correspondance, and will be replace by the our field
             ->add( "correspondance", "choice", array("mapped"=>false)
                   )
@@ -44,7 +46,8 @@ class LabelType extends AbstractType
                                    'data-new-tab' => 'yes',
                                    'placeholder' => 'feedback_answer_check',
                                    'style' => 'height:34px;'
-                       )
+                       ),
+                       'translation_domain' => 'ujm_exo'
                   )
             );
     }

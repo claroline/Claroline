@@ -25,7 +25,8 @@ class ChoiceType extends AbstractType
                     'required' => true,
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'choice'
+                    'placeholder' => 'choice',
+                    'translation_domain' => 'ujm_exo'
                     )
                 )
             )
@@ -33,7 +34,8 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false,
                     'label' => ' ',
-                    'attr' => array('placeholder' => 'points','size'=>'10')
+                    'attr' => array('placeholder' => 'points','size'=>'10'),
+                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
@@ -43,7 +45,8 @@ class ChoiceType extends AbstractType
                                    'data-new-tab' => 'yes',
                                    'placeholder' => 'feedback_answer_check',
                                    'style' => 'height:34px;'
-                       )
+                       ),
+                       'translation_domain' => 'ujm_exo'
                   )
             )
             ->add(

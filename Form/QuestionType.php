@@ -31,7 +31,8 @@ class QuestionType extends AbstractType
                 'title', 'text', array(
                     'label' => 'title',
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'question_title')
+                    'attr'  => array( 'placeholder' => 'question_title'),
+                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(

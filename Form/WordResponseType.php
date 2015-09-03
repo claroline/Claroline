@@ -25,8 +25,10 @@ class WordResponseType extends AbstractType
                    'attr' => array('class'=>'form-control',
                                    'data-new-tab' => 'yes',
                                    'placeholder' => 'feedback_answer_check',
-                                   'style' => 'height:34px;'
-                       )
+                                   'style' => 'height:34px;',
+                                   'translation_domain' => 'ujm_exo'
+                       ),
+                       
                   )
             )
             //->add('interactionopen')
