@@ -4,31 +4,37 @@
             {% if documentListText is not null %}
                 <div class="text-muted">{{ documentListText }}</div>
             {% endif %}
-
-            {% if drop.documents|length > 0 %}
-            <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
-                    <thead>
-                        <tr class="text-left">
-{#                            <th></th> #}
-                            <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
-                            <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                            <th class="no-sort" style="width: 120px;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for index, document in drop.documents %}
-                            {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
-                        {% endfor %}
-                    </tbody>
-            </table>
-            {% else %}
+            
+            {% set documents_validated = "none" %}
+            {% for document in drop.documents %}
+                {% if document.validate %}
+                    {% set documents_validated = "yes" %}
+                {% endif %}
+            {% endfor %}
+            
+            {% if drop.documents|length == 0 or (adminInnova and documents_validated == "none") %}
                 <p>{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
+            {% else %}
+                <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
+                        <thead>
+                            <tr class="text-left">
+                                <th class="nameColumn">{{ 'Name'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="nameColumn">{{ 'First name'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="usernameColumn">{{ 'Nickname'|trans({}, 'innova_collecticiel') }}</th>
+                                <th>{{ 'Name of document'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="typeColumn">{{ 'Type of document'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="dateColumn">{{ 'Date hour'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
+                                <th class="no-sort" style="width: 120px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, document in drop.documents %}
+                                {% include 'InnovaCollecticielBundle:Document:documentItem.html.twig' %}
+                            {% endfor %}
+                        </tbody>
+                </table>
             {% endif %}
         </div>
     </div>
