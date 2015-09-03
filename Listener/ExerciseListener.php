@@ -50,9 +50,7 @@ class ExerciseListener extends ContainerAware
 
             $exercise = $form->getData();
             $exercise->setName($exercise->getTitle());
-            $publish = (bool) $form->get('publish')->getData();
-            $exercise->setPublished($publish);
-            $event->setPublished($publish);
+            $event->setPublished((bool) $form->get('publish')->getData());
 
             $subscription = new Subscription($user, $exercise);
             $subscription->setAdmin(true);
@@ -81,11 +79,15 @@ class ExerciseListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
-        //Redirection to the controller.
-        $route = $this->container
-            ->get('router')
-            ->generate('ujm_exercise_open', array('exerciseId' => $event->getResource()->getId()));
-        $event->setResponse(new RedirectResponse($route));
+        $subRequest = $this->container->get('request_stack')
+            ->getCurrentRequest()
+            ->duplicate([], null, [
+                '_controller' => 'UJMExoBundle:Exercise:open',
+                'id' => $event->getResource()->getId()
+            ]);
+        $response = $this->container->get('http_kernel')
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 
@@ -180,7 +182,6 @@ class ExerciseListener extends ContainerAware
         $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
-        $newExercise->setPublished($exerciseToCopy->getPublished());
 
         $em->persist($newExercise);
         $em->flush();

@@ -94,7 +94,7 @@ class PaperController extends Controller
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
             && ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true)
-            && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+            && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin == 1) )
         ) {
             $retryButton = true;
         }
@@ -172,7 +172,7 @@ class PaperController extends Controller
         $display = $this->ctrlDisplayPaper($paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $paper->getExercise()->getId()]));
         }
 
         $infosPaper = $paperSer->getInfosPaper($paper);

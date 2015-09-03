@@ -64,3 +64,7 @@ sequence_step_questions:
     resource: "@UJMExoBundle/Controller/Sequence/StepQuestionController.php"
     type: annotation
     prefix: /step-question
+
+ujm_exercise:
+    resource: "@UJMExoBundle/Controller/ExerciseController.php"
+    type: annotation

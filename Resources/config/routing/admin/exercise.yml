@@ -1,7 +1,3 @@
-ujm_exercise_delete_all_paper:
-    pattern:  /delete/all/paper/{id}
-    defaults: { _controller: "UJMExoBundle:Exercise:deleteAllPapers" }
-
 ujm_exercise_docimology:
      pattern:  /docimology/{exerciseId}/{nbPapers}
      defaults: { _controller: "UJMExoBundle:Exercise:docimology" }
@@ -13,18 +9,6 @@ ujm_exercise_edit:
 ujm_exercise_import_question:
     pattern: /{exoID}/import/{pageGoNow}/{maxPage}/{nbItem}/{displayAll}/{idExo}/{QuestionsExo}
     defaults: { _controller: UJMExoBundle:Exercise:importQuestion, pageGoNow: 1, maxPage: 10, nbItem: 1, displayAll: 0, idExo: -1, QuestionsExo: false }
-
-ujm_exercise_publish:
-    pattern:  /publish
-    defaults: { _controller: "UJMExoBundle:Exercise:publish" }
-    requirements:
-      _method: POST
-
-ujm_exercise_unpublish:
-    pattern:  /unpublish
-    defaults: { _controller: "UJMExoBundle:Exercise:unpublish" }
-    requirements:
-      _method: POST
 
 ujm_exercise_questions:
     pattern:  /{id}/questions/{pageNow}/{displayAll}/{categoryToFind}/{titleToFind}

@@ -157,11 +157,15 @@ class Exercise extends AbstractResource
     private $groupes;
 
     /**
-     * @var boolean $published
+     * Flag indicating whether the exercise has been published at least
+     * one time. An exercise that has never been published has all its
+     * existing papers deleted at the first publication.
+     *
+     * @var boolean $waPublishedOnce
      *
      * @ORM\Column(name="published", type="boolean")
      */
-    private $published;
+    private $wasPublishedOnce = false;
 
     public function __construct()
     {
@@ -558,20 +562,18 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set published
-     *
-     * @param boolean $published
+     * @return boolean
      */
-    public function setPublished($published)
+    public function wasPublishedOnce()
     {
-        $this->published = $published;
+        return $this->wasPublishedOnce;
     }
 
     /**
-     * Get published
+     * @param boolean $wasPublishedOnce
      */
-    public function getpublished()
+    public function setPublishedOnce($wasPublishedOnce)
     {
-        return $this->published;
+        $this->wasPublishedOnce = $wasPublishedOnce;
     }
 }
