@@ -55,7 +55,7 @@ limit_date: Date limite
 low: Basse
 medium: Normale
 midnight: minuit
-modify: 'Modifier un événement'
+modify: Modifier l'évènement
 month_: Mois
 month:
     jan: Janv
@@ -73,7 +73,7 @@ month:
     july: Juillet
     aug: Août
     august: Août
-    sep: Sept
+    sept: Sept
     september: Septembre
     oct: Oct
     october: Octobre
