@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class InteractionHoleType extends AbstractType
 {
@@ -56,5 +57,12 @@ class InteractionHoleType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_interactionholetype';
+    }
+    
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }
