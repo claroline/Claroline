@@ -37,10 +37,12 @@
         {{ document.documentDate|date('formatDatetime'|trans({}, 'innova_collecticiel')) }}
     </td>
 
+    {% if not adminInnova %}
     {# InnovaERV : Ajout d'id "is-valide" afin d'exécuter le traitement pour l'affichage de "Demande adressée" #}
     <td class="{{ classArray }} centered" id="is-validate-{{ document.id }}">
         {% include 'InnovaCollecticielBundle:Document:documentIsValidate.html.twig' %}
     </td>
+    {% endif %}
 
     <td class="{{ classArray }} centered">
         <a href="{{ path('innova_collecticiel_drops_detail_add_comments_innova', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" type="button">
