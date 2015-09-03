@@ -236,11 +236,14 @@ class WorkspaceManager
     public function deleteWorkspace(Workspace $workspace)
     {
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $children = $root->getChildren();
-
-        if ($children) {
-            foreach ($children as $node) {
-                $this->resourceManager->delete($node);
+        
+        if ($root) {
+            $children = $root->getChildren();
+    
+            if ($children) {
+                foreach ($children as $node) {
+                    $this->resourceManager->delete($node);
+                }
             }
         }
 
