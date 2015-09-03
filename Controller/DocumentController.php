@@ -326,12 +326,13 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
     {
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
+        $canEdit = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
 
         if ($drop->getId() != $document->getDrop()->getId()) {
             throw new \HttpInvalidParamException();
         }
 
-        if ($drop->getUser()->getId() != $user->getId()) {
+        if ($drop->getUser()->getId() != $user->getId() && !$canEdit) {
             throw new AccessDeniedException();
         }
 
@@ -356,9 +357,10 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
 
                 return $this->redirect(
                     $this->generateUrl(
-                        'innova_collecticiel_drop',
+                        'innova_collecticiel_drop_switch',
                         array(
-                            'resourceId' => $dropzone->getId()
+                            'resourceId' => $dropzone->getId(),
+                            'userId' => $drop->getUser()->getId()
                         )
                     )
                 );
