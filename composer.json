@@ -1,9 +1,9 @@
 {
     "name": "ujm/exo-bundle",
-    "description": "Exercise tool for Claroline-Connect",
+    "description": "Exercise tool for Claroline Connect",
     "type": "claroline-plugin",
     "require": {
-        "claroline/core-bundle": "~5.0",
+        "claroline/core-bundle": "^6.2.5",
         "icap/badge-bundle": "~5.0",
         "innova/angular-js-bundle": "~5.1",
         "innova/angular-ui-bootstrap-bundle" : "~5.0",
