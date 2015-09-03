@@ -15,11 +15,12 @@ class InteractionMatchingHandler extends InteractionHandler
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ( $this->request->getMethod() == 'POST' ) {           
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
-            $this->checkCategory();
-            $this->checkTitle();
+            $this->checkCategory();            
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
+            $this->checkTitle();           
             if ( $this->validateNbClone() === FALSE ) {
 
                 return 'infoDuplicateQuestion';

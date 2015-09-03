@@ -1,11 +1,11 @@
 <div>
     <div class="form-group row col-md-offset-3">
-        <label class="control-label col-md-1">{{ 'type_question' | trans }}</label>
+        <label class="control-label col-md-1">{{ 'type_question' | trans({}, 'ujm_exo') }}</label>
             <div class="col-md-2">
                 {{ form_widget(form.typeopenquestion) }}
             </div>
             <div id="qOpenScoreMaxLongResp">
-                 <label class="control-label col-md-2 col-md-offset-1">{{ 'right_response' | trans }}</label>
+                 <label class="control-label col-md-2 col-md-offset-1">{{ 'right_response' | trans({}, 'ujm_exo') }}</label>
                 <div class="col-md-1 {% if not form.scoreMaxLongResp.vars.valid %} has-error{% endif %}">
                     {{ form_widget(form.scoreMaxLongResp) }}
                     {{ form_errors(form.scoreMaxLongResp) }}

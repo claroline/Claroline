@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ExerciseType extends AbstractType
 {
@@ -67,9 +68,9 @@ class ExerciseType extends AbstractType
                         '1' => 'at_the_end_of_assessment',
                         '2' => 'after_the_last_attempt',
                         '3' => 'from',
-                        '4' => 'never'
-                    )
+                        '4' => 'never'                       
                 )
+            )
             )
             ->add(
                 'dateCorrection', 'datetime', array(
@@ -136,5 +137,11 @@ class ExerciseType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_exercisetype';
+    }
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

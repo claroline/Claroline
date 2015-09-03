@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class LabelType extends AbstractType
 {
@@ -22,7 +23,6 @@ class LabelType extends AbstractType
                         'style' => 'height:34px;',
                         'placeholder' => 'choice'
                     ),
-                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
@@ -30,7 +30,7 @@ class LabelType extends AbstractType
                     'required' => true,
                     'label' => ' ', 'attr' => array('class' => 'labelScore', 'placeholder' => 'points'
                   ),
-                    'translation_domain' => 'ujm_exo'))
+                    ))
                 //add a field for correspondance, and will be replace by the our field
             ->add( "correspondance", "choice", array("mapped"=>false)
                   )
@@ -47,7 +47,6 @@ class LabelType extends AbstractType
                                    'placeholder' => 'feedback_answer_check',
                                    'style' => 'height:34px;'
                        ),
-                       'translation_domain' => 'ujm_exo'
                   )
             );
     }
@@ -63,5 +62,11 @@ class LabelType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_labeltype';
+    }
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

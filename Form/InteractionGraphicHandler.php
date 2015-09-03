@@ -21,6 +21,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
             $data=$this->form->getData();
             //Uses the default category if no category selected
             $this->checkCategory($data);
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
             if($this->validateNbClone() === FALSE) {
                 return 'infoDuplicateQuestion';

@@ -100,7 +100,7 @@ class InteractionOpenController extends Controller
                 $this->container->get('security.token_storage')->getToken()->getUser()
             ), $interOpen
         );
-
+        
         $exoID = $this->container->get('request')->request->get('exercise');
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
