@@ -3,14 +3,18 @@ var container;
 var tablewr;
 var deleteWr;
 var checkModal = false; //Checks whether the modal (question for a word) is show or hidden
+var editionAd;
+var commentRep;
 
-function insertStyle(tOpen, deleteTrans) {
+function insertStyle(tOpen, deleteTrans, edition, comment) {
 
     typeOpen = JSON.parse(tOpen);
     container = $('div#ujm_exobundle_interactionopentype_wordResponses');
     tablewr = $('#tablewr');
     deleteWr = deleteTrans;
-
+    editionAd = edition;
+    commentRep = comment;
+    
     $('#ujm_exobundle_interactionopentype_interaction').find('div').first().find('label').first().remove();
     $('.form-collection-add').remove();
 
@@ -30,9 +34,11 @@ function formWordResponseEdit(nbResponses) {
     container.children().first().children('div').each(function () {
         // Add a row to the table
         $('#tablewr').find('tbody').append('<tr></tr>');
-
+        var index = $('#tablewr').find('tr:not(:first)').length-1;
         $(this).find('.row').each(function () {
-            addRowToTablewr($(this));
+            addRowToTablewr($(this),index);
+              //Displays enabled tinyMCE
+            textareaAdvancedEdition();
         });
         if (nbResponses == 0) {
             // Add the delete button
@@ -51,19 +57,18 @@ function addWr(container, deleteWr) {
     var index = $('#tablewr').find('tr:not(:first)').length;
 
     while (uniqChoiceID == false) {
-        if ($('#ujm_exobundle_interactionopentype_wordResponses_' + index + '_label').length) {
+        if ($('#ujm_exobundle_interactionopentype_wordResponses_' + index + '_response').length) {
             index++;
-        } else {
+        } else {         
             uniqChoiceID = true;
         }
     }
-
+   
     // change the "name" by the index and delete the symfony delete form button
     var contain = $(container.attr('data-prototype').replace(/__name__label__/g, 'wr n°' + (index))
             .replace(/__name__/g, index)
             .replace('<a class="btn btn-danger remove" href="#">Delete</a>', '')
-            );
-
+            );     
     // Add the button to delete a choice
     addDelete(contain, deleteWr);
 
@@ -71,7 +76,7 @@ function addWr(container, deleteWr) {
     container.append(contain);
 
     container.find('.row').each(function () {
-        addRowToTablewr($(this));
+        addRowToTablewr($(this),index);
     });
 
     // Add the delete button
@@ -82,13 +87,23 @@ function addWr(container, deleteWr) {
     container.remove();
 }
 
-function addRowToTablewr(row) {
+function addRowToTablewr(row,index) {
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
             $('#tablewr').find('tr:last').append('<td class="classic"></td>');
             $('#tablewr').find('td:last').append(row.find('input'));
         }
+         //Add the field of type textarea feedback
+        
     }
+    if (row.find('*[id$="_feedback"]').length) {
+            var idFeedbackVal = row.find('textarea').attr("id");
+            //Adds a cell array with a comment button
+            $('#tablewr').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btn_' + idFeedbackVal + '" title="'+commentRep+'" onClick="addTextareaFeedback(\'span_' + idFeedbackVal + '\',\'btn_' + idFeedbackVal + '\')" ><i class="fa fa-comments-o"></i></a><span id="span_' + idFeedbackVal + '" class="input-group" style="display:none;"></span></td>');
+            //Adds the textarea and its advanced edition button (hidden by default)
+            $('#span_' + idFeedbackVal).append(row.find('*[id$="_feedback"]'));
+            $('#span_' + idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_' + idFeedbackVal + '" onClick="advancedEdition(\'ujm_exobundle_interactionopentype_wordResponses_' + index + '_feedback\',\'btnEdition_' + idFeedbackVal + '\',event);" title="' + editionAd + '"><i class="fa fa-font"></i></a></span>');
+        }   
 }
 
 function openEdit(nbResponses) {

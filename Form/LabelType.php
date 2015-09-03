@@ -20,7 +20,7 @@ class LabelType extends AbstractType
                     'label' => ' ', 'attr' => array(
                         'class' => 'labelVal form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'expected_answer'
+                        'placeholder' => 'choice'
                     )
                 )
             )
@@ -32,10 +32,21 @@ class LabelType extends AbstractType
                 //add a field for correspondance, and will be replace by the our field
             ->add( "correspondance", "choice", array("mapped"=>false)
                   )
+            
             ->add(
                 'positionForce', 'checkbox', array(
                     'required' => false, 'label' => ' '
-                ));
+                ))
+            ->add(
+                   'feedback', 'textarea', array(
+                   'required' => false, 'label' => ' ',
+                   'attr' => array('class'=>'form-control',
+                                   'data-new-tab' => 'yes',
+                                   'placeholder' => 'feedback_answer_check',
+                                   'style' => 'height:34px;'
+                       )
+                  )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)

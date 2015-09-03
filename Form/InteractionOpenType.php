@@ -32,7 +32,7 @@ class InteractionOpenType extends AbstractType
                 'typeopenquestion', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
                     'label' => 'type_question',
-                    'choice_translation_domain' => true
+                    'choice_translation_domain' => true,
                 )
             );
         $builder
@@ -55,7 +55,8 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'scoreMaxLongResp', 'text', array(
                 'required' => false,
-                'label' => 'right_response'
+                'label' => 'right_response',
+                    'attr' => array('placeholder'=>'points')
                 )
             );
     }

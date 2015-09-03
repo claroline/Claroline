@@ -5,15 +5,14 @@ window.onload = function () {
     var i = infos.substr(0, infos.indexOf('~'));
     infos = infos.substr(infos.indexOf('~') + 1);
     var info = infos.split('^');
-
     for (var x = 0 ; x < i ; x++) {
-        var content = info[x].split(';');
-        position(content[0], content[1], x, content[2], content[3], content[4], content[5]);
+        var content = info[x].split('§§');
+        position(content[0], content[1], x, content[2], content[3], content[4], content[5], content[6]);
     }
 
 };
 
-function position(shape, color, i, prefix, value, size, points) {
+function position(shape, color, i, prefix, value, size, points, feedback) {
 
     // Set the shape/color of the right answer zone already placed
     if (shape == 'circle') {
@@ -145,14 +144,14 @@ function position(shape, color, i, prefix, value, size, points) {
     $('#dragContainer' + grade).append('<p style="position: absolute; left: 5px; top: -20px;">'
         + parseInt(grade + 1) + '</p>');
 
-    alreadyPlacedAnswersZoneEdit(shape, color, prefix, points);
+    alreadyPlacedAnswersZoneEdit(shape, color, prefix, points,feedback);
 
     grade++;
     //Image center
   //  $('#Answer').children('div').css({'margin': 'auto'});
 }
 
-function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
+function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point, feedback) {
 
 
     var contenu = '<tr><td class="classic">' + (parseInt(grade) + 1) + '</td><td class="classic">';
@@ -211,8 +210,10 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
                 <option value="brown"    style="background-color:#5A4C41;"> &nbsp;&nbsp;&nbsp; </option>\n\
              </select></td>';
 
-    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" value="'
-                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint', {}, 'ujm_exo'] + '\', this);"></td><td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
+    contenu += '<td class="classic"><input class="form-control" type="TEXT" id="points' + grade + '" style="width:100px;display:block; margin:auto;" value="'
+                    + point + '" onblur="changePoints(\'' + translations['tradWrongPoint'] + '\', this);"></td>\n\
+                    <td class="classic" id="row_feedback_'+grade+'"><a class="btn btn-default" id="btn_feedback_'+grade+'" onClick="addFeedbackGraphic('+grade+',\'btn_feedback_'+grade+'\',\'row_feedback_'+grade+'\');"><i class="fa fa-comments-o"></i></a></td>\n\
+                    <td class="classic"><a class="btn btn-danger" id="delete'+grade+'"><i class="fa fa-close"></i></a></td></tr>';
             $('#AlreadyPlacedArray').find('tbody').append(contenu);
     //Button delete
         $('#delete'+grade).click(function(e) {
@@ -221,6 +222,14 @@ function alreadyPlacedAnswersZoneEdit(shape, color, pathImg, point) {
         $('#dragContainer'+chiffre).remove();
         setOrderAfterDel();
         e.preventDefault();
+    });
+    $('#row_feedback_'+grade).each(function() {
+        if(feedback !== "")
+        {
+            addFeedbackGraphic(grade,'btn_feedback_'+grade,'row_feedback_'+grade);             
+            $('#ujm_exobundle_interactiongraphictype_coords_'+grade+'_feedback').val(feedback);
+            textareaAdvancedEdition();
+        }
     });
     //Displays the array anwser
     $('#AlreadyPlacedArray').css({"display" : "inline"});

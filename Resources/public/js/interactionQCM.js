@@ -84,7 +84,7 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
            
          $(this).find('.row').each(function () {
 
-            fillChoicesArray($(this),edition,index);    
+            fillChoicesArray($(this),edition,index,comment);    
           
             // Add the form errors
             $('#choiceError').append($(this).find('.field-error'));
@@ -105,15 +105,16 @@ function creationQCMEdit(expectedAnswer, response, point, comment, positionForce
         
     }); 
    //Show feedback answers
-   $('.classic').find('textarea').each(function() {
-        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
-        if($(this).text() !== "") {
-            var idspanFeedback ='span_'+$(this).attr("id");
-            var idBtnFeedback = 'btn_'+$(this).attr("id");
-            $('#'+idspanFeedback).removeAttr( 'style' );
-            $('#'+idBtnFeedback).remove();
-        }
-    });   
+//   $('.classic').find('textarea').each(function() {
+//        //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
+//        if($(this).text() !== "") {
+//            var idspanFeedback ='span_'+$(this).attr("id");
+//            var idBtnFeedback = 'btn_'+$(this).attr("id");
+//            $('#'+idspanFeedback).removeAttr( 'style' );
+//            $('#'+idBtnFeedback).remove();
+//        }
+//    }); 
+ 
     //Displays enabled tinyMCE
    textareaAdvancedEdition();
 
@@ -185,7 +186,7 @@ function addChoice(container, deleteChoice, comment, edition) {
      
     // Get the form field to fill rows of the choices' table
     container.find('.row').each(function () {
-        fillChoicesArray($(this),edition,index);
+        fillChoicesArray($(this),edition,index,comment);
     });
 
     // Add the delete button
@@ -290,7 +291,7 @@ function whichChange() {
     });
 }
 
-function fillChoicesArray(row,edition,index) {   
+function fillChoicesArray(row,edition,index,comment) {   
     // Add the field of type input
     if (row.find('input').length) {
         if (row.find('input').attr('id').indexOf('ordre') == -1) {
@@ -317,7 +318,7 @@ function fillChoicesArray(row,edition,index) {
     if (row.find('*[id$="_feedback"]').length) { 
        var idFeedbackVal = row.find('textarea').attr("id");
        //Adds a cell array with a comment button
-       $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
+       $('#newTable').find('tr:last').append('<td class="classic"><a class="btn btn-default" id="btn_'+idFeedbackVal+'" title="'+comment+'"onClick="addTextareaFeedback(\'span_'+idFeedbackVal+'\',\'btn_'+idFeedbackVal+'\')" ><i class="fa fa-comments-o"></i></a><span id="span_'+idFeedbackVal+'" class="input-group" style="display:none;"></span></td>');
        //Adds the textarea and its advanced edition button (hidden by default)
        $('#span_'+idFeedbackVal).append(row.find('*[id$="_feedback"]'));
        $('#span_'+idFeedbackVal).append('<span class="input-group-btn"><a class="btn btn-default" id="btnEdition_'+idFeedbackVal+'" onClick="advancedEdition(\'ujm_exobundle_interactionqcmtype_choices_'+index+'_feedback\',\'btnEdition_'+idFeedbackVal+'\',event);" title="'+edition+'"><i class="fa fa-font"></i></a></span>');
@@ -327,7 +328,7 @@ function fillChoicesArray(row,edition,index) {
 function tableChoicesCreation(expectedAnswer, response, point, comment, positionForce, addchoice, deleteChoice, edition, nbResponses) {
     if (nbResponses == 0) {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="col-md-1">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th><th class="classic">'+deleteChoice+'</th></tr></thead><tbody><tr></tr></tbody></table>');
         // create the button to add a choice
         var add = $('<a title="'+addchoice+'" href="#" id="add_choice" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addchoice+'</a>');
 
@@ -343,12 +344,8 @@ function tableChoicesCreation(expectedAnswer, response, point, comment, position
         });
     } else {
         // Add the structure od the table
-        tableChoices.append('<table id="newTable" class="table table-striped table-bordered table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
+        tableChoices.append('<table id="newTable" class="table table-striped table-condensed"><thead><tr style="background-color: lightsteelblue;"><th class="classic">'+expectedAnswer+'</th><th class="classic">'+response+'</th><th class="classic">'+point+'</th><th class="classic">'+comment+'</th><th class="classic">'+positionForce+'</th></tr></thead><tbody><tr></tr></tbody></table>');
     }
-}
-function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
-     $('#'+btnHiddenFeedback).remove();
-     $('#'+spanFeedback).removeAttr( 'style' );    
 }
 
 /**
@@ -364,7 +361,6 @@ function checkScore() {
         }
       $("*[id$='_weight']").each(function () {
           if ($(this).val() === '~') {
-              alert('la');
                 $(this).val('');
            }
         });
@@ -375,13 +371,10 @@ function checkScore() {
                 $(this).val('~');
             }
         if ($('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val() === '~') {
-            alert('la');
             $('#ujm_exobundle_interactionqcmtype_scoreFalseResponse').val('');
         }
         if ($('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val() === '~') {
-            alert('la');
-            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');
-            
+            $('#ujm_exobundle_interactionqcmtype_scoreRightResponse').val('');           
         }      
         });
     }

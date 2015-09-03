@@ -12,12 +12,22 @@ class WordResponseType extends AbstractType
     {
         $builder
             ->add('response', 'text')
-            ->add('score', 'text', array('attr' => array('placeholder'=>'score_answer')))
+            ->add('score', 'text', array('attr' => array('placeholder'=>'points')))
             ->add(
                 'caseSensitive', 'checkbox', array(
                     'required' => false,
                     'attr' => array('title' => 'case_sensitive')
                 )
+            )
+            ->add(
+                   'feedback', 'textarea', array(
+                   'required' => false, 'label' => ' ',
+                   'attr' => array('class'=>'form-control',
+                                   'data-new-tab' => 'yes',
+                                   'placeholder' => 'feedback_answer_check',
+                                   'style' => 'height:34px;'
+                       )
+                  )
             )
             //->add('interactionopen')
             //->add('hole')

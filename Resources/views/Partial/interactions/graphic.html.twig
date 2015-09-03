@@ -41,7 +41,7 @@
                 <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" alt="AnswerZone{{ i }}" id="img{{ i }}"/>
             </div>
 
-            {% set allInfo = p.shape~';'~p.color~';'~asset('bundles/ujmexo/images/graphic/')~';'~p.value~';'~p.size~';'~p.scoreCoords~'^'~allInfo %}
+            {% set allInfo = p.shape~'§§'~p.color~'§§'~asset('bundles/ujmexo/images/graphic/')~'§§'~p.value~'§§'~p.size~'§§'~p.scoreCoords~'§§'~p.feedback~'^'~allInfo %}
 
             {% set i = i + 1 %}
         {% endfor %}

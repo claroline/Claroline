@@ -33,7 +33,7 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false,
                     'label' => ' ',
-                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'score_answer')
+                    'attr' => array('placeholder' => 'points','size'=>'10')
                 )
             )
             ->add(

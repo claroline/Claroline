@@ -129,11 +129,13 @@ class InteractionRepository extends EntityRepository
         }
 
         foreach ($questionsList as $q) {
-            $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
-                . 'WHERE q=' . $q;
-            $query = $em->createQuery($dql);
-            $inter = $query->getResult();
-            $interactions[] = $inter[0];
+            if ($q) { //this is a quick patch because sometimes $q is null and an error is thrown here
+                $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
+                    . 'WHERE q=' . $q;
+                $query = $em->createQuery($dql);
+                $inter = $query->getResult();
+                $interactions[] = $inter[0];
+            }
         }
 
         return $interactions;

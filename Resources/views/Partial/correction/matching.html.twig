@@ -68,6 +68,15 @@
                         {% endfor%}
                     </div>
                 </td>
+     
+                <td class="classic">
+                {% if label.feedback is not empty %}
+                    {{ label.feedback|raw }}
+                {% else %}
+                    -
+                {% endif %} 
+                </td>
+        
             </tr>
         {% endfor%}
             <tr>
@@ -88,4 +97,5 @@
                     {% endfor %}
                 </td>
             </tr>
+             
 </table>
