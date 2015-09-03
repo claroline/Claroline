@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ExerciseType extends AbstractType
 {
@@ -130,6 +129,7 @@ class ExerciseType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Exercise',
+                'translation_domain' => 'ujm_exo'
             )
         );
     }
@@ -137,11 +137,5 @@ class ExerciseType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_exercisetype';
-    }
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array('translation_domain' => 'ujm_exo')
-        );
     }
 }

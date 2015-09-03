@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class TypeMatchingType extends AbstractType
 {
@@ -20,6 +19,7 @@ class TypeMatchingType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\TypeMatching',
+                'translation_domain' => 'ujm_exo'
             )
         );
     }
@@ -27,11 +27,5 @@ class TypeMatchingType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_typematchingtype';
-    }
-     public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array('translation_domain' => 'ujm_exo')
-        );
     }
 }
