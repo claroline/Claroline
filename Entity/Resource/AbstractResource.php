@@ -13,7 +13,9 @@ namespace Claroline\CoreBundle\Entity\Resource;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/** @ORM\MappedSuperclass */
+/**
+ * @ORM\MappedSuperclass
+ */
 abstract class AbstractResource
 {
     /**
@@ -29,43 +31,65 @@ abstract class AbstractResource
      */
     protected $resourceNode;
 
-    protected $name = '';
+    protected $name = ''; // should be removed ?
 
-    //to remove ?
     protected $mimeType;
 
-    public function setResourceNode(ResourceNode $resourceNode)
-    {
-        $this->resourceNode = $resourceNode;
-    }
-
-    public function getResourceNode()
-    {
-        return $this->resourceNode;
-    }
-
+    /**
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    //for forms (otherwise name won't exist)
-    //@todo this should be removed
+    /**
+     * @param ResourceNode $resourceNode
+     */
+    public function setResourceNode(ResourceNode $resourceNode)
+    {
+        $this->resourceNode = $resourceNode;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResourceNode()
+    {
+        return $this->resourceNode;
+    }
+
+    /**
+     * For forms (otherwise name won't exist)
+     *
+     * TODO: this should be removed
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function getMimeType()
     {
         return $this->mimeType;
     }
 
+    /**
+     * @param string $mimeType
+     */
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
