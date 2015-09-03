@@ -1,2 +1,6 @@
 plugin:
   has_options: false
+
+  admin_tools:
+    - name: claroline_tag_admin_tool
+      class: tags

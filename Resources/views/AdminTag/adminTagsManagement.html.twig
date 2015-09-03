@@ -1,0 +1,161 @@
+{% macro renderPager(pager, search, orderedBy, order, max) %}
+    {{
+        pagerfanta(
+            pager,
+            'twitter_bootstrap_translated',
+            {
+                'proximity' : 1,
+                'routeName': 'claro_tag_admin_tags_management',
+                'routeParams': {
+                    'search': search,
+                    'orderedBy': orderedBy,
+                    'order': order,
+                    'max': max
+                }
+            }
+        )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'claroline_tag_admin_tool' | trans({}, 'tools') | striptags | raw
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_tag_admin_tool'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'claroline_tag_admin_tool' | trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        
+        {% if search != '' %}
+            <div class="alert alert-info">
+                {{ 'results_for_search_on'|trans({}, 'platform') }} :
+                "{{ search }}"
+            </div>
+        {% endif %}
+        
+        {% if search != '' or pager|length > 0 %}
+            <div class="input-group col-md-6 pull-right margin-top-sm">
+                <input class="form-control search-tag"
+                       type="text"
+                       id="search-tag-input"
+                       placeholder="{{ 'search'|trans({}, 'platform') }}"
+                       value="{{ search }}"
+                       data-ordered-by="{{ orderedBy }}"
+                       data-order="{{ order }}"
+                       data-max="{{ max }}"
+                >
+                <span class="input-group-btn">
+                    <button class="filter btn btn-default search-tag-btn"
+                            type="button"
+                            id="search-tag-btn"
+                            data-ordered-by="{{ orderedBy }}"
+                            data-order="{{ order }}"
+                            data-max="{{ max }}"
+                    >
+                        <i class="fa fa-search"></i>
+                    </button>
+                </span>
+            </div>
+            <br>
+            <br>
+        {% endif %}
+        
+        {% if pager|length > 0 %}
+        
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(pager, search, orderedBy, order, max) }}
+            {% endif %}
+
+            {% for firstChar, tags in datas %}
+
+                {% if tags|length > 0 %}
+                    <h3>
+                        {{ firstChar }}
+                    </h3>
+                    <div class="panel-group" id="{{ firstChar }}" role="tablist" aria-multiselectable="true">
+                    
+                        {% for tagName, taggedObjects in tags %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#{{ firstChar }}" href="#tag-content-{{ tags[tagName]['tag_id'] }}">
+                                            {{ tagName }}
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="tag-content-{{ tags[tagName]['tag_id'] }}" class="panel-collapse collapse" role="tabpanel">
+                                    <div class="panel-body">
+                                        {% for class, infos in taggedObjects['objects'] %}
+                                            <b>{{ class|trans({}, 'tag') }}</b>
+                                            <br>
+
+                                            {% for info in infos %}
+                                                <span>
+                                                    {% if info['name'] is not empty %}
+                                                        {{ info['name'] }}
+                                                    {% else %}
+                                                        {{ info['id'] }}
+                                                    {% endif %}
+                                                </span>
+                                                <br>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {% if pager.getNbPages() > 1 %}
+                {{ renderPager(pager, search, orderedBy, order, max) }}
+            {% endif %}
+        {% else %}
+            <br>
+            <br>
+            <div class="alert alert-warning">
+                {{ 'no_tag'|trans({}, 'tag') }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'tag' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinetag/js/adminTagsManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

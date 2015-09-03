@@ -15,11 +15,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TaggedItemRepository")
- * @ORM\Table(name="claro_tagbundle_tagged_item")
- * @DoctrineAssert\UniqueEntity({"itemId", "item_class", "tag"})
+ * @ORM\Entity(repositoryClass="Claroline\TagBundle\Repository\TaggedObjectRepository")
+ * @ORM\Table(name="claro_tagbundle_tagged_object")
+ * @DoctrineAssert\UniqueEntity({"objectId", "objectClass", "tag"})
  */
-class TaggedItem
+class TaggedObject
 {
     /**
      * @ORM\Column(type="integer")
@@ -29,14 +29,19 @@ class TaggedItem
     protected $id;
 
     /**
-     * @ORM\Column(name="item_id", type="integer")
+     * @ORM\Column(name="object_id", type="integer")
      */
-    protected $itemId;
+    protected $objectId;
 
     /**
-     * @ORM\Column(name="item_class")
+     * @ORM\Column(name="object_class")
      */
-    protected $itemClass;
+    protected $objectClass;
+
+    /**
+     * @ORM\Column(name="object_name", nullable=true)
+     */
+    protected $objectName;
 
     /**
      * @ORM\ManyToOne(
@@ -66,23 +71,33 @@ class TaggedItem
         $this->tag = $tag;
     }
 
-    public function getItemId()
+    public function getObjectId()
     {
-        return $this->itemId;
+        return $this->objectId;
     }
 
-    public function setItemId($itemId)
+    public function setObjectId($objectId)
     {
-        $this->itemId = $itemId;
+        $this->objectId = $objectId;
     }
 
-    public function getItemClass()
+    public function getObjectClass()
     {
-        return $this->itemClass;
+        return $this->objectClass;
     }
 
-    public function setItemClass($itemClass)
+    public function setObjectClass($objectClass)
     {
-        $this->itemClass = $itemClass;
+        $this->objectClass = $objectClass;
+    }
+
+    public function getObjectName()
+    {
+        return $this->objectName;
+    }
+
+    public function setObjectName($objectName)
+    {
+        $this->objectName = $objectName;
     }
 }

@@ -1,0 +1,2 @@
+Claroline\CoreBundle\Entity\User: Utilisateur
+Claroline\CoreBundle\Entity\Workspace\Workspace: Espace d'activités

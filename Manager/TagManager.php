@@ -14,7 +14,7 @@ namespace Claroline\TagBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\TagBundle\Entity\TaggedItem;
+use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Entity\Tag;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -26,7 +26,7 @@ class TagManager
     private $om;
     private $pagerFactory;
 
-    private $taggedItemRepo;
+    private $taggedObjectRepo;
     private $tagRepo;
 
     /**
@@ -40,7 +40,7 @@ class TagManager
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
 
-        $this->taggedItemRepo = $om->getRepository('ClarolineTagBundle:TaggedItem');
+        $this->taggedObjectRepo = $om->getRepository('ClarolineTagBundle:TaggedObject');
         $this->tagRepo = $om->getRepository('ClarolineTagBundle:Tag');
     }
     
@@ -56,15 +56,15 @@ class TagManager
         $this->om->flush();
     }
 
-    public function persistTaggedItem(TaggedItem $taggedItem)
+    public function persistTaggedObject(TaggedObject $taggedObject)
     {
-        $this->om->persist($taggedItem);
+        $this->om->persist($taggedObject);
         $this->om->flush();
     }
 
-    public function deleteTaggedItem(TaggedItem $taggedItem)
+    public function deleteTaggedObject(TaggedObject $taggedObject)
     {
-        $this->om->remove($taggedItem);
+        $this->om->remove($taggedObject);
         $this->om->flush();
     }
 
@@ -102,26 +102,30 @@ class TagManager
         return $tag;
     }
 
-    public function tagItem($tagName, $item, User $user = null)
+    public function tagObject($tagName, $object, User $user = null)
     {
-        if (method_exists($item, 'getId')) {
-            $itemId = $item->getId();
-            $itemClass = get_class($item);
+        if (method_exists($object, 'getId')) {
+            $objectId = $object->getId();
+            $objectClass = str_replace('Proxies\\__CG__\\', '', get_class($object));
             $tag = is_null($user) ?
                 $this->getOrCreatePlatformTag($tagName) :
                 $this->getOrCreateUserTag($user, $tagName);
 
-            $taggedItem = $this->getOneTaggedItemByTagAndItem($tag, $itemId, $itemClass);
+            $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
 
-            if (is_null($taggedItem)) {
-                $taggedItem = new TaggedItem();
-                $taggedItem->setTag($tag);
-                $taggedItem->setItemId($itemId);
-                $taggedItem->setItemClass($itemClass);
-                $this->persistTaggedItem($taggedItem);
+            if (is_null($taggedObject)) {
+                $taggedObject = new TaggedObject();
+                $taggedObject->setTag($tag);
+                $taggedObject->setObjectId($objectId);
+                $taggedObject->setObjectClass($objectClass);
+
+                if (method_exists($object, '__toString')) {
+                    $taggedObject->setObjectName((string)$object);
+                }
+                $this->persistTaggedObject($taggedObject);
             }
 
-            return $taggedItem;
+            return $taggedObject;
         } else {
 
             return null;
@@ -194,49 +198,68 @@ class TagManager
 
 
     /******************************************
-     * Access to TaggedItemRepository methods *
+     * Access to TaggedObjectRepository methods *
      ******************************************/
 
-    public function getSearchedPlatformTaggedItems(
-        $search,
-        $withPager = false,
-        $page = 1,
-        $max = 50
-    )
-    {
-        $items = empty($search) ?
-            array() :
-            $this->taggedItemRepo->findSearchedPlatformTaggedItems($search);
-
-        return $withPager ?
-            $this->pagerFactory->createPagerFromArray($items, $page, $max) :
-            $items;
-    }
-
-    public function getSearchedUserTaggedItems(
-        User $user,
-        $search,
+    public function getTaggedObjects(
+        User $user = null,
         $withPlatform = false,
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
         $withPager = false,
         $page = 1,
         $max = 50
     )
     {
-        $items = empty($search) ?
-            array() :
-            $this->taggedItemRepo->findSearchedUserTaggedItems($user, $search, $withPlatform);
+        $objects = empty($search) ?
+            $this->taggedObjectRepo->findAllTaggedObjects(
+                $user,
+                $withPlatform,
+                $orderedBy,
+                $order
+            ) :
+            $this->taggedObjectRepo->findSearchedTaggedObjects(
+                $search,
+                $user,
+                $withPlatform,
+                $orderedBy,
+                $order
+            );
 
         return $withPager ?
-            $this->pagerFactory->createPagerFromArray($items, $page, $max) :
-            $items;
+            $this->pagerFactory->createPagerFromArray($objects, $page, $max) :
+            $objects;
     }
 
-    public function getOneTaggedItemByTagAndItem(Tag $tag, $itemId, $itemClass)
+    public function getOneTaggedObjectByTagAndObject(Tag $tag, $objectId, $objectClass)
     {
-        return $this->taggedItemRepo->findOneTaggedItemByTagAndItem(
+        return $this->taggedObjectRepo->findOneTaggedObjectByTagAndObject(
             $tag,
-            $itemId,
-            $itemClass
+            $objectId,
+            $objectClass
         );
+    }
+
+    public function getTaggedObjectsByTags(
+        array $tags,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = false,
+        $page = 1,
+        $max = 50
+    )
+    {
+        $objects = count($tags) > 0 ?
+            $this->taggedObjectRepo->findTaggedObjectsByTags(
+                $tags,
+                $orderedBy,
+                $order
+            ) :
+            array();
+
+        return $withPager ?
+            $this->pagerFactory->createPagerFromArray($objects, $page, $max) :
+            $objects;
     }
 }

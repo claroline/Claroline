@@ -1,0 +1,2 @@
+Claroline\CoreBundle\Entity\User: User
+Claroline\CoreBundle\Entity\Workspace\Workspace: Workspace

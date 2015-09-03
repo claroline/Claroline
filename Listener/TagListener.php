@@ -33,52 +33,46 @@ class TagListener
     }
 
     /**
-     * @DI\Observe("claroline_tag_item")
+     * @DI\Observe("claroline_tag_object")
      *
      * @param GenericDatasEvent $event
      */
-    public function onItemTag(GenericDatasEvent $event)
+    public function onObjectTag(GenericDatasEvent $event)
     {
-        $taggedItem = null;
+        $taggedObject = null;
         $datas = $event->getDatas();
 
-        if (is_array($datas) && isset($datas['tag']) && isset($datas['item'])) {
+        if (is_array($datas) && isset($datas['tag']) && isset($datas['object'])) {
             $user = isset($datas['user']) ? $datas['user'] : null;
-            $taggedItem = $this->tagManager->tagItem($datas['tag'], $datas['item'], $user);
+            $taggedObject = $this->tagManager->tagObject($datas['tag'], $datas['object'], $user);
         }
-        $event->setResponse($taggedItem);
+        $event->setResponse($taggedObject);
     }
 
     /**
-     * @DI\Observe("claroline_retrieve_tagged_items")
+     * @DI\Observe("claroline_retrieve_tagged_objects")
      *
      * @param GenericDatasEvent $event
      */
-    public function onRetrieveItemsByTag(GenericDatasEvent $event)
+    public function onRetrieveObjectsByTag(GenericDatasEvent $event)
     {
-        $taggedItems = array();
+        $taggedObjects = array();
         $datas = $event->getDatas();
 
-        if (is_array($datas) && isset($datas['tag'])) {
+        if (is_array($datas)) {
+            $search = isset($datas['tag']) ? $datas['tag'] : '';
+            $user = isset($datas['user']) ? $datas['user'] : null;
+            $withPlatform = isset($datas['with_platform']) && $datas['with_platform'];
 
-            if (isset($datas['user'])) {
-                $withPlatform = isset($datas['with_platform']) && $datas['with_platform'];
-                $items = $this->tagManager->getSearchedUserTaggedItems(
-                    $datas['user'],
-                    $datas['tag'],
-                    $withPlatform
-                );
-            } else {
-                $items = $this->tagManager->getSearchedPlatformTaggedItems($datas['tag']);
-            }
+            $objects = $this->tagManager->getTaggedObjects($user, $withPlatform, $search);
 
-            foreach ($items as $item) {
+            foreach ($objects as $object) {
                 $datas = array();
-                $datas['class'] = $item->getItemClass();
-                $datas['itemId'] = $item->getItemId();
-                $taggedItems[] = $datas;
+                $datas['class'] = $object->getObjectClass();
+                $datas['objectId'] = $object->getObjectId();
+                $taggedObjects[] = $datas;
             }
         }
-        $event->setResponse($taggedItems);
+        $event->setResponse($taggedObjects);
     }
 }

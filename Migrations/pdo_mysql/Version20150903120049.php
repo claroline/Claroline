@@ -8,19 +8,20 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/02 11:28:04
+ * Generation date: 2015/09/03 12:00:51
  */
-class Version20150902112802 extends AbstractMigration
+class Version20150903120049 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            CREATE TABLE claro_tagbundle_tagged_item (
+            CREATE TABLE claro_tagbundle_tagged_object (
                 id INT AUTO_INCREMENT NOT NULL, 
                 tag_id INT NOT NULL, 
-                item_id INT NOT NULL, 
-                item_class VARCHAR(255) NOT NULL, 
-                INDEX IDX_C8B7E80FBAD26311 (tag_id), 
+                object_id INT NOT NULL, 
+                object_class VARCHAR(255) NOT NULL, 
+                object_name VARCHAR(255) DEFAULT NULL, 
+                INDEX IDX_1EA1E15DBAD26311 (tag_id), 
                 PRIMARY KEY(id)
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
@@ -34,8 +35,8 @@ class Version20150902112802 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
-            ALTER TABLE claro_tagbundle_tagged_item 
-            ADD CONSTRAINT FK_C8B7E80FBAD26311 FOREIGN KEY (tag_id) 
+            ALTER TABLE claro_tagbundle_tagged_object 
+            ADD CONSTRAINT FK_1EA1E15DBAD26311 FOREIGN KEY (tag_id) 
             REFERENCES claro_tagbundle_tag (id) 
             ON DELETE CASCADE
         ");
@@ -50,11 +51,11 @@ class Version20150902112802 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE claro_tagbundle_tagged_item 
-            DROP FOREIGN KEY FK_C8B7E80FBAD26311
+            ALTER TABLE claro_tagbundle_tagged_object 
+            DROP FOREIGN KEY FK_1EA1E15DBAD26311
         ");
         $this->addSql("
-            DROP TABLE claro_tagbundle_tagged_item
+            DROP TABLE claro_tagbundle_tagged_object
         ");
         $this->addSql("
             DROP TABLE claro_tagbundle_tag

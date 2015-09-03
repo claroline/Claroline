@@ -1,0 +1,4 @@
+claro_tag_bundle_admin_tag:
+    resource: "@ClarolineTagBundle/Controller/AdminTagController.php"
+    type:     annotation
+    prefix:   /
