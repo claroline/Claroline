@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class HoleType extends AbstractType
 {
@@ -47,7 +46,8 @@ class HoleType extends AbstractType
     {
         $resolver->setDefaults(
                 array('data_class' => 'UJM\ExoBundle\Entity\Hole',
-                      'cascade_validation' => true
+                      'cascade_validation' => true,
+                      'translation_domain' => 'ujm_exo'
                 )
         );
     }
@@ -55,11 +55,5 @@ class HoleType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_holetype';
-    }
-      public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array('translation_domain' => 'ujm_exo')
-        );
     }
 }

@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -33,7 +32,6 @@ class QuestionType extends AbstractType
                     'label' => 'title',
                     'required' => false,
                     'attr'  => array( 'placeholder' => 'question_title'),
-                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
@@ -52,7 +50,6 @@ class QuestionType extends AbstractType
                                 ->setParameter(1, $this->catID);
                         }
                     },
-                            'translation_domain' => 'ujm_exo'
                 )
             )
             ->add('description', 'textarea', array(
@@ -62,7 +59,6 @@ class QuestionType extends AbstractType
                                       'class'=> 'form-control',
                                       'data-new-tab' => 'yes'
                                     ),
-                'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
@@ -79,6 +75,7 @@ class QuestionType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Question',
+                'translation_domain' => 'ujm_exo'
             )
         );
     }
@@ -87,11 +84,4 @@ class QuestionType extends AbstractType
     {
         return 'ujm_exobundle_questiontype';
     }
-     public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array('translation_domain' => 'ujm_exo')
-        );
-    }
-
 }
