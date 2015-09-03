@@ -10,6 +10,7 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Paper controller.
@@ -395,7 +396,7 @@ class PaperController extends Controller
 
         } else {
 
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedException();
         }
     }
 
@@ -405,8 +406,6 @@ class PaperController extends Controller
      * @access private
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exo
-     *
-     * @return exception
      */
     private function checkAccess($exo)
     {
