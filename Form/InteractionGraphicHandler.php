@@ -21,6 +21,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
             $data=$this->form->getData();
             //Uses the default category if no category selected
             $this->checkCategory($data);
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
             if($this->validateNbClone() === FALSE) {
                 return 'infoDuplicateQuestion';
@@ -177,21 +178,21 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $result = array();
         for ($i = 0; $i < $lengthCoord; $i++) {
 
-            $inter = preg_split('[;]', $coord[$i]); // Divide the src of the answer zone and the other informations
+            $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
-            $before = array("-","~");
-            $after = array(",",",");
+            $before = array("|-|","~~","^^");
+            $after = array(",",",",",");
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
-
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}) = explode(",", $data); //... in order to split informations
-
+            
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}, ${'feedback'.$i}) = explode(",", $data); //... in order to split informations
+  
             ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
 
             // And persist it into the Database
             ${'url'.$i} = $inter[0];
 
-            ${'value'.$i} = str_replace("_", ",", ${'value'.$i});
+            ${'value'.$i} = str_replace("__", ",", ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
 
             ${'shape'.$i} = $this->getShape(${'url'.$i});
@@ -205,6 +206,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
             ${'co'.$i}->setScoreCoords(${'point'.$i});
             ${'co'.$i}->setInteractionGraphic($interGraph);
             ${'co'.$i}->setSize(${'size'.$i});
+            ${'co'.$i}->setFeedback(${'feedback'.$i});
 
             $result[$i] = ${'co'.$i};
         }

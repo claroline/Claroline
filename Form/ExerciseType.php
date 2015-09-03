@@ -119,7 +119,10 @@ class ExerciseType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['data_class' => 'UJM\ExoBundle\Entity\Exercise']);
+        $resolver->setDefaults([
+            'data_class' => 'UJM\ExoBundle\Entity\Exercise',
+            'translation_domain' => 'ujm_exo'
+        ]);
     }
 
     public function getName()

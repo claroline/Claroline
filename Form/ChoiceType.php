@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ChoiceType extends AbstractType
 {
@@ -25,7 +26,7 @@ class ChoiceType extends AbstractType
                     'required' => true,
                     'attr' => array('style' => 'height:34px; ',
                     'class'=>'form-control',
-                    'placeholder' => 'choice'
+                    'placeholder' => 'choice',
                     )
                 )
             )
@@ -33,7 +34,7 @@ class ChoiceType extends AbstractType
                 'weight', 'text', array(
                     'required' => false,
                     'label' => ' ',
-                    'attr' => array('class' => 'col-md-1', 'placeholder' => 'score_answer')
+                    'attr' => array('placeholder' => 'points','size'=>'10'),
                 )
             )
             ->add(
@@ -43,7 +44,7 @@ class ChoiceType extends AbstractType
                                    'data-new-tab' => 'yes',
                                    'placeholder' => 'feedback_answer_check',
                                    'style' => 'height:34px;'
-                       )
+                       ),
                   )
             )
             ->add(
@@ -66,5 +67,11 @@ class ChoiceType extends AbstractType
     {
         return 'ujm_exobundle_choicetype';
     }
-
+    
+      public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
+    }
 }

@@ -31,6 +31,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
             $this->form->handleRequest($this->request);
             //Uses the default category if no category selected
             $this->checkCategory();
+            //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
             if ( $this->form->isValid() ) {
                 if($this->validateNbClone() === FALSE) {

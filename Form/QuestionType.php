@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -31,7 +32,8 @@ class QuestionType extends AbstractType
                 'title', 'text', array(
                     'label' => 'title',
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'question_title')
+                    'attr'  => array( 'placeholder' => 'question_title'),
+                    'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
@@ -49,7 +51,8 @@ class QuestionType extends AbstractType
                                 ->where('c.id = ?1')
                                 ->setParameter(1, $this->catID);
                         }
-                    }
+                    },
+                            'translation_domain' => 'ujm_exo'
                 )
             )
             ->add('description', 'textarea', array(
@@ -58,13 +61,15 @@ class QuestionType extends AbstractType
                     'attr'  => array( 'placeholder' => 'question_description',
                                       'class'=> 'form-control',
                                       'data-new-tab' => 'yes'
-                                    )
+                                    ),
+                'translation_domain' => 'ujm_exo'
                 )
             )
             ->add(
                 'model', 'checkbox', array(
                     'required' => false,
-                    'label' => 'question_model'
+                    'label' => 'question_model',
+                    'translation_domain' => 'ujm_exo'
                 )
             );
     }
@@ -81,6 +86,12 @@ class QuestionType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_questiontype';
+    }
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 
 }

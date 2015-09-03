@@ -3,6 +3,8 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Interaction;
 
 /**
  * InteractionRepository
@@ -80,6 +82,26 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
+     * Returns all the interactions linked to a given exercise.
+     *
+     * @param Exercise $exercise
+     * @return Interaction[]
+     */
+    public function findByExercise(Exercise $exercise)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i')
+            ->join('i.question', 'q')
+            ->join('q.exerciseQuestions', 'eq')
+            ->join('eq.exercise', 'e')
+            ->where('e = :exercise')
+            ->orderBy('eq.ordre')
+            ->setParameter(':exercise', $exercise)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Get Interaction of an exercise or for a paper
      *
      * @access public
@@ -129,11 +151,13 @@ class InteractionRepository extends EntityRepository
         }
 
         foreach ($questionsList as $q) {
-            $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
-                . 'WHERE q=' . $q;
-            $query = $em->createQuery($dql);
-            $inter = $query->getResult();
-            $interactions[] = $inter[0];
+            if ($q) { //this is a quick patch because sometimes $q is null and an error is thrown here
+                $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
+                    . 'WHERE q=' . $q;
+                $query = $em->createQuery($dql);
+                $inter = $query->getResult();
+                $interactions[] = $inter[0];
+            }
         }
 
         return $interactions;

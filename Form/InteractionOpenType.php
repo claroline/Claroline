@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -32,7 +33,7 @@ class InteractionOpenType extends AbstractType
                 'typeopenquestion', 'entity', array(
                     'class' => 'UJM\\ExoBundle\\Entity\\TypeOpenQuestion',
                     'label' => 'type_question',
-                    'choice_translation_domain' => true
+                    'choice_translation_domain' => true,
                 )
             );
         $builder
@@ -55,7 +56,8 @@ class InteractionOpenType extends AbstractType
             ->add(
                 'scoreMaxLongResp', 'text', array(
                 'required' => false,
-                'label' => 'right_response'
+                'label' => 'right_response',
+                    'attr' => array('placeholder'=>'points')
                 )
             );
     }
@@ -73,5 +75,12 @@ class InteractionOpenType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_interactionopentype';
+    }
+    
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

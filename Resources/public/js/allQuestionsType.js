@@ -258,16 +258,16 @@ function displayOptionalFields(){
   if(valFeedback !== "")
   {
       $("#collepseinteraction").collapse('show');
-  }
+  }   
 }
 
 /**
- * Displays enabled tinyMCE by QCM et Matching
+ * active advanced edition
  * @returns {undefined}
  */
 function textareaAdvancedEdition()
 {
-    //Enables advanced edition QCM - Matching
+    //active advanced edition
     $('.classic').find('textarea').each(function() {
         //if there is at the start an open tag and a close at the end. And at the middle all caracters possible or nothing
         if($(this).val().match("<.+>.+|\s<\/.+>$")) {
@@ -276,5 +276,22 @@ function textareaAdvancedEdition()
             $("#"+idProposalVal).data("data-theme","advanced");
             $("#btnEdition_"+idProposalVal).remove();
         }
+         //Show feedback answers
+        if($(this).text() !== "") {
+            var idspanFeedback ='span_'+$(this).attr("id");
+            var idBtnFeedback = 'btn_'+$(this).attr("id"); 
+            $('#'+idspanFeedback).removeAttr( 'style' );
+            $('#'+idBtnFeedback).remove();
+        }
     });
+}
+/**
+ * Button feedback
+ * @param {type} spanFeedback
+ * @param {type} btnHiddenFeedback
+ * @returns {undefined}
+ */
+function addTextareaFeedback(spanFeedback,btnHiddenFeedback){
+     $('#'+btnHiddenFeedback).remove();
+     $('#'+spanFeedback).removeAttr( 'style' );    
 }

@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class LabelType extends AbstractType
 {
@@ -20,22 +21,34 @@ class LabelType extends AbstractType
                     'label' => ' ', 'attr' => array(
                         'class' => 'labelVal form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'expected_answer'
-                    )
+                        'placeholder' => 'choice'
+                    ),
                 )
             )
             ->add(
                 'scoreRightResponse', 'text', array(
                     'required' => true,
                     'label' => ' ', 'attr' => array('class' => 'labelScore', 'placeholder' => 'points'
-                  )))
+                  ),
+                    ))
                 //add a field for correspondance, and will be replace by the our field
             ->add( "correspondance", "choice", array("mapped"=>false)
                   )
+            
             ->add(
                 'positionForce', 'checkbox', array(
                     'required' => false, 'label' => ' '
-                ));
+                ))
+            ->add(
+                   'feedback', 'textarea', array(
+                   'required' => false, 'label' => ' ',
+                   'attr' => array('class'=>'form-control',
+                                   'data-new-tab' => 'yes',
+                                   'placeholder' => 'feedback_answer_check',
+                                   'style' => 'height:34px;'
+                       ),
+                  )
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -49,5 +62,11 @@ class LabelType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_labeltype';
+    }
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

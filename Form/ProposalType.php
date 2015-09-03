@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ProposalType extends AbstractType
 {
@@ -21,8 +22,8 @@ class ProposalType extends AbstractType
                     'attr' => array(
                         'class'=>'form-control',
                         'style' => 'height:34px;',
-                        'placeholder' => 'expected_answer'
-                    )
+                        'placeholder' => 'choice'
+                    ),
                 )
             )
             ->add(
@@ -43,5 +44,11 @@ class ProposalType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_proposaltype';
+    }
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

@@ -205,11 +205,11 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * @param collection of  UJM\ExoBundle\Entity\Interaction $interactions
      */
     private function createQuestionsDirectory($qtiRepos, $interactions) {
-        mkdir($qtiRepos->getUserDir().'questions');
+        @mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
         foreach ($interactions as $interaction) {
             $qtiRepos->export($interaction);
-            mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
+            @mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {
                 if (!$element->isDot() && $element->isFile()) {

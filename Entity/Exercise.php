@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
@@ -21,7 +22,7 @@ class Exercise extends AbstractResource
     private $title;
 
     /**
-     * @var text $description
+     * @var string $description
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
@@ -49,7 +50,7 @@ class Exercise extends AbstractResource
     private $keepSameQuestion;
 
     /**
-     * @var datetime $dateCreate
+     * @var \Datetime $dateCreate
      *
      * @ORM\Column(name="date_create", type="datetime")
      */
@@ -93,7 +94,7 @@ class Exercise extends AbstractResource
     private $correctionMode = '1';
 
     /**
-     * @var datetime $dateCorrection
+     * @var \Datetime $dateCorrection
      *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
@@ -109,7 +110,7 @@ class Exercise extends AbstractResource
     private $markMode = '1';
 
     /**
-     * @var datetime $startDate
+     * @var \Datetime $startDate
      *
      * @ORM\Column(name="start_date", type="datetime")
      */
@@ -123,7 +124,7 @@ class Exercise extends AbstractResource
     private $useDateEnd;
 
     /**
-     * @var datetime $end_date
+     * @var \Datetime $end_date
      *
      * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
@@ -211,7 +212,7 @@ class Exercise extends AbstractResource
     /**
      * Set description
      *
-     * @param text $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -221,7 +222,7 @@ class Exercise extends AbstractResource
     /**
      * Get description
      *
-     * @return text
+     * @return string
      */
     public function getDescription()
     {
@@ -287,9 +288,9 @@ class Exercise extends AbstractResource
     /**
      * Set dateCreate
      *
-     * @param datetime $dateCreate
+     * @param \Datetime $dateCreate
      */
-    public function setDateCreate($dateCreate)
+    public function setDateCreate(\DateTime $dateCreate)
     {
         $this->dateCreate = $dateCreate;
     }
@@ -297,7 +298,7 @@ class Exercise extends AbstractResource
     /**
      * Get dateCreate
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getDateCreate()
     {
@@ -405,9 +406,9 @@ class Exercise extends AbstractResource
     /**
      * Set dateCorrection
      *
-     * @param datetime $dateCorrection
+     * @param \Datetime $dateCorrection
      */
-    public function setDateCorrection($dateCorrection)
+    public function setDateCorrection(\DateTime $dateCorrection)
     {
         $this->dateCorrection = $dateCorrection;
     }
@@ -415,7 +416,7 @@ class Exercise extends AbstractResource
     /**
      * Get dateCorrection
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getDateCorrection()
     {
@@ -445,9 +446,9 @@ class Exercise extends AbstractResource
     /**
      * Set startDate
      *
-     * @param datetime $startDate
+     * @param \DateTime $startDate
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = $startDate;
     }
@@ -455,7 +456,7 @@ class Exercise extends AbstractResource
     /**
      * Get startDate
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getStartDate()
     {
@@ -483,9 +484,9 @@ class Exercise extends AbstractResource
     /**
      * Set endDate
      *
-     * @param datetime $endDate
+     * @param \Datetime $endDate
      */
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = $endDate;
     }
@@ -493,7 +494,7 @@ class Exercise extends AbstractResource
     /**
      * Get endDate
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getEndDate()
     {

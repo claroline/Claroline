@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 use Claroline\CoreBundle\Entity\User;
 
@@ -33,7 +34,8 @@ class InteractionQCMType extends AbstractType
             ->add(
                 'shuffle', 'checkbox', array(
                     'label' => 'qcm_shuffle',
-                    'required' => false
+                    'required' => false,
+                    'translation_domain' => 'ujm_exo'
                 )
             );
         $builder
@@ -41,7 +43,8 @@ class InteractionQCMType extends AbstractType
                 'scoreRightResponse', 'text', array(
                     'required' => false,
                     'label' => 'score_right_label',
-                    'attr'  => array( 'placeholder' => 'right_response')
+                    'attr'  => array( 'placeholder' => 'right_response'),
+                    'translation_domain' => 'ujm_exo'
                 )
             );
         $builder
@@ -50,13 +53,15 @@ class InteractionQCMType extends AbstractType
                     'required' => false,
                     'label' => 'score_false_label',
                     'attr'  => array( 'placeholder' => 'points','class'=>'col-md-2'),
+                    'translation_domain' => 'ujm_exo'
                 )
             );
         $builder
             ->add(
                 'weightResponse', 'checkbox', array(
                     'required' => false,
-                    'label' => 'weight_choice'
+                    'label' => 'weight_choice',
+                    'translation_domain' => 'ujm_exo'
                 )
             );
         $builder
@@ -70,7 +75,8 @@ class InteractionQCMType extends AbstractType
                     'query_builder' => function(TypeQCMRepository $er) {
                         return $er->createQueryBuilder('TypeQCM')
                         ->orderBy('TypeQCM.value', 'DESC');
-                    }
+                    },
+                    'translation_domain' => 'ujm_exo'
                 )
             );
         $builder
@@ -97,5 +103,12 @@ class InteractionQCMType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_interactionqcmtype';
+    }
+    
+     public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(
+            array('translation_domain' => 'ujm_exo')
+        );
     }
 }

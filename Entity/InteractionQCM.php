@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,7 +27,7 @@ class InteractionQCM
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
-    private $shuffle;
+    private $shuffle = false;
 
     /**
      * @var float $scoreRightResponse
@@ -47,7 +48,7 @@ class InteractionQCM
      *
      * @ORM\Column(name="weight_response", type="boolean", nullable=true)
      */
-    private $weightResponse;
+    private $weightResponse = false;
 
     /**
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Choice", mappedBy="interactionQCM", cascade={"remove"})
@@ -70,9 +71,7 @@ class InteractionQCM
      */
     public function __construct()
     {
-        $this->choices = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->setShuffle(false);
-        $this->setWeightResponse(false);
+        $this->choices = new ArrayCollection();
     }
 
     /**
@@ -90,7 +89,7 @@ class InteractionQCM
         return $this->interaction;
     }
 
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
+    public function setInteraction(Interaction $interaction)
     {
         $this->interaction = $interaction;
     }
@@ -100,7 +99,7 @@ class InteractionQCM
         return $this->typeQCM;
     }
 
-    public function setTypeQCM(\UJM\ExoBundle\Entity\TypeQCM $typeQCM)
+    public function setTypeQCM(TypeQCM $typeQCM)
     {
         $this->typeQCM = $typeQCM;
     }
@@ -186,7 +185,7 @@ class InteractionQCM
         return $this->choices;
     }
 
-    public function addChoice(\UJM\ExoBundle\Entity\Choice $choice)
+    public function addChoice(Choice $choice)
     {
         $this->choices[] = $choice;
         //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
@@ -204,7 +203,7 @@ class InteractionQCM
         $i = 0;
         $tabShuffle = array();
         $tabFixed   = array();
-        $choices = new \Doctrine\Common\Collections\ArrayCollection;
+        $choices = new ArrayCollection();
         $choiceCount = count($this->choices);
 
         while ($i < $choiceCount) {
@@ -241,7 +240,7 @@ class InteractionQCM
     public function sortChoices()
     {
         $tab = array();
-        $choices = new \Doctrine\Common\Collections\ArrayCollection;
+        $choices = new ArrayCollection();
 
         foreach ($this->choices as $choice) {
             $tab[] = $choice->getOrdre();
@@ -262,14 +261,13 @@ class InteractionQCM
 
             $this->interaction = clone $this->interaction;
 
-            $newChoices = new \Doctrine\Common\Collections\ArrayCollection;
+            $newChoices = new ArrayCollection();
             foreach ($this->choices as $choice) {
                 $newChoice = clone $choice;
                 $newChoice->setInteractionQCM($this);
                 $newChoices->add($newChoice);
             }
             $this->choices = $newChoices;
-
         }
     }
 }
