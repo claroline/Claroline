@@ -25,11 +25,11 @@ statisticsApp
         $scope.clickOnPortolio = function() {
             $('#chart').replaceWith('<div id="chart"></div>');
             if ($scope.selectedPortfolio !== null) {
-                $scope.fetchData();
+                $scope.fetchVisitData();
             }
         };
 
-        $scope.fetchData = function() {
+        $scope.fetchVisitData = function() {
             $scope.chartData = [$scope.cosPoints];
             $.jqplot('chart', $scope.chartData, $scope.chartOptions);
         }
