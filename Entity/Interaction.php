@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,7 @@ class Interaction
     private $type;
 
     /**
-     * @var text $invite
+     * @var string $invite
      *
      * @ORM\Column(name="invite", type="text")
      */
@@ -43,7 +44,7 @@ class Interaction
     private $ordre;
 
     /**
-     * @var text $feedBack
+     * @var string $feedBack
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
@@ -54,7 +55,7 @@ class Interaction
      *
      * @ORM\Column(name="locked_expertise", type="boolean", nullable=true)
      */
-    private $lockedExpertise;
+    private $lockedExpertise = false;
 
     /**
      * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Document")
@@ -84,9 +85,8 @@ class Interaction
      */
     public function __construct()
     {
-        $this->documents = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->hints = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->setLockedExpertise(false);
+        $this->documents = new ArrayCollection();
+        $this->hints = new ArrayCollection();
     }
 
     /**
@@ -222,7 +222,7 @@ class Interaction
         return $this->question;
     }
 
-    public function setQuestion(\UJM\ExoBundle\Entity\Question $question)
+    public function setQuestion(Question $question)
     {
         $this->question = $question;
     }
@@ -232,7 +232,7 @@ class Interaction
         return $this->hints;
     }
 
-    public function addHint(\UJM\ExoBundle\Entity\Hint $hint)
+    public function addHint(Hint $hint)
     {
         $this->hints[] = $hint;
         //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut

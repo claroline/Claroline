@@ -3,6 +3,8 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Interaction;
 
 /**
  * InteractionRepository
@@ -77,6 +79,26 @@ class InteractionRepository extends EntityRepository
             ->addOrderBy('q.title', 'ASC');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns all the interactions linked to a given exercise.
+     *
+     * @param Exercise $exercise
+     * @return Interaction[]
+     */
+    public function findByExercise(Exercise $exercise)
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i')
+            ->join('i.question', 'q')
+            ->join('q.exerciseQuestions', 'eq')
+            ->join('eq.exercise', 'e')
+            ->where('e = :exercise')
+            ->orderBy('eq.ordre')
+            ->setParameter(':exercise', $exercise)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
