@@ -19,19 +19,19 @@ use UJM\ExoBundle\Entity\Exercise;
  */
 class SequenceController extends Controller {
 
-    
     /**
      * Play the selected Exercise
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      */
-    public function playAction(Exercise $exercise){
-        $name = $exercise->getTitle();
-        die('yep yep '.$name);
-        return null;
+    public function playAction(Exercise $exercise) {
+
+        $id = $exercise->getId();
+        // get JSON from Controller
+        $response = $this->forward('ujm.controller.api_controller:exerciseAction', array('id' => $id));
+        return $this->render('UJMExoBundle:Sequence:play.html.twig', array('_resource' => $exercise, 'data' => $response));
     }
-    
-    
+
     /**
      * display a sequence
      * @Route("/get/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_open")

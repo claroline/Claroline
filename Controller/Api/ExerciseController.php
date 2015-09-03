@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\ExerciseManager;
+use JMS\DiExtraBundle\Annotation\Service;
 
 /**
  * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
@@ -30,7 +31,7 @@ class ExerciseController
     }
 
     /**
-     * @EXT\Route("/exercises/{id}")
+     * @EXT\Route("/exercises/{id}", service="ujm.controller.api_controller")
      */
     public function exerciseAction(Exercise $exercise)
     {

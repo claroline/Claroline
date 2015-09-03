@@ -1,0 +1,40 @@
+{% extends "UJMExoBundle:Sequence:layout.html.twig" %}
+
+
+
+{% block breadcrumb %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %} 
+    <div class="exercise-player-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
+        <step-show class="exercise-player-page" data-name="billy" data-sequence=""></step-show>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {# Load Claroline JS #}
+    {{ parent() }}
+
+
+
+    {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_sequence_show.js'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Sequence/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Step/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Step/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/player.module.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+   
+{% endblock %}
