@@ -71,7 +71,7 @@ var StepEditCtrl = function StepEditCtrl(step, inheritedResources, PathService, 
 };
 
 // Extends the base controller
-StepEditCtrl.prototype = StepBaseCtrl.prototype;
+StepEditCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepEditCtrl.prototype.constructor = StepEditCtrl;
 
 /**

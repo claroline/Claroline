@@ -38,7 +38,7 @@ var PathSummaryEditCtrl = function PathSummaryEditCtrl($routeParams, PathService
 };
 
 // Extends the base controller
-PathSummaryEditCtrl.prototype = PathSummaryBaseCtrl.prototype;
+PathSummaryEditCtrl.prototype = Object.create(PathSummaryBaseCtrl.prototype);
 PathSummaryEditCtrl.prototype.constructor = PathSummaryEditCtrl;
 
 /**
@@ -101,6 +101,12 @@ PathSummaryEditCtrl.prototype.paste = function (step) {
         // Change step IDs before paste them
         this.pathService.browseSteps([ clipboardData ], function (parentStep, step) {
             step.id = this.identifierService.generateUUID();
+
+            // Reset server step ID
+            step.resourceId = null;
+
+            // Reset Activity ID to generate a new one when publishing path
+            step.activityId = null;
 
             // Override name
             step.name  = step.name ? step.name + ' ' : '';

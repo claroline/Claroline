@@ -11,5 +11,5 @@ var ResourcesSecondaryShowCtrl = function ResourcesSecondaryShowCtrl() {
 };
 
 // Extends the base controller
-ResourcesSecondaryShowCtrl.prototype = ResourcesSecondaryBaseCtrl.prototype;
+ResourcesSecondaryShowCtrl.prototype = Object.create(ResourcesSecondaryBaseCtrl.prototype);
 ResourcesSecondaryShowCtrl.prototype.constructor = ResourcesSecondaryShowCtrl;

@@ -58,7 +58,7 @@ var ResourcesPrimaryEditCtrl = function ResourcesPrimaryEditCtrl($scope, Confirm
 };
 
 // Extends the base controller
-ResourcesPrimaryEditCtrl.prototype = ResourcesPrimaryBaseCtrl.prototype;
+ResourcesPrimaryEditCtrl.prototype = Object.create(ResourcesPrimaryBaseCtrl.prototype);
 ResourcesPrimaryEditCtrl.prototype.constructor = ResourcesPrimaryEditCtrl;
 
 /**

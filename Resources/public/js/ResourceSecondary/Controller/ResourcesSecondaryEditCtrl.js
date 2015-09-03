@@ -34,7 +34,7 @@ var ResourcesSecondaryEditCtrl = function ResourcesSecondaryEditCtrl($scope, Con
 };
 
 // Extends the base controller
-ResourcesSecondaryEditCtrl.prototype = ResourcesSecondaryBaseCtrl.prototype;
+ResourcesSecondaryEditCtrl.prototype = Object.create(ResourcesSecondaryBaseCtrl.prototype);
 ResourcesSecondaryEditCtrl.prototype.constructor = ResourcesSecondaryEditCtrl;
 
 ResourcesSecondaryEditCtrl.prototype.resourceSecondaryPicker = {};

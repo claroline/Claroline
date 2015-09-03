@@ -24,7 +24,7 @@ var StepShowCtrl = function StepShowCtrl(step, inheritedResources, PathService, 
 };
 
 // Extends the base controller
-StepShowCtrl.prototype = StepBaseCtrl.prototype;
+StepShowCtrl.prototype = Object.create(StepBaseCtrl.prototype);
 StepShowCtrl.prototype.constructor = StepShowCtrl;
 
 /**

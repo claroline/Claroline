@@ -41,7 +41,7 @@
                  * @returns ClipboardService
                  */
                 copy: function (data, callback) {
-                    var tempData = angular.copy(data)
+                    var tempData = angular.copy(data);
 
                     if (typeof callback === 'function') {
                         // Process data before copy them into clipboard
