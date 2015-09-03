@@ -7,7 +7,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Validator("daterange_validator")
+ * @DI\Validator("formalibre_daterange_validator")
  */
 class DateRangeValidator extends ConstraintValidator
 {

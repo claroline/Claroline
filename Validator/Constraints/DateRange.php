@@ -11,7 +11,7 @@ class DateRange extends Constraint
 {
     public function validatedBy()
     {
-        return 'daterange_validator';
+        return 'formalibre_daterange_validator';
     }
 
     public function getTargets()

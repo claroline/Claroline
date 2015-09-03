@@ -85,6 +85,7 @@ error:
   resource_type_already_exists: Ce type de ressource existe déjà.
   number_reservations_exceeded: Nombre des réservations dépassées avec cette ressource. Veuillez changer la date à laquelle vous voulez réserver cette ressource.
   max_time_reservation_exceeded: Vous avez dépassé le temps maximum de réservation de cette ressource.
+export_resources: Exporter les ressources
 filter:
   by_resource: Filtrer par ressource
   no_resource_found: Aucune ressource trouvée
@@ -105,7 +106,17 @@ import:
   resources: Importer des ressources
   resources_submit: Importer les ressources
   resources_title: Importer des ressources
-  resources_info: Veuillez sélectionner un fichier au format csv utilisant la virgule comme caractère de séparation. La première ligne du fichier doit posséder le nom des 7 colonnes (cf. exemple ci-dessous). Le nom du type de ressources existant, le nom de la nouvelle ressource, le temps maximum de réservation au format hh:mm ou hh:mm:ss, la description, la localisation, la quantité et la couleur de la ressource.
+  resources_info: |
+    Veuillez sélectionner un fichier au format csv utilisant la virgule comme caractère de séparation et les guillemets pour entourer les champs textes complexes. La première ligne du fichier doit contenir le nom des 7 colonnes (cf. exemple ci-dessous):
+    - le nom du type de ressources (min 2 et max 50 caractères)
+    - le nom de la ressource (min 2 et max 50 caractères)
+    - le temps maximum de réservation au format hh:mm ou hh:mm:ss (optionnel)
+    - la description (optionnel)
+    - la localisation (optionnel)
+    - la quantité (minimum 1)
+    - la couleur de la ressource (optionnel).
+
+    Si le type de ressource n'existe pas, il sera automatiquement créé.
   file: Fichier des ressources
   tv: Télévision
   tv_localisation: Salle des prof

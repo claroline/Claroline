@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Validator("duration_validator")
+ * @DI\Validator("formalibre_duration_validator")
  */
 class DurationValidator extends ConstraintValidator
 {

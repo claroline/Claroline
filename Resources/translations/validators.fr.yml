@@ -12,3 +12,4 @@ invalid_number_characters_localisation: La chaine de la colonne localisation doi
 invalid_number_quantity: La valeur dans la colonne quantity doit être de 1 minimum. Ligne %lineNb%.
 invalid_color_format: La valeur de la couleur de la colonne color doit être au format hex. Ligne %lineNb%.
 resource_already_exists_for_resource_type: Le nom de la ressource existe déjà pour ce type de ressource. Ligne %lineNb%.
+double_resource_for_one_resource_type: La ligne %lineNb1% et la ligne %lineNb2% contiennent le même type de ressources pour la même ressource. Veuillez différencier les noms des ressources.

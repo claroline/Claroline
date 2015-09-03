@@ -4,7 +4,9 @@ namespace FormaLibre\ReservationBundle\Controller;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Ddeboer\DataImport\Reader\ArrayReader;
 use Ddeboer\DataImport\Reader\CsvReader;
+use Ddeboer\DataImport\Writer\CsvWriter;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Entity\ResourceType;
@@ -15,6 +17,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 
@@ -109,7 +112,10 @@ class ReservationAdminController extends Controller
         $this->em->persist($resourceType);
         $this->em->flush();
 
-        return new JsonResponse(array('id' => $resourceType->getId()));
+        return new JsonResponse(array(
+            'id' => $resourceType->getId(),
+            'name' => $resourceType->getName()
+        ));
     }
 
     /**
@@ -293,8 +299,8 @@ class ReservationAdminController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $this->importResourcesAction($form->get('file')->getData());
-            return new JsonResponse();
+            $data = $this->importResourcesAction($form->get('file')->getData());
+            return new JsonResponse($data);
         }
 
         return $this->render('FormaLibreReservationBundle:Admin:importForm.html.twig', [
@@ -310,14 +316,100 @@ class ReservationAdminController extends Controller
         $reader = new CsvReader($file);
         $reader->setHeaderRowNumber(0);
 
+        $data = [
+            'resourcesTypes' => [],
+            'resources' => []
+        ];
+
         foreach ($reader as $row) {
-            $resourceTypeName = $row['resource_type'];
-            $resourceName = $row['name'];
+            $resourceTypeName = ucfirst($row['resource_type']);
+            $resourceName = ucfirst($row['name']);
             $maxTimeReservation = $row['max_time_reservation'];
-            $description = $row['description'];
-            $localisation = $row['localisation'];
+            $description = ucfirst($row['description']);
+            $localisation = ucfirst($row['localisation']);
             $quantity = $row['quantity'];
-            $color = $row['color'];
+            $color = empty($row['color']) ? '#3a87ad' : $row['color'];
+
+            $resourceType = $this->resourceTypeRepo->findOneBy(['name' => $resourceTypeName]);
+            if (!$resourceType) {
+                $resourceType = new ResourceType();
+                $resourceType->setName($resourceTypeName);
+                $this->em->persist($resourceType);
+                $this->em->flush();
+
+                $data['resourcesTypes'][] = [
+                    'id' => $resourceType->getId(),
+                    'name' => $resourceType->getName()
+                ];
+            }
+
+            $resource = new Resource();
+            $resource
+                ->setResourceType($resourceType)
+                ->setName($resourceName)
+                ->setMaxTimeReservation($maxTimeReservation)
+                ->setDescription($description)
+                ->setLocalisation($localisation)
+                ->setQuantity($quantity)
+                ->setColor($color)
+            ;
+            $this->em->persist($resource);
+            $this->em->flush();
+
+            $data['resources'][] = [
+                'resourceTypeId' => $resourceType->getId(),
+                'resource' => [
+                    'id' => $resource->getId(),
+                    'name' => $resourceName,
+
+                ]
+            ];
         }
+
+        return $data;
+    }
+
+    /**
+     * @EXT\Route(
+     *      "/export",
+     *      name="formalibre_reservation_export_resources",
+     *      options={"expose"=true}
+     * )
+     */
+    public  function exportResourcesAction()
+    {
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="resources.csv";');
+
+        $file = fopen('php://output', 'w');
+
+        fputcsv($file, [
+            'resource_type',
+            'name',
+            'max_time_reservation',
+            'description',
+            'localisation',
+            'quantity',
+            'color'
+        ], ',', '"');
+
+        $resourcesTypes = $this->resourceTypeRepo->findAll();
+        foreach ($resourcesTypes as $resourceType) {
+            foreach ($resourceType->getResources() as $resource) {
+                $data = [
+                    $resourceType->getName(),
+                    $resource->getName(),
+                    $resource->getMaxTimeReservation(),
+                    $resource->getDescription(),
+                    $resource->getLocalisation(),
+                    $resource->getQuantity(),
+                    $resource->getColor()
+                ];
+
+                fputcsv($file, $data, ',', '"');
+            }
+        }
+
+        return new Response();
     }
 }

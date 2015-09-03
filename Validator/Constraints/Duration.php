@@ -13,7 +13,7 @@ class Duration extends Constraint
 
     public function validatedBy()
     {
-        return 'duration_validator';
+        return 'formalibre_duration_validator';
     }
 
     public function getTargets()

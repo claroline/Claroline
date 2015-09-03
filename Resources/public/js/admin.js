@@ -4,7 +4,7 @@
     $('.add-new-resource-type').click(function() {
         var $resourceTypeInput = $('input[name="resource_type"]'),
             resourceTypeName = $resourceTypeInput.val(),
-            routing = Routing.generate('formalibre_add_new_resource_type', {'name': resourceTypeName});
+            routing = Routing.generate('formalibre_add_new_resource_type', {name: resourceTypeName});
 
         $.ajax({
             url: routing,
@@ -15,22 +15,7 @@
                 } else if (data.error == 'resource_type_exists') {
                     Claroline.Modal.confirmContainer(t('error_'), t('error.resource_type_already_exists'));
                 } else {
-                    var $newResourceType = $('<div class="col-sm-6">' +
-                        '<div class="list-group">' +
-                        '<div class="list-group-item active" data-resource-type-id="'+ data.id +'"><div class="pull-right" style="margin: -5px -5px 0 0;"><button class="btn btn-sm btn-success add-new-resource" title="Ajouter une ressource" data-toggle="tooltip"><span class="fa fa-plus"></span></button> ' +
-                        '<button class="btn btn-sm btn-warning modify-resource-type" title="'+ t("modify_resource_type_name") +'" data-toggle="tooltip"><span class="fa fa-pencil"></span></button> ' +
-                        '<button class="btn btn-sm btn-danger delete-resource-type" title="Supprimer ce type de ressources" data-toggle="tooltip"><span class="fa fa-trash"></span></button></div>' +
-                        '<div class="list-group-item-title">'+ resourceTypeName +'</div>' +
-                        '</div>' +
-                        '<div class="list-group-item no-resource-yet">'+ t("no_resources_in_resource_type") +'</div>' +
-                        '</div>' +
-                        '</div>').hide();
-
-                    $('.list-group-resource-type > .col-sm-12').slideUp('slow');
-
-                    $newResourceType.appendTo('.list-group-resource-type').slideDown('slow');
-                    $resourceTypeInput.val('');
-                    $('[data-toggle="tooltip"]').tooltip();
+                    displayNewResourceType(data);
                 }
             }
         });
@@ -47,7 +32,19 @@
 
         var routing = Routing.generate('formalibre_reservation_import_resources_form');
 
-        Claroline.Modal.displayForm(routing, onImportSucceded, function() {}, 'import-resources')
+        Claroline.Modal.displayForm(
+            routing,
+            function(data) {
+                $.each(data.resourcesTypes, function(index, element) {
+                    displayNewResourceType(element);
+                });
+
+                $.each(data.resources, function(index, element) {
+                    displayNewResource(element);
+                });
+            },
+            function(){},
+            'import-resources')
     });
 
     $('body')
@@ -135,6 +132,26 @@
         $('div[data-resource-type-id="'+ data.id +'"]').find('.list-group-item-title').text(data.name);
     }
 
+    function displayNewResourceType(data)
+    {
+        var $newResourceType = $('<div class="col-sm-6">' +
+            '<div class="list-group">' +
+            '<div class="list-group-item active" data-resource-type-id="'+ data.id +'"><div class="pull-right" style="margin: -5px -5px 0 0;"><button class="btn btn-sm btn-success add-new-resource" title="Ajouter une ressource" data-toggle="tooltip"><span class="fa fa-plus"></span></button> ' +
+            '<button class="btn btn-sm btn-warning modify-resource-type" title="'+ t("modify_resource_type_name") +'" data-toggle="tooltip"><span class="fa fa-pencil"></span></button> ' +
+            '<button class="btn btn-sm btn-danger delete-resource-type" title="Supprimer ce type de ressources" data-toggle="tooltip"><span class="fa fa-trash"></span></button></div>' +
+            '<div class="list-group-item-title">'+ data.name +'</div>' +
+            '</div>' +
+            '<div class="list-group-item no-resource-yet">'+ t("no_resources_in_resource_type") +'</div>' +
+            '</div>' +
+            '</div>').hide();
+
+        $('.list-group-resource-type > .col-sm-12').slideUp('slow');
+
+        $newResourceType.appendTo('.list-group-resource-type').slideDown('slow');
+        $('input[name="resource_type"]').val('');
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
     var displayNewResource = function(data) {
         var $newResource = $('<a class="list-group-item" href="#" data-resource-id="'+ data.resource.id +'">'+ data.resource.name +'</a>'),
             $listGroup = $('div.list-group > div.list-group-item[data-resource-type-id="'+ data.resourceTypeId +'"]').parent();
@@ -180,10 +197,5 @@
             url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesList}),
             type: 'post'
         });
-    }
-
-    function onImportSucceded()
-    {
-
     }
 }) ();
