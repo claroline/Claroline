@@ -1,7 +1,5 @@
 {% twig_js name="EventContent" %}
 
-{% set workspaceId = event.workspace_id ? event.workspace_id : 0 %}
-
 {% if event.isTask %}
     <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
 {% else %}

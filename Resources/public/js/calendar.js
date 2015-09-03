@@ -91,7 +91,9 @@
             eventRender: onEventRender,
             eventResize: onEventResize,
             eventResizeStart: onEventResizeStart,
-            eventDragStart: onEventDragStart
+            eventResizeStop: onEventResizeStop,
+            eventDragStart: onEventDragStart,
+            eventDragStop: onEventDragStop
         });
 
         // If a year is define in the Url, redirect the calendar to that year, month and day
@@ -145,12 +147,22 @@
 
     function onEventResizeStart()
     {
-        $(this).popover('hide');
+        $(this).popover('destroy');
+    }
+
+    function onEventResizeStop()
+    {
+        $('.popover').remove();
     }
 
     function onEventDragStart()
     {
-        $(this).popover('hide');
+        $(this).popover('destroy');
+    }
+
+    function onEventDragStop()
+    {
+        $('.popover').remove();
     }
 
     function renderEvent(event, $element)
