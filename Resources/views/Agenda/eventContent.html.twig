@@ -1,5 +1,7 @@
 {% twig_js name="EventContent" %}
 
+{% set workspaceId = event.workspace_id ? event.workspace_id : 0 %}
+
 {% if event.isTask %}
     <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
 {% else %}
@@ -30,4 +32,10 @@
     {% else %}
         <div style="background-color: darkred; color: #f5f5f5; text-align: center; padding: 5px 0;"><span class="fa fa-exclamation-circle"></span> {{ 'task_not_done'|trans({}, 'agenda') }}</div>
     {% endif %}
+{% endif %}
+
+{% if event.editable %}
+    <div class="text-right" style="margin-top: 6px;">
+        <a href="#" class="modify-event" data-event-id="{{ event.id }}">{{ 'modify'|trans({}, 'agenda') }}</a>
+    </div>
 {% endif %}
