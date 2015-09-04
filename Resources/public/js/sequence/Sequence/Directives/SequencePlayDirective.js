@@ -15,8 +15,7 @@
                 link: function (scope, element, attr, sequencePlayCtrl) {
                     // set current page to first page
                     console.log('sequence play directive link method called');
-                    sequencePlayCtrl.setSequence(scope.sequence);                   
-                    
+                    sequencePlayCtrl.setSequence(scope.sequence);
                 }
             };
         }

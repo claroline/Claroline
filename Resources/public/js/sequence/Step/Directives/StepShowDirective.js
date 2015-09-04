@@ -5,7 +5,7 @@
         function () {
             return {
                 restrict: 'E',
-                replace: true,
+                replace: false,
                 controller: 'StepShowCtrl',
                 controllerAs: 'stepShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Step/Partials/step.show.html',
@@ -13,7 +13,12 @@
                     steps: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
+                    console.log('yep');
                     stepShowCtrl.setSteps(scope.steps);
+                    
+                    stepShowCtrl.setCurrentStep(scope.steps[0]);
+                    
+                    console.log(scope.steps);
                 }
             };
         }

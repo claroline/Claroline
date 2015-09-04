@@ -8,9 +8,9 @@
 
             // all steps for the sequence
             this.steps = {};
-            this.currentStepIndex = 0;           
-
-            
+            this.currentStepIndex = 0;
+            // for now just one step
+            this.currentStep = {};
 
             this.getNextStep = function () {
                 var newIndex = this.currentStepIndex + 1;
@@ -42,9 +42,10 @@
             this.setCurrentStep = function (step) {
                 var index = this.steps.indexOf(step);
                 this.currentStepIndex = index;
+                this.currentStep = step;
                 // questions are applicable only for "normal" steps
                 if (index !== 0 || index !== this.steps.length - 1) {
-                    this.getStepQuestions(step);
+                    // this.getStepQuestions(step);
                 }
             };
         }
