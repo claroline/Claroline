@@ -413,6 +413,7 @@ has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
 help_url: 'URL de l''aide'
 hide: Cacher
+hide_breadcrumb: 'Cacher le fil d''Ariane'
 hide_tools_menu: 'Cacher le menu d''outils (sauf pour les gestionnaires)'
 history: Historique
 home: Accueil
