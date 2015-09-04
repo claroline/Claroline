@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "claroline/core-bundle": "~6.0",
-        "icap/notification-bundle": "~6.0"
+        "claroline/core-bundle": "~5.0",
+        "icap/notification-bundle": "~5.0"
     },
     "autoload": {
         "psr-0": { "Icap\\LessonBundle": "" }
