@@ -6,12 +6,13 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class ExerciseControllerTest extends TransactionalTestCase
 {
-    public function test()
+    public function testExportActionIsReachable()
     {
-        $this->markTestSkipped('Not implemented');
-
-        $this->client->request('GET', '/exercise/api/test');
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals('TEST', $this->client->getResponse()->getContent());
+        $this->client->request('GET', '/exercise/api/exercises/1');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertContains(
+            'UJM\ExoBundle\Entity\Exercise object not found',
+            $this->client->getResponse()->getContent()
+        );
     }
 }

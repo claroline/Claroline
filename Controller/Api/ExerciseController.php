@@ -32,7 +32,7 @@ class ExerciseController
     /**
      * @EXT\Route("/exercises/{id}")
      */
-    public function exerciseAction(Exercise $exercise)
+    public function exportAction(Exercise $exercise)
     {
         return new JsonResponse($this->manager->exportExercise($exercise));
     }
