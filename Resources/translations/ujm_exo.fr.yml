@@ -142,7 +142,7 @@ home_exercise: Accueil de l'exercice
 # I
 infiny: Infini
 info_duplicate_question: Pour dupliquer une question vous devez insérer un nombre entier entre 0 et 10.
-info_exercise_never_published: Cet exercice n'est pas encore été publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées.
+info_exercise_never_published: Cet exercice n'est pas encore publié. Les gestionnaires pourront ajouter des questions, tester l'exercice et supprimer les copies. Après publication, les apprenants pourront passer l'exercice et les copies ne pourront plus être supprimées.
 info_mark: Les éventuelles pénalités sont à prendre en compte dans votre notation
 info_measure_difficulty: Cet indice ne prend pas en compte les étudiants n'ayant pas vu la question
 inter_matching_shuffle: Ordre des propositions et des labels aléatoire

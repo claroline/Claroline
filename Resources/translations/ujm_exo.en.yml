@@ -142,7 +142,7 @@ home_exercise: Home exercise
 # I
 infiny: Indefinite
 info_duplicate_question: To duplicate a question you must insert an integer number between 0 and 10.
-info_exercise_never_published: This exercise is not yet published. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted.
+info_exercise_never_published: This exercise is not published yet. The administrators can add question, try the exercise and detele the papers. After the publishing, the students will compose the exercise and the papers will can not be deleted.
 info_mark: The potential penalties have to be count during your notation
 info_measure_difficulty: This measure doesn't count students that didn't saw the question
 inter_matching_shuffle: Order of random selection
