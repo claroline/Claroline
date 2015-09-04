@@ -19,12 +19,16 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.importer.icap_lesson_importer")
  * @DI\Tag("claroline.importer")
  */
-class LessonImporter extends Importer implements ConfigurationInterface{
+class LessonImporter extends Importer implements ConfigurationInterface, RichTextInterface
+{
 
     /**
      * @var \Icap\LessonBundle\Manager\LessonManager
@@ -33,12 +37,20 @@ class LessonImporter extends Importer implements ConfigurationInterface{
 
     /**
      * @DI\InjectParams({
-     *      "lessonManager"        = @DI\Inject("icap.lesson.manager")
+     *      "lessonManager" = @DI\Inject("icap.lesson.manager"),
+     *      "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container"     = @DI\Inject("service_container")
      * })
      */
-    public function __construct(LessonManager $lessonManager)
+    public function __construct(
+        LessonManager $lessonManager, 
+        ObjectManager $om,
+        ContainerInterface $container
+    )
     {
         $this->lessonManager = $lessonManager;
+        $this->om = $om;
+        $this->container = $container;
     }
 
     public function getConfigTreeBuilder()
@@ -96,5 +108,25 @@ class LessonImporter extends Importer implements ConfigurationInterface{
     public function export(Workspace $workspace, array &$files, $object)
     {
         return $this->lessonManager->exportLesson($workspace, $files, $object);
+    }
+    
+    public function format($data)
+    {
+        foreach ($data['chapters'] as $chapter) {
+             //look for the text with the exact same content (it's really bad I know but at least it works
+             $text = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $chapter['path']);
+             $chapters = $this->om->getRepository('Icap\LessonBundle\Entity\Chapter')->findByText($text);
+             
+             foreach ($chapters as $entity) {
+                 //avoid circulary dependency
+                 $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                 $entity->setText($text);
+                 $this->om->persist($entity);
+            }
+             
+        }
+        
+        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+        $this->om->flush();
     }
 }
