@@ -67,7 +67,7 @@ class ExerciseListener
         $request = $this->container->get('request');
         $form = $this->container
             ->get('form.factory')
-            ->create(new ExerciseType(true), new Exercise());
+            ->create(new ExerciseType(true));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
