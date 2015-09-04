@@ -103,12 +103,6 @@ class Event implements \JsonSerializable
      */
     private $isEditable;
 
-    private $recurring;
-    //public because of the symfony2 form does't use the appropriate setter and we need that value.
-    //@see AgendaManager::setEventDate
-    public $startHours;
-    public $endHours;
-
     private $dateRange;
 
     public function __construct()
@@ -131,57 +125,70 @@ class Event implements \JsonSerializable
         $this->title = $title;
     }
 
+    //Returns a String for the DateTimePicker of the AgendaType
     public function getStart()
     {
-        if (is_null($this->start)) {
-            return null;
-        } else {
-            $date = date('d-m-Y H:i', $this->start);
+        return date('d/m/Y H:i', $this->start);
+    }
 
-            return (new \Datetime($date));
-        }
+    public function getStartInTimestamp()
+    {
+        return $this->start;
+    }
+
+    public function getStartInDateTime()
+    {
+        return \Datetime::createFromFormat('U', $this->start);
     }
 
     public function setStart($start)
     {
-        if (!is_null($start)) {
-            if ($start instanceof \Datetime) {
-                $this->start = $start->getTimestamp();
-            } elseif (is_int($start)) {
-                $this->start = $start;
+        if (is_string($start)) {
+            $dateFormat = $this->isAllDay() ? 'd/m/Y' : 'd/m/Y H:i';
+            $dateTime = \DateTime::createFromFormat($dateFormat, $start);
+            if (!$dateTime) {
+                $this->start = null;
             } else {
-                throw new \Exception('Not an integer nor date.');
+                $this->start = $dateTime->getTimestamp();
             }
         } else {
-            $this->start = null;
+            $this->start = $start;
         }
+
+        return $this;
     }
 
+    //Returns a String for the DateTimePicker of the AgendaType
     public function getEnd()
     {
-        if (is_null($this->end)) {
-            return null;
+        return date('d/m/Y H:i', $this->end);
+    }
 
-        } else {
-            $date = date('d-m-Y H:i', $this->end);
+    public function getEndInTimestamp()
+    {
+        return $this->end;
+    }
 
-            return (new \Datetime($date));
-        }
+    public function getEndInDateTime()
+    {
+        return \Datetime::createFromFormat('U', $this->end);
     }
 
     public function setEnd($end)
     {
-        if (!is_null($end)) {
-            if ($end instanceof \Datetime) {
-                $this->end = $end->getTimestamp();
-            } elseif (is_int($end)) {
-                $this->end = $end;
+        if (is_string($end)) {
+            $dateFormat = $this->isAllDay() ? 'd/m/Y' : 'd/m/Y H:i';
+            $dateTime = \DateTime::createFromFormat($dateFormat, $end);
+            if (!$dateTime) {
+                $this->end = null;
             } else {
-                throw new \Exception('Not an integer nor date.');
+                $this->end = $dateTime->getTimestamp();
             }
         } else {
-            $this->end = null;
+            $this->end = $end;
         }
+
+        return $this;
     }
 
     public function getDescription()
@@ -249,45 +256,6 @@ class Event implements \JsonSerializable
     {
         $this->priority = $priority;
     }
-    public function getRecurring()
-    {
-        return $this->recurring;
-    }
-
-    public function setRecurring($recurring)
-    {
-        $this->recurring = $recurring;
-    }
-
-    //returns a timestamp for the form
-    public function getStartHours()
-    {
-        //For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
-        //This couldn't be fixed be setting the timezone in the form field.
-        return $this->getStart() ?
-            (int) $this->getStart()->format('H') * 3600 + (int) $this->getStart()->format('i') * 60 - 3600:
-            null;
-    }
-
-    public function setStartHours($startHours)
-    {
-        $this->startHours = $startHours;
-    }
-
-    //returns a timestamp for the form
-    public function getEndHours()
-    {
-        //For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
-        //This couldn't be fixed be setting the timezone in the form field.
-        return $this->getEnd() ?
-            (int) $this->getEnd()->format('H') * 3600 + (int) $this->getEnd()->format('i') * 60 - 3600:
-            null;
-    }
-
-    public function setEndHours($endHours)
-    {
-        $this->endHours = $endHours;
-    }
 
     public function setDateRange($dateRange)
     {
@@ -340,8 +308,8 @@ class Event implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $start = is_null($this->getStart()) ? null : $this->getStart()->getTimestamp();
-        $end = is_null($this->getEnd()) ? null : $this->getEnd()->getTimestamp();
+        $start = is_null($this->getStart()) ? null : $this->getStartInTimestamp();
+        $end = is_null($this->getEnd()) ? null : $this->getEndInTimestamp();
         $startDate = new \DateTime();
         $startDate->setTimeStamp($start);
         $startIso = $startDate->format(\DateTime::ISO8601);
@@ -362,8 +330,6 @@ class Event implements \JsonSerializable
             'description' => $this->getDescription(),
             'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId(): null,
             'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName(): null,
-            'endHours' => $this->getEndHours(),
-            'startHours' => $this->getStartHours(),
             'className' => 'event_' . $this->getId(),
             'isEditable' => $this->isEditable(),
             'durationEditable' => !$this->isTask() && $this->isEditable() !== false // If it's a task, disable resizing

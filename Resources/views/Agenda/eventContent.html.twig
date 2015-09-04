@@ -1,10 +1,10 @@
 {% twig_js name="EventContent" %}
 
 {% if event.isTask %}
-    <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
+    <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% else %}
-        <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start._i|convertDateTimeToString(event.allDay) }}</div>
-        <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
+        <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start.string }}</div>
+        <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% endif %}
 
 <div>{{ 'form.author'|trans({}, 'agenda') }}: {{ event.owner }}</div>

@@ -13,10 +13,10 @@
     </div>
 
     <div style="overflow: hidden">
-        {% set dateRange = (event.start|date('U') - date('now')|date('U')) %}
-        {% if event.start|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
+        {% set dateRange = (event.getStartInDateTime()|date('U') - date('now')|date('U')) %}
+        {% if event.getStartInDateTime()|date('d/m/Y') == date('+1 day')|date('d/m/Y') %}
             {{ 'tomorrow'|trans({}, 'agenda') }},
-        {% elseif event.start|date('d/m/Y') == date('now')|date('d/m/Y') %}
+        {% elseif event.getStartInDateTime()|date('d/m/Y') == date('now')|date('d/m/Y') %}
             {{ 'today_widget'|trans({}, 'agenda') }},
         {% elseif dateRange <= 0 %}
             {% if event.isTask %}
@@ -35,15 +35,15 @@
                 '%nbDays%': (dateRange/86400)|round(0, 'ceil')
             }, 'agenda') }},
         {% else %}
-            {{ ('day.' ~ event.start|date('l')|lower())|trans({}, 'agenda') }}
-            {{ event.start|date('d/m/Y') }},
+            {{ ('day.' ~ event.getStartInDateTime()|date('l')|lower())|trans({}, 'agenda') }}
+            {{ event.getStartInDateTime()|date('d/m/Y') }},
         {% endif %}
 
         <a href="
         {% if event.workspace is null %}
-            {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+            {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.getStartInDateTime()|date('Y') }}&month={{ event.getStartInDateTime()|date('m') }}&day={{ event.getStartInDateTime()|date('d') }}
         {% else %}
-            {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda_'}) }}?year={{ event.start|date('Y') }}&month={{ event.start|date('m') }}&day={{ event.start|date('d') }}
+            {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda_'}) }}?year={{ event.getStartInDateTime()|date('Y') }}&month={{ event.getStartInDateTime()|date('m') }}&day={{ event.getStartInDateTime()|date('d') }}
         {% endif %}"
            class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
            tabindex="0"
@@ -60,12 +60,12 @@
             {% set time = 'all_day'|trans({}, 'agenda') %}
         {% else %}
             {% set time = 'at'|trans({}, 'agenda') ~ ' '%}
-            {% if event.start|date('H\\hi') == '00h00' %}
+            {% if event.getStartInDateTime()|date('H\\hi') == '00h00' %}
                 {% set time = time ~ 'midnight'|trans({}, 'agenda') %}
-            {% elseif event.start|date('H\\hi') == '12h00' %}
+            {% elseif event.getStartInDateTime()|date('H\\hi') == '12h00' %}
                 {% set time = time ~ 'noon'|trans({}, 'agenda') %}
             {% else %}
-                {% set time = time ~ event.start|date('H\\hi') %}
+                {% set time = time ~ event.getStartInDateTime()|date('H\\hi') %}
             {% endif %}
         {% endif %}
 

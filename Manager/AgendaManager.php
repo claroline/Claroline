@@ -79,11 +79,6 @@ class AgendaManager
         $event->setUser($this->tokenStorage->getToken()->getUser());
         $this->setEventDate($event);
         $this->om->persist($event);
-
-        if ($event->getRecurring() > 0) {
-            $this->addRecurrentEvents($event);
-        }
-
         $this->om->flush();
 
         return $event->jsonSerialize();
@@ -201,7 +196,7 @@ class AgendaManager
 
     public function updateEndDate(Event $event, $dayDelta = 0, $minDelta = 0)
     {
-        $event->setEnd($event->getEnd()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
+        $event->setEnd($event->getEndInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
 
         return $event->jsonSerialize();
@@ -209,7 +204,7 @@ class AgendaManager
 
     public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
     {
-        $event->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
+        $event->setStart($event->getStartInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
     }
 
@@ -232,23 +227,6 @@ class AgendaManager
         return $data;
     }
 
-    private function addRecurrentEvents(Event $event, $day = 1, $minutes = 0)
-    {
-        $events = array();
-
-        for ($i = 1; $i <= $event->getRecurring(); $i++) {
-            $recEvent = clone $event;
-            $recEvent->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
-            $recEvent->setEnd($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
-            $events[] = $recEvent;
-            $this->om->persist($recEvent);
-        }
-
-        $this->om->flush();
-
-        return $this->convertEventsToArray($events);
-    }
-
     private function toSeconds($days = 0, $mins = 0)
     {
         return $days * 3600 * 24 + $mins * 60;
@@ -265,21 +243,21 @@ class AgendaManager
         if ($event->isAllDay()) {
             // If it's a task we set the start date at the beginning of the day
             if ($event->isTask()) {
-                $event->setStart(strtotime($event->getEnd()->format('Y-m-d'). ' 00:00:00'));
+                $event->setStart(strtotime($event->getEndInDateTime()->format('Y-m-d').' 00:00:00'));
             } else {
-                $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
+                $event->setStart(strtotime($event->getStartInDateTime()->format('Y-m-d').' 00:00:00'));
             }
-            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 24:00:00'));
+            $event->setEnd(strtotime($event->getEndInDateTime()->format('Y-m-d').' 24:00:00'));
         } else {
-            // we get the hours value directly from the property wich has been setted by the form.
+            // We get the hours value directly from the property wich has been setted by the form.
             // That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
             // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
             if ($event->isTask()) {
-                $event->setStart($event->getEnd()->getTimestamp() + $event->endHours - 30*60);
+                $event->setStart($event->getEndInTimestamp() - 30*60);
             } else {
-                $event->setStart($event->getStart()->getTimestamp() + $event->startHours);
+                $event->setStart($event->getStartInTimestamp());
             }
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours);
+            $event->setEnd($event->getEndInTimestamp());
         }
     }
 
@@ -288,8 +266,8 @@ class AgendaManager
         usort(
             $listEvents,
             function($a, $b) {
-                $aStartTimestamp = $a->getStart()->getTimestamp();
-                $bStartTimestamp = $b->getStart()->getTimestamp();
+                $aStartTimestamp = $a->getStartInTimestamp();
+                $bStartTimestamp = $b->getStartInTimestamp();
                 if ($aStartTimestamp == $bStartTimestamp) {
                     return 0;
                 }

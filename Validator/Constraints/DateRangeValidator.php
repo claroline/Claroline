@@ -16,7 +16,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Validator("daterange_validator")
+ * @DI\Validator("claroline_daterange_validator")
  */
 class DateRangeValidator extends ConstraintValidator
 {
@@ -39,23 +39,14 @@ class DateRangeValidator extends ConstraintValidator
             if ($object->getStart() === null) {
                 $this->context->addViolation('valid_start_date_required');
             }
-            if ($object->startHours === null) {
-                $this->context->addViolation('valid_start_hour_required');
-            }
-            if ($object->startHours === null) {
-                $this->context->addViolation('valid_start_hour_required');
-            }
 
             if ($object->getStart() !== null && $object->getEnd() !== null) {
-                if ($object->getStart()->getTimeStamp() + $object->startHours >
-                    $object->getEnd()->getTimeStamp()  + $object->endHours
-                ) {
-                    $this->context->addViolation($constraint->message);
+                if ($object->getStartInTimestamp() > $object->getEndInTimestamp()) {
+                    $this->context->addViolation('invalid_date_range');
                 }
             }
 
-            if ($object->getEnd()->getTimeStamp()  + $object->endHours -
-                $object->getStart()->getTimeStamp() - $object->startHours < 60*15) {
+            if ($object->getEndInTimestamp() - $object->getStartInTimestamp() < 60*15) {
                 $this->context->addViolation('date_range_too_small');
             }
         }

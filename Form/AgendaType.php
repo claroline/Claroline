@@ -46,148 +46,42 @@ class AgendaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $recurring = array();
-
-        for ($i = 0; $i < 10; $i++) {
-            $recurring[$i] = $i;
-        }
-
-        $now = new \DateTime();
-
-        $attr = array();
-        $attr['class'] = 'datepicker input-small';
-        $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
-        $attr['autocomplete'] = 'off';
         $builder
             ->add('title', 'text', array(
                 'label' => 'form.title',
                 'required' => true
-            ));
+            ))
 
-        $builder->add(
-            'isTask',
-            'checkbox',
-            array(
+            ->add('isTask', 'checkbox', [
                 'label' => 'form.task',
                 'required' => false
-            )
-        );
+            ])
 
-        $builder->add(
-            'isAllDay',
-            'checkbox',
-            array(
+            ->add('isAllDay', 'checkbox', [
                 'label' => 'form.all_day',
                 'required' => false
-            )
-        );
+            ])
 
-        $builder->add(
-                'start',
-                'datepicker',
-                array(
-                    'label' => 'form.start',
-                    'required'  => true,
-                    'widget'    => 'single_text',
-                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
-                    'attr'      => $attr,
-                    'autoclose' => true,
-                    'constraints' => new Assert\Date()
-                    )
-                );
-        if (!$this->editMode) {
-            $builder->add(
-                'startHours',
-                'time',
-                array(
-                    'label' => 'form.start_hours',
-                    'data' => $now->getTimestamp(),
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        } else {
-            $builder->add(
-                'startHours',
-                'time',
-                array(
-                    'label' => 'form.start_hours',
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        }
+            ->add('start', 'text', [
+                'label' => 'form.start'
+            ])
 
-        $builder->add(
-            'end',
-            'datepicker',
-            array(
-                'label' => 'form.end',
-                'required'  => true,
-                'widget'    => 'single_text',
-                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
-                'attr'      => $attr,
-                'autoclose' => true,
-                'constraints' => new Assert\Date()
-            )
-        );
+            ->add('end', 'text', [
+                'label' => 'form.end'
+            ])
 
-        if (!$this->editMode) {
-            $builder->add(
-                'endHours',
-                'time',
-                array(
-                    'label' => 'form.end_hours',
-                    'data' => $now->getTimestamp(),
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        } else {
-            $builder->add(
-                'endHours',
-                'time',
-                array(
-                    'label' => 'form.end_hours',
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        }
-
-        $builder->add(
-            'description',
-            'tinymce',
-            array(
+            ->add('description', 'tinymce', [
                 'label' => 'form.description'
-            )
-        );
+            ])
 
-        $builder->add(
-            'priority',
-            'choice',
-            array(
+            ->add('priority', 'choice', [
                 'label' => 'form.priority',
-                'choices' => array(
+                'choices' => [
                     '#FF0000' => 'high',
                     '#01A9DB' => 'medium',
                     '#848484' => 'low'
-                )
-            )
-        );
-
-        $builder->add(
-            'recurring',
-            'choice',
-            array(
-                'label' => 'form.recurring',
-                'choices' => $recurring
-            )
-        );
+                ]
+            ]);
     }
 
     public function getName()

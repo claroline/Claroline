@@ -206,14 +206,16 @@
         // Select the first id of the json workspacePermissions
         for(var key in workspacePermissions) break;
         if (workspacePermissions[key] && !isFormShown) {
-            var dateVal = moment(date).format(t('date_agenda_display_format'));
+            var dateStart = moment(date).format('DD/MM/YYYY HH:mm'),
+                dateEnd = moment(date).add(1, 'hours').format('DD/MM/YYYY HH:mm');
 
             var postRenderAddEventAction = function (html) {
-                $('#agenda_form_start').val(dateVal);
-                $('#agenda_form_end').val(dateVal);
+                $('#agenda_form_start').val(dateStart);
+                $('#agenda_form_end').val(dateEnd);
+                initializeDateTimePicker();
             };
 
-            window.Claroline.Modal.displayForm(
+            Claroline.Modal.displayForm(
                 addUrl,
                 addItemsToCalendar,
                 postRenderAddEventAction,
@@ -313,41 +315,42 @@
 
     function createPopover(event, $element)
     {
-        // In FullCalendar 2.3.1, the end date is null when the start date is the same
+        //In FullCalendar 2.3.1, the end date is null when the start date is the same
         if (event.end === null) {
             event.end = event.start;
         }
-        convertDateTimeToString();
+
+        event.start.string = convertDateTimeToString(event.start, event.isAllDay, false);
+        event.end.string = convertDateTimeToString(event.end, event.isAllDay, true);
+
         $element.popover({
             title: event.title,
-            content: Twig.render(EventContent, {'event': event}),
+            content: Twig.render(EventContent, {event: event}),
             html: true,
             container: 'body',
             placement: 'top'
         });
     }
 
-    function convertDateTimeToString()
+    function convertDateTimeToString(value, isAllDay, isEndDate)
     {
-        Twig.setFilter('convertDateTimeToString', function (value, isAllDay, isEndDate) {
-            isEndDate = typeof isEndDate !== 'undefined' ? isEndDate : false;
-            if (isAllDay) {
-                // We have to subtract 1 day for the all day events because it ends on the next day at midnight. So for a better user's experience, we subtract 1 day for the end date.
-                if (isEndDate) {
-                    return moment(value).subtract(1, 'day').format('DD/MM/YYYY');
-                } else {
-                    return moment(value).format('DD/MM/YYYY');
-                }
+        isEndDate = typeof isEndDate !== 'undefined' ? isEndDate : false;
+        if (isAllDay) {
+            // We have to subtract 1 day for the all day events because it ends on the next day at midnight.
+            if (isEndDate) {
+                return moment(value).subtract(1, 'day').format('DD/MM/YYYY');
             } else {
-                return moment(value).format('DD/MM/YYYY HH:mm');
+                return moment(value).format('DD/MM/YYYY');
             }
-        });
+        } else {
+            return moment(value).format('DD/MM/YYYY HH:mm');
+        }
     }
 
     function markTaskAsToDo(event, jsEvent, $element)
     {
         $.ajax({
-            url: window.Routing.generate('claro_agenda_set_task_as_not_done', {'event': event.id}),
+            url: window.Routing.generate('claro_agenda_set_task_as_not_done', {event: event.id}),
             type: 'GET',
             success: function() {
                 $(jsEvent.target)
@@ -356,6 +359,7 @@
                     .next().css('text-decoration', 'none');
                 $element.popover('destroy');
                 event.isTaskDone = false;
+
                 createPopover(event, $element);
             }
         })
@@ -381,12 +385,13 @@
     function showEditForm(eventId)
     {
         if (!isFormShown) {
-            window.Claroline.Modal.displayForm(
+            Claroline.Modal.displayForm(
                 Routing.generate('claro_agenda_update_event_form', {event: eventId}),
                 updateCalendarItemCallback,
                 function () {
+                    initializeDateTimePicker();
                     $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
-                    $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+                    $('#agenda_form_isAllDay').is(':checked') ? hideFormHours(): showFormHours();
                 },
                 'form-event'
             );
@@ -395,32 +400,73 @@
         }
     }
 
-    function hideFormhours()
+    function initializeDateTimePicker(showOnlyDate)
     {
-        $('#agenda_form_endHours').parent().parent().hide();
-        $('#agenda_form_startHours').parent().parent().hide();
+        showOnlyDate = typeof showOnlyDate == 'undefined' ? 'DD/MM/YYYY HH:mm' : 'DD/MM/YYYY';
+
+        var dateTimePickerOptions = {
+            format: showOnlyDate,
+            useCurrent: false,
+            locale: t('picker.locale'),
+            icons: {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-dot-circle-o',
+                clear: 'fa fa-trash',
+                close: 'fa fa-times'
+            },
+            stepping: 5,
+            showTodayButton: true,
+            showClose: true,
+            tooltips: {
+                today: t('picker.go_to_today'),
+                close: t('picker.close'),
+                selectMonth: t('picker.select_month'),
+                prevMonth: t('picker.prev_month'),
+                nextMonth: t('picker.next_month'),
+                selectYear: t('picker.select_year'),
+                prevYear: t('picker.prev_year'),
+                nextYear: t('picker.next_year'),
+                selectDecade: t('picker.select_decade'),
+                prevDecade: t('picker.prev_decade'),
+                nextDecade: t('picker.next_decade'),
+                prevCentury: t('picker.prev_century'),
+                nextCentury: t('picker.next_century')
+            }
+        };
+
+        $('#agenda_form_start, #agenda_form_end').datetimepicker(dateTimePickerOptions);
     }
 
-    function showFormhours()
+    function hideFormHours()
     {
-        $('#agenda_form_endHours').parent().parent().show();
-        if (!$('#agenda_form_isTask').is(':checked')) {
-            $('#agenda_form_startHours').parent().parent().show();
-        }
+        updateDateTimePicker(true);
+    }
+
+    function showFormHours()
+    {
+        updateDateTimePicker();
+    }
+
+    function updateDateTimePicker(showOnlyDate)
+    {
+        $('#agenda_form_start').data('DateTimePicker').destroy();
+        $('#agenda_form_end').data('DateTimePicker').destroy();
+        initializeDateTimePicker(showOnlyDate);
     }
 
     function hideStartDate()
     {
         $('#agenda_form_start').parent().parent().hide();
-        $('#agenda_form_startHours').parent().parent().hide();
     }
 
     function showStartDate()
     {
         $('#agenda_form_start').parent().parent().show();
-        if (!$('#agenda_form_isAllDay').is(':checked')) {
-            $('#agenda_form_startHours').parent().parent().show();
-        }
     }
 
     function getQueryVariable(variable)
@@ -486,7 +532,7 @@
             })
             // Hide the hours if the checkbox allDay is checked
             .on('click', '#agenda_form_isAllDay', function() {
-                $('#agenda_form_isAllDay').is(':checked') ? hideFormhours(): showFormhours();
+                $('#agenda_form_isAllDay').is(':checked') ? hideFormHours(): showFormHours();
             })
             // Hide the start date if the task is checked.
             .on('click', '#agenda_form_isTask', function() {
