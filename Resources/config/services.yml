@@ -1,18 +1,4 @@
 services:
-    ujm.listener.exercise_listener:
-        class: UJM\ExoBundle\Listener\ExerciseListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_form_ujm_exercise, method: onCreateForm }
-            - { name: kernel.event_listener, event: create_ujm_exercise, method: onCreate }
-            - { name: kernel.event_listener, event: open_ujm_exercise, method: onOpen }
-#      - { name: kernel.event_listener, event: export_ujm_exercise, method: onExport }
-            - { name: kernel.event_listener, event: delete_ujm_exercise, method: onDelete }
-            - { name: kernel.event_listener, event: copy_ujm_exercise, method: onCopy }
-#      - { name: kernel.event_listener, event: plugin_options_ujmexo, method: onAdministrate }
-            - { name: kernel.event_listener, event: open_tool_desktop_ujm_questions, method: onDisplayDesktop}
-
     ujm.listener.exercise.display_log_listener:
             class: UJM\ExoBundle\Listener\Log\DisplayLogListener
             calls:

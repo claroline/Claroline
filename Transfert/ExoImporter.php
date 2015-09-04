@@ -185,7 +185,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise->setDateCorrection(new \Datetime());
         $newExercise->setCorrectionMode('1');
         $newExercise->setMarkMode('1');
-        $newExercise->setPublished(FALSE);
         $this->om->persist($newExercise);
         $this->om->flush();
 

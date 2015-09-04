@@ -25,7 +25,7 @@
     </div>
 
     <div class="panel-body">
-        <a href="{{ path('ujm_exercise_open', { 'exerciseId': exoID }) }}" class="btn btn-primary">
+        <a href="{{ path('ujm_exercise_open', { 'id': exoID }) }}" class="btn btn-primary">
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
         {% if retryButton and nbUserPaper == 0 and nbQuestions > 0 %}
@@ -42,11 +42,12 @@
                class="btn btn-primary">
                 {{ 'export_csv_results' | trans({}, 'ujm_exo') }}
             </a>
-            {% if _resource.published == FALSE %}
-                <a href="{{ path('ujm_exercise_delete_all_paper', { 'id': exoID }) }}"
-                   class="btn btn-primary">
-                    <i class="fa fa-trash-o"></i> {{ 'delete_papers' | trans({}, 'ujm_exo') }}
-                </a>
+            {% if not _resource.getResourceNode().isPublished() and not _resource.wasPublishedOnce() %}
+                <form method="POST" action="{{ path('ujm_exercise_delete_papers', { 'id': exoID }) }}" style="display: inline">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-trash-o"></i> {{ 'delete_papers' | trans({}, 'ujm_exo') }}
+                    </button>
+                </form>
             {% endif %}
         {% endif %}
 

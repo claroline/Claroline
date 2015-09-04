@@ -25,7 +25,7 @@
         <h3 class="panel-title">{{ 'correction' | trans({}, 'ujm_exo') }} </h3>
     </div>
     <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exoId }) }}">
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'id':  exoId }) }}">
             <i class="fa fa-arrow-left"></i> {{ 'home_exercise' | trans({}, 'ujm_exo') }}
         </a>
         <a href="{{ path('ujm_paper_list', { 'exoID': exoId }) }}" class="btn btn-primary">
