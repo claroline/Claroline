@@ -31,6 +31,9 @@ class ExerciseController
 
     /**
      * @EXT\Route("/exercises/{id}")
+     *
+     * @param Exercise $exercise
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function exportAction(Exercise $exercise)
     {
