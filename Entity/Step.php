@@ -316,8 +316,7 @@ class Step implements \JsonSerializable
     {
         if (!empty($this->activity)) {
             return $this->activity->getResourceNode()->getName();
-        }
-        else {
+        } else {
             return '';
         }
     }
@@ -330,8 +329,7 @@ class Step implements \JsonSerializable
     {
         if (!empty($this->activity) && ' ' != $this->activity->getDescription()) {
             return $this->activity->getDescription();
-        }
-        else {
+        } else {
             return '';
         }
     }
@@ -407,10 +405,14 @@ class Step implements \JsonSerializable
     public function getPropagatedResources($lvl = 0)
     {
         $propagated = array ();
+
+        /** @var \Innova\PathBundle\Entity\Step $child */
         foreach ($this->children as $child) {
             if ($child->getLvl() > $lvl) {
                 // Loop over child inherited resources and grab inherited from `$lvl`
                 $inheritedResources = $child->getInheritedResources();
+
+                /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
                 foreach ($inheritedResources as $inherited) {
                     if ($inherited->getLvl() == $lvl) {
                         // Resource is inherited from the searched level => get it
@@ -514,6 +516,7 @@ class Step implements \JsonSerializable
                 // Get propagated resources of the current step
                 $propagatedResources = $this->getPropagatedResources($this->lvl);
 
+
                 foreach ($secondaryResources as $secondaryResource) {
                     $jsonArray['resources'][] = array(
                         'id'                  => $secondaryResource->getId(),
@@ -535,8 +538,12 @@ class Step implements \JsonSerializable
 
         // Excluded resources
         $parentResources = $this->getParentsSecondaryResources();
+
+        /** @var \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource */
         foreach ($parentResources as $resource) {
             $exist = false;
+
+            /** @var \Innova\PathBundle\Entity\InheritedResource $inherited */
             foreach ($this->inheritedResources as $inherited) {
                 if ($inherited->getResource()->getId() == $resource->getId()) {
                     $exist = true;
@@ -552,6 +559,20 @@ class Step implements \JsonSerializable
 
         // Get step children
         if (!empty($this->children)) {
+            // Reorder children
+            // The property OrderBy only works when we grab data from the DB,
+            // so if we have modified the Path after it, children may be not ordered
+            $iterator = $this->children->getIterator();
+
+            $iterator->uasort(function ($a, $b) {
+                /**
+                 * @var \Innova\PathBundle\Entity\Step $a
+                 * @var \Innova\PathBundle\Entity\Step $b
+                 */
+                return ($a->getOrder() < $b->getOrder()) ? -1 : 1;
+            });
+            $this->children = new ArrayCollection(iterator_to_array($iterator));
+
             $jsonArray['children'] = array_values($this->children->toArray());
         }
 
