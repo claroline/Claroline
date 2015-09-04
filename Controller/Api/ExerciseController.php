@@ -31,7 +31,7 @@ class ExerciseController
     }
 
     /**
-     * @EXT\Route("/exercises/{id}", service="ujm.controller.api_controller")
+     * @EXT\Route("/exercises/{id}")
      */
     public function exerciseAction(Exercise $exercise)
     {

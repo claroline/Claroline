@@ -28,8 +28,9 @@ class SequenceController extends Controller {
 
         $id = $exercise->getId();
         // get JSON from Controller
-        $response = $this->forward('ujm.controller.api_controller:exerciseAction', array('id' => $id));
-        return $this->render('UJMExoBundle:Sequence:play.html.twig', array('_resource' => $exercise, 'data' => $response));
+        $response = $this->forward('UJMExoBundle:Api\Exercise:exercise', array('id' => $id));
+        $data = $response->getContent();
+        return $this->render('UJMExoBundle:Sequence:play.html.twig', array('_resource' => $exercise, 'data' => $data));
     }
 
     /**
