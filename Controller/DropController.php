@@ -491,6 +491,8 @@ class DropController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
@@ -542,10 +544,10 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $adminInnova = false;
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+        $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
+    /*    if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
-        }
+        }*/
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -968,6 +970,8 @@ class DropController extends DropzoneBaseController
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
+        $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
+        
         // Récupération du Workspace
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
@@ -1030,10 +1034,10 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $adminInnova = false;
+        $adminInnova = $dropzoneVoter->checkEditRight($dropzone);/*
         if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
-        }
+        }*/
 
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),

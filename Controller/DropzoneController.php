@@ -107,7 +107,7 @@ class DropzoneController extends DropzoneBaseController
         }
 
         $adminInnova = false;
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+        if ($dropzoneVoter->checkEditRight($dropzone)
         && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
         }
@@ -246,10 +246,10 @@ class DropzoneController extends DropzoneBaseController
             }
         }
 
-        $adminInnova = false;
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
+        $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
+    /*    if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
-        }
+        }*/
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
