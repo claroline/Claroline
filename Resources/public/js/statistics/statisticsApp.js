@@ -1,3 +1,3 @@
 'use strict';
 
-var statisticsApp = angular.module('statisticsApp', []);
+var statisticsApp = angular.module('statisticsApp', ['angular-toArrayFilter']);

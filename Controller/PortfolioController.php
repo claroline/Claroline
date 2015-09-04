@@ -73,6 +73,12 @@ class PortfolioController extends Controller
         if ($request->isXmlHttpRequest()) {
             $returnData = new Response($this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $returnData));
         }
+        else {
+            $analyticsViewsForm = $this->get('form.factory')->create($this->getAnalyticsManager()->getAnalyticsViewsForm(), [
+                'range' => $this->getAnalyticsManager()->getDefaultRangeForViews()
+            ]);
+            $returnData['analyticsViewsForm'] = $analyticsViewsForm->createView();
+        }
 
         return $returnData;
     }
