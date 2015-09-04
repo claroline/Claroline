@@ -45,7 +45,23 @@ class AdminTagController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
-    public function adminTagsManagementAction(
+    public function adminTagsManagementAction()
+    {
+
+        return array();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/tags/display/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     name="claro_tag_admin_tags_display",
+     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="name","order"="ASC"},
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminTagsDisplayAction(
         $search = '',
         $orderedBy = 'name',
         $order = 'ASC',
@@ -60,7 +76,7 @@ class AdminTagController extends Controller
             $orderedBy,
             $order,
             true,
-            $page, 
+            $page,
             $max
         );
         $tagsList = array();
@@ -106,6 +122,7 @@ class AdminTagController extends Controller
 
         return array(
             'pager' => $tags,
+            'search' => $search,
             'datas' => $datas,
             'orderedBy' => $orderedBy,
             'order' => $order,

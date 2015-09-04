@@ -10,41 +10,57 @@
 (function () {
     'use strict';
 
-    $('#search-tag-btn').on('click', function () {
-        var search = $('#search-tag-input').val();
-        var orderedBy = $(this).data('ordered-by');
-        var order = $(this).data('order');
-        var max = $(this).data('max');
+//    $('#search-tag-btn').on('click', function () {
+//        var search = $('#search-tag-input').val();
+//        var orderedBy = $(this).data('ordered-by');
+//        var order = $(this).data('order');
+//        var max = $(this).data('max');
+//        var route = Routing.generate(
+//            'claro_tag_admin_tags_management',
+//            {
+//                'orderedBy': orderedBy,
+//                'order': order,
+//                'max': max,
+//                'search': search
+//            }
+//        );
+//
+//        window.location.href = route;
+//    });
+
+//    $('#search-tag-input').keypress(function(e) {
+//        if (e.keyCode === 13) {
+//            var search = $(this).val();
+//            var orderedBy = $(this).data('ordered-by');
+//            var order = $(this).data('order');
+//            var max = $(this).data('max');
+//            var route = Routing.generate(
+//                'claro_tag_admin_tags_management',
+//                {
+//                    'orderedBy': orderedBy,
+//                    'order': order,
+//                    'max': max,
+//                    'search': search
+//                }
+//            );
+//
+//            window.location.href = route;
+//        }
+//    });
+    
+    $('#search-tag-input').keyup(function(e) {
+        var search = $(this).val();
+        
         var route = Routing.generate(
-            'claro_tag_admin_tags_management',
-            {
-                'orderedBy': orderedBy,
-                'order': order,
-                'max': max,
-                'search': search
-            }
+            'claro_tag_admin_tags_display',
+            {'search': search}
         );
-
-        window.location.href = route;
-    });
-
-    $('#search-tag-input').keypress(function(e) {
-        if (e.keyCode === 13) {
-            var search = $(this).val();
-            var orderedBy = $(this).data('ordered-by');
-            var order = $(this).data('order');
-            var max = $(this).data('max');
-            var route = Routing.generate(
-                'claro_tag_admin_tags_management',
-                {
-                    'orderedBy': orderedBy,
-                    'order': order,
-                    'max': max,
-                    'search': search
-                }
-            );
-
-            window.location.href = route;
-        }
+        $.ajax({
+            url: route,
+            type: 'GET',
+            success: function (datas) {
+                $('#tags-display-box').html(datas);
+            }
+        });
     });
 })();
