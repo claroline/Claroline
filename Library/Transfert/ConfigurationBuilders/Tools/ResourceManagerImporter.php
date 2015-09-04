@@ -324,8 +324,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $children = $resourceNode->getChildren();
 
             foreach ($children as $child) {
-                $child = $this->resourceManager->getRealTarget($child, false);
-
                 if ($child && $child->getResourceType()->getName() !== 'directory') {
                     $data['items'][] = $this->getResourceElement($child, $workspace, $_files);
                 }
@@ -797,6 +795,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $setParentNull = false
     )
     {
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
         $data = array();
         $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
 
@@ -808,7 +808,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             );
         }
 
-        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        
         if ($setParentNull) $parentId = null;
 
         $resElement = array('item' => array(
