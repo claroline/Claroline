@@ -40,7 +40,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="nb_question", type="integer")
      */
-    private $nbQuestion;
+    private $nbQuestion = 0;
 
     /**
      * @var boolean $keepSameQuestion
@@ -61,14 +61,14 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="duration", type="integer")
      */
-    private $duration;
+    private $duration = 0;
 
     /**
      * @var integer $nbQuestionPage
      *
      * @ORM\Column(name="nb_question_page", type="integer")
      */
-    private $nbQuestionPage;
+    private $nbQuestionPage = 0;
 
     /**
      * @var boolean $doprint
@@ -82,14 +82,16 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="max_attempts", type="integer")
      */
-    private $maxAttempts;
+    private $maxAttempts = 0;
 
     /**
+     * @todo mode should be at least a class constant
+     *
      * @var string $correctionMode
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
-    private $correctionMode;
+    private $correctionMode = '1';
 
     /**
      * @var \Datetime $dateCorrection
@@ -99,11 +101,13 @@ class Exercise extends AbstractResource
     private $dateCorrection;
 
     /**
+     * @todo mode should be at least a class constant
+     *
      * @var string $markMode
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode;
+    private $markMode = '1';
 
     /**
      * @var \Datetime $startDate
@@ -154,15 +158,25 @@ class Exercise extends AbstractResource
     private $groupes;
 
     /**
-     * @var boolean $published
+     * Flag indicating whether the exercise has been published at least
+     * one time. An exercise that has never been published has all its
+     * existing papers deleted at the first publication.
+     *
+     * @var boolean $waPublishedOnce
      *
      * @ORM\Column(name="published", type="boolean")
      */
-    private $published = false;
+    private $wasPublishedOnce = false;
 
     public function __construct()
     {
-        $this->groupes = new ArrayCollection();
+        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
+
+        // todo: remove these default values (coming from listener#createForm)
+        $this->dateCreate = new \DateTime();
+        $this->startDate = new \DateTime();
+        $this->endDate = new \DateTime();
+        $this->dateCorrection = new \DateTime();
     }
 
     /**
@@ -549,20 +563,18 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set published
-     *
-     * @param boolean $published
+     * @return boolean
      */
-    public function setPublished($published)
+    public function wasPublishedOnce()
     {
-        $this->published = $published;
+        return $this->wasPublishedOnce;
     }
 
     /**
-     * Get published
+     * @param boolean $wasPublishedOnce
      */
-    public function getpublished()
+    public function setPublishedOnce($wasPublishedOnce)
     {
-        return $this->published;
+        $this->wasPublishedOnce = $wasPublishedOnce;
     }
 }

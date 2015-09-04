@@ -60,17 +60,7 @@ class InteractionRepositoryTest extends TransactionalTestCase
     {
         $exercise = new Exercise();
         $exercise->setTitle($title);
-        $exercise->setNbQuestion(0);
-        $exercise->setNbQuestionPage(0);
-        $exercise->setDateCreate(new \DateTime());
-        $exercise->setStartDate(new \DateTime());
-        $exercise->setEndDate(new \DateTime());
         $exercise->setUseDateEnd(false);
-        $exercise->setDuration(0);
-        $exercise->setMaxAttempts(0);
-        $exercise->setCorrectionMode(0);
-        $exercise->setMarkMode(0);
-        $exercise->setPublished(true);
 
         for ($i = 0, $max = count($questions); $i < $max; ++$i) {
             $link = new ExerciseQuestion($exercise, $questions[$i]);

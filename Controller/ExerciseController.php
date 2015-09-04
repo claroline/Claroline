@@ -2,22 +2,20 @@
 
 namespace UJM\ExoBundle\Controller;
 
+use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Pagerfanta;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
-use Claroline\CoreBundle\Library\Resource\ResourceCollection;
-
 use UJM\ExoBundle\Form\ExerciseType;
 use UJM\ExoBundle\Form\ExerciseHandler;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Entity\Response;
-
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * Exercise controller.
@@ -63,7 +61,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
         }
     }
 
@@ -115,179 +113,103 @@ class ExerciseController extends Controller
     }
 
     /**
-     * Finds and displays a Exercise entity if the User is enrolled.
+     * Displays an exercise.
      *
-     * @access public
+     * @EXT\Route("/{id}", name="ujm_exercise_open")
      *
-     * @param integer $exerciseId id of exercise
-     *
+     * @param Exercise $exercise
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function openAction($exerciseId)
+    public function openAction(Exercise $exercise)
     {
-        $exerciseSer = $this->container->get('ujm.exo_exercise');
-
-        $uid = $exerciseSer->getUserId();
-
-        $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         $this->checkAccess($exercise);
 
-        $published = 1;
-        $allowToCompose = 0;
-        $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
+        $em = $this->getDoctrine()->getManager();
+        $exerciseSer = $this->container->get('ujm.exo_exercise');
 
-        $workspace = $exercise->getResourceNode()->getWorkspace();
+        $userId = $exerciseSer->getUserId();
+        $exerciseId = $exercise->getId();
+        $isExoAdmin = $exerciseSer->isExerciseAdmin($exercise);
+        $isAllowedToOpen = $exerciseSer->allowToOpen($exercise);
+        $isAllowedToCompose = $isExoAdmin
+            || $isAllowedToOpen
+            && $exerciseSer->controlDate($isExoAdmin, $exercise)
+            && $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
 
-        if (!$exercise) {
-            throw $this->createNotFoundException('Unable to find Exercise entity.');
-        }
-
-        if ($exerciseSer->allowToOpen($exercise) && ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-            && ($exerciseSer->controlMaxAttemps($exercise, $uid, $exoAdmin) === true)
-            && ( ($exercise->getPublished() === true) || ($exoAdmin === true) )
-        ) {
-            $allowToCompose = 1;
-        }
-
-        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
-
-        if ($exerciseSer->allowToOpen($exercise) && $uid != 'anonymous') {
-            $nbUserPaper = $exerciseSer->getNbPaper($uid,
-                                                    $exercise->getId());
+        if ($isAllowedToOpen && $userId !== 'anonymous') {
+            $nbUserPaper = $exerciseSer->getNbPaper($userId, $exerciseId);
         } else {
             $nbUserPaper = 0;
         }
 
-        if ($exercise->getPublished() != 1) {
-            $published = 0;
-        }
-
-        $nbPapers = $em->getRepository('UJMExoBundle:Paper')
-                       ->countPapers($exerciseId);
+        $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->getCountQuestion($exerciseId);
+        $nbPapers = $em->getRepository('UJMExoBundle:Paper')->countPapers($exerciseId);
 
         return $this->render(
             'UJMExoBundle:Exercise:show.html.twig',
-            array(
-                'workspace'      => $workspace,
-                'entity'         => $exercise,
-                'allowToCompose' => $allowToCompose,
-                'userId'         => $uid,
-                'nbQuestion'     => $nbQuestions['nbq'],
-                'nbUserPaper'    => $nbUserPaper,
-                'published'      => $published,
-                'nbPapers'       => $nbPapers,
-                '_resource'      => $exercise
-            )
+            [
+                'exercise'          => $exercise,
+                'allowedToCompose'  => $isAllowedToCompose,
+                'nbQuestion'        => $nbQuestions['nbq'],
+                'nbUserPaper'       => $nbUserPaper,
+                'nbPapers'          => $nbPapers,
+            ]
         );
     }
 
     /**
-     * Publish an exercise
+     * Publishes an exercise.
      *
-     * @access public
+     * @EXT\Route("/{id}/publish", name="ujm_exercise_publish")
+     * @EXT\Method("POST")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Exercise $exercise
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function publishAction()
+    public function publishAction(Exercise $exercise)
     {
-        $request = $this->container->get('request');
+        $this->checkIsAllowed('ADMINISTRATE', $exercise);
+        $this->get('ujm.exo.exercise_manager')->publish($exercise);
 
-        if ($request->isXmlHttpRequest()) {
-            $exerciseid = $request->request->get('exerciseId');
-
-            $em = $this->getDoctrine()->getManager();
-            $exercise = $em->getRepository('UJMExoBundle:Exercise')
-                           ->find($exerciseid);
-            $this->checkAccess($exercise);
-
-            $exoAdmin = $this->container->get('ujm.exo_exercise')
-                                        ->isExerciseAdmin($exercise);
-
-            if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE)) {
-
-                $this->deletePapers($exercise->getId(), $em);
-
-                $exercise->setPublished(TRUE);
-                $em->persist($exercise);
-                $em->flush();
-
-                $nbPapers = $em->getRepository('UJMExoBundle:Paper')
-                               ->countPapers($exercise->getId());
-
-            }
-        }
-
-        return new \Symfony\Component\HttpFoundation\Response($nbPapers);
+        return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
     }
 
     /**
-     * Unpublish an exercise
+     * Unpublishes an exercise.
      *
-     * @access public
+     * @EXT\Route("/{id}/unpublish", name="ujm_exercise_unpublish")
+     * @EXT\Method("POST")
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Exercise $exercise
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function unpublishAction()
+    public function unpublishAction(Exercise $exercise)
     {
-        $request = $this->container->get('request');
+        $this->checkIsAllowed('ADMINISTRATE', $exercise);
+        $this->get('ujm.exo.exercise_manager')->unpublish($exercise);
 
-        if ($request->isXmlHttpRequest()) {
-            $exerciseid = $request->request->get('exerciseId');
-
-            $em = $this->getDoctrine()->getManager();
-            $exercise = $em->getRepository('UJMExoBundle:Exercise')
-                           ->find($exerciseid);
-            $this->checkAccess($exercise);
-
-            $exoAdmin = $this->container->get('ujm.exo_exercise')
-                                        ->isExerciseAdmin($exercise);
-
-            $nbPapers = $em->getRepository('UJMExoBundle:Paper')
-                           ->countPapers($exercise->getId());
-
-            if ( ($exoAdmin === true) && ($nbPapers == 0) ) {
-                $exercise->setPublished(FALSE);
-                $em->persist($exercise);
-                $em->flush();
-            }
-        }
-
-        return new \Symfony\Component\HttpFoundation\Response();
+        return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
     }
 
     /**
-     * Delete all papers of this exercise
+     * Deletes all the papers associated with an exercise.
      *
-     * @access public
+     * @EXT\Route("/{id}/papers/delete", name="ujm_exercise_delete_papers")
+     * @EXT\Method("POST")
      *
-     * @param integer $id id of exercise
-     *
+     * @param Exercise $exercise
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAllPapersAction($id)
+    public function deletePapersAction(Exercise $exercise)
     {
-        $em = $this->getDoctrine()->getManager();
+        $this->checkIsAllowed('ADMINISTRATE', $exercise);
+        $this->get('ujm.exo.exercise_manager')->deletePapers($exercise);
 
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')
-                       ->find($id);
-
-        $this->checkAccess($exercise);
-
-        $exoAdmin = $this->container->get('ujm.exo_exercise')
-                                    ->isExerciseAdmin($exercise);
-
-        if ( ($exoAdmin === true) && ($exercise->getPublished() == FALSE) ) {
-            $this->deletePapers($id, $em);
-        }
-
-        return $this->forward('UJMExoBundle:Paper:index',
-                                  array(
-                                      'exoID' => $id,
-                                      'page'  => 1,
-                                      'all'   => 0
-                                       )
-                                 );
+        return $this->forward('UJMExoBundle:Paper:index', [
+            'exoID' => $exercise->getId(),
+            'page'  => 1,
+            'all'   => 0
+        ]);
     }
 
     /**
@@ -414,7 +336,7 @@ class ExerciseController extends Controller
             }
 
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
         }
     }
 
@@ -585,7 +507,7 @@ class ExerciseController extends Controller
 
             return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exoID)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exoID]));
         }
     }
 
@@ -708,7 +630,7 @@ class ExerciseController extends Controller
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         if (!$exerciseSer->allowToOpen($exercise)) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $id)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
         }
 
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
@@ -717,7 +639,7 @@ class ExerciseController extends Controller
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
         if ( ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-             && ( ($exercise->getPublished() === true) || ($exoAdmin === true) )
+             && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin === true) )
            ) {
             $session = $this->getRequest()->getSession();
 
@@ -1086,7 +1008,7 @@ class ExerciseController extends Controller
         $em->persist($paper);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
+        return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $paper->getExercise()->getId()]));
     }
 
     /**
@@ -1147,7 +1069,7 @@ class ExerciseController extends Controller
             return $this->render('UJMExoBundle:Exercise:docimology.html.twig', $parameters);
         } else {
 
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $exerciseId)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exerciseId]));
         }
     }
 
@@ -1165,6 +1087,15 @@ class ExerciseController extends Controller
         $collection = new ResourceCollection(array($exo->getResourceNode()));
 
         if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
+    }
+
+    private function checkIsAllowed($permission, Exercise $exercise)
+    {
+        $collection = new ResourceCollection(array($exercise->getResourceNode()));
+
+        if (!$this->get('security.authorization_checker')->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
@@ -1251,39 +1182,5 @@ class ExerciseController extends Controller
         $pagination[1] = $pager;
 
         return $pagination;
-    }
-
-    /**
-     * To delete all papers (Allow if the exercise is not published)
-     *
-     * @access private
-     *
-     * @param integer $id id of exercise
-     * @param Doctrine Entity Manager $em
-     *
-     */
-    private function deletePapers($id, $em) {
-
-        $papers = $em->getRepository('UJMExoBundle:Paper')
-                     ->findBy(array('exercise' => $id));
-
-        foreach ($papers as $paper) {
-            $lhps = $em->getRepository('UJMExoBundle:LinkHintPaper')
-                       ->findBy(array('paper' => $paper->getId()));
-
-            foreach ($lhps as $lph) {
-                $em->remove($lph);
-            }
-
-            $responses = $em->getRepository('UJMExoBundle:Response')
-                            ->findBy(array('paper' => $paper->getId()));
-
-            foreach ($responses as $response) {
-                $em->remove($response);
-            }
-
-            $em->remove($paper);
-        }
-        $em->flush();
     }
 }

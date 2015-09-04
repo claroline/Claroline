@@ -23,7 +23,7 @@
         <h3 class="panel-title">{{ 'my_questions' | trans({}, 'ujm_exo') }}</h3>
     </div>
     <div class="panel-body">
-        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'exerciseId':  exerciseID }) }}">
+        <a class="btn btn-primary" href="{{ path('ujm_exercise_open', { 'id':  exerciseID }) }}">
             <i class="fa fa-arrow-left"></i> {{ 'back' | trans({}, 'ujm_exo') }}
         </a>
         <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID':  exerciseID, 'pageGoNow': pagerQuestion.getNbPages,

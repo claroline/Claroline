@@ -10,6 +10,7 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Paper controller.
@@ -94,7 +95,7 @@ class PaperController extends Controller
 
         if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
             && ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true)
-            && ( ($exercise->getPublished() === true) || ($exoAdmin == 1) )
+            && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin == 1) )
         ) {
             $retryButton = true;
         }
@@ -172,7 +173,7 @@ class PaperController extends Controller
         $display = $this->ctrlDisplayPaper($paper);
 
         if ((($this->checkAccess($paper->getExercise())) && ($paper->getEnd() == null)) || ($display == 'none')) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('exerciseId' => $paper->getExercise()->getId())));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $paper->getExercise()->getId()]));
         }
 
         $infosPaper = $paperSer->getInfosPaper($paper);
@@ -395,7 +396,7 @@ class PaperController extends Controller
 
         } else {
 
-            throw new \Symfony\Component\Security\Core\Exception\AccessDeniedException();
+            throw new AccessDeniedException();
         }
     }
 
@@ -405,8 +406,6 @@ class PaperController extends Controller
      * @access private
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exo
-     *
-     * @return exception
      */
     private function checkAccess($exo)
     {

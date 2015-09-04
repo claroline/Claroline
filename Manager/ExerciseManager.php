@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Interaction;
 
 /**
  * @DI\Service("ujm.exo.exercise_manager")
@@ -13,8 +12,9 @@ use UJM\ExoBundle\Entity\Interaction;
 class ExerciseManager
 {
     private $om;
-    private $interactionRepo;
-    private $interactionQcmRepo;
+    private $paperRepo;
+    private $linkHintPaperRepo;
+    private $responseRepo;
 
     /**
      * @DI\InjectParams({
@@ -26,125 +26,82 @@ class ExerciseManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->interactionRepo = $om->getRepository('UJMExoBundle:Interaction');
-        $this->interactionQcmRepo = $om->getRepository('UJMExoBundle:InteractionQCM');
+        $this->paperRepo = $this->om->getRepository('UJMExoBundle:Paper');
+        $this->linkHintPaperRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
+        $this->responseRepo = $this->om->getRepository('UJMExoBundle:Response');
     }
 
     /**
-     * @todo add user parameter...
+     * Publishes an exercise.
      *
      * @param Exercise $exercise
-     * @return array
+     * @throws \LogicException if the exercise is already published
      */
-    public function exportExercise(Exercise $exercise)
+    public function publish(Exercise $exercise)
     {
-        return [
-            'id' => $exercise->getId(),
-            'meta' => $this->getMetadata($exercise),
-            'steps' => $this->getSteps($exercise)
-        ];
+        if ($exercise->getResourceNode()->isPublished()) {
+            throw new \LogicException("Exercise {$exercise->getId()} is already published");
+        }
+
+        if (!$exercise->wasPublishedOnce()) {
+            $this->deletePapers($exercise);
+            $exercise->setPublishedOnce(true);
+        }
+
+        $exercise->getResourceNode()->setPublished(true);
+        $this->om->flush();
     }
 
     /**
-     * @todo add allowedToCompose: isPublished && (isAdmin || startDate/endDate)
-     * @todo what about duration / nbQuestionPage ? seem unused...
-     * @todo add useEndDate ?
+     * Unpublishes an exercise.
      *
      * @param Exercise $exercise
-     * @return array
+     * @throws \LogicException if the exercise is already unpublished
      */
-    private function getMetadata(Exercise $exercise)
+    public function unpublish(Exercise $exercise)
     {
-        $node = $exercise->getResourceNode();
-        $creator = $node->getCreator();
-        $authorName = sprintf('%s %s', $creator->getFirstName(), $creator->getLastName());
+        if (!$exercise->getResourceNode()->isPublished()) {
+            throw new \LogicException("Exercise {$exercise->getId()} is already unpublished");
+        }
 
-        return [
-            'authors' => [$authorName],
-            'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
-            'title' => $exercise->getTitle(),
-            'description' => $exercise->getDescription(),
-            'start' => $exercise->getStartDate()->format('Y-m-d H:i:s'),
-            'end' => $exercise->getEndDate()->format('Y-m-d H:i:s'),
-            'isPublished' => $exercise->getpublished(),
-            'pick' => $exercise->getNbQuestion(),
-            'random' => $exercise->getShuffle(),
-            'maxAttempts' => $exercise->getMaxAttempts()
-        ];
+        $exercise->getResourceNode()->setPublished(false);
+        $this->om->flush();
     }
 
     /**
-     * @todo step id...
-     * @todo add optional question description (schema)
+     * Deletes all the papers associated with an exercise.
+     *
+     * @todo optimize request number using repository method(s)
      *
      * @param Exercise $exercise
-     * @return array
+     * @throws \Exception if the exercise has been published at least once
      */
-    private function getSteps(Exercise $exercise)
+    public function deletePapers(Exercise $exercise)
     {
-        $interactions = $this->interactionRepo->findByExercise($exercise);
+        if ($exercise->wasPublishedOnce()) {
+            throw new \Exception(
+                "Cannot delete exercise {$exercise->getId()} papers as it has been published at least once"
+            );
+        }
 
-        return array_map(function ($interaction) {
-            switch ($type = $interaction->getType()) {
-                case 'InteractionQCM':
-                    $data = $this->getQCM($interaction);
-                    $type = 'application/x.choice+json';
-                    break;
-                default:
-                    throw new \Exception("Export not implemented for {$type} type");
+        $papers = $this->paperRepo->findByExercise($exercise);
+
+        foreach ($papers as $paper) {
+            $links = $this->linkHintPaperRepo->findByPaper($paper);
+
+            foreach ($links as $link) {
+                $this->om->remove($link);
             }
 
-            $step = [
-                'id' => 'todo',
-                'items' => [array_merge($data, [
-                    'id' => $interaction->getId(),
-                    'type' => $type,
-                    'title' => $interaction->getQuestion()->getTitle(),
-                    'hints' => ''
-                ])]
-            ];
+            $responses = $this->responseRepo->findByPaper($paper);
 
-            if ($interaction->getFeedback()) {
-                $step['items'][0]['feedback'] = $interaction->getFeedback();
+            foreach ($responses as $response) {
+                $this->om->remove($response);
             }
 
-            if (count($hints = $interaction->getHints()->toArray()) > 0) {
-                $step['items'][0]['hints'] = array_map(function ($hint) {
-                    return [
-                        'id' => $hint->getId(),
-                        'text' => $hint->getValue(),
-                        'penalty' => $hint->getPenalty()
-                    ];
-                }, $hints);
-            }
+            $this->om->remove($paper);
+        }
 
-            return $step;
-        }, $interactions);
-    }
-
-    /**
-     * @todo get real "multiple" value
-     * @todo add solutions property
-     * @todo check order of choices
-     * @todo weight ?
-     *
-     * @param Interaction $interaction
-     * @return array
-     */
-    private function getQCM(Interaction $interaction)
-    {
-        $qcm = $this->interactionQcmRepo->findOneBy(['interaction' => $interaction]);
-
-        return [
-            'multiple' => false,
-            'random' => $qcm->getShuffle(),
-            'choices' => array_map(function ($choice) {
-                return [
-                    'id' => $choice->getId(),
-                    'type' => 'text/html',
-                    'data' => $choice->getLabel()
-                ];
-            }, $qcm->getChoices()->toArray()),
-        ];
+        $this->om->flush();
     }
 }

@@ -7,9 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Manager\ExerciseManager;
-use JMS\DiExtraBundle\Annotation\Service;
-
+use UJM\ExoBundle\Manager\ApiManager;
 /**
  * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")
@@ -20,18 +18,21 @@ class ExerciseController
 
     /**
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("ujm.exo.exercise_manager")
+     *     "manager" = @DI\Inject("ujm.exo.api_manager")
      * })
      *
      * @param ExerciseManager $manager
      */
-    public function __construct(ExerciseManager $manager)
+    public function __construct(ApiManager $manager)
     {
         $this->manager = $manager;
     }
 
     /**
      * @EXT\Route("/exercises/{id}")
+     *
+     * @param Exercise $exercise
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function exerciseAction(Exercise $exercise)
     {

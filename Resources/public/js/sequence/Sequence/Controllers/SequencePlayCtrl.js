@@ -10,7 +10,6 @@
 
             this.setSequence = function (sequence) {
                 this.sequence = sequence;
-                console.log(sequence);
             };
 
             this.getSequence = function () {
