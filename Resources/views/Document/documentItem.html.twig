@@ -5,9 +5,10 @@
     {% set classArray="info" %}
 {% endif %}
 
-{% if adminInnova and not document.validate %}
-    
-    {% else %}
+{# InnovaERV : suppression de la condition "OR" suite retour Nathalie #}
+{# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
+{# voir également macros.html.twig #}
+
 {# InnovaERV : Fin ajout : Affichage ... #}
 <tr id="row_{{ document.id }}">
     <td class="{{ classArray }}">
@@ -69,4 +70,3 @@
         </td>
     {% endif %}
 </tr>
-{% endif %}

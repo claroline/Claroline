@@ -12,7 +12,10 @@
                 {% endif %}
             {% endfor %}
             
-            {% if drop.documents|length == 0 or (adminInnova and documents_validated == "none") %}
+            {# InnovaERV : suppression de la condition "OR" suite retour Nathalie #}
+            {# InnovaERV : car il fallait voir les documents qund on va sur l'espace d'un étudiant #}
+            {# voir également documentItem.html.twig #}
+            {% if drop.documents|length == 0  %}
                 <p>{{ 'No document associated'|trans({},'innova_collecticiel') }}</p>
             {% else %}
                 <table class="table table-responsive {% if mode == "condensed" %}table-condensed{% endif %} well datatable">
