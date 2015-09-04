@@ -164,11 +164,11 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $this->om->persist($widgetInstance);
 
                 $widgetConfig = new WidgetDisplayConfig();
-                $widgetConfig->setRow($widget['widget']['row']);
-                $widgetConfig->setColumn($widget['widget']['column']);
-                $widgetConfig->setWidth($widget['widget']['width']);
-                $widgetConfig->setHeight($widget['widget']['height']);
-                $widgetConfig->setColor($widget['widget']['color']);
+                if ($widget['widget']['row'])    $widgetConfig->setRow($widget['widget']['row']);
+                if ($widget['widget']['column']) $widgetConfig->setColumn($widget['widget']['column']);
+                if ($widget['widget']['width'])  $widgetConfig->setWidth($widget['widget']['width']);
+                if ($widget['widget']['height']) $widgetConfig->setHeight($widget['widget']['height']);
+                if ($widget['widget']['color'])  $widgetConfig->setColor($widget['widget']['color']);
                 $widgetConfig->setWorkspace($workspace);
                 $widgetConfig->setWidgetInstance($widgetInstance);
                 $this->om->persist($widgetConfig);
