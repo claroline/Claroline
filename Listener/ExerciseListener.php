@@ -45,13 +45,6 @@ class ExerciseListener
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        $exercise = new Exercise();
-        $exercise->setNbQuestion(0);
-        $exercise->setDuration(0);
-        $exercise->setMaxAttempts(0);
-        $exercise->setStartDate(new \Datetime());
-        $exercise->setEndDate(new \Datetime());
-        $exercise->setDateCorrection(new \Datetime());
         $form = $this->container->get('form.factory')
             ->create(new ExerciseType(true));
         $twig = $this->container->get('templating');

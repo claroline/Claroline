@@ -21,7 +21,7 @@ class ExerciseController
      *     "manager" = @DI\Inject("ujm.exo.api_manager")
      * })
      *
-     * @param ExerciseManager $manager
+     * @param ApiManager $manager
      */
     public function __construct(ApiManager $manager)
     {
@@ -34,7 +34,7 @@ class ExerciseController
      * @param Exercise $exercise
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
-    public function exerciseAction(Exercise $exercise)
+    public function exportAction(Exercise $exercise)
     {
         return new JsonResponse($this->manager->exportExercise($exercise));
     }
