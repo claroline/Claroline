@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ResponseType extends AbstractType
 {
@@ -25,6 +24,7 @@ class ResponseType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Response',
+                'translation_domain' => 'ujm_exo'
             )
         );
     }
@@ -32,11 +32,5 @@ class ResponseType extends AbstractType
     public function getName()
     {
         return 'ujm_exobundle_responsetype';
-    }
-     public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults(
-            array('translation_domain' => 'ujm_exo')
-        );
     }
 }
