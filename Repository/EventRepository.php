@@ -31,20 +31,39 @@ class EventRepository extends EntityRepository
                 JOIN w.roles r
                 JOIN r.users u
                 WHERE u.id = :userId
+                AND (
+                    EXISTS (
+                        SELECT ot
+                        FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                        JOIN ot.tool t
+                        JOIN t.maskDecoders tm
+                        JOIN ot.rights otr
+                        WHERE ot.workspace = w
+                        AND t.name = :agenda
+                        AND otr.role = r
+                        AND tm.name = :open
+                        AND BIT_AND(otr.mask, tm.value) = tm.value
+                    )
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                )
             )
             WHERE e.isTask = :isTask
             ORDER BY e.start DESC
         ";
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('isTask', $isTask);
+        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('open', 'open');
+
 
         return $query->getResult();
     }
 
     /*
-     * Get all the events and the tasks of the user for all the workspace where is allowed to write
-     */
+   * Get all the events and the tasks of the user for all the workspace where is allowed to write
+   */
     public function findEventsAndTasksOfWorkspaceForTheUser($user)
     {
         $dql = "
@@ -57,11 +76,28 @@ class EventRepository extends EntityRepository
                 JOIN w.roles r
                 JOIN r.users u
                 WHERE u.id = :userId
+                AND (
+                    EXISTS (
+                        SELECT ot
+                        FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                        JOIN ot.tool t
+                        JOIN t.maskDecoders tm
+                        JOIN ot.rights otr
+                        WHERE ot.workspace = w
+                        AND t.name = :agenda
+                        AND otr.role = r
+                        AND tm.name = :open
+                        AND BIT_AND(otr.mask, tm.value) = tm.value
+                    )
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                )
             )
             ORDER BY e.start DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('open', 'open');
 
         return $query->getResult();
     }

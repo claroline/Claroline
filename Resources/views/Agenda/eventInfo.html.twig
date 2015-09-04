@@ -1,15 +1,16 @@
-{% twig_js name="EventContent" %}
+{% twig_js name="EventInfo" %}
 
 {% if event.isTask %}
     <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% else %}
-    <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start.string }}</div>
-    <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
+        <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start.string }}</div>
+        <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% endif %}
 
 <div>{{ 'form.author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
 
-<div>{{ 'workspace'|trans({}, 'platform') }}:
+<div>
+    {{ 'workspace'|trans({}, 'platform') }}:
     {% if event.workspace_id is null %}
         {{ 'desktop'|trans({}, 'platform') }}
     {% else %}
@@ -20,7 +21,7 @@
 {% if event.description is not empty %}
     {{ 'form.description'|trans({}, 'agenda') }} :
     <div style="max-height: 150px; overflow-y: auto;">
-        {{ event.description|raw }}
+         {{ event.description|raw }}
     </div>
 {% endif %}
 

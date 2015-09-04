@@ -83,15 +83,6 @@ class Event implements \JsonSerializable
      */
     private $isTaskDone = false;
 
-    /**
-     * @ORM\ManyToMany(
-     *      targetEntity="Claroline\AgendaBundle\Entity\EventCategory",
-     *      inversedBy="events"
-     * )
-     * @ORM\JoinTable(name="claro_event_event_category")
-     */
-    private $eventCategories;
-
      /**
      * @ORM\Column(nullable=true)
      */
@@ -229,22 +220,6 @@ class Event implements \JsonSerializable
     public function setIsAllDay($isAllDay)
     {
         $this->allDay = (bool) $isAllDay;
-    }
-
-    /**
-     * @param EventCategory $category
-     */
-    public function addEventCategory(EventCategory $category)
-    {
-        $this->eventCategories->add($category);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getEventCategories()
-    {
-        return $this->eventCategories;
     }
 
     public function getPriority()

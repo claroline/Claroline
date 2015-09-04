@@ -88,12 +88,10 @@
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
             eventDestroy: onEventDestroy,
+            eventMouseover: onEventMouseover,
+            eventMouseout: onEventMouseout,
             eventRender: onEventRender,
-            eventResize: onEventResize,
-            eventResizeStart: onEventResizeStart,
-            eventResizeStop: onEventResizeStop,
-            eventDragStart: onEventDragStart,
-            eventDragStop: onEventDragStop
+            eventResize: onEventResize
         });
 
         // If a year is define in the Url, redirect the calendar to that year, month and day
@@ -118,8 +116,22 @@
              // If click on the checkbox of a task, mark this task as done
              else if ($(jsEvent.target).hasClass('fa-square-o')) {
                  markTaskAsDone(event, jsEvent, $this);
+             } else {
+                 showEditForm(event.id);
              }
          }
+    }
+
+    function onEventMouseover(event)
+    {
+        $(this).popover('show');
+
+        $('#event_info').html(Twig.render(EventInfo, {event: event}));
+    }
+
+    function onEventMouseout()
+    {
+        $(this).popover('hide');
     }
 
     function onEventDestroy(event, $element)
@@ -145,26 +157,6 @@
         resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
     }
 
-    function onEventResizeStart()
-    {
-        $(this).popover('destroy');
-    }
-
-    function onEventResizeStop()
-    {
-        $('.popover').remove();
-    }
-
-    function onEventDragStart()
-    {
-        $(this).popover('destroy');
-    }
-
-    function onEventDragStop()
-    {
-        $('.popover').remove();
-    }
-
     function renderEvent(event, $element)
     {
         // Check if the user is allowed to modify the agenda
@@ -172,7 +164,9 @@
 
         event.editable = event.isEditable === false ? false : workspacePermissions[workspaceId];
 
-        $element.addClass('fc-draggable');
+        if (event.editable) {
+            $element.addClass('fc-draggable');
+        }
 
         event.durationEditable = event.durationEditable && workspacePermissions[workspaceId] && event.isEditable !== false;
 
@@ -537,14 +531,6 @@
             // Hide the start date if the task is checked.
             .on('click', '#agenda_form_isTask', function() {
                 $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
-            })
-            // Show the modal for editing the event
-            .on('click', '.modify-event', function(e) {
-                e.preventDefault();
-
-                var eventId = $(this).data('event-id');
-
-                showEditForm(eventId);
             })
         ;
     }

@@ -26,6 +26,7 @@ date_agenda_display_format: DD-MM-YYYY
 date_agenda_display_format_for_form: dd-MM-yyyy
 end: Fin
 end_date: 'Date de fin'
+event_info: Détail de l'évènement
 export: 'Exporter les événements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event: Evénement

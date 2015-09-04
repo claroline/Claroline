@@ -12,10 +12,12 @@
 namespace Claroline\AgendaBundle\Form;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,16 +28,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AgendaType extends AbstractType
 {
     private $translator;
+    private $om;
+    private $tokenStorage;
     private $editMode;
 
     /**
      * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator")
+     *     "translator" = @DI\Inject("translator"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ObjectManager $om, TokenStorageInterface $tokenStorage)
     {
         $this->translator = $translator;
+        $this->om = $om;
+        $this->tokenStorage = $tokenStorage;
         $this->editMode = false;
     }
 
@@ -47,10 +55,10 @@ class AgendaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
+            ->add('title', 'text', [
                 'label' => 'form.title',
                 'required' => true
-            ))
+            ])
 
             ->add('isTask', 'checkbox', [
                 'label' => 'form.task',
@@ -70,6 +78,16 @@ class AgendaType extends AbstractType
                 'label' => 'form.end'
             ])
 
+//            ->add('workspace', 'entity', [
+//                'label' => $this->translator->trans('workspace', [], 'platform'),
+//                'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
+//                'required' => false,
+//                'choices' => $this->getWorkspacesByUser(),
+//                'empty_value' => 'Desktop',
+//                'data_class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
+//                'property' => 'name'
+//            ])
+
             ->add('description', 'tinymce', [
                 'label' => 'form.description'
             ])
@@ -82,6 +100,11 @@ class AgendaType extends AbstractType
                     '#848484' => 'low'
                 ]
             ]);
+    }
+
+    public function getWorkspacesByUser()
+    {
+        //return $this->om->getRepository('ClarolineAgendaBundle:Event')->;
     }
 
     public function getName()

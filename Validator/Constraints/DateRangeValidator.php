@@ -28,12 +28,6 @@ class DateRangeValidator extends ConstraintValidator
                 $this->context->addViolation('valid_start_date_required');
             }
         }
-        // If isAllDay is unchecked and isTask is checked
-        else if (!$object->isAllDay() && $object->isTask()) {
-            if ($object->endHours === null) {
-                $this->context->addViolation('valid_end_hour_required');
-            }
-        }
         // If isAllDay and isTask are unchecked
         else if (!$object->isAllDay() && !$object->isTask()) {
             if ($object->getStart() === null) {
