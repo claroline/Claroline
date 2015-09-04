@@ -88,10 +88,11 @@
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
             eventDestroy: onEventDestroy,
-            eventMouseover: onEventMouseover,
-            eventMouseout: onEventMouseout,
             eventRender: onEventRender,
             eventResize: onEventResize,
+            eventResizeStart: onEventResizeStart,
+            eventResizeStop: onEventResizeStop,
+            eventDragStart: onEventDragStart,
             eventDragStop: onEventDragStop
         });
 
@@ -118,26 +119,12 @@
              else if ($(jsEvent.target).hasClass('fa-square-o')) {
                  markTaskAsDone(event, jsEvent, $this);
              }
-             // Show the modal form
-             else {
-                 showEditForm(event);
-             }
          }
     }
 
     function onEventDestroy(event, $element)
     {
         $element.popover('destroy');
-    }
-
-    function onEventMouseover()
-    {
-       $(this).popover('show');
-    }
-
-    function onEventMouseout()
-    {
-        $(this).popover('hide');
     }
 
     function onEventRender(event, element)
@@ -158,23 +145,34 @@
         resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
     }
 
+    function onEventResizeStart()
+    {
+        $(this).popover('destroy');
+    }
+
+    function onEventResizeStop()
+    {
+        $('.popover').remove();
+    }
+
+    function onEventDragStart()
+    {
+        $(this).popover('destroy');
+    }
+
     function onEventDragStop()
     {
-        // Remove all popovers shown
-        $('.popover.in').remove();
+        $('.popover').remove();
     }
 
     function renderEvent(event, $element)
     {
-        // Create the popover for the event or the task
-        createPopover(event, $element);
         // Check if the user is allowed to modify the agenda
         var workspaceId = event.workspace_id ? event.workspace_id : 0;
 
-        event.editable = event.isEditable == false ? false : workspacePermissions[workspaceId];
-        if (event.editable) {
-            $element.addClass('fc-draggable');
-        }
+        event.editable = event.isEditable === false ? false : workspacePermissions[workspaceId];
+
+        $element.addClass('fc-draggable');
 
         event.durationEditable = event.durationEditable && workspacePermissions[workspaceId] && event.isEditable !== false;
 
@@ -198,6 +196,9 @@
                 checkbox.addClass('fa-square-o');
             }
         }
+
+        // Create the popover for the event or the task
+        createPopover(event, $element);
     }
 
     function renderAddEventForm(date)
@@ -377,11 +378,11 @@
         })
     }
 
-    function showEditForm(event)
+    function showEditForm(eventId)
     {
         if (!isFormShown) {
             window.Claroline.Modal.displayForm(
-                Routing.generate('claro_agenda_update_event_form', {'event': event.id}),
+                Routing.generate('claro_agenda_update_event_form', {event: eventId}),
                 updateCalendarItemCallback,
                 function () {
                     $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
@@ -490,6 +491,14 @@
             // Hide the start date if the task is checked.
             .on('click', '#agenda_form_isTask', function() {
                 $('#agenda_form_isTask').is(':checked') ? hideStartDate() : showStartDate();
+            })
+            // Show the modal for editing the event
+            .on('click', '.modify-event', function(e) {
+                e.preventDefault();
+
+                var eventId = $(this).data('event-id');
+
+                showEditForm(eventId);
             })
         ;
     }
