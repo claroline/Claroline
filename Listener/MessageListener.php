@@ -135,7 +135,7 @@ class MessageListener
 
         $menu = $event->getMenu();
         $menu->addChild(
-            $this->translator->trans('messages', array(), 'platform'),
+            $this->translator->trans('send_message', array(), 'platform'),
             array('uri' => $url)
         )->setExtra('icon', 'fa fa-envelope-o');
 
