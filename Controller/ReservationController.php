@@ -134,8 +134,8 @@ class ReservationController extends Controller
 
         $formType = $this->get('formalibre.form.reservation');
         $formType->setEditMode();
-        $reservation->setStart($reservation->getEvent()->getStart()->getTimestamp());
-        $reservation->setEnd($reservation->getEvent()->getEnd()->getTimestamp());
+        $reservation->setStart($reservation->getEvent()->getStartInTimestamp());
+        $reservation->setEnd($reservation->getEvent()->getEndInTimestamp());
         $form = $this->createForm($formType, $reservation);
 
         return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
@@ -195,8 +195,8 @@ class ReservationController extends Controller
     {
         $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
-        $newStart = $reservation->getEvent()->getStart()->getTimestamp() + $minutes * 60;
-        $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
+        $newStart = $reservation->getEvent()->getStartInTimestamp() + $minutes * 60;
+        $newEnd = $reservation->getEvent()->getEndInTimestamp() + $minutes * 60;
 
         return $this->reservationManager->updateReservation($reservation, $newStart, $newEnd);
     }
@@ -212,8 +212,8 @@ class ReservationController extends Controller
     {
         $this->reservationManager->checkAccess($reservation->getEvent()->getUser(), $reservation, $this::BOOK);
 
-        $start = $reservation->getEvent()->getStart()->getTimestamp();
-        $newEnd = $reservation->getEvent()->getEnd()->getTimestamp() + $minutes * 60;
+        $start = $reservation->getEvent()->getStartInTimestamp();
+        $newEnd = $reservation->getEvent()->getEndInTimestamp() + $minutes * 60;
         $maxTimeArray = explode(':', $reservation->getResource()->getMaxTimeReservation());
         $maxTime = $maxTimeArray[0] * 3600 + $maxTimeArray[2] * 60;
 
