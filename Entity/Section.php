@@ -49,7 +49,7 @@ class Section
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Wiki")
-     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="wiki_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $wiki;
 
