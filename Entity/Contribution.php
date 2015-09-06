@@ -51,7 +51,7 @@ class Contribution
 
     /**
      * @ORM\ManyToOne(targetEntity="Icap\WikiBundle\Entity\Section")
-     * @ORM\JoinColumn(name="section_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * @ORM\JoinColumn(name="section_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
      */
     protected $section;
 
