@@ -19,27 +19,41 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * @DI\Service("claroline.importer.icap_wiki_importer")
  * @DI\Tag("claroline.importer")
  */
-class WikiImporter extends Importer implements ConfigurationInterface{
+class WikiImporter extends Importer implements ConfigurationInterface, RichTextInterface
+{
 
     /**
      * @var \Icap\WikiBundle\Manager\WikiManager
      */
     private $wikiManager;
+    private $container;
+    private $om;
 
 
     /**
      * @DI\InjectParams({
      *      "wikiManager"        = @DI\Inject("icap.wiki.manager"),
+     *      "container"          = @DI\Inject("service_container"),
+     *      "om"                 = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(WikiManager $wikiManager)
+    public function __construct(
+        WikiManager $wikiManager, 
+        ContainerInterface $container,
+        ObjectManager $om
+    )
     {
         $this->wikiManager = $wikiManager;
+        $this->container = $container;
+        $this->om = $om;
     }
 
     public function getConfigTreeBuilder()
@@ -123,5 +137,26 @@ class WikiImporter extends Importer implements ConfigurationInterface{
     public function export(Workspace $workspace, array &$files, $object)
     {
         return $this->wikiManager->exportWiki($workspace, $files, $object);
+    }
+    
+    public function format($data)
+    {
+        foreach ($data['sections'] as $section) {
+            foreach ($section['contributions'] as $contribution) {
+                 //look for the text with the exact same content (it's really bad I know but at least it works
+                 $text = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $contribution['contribution']['path']);
+                 $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
+                 //avoid circulary dependency
+                 $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                 
+                 foreach ($entities as $entity) {
+                     $entity->setText($text);
+                     $this->om->persist($entity);
+                }
+            }
+        }
+        
+        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+        $this->om->flush();
     }
 }
