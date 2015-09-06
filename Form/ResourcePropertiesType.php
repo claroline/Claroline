@@ -47,6 +47,16 @@ class ResourcePropertiesType extends AbstractType
             )
         );
         $builder->add(
+            'modificationDate',
+            'date',
+            array(
+                'disabled' => true,
+                'widget' => 'single_text',
+                'format' => 'yyyy-MM-dd',
+                'label' => 'last_modification'
+            )
+        );
+        $builder->add(
             'published',
             'checkbox',
             array( 'required' => true, 'label' => 'published')
