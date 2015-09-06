@@ -146,19 +146,15 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
                  //look for the text with the exact same content (it's really bad I know but at least it works
                  $text = file_get_contents($this->getRootPath() . DIRECTORY_SEPARATOR . $contribution['contribution']['path']);
                  $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
+                 //avoid circulary dependency
                  $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
                  
                  foreach ($entities as $entity) {
-                     //var_dump('change entity');
-                     //avoid circulary dependency
-                    
                      $entity->setText($text);
                      $this->om->persist($entity);
                 }
             }
         }
-        
-        //var_dump('flush');
         
         //this could be bad, but the corebundle can use a transaction and force flush itself anyway
         $this->om->flush();
