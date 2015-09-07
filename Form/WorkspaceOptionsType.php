@@ -36,6 +36,9 @@ class WorkspaceOptionsType extends AbstractType
         $hideToolsMenu = isset($details['hide_tools_menu']) ?
             $details['hide_tools_menu'] :
             false;
+        $hideBreadcrumb = isset($details['hide_breadcrumb']) ?
+            $details['hide_breadcrumb'] :
+            false;
         $useDefaultResource = isset($details['use_workspace_opening_resource']) ?
             $details['use_workspace_opening_resource'] :
             false;
@@ -51,6 +54,16 @@ class WorkspaceOptionsType extends AbstractType
                 'mapped' => false,
                 'data' => $hideToolsMenu,
                 'label' => 'hide_tools_menu'
+            )
+        );
+        $builder->add(
+            'hideBreadcrumb',
+            'checkbox',
+            array(
+                'required' => false,
+                'mapped' => false,
+                'data' => $hideBreadcrumb,
+                'label' => 'hide_breadcrumb'
             )
         );
         $builder->add(
