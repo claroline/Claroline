@@ -175,7 +175,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
     private function createExo($title, $user) {
         $newExercise = new Exercise();
         $newExercise->setTitle($title);
-        $newExercise->setDateCreate(new \Datetime());
         $newExercise->setNbQuestionPage(1);
         $newExercise->setNbQuestion(0);
         $newExercise->setDuration(0);

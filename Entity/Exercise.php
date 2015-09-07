@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * UJM\ExoBundle\Entity\Exercise
@@ -48,13 +48,6 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
      */
     private $keepSameQuestion;
-
-    /**
-     * @var \Datetime $dateCreate
-     *
-     * @ORM\Column(name="date_create", type="datetime")
-     */
-    private $dateCreate;
 
     /**
      * @var integer $duration
@@ -173,7 +166,7 @@ class Exercise extends AbstractResource
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
 
         // todo: remove these default values (coming from listener#createForm)
-        $this->dateCreate = new \DateTime();
+
         $this->startDate = new \DateTime();
         $this->endDate = new \DateTime();
         $this->dateCorrection = new \DateTime();
@@ -283,26 +276,6 @@ class Exercise extends AbstractResource
     public function getKeepSameQuestion()
     {
         return $this->keepSameQuestion;
-    }
-
-    /**
-     * Set dateCreate
-     *
-     * @param \Datetime $dateCreate
-     */
-    public function setDateCreate(\DateTime $dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-    }
-
-    /**
-     * Get dateCreate
-     *
-     * @return \Datetime
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
     }
 
     /**

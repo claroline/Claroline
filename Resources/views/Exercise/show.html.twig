@@ -114,11 +114,11 @@
                                     {% else %}
                                         <i class="fa fa-check-circle"></i>
                                     {% endif %}
-                                </td> #}
-                            </tr>
+                                </td>
+                            </tr>#}
                             <tr class="hiddencells">
                                 <th class="classic">{{ 'creation_date' | trans({}, 'ujm_exo') }}</th>
-                                <td class="classic">{{ exercise.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+                                <td class="classic">{{ resource.getCreationDate()|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                             </tr>
                             <tr style="display: none;">
                                 <th class="classic">{{ 'duration' | trans({}, 'ujm_exo') }}</th>
