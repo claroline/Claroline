@@ -66,11 +66,6 @@ class Question
     private $model;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Expertise")
-     */
-    private $expertise;
-
-    /**
      * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Document")
      * @ORM\JoinTable(
      *     name="ujm_document_question",
@@ -232,16 +227,6 @@ class Question
     public function getModel()
     {
         return $this->model;
-    }
-
-    public function getExpertise()
-    {
-        return $this->expertise;
-    }
-
-    public function setExpertise(Expertise $expertise)
-    {
-        $this->expertise = $expertise;
     }
 
     /**

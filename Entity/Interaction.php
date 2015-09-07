@@ -51,13 +51,6 @@ class Interaction
     private $feedBack;
 
     /**
-     * @var boolean $locked_expertise
-     *
-     * @ORM\Column(name="locked_expertise", type="boolean", nullable=true)
-     */
-    private $lockedExpertise = false;
-
-    /**
      * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Document")
      * @ORM\JoinTable(
      *     name="ujm_document_interaction",
@@ -177,24 +170,6 @@ class Interaction
     public function getFeedBack()
     {
         return $this->feedBack;
-    }
-
-    /**
-     * Set locked_expertise
-     *
-     * @param boolean $lockedExpertise
-     */
-    public function setLockedExpertise($lockedExpertise)
-    {
-        $this->lockedExpertise = $lockedExpertise;
-    }
-
-    /**
-     * Get lockedExpertise
-     */
-    public function getLockedExpertise()
-    {
-        return $this->lockedExpertise;
     }
 
     /**

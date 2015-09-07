@@ -13,6 +13,13 @@ class AdditionalInstaller extends BaseInstaller
         }
     }
 
+    public function postUpdate($currentVersion, $targetVersion)
+    {
+        if (version_compare($currentVersion, '6.0.0', '<=')) {
+            $this->dropExpertiseTables();
+        }
+    }
+
     private function migrateDateData()
     {
         $conn = $this->container->get('doctrine.dbal.default_connection');
@@ -21,7 +28,7 @@ class AdditionalInstaller extends BaseInstaller
             return; // migration has already been executed
         }
 
-        $this->log('Moving date data from ujm_exercise to claro_resource_node');
+        $this->log('Moving date data from ujm_exercise to claro_resource_node...');
 
         $startQuery = '
             UPDATE claro_resource_node AS node
@@ -43,5 +50,26 @@ class AdditionalInstaller extends BaseInstaller
 
         $conn->exec($startQuery);
         $conn->exec($endQuery);
+    }
+
+    private function dropExpertiseTables()
+    {
+        $schema = $this->container->get('doctrine.dbal.default_connection')
+            ->getSchemaManager();
+        $tableNames = $schema->listTableNames();
+        $tablesToDrop = [
+            'ujm_expertise_user',
+            'ujm_expertise',
+            'ujm_exercise_group',
+            'ujm_planning',
+            'ujm_group'
+        ];
+
+        foreach ($tablesToDrop as $tableName) {
+            if (in_array($tableName, $tableNames)) {
+                $this->log("Dropping {$tableName} table...");
+                $schema->dropTable($tableName);
+            }
+        }
     }
 }

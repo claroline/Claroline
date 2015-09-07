@@ -117,19 +117,6 @@ class Exercise extends AbstractResource
     private $lockAttempt = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Groupes")
-     * @ORM\JoinTable(
-     *     name="ujm_exercise_group",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="exercise_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     */
-    private $groupes;
-
-    /**
      * Flag indicating whether the exercise has been published at least
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
@@ -142,7 +129,6 @@ class Exercise extends AbstractResource
 
     public function __construct()
     {
-        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
         $this->dateCorrection = new \DateTime();
     }
 
@@ -424,26 +410,6 @@ class Exercise extends AbstractResource
     public function getLockAttempt()
     {
         return $this->lockAttempt;
-    }
-
-    /**
-     * Gets an array of Groupes.
-     *
-     * @return array An array of Groupes objects
-     */
-    public function getGroupes()
-    {
-        return $this->groupes;
-    }
-
-    /**
-     * Add Groupe
-     *
-     * @param UJM\ExoBundle\Entity\Groupes $Groupe
-     */
-    public function addGroupe(\UJM\ExoBundle\Entity\Groupes $groupe)
-    {
-        $this->groupes[] = $groupe;
     }
 
     public function archiveExercise()
