@@ -79,9 +79,13 @@
                 {% set creator = message.getCreator() %}
                 <tr class="row-message">
                     <td width="125px">
-                        <div>
+                        <div class="text-center">
                             {% if creator.getPicture() != "" %}
-                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}" class="col-md-12">
+                                 <img src="{{ asset('uploads/pictures/') ~ creator.getPicture() }}"
+                                      class="img-circle"
+                                      width="70px"
+                                      height="70px"
+                                 >
                             {% else %}
                                 <h1><i class="fa fa-user col-md-12"></i><h1>
                             {% endif %}
