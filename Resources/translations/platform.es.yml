@@ -412,6 +412,7 @@ has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
 help_url: 'URL de ayuda'
 hide: Ocultar
+hide_breadcrumb: 'Ocultar hilo de Ariadna'
 hide_tools_menu: 'Ocultar el menú de herramientas (excepto para los administradores)'
 history: Historial
 home: Inicio

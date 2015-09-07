@@ -413,6 +413,7 @@ has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
 help_url: 'Help URL'
 hide: Hide
+hide_breadcrumb: 'Hide breadcrumb'
 hide_tools_menu: 'Hide tools menu (except for managers)'
 history: History
 home: Home
