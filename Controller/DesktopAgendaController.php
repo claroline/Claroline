@@ -115,7 +115,7 @@ class DesktopAgendaController extends Controller
 
         if ($form->isValid()) {
             $event = $form->getData();
-            $data = $this->agendaManager->addEvent($event, null);
+            $data = $this->agendaManager->addEvent($event,  $event->getWorkspace());
 
             return new JsonResponse(array($data), 200);
         }
