@@ -241,7 +241,7 @@ date_range.first_day: '1'
 date_range.format: d/m/Y
 date_range.format.with_hours: 'd/m/Y H:i:s'
 date_range.from: De
-date_range.js_format: dd/MM/yyyy
+date_range.js_format: DD/MM/YYYY
 date_range.last_month: 'Mois précédent'
 date_range.last_school_year: 'Année sco. précédente'
 date_range.last_seven_days: '7 derniers jours'
