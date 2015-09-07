@@ -801,9 +801,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
         $data = array();
         $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
-        $importer->setExtendedData($_data);
 
         if ($importer) {
+            $importer->setExtendedData($_data);
             $data = $importer->export(
                 $workspace,
                 $_files,
