@@ -222,7 +222,7 @@ class TransfertManager
 
         $defaultZip = $this->container->getParameter('claroline.param.templates_directory') . 'default.zip';
 
-        //batch import with default template shouldn't be flushed    
+        //batch import with default template shouldn't be flushed
         if ($configuration->getArchive() !== $defaultZip) {
             $this->om->forceFlush();
         }
