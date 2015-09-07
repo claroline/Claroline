@@ -175,3 +175,5 @@ resource: Ressource
 role: Rôle
 user: Utilisateur
 workspace: 'Espace d''activités'
+log_resource-custom_action_update_file_shortname: Mise à jour
+log_resource-custom_action_update_file_sentence: Le fichier a été mit à jour.
