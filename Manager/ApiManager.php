@@ -46,9 +46,7 @@ class ApiManager
     }
 
     /**
-     * @todo add allowedToCompose: isPublished && (isAdmin || startDate/endDate)
-     * @todo what about duration / nbQuestionPage ? seem unused...
-     * @todo add useEndDate ?
+     * @todo add duration
      *
      * @param Exercise $exercise
      * @return array
@@ -64,8 +62,6 @@ class ApiManager
             'created' => $node->getCreationDate()->format('Y-m-d H:i:s'),
             'title' => $exercise->getTitle(),
             'description' => $exercise->getDescription(),
-            'start' => $exercise->getStartDate()->format('Y-m-d H:i:s'),
-            'end' => $exercise->getEndDate()->format('Y-m-d H:i:s'),
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
             'maxAttempts' => $exercise->getMaxAttempts()

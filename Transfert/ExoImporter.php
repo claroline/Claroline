@@ -179,8 +179,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $newExercise->setNbQuestion(0);
         $newExercise->setDuration(0);
         $newExercise->setMaxAttempts(0);
-        $newExercise->setStartDate(new \Datetime());
-        $newExercise->setEndDate(new \Datetime());
         $newExercise->setDateCorrection(new \Datetime());
         $newExercise->setCorrectionMode('1');
         $newExercise->setMarkMode('1');

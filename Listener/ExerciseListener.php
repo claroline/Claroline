@@ -191,9 +191,6 @@ class ExerciseListener
         $newExercise->setCorrectionMode($exerciseToCopy->getCorrectionMode());
         $newExercise->setDateCorrection($exerciseToCopy->getDateCorrection());
         $newExercise->setMarkMode($exerciseToCopy->getMarkMode());
-        $newExercise->setStartDate($exerciseToCopy->getStartDate());
-        $newExercise->setUseDateEnd($exerciseToCopy->getUseDateEnd());
-        $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
 

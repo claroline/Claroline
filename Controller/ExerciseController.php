@@ -133,7 +133,6 @@ class ExerciseController extends Controller
         $isAllowedToOpen = $exerciseSer->allowToOpen($exercise);
         $isAllowedToCompose = $isExoAdmin
             || $isAllowedToOpen
-            && $exerciseSer->controlDate($isExoAdmin, $exercise)
             && $exerciseSer->controlMaxAttemps($exercise, $userId, $isExoAdmin);
 
         if ($isAllowedToOpen && $userId !== 'anonymous') {
@@ -638,9 +637,7 @@ class ExerciseController extends Controller
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
-        if ( ($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-             && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin === true) )
-           ) {
+        if ($exoAdmin || $exercise->getResourceNode()->isPublished()) {
             $session = $this->getRequest()->getSession();
 
             if ($uid != 'anonymous') {

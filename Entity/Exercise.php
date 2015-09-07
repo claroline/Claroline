@@ -103,27 +103,6 @@ class Exercise extends AbstractResource
     private $markMode = '1';
 
     /**
-     * @var \Datetime $startDate
-     *
-     * @ORM\Column(name="start_date", type="datetime")
-     */
-    private $startDate;
-
-    /**
-     * @var boolean $useDateEnd
-     *
-     * @ORM\Column(name="use_date_end", type="boolean", nullable=true)
-     */
-    private $useDateEnd;
-
-    /**
-     * @var \Datetime $end_date
-     *
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     */
-    private $endDate;
-
-    /**
      * @var boolean $dispButtonInterrupt
      *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
@@ -164,11 +143,6 @@ class Exercise extends AbstractResource
     public function __construct()
     {
         $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
-
-        // todo: remove these default values (coming from listener#createForm)
-
-        $this->startDate = new \DateTime();
-        $this->endDate = new \DateTime();
         $this->dateCorrection = new \DateTime();
     }
 
@@ -414,64 +388,6 @@ class Exercise extends AbstractResource
     public function getMarkMode()
     {
         return $this->markMode;
-    }
-
-    /**
-     * Set startDate
-     *
-     * @param \DateTime $startDate
-     */
-    public function setStartDate(\DateTime $startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * Get startDate
-     *
-     * @return \Datetime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-     /**
-     * Set useDateEnd
-     *
-     * @param boolean $useDateEnd
-     */
-    public function setUseDateEnd($useDateEnd)
-    {
-        $this->useDateEnd = $useDateEnd;
-    }
-
-    /**
-     * Get useDateEnd
-     */
-    public function getUseDateEnd()
-    {
-        return $this->useDateEnd;
-    }
-
-    /**
-     * Set endDate
-     *
-     * @param \Datetime $endDate
-     */
-    public function setEndDate(\DateTime $endDate)
-    {
-        $this->endDate = $endDate;
-    }
-
-    /**
-     * Get endDate
-     *
-     * @return \Datetime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
     }
 
     /**

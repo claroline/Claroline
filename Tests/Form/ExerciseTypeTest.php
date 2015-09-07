@@ -56,9 +56,7 @@ class ExerciseTypeTest extends TypeTestCase
             'title' => 'Ex 1',
             'description' => 'Desc...',
             'duration' => '3600',
-            'dateCorrection' => '2012-01-12',
-            'start_date' => '2012-01-10',
-            'end_date' => '2012-01-11'
+            'lockAttempt' => '1'
         ];
 
         $form = $this->factory->create(new ExerciseType(), new Exercise());
