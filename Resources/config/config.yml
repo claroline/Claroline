@@ -6,6 +6,9 @@ plugin:
           name: ujm_exercise
           is_browsable: false
           icon: res_exo.png
+          actions:
+            - name: administrate
+              menu_name: ujm_exercise_administrate
           activity_rules:
             - action: resource-ujm_exercise-exercise_evaluated
         - class: UJM\ExoBundle\Entity\Sequence\Sequence

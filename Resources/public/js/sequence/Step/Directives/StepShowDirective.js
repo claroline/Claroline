@@ -13,7 +13,7 @@
                     steps: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    
+                    stepShowCtrl.setSteps(scope.steps);
                 }
             };
         }

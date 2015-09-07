@@ -1,4 +1,5 @@
 services:
+   
     ujm.listener.exercise.display_log_listener:
             class: UJM\ExoBundle\Listener\Log\DisplayLogListener
             calls:

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\ApiManager;
-
 /**
  * @EXT\Route(requirements={"id"="\d+"}, options={"expose"=true})
  * @EXT\Method("GET")

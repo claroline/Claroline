@@ -9,6 +9,8 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
+
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -113,6 +115,25 @@ class ExerciseListener
         $subRequest = $this->container->get('request_stack')
             ->getCurrentRequest()
             ->duplicate([], null, [
+                '_controller' => 'UJMExoBundle:Sequence\Sequence:play',
+                'id' => $event->getResource()->getId()
+            ]);
+        $response = $this->container->get('http_kernel')
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * Event launched when choosing Administrate exercise from the resource icon contextual menu
+     * @DI\Observe("ujm_exercise_administrate_ujm_exercise")
+     * @param CustomActionResourceEvent $event
+     */
+    public function onAdministrate(CustomActionResourceEvent $event)
+    {
+        $subRequest = $this->container->get('request_stack')
+            ->getCurrentRequest()
+            ->duplicate([], null, [
                 '_controller' => 'UJMExoBundle:Exercise:open',
                 'id' => $event->getResource()->getId()
             ]);
@@ -135,6 +156,7 @@ class ExerciseListener
             ->findOneByExercise($event->getResource());
 
         if (count($papers) == 0) {
+
              $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')
                 ->findByExercise($event->getResource());
 
@@ -150,14 +172,15 @@ class ExerciseListener
             }
 
             $em->flush();
+
             $em->remove($event->getResource());
+
         } else {
             $exercise = $event->getResource();
             $resourceNode = $exercise->getResourceNode();
 
             $em->remove($resourceNode);
             $exercise->archiveExercise();
-
             $em->persist($exercise);
             $em->flush();
         }
@@ -198,6 +221,7 @@ class ExerciseListener
         $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
+        
 
         $em->persist($newExercise);
         $em->flush();

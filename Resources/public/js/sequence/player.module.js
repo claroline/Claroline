@@ -8,6 +8,12 @@
         'ui.tinymce',
         'ui.translation',
         'ui.resourcePicker',
-        'Step'
-    ]);
+        'Step',
+        'Sequence'
+    ])
+    .filter(
+    'unsafe', 
+    function($sce) { 
+        return $sce.trustAsHtml; 
+    });
 })();
