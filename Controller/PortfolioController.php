@@ -74,9 +74,7 @@ class PortfolioController extends Controller
             $returnData = new Response($this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $returnData));
         }
         else {
-            $analyticsViewsForm = $this->get('form.factory')->create($this->getAnalyticsManager()->getAnalyticsViewsForm(), [
-                'range' => $this->getAnalyticsManager()->getDefaultRangeForViews()
-            ]);
+            $analyticsViewsForm = $this->get('form.factory')->create($this->getAnalyticsManager()->getAnalyticsViewsForm());
             $returnData['analyticsViewsForm'] = $analyticsViewsForm->createView();
         }
 

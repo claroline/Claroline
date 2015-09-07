@@ -5,6 +5,9 @@ statisticsApp
         function($scope, portfolioManager, $filter) {
         $scope.selectedPortfolioId = 0;
         $scope.selectedPortfolio = null;
+        $scope.period = {
+            date: {startDate: moment().startOf('month'), endDate: moment().endOf('month')}
+        };
 
         $scope.cosPoints = [];
         for (var i=0; i<2*Math.PI; i+=0.4){

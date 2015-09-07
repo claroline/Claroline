@@ -19,7 +19,7 @@
                                 data-ng-change="clickOnPortolio()" data-ng-show="portfolios.$resolved">
                                 <option value="">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</option>
                                 {% verbatim %}
-                                <option data-ng-repeat="portfolio in guidedPortfolios = (portfolios | toArray : false | filter:{type: 'owned'})" value="{{ portfolio.id }}">
+                                <option data-ng-repeat="portfolio in analyticsPortfolios = (portfolios | toArray : false | filter:{type: 'owned'})" value="{{ portfolio.id }}">
                                     {{ portfolio.title }}
                                 </option>
                                 {% endverbatim %}
@@ -27,7 +27,17 @@
                         </div>
                     </div>
 
-                    {{ form_row(analyticsViewsForm.range) }}
+                    <div class="form-group">
+                        {{ form_errors(analyticsViewsForm.range) }}
+                        {{ form_label(analyticsViewsForm.range) }}
+                        <div class="col-md-10">
+
+                            {{ form_widget(analyticsViewsForm.range, {'attr': {
+                                'class': 'date-picker', 'data-ng-model': 'period.date', 'date-range-picker': '',
+                                'options': '{format: \'' ~ 'date_range.js_format'|trans({}, 'platform') ~ '\'}'
+                            }}) }}
+                        </div>
+                    </div>
                 {{ form_end(analyticsViewsForm) }}
                 <div id="chart"></div>
                 <div class="empty_chart" data-ng-show="selectedPortfolio == null">
