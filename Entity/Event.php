@@ -94,8 +94,6 @@ class Event implements \JsonSerializable
      */
     private $isEditable;
 
-    private $dateRange;
-
     public function __construct()
     {
         $this->eventCategories = new ArrayCollection();
@@ -232,16 +230,6 @@ class Event implements \JsonSerializable
         $this->priority = $priority;
     }
 
-    public function setDateRange($dateRange)
-    {
-        $this->dateRange = $dateRange;
-    }
-
-    public function getDateRange()
-    {
-        return $this->dateRange;
-    }
-
     public function setIsTask($isTask)
     {
         $this->isTask = $isTask;
@@ -283,28 +271,19 @@ class Event implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $start = is_null($this->getStart()) ? null : $this->getStartInTimestamp();
-        $end = is_null($this->getEnd()) ? null : $this->getEndInTimestamp();
-        $startDate = new \DateTime();
-        $startDate->setTimeStamp($start);
-        $startIso = $startDate->format(\DateTime::ISO8601);
-        $endDate = new \DateTime();
-        $startDate->setTimeStamp($end);
-        $endIso = $startDate->format(\DateTime::ISO8601);
-
         return [
             'id' => $this->getId(),
             'title' => $this->getTitle(),
-            'start' => $startIso,
-            'end' => $endIso,
+            'start' => \Datetime::createFromFormat('U', $this->start)->format(\DateTime::ISO8601),
+            'end' => \Datetime::createFromFormat('U', $this->end)->format(\DateTime::ISO8601),
             'color' => $this->getPriority(),
             'allDay' => $this->isAllDay(),
             'isTask' => $this->isTask(),
             'isTaskDone' => $this->isTaskDone(),
             'owner' => $this->getUser()->getUsername(),
             'description' => $this->getDescription(),
-            'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId(): null,
-            'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName(): null,
+            'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId() : null,
+            'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName() : null,
             'className' => 'event_' . $this->getId(),
             'isEditable' => $this->isEditable(),
             'durationEditable' => !$this->isTask() && $this->isEditable() !== false // If it's a task, disable resizing

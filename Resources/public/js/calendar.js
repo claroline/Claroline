@@ -77,7 +77,7 @@
             monthNamesShort: t(['month.jan', 'month.feb', 'month.mar', 'month.apr', 'month.may', 'month.ju', 'month.jul', 'month.aug', 'month.sept',  'month.oct', 'month.nov', 'month.dec']),
             dayNames: t(['day.sunday', 'day.monday', 'day.tuesday', 'day.wednesday', 'day.thursday', 'day.friday', 'day.saturday']),
             dayNamesShort: t(['day.sun', 'day.mon', 'day.tue', 'day.wed', 'day.thu', 'day.fri', 'day.sat']),
-            //This is the url wich will get the events from ajax the 1st time the calendar is launched
+            //This is the url which will get the events from ajax the 1st time the calendar is launched
             events: showUrl,
             axisFormat: 'HH:mm',
             timeFormat: 'H:mm',
@@ -88,20 +88,27 @@
             eventLimit: 4,
             timezone: 'local',
             eventDrop: onEventDrop,
+            eventDragStart: onEventDragStart,
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
             eventDestroy: onEventDestroy,
             eventRender: onEventRender,
-            eventResize: onEventResize
+            eventResize: onEventResize,
+            eventResizeStart: onEventResizeStart
         });
 
         // If a year is define in the Url, redirect the calendar to that year, month and day
         redirectCalendar();
     };
 
-    function onEventDrop(event, delta, revertFunc, jsEvent, ui, view)
+    function onEventDrop(event, delta)
     {
         resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'move');
+    }
+
+    function onEventDragStart()
+    {
+        $(this).popover('hide');
     }
 
      function onEventClick(event, jsEvent)
@@ -117,8 +124,6 @@
              // If click on the checkbox of a task, mark this task as done
              else if ($(jsEvent.target).hasClass('fa-square-o')) {
                  markTaskAsDone(event, jsEvent, $this);
-             } else {
-                 showEditForm(event.id);
              }
          }
     }
@@ -126,6 +131,7 @@
     function onEventDestroy(event, $element)
     {
         $element.popover('destroy');
+        $('.popover').remove();
     }
 
     function onEventRender(event, element)
@@ -141,14 +147,19 @@
         renderEvent(event, element);
     }
 
-    function onEventResize(event, delta, revertFunc, jsEvent, ui, view)
+    function onEventResize(event, delta)
     {
         resizeOrMove(event, delta._days, delta._milliseconds / (1000 * 60), 'resize');
     }
 
+    function onEventResizeStart()
+    {
+        $(this).popover('hide');
+    }
+
     function renderEvent(event, $element)
     {
-        // Check if the user is allowed to modify the agenda
+         // Check if the user is allowed to modify the agenda
         var workspaceId = event.workspace_id ? event.workspace_id : 0;
 
         event.editable = event.isEditable === false ? false : workspacePermissions[workspaceId];
@@ -209,9 +220,17 @@
         }
     }
 
-    $('body').on('hide.bs.modal', '.modal', function (event) {
-        isFormShown = false;
-    });
+    $('body')
+        .on('hide.bs.modal', '.modal', function () {
+            isFormShown = false;
+        })
+        // Show the edit form
+        .on('click', '.modify-event', function(e) {
+            e.preventDefault();
+
+            showEditForm($(this).data('event-id'));
+        })
+    ;
 
     function addEventAndTaskToCalendar(event)
     {
@@ -245,7 +264,7 @@
     {
         var route = action === 'move' ? 'claro_workspace_agenda_move': 'claro_workspace_agenda_resize';
         $.ajax({
-            url: Routing.generate(route, {'event': event.id, 'day': dayDelta, 'minute': minuteDelta}),
+            url: Routing.generate(route, {event: event.id, day: dayDelta, minute: minuteDelta}),
             type: 'POST',
             success: function (event) {
                 // Update the event to change the popover's data
@@ -298,54 +317,36 @@
 
     function createPopover(event, $element)
     {
-        //In FullCalendar 2.3.1, the end date is null when the start date is the same
+        /* In FullCalendar >= 2.3.1, the end date is null if the start date is the same.
+         * In this case, the end date is null when it's a all day event which lasts one day
+         */
         if (event.end === null) {
-            event.end = event.start;
-        }
+            event.end = moment(event.start).add(1, 'days');
 
-        event.start.string = convertDateTimeToString(event.start, event.isAllDay, false);
-        event.end.string = convertDateTimeToString(event.end, event.isAllDay, true);
+        }
+        event.start.string = convertDateTimeToString(event.start, event.allDay, false);
+        event.end.string = convertDateTimeToString(event.end, event.allDay, true);
 
         $element
             .popover({
-                trigger: 'manual',
+                trigger: 'click',
                 title: event.title,
                 content: Twig.render(EventContent, {event: event}),
                 html: true,
                 container: 'body',
                 placement: 'top'
             })
-            .on('mouseenter', function() {
-                var _this = this;
-                $(this).popover('show');
-
-                $(".popover").on("mouseleave", function() {
-                    $(_this).popover('hide');
-                });
-            })
-            .on('mouseleave', function() {
-                var _this = this;
-                setTimeout(function() {
-                    if (!$('.popover:hover').length) {
-                        $(_this).popover('hide');
-                    }
-                }, 200);
-            })
+        ;
     }
 
     function convertDateTimeToString(value, isAllDay, isEndDate)
     {
-        isEndDate = typeof isEndDate !== 'undefined' ? isEndDate : false;
         if (isAllDay) {
-            // We have to subtract 1 day for the all day events because it ends on the next day at midnight.
             if (isEndDate) {
-                return moment(value).subtract(1, 'day').format('DD/MM/YYYY');
-            } else {
-                return moment(value).format('DD/MM/YYYY');
+                return moment(value).subtract(1, 'minutes').format('DD/MM/YYYY HH:mm');
             }
-        } else {
-            return moment(value).format('DD/MM/YYYY HH:mm');
         }
+        return moment(value).format('DD/MM/YYYY HH:mm');
     }
 
     function markTaskAsToDo(event, jsEvent, $element)

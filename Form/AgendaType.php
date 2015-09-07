@@ -92,7 +92,7 @@ class AgendaType extends AbstractType
                 'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
                 'required' => false,
                 'choices' => $this->getWorkspacesByUser(),
-                'empty_value' => 'Desktop',
+                'empty_value' => $this->translator->trans('desktop', [], 'platform'),
                 'property' => 'name'
             ]);
         }

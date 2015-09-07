@@ -1,4 +1,4 @@
-add_event: 'Ajouter un événement'
+add_event: Ajouter un évènement
 isTask: Tâche
 all_day: toute la journée
 at: à
@@ -26,7 +26,7 @@ date_agenda_display_format: DD-MM-YYYY
 date_agenda_display_format_for_form: dd-MM-yyyy
 end: Fin
 end_date: 'Date de fin'
-export: 'Exporter les événements'
+export: 'Exporter les évènements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event: Evénement
 filter_user: Filtrer par utilisateur
@@ -80,8 +80,8 @@ month:
   december: Décembre
 next: '>'
 nextYear: '>>'
-no_event_found: 'Pas d''événements'
-no_description: 'Pas de description'
+no_event_found: Pas d'évènements
+no_description: Pas de description
 no_task_found: Pas de tâches
 no_filter_tasks: Pas de filtre
 noon: midi
@@ -104,8 +104,8 @@ picker:
   next_decade: Décade suivante
   prev_century: Siècle précédent
   next_century: Siècle suivant
-remove_event: Supprimer un événement
-remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
+remove_event: Supprimer un évènement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet évènement ?
 start_date: 'Date de début'
 show_task_only: Montrer que les tâches
 task: Tâche
@@ -118,6 +118,6 @@ today_widget: Aujourd'hui
 tomorrow: Demain
 type: Type
 update: Modifier
-update_event: Mettre à jour un événement
+update_event: Mettre à jour un évènement
 week: Semaine
 workspace: 'Espace d''activités'
