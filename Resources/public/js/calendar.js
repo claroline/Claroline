@@ -15,6 +15,7 @@
     var workspacePermissions;
     var addUrl;
     var showUrl;
+    var isDesktop;
     var $calendarElement = $('#calendar');
     var isFormShown = false;
 
@@ -31,9 +32,11 @@
         if (context !== 'desktop') {
             addUrl = Routing.generate('claro_workspace_agenda_add_event_form', {'workspace': workspaceId});
             showUrl = Routing.generate('claro_workspace_agenda_show', {'workspace': workspaceId});
+            isDesktop = false;
         } else {
             addUrl = Routing.generate('claro_desktop_agenda_add_event_form');
             showUrl = Routing.generate('claro_desktop_agenda_show');
+            isDesktop = true;
         }
 
         // Initialize the click event on the import button
@@ -88,8 +91,6 @@
             dayClick: renderAddEventForm,
             eventClick:  onEventClick,
             eventDestroy: onEventDestroy,
-            eventMouseover: onEventMouseover,
-            eventMouseout: onEventMouseout,
             eventRender: onEventRender,
             eventResize: onEventResize
         });
@@ -120,18 +121,6 @@
                  showEditForm(event.id);
              }
          }
-    }
-
-    function onEventMouseover(event)
-    {
-        $(this).popover('show');
-
-        $('#event_info').html(Twig.render(EventInfo, {event: event}));
-    }
-
-    function onEventMouseout()
-    {
-        $(this).popover('hide');
     }
 
     function onEventDestroy(event, $element)
@@ -317,13 +306,31 @@
         event.start.string = convertDateTimeToString(event.start, event.isAllDay, false);
         event.end.string = convertDateTimeToString(event.end, event.isAllDay, true);
 
-        $element.popover({
-            title: event.title,
-            content: Twig.render(EventContent, {event: event}),
-            html: true,
-            container: 'body',
-            placement: 'top'
-        });
+        $element
+            .popover({
+                trigger: 'manual',
+                title: event.title,
+                content: Twig.render(EventContent, {event: event}),
+                html: true,
+                container: 'body',
+                placement: 'top'
+            })
+            .on('mouseenter', function() {
+                var _this = this;
+                $(this).popover('show');
+
+                $(".popover").on("mouseleave", function() {
+                    $(_this).popover('hide');
+                });
+            })
+            .on('mouseleave', function() {
+                var _this = this;
+                setTimeout(function() {
+                    if (!$('.popover:hover').length) {
+                        $(_this).popover('hide');
+                    }
+                }, 200);
+            })
     }
 
     function convertDateTimeToString(value, isAllDay, isEndDate)
@@ -379,8 +386,11 @@
     function showEditForm(eventId)
     {
         if (!isFormShown) {
+            var route_name = isDesktop ? 'claro_desktop_agenda_update_event_form' : 'claro_workspace_agenda_update_event_form',
+                editUrl = Routing.generate(route_name, {event: eventId});
+
             Claroline.Modal.displayForm(
-                Routing.generate('claro_agenda_update_event_form', {event: eventId}),
+                editUrl,
                 updateCalendarItemCallback,
                 function () {
                     initializeDateTimePicker();

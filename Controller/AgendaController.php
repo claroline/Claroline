@@ -66,67 +66,6 @@ class AgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{event}/update/form",
-     *     name="claro_agenda_update_event_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
-     *
-     * @param Workspace $workspace
-     * @return array
-     */
-    public function updateEventModalFormAction(Event $event)
-    {
-        $this->checkPermission($event);
-        $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
-        $form = $this->createForm($formType, $event);
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_agenda_update', array('event' => $event->getId())
-            ),
-            'event' => $event
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/update",
-     *     name="claro_agenda_update"
-     * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateAction(Event $event)
-    {
-        $this->checkPermission($event);
-        $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
-        $form = $this->createForm($formType, $event);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $event = $this->agendaManager->updateEvent($event);
-
-            return new JsonResponse($event, 200);
-        }
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_agenda_update', array('event' => $event->getId())
-            ),
-            'event' => $event
-        );
-    }
-
-    /**
-     * @EXT\Route(
      *     "set-task/{event}/as-not-done",
      *     name="claro_agenda_set_task_as_not_done",
      *     options = {"expose"=true}

@@ -97,13 +97,6 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">{{ 'event_info'|trans({}, 'agenda') }}</div>
-                    <div class="panel-body list-group" id="event_info">
-
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
                     {% if filters is defined and filters | length > 1 %}
                         <div data-toggle="collapse" data-target="#panel-owners" class="panel-heading">{{'filter_ws'|trans({}, 'agenda')}}</div>
                         <div id="panel-owners" class="panel-body list-group in" style="padding:0">
@@ -177,9 +170,6 @@
 {% block javascripts %}
     {{ parent() }}
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"] "@ClarolineAgendaBundle/Resources/views/Agenda/eventContent.html.twig" %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"] "@ClarolineAgendaBundle/Resources/views/Agenda/eventInfo.html.twig" %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'agenda' }) }}"></script>

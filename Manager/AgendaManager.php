@@ -295,4 +295,18 @@ class AgendaManager
             )
         );
     }
+
+    public function checkOpenAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted('agenda_', $workspace)) {
+            throw new AccessDeniedException("You cannot open the agenda");
+        }
+    }
+
+    public function checkEditAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
+            throw new AccessDeniedException("You cannot edit the agenda");
+        }
+    }
 }

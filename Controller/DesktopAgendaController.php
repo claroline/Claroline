@@ -93,6 +93,7 @@ class DesktopAgendaController extends Controller
     public function addEventModalFormAction()
     {
         $formType = $this->get('claroline.form.agenda');
+        $formType->setIsDesktop();
         $form = $this->createForm($formType, new Event());
 
         return array(
@@ -108,6 +109,7 @@ class DesktopAgendaController extends Controller
     public function addEvent()
     {
         $formType = $this->get('claroline.form.agenda');
+        $formType->setIsDesktop();
         $form = $this->createForm($formType, new Event());
         $form->handleRequest($this->request);
 
@@ -121,6 +123,69 @@ class DesktopAgendaController extends Controller
         return array(
             'form' => $form->createView(),
             'action' => $this->router->generate('claro_desktop_agenda_add', array())
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{event}/update/form",
+     *     name="claro_desktop_agenda_update_event_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     *
+     * @return array
+     */
+    public function updateEventModalFormAction(Event $event)
+    {
+        $formType = $this->get('claroline.form.agenda');
+        $formType->setEditMode();
+        $formType->setIsDesktop();
+        $form = $this->createForm($formType, $event);
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_desktop_agenda_update', array('event' => $event->getId())
+            ),
+            'event' => $event
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{event}/update",
+     *     name="claro_desktop_agenda_update"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction(Event $event)
+    {
+        $formType = $this->get('claroline.form.agenda');
+        $formType->setEditMode();
+        $formType->setIsDesktop();
+        $form = $this->createForm($formType, $event);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            if ($event->getWorkspace()) {
+                $this->agendaManager->checkEditAccess($event->getWorkspace());
+            }
+
+            $event = $this->agendaManager->updateEvent($event);
+
+            return new JsonResponse($event, 200);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_desktop_agenda_update', array('event' => $event->getId())
+            ),
+            'event' => $event
         );
     }
 

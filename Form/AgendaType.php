@@ -31,6 +31,7 @@ class AgendaType extends AbstractType
     private $om;
     private $tokenStorage;
     private $editMode;
+    private $isDesktop;
 
     /**
      * @DI\InjectParams({
@@ -45,11 +46,17 @@ class AgendaType extends AbstractType
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->editMode = false;
+        $this->isDesktop = false;
     }
 
     public function setEditMode()
     {
         $this->editMode = true;
+    }
+
+    public function setIsDesktop()
+    {
+        $this->isDesktop = true;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -77,17 +84,20 @@ class AgendaType extends AbstractType
             ->add('end', 'text', [
                 'label' => 'form.end'
             ])
+        ;
 
-//            ->add('workspace', 'entity', [
-//                'label' => $this->translator->trans('workspace', [], 'platform'),
-//                'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
-//                'required' => false,
-//                'choices' => $this->getWorkspacesByUser(),
-//                'empty_value' => 'Desktop',
-//                'data_class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
-//                'property' => 'name'
-//            ])
+        if ($this->isDesktop) {
+            $builder->add('workspace', 'entity', [
+                'label' => $this->translator->trans('workspace', [], 'platform'),
+                'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
+                'required' => false,
+                'choices' => $this->getWorkspacesByUser(),
+                'empty_value' => 'Desktop',
+                'property' => 'name'
+            ]);
+        }
 
+        $builder
             ->add('description', 'tinymce', [
                 'label' => 'form.description'
             ])
@@ -99,12 +109,13 @@ class AgendaType extends AbstractType
                     '#01A9DB' => 'medium',
                     '#848484' => 'low'
                 ]
-            ]);
+            ])
+        ;
     }
 
     public function getWorkspacesByUser()
     {
-        //return $this->om->getRepository('ClarolineAgendaBundle:Event')->;
+        return $this->om->getRepository('ClarolineAgendaBundle:Event')->findEditableUserWorkspaces($this->tokenStorage->getToken()->getUser());
     }
 
     public function getName()
