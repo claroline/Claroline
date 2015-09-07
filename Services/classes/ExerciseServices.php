@@ -226,30 +226,6 @@ class ExerciseServices
     }
 
     /**
-     * The user must be registered (and the dates must be good or the user must to be admin for the exercise)
-     *
-     * @access public
-     *
-     * @param boolean $exoAdmin
-     * @param \UJM\ExoBundle\Entity\Exercise $exercise
-     *
-     * @return boolean
-     */
-    public function controlDate($exoAdmin, $exercise)
-    {
-        if (
-            ((($exercise->getStartDate()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))
-            && (($exercise->getUseDateEnd() == 0)
-            || ($exercise->getEndDate()->format('Y-m-d H:i:s') >= date('Y-m-d H:i:s'))))
-            || ($exoAdmin === true))
-        ) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Add an Interaction in an exercise if created from an exercise
      *
      * @access public

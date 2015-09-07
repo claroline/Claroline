@@ -65,24 +65,24 @@
                         </tr>
                         <tr>
                             <th class="classic">{{ 'start_date' | trans({}, 'ujm_exo') }}</th>
-                            <td class="classic">{{ exercise.startdate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
-                        </tr>
-                        <tr>
-                            <th class="classic">{{ 'use_date_end' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
-                                {% if exercise.useDateEnd == 0 %}
-                                    <i class="fa fa-times-circle"></i>
+                                {% if resource.getAccessibleFrom() %}
+                                    {{ resource.getAccessibleFrom()|date('d/m/Y \\- H\\hi\\ms\\s') }}
                                 {% else %}
-                                    <i class="fa fa-check-circle"></i>
+                                    -
                                 {% endif %}
                             </td>
                         </tr>
-                        {% if exercise.useDateEnd != 0 %}
-                            <tr>
-                                <th class="classic">{{ 'end_date' | trans({}, 'ujm_exo') }}</th>
-                                <td class="classic">{{ exercise.enddate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
-                            </tr>
-                        {% endif %}
+                        <tr>
+                            <th class="classic">{{ 'end_date' | trans({}, 'ujm_exo') }}</th>
+                            <td class="classic">
+                                {% if resource.getAccessibleUntil() %}
+                                    {{ resource.getAccessibleUntil()|date('d/m/Y \\- H\\hi\\ms\\s') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
 
                         {% if is_granted('ADMINISTRATE', exercise) %}
                             <tr class="hiddencells">
@@ -105,7 +105,7 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                           {#---not operational---#}
+                            {#---not operational---#}
                                 {#<tr class="hiddencells">
                                 <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
                                 <td class="classic">
@@ -114,11 +114,11 @@
                                     {% else %}
                                         <i class="fa fa-check-circle"></i>
                                     {% endif %}
-                                </td> #}
-                            </tr>
+                                </td>
+                            </tr>#}
                             <tr class="hiddencells">
                                 <th class="classic">{{ 'creation_date' | trans({}, 'ujm_exo') }}</th>
-                                <td class="classic">{{ exercise.dateCreate|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
+                                <td class="classic">{{ resource.getCreationDate()|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
                             </tr>
                             <tr style="display: none;">
                                 <th class="classic">{{ 'duration' | trans({}, 'ujm_exo') }}</th>
