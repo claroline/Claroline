@@ -25,15 +25,11 @@ statisticsApp
             ]
         };
 
-        $scope.clickOnPortolio = function() {
-            $('#chart').replaceWith('<div id="chart"></div>');
+        $scope.fetchVisitData = function() {
             if ($scope.selectedPortfolio !== null) {
-                $scope.fetchVisitData();
+                $('#chart').replaceWith('<div id="chart"></div>');
+                $scope.chartData = [$scope.cosPoints];
+                $.jqplot('chart', $scope.chartData, $scope.chartOptions);
             }
         };
-
-        $scope.fetchVisitData = function() {
-            $scope.chartData = [$scope.cosPoints];
-            $.jqplot('chart', $scope.chartData, $scope.chartOptions);
-        }
     }]);

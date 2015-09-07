@@ -16,7 +16,7 @@
                         <label for="portfolio" class="col-md-2 control-label">{{ 'portfolio'|trans({}, 'icap_portfolio') }} :</label>
                         <div class="col-md-10">
                             <select id="portfolio" class="ng-cloak form-control portfolio-selector" data-ng-model="selectedPortfolio"
-                                data-ng-change="clickOnPortolio()" data-ng-show="portfolios.$resolved">
+                                data-ng-change="fetchVisitData()" data-ng-show="portfolios.$resolved">
                                 <option value="">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</option>
                                 {% verbatim %}
                                 <option data-ng-repeat="portfolio in analyticsPortfolios = (portfolios | toArray : false | filter:{type: 'owned'})" value="{{ portfolio.id }}">
@@ -34,7 +34,8 @@
 
                             {{ form_widget(analyticsViewsForm.range, {'attr': {
                                 'class': 'date-picker', 'data-ng-model': 'period.date', 'date-range-picker': '',
-                                'options': '{format: \'' ~ 'date_range.js_format'|trans({}, 'platform') ~ '\'}'
+                                'options': '{format: \'' ~ 'date_range.js_format'|trans({}, 'platform') ~ '\',
+                                eventHandlers: {\'apply.daterangepicker\': fetchVisitData}}'
                             }}) }}
                         </div>
                     </div>
