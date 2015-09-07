@@ -410,6 +410,7 @@ has_been_unregistered_from_workspace: has_been_unregistered_from_workspace
 has_been_updated: 'ha sido actualizado'
 has_not_been_imported: 'No se ha importado'
 has_not_been_imported_into_the_group: 'no ha sido importado en un grupo'
+height: Altura
 help_url: 'URL de ayuda'
 hide: Ocultar
 hide_tools_menu: 'Ocultar el menú de herramientas (excepto para los administradores)'
@@ -1086,6 +1087,7 @@ warning_workspace_impersonation: 'Usted esta conectado como %role% del espacio d
 warnings: warnings
 widget: Widget
 widget_configuration: 'Configuración del Widget'
+widget_creation_roles: 'Roles que pueden crear el widget en su escritorio'
 widget_home_tab_delete_confirm_message: '¿Está seguro que desea retirar este widget de esta pestaña?'
 widget_home_tab_delete_confirm_title: 'Retirar widgets de esta pestaña'
 widget_settings: 'Configuración del Widget'
@@ -1093,6 +1095,7 @@ widget_visible_actions: 'Escoger una acción visible en el widget'
 widget_workspace_pick: 'Escoger un espacio de trabajo visible en el widget'
 widgets: Widgets
 widgets_configuration: 'Configuración del Widget'
+width: Ancho
 with_role: with_role
 with_tutor: Tutelado
 workspace: 'Espacio de trabajo'

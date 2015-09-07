@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\Form\Factory\FormFactory;
+use Claroline\CoreBundle\Entity\Widget\Widget;
+use Claroline\CoreBundle\Form\Administration\WidgetEditType;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -19,7 +20,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -31,14 +35,16 @@ class WidgetController extends Controller
     private $om;
     private $request;
     private $roleManager;
+    private $translator;
     private $widgetManager;
 
     /**
      * @DI\InjectParams({
-     *     "formFactory"   = @DI\Inject("claroline.form.factory"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"  = @DI\Inject("request_stack"),
      *     "roleManager"   = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"    = @DI\Inject("translator"),
      *     "widgetManager" = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
@@ -47,6 +53,7 @@ class WidgetController extends Controller
         ObjectManager $om,
         RequestStack $requestStack,
         RoleManager $roleManager,
+        TranslatorInterface $translator,
         WidgetManager $widgetManager
     )
     {
@@ -54,6 +61,7 @@ class WidgetController extends Controller
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->roleManager = $roleManager;
+        $this->translator = $translator;
         $this->widgetManager = $widgetManager;
     }
 
@@ -69,6 +77,66 @@ class WidgetController extends Controller
      */
     public function widgetsManagementAction()
     {
-        return array();
+        $widgets = $this->widgetManager->getAll();
+        $toOrder = array();
+
+        foreach ($widgets as $widget) {
+            $widgetName = $this->translator->trans($widget->getName(), array(), 'widget');
+            $toOrder[$widgetName] = $widget;
+        }
+        ksort($toOrder);
+
+        return array('widgets' => $toOrder);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "widget/{widget}/edit/form",
+     *     name="claro_widget_edit_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Administration\Widget:widgetEditModalForm.html.twig")
+     *
+     * @param Widget $widget
+     */
+    public function widgetEditFormAction(Widget $widget)
+    {
+        $form = $this->formFactory->create(
+            new WidgetEditType($widget->isDisplayableInDesktop()),
+            $widget
+        );
+
+        return array('form' => $form->createView(), 'widget' => $widget);
+    }
+
+
+    /**
+     * @EXT\Route(
+     *     "widget/{widget}/edit",
+     *     name="claro_widget_edit",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineCoreBundle:Administration\Widget:widgetEditModalForm.html.twig")
+     *
+     * @param Widget $widget
+     */
+    public function widgetEditAction(Widget $widget)
+    {
+        $form = $this->formFactory->create(
+            new WidgetEditType($widget->isDisplayableInDesktop()),
+            $widget
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->widgetManager->persistWidget($widget);
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array('form' => $form->createView(), 'widget' => $widget);
+        }
     }
 }

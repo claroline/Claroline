@@ -117,6 +117,12 @@ class WidgetManager
         $this->om->flush();
     }
 
+    public function persistWidget(Widget $widget)
+    {
+        $this->om->persist($widget);
+        $this->om->flush();
+    }
+
     /**
      * Finds all widgets.
      *
