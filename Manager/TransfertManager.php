@@ -220,7 +220,12 @@ class TransfertManager
             true
         );
 
-        $this->om->forceFlush();
+        $defaultZip = $this->container->getParameter('claroline.param.templates_directory') . 'default.zip';
+
+        //batch import with default template shouldn't be flushed    
+        if ($configuration->getArchive() !== $defaultZip) {
+            $this->om->forceFlush();
+        }
 
         $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);

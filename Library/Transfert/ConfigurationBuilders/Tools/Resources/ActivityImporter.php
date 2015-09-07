@@ -124,7 +124,9 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
             $parameters->setEvaluationType($item['activity']['evaluation_type']);
 
             foreach ($item['activity']['secondary_resources'] as $secondaryResource) {
-                $parameters->addSecondaryResource($created[$secondaryResource['uid']]->getResourceNode());
+                if ($created[$secondaryResource['uid']]) {
+                    $parameters->addSecondaryResource($created[$secondaryResource['uid']]->getResourceNode());
+                }
             }
 
             $activity->setParameters($parameters);

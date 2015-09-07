@@ -475,6 +475,7 @@ last_30_days_activity: 'Activités des 30 derniers jours'
 last_action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 last_attempt_date: 'Date de la dernière tentative'
 last_manager_error_message: 'Vous ne pouvez pas retirer tous les gestionnaires.'
+last_modification: Dernière modification
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
