@@ -51,7 +51,7 @@ class Interaction
     private $feedBack;
 
     /**
-     * @var bool
+     * @var boolean $locked_expertise
      *
      * @ORM\Column(name="locked_expertise", type="boolean", nullable=true)
      */
@@ -180,9 +180,9 @@ class Interaction
     }
 
     /**
-     * Set locked_expertise.
+     * Set locked_expertise
      *
-     * @param bool $lockedExpertise
+     * @param boolean $lockedExpertise
      */
     public function setLockedExpertise($lockedExpertise)
     {
@@ -190,7 +190,7 @@ class Interaction
     }
 
     /**
-     * Get lockedExpertise.
+     * Get lockedExpertise
      */
     public function getLockedExpertise()
     {
@@ -208,7 +208,7 @@ class Interaction
     }
 
     /**
-     * Add $Document.
+     * Add $Document
      *
      * @param UJM\ExoBundle\Entity\Document $Document
      */
@@ -255,21 +255,21 @@ class Interaction
         }
     }
 
-    public function __clone()
-    {
+    public function __clone() {
         if ($this->id) {
             $this->id = null;
 
             $this->question = clone $this->question;
             $this->question->setModel(0);
 
-            $newHints = new \Doctrine\Common\Collections\ArrayCollection();
+            $newHints = new \Doctrine\Common\Collections\ArrayCollection;
             foreach ($this->hints as $hint) {
                 $newHint = clone $hint;
                 $newHint->setInteraction($this);
                 $newHints->add($newHint);
             }
             $this->hints = $newHints;
+
         }
     }
 }

@@ -106,7 +106,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
-    private $lockAttempt = false;   
+    private $lockAttempt = false;
 
     /**
      * Flag indicating whether the exercise has been published at least
@@ -120,7 +120,7 @@ class Exercise extends AbstractResource
     private $wasPublishedOnce = false;
 
     public function __construct()
-    {       
+    {
         $this->dateCorrection = new \DateTime();
     }
 
@@ -231,9 +231,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set duration
+     * Set duration.
      *
-     * @param integer $duration
+     * @param int $duration
      */
     public function setDuration($duration)
     {
@@ -251,7 +251,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set doprint.
+     * Set doprint
      *
      * @param bool $doprint
      */
@@ -313,7 +313,7 @@ class Exercise extends AbstractResource
      *
      * @param \Datetime $dateCorrection
      */
-    public function setDateCorrection(\DateTime $dateCorrection)
+    public function setDateCorrection(\DateTime $dateCorrection = null)
     {
         $this->dateCorrection = $dateCorrection;
     }
@@ -382,9 +382,7 @@ class Exercise extends AbstractResource
     public function getLockAttempt()
     {
         return $this->lockAttempt;
-    }    
-
-   
+    }
 
     public function archiveExercise()
     {
