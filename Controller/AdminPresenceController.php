@@ -73,7 +73,8 @@ class AdminPresenceController extends Controller
     {
  
         $Presences = $this->presenceRepo->findAll() ;
-        $Periods = $this->periodRepo->findAll() ;
+        $Periods = $this->periodRepo->findByVisibility(true) ;
+        
         
         
         return array('user'=>$user, 'presences'=>$Presences, 'periods'=>$Periods );
@@ -280,7 +281,6 @@ class AdminPresenceController extends Controller
                 $startHourFormat = \DateTime::createFromFormat('H:i', $startHour);
                 $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
                 
-                var_dump($startHourFormat);
                 foreach ($wichDay as $oneDay) {
                     $begin = new \DateTime('2015-09-01 09:00:00', new \DateTimeZone('Europe/Paris')); //j'initialise ainsi car je ne suis pas le 1/09
                     $begin->modify('last '.$oneDay);  
@@ -289,13 +289,15 @@ class AdminPresenceController extends Controller
                     $end->modify('next '.$oneDay); //dernier jour du mois
                     $period = new \DatePeriod($begin, $interval, $end);
                     foreach ($period as $date) {
-
+                         
                         $dateFormat = $date->format("Y-m-d");
+                        $dayNameFormat=$date->format("l");
 
                         $actualPeriod = new Period();
                         $actualPeriod->setBeginHour($startHourFormat);
                         $actualPeriod->setEndHour($endHourFormat);
-                        $actualPeriod->setDay($dateFormat);
+                        $actualPeriod->setDay($date);
+                        $actualPeriod->setDayName($dayNameFormat);
                         $actualPeriod->setName($name);
                         $actualPeriod->setNumPeriod($number);
 
@@ -323,70 +325,118 @@ class AdminPresenceController extends Controller
      */
     public function adminModifierHoraireAction(Period $period)
             
-    {
-       $Periods = $this->periodRepo->findOneById($period) ; 
+    { 
+       $ModifPeriodForm = $this ->createFormBuilder()
         
-       $NewPeriodForm = $this ->createFormBuilder()
-        
-            ->add('day', 'choice', array(
-                    'choices'   => array(
-                    'monday'   => 'lundi',
-                    'tuesday' => 'mardi',
-                    'wednesday'   => 'mercredi',
-                    'thursday'   => 'jeudi',
-                    'friday'   => 'vendredi',
-                    'saturday'   => 'samedi',
-                    ),
-                'multiple'  => true,
-                'expanded'  => true,
-                ))
-            ->add('number','text')  
-            ->add('name','text')
+            ->add('numberMod','text')  
+            ->add('nameMod','text')
             ->add('startMod','text')
             ->add('endMod','text')
-            ->add ('valider','submit',array (
-                'label'=>'Ajouter'))
-               
+            ->add('dayName','hidden')
+            ->add ('modifier','submit')
+            ->add ('supprimer','submit')   
             ->getForm();
 
-            $request = $this->getRequest();
-            if ($request->getMethod() === 'POST') {
+                $request = $this->getRequest();
+
+                $ModifPeriodForm->handleRequest($request);
+                if($ModifPeriodForm->isSubmitted()){
+                                    
+                $startHour = $ModifPeriodForm->get("startMod")->getData();
+                $endHour = $ModifPeriodForm->get("endMod")->getData();
+                $name = $ModifPeriodForm->get("nameMod")->getData();
+                $number = $ModifPeriodForm->get("numberMod")->getData();
+                $dayName =$ModifPeriodForm->get("dayName")->getData();
                 
-                $NewPeriodForm->handleRequest($request);
-                $startHour = $NewPeriodForm->get("start")->getData();
-                $endHour = $NewPeriodForm->get("end")->getData();
-                $name = $NewPeriodForm->get("name")->getData();
-                $number = $NewPeriodForm->get("number")->getData();
-                $wichDay =$NewPeriodForm->get("day")->getData();
+                $startHourFormat = \DateTime::createFromFormat('H:i', $startHour);
+                $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
+                                
+                $PeriodToModif = $this->periodRepo->findBy(array('beginHour'=>$startHourFormat,
+                                                                 'endHour'=>$endHourFormat, 
+                                                                 'dayName'=>$dayName));
+               
+                if ($ModifPeriodForm->get("modifier")->isClicked()) {
+                    throw new \Exception("coucou");
+//                    foreach ($PeriodToModif as $OnePeriodToModif) {
+//
+//                        $OnePeriodToModif->setBeginHour($startHourFormat);
+//                        $OnePeriodToModif->setEndHour($endHourFormat);
+//                        $OnePeriodToModif->setName($name);
+//                        $OnePeriodToModif->setNumPeriod($number); 
+//                    }    
+//                    $this->em->flush();
                 
-                foreach ($wichDay as $oneDay) {
-                    $begin = new \DateTime('2015-09-01 09:00:00', new \DateTimeZone('Europe/Paris')); //j'initialise ainsi car je ne suis pas le 1/09
-                    $begin->modify('last '.$oneDay);  
-                    $interval = new \DateInterval('P1W'); //interval d'une semaine
-                    $end = new \DateTime('2016-06-30 09:00:00', new \DateTimeZone('Europe/Paris'));
-                    $end->modify('next '.$oneDay); //dernier jour du mois
-                    $period = new \DatePeriod($begin, $interval, $end);
-                    foreach ($period as $date) {
-
-                        $dateFormat = $date->format("Y-m-d");
-
-                        $actualPeriod = new Period();
-                        $actualPeriod->setBeginHour($startHour);
-                        $actualPeriod->setEndHour($endHour);
-                        $actualPeriod->setDay($dateFormat);
-                        $actualPeriod->setName($name);
-                        $actualPeriod->setNumPeriod($number);
-
-                        $this->em->persist($actualPeriod);
-                        $this->em->flush();  
-                    }
+                    
                 }
-   
-            return $this->redirect($this->generateUrl('formalibre_presence_horaire'));    
-        }  
-       return array('NewPeriodForm' => $NewPeriodForm->createView(), 'periods' => $Periods);
+             return new JsonResponse('success',200);
+                    
+            }    
+          
+       return array('ModifPeriodForm' => $ModifPeriodForm->createView(), 'period' => $period);
     }
     
+    
+    
+                /**
+     * @EXT\Route(
+     *     "/admin/presence/presence_modif/id/{id}",
+     *     name="formalibre_presence_modif",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     * @EXT\Template()
+     */
+    public function adminPresenceModifAction($id)
+            
+    {   $Presence= $this->presenceRepo->findOneById($id) ;
+        $ModifPresenceForm = $this ->createFormBuilder()
+        ->add (
+                 'Status',
+                 'entity',
+                 array (
+                     'multiple'  => false,
+                     'expanded'  => false, 
+                     'label'=>'Status:',
+                     'class' => 'FormaLibre\PresenceBundle\Entity\Status',
+                     'data_class' => 'FormaLibre\PresenceBundle\Entity\Status',
+                     'empty_value'=> 'Nouveau status',
+                     'property' => 'statusName'
+
+                 ))
+        ->add ('Comment','textarea')
+        ->add ('Save','submit')
+        ->getForm();
+        
+        
+        $request = $this->getRequest();
+         
+        if ($request->getMethod() == 'POST')
+            {
+                $ModifPresenceForm->handleRequest($request);
+                                                            
+                $NewStatus = $ModifPresenceForm->get("Status")->getData();
+                $NewComment = $ModifPresenceForm->get("Comment")->getData();
+                
+                if(empty($NewStatus)){
+                    $Presence->setComment($NewComment);
+                    $this->em->flush();
+                    
+                    return new JsonResponse('success',200);
+                }
+                else{
+                    $Presence->setStatus($NewStatus);
+                    $Presence->setComment($NewComment);
+                    $this->em->flush();
+                    
+                    return new JsonResponse('success',200);
+                }
+
+                }
+        
+       return array('ModifPresenceForm' => $ModifPresenceForm->createView(),'presence' => $Presence);
+    }
     
             /**
      * @EXT\Route(
@@ -429,6 +479,8 @@ class AdminPresenceController extends Controller
         }
         return new JsonResponse($datas,200);
     }
+    
+    
     
 }
 

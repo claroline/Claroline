@@ -26,9 +26,13 @@ use Doctrine\ORM\Mapping as ORM;
      */
     protected $name;
     /**
-     * @ORM\Column(name="school_day")
+     * @ORM\Column(name="school_date",type="date")
      */
     protected $day;
+     /**
+     * @ORM\Column(name="school_day")
+     */
+    protected $dayName;
     /**
      * @ORM\Column(name="begin_hour",type="time")
      */
@@ -38,6 +42,10 @@ use Doctrine\ORM\Mapping as ORM;
      * @ORM\Column(name="end_hour",type="time")
      */
     protected $endHour;
+     /**
+     * @ORM\Column(name="visibility",type="boolean")
+     */
+    protected $visibility=true;
     
     public function getId()
     {
@@ -66,6 +74,15 @@ use Doctrine\ORM\Mapping as ORM;
     {
         $this->day = $day;
     }
+    public function getDayName()
+    {
+        return $this->dayName;
+    }
+    
+    public function setDayName($dayName)
+    {
+        $this->dayName = $dayName;
+    }
      public function getName()
     {
         return $this->name;
@@ -91,6 +108,15 @@ use Doctrine\ORM\Mapping as ORM;
     public function setEndHour($endHour)
     {
         $this->endHour = $endHour;
+    }
+      public function getVisibility()
+    {
+        return $this->visibility;
+    }
+    
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
     }
     
     

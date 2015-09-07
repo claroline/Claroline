@@ -13,7 +13,7 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_admin_tool_index")}}">Appel</a></li>
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_admin_tool_index")}}">Accueil</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}">Configurations</a></li>
@@ -30,9 +30,45 @@
             <br /><br /><br />
             
             <div id='calendar'></div>
-         
-           
-
+            
+            
+           Mes présences:
+           <br /><br /><br />
+            <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Date</th>
+                        <th style="text-align: center;">Period</th>
+                            {#<th>Cours</th>#}
+                            <th style="text-align: center;">Classe</th>
+                            <th style="text-align: center;">Nom de l'étudiant</th>
+                            <th style="text-align: center;">Prénom de l'étudiant</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Responsable de l'appel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presence in presences%}
+                            {% if presence.getUserStudent.getId==user.getId%}
+                                <tr>
+                                    <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                    <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                {#                    <td>{{presence.getPeriod.getName()}}</td>#}
+                                    <td>{{presence.getGroup.getName()}}</td>
+                                    <td>{{presence.getUserStudent.getLastName()}}</td>
+                                    <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                    {% if presence.getStatus() is null %}
+                                        <td>Non communiqué</td>
+                                    {% else %}
+                                    <td>{{presence.getStatus.getStatusName()}}</td>
+                                    {% endif %}
+                                    <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
         </div>
     </div>
 
@@ -98,9 +134,9 @@
                                {
                                id: {{ item.getId }},
                                title: '{{ item.getName()}}',
-                               start: '{{item.getDay()}}T{{item.getBeginHour()|date('H:i:s')}}',
-                               end: '{{item.getDay()}}T{{item.getEndHour()|date('H:i:s')}}',
-                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()})}}',
+                               start: '{{item.getDay()|date('Y-m-d')}}T{{item.getBeginHour()|date('H:i:s')}}',
+                               end: '{{item.getDay()|date('Y-m-d')}}T{{item.getEndHour()|date('H:i:s')}}',
+                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()|date('d-m-Y')})}}',
                                        
 
         
@@ -122,6 +158,40 @@
     });
 
 </script>
+
+<script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
+    
+
+    <!-- outils -->
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
+    <script>    
+        $(document).ready(function() {
+            $('#archivesList').DataTable( {
+
+                dom: 'Bftp',
+                buttons: true,
+               "pageLength": 50,
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ presences par page",
+                    "zeroRecords": "Rien trouvé - Désolé",
+                    "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Pas de présence valide",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trier les présences"
+                }
+            } );
+        } );
+        
+        
+        
+    </script>
 
 {% endblock javascripts %}
 

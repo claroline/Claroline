@@ -59,6 +59,10 @@ use FormaLibre\PresenceBundle\Entity\Period;
      * @ORM\JoinColumn(name="group_id", onDelete="CASCADE")
      */
     protected $group;
+      /**
+     * @ORM\Column(name="Comment",nullable=true)
+     */
+    protected $comment;
     
     public function getId()
     {
@@ -129,5 +133,14 @@ use FormaLibre\PresenceBundle\Entity\Period;
     {
         $this->group = $group;
     }  
+     public function getComment()
+    {
+        return $this->comment;
+    }
+    
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+    }
     
  }

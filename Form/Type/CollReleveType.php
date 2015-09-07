@@ -10,13 +10,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class CollReleveType extends AbstractType
 
 {
-//    private $stats;
-//    
-//    public function __construct($param) 
-//    {
-//        $this->stats=$param; 
-//    }
-
     public function buildForm(FormBuilderInterface $builder, array $options) 
                 
            {$builder->add('releves', 'collection', array('type' => new PresenceType(),

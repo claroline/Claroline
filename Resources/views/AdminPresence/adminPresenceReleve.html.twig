@@ -7,7 +7,7 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Accueil</a></li>
                   <li role="presentation" class="active"><a href="">Relevé</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
@@ -25,13 +25,13 @@
             </a>
             <br /><br />
             Classe: 
-            <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()})}}" 
+            <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()|date('d-m-Y')})}}" 
                 role="button"
                 class="btn btn-primary">
                 {{classe.getName()}} 
             </a>
             <br />
-                <div class="col-md-2 col-md-offset-6"  style="text-align: leftt;"> 
+                <div class="col-md-2 col-md-offset-6"  style="text-align: left;"> 
                    {{form_widget(sameStatus.singleStatus)}}
                    <button type="button" 
                            class="btn btn-primary"
@@ -58,7 +58,7 @@
                             <tr class="OneForm">
                                 {% for student in presences %}
                                     {%if student.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
-                                <td> <img id="photo" style="height:150px; background-color: black;" 
+                                <td> <img id="photo" style="height:150px;" 
                                                      class="img-thumbnail" 
                                                      src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
                                                      width="100" 
@@ -97,6 +97,7 @@
                             {% endif %}
                         {% endfor %}
                     </td>
+                  
                     
                             </tr>
                         {% endfor %}
@@ -251,16 +252,7 @@
           });
           
     </script>
-     <!-- jQuery -->
-    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
-
-    <!-- DataTables -->
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
-
-    <!-- outils -->
-    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.js"></script>
-    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
-    
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#studentList').DataTable( {

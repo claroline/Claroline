@@ -8,30 +8,32 @@
         <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Accueil</a></li>
                   <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" >Configurations</a></li>
                 </ul>
         </div>
         </br> </br> </br>
-        <table id="archivesList" class="cell-border" cellspacing="0" width="100%">
+        <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Period</th>
+                        <th style="text-align: center;">Date</th>
+                        <th style="text-align: center;">Period</th>
                             {#<th>Cours</th>#}
-                            <th>Classe</th>
-                            <th>Nom de l'étudiant</th>
-                            <th>Prénom de l'étudiant</th>
-                            <th>Status</th>
-                            <th>Responsable de l'appel</th>
+                            <th style="text-align: center;">Classe</th>
+                            <th style="text-align: center;">Nom de l'étudiant</th>
+                            <th style="text-align: center;">Prénom de l'étudiant</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Responsable de l'appel</th>
+                            <th style="text-align: center;">Commentaire(s)</th>
+                            <th style="text-align: center;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for presence in presences%}
                             <tr>
-                                <td>{{presence.getDate()|date("D d/m/Y")}}</td>
+                                <td>{{presence.getDate()|date("y/m/d")}}</td>
                                 <td>{{presence.getPeriod.getNumPeriod()}}</td>
             {#                    <td>{{presence.getPeriod.getName()}}</td>#}
                                 <td>{{presence.getGroup.getName()}}</td>
@@ -42,7 +44,28 @@
                                 {% else %}
                                 <td>{{presence.getStatus.getStatusName()}}</td>
                                 {% endif %}
-                                <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                                <td>{{presence.getUserTeacher.getFirstName()}}{{presence.getUserTeacher.getLastName()}}</td>
+                                <td>{{presence.getComment()}}</td>
+                                <td>
+                                    <span class="btn btn-default modifier-presence-btn"
+                                                               data-presence-id="{{presence.getId()}}"
+                                                               data-toggle="tooltip" 
+                                                               data-placement="bottom" 
+                                                               title="" 
+                                                               data-original-title="Modifier" 
+                                                               role="button">
+                                        <i class="fa fa-pencil"></i>
+                                    </span>
+                                     <a class="btn btn-default" href="/Claroline/web/app_dev.php/profile/profile/edit/17" 
+                                                               data-toggle="tooltip" 
+                                                               data-placement="bottom" 
+                                                               title="" 
+                                                               data-original-title="Supprimer" 
+                                                               role="button">
+                                        <i class="fa fa-times"></i>
+                                    </a>
+                       
+                    </td>
                             </tr>
                         {% endfor %}
                         </tr>
@@ -51,45 +74,57 @@
          </div>
     </div>
 {% endblock %}   
-{#{% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/responsive/1.0.6/css/dataTables.responsive.css">
-{% endblock %}#}
-    
 {% block javascripts %}
     
     {{ parent() }}
-    
-    <!-- jQuery -->
-    <script type="text/javascript" charset="utf8" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
 
     <!-- DataTables -->
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
+    
 
     <!-- outils -->
-    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.js"></script>
-    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/media/js/jquery.dataTables.js"></script>
-{#    <script type="text/javascript" charset="utf8" src="http://www.datatables.net/release-datatables/extensions/TableTools/js/dataTables.tableTools.js"></script>#}
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.bootstrap.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
-    <script>
-            
-    $(document).ready(function() {
-        $('#archivesList').DataTable( {
-            
-             "language": {
-                "lengthMenu": "Afficher _MENU_ presences par page",
-                "zeroRecords": "Rien trouvé - Désolé",
-                "info": "Affichage de la page _PAGE_ sur _PAGES_",
-                "infoEmpty": "Pas de présence valide",
-                "infoFiltered": "(filtered from _MAX_ total records)"
-            }
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
+    <script>    
+        $(document).ready(function() {
+            $('#archivesList').DataTable( {
+
+                dom: 'Bftp',
+                buttons: true,
+               "pageLength": 50,
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ presences par page",
+                    "zeroRecords": "Rien trouvé - Désolé",
+                    "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Pas de présence valide",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trier les présences"
+                }
+            } );
         } );
-    } );
-
-
+        
+        
+        
+    </script>
+    <script>
+    $(".modifier-presence-btn").on("click",function(){
+       var presenceId=$(this).data("presence-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_presence_modif",{"id":presenceId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });    
+                
     </script>
 
 {% endblock javascripts %}

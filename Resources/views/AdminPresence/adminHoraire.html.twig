@@ -13,7 +13,7 @@
              <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}">Appel</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}">Accueil</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
                   <li role="presentation" class="active"><a href="{{path("formalibre_presence_horaire")}}">Horaire</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}">Configurations</a></li>
@@ -109,8 +109,8 @@
                                        {
                                        id: {{ item.getId }},
                                        title: '{{ item.getName()}}',
-                                       start: '{{item.getDay()}}T{{item.getBeginHour()|date('H:i:s')}}',
-                                       end: '{{item.getDay()}}T{{item.getEndHour()|date('H:i:s')}}',
+                                       start: '{{item.getDay()|date('Y-m-d')}}T{{item.getBeginHour()|date('H:i:s')}}',
+                                       end: '{{item.getDay()|date('Y-m-d')}}T{{item.getEndHour()|date('H:i:s')}}',
                                        url:'{{path("formalibre_presence_modifier_horaire", {"period":item.getId()})}}',
                                       
                 
@@ -122,8 +122,11 @@
                          jsEvent.preventDefault();
                         window.Claroline.Modal.displayForm(
                             calEvent.url,
+                            function() {
+                                window.location.reload();
+                            },
                             function() {},
-                            function() {}
+                            "ModifHoraireForm"
                         );
                 
                      }
