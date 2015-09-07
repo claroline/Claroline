@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
+use Claroline\CoreBundle\Entity\Role;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,6 +74,19 @@ class Widget
      * @ORM\Column(name="default_height", type="integer", options={"default":3})
      */
     protected $defaultHeight = 3;
+
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     * )
+     * @ORM\JoinTable(name="claro_widget_roles")
+     */
+    protected $roles;
+
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -161,5 +176,22 @@ class Widget
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        $this->roles->removeElement($role);
     }
 }

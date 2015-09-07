@@ -1,0 +1,35 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'widgets_management' | trans({}, 'tools') | striptags | raw 
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'widgets_management'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'widgets_management'|trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+    </div>
+{% endblock %}
