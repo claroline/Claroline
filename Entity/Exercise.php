@@ -56,13 +56,6 @@ class Exercise extends AbstractResource
     private $duration = 0;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="nb_question_page", type="integer")
-     */
-    private $nbQuestionPage = 0;
-
-    /**
      * @var bool
      *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
@@ -113,20 +106,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
-    private $lockAttempt = false;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Groupes")
-     * @ORM\JoinTable(
-     *     name="ujm_exercise_group",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="exercise_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     */
-    private $groupes;
+    private $lockAttempt = false;   
 
     /**
      * Flag indicating whether the exercise has been published at least
@@ -140,8 +120,7 @@ class Exercise extends AbstractResource
     private $wasPublishedOnce = false;
 
     public function __construct()
-    {
-        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
+    {       
         $this->dateCorrection = new \DateTime();
     }
 
@@ -252,9 +231,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set duration.
+     * Set duration
      *
-     * @param int $duration
+     * @param integer $duration
      */
     public function setDuration($duration)
     {
@@ -269,26 +248,6 @@ class Exercise extends AbstractResource
     public function getDuration()
     {
         return $this->duration;
-    }
-
-    /**
-     * Set nbQuestionPage.
-     *
-     * @param int $nbQuestionPage
-     */
-    public function setNbQuestionPage($nbQuestionPage)
-    {
-        $this->nbQuestionPage = $nbQuestionPage;
-    }
-
-    /**
-     * Get nbQuestionPage.
-     *
-     * @return int
-     */
-    public function getNbQuestionPage()
-    {
-        return $this->nbQuestionPage;
     }
 
     /**
@@ -423,27 +382,9 @@ class Exercise extends AbstractResource
     public function getLockAttempt()
     {
         return $this->lockAttempt;
-    }
+    }    
 
-    /**
-     * Gets an array of Groupes.
-     *
-     * @return array An array of Groupes objects
-     */
-    public function getGroupes()
-    {
-        return $this->groupes;
-    }
-
-    /**
-     * Add Groupe.
-     *
-     * @param UJM\ExoBundle\Entity\Groupes $Groupe
-     */
-    public function addGroupe(\UJM\ExoBundle\Entity\Groupes $groupe)
-    {
-        $this->groupes[] = $groupe;
-    }
+   
 
     public function archiveExercise()
     {

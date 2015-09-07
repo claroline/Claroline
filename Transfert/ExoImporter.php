@@ -175,7 +175,6 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         $newExercise = new Exercise();
         $newExercise->setTitle($title);
-        $newExercise->setNbQuestionPage(1);
         $newExercise->setNbQuestion(0);
         $newExercise->setDuration(0);
         $newExercise->setMaxAttempts(0);
