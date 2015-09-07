@@ -30,7 +30,6 @@ class AgendaType extends AbstractType
     private $translator;
     private $om;
     private $tokenStorage;
-    private $editMode;
     private $isDesktop;
 
     /**
@@ -45,13 +44,7 @@ class AgendaType extends AbstractType
         $this->translator = $translator;
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
-        $this->editMode = false;
         $this->isDesktop = false;
-    }
-
-    public function setEditMode()
-    {
-        $this->editMode = true;
     }
 
     public function setIsDesktop()

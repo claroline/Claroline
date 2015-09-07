@@ -322,8 +322,8 @@
          */
         if (event.end === null) {
             event.end = moment(event.start).add(1, 'days');
-
         }
+
         event.start.string = convertDateTimeToString(event.start, event.allDay, false);
         event.end.string = convertDateTimeToString(event.end, event.allDay, true);
 

@@ -195,7 +195,6 @@ class WorkspaceAgendaController extends Controller
     {
         $this->agendaManager->checkEditAccess($event->getWorkspace());
         $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
         $form = $this->createForm($formType, $event);
 
         return array(
@@ -221,7 +220,6 @@ class WorkspaceAgendaController extends Controller
     {
         $this->agendaManager->checkEditAccess($event->getWorkspace());
         $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
         $form = $this->createForm($formType, $event);
         $form->handleRequest($this->request);
 

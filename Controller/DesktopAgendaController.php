@@ -139,7 +139,6 @@ class DesktopAgendaController extends Controller
     public function updateEventModalFormAction(Event $event)
     {
         $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
         $formType->setIsDesktop();
         $form = $this->createForm($formType, $event);
 
@@ -165,7 +164,6 @@ class DesktopAgendaController extends Controller
     public function updateAction(Event $event)
     {
         $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
         $formType->setIsDesktop();
         $form = $this->createForm($formType, $event);
         $form->handleRequest($this->request);

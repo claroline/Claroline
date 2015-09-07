@@ -247,7 +247,7 @@ class AgendaManager
             } else {
                 $event->setStart(strtotime($event->getStartInDateTime()->format('Y-m-d').' 00:00:00'));
             }
-            $event->setEnd(strtotime($event->getEndInDateTime()->format('Y-m-d').' 00:00:00'));
+            $event->setEnd(strtotime($event->getEndInDateTime()->format('Y-m-d').' 24:00:00'));
         } else {
             // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
             if ($event->isTask()) {
