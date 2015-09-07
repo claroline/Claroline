@@ -807,7 +807,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $this->resourceManager->getResourceFromNode($resourceNode)
             );
         }
-
         
         if ($setParentNull) $parentId = null;
 
