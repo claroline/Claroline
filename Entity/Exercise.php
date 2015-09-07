@@ -57,13 +57,6 @@ class Exercise extends AbstractResource
     private $duration = 0;
 
     /**
-     * @var integer $nbQuestionPage
-     *
-     * @ORM\Column(name="nb_question_page", type="integer")
-     */
-    private $nbQuestionPage = 0;
-
-    /**
      * @var boolean $doprint
      *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
@@ -270,26 +263,6 @@ class Exercise extends AbstractResource
     public function getDuration()
     {
         return $this->duration;
-    }
-
-    /**
-     * Set nbQuestionPage
-     *
-     * @param integer $nbQuestionPage
-     */
-    public function setNbQuestionPage($nbQuestionPage)
-    {
-        $this->nbQuestionPage = $nbQuestionPage;
-    }
-
-    /**
-     * Get nbQuestionPage
-     *
-     * @return integer
-     */
-    public function getNbQuestionPage()
-    {
-        return $this->nbQuestionPage;
     }
 
     /**

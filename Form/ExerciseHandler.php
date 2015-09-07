@@ -71,7 +71,6 @@ class ExerciseHandler
      */
     private function onSuccess(Exercise $exercise)
     {
-        $exercise->setNbQuestionPage(1);
         $this->em->persist($exercise);
         $this->em->flush();
 

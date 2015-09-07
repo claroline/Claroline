@@ -208,7 +208,6 @@ class ExerciseListener
         $newExercise->setShuffle($exerciseToCopy->getShuffle());
         $newExercise->setNbQuestion($exerciseToCopy->getNbQuestion());
         $newExercise->setDuration($exerciseToCopy->getDuration());
-        $newExercise->setNbQuestionPage($exerciseToCopy->getNbQuestionPage());
         $newExercise->setDoprint($exerciseToCopy->getDoprint());
         $newExercise->setMaxAttempts($exerciseToCopy->getMaxAttempts());
         $newExercise->setCorrectionMode($exerciseToCopy->getCorrectionMode());
