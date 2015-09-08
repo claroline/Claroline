@@ -133,12 +133,14 @@ class DropzoneListener extends ContainerAware
 
     public function onList(CustomActionResourceEvent $event)
     {
+ 
         $route = $this->container
             ->get('router')
             ->generate(
-                'innova_collecticiel_drops',
+                'innova_collecticiel_drops_awaiting',
                 array('resourceId' => $event->getResource()->getId())
-            );
+        );
+
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }

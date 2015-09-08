@@ -14,7 +14,6 @@ services:
           - { name: kernel.event_listener, event: create_log_details_innova_collecticiel, method: onCreateLogDetails }
           - { name: kernel.event_listener, event: plugin_options_innovacollecticiel, method: onAdministrate }
           - { name: kernel.event_listener, event: edit_dropzone_innova_collecticiel, method: onEdit }
-          - { name: kernel.event_listener, event: list_dropzone_innova_collecticiel, method: onList }
           - { name: kernel.event_listener, event: open_dropzone_innova_collecticiel, method: onOpenCustom }
 
     innova.listener.document_listener:
