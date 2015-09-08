@@ -21,7 +21,6 @@
             {% for userName in pager.currentPageResults %}
                 {% if usersByWorkspace.userName == userName.user.userName %}
                     {% set findUser = true %}
-                    {{ usersByWorkspace.userName }}
                 {% endif %}
             {% endfor %}
             {# J'affiche la ligne si l'utilisateur n'a pas déjà été affiché. InnovaERV #}
