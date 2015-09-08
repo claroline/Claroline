@@ -31,7 +31,7 @@
     {% set AwaitingMode = true %}
     {% include 'InnovaCollecticielBundle:Drop:Shared/dropsShared.html.twig' %}
 
-    {% if pager.nbResults == 0 %}
+    {% if pager.nbResults == 0 and usersByWorkspaces|length == 0 %}
         <div class="row">
             <div class="col-md-12 col-md-offset-1">
                 {{ 'No space in this collecticiel'|trans({}, 'innova_collecticiel') }}
