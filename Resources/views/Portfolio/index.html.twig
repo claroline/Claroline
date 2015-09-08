@@ -92,11 +92,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/comments.css'
+    {% stylesheets debug=false filter='lessphp, cssmin'  output='css/icapportfolio/index.css'
       '@IcapPortfolioBundle/Resources/views/less/comments.less'
       '@IcapPortfolioBundle/Resources/views/less/statistics.less'
       '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.less'
-      '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/less/jquery.jqplot.less'
+      '@ClarolineCoreBundle/Resources/public/css/common/jqplot/jquery.jqplot.css'
     %}
         <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
     {% endstylesheets %}
@@ -144,6 +144,12 @@
         '@FrontEndBundle/Resources/public/jquery/plugin/toastr/toastr.js'
         '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
         '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/jquery.jqplot.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.cursor.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.highlighter.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.canvasTextRenderer.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.dateAxisRenderer.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js'
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

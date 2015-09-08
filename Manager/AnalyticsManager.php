@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioComment;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Event\Log\PortfolioViewEvent;
 use Icap\PortfolioBundle\Factory\CommentFactory;
 use Icap\PortfolioBundle\Form\Type\AnalyticsViewsType;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -74,24 +75,27 @@ class AnalyticsManager
     /**
      * @param User      $user
      * @param Portfolio $portfolio
+     * @param array     $range     0 => startDate and 1 => endDate
      *
      * @return array
      */
-    public function getViewsForChart(User $user, Portfolio $portfolio)
+    public function getViewsForChart(User $user, Portfolio $portfolio, array $range)
     {
         /** @var \Claroline\CoreBundle\Repository\Log\LogRepository $logRepository */
         $logRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Log\Log');
-        return $logRepository->createQueryBuilder('l')
-            ->select("COUNT(l.id) as nbLog, l.shortDateLog")
-            ->where("l.owner = :owner")
-            ->andWhere("l.otherElementId = :otherElementId")
-            ->setParameters([
-                'owner' => $user,
-                'otherElementId' => $portfolio->getId()
-            ])
-            ->groupBy("l.shortDateLog")
-            ->getQuery()
-            ->getArrayResult()
+
+        $queryBuilder = $logRepository
+            ->createQueryBuilder('log')
+            ->select('log.shortDateLog as shortDate, count(log.id) as total')
+            ->orderBy('shortDate', 'ASC')
+            ->groupBy('shortDate')
         ;
+
+        $queryBuilder = $logRepository->addOwnerFilterToQueryBuilder($queryBuilder, $user);
+        $queryBuilder = $logRepository->addActionFilterToQueryBuilder($queryBuilder, PortfolioViewEvent::ACTION);
+        $queryBuilder = $logRepository->addOtherElementIdFilterToQueryBuilder($queryBuilder, $portfolio->getId());
+        $queryBuilder = $logRepository->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+
+        return $logRepository->extractChartData($queryBuilder->getQuery()->getResult(), $range);
     }
 }

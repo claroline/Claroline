@@ -5,8 +5,8 @@ var appTranslation = angular.module('app.translation', []);
 appTranslation
     .factory('translationService', function(){
         return {
-            trans: function(key) {
-                return Translator.trans(key, {}, 'icap_portfolio');
+            trans: function(key, translationDomain) {
+                return Translator.trans(key, {}, translationDomain || 'icap_portfolio');
             }
         };
     })

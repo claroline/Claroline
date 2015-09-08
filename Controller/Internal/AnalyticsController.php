@@ -19,16 +19,24 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class AnalyticsController extends BaseController
 {
     /**
-     * @Route("/views", name="icap_portfolio_internal_analytics_views")
+     * @Route("/views/{startDate}/{endDate}", name="icap_portfolio_internal_analytics_views")
      * @Method({"GET"})
      *
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
      */
-    public function getViewAction(User $loggedUser, Portfolio $portfolio)
+    public function getViewAction(User $loggedUser, Portfolio $portfolio, $startDate, $endDate)
     {
         $this->checkPortfolioToolAccess($loggedUser, $portfolio);
 
-        $response = new JsonResponse($this->getAnalyticsManager()->getViewsForChart($loggedUser, $portfolio), Response::HTTP_OK);
+        $startDate = new \DateTime($startDate);
+        $endDate = new \DateTime($endDate);
+
+        $chartData = $this->getAnalyticsManager()->getViewsForChart(
+            $loggedUser,
+            $portfolio,
+            [$startDate->getTimestamp(), $endDate->getTimestamp()]
+        );
+        $response = new JsonResponse($chartData, Response::HTTP_OK);
 
         return $response;
     }

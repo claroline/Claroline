@@ -1,35 +1,83 @@
 'use strict';
 
 statisticsApp
-    .controller("statisticsViewController", ["$scope",
-        function($scope, portfolioManager, $filter) {
-        $scope.selectedPortfolioId = 0;
+    .controller("statisticsViewController", ["$scope", "portfolioManager", "$filter", "$http", "urlInterpolator", "translationService",
+        function($scope, portfolioManager, $filter, $http, urlInterpolator, translationService) {
         $scope.selectedPortfolio = null;
         $scope.period = {
             date: {startDate: moment().startOf('month'), endDate: moment().endOf('month')}
         };
 
-        $scope.cosPoints = [];
-        for (var i=0; i<2*Math.PI; i+=0.4){
-            $scope.cosPoints.push([i, Math.cos(i)]);
-        }
-
         $scope.chartData = [];
 
+        var bg_color = "transparent";
+        if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
+
         $scope.chartOptions = {
-            series: [
-                {
-                    lineWidth: 2,
-                    markerOptions: { style:"filledSquare", size: 5 }
+            title: {show: false},
+            grid: {
+                drawBorder: true,
+                borderWidth: 1.0,
+                shadow: false,
+                background: bg_color
+            },
+            axesDefaults: {
+                labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions: {
+                        formatString: translationService.trans('jqplot_date_output_format', 'platform'),
+                        showGridline: false,
+                        showMark: true,
+                        angle: -20,
+                        fontSize: '10px'
+                    },
+                    numberTicks:10
+                },
+                yaxis: {
+                    min:0,
+                    showTickMarks: true,
+                    numberTicks: 5
                 }
-            ]
+            },
+            seriesDefaults: {
+                showMarker:(true),
+                markerOptions:{shadow:false},
+                shadow:false,
+                showLine:true,
+                useNegativeColors: false,
+                fill: true,
+                lineWidth: 1.5,
+                fillAndStroke: true,
+                fillAlpha: 0.12,
+                rendererOptions:{highlightMouseOver: true, highlightMouseDown: true}
+            }
         };
 
         $scope.fetchVisitData = function() {
             if ($scope.selectedPortfolio !== null) {
                 $('#chart').replaceWith('<div id="chart"></div>');
-                $scope.chartData = [$scope.cosPoints];
-                $.jqplot('chart', $scope.chartData, $scope.chartOptions);
+                $scope.chartData = [];
+                var url = urlInterpolator
+                    .interpolate('/analytics/{{portfolioId}}/views/{{startDate}}/{{endDate}}',
+                    {
+                        portfolioId: $scope.selectedPortfolio,
+                        startDate: $scope.period.date.startDate.format('DD-MM-YYYY'),
+                        endDate: $scope.period.date.endDate.format('DD-MM-YYYY')
+                    }
+                );
+                var self = this;
+
+                $http.get(url)
+                    .success(function(data) {
+                        if (data.length > 0) {
+                            $scope.chartData = data;
+                            $.jqplot('chart', [data], $scope.chartOptions);
+                        }
+                    });
             }
         };
     }]);
