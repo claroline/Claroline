@@ -93,8 +93,9 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_paper')->getInfosPaper($p);
         }
 
-        if ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true
-            && ($exercise->getResourceNode()->isPublished() || $exoAdmin == 1 )
+        if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
+            && ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true)
+            && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin == 1) )
         ) {
             $retryButton = true;
         }
