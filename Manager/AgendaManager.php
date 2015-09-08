@@ -12,12 +12,17 @@
 namespace Claroline\AgendaBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -73,13 +78,25 @@ class AgendaManager
         $this->container = $container;
     }
 
-    public function addEvent(Event $event, $workspace = null)
+    public function addEvent(Event $event, $workspace = null, array $users = [])
     {
         $event->setWorkspace($workspace);
         $event->setUser($this->tokenStorage->getToken()->getUser());
         $this->setEventDate($event);
         $this->om->persist($event);
         $this->om->flush();
+
+        $this->sendInvitation($event, $users);
+
+        return $event->jsonSerialize();
+    }
+
+    public function updateEvent(Event $event, array $users = [])
+    {
+        $this->setEventDate($event);
+        $this->om->flush();
+
+        $this->sendInvitation($event, $users);
 
         return $event->jsonSerialize();
     }
@@ -97,14 +114,57 @@ class AgendaManager
         return $removed;
     }
 
+    public function sendInvitation(Event $event, array $users = [])
+    {
+        foreach ($users as $key => $user) {
+            $invitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+                'user' => $user,
+                'event' => $event
+            ]);
+
+            if ($invitation) {
+                unset($users[$key]);
+                continue;
+            }
+
+            $eventInvitation = new EventInvitation($event, $user);
+            $this->om->persist($eventInvitation);
+        }
+        $this->om->flush();
+
+        $creator = $this->tokenStorage->getToken()->getUser();
+        $message = new SendMessageEvent(
+            $creator,
+            $this->translator->trans('send_message_content', [
+                '%Sender%' => $creator->getUserName(),
+                '%Start%' => $event->getStart(),
+                '%End%' => $event->getEnd(),
+                '%Description%' => $event->getDescription(),
+                '%href%' => $this->container->get('router')->generate('claro_agenda_accept_invitation', ['event' => $event->getId()]),
+            ], 'agenda'),
+            $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
+            null,
+            $users,
+            false
+        );
+
+        $dispatcher = $this->container->get('event_dispatcher');
+        $dispatcher->dispatch('claroline_message_sending_to_users', $message);
+    }
+
     public function desktopEvents(User $usr, $allDay = false)
     {
         $desktopEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, $allDay);
         $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
+        $invitationEvents = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findBy([
+            'user' => $usr,
+            'isConfirm' => true
+        ]);
 
         return array_merge(
             $this->convertEventsToArray($workspaceEventsAndTasks),
-            $this->convertEventsToArray($desktopEvents)
+            $this->convertEventsToArray($desktopEvents),
+            $this->convertInvitationsToArray($invitationEvents)
         );
     }
 
@@ -132,7 +192,7 @@ class AgendaManager
     }
 
     /**
-     * @param $text it's the calendar text formated in ics structure
+     * @param $text it's the calendar text formatted in ics structure
      * @param $workspaceId
      * @return string $fileName path to the file in web/upload folder
      */
@@ -178,14 +238,6 @@ class AgendaManager
         return $tabs;
     }
 
-    public function updateEvent(Event $event)
-    {
-        $this->setEventDate($event);
-        $this->om->flush();
-
-        return $event->jsonSerialize();
-    }
-
     public function displayEvents(Workspace $workspace, $allDay = false)
     {
         $events = $this->om->getRepository('ClarolineAgendaBundle:Event')
@@ -222,6 +274,17 @@ class AgendaManager
 
         foreach ($events as $event) {
             $data[] = $event->jsonSerialize();
+        }
+
+        return $data;
+    }
+
+    public function convertInvitationsToArray(array $invitations)
+    {
+        $data = [];
+
+        foreach ($invitations as $key => $invitation) {
+            $data[] = $invitation->getEvent()->jsonSerialize($this->tokenStorage->getToken()->getUser());
         }
 
         return $data;

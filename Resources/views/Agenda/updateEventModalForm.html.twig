@@ -15,7 +15,14 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
                 <button type="submit" class="btn btn-primary">{{ 'update'|trans({}, 'agenda') }}</button>
-                <a class="btn btn-danger delete-event" href="{{ path('claro_agenda_delete_event', {'event': event.getId()}) }}"
+
+                <a class="btn btn-danger delete-event" href="
+                    {% if isGuest is defined %}
+                        {{ path('claro_agenda_delete_guest_event', {'event': event.getId()}) }}
+                    {% else %}
+                        {{ path('claro_agenda_delete_event', {'event': event.getId()}) }}
+                    {% endif %}
+                    "
                    data-dismiss="modal">
                     {{ 'delete'|trans({}, 'platform') }}
                 </a>

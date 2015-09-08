@@ -23,7 +23,7 @@ use Claroline\AgendaBundle\Validator\Constraints\DateRange;
  * @ORM\Table(name="claro_event")
  * @DateRange()
  */
-class Event
+class Event implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="integer")
@@ -92,7 +92,7 @@ class Event
      * @ORM\OneToMany(targetEntity="Claroline\AgendaBundle\Entity\EventInvitation", mappedBy="event")
      * @ORM\JoinColumn(nullable=true)
      */
-    private $eventInvitations = null;
+    private $eventInvitations;
 
     //If this parameter is set to false, NOBODY could modify the event. This parameter is useful for displaying an event of another bundle without possibility of modification.
     /**
@@ -100,9 +100,14 @@ class Event
      */
     private $isEditable;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Claroline\AgendaBundle\Entity\EventUsers")
+     */
+    private $eventUsers = null;
+
     public function __construct()
     {
-        $this->eventInvitations = new ArrayCollection();
+        $this->eventCategories = new ArrayCollection();
     }
 
     public function getId()
@@ -275,102 +280,11 @@ class Event
         return $this->isEditable;
     }
 
-    /**
-     * Set allDay
-     *
-     * @param boolean $allDay
-     *
-     * @return Event
-     */
-    public function setAllDay($allDay)
+    public function jsonSerialize()
     {
-        $this->allDay = $allDay;
-
-        return $this;
-    }
-
-    /**
-     * Get allDay
-     *
-     * @return boolean
-     */
-    public function getAllDay()
-    {
-        return $this->allDay;
-    }
-
-    /**
-     * Get isTaskDone
-     *
-     * @return boolean
-     */
-    public function getIsTaskDone()
-    {
-        return $this->isTaskDone;
-    }
-
-    /**
-     * Get isEditable
-     *
-     * @return boolean
-     */
-    public function getIsEditable()
-    {
-        return $this->isEditable;
-    }
-
-    /**
-     * Add eventInvitation
-     *
-     * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
-     *
-     * @return Event
-     */
-    public function addEventInvitation(\Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation)
-    {
-        $this->eventInvitations[] = $eventInvitation;
-
-        return $this;
-    }
-
-    /**
-     * Remove eventInvitation
-     *
-     * @param \Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation
-     */
-    public function removeEventInvitation(\Claroline\AgendaBundle\Entity\EventInvitation $eventInvitation)
-    {
-        $this->eventInvitations->removeElement($eventInvitation);
-    }
-
-    /**
-     * Get eventInvitations
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getEventInvitations()
-    {
-        return $this->eventInvitations;
-    }
-
-    public function jsonSerialize(User $user = null)
-    {
-        $guests = [];
-        $invitation = null;
-        foreach ($this->getEventInvitations() as $eventInvitation) {
-            $guests[] = [
-                'user_name' => $eventInvitation->getUser()->getUserName(),
-                'is_confirm' => $eventInvitation->getIsConfirm()
-            ];
-
-            if ($eventInvitation->getUser() === $user) {
-                $invitation = $eventInvitation;
-            }
-        }
-
         return [
             'id' => $this->getId(),
-            'title' => $invitation && !is_null($invitation->getTitle()) ? $invitation->getTitle() : $this->getTitle(),
+            'title' => $this->getTitle(),
             'start' => \Datetime::createFromFormat('U', $this->start)->format(\DateTime::ISO8601),
             'end' => \Datetime::createFromFormat('U', $this->end)->format(\DateTime::ISO8601),
             'color' => $this->getPriority(),
@@ -378,14 +292,12 @@ class Event
             'isTask' => $this->isTask(),
             'isTaskDone' => $this->isTaskDone(),
             'owner' => $this->getUser()->getUsername(),
-            'description' =>  $invitation && !is_null($invitation->getDescription()) ? $invitation->getDescription() : $this->getDescription(),
+            'description' => $this->getDescription(),
             'workspace_id' => $this->getWorkspace() ? $this->getWorkspace()->getId() : null,
             'workspace_name' => $this->getWorkspace() ? $this->getWorkspace()->getName() : null,
             'className' => 'event_' . $this->getId(),
-            'isEditable' => $this->isEditable() !== false && !$invitation,
-            'durationEditable' => !$this->isTask() && $this->isEditable() !== false && !$invitation, // If it's a task, disable resizing
-            'invitations' => $guests,
-            'is_guest' => !is_null($invitation)
+            'isEditable' => $this->isEditable(),
+            'durationEditable' => !$this->isTask() && $this->isEditable() !== false // If it's a task, disable resizing
         ];
     }
 }

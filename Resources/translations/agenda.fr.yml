@@ -42,9 +42,16 @@ form:
   start: Date de début
   title: Titre
   author: Créé par
+  invitations: Invitations
 high: Haute
 hide_tasks: Cacher toutes les tâches
 import_agenda_file: 'Importer'
+invitation_to_an_event: Invitation à un évènement
+invitation_not_found: L'invitation à l'évènement n'a pas été trouvé. Il a peut-être été modifié ou supprimé.
+invitation_already_accepted: L'invitation à l'évènement a déjà été accépté. Aucune modification n'a été effectuée.
+invitation_confirmed: L'invitation a bien été acceptée. Un nouvel évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_back_to_calendar: Retourner sur le calendrier du bureau
+invitation_guests: Invités
 in_x_days: Dans %nbDays% jours
 isAllDay: Toute la journée
 length: Durée
@@ -106,6 +113,13 @@ picker:
   next_century: Siècle suivant
 remove_event: Supprimer un évènement
 remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet évènement ?
+send_message_content: |
+  Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%.
+
+  Cette évènement se déroule du %Start% au %End% avec comme description: %Description%.
+
+  Pour accepter l'invitation <a href="%href%">cliquez ici</a>.
+send_message_object: Invitation à un évènement: %EventName%
 start_date: 'Date de début'
 show_task_only: Montrer que les tâches
 task: Tâche

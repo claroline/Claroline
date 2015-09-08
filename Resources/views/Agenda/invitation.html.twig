@@ -1,0 +1,51 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}
+    {{ parent() ~ '' }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'agenda'|trans({}, 'tools'),
+                'href': path('claro_desktop_open_tool', {'toolName': 'agenda_'})
+            },
+            {
+                'name': 'invitation'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'invitation_to_an_event'|trans({}, 'agenda') }}</h3>
+    </div>
+    <div class="panel-body">
+        {% if invitation is null %}
+            <div class="alert alert-warning">
+                {{ 'invitation_not_found'|trans({}, 'agenda') }}
+            </div>
+        {% elseif already_accepted %}
+            <div class="alert alert-info">
+                {{ 'invitation_already_accepted'|trans({}, 'agenda') }}
+            </div>
+        {% else %}
+            <div class="alert alert-success">
+                {{ 'invitation_confirmed'|trans({}, 'agenda') }}
+            </div>
+        {% endif %}
+
+        <a href="{{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}" class="btn btn-primary">{{ 'invitation_back_to_calendar'|trans({}, 'agenda') }}</a>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+{% endblock javascripts %}

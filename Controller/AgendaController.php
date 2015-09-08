@@ -36,6 +36,7 @@ class AgendaController extends Controller
     private $agendaManager;
     private $router;
     private $tokenStorage;
+    private $em;
 
     /**
      * @DI\InjectParams({
@@ -44,7 +45,8 @@ class AgendaController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage")
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
+     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(
@@ -53,7 +55,8 @@ class AgendaController extends Controller
         Request $request,
         AgendaManager $agendaManager,
         RouterInterface $router,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EntityManager $em
     )
     {
         $this->authorization = $authorization;
@@ -62,6 +65,7 @@ class AgendaController extends Controller
         $this->agendaManager = $agendaManager;
         $this->router        = $router;
         $this->tokenStorage  = $tokenStorage;
+        $this->em            = $em;
     }
 
     /**
@@ -116,9 +120,40 @@ class AgendaController extends Controller
 
     /**
      * @EXT\Route(
+     *      "/accept/invitation/{event}",
+     *      name="claro_agenda_accept_invitation"
+     * )
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:invitation.html.twig")
+     */
+    public function acceptInvitationAction(Event $event)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $invitation = $this->em->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+            'event' => $event->getId(),
+            'user' => $user->getId()
+        ]);
+
+        if ($invitation && !$invitation->getIsConfirm()) {
+            $invitation->setIsConfirm(true);
+            $this->em->flush();
+
+            return [
+                'invitation' => $invitation,
+                'already_accepted' => false
+            ];
+        }
+
+        return [
+            'invitation' => $invitation,
+            'already_accepted' => true
+        ];
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{event}/delete",
      *     name="claro_agenda_delete_event",
-     *     options = {"expose"=true}
+     *     options={"expose"=true}
      * )
      *
      * @param Event $event

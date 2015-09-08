@@ -191,6 +191,7 @@
             }
         }
 
+        console.log(event);
         // Create the popover for the event or the task
         createPopover(event, $element);
     }
@@ -229,6 +230,11 @@
             e.preventDefault();
 
             showEditForm($(this).data('event-id'));
+        })
+        .on('click', '.modify-event-as-guest', function(e) {
+            e.preventDefault();
+
+            showEditFormForGuest($(this).data('event-id'));
         })
     ;
 
@@ -403,6 +409,22 @@
 
             isFormShown = true;
         }
+    }
+
+    function showEditFormForGuest(eventId)
+    {
+        if (!isFormShown) {
+            var editUrl = Routing.generate('claro_desktop_agenda_guest_update', {event: eventId});
+
+            Claroline.Modal.displayForm(
+                editUrl,
+                updateCalendarItemCallback,
+                function(){},
+                'form-event'
+            );
+        }
+
+        isFormShown = true;
     }
 
     function initializeDateTimePicker(showOnlyDate)

@@ -31,11 +31,12 @@ class AgendaType extends AbstractType
     private $om;
     private $tokenStorage;
     private $isDesktop;
+    private $guestMode = false;
 
     /**
      * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "translator"   = @DI\Inject("translator"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
@@ -52,6 +53,11 @@ class AgendaType extends AbstractType
         $this->isDesktop = true;
     }
 
+    public function setGuestMode()
+    {
+        $this->guestMode = true;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -59,27 +65,31 @@ class AgendaType extends AbstractType
                 'label' => 'form.title',
                 'required' => true
             ])
-
-            ->add('isTask', 'checkbox', [
-                'label' => 'form.task',
-                'required' => false
-            ])
-
-            ->add('isAllDay', 'checkbox', [
-                'label' => 'form.all_day',
-                'required' => false
-            ])
-
-            ->add('start', 'text', [
-                'label' => 'form.start'
-            ])
-
-            ->add('end', 'text', [
-                'label' => 'form.end'
-            ])
         ;
 
-        if ($this->isDesktop) {
+        if (!$this->guestMode) {
+            $builder
+                ->add('isTask', 'checkbox', [
+                    'label' => 'form.task',
+                    'required' => false
+                ])
+
+                ->add('isAllDay', 'checkbox', [
+                    'label' => 'form.all_day',
+                    'required' => false
+                ])
+
+                ->add('start', 'text', [
+                    'label' => 'form.start'
+                ])
+
+                ->add('end', 'text', [
+                    'label' => 'form.end'
+                ])
+            ;
+        }
+
+        if ($this->isDesktop && !$this->guestMode) {
             $builder->add('workspace', 'entity', [
                 'label' => $this->translator->trans('workspace', [], 'platform'),
                 'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
@@ -94,16 +104,27 @@ class AgendaType extends AbstractType
             ->add('description', 'tinymce', [
                 'label' => 'form.description'
             ])
-
-            ->add('priority', 'choice', [
-                'label' => 'form.priority',
-                'choices' => [
-                    '#FF0000' => 'high',
-                    '#01A9DB' => 'medium',
-                    '#848484' => 'low'
-                ]
-            ])
         ;
+
+        if (!$this->guestMode) {
+            $builder
+                ->add('priority', 'choice', [
+                    'label' => 'form.priority',
+                    'choices' => [
+                        '#FF0000' => 'high',
+                        '#01A9DB' => 'medium',
+                        '#848484' => 'low'
+                    ]
+                ])
+
+                ->add('users', 'userpicker', [
+                    'label' => 'form.invitations',
+                    'translation_domain' => 'agenda',
+                    'multiple' => true,
+                    'mapped' => false
+                ])
+            ;
+        }
     }
 
     public function getWorkspacesByUser()

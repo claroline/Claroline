@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -115,7 +116,8 @@ class DesktopAgendaController extends Controller
 
         if ($form->isValid()) {
             $event = $form->getData();
-            $data = $this->agendaManager->addEvent($event,  $event->getWorkspace());
+            $users = $form->get('users')->getData();
+            $data = $this->agendaManager->addEvent($event,  $event->getWorkspace(), $users);
 
             return new JsonResponse(array($data), 200);
         }
@@ -173,7 +175,7 @@ class DesktopAgendaController extends Controller
                 $this->agendaManager->checkEditAccess($event->getWorkspace());
             }
 
-            $event = $this->agendaManager->updateEvent($event);
+            $event = $this->agendaManager->updateEvent($event, $form->get('users')->getData());
 
             return new JsonResponse($event, 200);
         }
@@ -185,6 +187,66 @@ class DesktopAgendaController extends Controller
             ),
             'event' => $event
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{event}/guest/update",
+     *     name="claro_desktop_agenda_guest_update",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     */
+    public function guestUpdateAction(Event $event)
+    {
+        $this->checkGuestAccess($event);
+
+        $formType = $this->get('claroline.form.agenda');
+        $formType->setGuestMode();
+        $formType->setIsDesktop();
+        $form = $this->createForm($formType, $event);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+
+
+            return new JsonResponse($event, 200);
+        }
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_desktop_agenda_guest_update', array('event' => $event->getId())
+            ),
+            'event' => $event,
+            'isGuest' => true
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/{event}/delete",
+     *     name="claro_agenda_delete_guest_event",
+     *     options={"expose"=true}
+     * )
+     *
+     * @param Event $event
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function guestDeleteAction(Event $event)
+    {
+        $this->checkGuestAccess($event);
+
+        foreach ($event->getEventInvitations() as $eventInvitation) {
+            if ($eventInvitation->getUser() === $this->tokenStorage->getToken()->getUser()) {
+                $eventInvitation->setIsConfirm(null);
+                $this->om->flush();
+                break;
+            }
+        }
+
+        return new JsonResponse($event->jsonSerialize(), 200);
     }
 
     /**
@@ -237,5 +299,17 @@ class DesktopAgendaController extends Controller
         }
 
         return array('form' => $form->createView());
+    }
+
+    public function checkGuestAccess(Event $event)
+    {
+        $eventInvitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+            'event' => $event,
+            'user' => $this->tokenStorage->getToken()->getUser()
+        ]);
+
+        if (!$eventInvitation) {
+            throw new AccessDeniedException('You cannot change this invitation.');
+        }
     }
 }

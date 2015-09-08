@@ -32,7 +32,24 @@
     {% endif %}
 {% endif %}
 
-{% if event.editable %}
+{% if event.invitations|length > 0 %}
+    {{ 'invitation_guests'|trans({}, 'agenda') }} :
+    {% for invitation in event.invitations %}
+        {% set className = 'label-default' %}
+        {% if invitation.is_confirm %}
+            {% set className = 'label-success' %}
+        {% elseif invitation.is_confirm is null %}
+            {% set className = 'label-warning' %}
+        {% endif %}
+        <span class="label {{ className }}">{{ invitation.user_name }}</span>
+    {% endfor %}
+{% endif %}
+
+{% if event.is_guest %}
+    <div class="text-right" style="margin-top: 5px;">
+        <a href="#" data-event-id="{{ event.id }}" class="modify-event-as-guest">{{ 'modify'|trans({}, 'agenda') }}</a>
+    </div>
+{% elseif event.editable %}
     <div class="text-right" style="margin-top: 5px;">
         <a href="#" data-event-id="{{ event.id }}" class="modify-event">{{ 'modify'|trans({}, 'agenda') }}</a>
     </div>
