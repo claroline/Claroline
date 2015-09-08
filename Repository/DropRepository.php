@@ -339,7 +339,6 @@ class DropRepository extends EntityRepository
                 ->setParameter('dropIds', $dropIds);
         }
 
-        //var_dump($qb->getQuery());die();
         return $qb->getQuery();
     }
 

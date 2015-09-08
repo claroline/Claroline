@@ -1,0 +1,18 @@
+{# Affichage du tableau de l'onglet "Espaces partagés" #}
+<tr>
+    <td>{{ usersByWorkspace.lastName|upper }}</td>
+    <td>{{ usersByWorkspace.firstName|capitalize }}</td>
+    <td>{{ usersByWorkspace.userName|capitalize }}</td>
+    <td class="centered">0</td>
+    <td class="centered">0</td>
+    <td class="centered"> {# Appel de la vue "Espaces collecticiel". #}
+        <div class="btn-group">
+            <a href="{{ path('innova_collecticiel_drop_switch',
+            {'resourceId': dropzone.id, 'userId': usersByWorkspace.id}
+            ) }}" type="button" class="btn btn-default btn-sm">
+                {{ 'To display'|trans({}, 'innova_collecticiel') }}
+            </a>
+        </div>
+    </td>
+
+</tr>

@@ -982,12 +982,23 @@ class DropController extends DropzoneBaseController
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
+        // Ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.
+        // Déclaration du tableau de workspace
+        $workspaceArray = array();
+
+        // Récupération du workspace courant
+        $workspaceId = $dropzone->getResourceNode()->getWorkspace()->getId();
+
+        $workspaceArray[] = $workspaceId;
+        $page=1;
+
+        $userManager = $this->get('claroline.manager.user_manager');
+        $withPager = false;
+        $usersByWorkspaces = $userManager->getUsersByWorkspaces($workspaceArray, $page, 20, $withPager);
+        // Fin ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.
+
         // dropsQuery : finished à TRUE et unlocked_drop à FALSE
         $dropsQuery = $dropRepo->getDropsAwaitingCorrectionQuery($dropzone, 2);
-
-//        var_dump($dropsQuery);die();
-//        $userRepo = $this->getDoctrine()->getManager()->getRepository('ClarolineCoreBundle:User');
-//        $users = $dropRepo->getUsersByWorkspacesAndRoles($workspace, $roles);
 
         $countUnterminatedDrops = $dropRepo->countUnterminatedDropsByDropzone($dropzone->getId());
 
@@ -1034,7 +1045,8 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $adminInnova = $dropzoneVoter->checkEditRight($dropzone);/*
+        $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
+        /*
         if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
         }*/
@@ -1048,6 +1060,7 @@ class DropController extends DropzoneBaseController
             'userNbDocDropped' => $userNbDocDropped,
             'userNbAdressedRequests' => $userNbAdressedRequests,
             'adminInnova' => $adminInnova,
+            'usersByWorkspaces' => $usersByWorkspaces
         ));
 
         return $dataToView;

@@ -14,6 +14,22 @@
             {# Séparation de l'affichage de la vue. InnovaERV #}
             {% include 'InnovaCollecticielBundle:Drop:Shared/dropsSharedList.html.twig'%}
         {% endfor %}
+
+        {# Parcours du tableau, des données et affichage du tableau. InnovaERV #}
+        {% for usersByWorkspace in usersByWorkspaces %}
+            {% set findUser = false %}
+            {% for userName in pager.currentPageResults %}
+                {% if usersByWorkspace.userName == userName.user.userName %}
+                    {% set findUser = true %}
+                    {{ usersByWorkspace.userName }}
+                {% endif %}
+            {% endfor %}
+            {# J'affiche la ligne si l'utilisateur n'a pas déjà été affiché. InnovaERV #}
+            {# Ce cas signifie que l'étudiant est inscrit mais qu'il n'a pas encore déposé. InnovaERV #}
+            {% if findUser == false %}
+                {% include 'InnovaCollecticielBundle:Drop:Shared/dropsSharedListUsersByWorkspaces.html.twig'%}
+            {% endif %}
+        {% endfor %}
     </tbody>
 </table>
 
