@@ -77,12 +77,28 @@ class DropzoneListener extends ContainerAware
         // suite demande JJQ, voir son document de référence d'août 2015
         // il faut venir sur l'onglet "Demandes adressées" et non plus sur "Paramètres"
         // Point 3 du document
-            $route = $this->container
-                ->get('router')
-                ->generate(
-                    'innova_collecticiel_drops_awaiting',
-                    array('resourceId' => $event->getResource()->getId())
+            
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            
+            $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
+            ->find($event->getResource()->getId());
+            
+            if ($dropzone->getManualState() == "allowDrop") {
+                $route = $this->container
+                    ->get('router')
+                    ->generate(
+                        'innova_collecticiel_drops_awaiting',
+                        array('resourceId' => $event->getResource()->getId())
                 );
+            }
+            else {
+                $route = $this->container
+                    ->get('router')
+                    ->generate(
+                        'innova_collecticiel_edit_common',
+                        array('resourceId' => $event->getResource()->getId())
+                );
+            }
         }
 
 
