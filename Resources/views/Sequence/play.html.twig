@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block content %} 
-    <div class="exercise-player-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
+    <div class="ujm-sequence-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
         <sequence-play class="sequence-container" data-sequence="{{ data }}"></sequence-play>
+        <step-show class="step-container" data-sequence="{{ data }}"></step-show>
     </div>
 {% endblock %}
 
@@ -20,11 +21,19 @@
 
 
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_sequence_show.js'
+        
+        '@UJMExoBundle/Resources/public/js/sequence/Common/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'
 
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/*'
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/Controllers/*'
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/Directives/*'
         '@UJMExoBundle/Resources/public/js/sequence/Sequence/Services/*'
+
+        '@UJMExoBundle/Resources/public/js/sequence/Question/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Question/Controllers/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Question/Directives/*'
+        '@UJMExoBundle/Resources/public/js/sequence/Question/Services/*'
 
         '@UJMExoBundle/Resources/public/js/sequence/Step/*'
         '@UJMExoBundle/Resources/public/js/sequence/Step/Controllers/*'
@@ -33,8 +42,8 @@
 
         '@UJMExoBundle/Resources/public/js/sequence/player.module.js'
     %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
+    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-   
+
 {% endblock %}

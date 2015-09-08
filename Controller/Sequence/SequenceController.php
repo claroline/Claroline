@@ -8,9 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Exercise;
 
 /**
@@ -23,6 +20,7 @@ class SequenceController extends Controller {
      * Play the selected Exercise
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * @Method("GET")
      */
     public function playAction(Exercise $exercise) {
         // get api manager

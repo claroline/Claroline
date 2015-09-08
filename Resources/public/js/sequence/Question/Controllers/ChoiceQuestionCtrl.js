@@ -2,10 +2,12 @@
     'use strict';
 
     angular.module('Question').controller('ChoiceQuestionCtrl', [
-        function () {
+        'CommonService',
+        function (CommonService) {
             this.question = {};
-
-            this.isCollapsed = false;
+            
+            // keep answers
+            this.answers = {};
 
 
             this.setQuestion = function (question) {
@@ -35,8 +37,41 @@
              * @returns {boolean}
              */
             this.questionHasOtherMeta = function () {
-                return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
+                return CommonService.objectHasOtherMeta(this.question);
+                //return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || (this.question.meta.description && this.question.meta.description !== '');
             };
+
+            /**
+             * 
+             * @param {type} object a javascript object with type property
+             * @returns {undefined}
+             */
+            this.getChoiceSimpleType = function (object) {                
+                return CommonService.getObjectSimpleType(object);
+            };
+            
+            this.handleUniqueAnswer = function (id){
+                
+                console.log('choosen choice with id : ' + id);  
+            };
+            
+            this.initAnswers = function(){
+                for(var i = 0; i < this.question.choices.length; i++){
+                    this.answers[this.question.choices[i].id] = false;
+                }
+            };
+            
+
+            
+            this.test = function (){
+                console.log('called');
+                console.log(this.answers);
+            };
+            
+            this.check = function (){
+                console.log('called');
+                console.log(this.answers);
+            }
         }
     ]);
 })();

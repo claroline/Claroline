@@ -5,15 +5,18 @@
         function () {
             return {
                 restrict: 'E',
-                replace: true,
+                replace: false,
                 controller: 'StepShowCtrl',
                 controllerAs: 'stepShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Step/Partials/step.show.html',
                 scope: {
-                    steps: '='
+                    sequence: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    stepShowCtrl.setSteps(scope.steps);
+                    console.log('step show directive link method called');
+                    console.log(scope.sequence);
+                    stepShowCtrl.setSteps(scope.sequence.steps);                    
+                    stepShowCtrl.setCurrentStep(scope.sequence.steps[0]);
                 }
             };
         }
