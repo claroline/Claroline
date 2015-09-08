@@ -55,7 +55,6 @@ class DropzoneCommonType extends AbstractType
                     'finished' => 'finishedManualState',
 
                 ),
-                'data' => 'allowDrop',
                 'expanded' => true,
                 'multiple' => false,
             ))
