@@ -9,6 +9,7 @@ statisticsApp
         };
 
         $scope.chartData = [];
+        $scope.fetchingChartData = false;
 
         var bg_color = "transparent";
         if (navigator.userAgent.match(/msie/i) && navigator.userAgent.match(/8/)) bg_color = "#fff";
@@ -59,8 +60,8 @@ statisticsApp
 
         $scope.fetchVisitData = function() {
             if ($scope.selectedPortfolio !== null) {
+                $scope.fetchingChartData = true;
                 $('#chart').replaceWith('<div id="chart"></div>');
-                $scope.chartData = [];
                 var url = urlInterpolator
                     .interpolate('/analytics/{{portfolioId}}/views/{{startDate}}/{{endDate}}',
                     {
@@ -77,6 +78,10 @@ statisticsApp
                             $scope.chartData = data;
                             $.jqplot('chart', [data], $scope.chartOptions);
                         }
+                        else {
+                            $scope.chartData = [];
+                        }
+                        $scope.fetchingChartData = false;
                     });
             }
         };

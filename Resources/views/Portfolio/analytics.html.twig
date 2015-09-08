@@ -41,9 +41,11 @@
                     </div>
                 {{ form_end(analyticsViewsForm) }}
                 <div id="chart"></div>
-                <div class="empty_chart" data-ng-show="selectedPortfolio == null">
-                    <span class="fa fa-line-chart"></span>
-                    <span class="small">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</span>
+                <div class="empty_chart" data-ng-show="selectedPortfolio == null || chartData.length == 0 || fetchingChartData">
+                    <span class="fa fa-line-chart" data-ng-show="selectedPortfolio == null"></span>
+                    <span class="fa fa-spinner fa-pulse" data-ng-show="fetchingChartData"></span>
+                    <span class="small" data-ng-show="selectedPortfolio == null">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</span>
+                    <span class="small" data-ng-show="selectedPortfolio != null && !fetchingChartData && chartData.length == 0">{{ 'no_data_available'|trans({}, 'icap_portfolio') }}</span>
                 </div>
             </div>
         </div>
