@@ -194,10 +194,23 @@
                                 <!-- Si le créateur du commentaire est l'utilisateur actuel alors ... -->
                                 {% if comment.user.id == user.id %}
                                     <!-- Message. Default to the left -->
+                                    <!-- Message to the right -->
+                                    <div class="direct-chat-msg right">
+                                        <div class="direct-chat-info clearfix">
+                                            <span class="direct-chat-name">Vous</span>
+                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
+                                        </div><!-- /.direct-chat-info -->
+                                        <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
+                                    </div><!-- /.direct-chat-msg -->
+                                <!-- sinon ... -->
+                                {% else %}
+
+
+
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-info clearfix">
                                             <span class="pull-right">
-                                            <span class="direct-chat-name">Vous</span>
+                                            <span class="direct-chat-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.username }})</span>
                                             <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
                                             </span>
                                         </div><!-- /.direct-chat-info -->
@@ -205,16 +218,8 @@
                                         <!-- /.direct-chat-img -->
                                         <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
                                     </div><!-- /.direct-chat-msg -->
-                                <!-- sinon ... -->
-                                {% else %}
-                                    <!-- Message to the right -->
-                                    <div class="direct-chat-msg right">
-                                        <div class="direct-chat-info clearfix">
-                                            <span class="direct-chat-name">{{ comment.user.firstName }} {{ comment.user.lastName }} ({{ comment.user.username }})</span>
-                                            <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
-                                        </div><!-- /.direct-chat-info -->
-                                        <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
-                                    </div><!-- /.direct-chat-msg -->
+
+
                                 {% endif %}
                             {% endfor %}
                         </div><!-- direct-chat-messages -->
