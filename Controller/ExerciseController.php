@@ -61,7 +61,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', array('id' => $id)));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
         }
     }
 
@@ -96,8 +96,9 @@ class ExerciseController extends Controller
         if ($formHandler->process()) {
             return $this->redirect(
                 $this->generateUrl(
-                    'ujm_exercise_open', array(
-                    'id' => $exercise->getId())
+                    'claro_resource_open', array(
+                    'resourceType' => $exercise->getResourceNode()->getResourceType()->getName(),
+                    'node' => $exercise->getResourceNode()->getId())
                 )
             );
         }
@@ -154,7 +155,7 @@ class ExerciseController extends Controller
                 'nbPapers'          => $nbPapers,
             ]
         );
-    }    
+    }
 
     /**
      * Publishes an exercise.

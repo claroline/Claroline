@@ -1,34 +1,3 @@
-# b
-btn_end_step_label: End step
-
-# m
-meta_authors: Author(s)
-meta_others: Others
-meta_author_name: Name
-meta_author_status: Status
-meta_author_mail: Email
-meta_created: Created
-meta_updated: Modified
-meta_licence: Licence
-meta_description: Description
-meta_max_attempts: Maximum attempts
-
-# q
-question_hints: Hints
-question_objects: Objects
-question_global_feedback: Global feedback
-question_resources: Resources
-question_choices: Choices
-question_choice_score: Score
-question_allow_multiple_choice: Allow multiple choice
-question_randomize_choices: Shuffle choices order
-question_panel_hide: Hide / Show question details
-question_remove: Remove question
-question_cloze_text: Cloze text
-question_solutions: Solutions
-question_solution_answers: Answer(s)
-question_solution_score: Score
-
 # s
 sequence_panel_title: Sequence
 sequence_panel_hide: Hide / Show sequence informations
@@ -53,3 +22,30 @@ sequence_select_available_question: Select a question
 sequence_step_add_question: Add question
 step_question_shuffle: Shuffle question order for this step
 
+# q
+question_hints: Hints
+question_objects: Objects
+question_global_feedback: Global feedback
+question_resources: Resources
+question_choices: Choices
+question_choice_score: Score
+question_allow_multiple_choice: Allow multiple choice
+question_randomize_choices: Shuffle choices order
+question_panel_hide: Hide / Show question details
+question_remove: Remove question
+question_cloze_text: Cloze text
+question_solutions: Solutions
+question_solution_answers: Answer(s)
+question_solution_score: Score
+
+# m
+meta_authors: Author(s)
+meta_others: Others
+meta_author_name: Name
+meta_author_status: Status
+meta_author_mail: Email
+meta_created: Created
+meta_updated: Modified
+meta_licence: Licence
+meta_description: Description
+meta_max_attempts: Maximum attempts
