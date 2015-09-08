@@ -7,7 +7,8 @@
         'ui.bootstrap',
         'ui.tinymce',
         'ui.translation',
-        'ui.resourcePicker',        
+        'ui.resourcePicker', 
+        'Common',
         'Sequence'
     ])
     .filter(

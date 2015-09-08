@@ -10,15 +10,13 @@
                 controllerAs: 'stepShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Step/Partials/step.show.html',
                 scope: {
-                    steps: '='
+                    sequence: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    console.log('yep');
-                    stepShowCtrl.setSteps(scope.steps);
-                    
-                    stepShowCtrl.setCurrentStep(scope.steps[0]);
-                    
-                    console.log(scope.steps);
+                    console.log('step show directive link method called');
+                    console.log(scope.sequence);
+                    stepShowCtrl.setSteps(scope.sequence.steps);                    
+                    stepShowCtrl.setCurrentStep(scope.sequence.steps[0]);
                 }
             };
         }
