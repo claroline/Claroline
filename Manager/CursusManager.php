@@ -999,7 +999,7 @@ class CursusManager
         $session = new CourseSession();
         $session->setName($sessionName);
         $session->setCourse($course);
-        $session->addCursus($cursus);
+        $session->addCursu($cursus);
         $session->setCreationDate($registrationDate);
         $session->setPublicRegistration($course->getPublicRegistration());
         $session->setPublicUnregistration($course->getPublicUnregistration());
@@ -1137,7 +1137,7 @@ class CursusManager
     public function associateCursusToSessions(Cursus $cursus, array $sessions)
     {
         foreach ($sessions as $session) {
-            $session->addCursus($cursus);
+            $session->addCursu($cursus);
             $this->om->persist($session);
         }
         $this->om->flush();
