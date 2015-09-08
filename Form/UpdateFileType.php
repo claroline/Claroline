@@ -28,6 +28,7 @@ class UpdateFileType extends AbstractType
             array(
                 'required' => true,
                 'mapped' => false,
+                'label' => 'file',
                 'constraints' => array(
                     new NotBlank(),
                     new File()

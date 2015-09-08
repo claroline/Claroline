@@ -99,6 +99,10 @@ class FileImporter extends Importer implements ConfigurationInterface
                 $file, $tmpFile,  $name, $item['file']['mime_type']
             );
         }
+
+        return $this->container->get('claroline.listener.file_listener')->createFile(
+            new File(), new SfFile(tempnam('/tmp', 'claroimport')),  $name, 'none'
+        );
     }
 
     public function export(Workspace $workspace, array &$_files, $object)

@@ -27,6 +27,8 @@ abstract class Importer
     private $workspace;
     private static $isStrict;
     private $roles = array();
+    private $_data;
+    private $_files;
 
     public function setListImporters(ArrayCollection $importers)
     {
@@ -139,6 +141,18 @@ abstract class Importer
         $this->logger = $logger;
     }
 
+    public function setExtendedData(&$_data)
+    {
+        $this->_data =& $_data;
+    }
+
+    //this is only supposed to keep backward compatibility... damn references !
+    //I wish I could pass _data to the export function but it would break pretty much every plugin
+    public function &getExtendedData()
+    {
+        return $this->_data;
+    }
+
     abstract function getName();
 
     abstract function validate(array $data);
@@ -147,6 +161,7 @@ abstract class Importer
      * @param Workspace $workspace
      * @param array $files
      * @param mixed $object
+     * @param mixed $data
      */
      abstract function export(Workspace $workspace, array &$files, $object);
 }

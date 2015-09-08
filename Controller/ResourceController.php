@@ -382,6 +382,7 @@ class ResourceController
         }
 
         $collection = new ResourceCollection(array($node));
+
         if ($menuAction->getResourceType() === null) {
             if (!$this->authorization->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException('You must be log in to execute this action !');
@@ -436,8 +437,7 @@ class ResourceController
         $this->checkAccess("ADMINISTRATE", $collection);
 
         //$type = $node->getResourceType();
-        $logs = $this->logManager
-            ->getResourceList($resource, $page);
+        $logs = $this->logManager->getResourceList($resource, $page);
 
         return $logs;
     }
