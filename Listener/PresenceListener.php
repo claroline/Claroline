@@ -4,6 +4,7 @@ namespace FormaLibre\PresenceBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -47,4 +48,25 @@ class PresenceListener
         $event->setResponse($response);
         $event->stopPropagation();
     }
+    
+    /**
+     * @DI\Observe("open_tool_desktop_formalibre_presence_tool")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onToolOpen(DisplayToolEvent $event)
+    
+    {
+        
+        $params = array();
+        $params['_controller'] = 'FormaLibrePresenceBundle:Presence:ToolIndex';
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
+        $event->stopPropagation();
+    }
+    
+    
+    
 }

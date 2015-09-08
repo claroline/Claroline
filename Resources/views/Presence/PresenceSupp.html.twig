@@ -1,0 +1,41 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title" style="text-align: center;">
+                Supprimer présence
+            </h3>
+        </div>
+        <div class="modal-body">
+            Etes-vous certain de vouloir effacer cette présence ?
+        </div>
+        <div class="modal-footer">           
+        <input type="button" class="btn btn-default annuler-btn" data-dismiss="modal" value="Annuler">
+        <input type="button" class="btn btn-primary ok-btn" data-presence-id="{{presence.getId()}}" value="Ok">    
+        </div>
+    </div>
+</div>
+{% block javascripts %}    
+    <script>
+      
+        $(".ok-btn").on("click",function(){
+            
+            var presenceId=$(this).data("presence-id");
+            $.ajax({
+                url:Routing.generate("formalibre_presence_supp_validate",{"id":presenceId}),
+                type:'GET',
+                async:false,
+                success:function(){
+                    window.parent.location.reload();
+                }    
+            });        
+        });
+                       
+       
+    </script>
+{% endblock %}

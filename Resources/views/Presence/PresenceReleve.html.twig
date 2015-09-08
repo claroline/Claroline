@@ -7,29 +7,35 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Accueil</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
                   <li role="presentation" class="active"><a href="">Relevé</a></li>
                   <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" >Configurations</a></li>
                 </ul>
             </div>
             
             
             <br /><br />
             Vous souhaitez faire l'appel pour la  
-            <a  href="{{path("formalibre_presence_admin_tool_index")}}" 
+            <a  href="{{path("formalibre_presence_tool_index")}}" 
                 role="button"
                 class="btn btn-primary">
                 {{period.getNumPeriod()}}° période du {{date}}
             </a>
             <br /><br />
-            Classe: 
-            <a  href="{{path("formalibre_choix_classe", {"period":period.getId(),"date":period.getDay()|date('d-m-Y')})}}" 
-                role="button"
-                class="btn btn-primary">
-                {{classe.getName()}} 
+            Classe:
+            
+            <a class="btn btn-primary modifier-classe-btn"
+               data-period-id="{{period.getId()}}"
+               data-period-date="{{period.getDay()|date('d-m-Y')}}"
+               data-toggle="tooltip" 
+               data-placement="bottom" 
+               title="" 
+               data-original-title="changer de classe"  
+               role="button">
+            {{classe.getName()}}
             </a>
+            
+ 
             <br />
                 <div class="col-md-2 col-md-offset-6"  style="text-align: left;"> 
                    {{form_widget(sameStatus.singleStatus)}}
@@ -105,39 +111,7 @@
                     </tbody>
                 </table>
             
-            
-            
-            
-            
-            {#     
-            <form method="post" {{ form_enctype(presForm) }}>
-               {% for presence in presForm.releves  %}          
-                    <div class="col-md-2 OneForm" align="center" >        
-                        {% for student in presences %}
-                            {%if student.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
-                                <img id="photo" style="height:220px; background-color: black;" class="img-thumbnail" src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" width="150" alt="Photo de l'élève"><br />
-                                {{student.getUserStudent().getLastName()}}
-                                {{student.getUserStudent().getFirstName()}} 
-                            {%endif%}
-                        {% endfor %}
 
-                        <br/>
-                        
-                            {{form_widget(presence.Status)}}
-                        
-                        <span class="dropdown">
-                            
-                            <span class="btn btn-primary" data-toggle="dropdown">...</span>
-                            
-                            <ul class="dropdown-menu otherStatus" role="menu">
-                                
-                            </ul>
-                            
-                        </span>
-
-                    </div>
-
-                {% endfor %} #}
                 <br/><br/>
                   <button type="submit" 
                            class="btn btn-primary"
@@ -162,22 +136,6 @@
                 colors=data;
             }
         });
-
-      {#  $('.OneForm').each(function (){
-
-            var image=$("img",this);
-
-      $(this).find('input').each(function (){
-         if($(this).prop('checked')){
-             var valeurCheck=$(this).val();
-
-             image.css( 'background-color', colors[valeurCheck]['color']);  
-
-         }
-
-        });
-
-        });#}
             
            $('.OneForm').each(function (){
 
@@ -223,6 +181,7 @@
               var OneForm=$(this).closest('.OneForm');
               var image =OneForm.find("img");
             image.css( 'background-color', colors[status]['color']);
+            console.log("testcouleur")
               }
               else
               {
@@ -289,5 +248,24 @@
                 return 'En quittant cette page, vous risquez de perdre des données non enregistrées.';
             }
         }
+        
+    </script>
+    <script>
+        
+    $(".modifier-classe-btn").on("click",function(){
+       
+        var periodId=$(this).data("period-id");
+        var periodDate=$(this).data("period-date");
+        
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_choix_classe",{"period":periodId,"date":periodDate}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });   
     </script>
 {% endblock javascripts %}
+

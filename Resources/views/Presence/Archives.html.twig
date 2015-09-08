@@ -8,10 +8,8 @@
         <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_admin_tool_index")}}" >Accueil</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
                   <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_horaire")}}" >Horaire</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_configurations")}}" >Configurations</a></li>
                 </ul>
         </div>
         </br> </br> </br>
@@ -56,7 +54,8 @@
                                                                role="button">
                                         <i class="fa fa-pencil"></i>
                                     </span>
-                                     <a class="btn btn-default" href="/Claroline/web/app_dev.php/profile/profile/edit/17" 
+                                     <a class="btn btn-default supprimer-presence-btn"
+                                                               data-presence-id="{{presence.getId()}}"
                                                                data-toggle="tooltip" 
                                                                data-placement="bottom" 
                                                                title="" 
@@ -124,6 +123,18 @@
                                 );
    
     });    
+    
+    $(".supprimer-presence-btn").on("click",function(){
+       var presenceId=$(this).data("presence-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_presence_supp",{"id":presenceId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });  
                 
     </script>
 

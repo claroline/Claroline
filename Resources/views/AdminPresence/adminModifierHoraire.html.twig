@@ -2,6 +2,7 @@
      role="dialog"
      aria-labelledby="modalLabel"
      aria-hidden="true"
+     id="modifier-modal"
  >
     <div class="modal-content">
         <div class="modal-header">
@@ -23,17 +24,21 @@
                         Changer l'heure de début:{{form_widget(ModifPeriodForm.startMod,{ 'attr': {'value':period.getBeginHour()|date('H:i')} } )}}
                         Changer l'heure de fin:{{form_widget(ModifPeriodForm.endMod,{ 'attr': {'value': period.getEndHour()|date('H:i')} } )}}
                         {{form_widget(ModifPeriodForm.dayName,{ 'attr': {'value': period.getDayName} } )}}
-                 
+                       
                         <br />
                         <div class="row">
+                             <div class="row">
                             <button class="btn btn-primary col-md-4 col-md-offset-1" 
                                     type="submit" 
                                     name="form[modifier]">Modifier la période
                             </button> 
-                            <button class="btn btn-primary col-md-4 col-md-offset-2" 
-                                    type="submit" 
-                                    name="form[supprimer]">Supprimer la période
+                            <button class="btn btn-danger col-md-4 col-md-offset-2" 
+                                    id="supprimer-btn"
+                                    data-dismiss="modal"
+                                    data-period-id="{{period.getId()}}">
+                            Supprimer la période
                             </button> 
+                        </div>
                         </div>
                     </div>
                     <br />
@@ -70,4 +75,22 @@
             });
         });
     </script>
+     <script>
+      
+        $("#supprimer-btn").on("click",function(){
+            console.log('ce que tu veux');
+            var periodId=$(this).data("period-id");
+            $.ajax({
+                url:Routing.generate("formalibre_period_supprimer",{"period":periodId}),
+                type:'GET',
+                async:false,
+                success:function(){
+                    window.parent.location.reload();
+                }    
+            });        
+        });
+                       
+       
+    </script>
+
 {% endblock %}

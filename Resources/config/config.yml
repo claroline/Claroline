@@ -1,6 +1,12 @@
 plugin:
     has_options: false
-
+    
+    tools:
+        - name: formalibre_presence_tool
+          class: check-square-o
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+        
     admin_tools:
         - name: formalibre_presence_admin_tool
           class: check-square-o

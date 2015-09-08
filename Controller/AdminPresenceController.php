@@ -11,15 +11,22 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 use Claroline\CoreBundle\Entity\Group;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\RouterInterface;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\RoleManager;
 
 use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
 use FormaLibre\PresenceBundle\Entity\Status;
 use FormaLibre\PresenceBundle\Entity\Releves;
 use Claroline\CoreBundle\Entity\User;
+use FormaLibre\PresenceBundle\Manager\PresenceManager;
 
 use FormaLibre\PresenceBundle\Form\Type\ReleveType;
 use FormaLibre\PresenceBundle\Form\Type\CollReleveType;
+use FormaLibre\PresenceBundle\Entity\PresenceRights;
 
 
 
@@ -35,19 +42,31 @@ class AdminPresenceController extends Controller
     private $periodRepo;
     private $groupRepo;
     private $userRepo;
+    private $router;
+    private $config;
+    private $roleManager;
+    private $presenceManager;
     
     
     /**
      * @DI\InjectParams({
      *      "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *      "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "router"             = @DI\Inject("router"),
+     *      "config"             = @DI\Inject("claroline.config.platform_config_handler"),
+     *      "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *      "presenceManager"    = @DI\Inject("formalibre.manager.presence_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
-        EntityManager $em
+        EntityManager $em,
+        RouterInterface $router,
+        PlatformConfigurationHandler $config,
+        RoleManager $roleManager,
+        PresenceManager $presenceManager
       )
-    {
+    {   $this->router             =$router;          
         $this->om                 = $om;
         $this->em                 = $em;  
         $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User');  
@@ -56,6 +75,9 @@ class AdminPresenceController extends Controller
         $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User'); 
         $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
         $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');  
+        $this->config             = $config;
+        $this->roleManager        = $roleManager;
+        $this->presenceManager    = $presenceManager;
     }
     
        /**
@@ -66,168 +88,69 @@ class AdminPresenceController extends Controller
      * )
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
      * @EXT\Template()
      */
-    public function adminToolIndexAction(User $user)
+    public function adminToolIndexAction()
     {
- 
-        $Presences = $this->presenceRepo->findAll() ;
-        $Periods = $this->periodRepo->findByVisibility(true) ;
+        $rightsValue=array();
         
+        $rightsForArray=$this->presenceManager->getAllPresenceRights();
         
-        
-        return array('user'=>$user, 'presences'=>$Presences, 'periods'=>$Periods );
-         
-    }
-          /**
-     * @EXT\Route(
-     *     "/admin/presence/choix_classe/period/{period}/date/{date}",
-     *     name="formalibre_choix_classe",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
-     * @EXT\Template()
-     */
-    public function adminChoixClasseAction(User $user, Period $period, Request $request, $date)
-
-    {
-        $form = $this ->createFormBuilder()
-        
-            ->add ('selection','entity',array (
-                'label'=>'Classe:',
-                'class' => 'ClarolineCoreBundle:Group',
-                'property' => 'name',
-                'empty_value' =>'Choisissez une classe',))
-            ->add ('valider','submit',array (
-                'label'=>'Relever les présences'))
-            ->getForm();
-
-            $request = $this->getRequest();
-            if ($request->getMethod() == 'POST')
-            {
-                $form->handleRequest($request);
-                $classe = $form->get("selection")->getData();
-                
-                return $this->redirect($this->generateUrl('formalibre_presence_releve', array("period" => $period->getId(), "date" => $date, "classe" => $classe->getId())));
-        }
+        foreach ($rightsForArray as $oneRightForArray){
             
-            return array('form'=>$form->createView(),'user'=>$user,'period'=>$period, 'date'=>$date);
-  
+            $mask=$oneRightForArray->getMask();
+            $oneValue=array();
+            $oneValue["right"]=$oneRightForArray;
+            $oneValue[PresenceRights::PERSONAL_ARCHIVES]= (PresenceRights::PERSONAL_ARCHIVES & $mask)===PresenceRights::PERSONAL_ARCHIVES;
+            $oneValue[PresenceRights::CHECK_PRESENCES]=(PresenceRights::CHECK_PRESENCES & $mask)===PresenceRights::CHECK_PRESENCES;
+            $oneValue[PresenceRights::READING_ARCHIVES]=(PresenceRights::READING_ARCHIVES & $mask)===PresenceRights::READING_ARCHIVES;
+            $oneValue[PresenceRights::EDIT_ARCHIVES]=(PresenceRights::EDIT_ARCHIVES & $mask)===PresenceRights::EDIT_ARCHIVES;
+            $rightsValue[]=$oneValue;
+          
+            
+        }
+        
+        $rightNameId=array();
+        $rightNameId[]=  PresenceRights::PERSONAL_ARCHIVES;
+        $rightNameId[]=  PresenceRights::CHECK_PRESENCES;
+        $rightNameId[]=  PresenceRights::READING_ARCHIVES;
+        $rightNameId[]=  PresenceRights::EDIT_ARCHIVES;
+        
+        $rightName=array();
+        $rightName[PresenceRights::PERSONAL_ARCHIVES]="Voir ses archives";
+        $rightName[PresenceRights::CHECK_PRESENCES]="Relever les présences";
+        $rightName[PresenceRights::READING_ARCHIVES]="Consulter les archives";
+        $rightName[PresenceRights::EDIT_ARCHIVES]="Editer les archives";
+        
+        return array('rightsForArray'=>$rightsForArray, 'rightsValue'=>$rightsValue, 'rightNameId'=>$rightNameId, 'rightName'=>$rightName);
+         
     }
     
       /**
      * @EXT\Route(
-     *     "/admin/presence/releve/period/{period}/date/{date}/classe/{classe}",
-     *     name="formalibre_presence_releve",
+     *     "/admin/presence/right/right/{right}/rightValue/{rightValue}",
+     *     name="formalibre_presence_admin_right",
      *     options={"expose"=true}
      * )
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
-     * @EXT\Template()
-     */
-    public function adminPresenceReleveAction(Request $request, User $user, Period $period, $date, Group $classe)
-    {
-        $dateFormat=new \DateTime($date);
- 
-        $Presences = $this->presenceRepo->OrderByStudent($classe,$date,$period);
-        $dayPresences = $this->presenceRepo->OrderByNumPeriod($classe,$date);
+      */
+    public function adminRightAction(PresenceRights $right, $rightValue){
         
-        $Groups = $this->groupRepo->findAll() ;
-        $Users = $this->userRepo->findByGroup($classe) ;
-       
-        $Null = $this->statuRepo->findOneByStatusName('');
-        $liststatus= $this->statuRepo->findByStatusByDefault(false);
-       
-            if (!$Presences)
-            {
-                $Presences=array();
-                foreach ($Users as $student)
-
-                    {
-                    $actualPresence =new Presence();
-                    $actualPresence->setStatus($Null);
-                    $actualPresence->setUserTeacher($user);
-                    $actualPresence->setUserStudent($student);
-                    $actualPresence->setGroup($classe);
-                    $actualPresence->setPeriod($period);
-                    $actualPresence->setDate($dateFormat);
-                    $this->em->persist($actualPresence);
-                    $this->em->flush();
-                    $Presences[]=$actualPresence;
-                    }
-            }
-            
-        $SameStatus = $this ->createFormBuilder()
+        $mask=$right->getMask();
+        $newmask=$mask ^ $rightValue;
+           
+        $right->setMask($newmask);
+        $this->om->persist($right);
+        $this->om->flush();
         
-            ->add ('singleStatus','entity',array (
-                'class' => 'FormaLibrePresenceBundle:Status',
-                'property' => 'statusName',
-                'empty_value' =>' Indiquer toute la classe comme:',))
-            ->add ('valider','submit',array (
-                'label'=>'Comfirmer ?'))
-            ->getForm();
+        return new Response('success',200);
+                
         
-        $formCollection = new Releves;
         
-        foreach ($Presences as $presence) {
-            $formCollection->getReleves()->add($presence);
-        }
         
-        $presForm = $this->createForm(new CollReleveType(), $formCollection);
-
-        if ($request->isMethod('POST')) {
-            $presForm->handleRequest($request);
-            
-            
-            foreach ($Presences as $presence) {  
-                $this->em->persist($presence);
-            }
-            
-            $this->em->flush();
-            
-            return $this->redirect($this->generateUrl('formalibre_presence_releve', 
-                    array("period" => $period->getId(), 
-                          "date" => $date, 
-                          "classe" => $classe->getId())));
-        }
-        
-        return array('presForm'=>$presForm->createView(),
-                     'sameStatus'=>$SameStatus->createView(),
-                     'status'=>$liststatus, 
-                     'user'=>$user, 
-                     'presences'=>$Presences, 
-                     'period'=>$period, 
-                     'date'=>$date, 
-                     'classe'=>$classe, 
-                     'groups'=>$Groups, 
-                     'users'=>$Users,
-                     'daypresences'=>$dayPresences);   
     }
-
     
-           /**
-     * @EXT\Route(
-     *     "/admin/presence/archives",
-     *     name="formalibre_presence_archives",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
-     * @EXT\Template()
-     */
-    public function adminArchivesAction()
-            
-    {
-        $Presences = $this->presenceRepo->findAll();
-       
-       return array('presences'=> $Presences);
-    }
-  
     
              /**
      * @EXT\Route(
@@ -243,7 +166,7 @@ class AdminPresenceController extends Controller
     public function adminHoraireAction()
             
     {
-       $Periods = $this->periodRepo->findAll() ; 
+       $Periods = $this->periodRepo->findByVisibility(1) ; 
         
        $NewPeriodForm = $this ->createFormBuilder()
         
@@ -334,14 +257,13 @@ class AdminPresenceController extends Controller
             ->add('endMod','text')
             ->add('dayName','hidden')
             ->add ('modifier','submit')
-            ->add ('supprimer','submit')   
             ->getForm();
 
-                $request = $this->getRequest();
-
+                $request = $this->get('request');
+                
+                if($request->getMethod()=='POST'){
                 $ModifPeriodForm->handleRequest($request);
-                if($ModifPeriodForm->isSubmitted()){
-                                    
+               
                 $startHour = $ModifPeriodForm->get("startMod")->getData();
                 $endHour = $ModifPeriodForm->get("endMod")->getData();
                 $name = $ModifPeriodForm->get("nameMod")->getData();
@@ -354,20 +276,16 @@ class AdminPresenceController extends Controller
                 $PeriodToModif = $this->periodRepo->findBy(array('beginHour'=>$startHourFormat,
                                                                  'endHour'=>$endHourFormat, 
                                                                  'dayName'=>$dayName));
-               
-                if ($ModifPeriodForm->get("modifier")->isClicked()) {
-                    throw new \Exception("coucou");
-//                    foreach ($PeriodToModif as $OnePeriodToModif) {
-//
-//                        $OnePeriodToModif->setBeginHour($startHourFormat);
-//                        $OnePeriodToModif->setEndHour($endHourFormat);
-//                        $OnePeriodToModif->setName($name);
-//                        $OnePeriodToModif->setNumPeriod($number); 
-//                    }    
-//                    $this->em->flush();
-                
-                    
-                }
+
+                    foreach ($PeriodToModif as $OnePeriodToModif) {
+
+                        $OnePeriodToModif->setBeginHour($startHourFormat);
+                        $OnePeriodToModif->setEndHour($endHourFormat);
+                        $OnePeriodToModif->setName($name);
+                        $OnePeriodToModif->setNumPeriod($number); 
+                    }    
+                    $this->em->flush();
+
              return new JsonResponse('success',200);
                     
             }    
@@ -375,112 +293,58 @@ class AdminPresenceController extends Controller
        return array('ModifPeriodForm' => $ModifPeriodForm->createView(), 'period' => $period);
     }
     
-    
-    
-                /**
+              /**
      * @EXT\Route(
-     *     "/admin/presence/presence_modif/id/{id}",
-     *     name="formalibre_presence_modif",
+     *     "/admin/period_supprimer/period/{period}",
+     *     name="formalibre_period_supprimer",
      *     options={"expose"=true}
      * )
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @param User $user
-     * @EXT\Template()
      */
-    public function adminPresenceModifAction($id)
-            
-    {   $Presence= $this->presenceRepo->findOneById($id) ;
-        $ModifPresenceForm = $this ->createFormBuilder()
-        ->add (
-                 'Status',
-                 'entity',
-                 array (
-                     'multiple'  => false,
-                     'expanded'  => false, 
-                     'label'=>'Status:',
-                     'class' => 'FormaLibre\PresenceBundle\Entity\Status',
-                     'data_class' => 'FormaLibre\PresenceBundle\Entity\Status',
-                     'empty_value'=> 'Nouveau status',
-                     'property' => 'statusName'
+    public function adminPeriodSupprimerAction(Period $period){
+        
+        
+        
+        $startHour = $period->getBeginHour();
+        $endHour = $period->getEndHour(); 
+        $dayName = $period->getDayName();
+        
+        $PeriodToModif = $this->periodRepo->findBy(array('beginHour'=>$startHour,
+                                                         'endHour'=>$endHour, 
+                                                         'dayName'=>$dayName));
 
-                 ))
-        ->add ('Comment','textarea')
-        ->add ('Save','submit')
-        ->getForm();
+        foreach ($PeriodToModif as $OnePeriodToModif) {
+            
+            $OnePeriodToModif->setVisibility(0);
+           
+            }
+            
+        $this->em->flush();
         
-        
-        $request = $this->getRequest();
-         
-        if ($request->getMethod() == 'POST')
-            {
-                $ModifPresenceForm->handleRequest($request);
-                                                            
-                $NewStatus = $ModifPresenceForm->get("Status")->getData();
-                $NewComment = $ModifPresenceForm->get("Comment")->getData();
-                
-                if(empty($NewStatus)){
-                    $Presence->setComment($NewComment);
-                    $this->em->flush();
-                    
-                    return new JsonResponse('success',200);
-                }
-                else{
-                    $Presence->setStatus($NewStatus);
-                    $Presence->setComment($NewComment);
-                    $this->em->flush();
-                    
-                    return new JsonResponse('success',200);
-                }
-
-                }
-        
-       return array('ModifPresenceForm' => $ModifPresenceForm->createView(),'presence' => $Presence);
-    }
+        return new RedirectResponse($this->router->generate('formalibre_presence_horaire')); 
+    }    
     
-            /**
+               /**
      * @EXT\Route(
-     *     "/admin/presence/configurations",
-     *     name="formalibre_presence_configurations",
+     *     "/admin/listing/roles",
+     *     name="formalibre_admin_listing_roles",
      *     options={"expose"=true}
      * )
      *
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
-     * @EXT\Template()
      */
-    public function adminConfigurationsAction()
-            
-    {
-       return array();
-    }
-    
-    
-            /**
-     * @EXT\Route(
-     *     "/admin/presence/listingstatus",
-     *     name="formalibre_presence_listingstatus",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @param User $user
-     */
-    public function adminListingStatusAction()
-            
-    {
+    public function adminListingRolesAction(){
         
-        $liststatus= $this->statuRepo->findAll();
-        $datas=array();
-        foreach($liststatus as $status)
-        {
-            $datas[$status->getId()]=array();
-            $datas[$status->getId()]['color']=$status->getStatusColor();
-        }
-        return new JsonResponse($datas,200);
-    }
-    
+        return array();
+ 
+    }    
     
     
 }
+
+
+    
+
 

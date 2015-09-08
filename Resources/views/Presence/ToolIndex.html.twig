@@ -1,0 +1,195 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% set duration ='00:50:00' %}
+{% set startday ='06:00:00' %}
+{% set endday ='20:00:00' %}
+
+
+{% block section_content %} 
+  
+
+    <div class="panel panel-default">
+        <div class="panel-body">   
+            <div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_tool_index")}}">Accueil</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
+                </ul>
+            </div>
+            
+            <br /><br />
+
+            Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+            
+           
+            <br /><br />
+            Semaine n°: {{ "now"|date("W") }}
+            <br /><br /><br />
+            
+            <div id='calendar'></div>
+            
+            
+           Mes présences:
+           <br /><br /><br />
+            <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Date</th>
+                        <th style="text-align: center;">Period</th>
+                            {#<th>Cours</th>#}
+                            <th style="text-align: center;">Classe</th>
+                            <th style="text-align: center;">Nom de l'étudiant</th>
+                            <th style="text-align: center;">Prénom de l'étudiant</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Responsable de l'appel</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for presence in presences%}
+                            {% if presence.getUserStudent.getId==user.getId%}
+                                <tr>
+                                    <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                    <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                {#                    <td>{{presence.getPeriod.getName()}}</td>#}
+                                    <td>{{presence.getGroup.getName()}}</td>
+                                    <td>{{presence.getUserStudent.getLastName()}}</td>
+                                    <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                    {% if presence.getStatus() is null %}
+                                        <td>Non communiqué</td>
+                                    {% else %}
+                                    <td>{{presence.getStatus.getStatusName()}}</td>
+                                    {% endif %}
+                                    <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+
+{% endblock %}
+
+   
+{% block stylesheets %}
+{{ parent() }}
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.print.css') }}' media='print' />
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
+<style>
+    .fc-day-grid-event > .fc-content {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+    .is-task {
+        padding-right: 3px;
+    }
+</style>
+{% endblock %}
+
+ {% block javascripts %}
+     {{ parent() }}
+            
+    <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
+    <script type='text/javascript' src='{{ asset('bundles/formalibrepresence/js/fr.js') }}'></script>
+
+<script>
+
+    $(document).ready(function() {
+
+            $('#calendar').fullCalendar({
+                    header: {
+                            left: '',
+                            center: 'title',
+                            right: ''
+                    },
+                    defaultView: 'agendaWeek',
+                    lang: 'fr',
+                    weekends: true,
+                    editable: false,
+                    contentHeight:"auto",
+                    firstDay:1,
+                    defaultTimedEventDuration:'{{duration}}',
+                    forceEventDuration:true,
+                    timeFormat:'H(:mm)',
+                    columnFormat: 'dddd D/M',
+                    titleFormat:'MMMM YYYY',
+                    minTime:'{{startday}}',
+                    maxTime:'{{endday}}',
+                    //slotDuration:'{{duration}}',
+                    eventLimit: true, // allow "more" link when too many events
+
+                     events: [
+                            {% for item in periods %}
+                               {
+                               id: {{ item.getId }},
+                               title: '{{ item.getName()}}',
+                               start: '{{item.getDay()|date('Y-m-d')}}T{{item.getBeginHour()|date('H:i:s')}}',
+                               end: '{{item.getDay()|date('Y-m-d')}}T{{item.getEndHour()|date('H:i:s')}}',
+                               url:'{{path("formalibre_choix_classe", {"period":item.getId(),"date":item.getDay()|date('d-m-Y')})}}',
+                                       
+
+        
+                                }
+                              {% if loop.last %}{% else %},{% endif %}{% endfor %}
+
+                        ],
+                     eventClick: function(calEvent, jsEvent, view) {
+                         jsEvent.preventDefault();
+                        window.Claroline.Modal.displayForm(
+                            calEvent.url,
+                            function() {},
+                            function() {}
+                        );
+                
+                     }
+            });
+
+    });
+
+</script>
+
+<script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
+    
+
+    <!-- outils -->
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.buttons.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
+    <script>    
+        $(document).ready(function() {
+            $('#archivesList').DataTable( {
+
+                dom: 'Bftp',
+                buttons: true,
+               "pageLength": 50,
+                "language": {
+                    "lengthMenu": "Afficher _MENU_ presences par page",
+                    "zeroRecords": "Rien trouvé - Désolé",
+                    "info": "Affichage de la page _PAGE_ sur _PAGES_",
+                    "infoEmpty": "Pas de présence valide",
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trier les présences"
+                }
+            } );
+        } );
+        
+        
+        
+    </script>
+
+{% endblock javascripts %}
+
