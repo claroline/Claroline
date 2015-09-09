@@ -77,9 +77,17 @@
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova) }}
 
+        {# Pour se positionner sur l'onglet par défaut ou sur l'onglet du type de document qui vient d'être créé. InnovaERV #}
+        {% set lastType = "file" %}
+        {% if activeRoute == "innova_collecticiel_drop_switch" %}
+            {% for document in drop.documents %}
+                {% set lastType = document.type %}
+            {% endfor %}
+        {% endif %}
+
         <br/>
         {# ADD DOCUMENT #}
-        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig' %}
+        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig' with {'lastType': lastType}  %}
 
         {# GLOBAL DROP FORM #}
         <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"

@@ -109,6 +109,8 @@ class DropController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
         $userNbTextToRead = array();
 
+        $activeRoute = $this->getRequest()->attributes->get('_route');
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -123,6 +125,7 @@ class DropController extends DropzoneBaseController
             'dropzoneProgress' => $dropzoneProgress,
             'adminInnova' => $canEdit,
             'userNbTextToRead' => $userNbTextToRead,
+            'activeRoute' => $activeRoute
         );
     }
 
