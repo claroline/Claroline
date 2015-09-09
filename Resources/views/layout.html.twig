@@ -146,102 +146,7 @@
             <section class="col-lg-8">
                 {% block blog_content %}{% endblock %}
             </section>
-            <aside class="col-lg-4">
-
-                <div class="panel panel-default">
-                    <div class="panel-body search_form">
-                        <form action="{{ path('icap_blog_view', {'blogId': _resource.id}) }}" method="get" class="form-horisontal" role="search">
-                            <div class="input-group">
-                                <input type="search" class="form-control" name="search" id="search_query" placeholder="{{ 'search'|trans({}, 'icap_blog') }}..." {% if search is defined %}value="{{ search }}" {% endif %}/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
-                                </span>
-                            </div>
-                            <p class="help-block"><small>{{ 'search_in_title_and_content'|trans({}, 'icap_blog') }}</small></p>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            {{ 'info_bar'|trans({}, 'icap_blog') }}
-                            {% if is_granted('ADMINISTRATE', _resource) %}
-                            <a href="{{ path('icap_blog_edit_infos', {'blogId': _resource.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-primary btn-xs pull-right white">
-                                <span class="fa fa-edit"></span>
-                            </a>
-                            {% endif %}
-                        </h3>
-                    </div>
-                    <div class="panel-body">
-                        {{ _resource.infos|raw }}
-                    </div>
-                </div>
-
-                <div class="panel panel-default rss_panel">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">
-                            {{ 'blog_rss_feed'|trans({}, 'icap_blog') }}
-                            <a href="{{ path('icap_blog_rss', {'blogId': _resource.id}) }}" title="{{ 'blog_rss_feed'|trans({}, 'icap_blog') }}" class="label label-warning pull-right white"><span class="fa fa-rss"></span> {{ 'rss_feed'|trans({}, 'icap_blog') }}</a>
-                        </h3>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
-                    </div>
-                    <div class="tag-cloud-container panel-body">
-                        {% include 'IcapBlogBundle:Layout:tags.html.twig' %}
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'editor'|trans({}, 'icap_blog') }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="list-unstyled list-inline">
-                            {% for author in blog_authors(_resource) %}
-                            <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
-                            {% else %}
-                            <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="panel panel-default calendar visible-lg">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'calendar'|trans({}, 'icap_blog') }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div id='calendar'></div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ 'archives'|trans({}, 'icap_blog') }}</h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul class="tree">
-                            {% for year, datas in archives %}
-                            <li>
-                                <span>{{ year }}</span>
-                                <ul>
-                                {% for data in datas %}
-                                    <li><a href="{{ path('icap_blog_view_filter', {'blogId': _resource.id, 'filter': data.urlParameters}) }}">{{ data.month }} ({{ data.count }})</a></li>
-                                {% endfor %}
-                                </ul>
-                            </li>
-                            {% else %}
-                            <li>{{ 'no_archives'|trans({}, 'icap_blog') }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </aside>
+            {{ render(controller('IcapBlogBundle:Base:orderPanels', { 'blog': _resource })) }}
         </div>
 {% endblock %}
 
@@ -250,8 +155,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
+    <!--<link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />-->
     {% stylesheets debug=false filter='lessphp'  output='css/icapblog/style.css'
       "@IcapBlogBundle/Resources/views/less/style.less"
     %}
@@ -272,8 +177,8 @@
         '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.spinner.min.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'lib/moment.min.js') }}' ></script>
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
+     <!-- <script type='text/javascript' src='{{ asset(calendarPath ~ 'lib/moment.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script> -->
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
 
@@ -294,7 +199,9 @@
                     return Translator.trans(key, {}, 'agenda');
                 }
 
-                $('#calendar').fullCalendar({
+                /*
+                
+                 $('#calendar').fullCalendar({
                     editable:        false,
                     events:          "{{ path('icap_blog_calendar_datas', {'blogId': _resource.id}) }}",
                     buttonText: {
@@ -308,6 +215,7 @@
                     dayNamesShort: [ t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')],
                     today: 'pouet'
                 });
+                */
 
                 $('.delete').confirmModal();
 

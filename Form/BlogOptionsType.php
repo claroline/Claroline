@@ -41,6 +41,9 @@ class BlogOptionsType extends AbstractType
                 'multiple'      => false,
                 'empty_value'   => false
             ))
+            ->add('listWidgetBlog', 'listWidgetBlog', array(
+                'label' => 'Trier les rubriques'
+            ))
         ;
     }
 

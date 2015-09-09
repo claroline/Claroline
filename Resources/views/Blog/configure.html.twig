@@ -39,8 +39,9 @@
 
         {{ form_rest(form) }}
         <div class="form-actions">
-            <button type="submit" class="btn btn-primary">{{ 'configure'|trans({}, 'platform') }}</button>
-            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-danger">{{ 'cancel'|trans({}, 'platform') }}</a>
+            <button type="submit" class="btn btn-primary">{{ 'apply'|trans({}, 'icap_blog') }}</button>
+            <a href="{{ path("icap_blog_view", {"blogId": _resource.id}) }}" title="{{ 'cancel'|trans({}, 'platform') }}" class="btn btn-annuler">{{ 'cancel'|trans({}, 'platform') }}</a>
         </div>
+        
     </form>
 {% endblock %}

@@ -229,4 +229,18 @@ class BlogManager
 
         return $tag;
     }
+
+    public function getPanelInfos()
+    {
+        return array(
+            'search',
+            'infobar',
+            'rss',
+            'tagcloud',
+            'redactor',
+            'calendar',
+            'archives'
+        );
+    }
+
 }

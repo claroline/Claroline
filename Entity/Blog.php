@@ -60,14 +60,6 @@ class Blog extends AbstractResource
     }
 
     /**
-     * @return ArrayCollection|Post[]
-     */
-    public function getPosts()
-    {
-        return $this->posts;
-    }
-
-    /**
      * @return int
      */
     public function getCountPublishedPosts()
@@ -104,6 +96,41 @@ class Blog extends AbstractResource
     {
         return $this->options;
     }
+
+
+    /**
+     * @param ArrayCollection $posts
+     *
+     * @return Blog
+     */
+    public function setLateralbars(ArrayCollection $posts)
+    {
+        /** @var \Icap\BlogBundle\Entity\Post[] $posts */
+        foreach ($posts as $post) {
+            $post->setBlog($this);
+        }
+
+        $this->posts = $posts;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Post[]
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
+
+
+
+
+
+
+
+
+
 
     /**
      * @return bool

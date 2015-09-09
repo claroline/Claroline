@@ -35,3 +35,11 @@ services:
         arguments: [@icap.blog.manager.tag, @icap.blog.post_repository]
         tags:
             - { name: twig.extension }
+
+
+    icap.blog.form.type.listWidgetBlog:
+        class: Icap\BlogBundle\Form\ListWidgetBlogType
+        arguments:
+            - "%listWidgetBlog%"
+        tags:
+            - { name: form.type, alias: listWidgetBlog }

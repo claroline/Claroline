@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class CommentController extends Controller
+class CommentController extends BaseController
 {
     /**
      * @Route("/{blogId}/{postSlug}/comment/delete/{commentId}", name="icap_blog_comment_delete", requirements={"blogId" = "\d+"})
@@ -190,8 +190,7 @@ class CommentController extends Controller
             'user'       => $user,
             'post'       => $post,
             'comment'    => $comment,
-            'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog)
+            'form'       => $form->createView()
         );
     }
 }

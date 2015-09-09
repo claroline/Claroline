@@ -15,7 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
     /**
      * @Route("/{blogId}/post/view/{postSlug}", name="icap_blog_post_view", requirements={"id" = "\d+"})
@@ -98,8 +98,7 @@ class PostController extends Controller
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'post'       => $post,
-            'form'       => $form,
-            'archives'   => $this->getArchiveDatas($blog)
+            'form'       => $form
         );
     }
     /**
@@ -208,8 +207,7 @@ class PostController extends Controller
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'post'       => $post,
-            'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog)
+            'form'       => $form->createView()
         );
     }
 

@@ -6,8 +6,17 @@
     padding-bottom: 0;
 }
 
+.control-label.col-md-3 {
+    padding-left: 52px;
+    text-align: left;
+}
+
 a.white {
     color: white;
+}
+
+.btn-annuler {
+    border: 1px solid;
 }
 
 article {
@@ -311,4 +320,16 @@ ul.tag-cloud {
 
 form#icap_blog_post_form {
   label span.info {font-weight: normal; color: #777;}
+}
+
+/*List Options*/
+#sortable{
+    padding-left:0;
+    list-style:none;
+    display:block;
+    .widgetNameSortable{
+        & > :hover {
+            cursor:move;
+        }
+    } 
 }

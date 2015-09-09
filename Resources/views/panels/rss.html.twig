@@ -1,0 +1,8 @@
+<div id="panel2" class="panel panel-default rss_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'blog_rss_feed'|trans({}, 'icap_blog') }}
+            <a href="{{ path('icap_blog_rss', {'blogId': blog.id}) }}" title="{{ 'blog_rss_feed'|trans({}, 'icap_blog') }}" class="label label-warning pull-right white"><span class="fa fa-rss"></span> {{ 'rss_feed'|trans({}, 'icap_blog') }}</a>
+        </h3>
+    </div>
+</div>

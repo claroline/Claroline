@@ -144,6 +144,17 @@ class BlogOptions
      */
     protected $tagCloud = null;
 
+
+    /**
+     * @var string
+     *
+     * Option to display the widget bar on the right
+     *
+     * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false)
+     */
+    protected $listWidgetBlog = "01112131415161" ;
+
+
     /**
      * @return int
      */
@@ -394,6 +405,7 @@ class BlogOptions
     {
         return $this->bannerBackgroundImageRepeat;
     }
+    
 
     /**
      * @param boolean $bannerActivate
@@ -459,6 +471,26 @@ class BlogOptions
     public function getTagCloud()
     {
         return $this->tagCloud;
+    }
+
+    /**
+     * @param string $listWidgetBlog
+     *
+     * @return BlogOptions
+     */
+    public function setListWidgetBlog($listWidgetBlog)
+    {
+        $this->listWidgetBlog = $listWidgetBlog;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListWidgetBlog()
+    {
+        return $this->listWidgetBlog;
     }
 
     /**
@@ -570,5 +602,15 @@ class BlogOptions
         if (null !== $filePath) {
             unlink($filePath);
         }
+    }
+
+    /**
+     * Get bannerActivate
+     *
+     * @return boolean
+     */
+    public function getBannerActivate()
+    {
+        return $this->bannerActivate;
     }
 }

@@ -10,12 +10,12 @@ add_new_post: 'Add new post'
 edit_post: "Edition of the post '%postTitle%'"
 back_to_blog: 'Back to blog'
 icap_blog_edit_banner: "Edit the banner"
-icap_blog_options_form_authorize_comment: 'Authorize comments ?'
-icap_blog_options_form_authorize_anonymous_comment: 'Anonymous comments authorized ?'
+icap_blog_options_form_authorize_comment: 'Authorize comments on the articles'
+icap_blog_options_form_authorize_anonymous_comment: 'Anonymous comments authorized (authentification not riquired)'
 icap_blog_options_form_post_per_page: 'Post per page'
-icap_blog_options_form_auto_publish_post: 'Automatic publication of posts ?'
-icap_blog_options_form_auto_publish_comment: 'Automatic publication of comments ?'
-icap_blog_options_form_display_title: "Display title of the blog ?"
+icap_blog_options_form_auto_publish_post: 'Automatic publication of posts on there creation'
+icap_blog_options_form_auto_publish_comment: 'Automatic publication of comments on there creation (without moderation)'
+icap_blog_options_form_display_title: "Display title of the blog"
 icap_blog_banner_form_banner_background_color: "Background color"
 icap_blog_banner_form_banner_activate: "Activate the banner ?"
 icap_blog_banner_form_banner_background_image_position: "Positionning"
@@ -96,8 +96,10 @@ classic: "Classic"
 3D: "3D sphere <span>(* Not compatible with IE<9)</span>"
 advanced: "Classic with post number"
 view: '%viewCounter% view | %viewCounter% views'
-icap_blog_options_form_display_post_view_counter: 'Display view counter on each post ?'
+icap_blog_options_form_display_post_view_counter: 'Display view counter on each post'
 blog_widgt_list_form_blog: 'Blog to add'
 widget_list_no_blog: 'No blog displayed'
 no_blog_selected: 'No blog selected'
 blog_widget_tag_list_blog_form_tag_cloud: "Tag cloud"
+icap_blog_options_form_Order_Widget_Right: "Manage the side bar of widget"
+apply: "Apply"

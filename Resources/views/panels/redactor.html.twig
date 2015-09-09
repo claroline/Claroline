@@ -1,0 +1,14 @@
+<div id="panel4" class="panel panel-default redactor_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'editor'|trans({}, 'icap_blog') }}</h3>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled list-inline">
+            {% for author in blog_authors(blog) %}
+            <li><a href="{{ path('icap_blog_view_filter', {'blogId': blog.id, 'filter': author.username}) }}" title="{{ author.firstName ~ ' ' ~ author.lastName }}">{{ author.firstName ~ ' ' ~ author.lastName }}</a></li>
+            {% else %}
+            <li>{{ 'no_authors'|trans({}, 'icap_blog') }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

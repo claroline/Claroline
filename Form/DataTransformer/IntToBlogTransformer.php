@@ -33,15 +33,6 @@ class IntToBlogTransformer implements DataTransformerInterface
      */
     public function transform($value)
     {
-        echo "<pre>t ";
-        var_dump(get_class($value));
-        echo "</pre>" . PHP_EOL;
-
-        if ($value instanceof Blog) {
-            echo "<pre>";
-            var_dump($value->getResourceNode()->getName());
-            echo "</pre>" . PHP_EOL;
-        }
         return ($value instanceof Blog) ? $value->getId() : null;
     }
 
@@ -53,9 +44,6 @@ class IntToBlogTransformer implements DataTransformerInterface
      */
     public function reverseTransform($blogId)
     {
-        echo "<pre>r ";
-        var_dump($blogId);
-        echo "</pre>" . PHP_EOL;
         if (!$blogId) {
             return null;
         }
