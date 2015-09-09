@@ -97,3 +97,21 @@ span.invisible-section-text {font-style: italic;}
     margin-top: -25px;
     text-align: right;
 }
+
+.wiki-contents-inner.well ul.sortable-list.sortable-enable li{
+    padding: 5px 5px 5px 15px;
+    font-size: 0.9em;
+}
+
+/* Grip */
+.wiki-contents-inner.well ul.sortable-list.sortable-enable li::before{
+    content: "..\A ..\A ..\A ..\A ";
+    display: inline-block;
+    line-height: 5px;
+    margin-left: -11px;
+    margin-top: -5px;
+    position: absolute;
+    width: 5px;
+}
+
+

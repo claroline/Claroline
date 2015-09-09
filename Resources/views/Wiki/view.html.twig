@@ -51,9 +51,9 @@
                 <div class="wiki-contents-title">
                     {{ 'wiki_contents'|trans({},'icap_wiki') }}
                     {% if isAdmin %}
-                    <a id="move-contents-trigger" class="btn btn-default btn-xs pull-right">
-                        <i class="fa fa-resize-vertical"></i> <i class="fa fa-reorder"></i>
-                    </a>
+                    <span id="move-contents-trigger" class="btn btn-default btn-xs pull-right">
+                        <i class="fa fa-resize-vertical"></i> <span class="fa fa-arrows"></span>
+                    </span>
                     {% endif %}
                 </div>
                 {% include "IcapWikiBundle:Wiki:wikiContents.html.twig" with {'sections' : tree[0].__children, 'isAdmin' : isAdmin, 'delimeter' : '.', 'rootId' : tree[0].id } %}
