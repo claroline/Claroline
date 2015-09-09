@@ -12,10 +12,12 @@
 namespace Claroline\AgendaBundle\Form;
 
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\AbstractType;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -26,168 +28,108 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AgendaType extends AbstractType
 {
     private $translator;
-    private $editMode;
+    private $om;
+    private $tokenStorage;
+    private $isDesktop;
+    private $guestMode = false;
 
     /**
      * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator")
+     *     "translator"   = @DI\Inject("translator"),
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ObjectManager $om, TokenStorageInterface $tokenStorage)
     {
         $this->translator = $translator;
-        $this->editMode = false;
+        $this->om = $om;
+        $this->tokenStorage = $tokenStorage;
+        $this->isDesktop = false;
     }
 
-    public function setEditMode()
+    public function setIsDesktop()
     {
-        $this->editMode = true;
+        $this->isDesktop = true;
+    }
+
+    public function setGuestMode()
+    {
+        $this->guestMode = true;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $recurring = array();
-
-        for ($i = 0; $i < 10; $i++) {
-            $recurring[$i] = $i;
-        }
-
-        $now = new \DateTime();
-
-        $attr = array();
-        $attr['class'] = 'datepicker input-small';
-        $attr['data-date-format'] = $this->translator->trans('date_form_datepicker_format', array(), 'platform');
-        $attr['autocomplete'] = 'off';
         $builder
-            ->add('title', 'text', array(
+            ->add('title', 'text', [
                 'label' => 'form.title',
                 'required' => true
-            ));
+            ])
+        ;
 
-        $builder->add(
-            'isTask',
-            'checkbox',
-            array(
-                'label' => 'form.task',
-                'required' => false
-            )
-        );
+        if (!$this->guestMode) {
+            $builder
+                ->add('isTask', 'checkbox', [
+                    'label' => 'form.task',
+                    'required' => false
+                ])
 
-        $builder->add(
-            'isAllDay',
-            'checkbox',
-            array(
-                'label' => 'form.all_day',
-                'required' => false
-            )
-        );
+                ->add('isAllDay', 'checkbox', [
+                    'label' => 'form.all_day',
+                    'required' => false
+                ])
 
-        $builder->add(
-                'start',
-                'datepicker',
-                array(
-                    'label' => 'form.start',
-                    'required'  => true,
-                    'widget'    => 'single_text',
-                    'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
-                    'attr'      => $attr,
-                    'autoclose' => true,
-                    'constraints' => new Assert\Date()
-                    )
-                );
-        if (!$this->editMode) {
-            $builder->add(
-                'startHours',
-                'time',
-                array(
-                    'label' => 'form.start_hours',
-                    'data' => $now->getTimestamp(),
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        } else {
-            $builder->add(
-                'startHours',
-                'time',
-                array(
-                    'label' => 'form.start_hours',
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
+                ->add('start', 'text', [
+                    'label' => 'form.start'
+                ])
+
+                ->add('end', 'text', [
+                    'label' => 'form.end'
+                ])
+            ;
         }
 
-        $builder->add(
-            'end',
-            'datepicker',
-            array(
-                'label' => 'form.end',
-                'required'  => true,
-                'widget'    => 'single_text',
-                'format'    => $this->translator->trans('date_agenda_display_format_for_form', array(), 'agenda'),
-                'attr'      => $attr,
-                'autoclose' => true,
-                'constraints' => new Assert\Date()
-            )
-        );
-
-        if (!$this->editMode) {
-            $builder->add(
-                'endHours',
-                'time',
-                array(
-                    'label' => 'form.end_hours',
-                    'data' => $now->getTimestamp(),
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
-        } else {
-            $builder->add(
-                'endHours',
-                'time',
-                array(
-                    'label' => 'form.end_hours',
-                    'attr' => array('class' => 'hours'),
-                    'input' => 'timestamp',
-                    'widget' => 'single_text'
-                )
-            );
+        if ($this->isDesktop && !$this->guestMode) {
+            $builder->add('workspace', 'entity', [
+                'label' => $this->translator->trans('workspace', [], 'platform'),
+                'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
+                'required' => false,
+                'choices' => $this->getWorkspacesByUser(),
+                'empty_value' => $this->translator->trans('desktop', [], 'platform'),
+                'property' => 'name'
+            ]);
         }
 
-        $builder->add(
-            'description',
-            'tinymce',
-            array(
+        $builder
+            ->add('description', 'tinymce', [
                 'label' => 'form.description'
-            )
-        );
+            ])
+        ;
 
-        $builder->add(
-            'priority',
-            'choice',
-            array(
-                'label' => 'form.priority',
-                'choices' => array(
-                    '#FF0000' => 'high',
-                    '#01A9DB' => 'medium',
-                    '#848484' => 'low'
-                )
-            )
-        );
+        if (!$this->guestMode) {
+            $builder
+                ->add('priority', 'choice', [
+                    'label' => 'form.priority',
+                    'choices' => [
+                        '#FF0000' => 'high',
+                        '#01A9DB' => 'medium',
+                        '#848484' => 'low'
+                    ]
+                ])
 
-        $builder->add(
-            'recurring',
-            'choice',
-            array(
-                'label' => 'form.recurring',
-                'choices' => $recurring
-            )
-        );
+                ->add('users', 'userpicker', [
+                    'label' => 'form.invitations',
+                    'translation_domain' => 'agenda',
+                    'multiple' => true,
+                    'mapped' => false
+                ])
+            ;
+        }
+    }
+
+    public function getWorkspacesByUser()
+    {
+        return $this->om->getRepository('ClarolineAgendaBundle:Event')->findEditableUserWorkspaces($this->tokenStorage->getToken()->getUser());
     }
 
     public function getName()

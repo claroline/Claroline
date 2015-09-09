@@ -7,8 +7,8 @@ METHOD:PUBLISH
 X-WR-CALNAME: {{ event.getUser().getUsername() }}
 X-WR-TIMEZONE: {{ tzName }}
 BEGIN:VEVENT
-DTSTART: {{ event.getStart().getTimestamp()|date('Ymd\\THi') }}00
-DTEND:{{ event.getEnd().getTimestamp()|date('Ymd\\THi') }}00
+DTSTART: {{ event.getStartInDateTime().getTimestamp()|date('Ymd\\THi') }}00
+DTEND:{{ event.getEndInDateTime().getTimestamp()|date('Ymd\\THi') }}00
 CLASS:CLAROLINECONNECT
 DESCRIPTION: {{ event.getDescription() }}
 LOCATION:

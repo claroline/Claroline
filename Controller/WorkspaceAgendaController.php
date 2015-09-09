@@ -76,7 +76,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function showAction(Workspace $workspace)
     {
-        $this->checkOpenAccess($workspace);
+        $this->agendaManager->checkOpenAccess($workspace);
         $data = $this->agendaManager->displayEvents($workspace);
 
         return new JsonResponse($data, 200);
@@ -95,7 +95,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importEventsModalForm(Workspace $workspace)
     {
-        $this->checkEditAccess($workspace);
+        $this->agendaManager->checkEditAccess($workspace);
         $form = $this->createForm(new ImportAgendaType());
 
         return array('form' => $form->createView(), 'workspace' => $workspace);
@@ -110,7 +110,7 @@ class WorkspaceAgendaController extends Controller
      */
     public function importsEventsIcsAction(Workspace $workspace)
     {
-        $this->checkEditAccess($workspace);
+        $this->agendaManager->checkEditAccess($workspace);
         $form = $this->createForm(new ImportAgendaType());
         $form->handleRequest($this->request);
 
@@ -137,7 +137,7 @@ class WorkspaceAgendaController extends Controller
 
     public function addEventModalFormAction(Workspace $workspace)
     {
-        $this->checkEditAccess($workspace);
+        $this->agendaManager->checkEditAccess($workspace);
         $formType = $this->get('claroline.form.agenda');
         $form = $this->createForm($formType, new Event());
 
@@ -160,14 +160,17 @@ class WorkspaceAgendaController extends Controller
      */
     public function addEventAction(Workspace $workspace)
     {
-        $this->checkEditAccess($workspace);
+        $this->agendaManager->checkEditAccess($workspace);
         $formType = $this->get('claroline.form.agenda');
         $form = $this->createForm($formType, new Event());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
             $event = $form->getData();
-            $data = $this->agendaManager->addEvent($event, $workspace);
+
+            $users = $form->get('users')->getData();
+
+            $data = $this->agendaManager->addEvent($event, $workspace, $users);
 
             return new JsonResponse(array($data), 200);
         }
@@ -181,17 +184,63 @@ class WorkspaceAgendaController extends Controller
         );
     }
 
-    public function checkOpenAccess(Workspace $workspace)
+    /**
+     * @EXT\Route(
+     *     "/{event}/update/form",
+     *     name="claro_workspace_agenda_update_event_form",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     *
+     * @return array
+     */
+    public function updateEventModalFormAction(Event $event)
     {
-        if (!$this->authorization->isGranted('agenda_', $workspace)) {
-            throw new AccessDeniedException("You cannot open the agenda");
-        }
+        $this->agendaManager->checkEditAccess($event->getWorkspace());
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, $event);
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_workspace_agenda_update', array('event' => $event->getId())
+            ),
+            'event' => $event
+        );
     }
 
-    public function checkEditAccess(Workspace $workspace)
+    /**
+     * @EXT\Route(
+     *     "/{event}/update",
+     *     name="claro_workspace_agenda_update"
+     * )
+     * @EXT\Method("POST")
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function updateAction(Event $event)
     {
-        if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
-            throw new AccessDeniedException("You cannot edit the agenda");
+        $this->agendaManager->checkEditAccess($event->getWorkspace());
+        $formType = $this->get('claroline.form.agenda');
+        $form = $this->createForm($formType, $event);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $users = $form->get('users')->getData();
+
+            $event = $this->agendaManager->updateEvent($event, $users);
+
+
+            return new JsonResponse($event, 200);
         }
+
+        return array(
+            'form' => $form->createView(),
+            'action' => $this->router->generate(
+                'claro_workspace_agenda_update', array('event' => $event->getId())
+            ),
+            'event' => $event
+        );
     }
 }

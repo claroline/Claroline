@@ -36,6 +36,7 @@ class AgendaController extends Controller
     private $agendaManager;
     private $router;
     private $tokenStorage;
+    private $em;
 
     /**
      * @DI\InjectParams({
@@ -44,7 +45,8 @@ class AgendaController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"             = @DI\Inject("router"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage")
+     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
+     *     "em"                 = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct(
@@ -53,7 +55,8 @@ class AgendaController extends Controller
         Request $request,
         AgendaManager $agendaManager,
         RouterInterface $router,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EntityManager $em
     )
     {
         $this->authorization = $authorization;
@@ -62,67 +65,7 @@ class AgendaController extends Controller
         $this->agendaManager = $agendaManager;
         $this->router        = $router;
         $this->tokenStorage  = $tokenStorage;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/update/form",
-     *     name="claro_agenda_update_event_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
-     *
-     * @param Workspace $workspace
-     * @return array
-     */
-    public function updateEventModalFormAction(Event $event)
-    {
-        $this->checkPermission($event);
-        $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
-        $form = $this->createForm($formType, $event);
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_agenda_update', array('event' => $event->getId())
-            ),
-            'event' => $event
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{event}/update",
-     *     name="claro_agenda_update"
-     * )
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
-     * @param Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function updateAction(Event $event)
-    {
-        $this->checkPermission($event);
-        $formType = $this->get('claroline.form.agenda');
-        $formType->setEditMode();
-        $form = $this->createForm($formType, $event);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $event = $this->agendaManager->updateEvent($event);
-
-            return new JsonResponse($event, 200);
-        }
-
-        return array(
-            'form' => $form->createView(),
-            'action' => $this->router->generate(
-                'claro_agenda_update', array('event' => $event->getId())
-            ),
-            'event' => $event
-        );
+        $this->em            = $em;
     }
 
     /**
@@ -177,9 +120,40 @@ class AgendaController extends Controller
 
     /**
      * @EXT\Route(
+     *      "/accept/invitation/{event}/{action}",
+     *      name="claro_agenda_invitation_action"
+     * )
+     * @EXT\Template("ClarolineAgendaBundle:Agenda:invitation.html.twig")
+     */
+    public function invitationAction(Event $event, $action)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $invitation = $this->em->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+            'event' => $event->getId(),
+            'user' => $user->getId()
+        ]);
+
+        if ($invitation && $invitation->getStatus() != $action) {
+            $invitation->setStatus($action);
+            $this->em->flush();
+
+            return [
+                'invitation' => $invitation,
+                'already_done' => false
+            ];
+        }
+
+        return [
+            'invitation' => $invitation,
+            'already_done' => true
+        ];
+    }
+
+    /**
+     * @EXT\Route(
      *     "/{event}/delete",
      *     name="claro_agenda_delete_event",
-     *     options = {"expose"=true}
+     *     options={"expose"=true}
      * )
      *
      * @param Event $event
@@ -277,6 +251,10 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
+        if ($event->isEditable() === false) {
+            throw new AccessDeniedException("You cannot edit this event");
+        }
+
         if ($event->getWorkspace()) {
             if (!$this->authorization->isGranted(array('agenda_', 'edit'), $event->getWorkspace())) {
                 throw new AccessDeniedException("You cannot edit the agenda");

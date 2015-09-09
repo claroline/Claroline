@@ -30,13 +30,10 @@ form:
     all_day: todo el dia
     description: Descripción
     end: Fecha de finalización
-    end_hours: Hora de finalización
     task: Tâche
     priority: Prioridad
     priority_hight: Alta
-    recurring: Repeticiones
     start: Fecha de inicio
-    start_hours: Hora de inicio
     title: Titulo
     author: Creado por
 high: 'Alta'

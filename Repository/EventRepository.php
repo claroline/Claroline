@@ -31,21 +31,40 @@ class EventRepository extends EntityRepository
                 JOIN w.roles r
                 JOIN r.users u
                 WHERE u.id = :userId
+                AND (
+                    EXISTS (
+                        SELECT ot
+                        FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                        JOIN ot.tool t
+                        JOIN t.maskDecoders tm
+                        JOIN ot.rights otr
+                        WHERE ot.workspace = w
+                        AND t.name = :agenda
+                        AND otr.role = r
+                        AND tm.name = :open
+                        AND BIT_AND(otr.mask, tm.value) = tm.value
+                    )
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                )
             )
             WHERE e.isTask = :isTask
             ORDER BY e.start DESC
         ";
+
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
         $query->setParameter('isTask', $isTask);
+        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('open', 'open');
+
 
         return $query->getResult();
     }
 
     /*
-     * Get all the events and the tasks of the user for all the workspace where is allowed to write
-     */
-    public function findEventsAndTasksOfWorkspaceForTheUser($user)
+   * Get all the events and the tasks of the user for all the workspace where is allowed to write
+   */
+    public function findEventsAndTasksOfWorkspaceForTheUser(User $user)
     {
         $dql = "
             SELECT e
@@ -57,11 +76,64 @@ class EventRepository extends EntityRepository
                 JOIN w.roles r
                 JOIN r.users u
                 WHERE u.id = :userId
+                AND (
+                    EXISTS (
+                        SELECT ot
+                        FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                        JOIN ot.tool t
+                        JOIN t.maskDecoders tm
+                        JOIN ot.rights otr
+                        WHERE ot.workspace = w
+                        AND t.name = :agenda
+                        AND otr.role = r
+                        AND tm.name = :open
+                        AND BIT_AND(otr.mask, tm.value) = tm.value
+                    )
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                )
             )
             ORDER BY e.start DESC
         ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('userId', $user->getId());
+        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('open', 'open');
+
+        return $query->getResult();
+    }
+
+    /*
+     * Find all the workspaces where the user is allowed to edit the agenda
+     */
+    public function findEditableUserWorkspaces(User $user)
+    {
+        $dql = "
+            SELECT w
+            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+            JOIN w.roles r
+            JOIN r.users u
+            WHERE u.id = :userId
+            AND (
+                EXISTS (
+                    SELECT ot
+                    FROM Claroline\CoreBundle\Entity\Tool\OrderedTool ot
+                    JOIN ot.tool t
+                    JOIN t.maskDecoders tm
+                    JOIN ot.rights otr
+                    WHERE ot.workspace = w
+                    AND t.name = :agenda
+                    AND otr.role = r
+                    AND tm.name = :edit
+                    AND BIT_AND(otr.mask, tm.value) = tm.value
+                )
+                OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+            )
+        ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('userId', $user->getId());
+        $query->setParameter('agenda', 'agenda_');
+        $query->setParameter('edit', 'edit');
 
         return $query->getResult();
     }

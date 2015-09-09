@@ -12,12 +12,17 @@
 namespace Claroline\AgendaBundle\Manager;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -73,18 +78,25 @@ class AgendaManager
         $this->container = $container;
     }
 
-    public function addEvent(Event $event, $workspace = null)
+    public function addEvent(Event $event, $workspace = null, array $users = [])
     {
         $event->setWorkspace($workspace);
         $event->setUser($this->tokenStorage->getToken()->getUser());
         $this->setEventDate($event);
         $this->om->persist($event);
-
-        if ($event->getRecurring() > 0) {
-            $this->addRecurrentEvents($event);
-        }
-
         $this->om->flush();
+
+        $this->sendInvitation($event, $users);
+
+        return $event->jsonSerialize();
+    }
+
+    public function updateEvent(Event $event, array $users = [])
+    {
+        $this->setEventDate($event);
+        $this->om->flush();
+
+        $this->sendInvitation($event, $users);
 
         return $event->jsonSerialize();
     }
@@ -102,14 +114,59 @@ class AgendaManager
         return $removed;
     }
 
+    public function sendInvitation(Event $event, array $users = [])
+    {
+        foreach ($users as $key => $user) {
+            $invitation = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
+                'user' => $user,
+                'event' => $event
+            ]);
+
+            if ($invitation) {
+                unset($users[$key]);
+                continue;
+            }
+
+            $eventInvitation = new EventInvitation($event, $user);
+            $this->om->persist($eventInvitation);
+        }
+        $this->om->flush();
+
+        $creator = $this->tokenStorage->getToken()->getUser();
+        $message = new SendMessageEvent(
+            $creator,
+            $this->translator->trans('send_message_content', [
+                '%Sender%' => $creator->getUserName(),
+                '%Start%' => $event->getStart(),
+                '%End%' => $event->getEnd(),
+                '%Description%' => $event->getDescription(),
+                '%JoinAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::JOIN]),
+                '%MaybeAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::MAYBE]),
+                '%ResignAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::RESIGN]),
+            ], 'agenda'),
+            $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
+            null,
+            $users,
+            false
+        );
+
+        $dispatcher = $this->container->get('event_dispatcher');
+        $dispatcher->dispatch('claroline_message_sending_to_users', $message);
+    }
+
     public function desktopEvents(User $usr, $allDay = false)
     {
         $desktopEvents = $this->om->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, $allDay);
         $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
+        $invitationEvents = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findBy([
+            'user' => $usr,
+            'status' => [EventInvitation::JOIN, EventInvitation::MAYBE]
+        ]);
 
         return array_merge(
             $this->convertEventsToArray($workspaceEventsAndTasks),
-            $this->convertEventsToArray($desktopEvents)
+            $this->convertEventsToArray($desktopEvents),
+            $this->convertInvitationsToArray($invitationEvents)
         );
     }
 
@@ -137,7 +194,7 @@ class AgendaManager
     }
 
     /**
-     * @param $text it's the calendar text formated in ics structure
+     * @param $text it's the calendar text formatted in ics structure
      * @param $workspaceId
      * @return string $fileName path to the file in web/upload folder
      */
@@ -183,14 +240,6 @@ class AgendaManager
         return $tabs;
     }
 
-    public function updateEvent(Event $event)
-    {
-        $this->setEventDate($event);
-        $this->om->flush();
-
-        return $event->jsonSerialize();
-    }
-
     public function displayEvents(Workspace $workspace, $allDay = false)
     {
         $events = $this->om->getRepository('ClarolineAgendaBundle:Event')
@@ -201,7 +250,7 @@ class AgendaManager
 
     public function updateEndDate(Event $event, $dayDelta = 0, $minDelta = 0)
     {
-        $event->setEnd($event->getEnd()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
+        $event->setEnd($event->getEndInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
 
         return $event->jsonSerialize();
@@ -209,7 +258,7 @@ class AgendaManager
 
     public function updateStartDate(Event $event, $dayDelta = 0, $minDelta = 0)
     {
-        $event->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($dayDelta, $minDelta));
+        $event->setStart($event->getStartInTimestamp() + $this->toSeconds($dayDelta, $minDelta));
         $this->om->flush();
     }
 
@@ -232,21 +281,15 @@ class AgendaManager
         return $data;
     }
 
-    private function addRecurrentEvents(Event $event, $day = 1, $minutes = 0)
+    public function convertInvitationsToArray(array $invitations)
     {
-        $events = array();
+        $data = [];
 
-        for ($i = 1; $i <= $event->getRecurring(); $i++) {
-            $recEvent = clone $event;
-            $recEvent->setStart($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
-            $recEvent->setEnd($event->getStart()->getTimeStamp() + $this->toSeconds($day, $minutes) * $i);
-            $events[] = $recEvent;
-            $this->om->persist($recEvent);
+        foreach ($invitations as $key => $invitation) {
+            $data[] = $invitation->getEvent()->jsonSerialize($this->tokenStorage->getToken()->getUser());
         }
 
-        $this->om->flush();
-
-        return $this->convertEventsToArray($events);
+        return $data;
     }
 
     private function toSeconds($days = 0, $mins = 0)
@@ -265,23 +308,19 @@ class AgendaManager
         if ($event->isAllDay()) {
             // If it's a task we set the start date at the beginning of the day
             if ($event->isTask()) {
-                $event->setStart(strtotime($event->getEnd()->format('Y-m-d'). ' 00:00:00'));
+                $event->setStart(strtotime($event->getEndInDateTime()->format('Y-m-d').' 00:00:00'));
             } else {
-                $event->setStart(strtotime($event->getStart()->format('Y-m-d'). ' 00:00:00'));
+                $event->setStart(strtotime($event->getStartInDateTime()->format('Y-m-d').' 00:00:00'));
             }
-            $event->setEnd(strtotime($event->getEnd()->format('Y-m-d'). ' 24:00:00'));
+            $event->setEnd(strtotime($event->getEndInDateTime()->format('Y-m-d').' 24:00:00'));
         } else {
-            // we get the hours value directly from the property wich has been setted by the form.
-            // That way we can use the getter to return the number of hours wich is deduced from the timestamp stored
-            // For some reason, symfony2 always substract 3600. Timestamp for hours 0 = -3600 wich is weird.
-            // This couldn't be fixed be setting the timezone in the form field.
             // If it's a task, we subtract 30 min so that the event is not a simple line on the calendar
             if ($event->isTask()) {
-                $event->setStart($event->getEnd()->getTimestamp() + $event->endHours + 3600 -30*60);
+                $event->setStart($event->getEndInTimestamp() - 30*60);
             } else {
-                $event->setStart($event->getStart()->getTimestamp() + $event->startHours + 3600);
+                $event->setStart($event->getStartInTimestamp());
             }
-            $event->setEnd($event->getEnd()->getTimestamp() + $event->endHours + 3600);
+            $event->setEnd($event->getEndInTimestamp());
         }
     }
 
@@ -290,8 +329,8 @@ class AgendaManager
         usort(
             $listEvents,
             function($a, $b) {
-                $aStartTimestamp = $a->getStart()->getTimestamp();
-                $bStartTimestamp = $b->getStart()->getTimestamp();
+                $aStartTimestamp = $a->getStartInTimestamp();
+                $bStartTimestamp = $b->getStartInTimestamp();
                 if ($aStartTimestamp == $bStartTimestamp) {
                     return 0;
                 }
@@ -318,5 +357,19 @@ class AgendaManager
                 'events' => $events
             )
         );
+    }
+
+    public function checkOpenAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted('agenda_', $workspace)) {
+            throw new AccessDeniedException("You cannot open the agenda");
+        }
+    }
+
+    public function checkEditAccess(Workspace $workspace)
+    {
+        if (!$this->authorization->isGranted(array('agenda_', 'edit'), $workspace)) {
+            throw new AccessDeniedException("You cannot edit the agenda");
+        }
     }
 }

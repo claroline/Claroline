@@ -1,4 +1,4 @@
-add_event: 'Ajouter un événement'
+add_event: Ajouter un évènement
 isTask: Tâche
 all_day: toute la journée
 at: à
@@ -8,46 +8,59 @@ confirm: 'Êtes-vous sûr ?'
 date_invalid: 'Une erreur s''est produite, vérifiez que la date de début se situe avant la date de fin'
 day_: Jour
 day:
-    mon: Lun
-    monday: Lundi
-    tue: Mar
-    tuesday: Mardi
-    wed: Mer
-    wednesday: Mercredi
-    thu: Jeu
-    thursday: Jeudi
-    fri: Ven
-    friday: Vendredi
-    sat: Sam
-    saturday: Samedi
-    sun: Dim
-    sunday: Dimanche
+  mon: Lun
+  monday: Lundi
+  tue: Mar
+  tuesday: Mardi
+  wed: Mer
+  wednesday: Mercredi
+  thu: Jeu
+  thursday: Jeudi
+  fri: Ven
+  friday: Vendredi
+  sat: Sam
+  saturday: Samedi
+  sun: Dim
+  sunday: Dimanche
 date_agenda_display_format: DD-MM-YYYY
 date_agenda_display_format_for_form: dd-MM-yyyy
 end: Fin
 end_date: 'Date de fin'
-export: 'Exporter les événements'
+export: 'Exporter les évènements'
 error: 'Une erreur s''est produite, veuillez réessayer'
 event: Evénement
 filter_user: Filtrer par utilisateur
 filter_ws: Filtrer par espace d'activités
 filter_tasks: Filtrer les tâches
 form:
-    all_day: Toute la journée
-    description: Description
-    end: Date de fin
-    end_hours: Heure de fin
-    task: Tâche
-    priority: Priorité
-    priority_hight: Haute
-    recurring: Répétition
-    start: Date de début
-    start_hours: Heure de début
-    title: Titre
-    author: Créé par
+  all_day: Toute la journée
+  description: Description
+  end: Date de fin
+  task: Tâche
+  priority: Priorité
+  priority_hight: Haute
+  start: Date de début
+  title: Titre
+  author: Créé par
+  invitations: Invitations
+  status: Status
 high: Haute
 hide_tasks: Cacher toutes les tâches
 import_agenda_file: 'Importer'
+invitation_to_an_event: Invitation à un évènement
+invitation_not_found: L'invitation à l'évènement n'a pas été trouvé. Il a peut-être été modifié ou supprimé.
+invitation_already_done: L'action demandée a déjà été appliquée à l'évènement. Aucune modification n'a été effectuée.
+invitation_joined: L'invitation a bien été acceptée. Un nouvel évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_set_maybe: Vous avez bien marqué vous participerez peut-être à l'évènement. Cet évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_canceled: L'invitation a bien été supprimée. Aucun évènement n'a été créé dans votre agenda. Vous pouvez, à tout moment, modifier votre choix en cliquant sur les autres actions disponibles dans le message privé reçu.
+invitation_back_to_calendar: Retourner sur le calendrier du bureau
+invitation_guests: Invités
+invitation_ignore: Invitation pas encore acceptée
+invitation_join: Invitation acceptée
+invitation_maybe: L'utilisateur participera peut-être
+invitation_resign: L'utilisateur ne participera pas
+invitation_join_label: Participer
+invitation_maybe_label: Peut-être
 in_x_days: Dans %nbDays% jours
 isAllDay: Toute la journée
 length: Durée
@@ -58,33 +71,33 @@ midnight: minuit
 modify: Modifier l'évènement
 month_: Mois
 month:
-    jan: Janv
-    january: Janvier
-    feb: Févr
-    february: Février
-    mar: Mars
-    march: Mars
-    apr: Avr
-    april: Avril
-    may: Mai
-    jun: Juin
-    june: Juin
-    jul: Juil
-    july: Juillet
-    aug: Août
-    august: Août
-    sept: Sept
-    september: Septembre
-    oct: Oct
-    october: Octobre
-    nov: Nov
-    november: Novembre
-    dec: Déc
-    december: Décembre
+  jan: Janv
+  january: Janvier
+  feb: Févr
+  february: Février
+  mar: Mars
+  march: Mars
+  apr: Avr
+  april: Avril
+  may: Mai
+  jun: Juin
+  june: Juin
+  jul: Juil
+  july: Juillet
+  aug: Août
+  august: Août
+  sept: Sept
+  september: Septembre
+  oct: Oct
+  october: Octobre
+  nov: Nov
+  november: Novembre
+  dec: Déc
+  december: Décembre
 next: '>'
 nextYear: '>>'
-no_event_found: 'Pas d''événements'
-no_description: 'Pas de description'
+no_event_found: Pas d'évènements
+no_description: Pas de description
 no_task_found: Pas de tâches
 no_filter_tasks: Pas de filtre
 noon: midi
@@ -92,8 +105,25 @@ now: Maintenant
 no_task_now: Aucune tâche à réaliser
 prev: '<'
 prevYear: '<<'
-remove_event: Supprimer un événement
-remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet événement ?
+picker:
+  close: Fermer
+  go_to_today: Aujourd'hui
+  locale: fr
+  select_month: Sélectionnez un mois
+  prev_month: Mois précédent
+  next_month: Mois suivant
+  select_year: Sélectionnez une année
+  prev_year: Année précédente
+  next_year: Année suivante
+  select_decade: Sélectionnez une décade
+  prev_decade: Décade précédente
+  next_decade: Décade suivante
+  prev_century: Siècle précédent
+  next_century: Siècle suivant
+remove_event: Supprimer un évènement
+remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet évènement ?
+send_message_content: Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%.<br> Cette évènement se déroule du %Start% au %End% avec comme description: %Description%.<br><a href="%JoinAction%" class="btn btn-success">Participer</a> <a href="%MaybeAction%" class="btn btn-primary">Peut-être</a> <a href="%ResignAction%" class="btn btn-danger">Ne participe pas</a>
+send_message_object: Invitation à un évènement: %EventName%
 start_date: 'Date de début'
 show_task_only: Montrer que les tâches
 task: Tâche
@@ -106,6 +136,6 @@ today_widget: Aujourd'hui
 tomorrow: Demain
 type: Type
 update: Modifier
-update_event: Mettre à jour un événement
+update_event: Mettre à jour un évènement
 week: Semaine
 workspace: 'Espace d''activités'

@@ -36,13 +36,10 @@ form:
     all_day: All day
     description: Description
     end: End date
-    end_hours: End hours
     task: Task
     priority: Priority
     priority_hight: Hight
-    recurring: Recurring
     start: Start date
-    start_hours: Start hours
     title: Title
     author: Author
 high: High

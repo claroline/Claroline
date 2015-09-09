@@ -18,11 +18,9 @@ use Symfony\Component\Validator\Constraint;
  */
 class DateRange extends Constraint
 {
-    public $message = 'invalid_date_range';
-
     public function validatedBy()
     {
-        return 'daterange_validator';
+        return 'claroline_daterange_validator';
     }
 
     public function getTargets()

@@ -1,10 +1,10 @@
 {% twig_js name="EventContent" %}
 
 {% if event.isTask %}
-    <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
+    <div>{{ 'limit_date'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% else %}
-        <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start._i|convertDateTimeToString(event.allDay) }}</div>
-        <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end._i|convertDateTimeToString(event.allDay, 'true') }}</div>
+    <div>{{ 'form.start'|trans({}, 'agenda') }}: {{ event.start.string }}</div>
+    <div>{{ 'form.end'|trans({}, 'agenda') }}: {{ event.end.string }}</div>
 {% endif %}
 
 <div>{{ 'form.author'|trans({}, 'agenda') }}: {{ event.owner }}</div>
@@ -20,7 +20,7 @@
 {% if event.description is not empty %}
     {{ 'form.description'|trans({}, 'agenda') }} :
     <div style="max-height: 150px; overflow-y: auto;">
-         {{ event.description|raw }}
+        {{ event.description|raw }}
     </div>
 {% endif %}
 
@@ -32,8 +32,28 @@
     {% endif %}
 {% endif %}
 
-{% if event.editable %}
-    <div class="text-right" style="margin-top: 6px;">
-        <a href="#" class="modify-event" data-event-id="{{ event.id }}">{{ 'modify'|trans({}, 'agenda') }}</a>
+
+{% if event.invitations|length > 0 %}
+    {{ 'invitation_guests'|trans({}, 'agenda') }} :
+    {% for invitation in event.invitations %}
+        {% if invitation.status == event.event_invitation_status.ignore %}
+            <span class="label label-default" title="{{ 'invitation_ignore'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.join %}
+            <span class="label label-success" title="{{ 'invitation_join'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.maybe %}
+            <span class="label label-primary" title="{{ 'invitation_maybe'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.resign %}
+            <span class="label label-danger" title="{{ 'invitation_resign'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{% if event.is_guest %}
+    <div class="text-right" style="margin-top: 5px;">
+        <a href="#" data-event-id="{{ event.id }}" class="modify-event-as-guest">{{ 'modify'|trans({}, 'agenda') }}</a>
+    </div>
+{% elseif event.editable %}
+    <div class="text-right" style="margin-top: 5px;">
+        <a href="#" data-event-id="{{ event.id }}" class="modify-event">{{ 'modify'|trans({}, 'agenda') }}</a>
     </div>
 {% endif %}

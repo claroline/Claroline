@@ -1,10 +1,10 @@
 <div>
     {{ 'form.start'|trans({}, 'agenda') }} :
-    {{ event.start|date('d/m/Y H\\hi') }}
+    {{ event.getStartInDateTime()|date('d/m/Y H\\hi') }}
 </div>
 <div>
     {{ 'form.end'|trans({}, 'agenda') }} :
-    {{ event.end|date('d/m/Y H\\hi') }}
+    {{ event.getEndInDateTime()|date('d/m/Y H\\hi') }}
 </div>
 {% if event.description is not empty %}
     <div>
