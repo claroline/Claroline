@@ -24,6 +24,7 @@ class DropzoneListener extends ContainerAware
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new DropzoneType(), new Dropzone());
+        
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
             array(

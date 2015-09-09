@@ -307,6 +307,9 @@ This copy has been unlocked by admin.(it did not received the expected number of
 No copy waiting for correction: 'No copy waiting for correction'
 unterminated drops: 'unterminated drops'
 Notify on drop: 'Notify administrators when someone made a drop'
+Notifications: "Notifications"
+unterminated drops: 'Document(s) not completed'
+Notify on drop: 'Notify administrators when a document is filed'
 drop_info: "Documents are automaticaly saved, but don't forget to click on the 'finish' button when you have no more thing to add, if you don't, your copy will be like undelivered."
 dropzone_startedNotValidatedYet_infos: "Started but not validated drops are drop where people started to depose some files to the evaluation but had nevers clicked on the 'finished' button. If you do nothing, they will be considered as not deposited."
 Close unterminated drops: "Close unterminated drops"
@@ -344,7 +347,7 @@ unlock user: "unlock user"
 unlock_user_tooltip: "An unlocked user will be able to see his copy without doing the expected correction"
 unlock_all: "unlock all"
 cancel_unlock: "cancel unlock for all"
-Start collecticiel: 'Démarrer le collecticiel'
+Start evaluation: 'Démarrer le collecticiel'
 Complete collecticiel: 'Compléter le collecticiel'
 Type of document: 'Type'
 Name of document: 'Document'
@@ -358,9 +361,15 @@ To See: 'See'
 Comments list: 'List of comments'
 Comments add: 'Add comment'
 Comment validation: 'Validate this comment'
+Instruction Innova: 'Instructions'
+Edit evaluation admin: 'Collecticiel - Teacher view'
+Edit evaluation user: 'Collecticiel - Learner view'
 Add comment: 'Add a comment'
 Parameters : 'Parameters'
 Commented document: 'Document to comment'
+Commented document modal: 'Communication of an application ( comments , and evaluation )'
+Closed collecticiel: 'This groupware is not yet opened'
+Sure to ask comment for document: 'Will you send a request to comment or assessment for this document ?'
 Date hour: 'Date - Hour'
 Comment: 'Comment'
 See collecticiel: 'See collecticiel'
@@ -370,10 +379,12 @@ Name: 'Name'
 Nickname: 'Nickname'
 Dated: 'Dated'
 Document: 'Document'
+Comments on: 'Comment - Assessment on'
 Condition: 'Condition'
 Comment evaluation: 'Comment - Evaluation'
 Requests: 'Requests'
 Shared spaces: 'Shared spaces'
+OK: 'OK'
 Are you sure to want to close this collecticiel: 'Are you sure to want to close this collecticiel'
 The collecticiel has been successfully saved: 'The collecticiel has been successfully saved'
 Shared list: 'Shared collecticiel list'

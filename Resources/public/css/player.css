@@ -1,3 +1,7 @@
+/** InnovaERV : pour positinner le bouton "Ajouter" au même niveau que le reste du texte **/
+.addButtonToTop {
+    vertical-align: top;
+}
 
 input.form-control {
 	padding: 0 0 0 0;

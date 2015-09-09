@@ -10,7 +10,7 @@ class DropzoneType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name');
+        $builder->add('name', 'text', array('required' => true));
     }
 
     public function getName()
