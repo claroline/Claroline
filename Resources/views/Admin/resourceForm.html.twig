@@ -29,41 +29,43 @@
                 </div>
                 <div class="roles-list">
                     {% for role in roles %}
-                        <div class="row" data-role-id="{{ role.getId() }}">
-                            <div class="col-sm-3">
-                                {{ role.getTranslationKey()|trans({}, 'platform') }}
-                            </div>
-                            <div class="col-sm-9">
-                                <div class="btn-group btn-group-justified roles-list-btn">
-                                    {% set classNameMask0 = 'btn-default' %}
-                                    {% set classNameMask1 = 'btn-default' %}
-                                    {% set classNameMask3 = 'btn-default' %}
-                                    {% set classNameMask7 = 'btn-default' %}
-                                    {% if resourcesRights is defined %}
-                                        {% if resourcesRights[role.getId()] is defined %}
-                                            {% set mask = resourcesRights[role.getId()] %}
-                                            {% if mask == 0 %}
-                                                {% set classNameMask0 = 'btn-primary'%}
-                                            {% elseif mask == 1 %}
-                                                {% set classNameMask1 = 'btn-primary' %}
-                                            {% elseif mask == 3 %}
-                                                {% set classNameMask3 = 'btn-primary' %}
+                        {% if role.getName != 'ROLE_ADMIN' %}
+                            <div class="row" data-role-id="{{ role.getId() }}">
+                                <div class="col-sm-3">
+                                    {{ role.getTranslationKey()|trans({}, 'platform') }}
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="btn-group btn-group-justified roles-list-btn">
+                                        {% set classNameMask0 = 'btn-default' %}
+                                        {% set classNameMask1 = 'btn-default' %}
+                                        {% set classNameMask3 = 'btn-default' %}
+                                        {% set classNameMask7 = 'btn-default' %}
+                                        {% if resourcesRights is defined %}
+                                            {% if resourcesRights[role.getId()] is defined %}
+                                                {% set mask = resourcesRights[role.getId()] %}
+                                                {% if mask == 0 %}
+                                                    {% set classNameMask0 = 'btn-primary'%}
+                                                {% elseif mask == 1 %}
+                                                    {% set classNameMask1 = 'btn-primary' %}
+                                                {% elseif mask == 3 %}
+                                                    {% set classNameMask3 = 'btn-primary' %}
+                                                {% else %}
+                                                    {% set classNameMask7 = 'btn-primary' %}
+                                                {% endif %}
                                             {% else %}
-                                                {% set classNameMask7 = 'btn-primary' %}
+                                                {% set classNameMask0 = 'btn-primary' %}
                                             {% endif %}
                                         {% else %}
                                             {% set classNameMask0 = 'btn-primary' %}
                                         {% endif %}
-                                    {% else %}
-                                        {% set classNameMask0 = 'btn-primary' %}
-                                    {% endif %}
-                                    <span class="btn {{ classNameMask0 }}" data-mask="0">{{ 'agenda.resource.cannot_see'|trans({}, 'reservation') }}</span>
-                                    <span class="btn {{ classNameMask1 }}" data-mask="1">{{ 'agenda.resource.see'|trans({}, 'reservation') }}</span>
-                                    <span class="btn {{ classNameMask3 }}" data-mask="3">{{ 'agenda.resource.book'|trans({}, 'reservation') }}</span>
-                                    <span class="btn {{ classNameMask7 }}" data-mask="7">{{ 'agenda.resource.admin'|trans({}, 'reservation') }}</span>
+                                        <span class="btn {{ classNameMask0 }}" data-mask="0">{{ 'agenda.resource.cannot_see'|trans({}, 'reservation') }}</span>
+                                        <span class="btn {{ classNameMask1 }}" data-mask="1">{{ 'agenda.resource.see'|trans({}, 'reservation') }}</span>
+                                        <span class="btn {{ classNameMask3 }}" data-mask="3">{{ 'agenda.resource.book'|trans({}, 'reservation') }}</span>
+                                        <span class="btn {{ classNameMask7 }}" data-mask="7">{{ 'agenda.resource.admin'|trans({}, 'reservation') }}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        {% endif %}
                     {% endfor %}
                     <div>
                         <div>{{ 'agenda.resource.cannot_see'|trans({}, 'reservation') }}: {{ 'agenda.resource.cannot_see_info'|trans({}, 'reservation') }}</div>
