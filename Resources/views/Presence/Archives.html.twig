@@ -4,72 +4,88 @@
 
 <div class="panel panel-default">
     <div class="panel-body">   
-        
-        <div>
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
-                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
-                </ul>
-        </div>
-        </br> </br> </br>
-        <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">Date</th>
-                        <th style="text-align: center;">Period</th>
-                            {#<th>Cours</th>#}
-                            <th style="text-align: center;">Classe</th>
-                            <th style="text-align: center;">Nom de l'étudiant</th>
-                            <th style="text-align: center;">Prénom de l'étudiant</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: center;">Responsable de l'appel</th>
-                            <th style="text-align: center;">Commentaire(s)</th>
-                            <th style="text-align: center;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for presence in presences%}
-                            <tr>
-                                <td>{{presence.getDate()|date("y/m/d")}}</td>
-                                <td>{{presence.getPeriod.getNumPeriod()}}</td>
-            {#                    <td>{{presence.getPeriod.getName()}}</td>#}
-                                <td>{{presence.getGroup.getName()}}</td>
-                                <td>{{presence.getUserStudent.getLastName()}}</td>
-                                <td>{{presence.getUserStudent.getFirstName()}}</td>
-                                {% if presence.getStatus() is null %}
-                                    <td>Non communiqué</td>
-                                {% else %}
-                                <td>{{presence.getStatus.getStatusName()}}</td>
+        {% if canViewArchives%}
+            <div>
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs">
+                      <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
+                      <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                    </ul>
+            </div>
+                    
+            </br>
+            
+            <div style="text-align: center;">
+                    <H1>Archives:</H1>
+            </div>
+            
+            <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Date</th>
+                            <th style="text-align: center;">Period</th>
+                                {#<th>Cours</th>#}
+                                <th style="text-align: center;">Classe</th>
+                                <th style="text-align: center;">Nom de l'étudiant</th>
+                                <th style="text-align: center;">Prénom de l'étudiant</th>
+                                <th style="text-align: center;">Status</th>
+                                <th style="text-align: center;">Responsable de l'appel</th>
+                                <th style="text-align: center;">Commentaire(s)</th>
+                                {% if canEditArchives%}
+                                    <th style="text-align: center;">Actions</th>
                                 {% endif %}
-                                <td>{{presence.getUserTeacher.getFirstName()}}{{presence.getUserTeacher.getLastName()}}</td>
-                                <td>{{presence.getComment()}}</td>
-                                <td>
-                                    <span class="btn btn-default modifier-presence-btn"
-                                                               data-presence-id="{{presence.getId()}}"
-                                                               data-toggle="tooltip" 
-                                                               data-placement="bottom" 
-                                                               title="" 
-                                                               data-original-title="Modifier" 
-                                                               role="button">
-                                        <i class="fa fa-pencil"></i>
-                                    </span>
-                                     <a class="btn btn-default supprimer-presence-btn"
-                                                               data-presence-id="{{presence.getId()}}"
-                                                               data-toggle="tooltip" 
-                                                               data-placement="bottom" 
-                                                               title="" 
-                                                               data-original-title="Supprimer" 
-                                                               role="button">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                       
-                    </td>
                             </tr>
-                        {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for presence in presences%}
+                                <tr>
+                                    <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                    <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                {#                    <td>{{presence.getPeriod.getName()}}</td>#}
+                                    <td>{{presence.getGroup.getName()}}</td>
+                                    <td>{{presence.getUserStudent.getLastName()}}</td>
+                                    <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                    {% if presence.getStatus() is null %}
+                                        <td>Non communiqué</td>
+                                    {% else %}
+                                    <td>{{presence.getStatus.getStatusName()}}</td>
+                                    {% endif %}
+                                    <td>{{presence.getUserTeacher.getFirstName()}}{{presence.getUserTeacher.getLastName()}}</td>
+                                    <td>{{presence.getComment()}}</td>
+                                    {% if canEditArchives%}
+                                        <td>
+                                            <span class="btn btn-default modifier-presence-btn"
+                                                                       data-presence-id="{{presence.getId()}}"
+                                                                       data-toggle="tooltip" 
+                                                                       data-placement="bottom" 
+                                                                       title="" 
+                                                                       data-original-title="Modifier" 
+                                                                       role="button">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
+                                             <a class="btn btn-default supprimer-presence-btn"
+                                                                       data-presence-id="{{presence.getId()}}"
+                                                                       data-toggle="tooltip" 
+                                                                       data-placement="bottom" 
+                                                                       title="" 
+                                                                       data-original-title="Supprimer" 
+                                                                       role="button">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+            {% else %}
+                </br></br>
+                </br></br>
+                Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+                </br></br>
+                </br></br>
+            {% endif %}        
          </div>
     </div>
 {% endblock %}   

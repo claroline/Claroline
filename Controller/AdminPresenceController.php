@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\RoleManager;
+
 
 use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
@@ -44,7 +44,6 @@ class AdminPresenceController extends Controller
     private $userRepo;
     private $router;
     private $config;
-    private $roleManager;
     private $presenceManager;
     
     
@@ -54,7 +53,6 @@ class AdminPresenceController extends Controller
      *      "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *      "router"             = @DI\Inject("router"),
      *      "config"             = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
      *      "presenceManager"    = @DI\Inject("formalibre.manager.presence_manager")
      * })
      */
@@ -63,7 +61,6 @@ class AdminPresenceController extends Controller
         EntityManager $em,
         RouterInterface $router,
         PlatformConfigurationHandler $config,
-        RoleManager $roleManager,
         PresenceManager $presenceManager
       )
     {   $this->router             =$router;          
@@ -76,7 +73,6 @@ class AdminPresenceController extends Controller
         $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
         $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');  
         $this->config             = $config;
-        $this->roleManager        = $roleManager;
         $this->presenceManager    = $presenceManager;
     }
     
@@ -122,8 +118,43 @@ class AdminPresenceController extends Controller
         $rightName[PresenceRights::READING_ARCHIVES]="Consulter les archives";
         $rightName[PresenceRights::EDIT_ARCHIVES]="Editer les archives";
         
-        return array('rightsForArray'=>$rightsForArray, 'rightsValue'=>$rightsValue, 'rightNameId'=>$rightNameId, 'rightName'=>$rightName);
          
+        $listStatus=  $this->statuRepo->findAll();
+        $NewStatusForm = $this ->createFormBuilder()
+        
+            ->add('name','text')
+            ->add('color','text')
+            ->add('principalStatus','checkbox',array(
+                  'required'  => false,)
+            )
+            ->add ('valider','submit',array (
+                'label'=>'Ajouter'))
+               
+            ->getForm();
+        
+        $request = $this->getRequest();
+            if ($request->getMethod() === 'POST') {
+                
+                $NewStatusForm->handleRequest($request);
+                $name = $NewStatusForm->get("name")->getData();
+                $color= $NewStatusForm->get("color")->getData();
+                $principal=$NewStatusForm->get("principalStatus")->getData();
+                
+                $actualStatus = new Status();
+                $actualStatus->setStatusName($name);
+                $actualStatus->setStatusColor($color);
+                $actualStatus->setStatusByDefault($principal);
+                $this->em->persist($actualStatus);
+                $this->em->flush();
+ 
+            }
+ 
+        return array('rightsForArray'=>$rightsForArray, 
+                     'rightsValue'=>$rightsValue, 
+                     'rightNameId'=>$rightNameId, 
+                     'rightName'=>$rightName,
+                     'NewStatusForm' => $NewStatusForm->createView(),
+                     'listStatus'=>$listStatus); 
     }
     
       /**
@@ -146,12 +177,8 @@ class AdminPresenceController extends Controller
         
         return new Response('success',200);
                 
-        
-        
-        
     }
-    
-    
+
              /**
      * @EXT\Route(
      *     "/admin/presence/horaire",
@@ -339,8 +366,98 @@ class AdminPresenceController extends Controller
         
         return array();
  
-    }    
+    } 
+               /**
+     * @EXT\Route(
+     *     "/presence/status_modif/id/{theStatus}",
+     *     name="formalibre_status_modif",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     * @EXT\Template()
+     */
+    public function StatusModifAction(Status $theStatus)
+            
+    {      
+        $ModifStatusForm = $this ->createFormBuilder()
+        
+            ->add('name2','text')
+            ->add('color2','text')
+            ->add('principalStatus2','checkbox',array(
+                  'required'  => false,)
+            )
+            ->add ('valider2','submit',array (
+                'label'=>'Modifier'))
+               
+            ->getForm();
+        
+        
+        $request = $this->getRequest();
+         
+        if ($request->getMethod() == 'POST')
+            {
+                $ModifStatusForm->handleRequest($request);
+                                                            
+                $NewName = $ModifStatusForm->get("name2")->getData();
+                $NewColor = $ModifStatusForm->get("color2")->getData();
+                $NewByDefault = $ModifStatusForm->get("principalStatus2")->getData();
+                
+                $theStatus->setStatusName($NewName);
+                $theStatus->setStatusColor($NewColor);
+                $theStatus->setStatusByDefault( $NewByDefault);
+                $this->em->persist($theStatus);
+                $this->em->flush();
+                
+                return new JsonResponse("success",200);
+                }
+        
+       return array('ModifStatusForm' => $ModifStatusForm->createView(),
+                    'theStatus'=>$theStatus);
+    }
+                 /**
+     * @EXT\Route(
+     *     "/presence/status_supprimerf/id/{theStatus}",
+     *     name="formalibre_status_supprimer",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     */
+    public function StatussupprimerAction(Status $theStatus)
+            
+    {      
+                $this->em->remove($theStatus);
+                $this->em->flush();
+ 
+       return new JsonResponse("success",200);
+    }
     
+            /**
+     * @EXT\Route(
+     *     "/presence/listingstatusbydefault",
+     *     name="formalibre_presence_listingstatusbydefault",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     */
+    public function ListingStatusByDefaultAction()
+            
+    {
+        
+        $liststatus= $this->statuRepo->findByStatusByDefault(0);
+        $datas=array();
+        foreach($liststatus as $status)
+        {
+            $datas[$status->getId()]=array();
+            $datas[$status->getId()]=$status->getId();
+        }
+        return new JsonResponse($datas,200);
+    }
     
 }
 

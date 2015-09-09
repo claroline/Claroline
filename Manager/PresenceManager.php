@@ -6,6 +6,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use FormaLibre\PresenceBundle\Entity\PresenceRights;
+use Claroline\CoreBundle\Entity\User;
 
 /**
  *@DI\Service("formalibre.manager.presence_manager")
@@ -63,6 +64,14 @@ class PresenceManager
         }
         
         return $existentRights;        
+    }
+    
+    public function checkRights(User $user, $theRight){
+        
+        $roles=$user->getEntityRoles();
+        $rights=$this->rightsRepo->findPresenceRightsByRolesAndValue($roles, $theRight);
+        return count($rights)>0;
+        
     }
     
     

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Role;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="FormaLibre\PresenceBundle\Repository\PresenceRightsRepository")    
  * @ORM\Table(name="formalibre_presencebundle_rights")
  */
  class PresenceRights

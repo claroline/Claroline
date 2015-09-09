@@ -38,9 +38,10 @@ class Status
    /**
      * @var string
      *
-     * @ORM\Column(name="statusByDefault", type="boolean")
+     * @ORM\Column(name="statusByDefault", type="boolean" )
      */
-    private $statusByDefault;
+    private $statusByDefault = false;
+    
     
     
     /**

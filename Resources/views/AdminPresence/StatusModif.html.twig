@@ -1,0 +1,58 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title" style="text-align: center;">
+                Modifier status : {{theStatus.getStatusName()}}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form method="post" {{ form_enctype(ModifStatusForm) }} action="{{path("formalibre_status_modif",{"theStatus":theStatus.getId()})}}">
+              
+                Choisissez un nom:
+                {{form_widget(ModifStatusForm.name2)}}
+
+                Choisissez une couleur:
+                {{form_widget(ModifStatusForm.color2)}}
+
+                Mise en évidence du status:
+                {{form_widget(ModifStatusForm.principalStatus2)}}
+                
+                </br></br>
+                {{form_widget(ModifStatusForm.valider2)}}
+                  
+            </form>
+        </div>
+    </div>
+</div>
+{% block javascripts %}    
+    <script>
+         
+       $(document).ready(function() {
+           document.getElementById("form_name2").defaultValue = "{{theStatus.getStatusName()}}";                        
+        });
+        
+        $(document).ready(function() {
+           document.getElementById("form_color2").defaultValue = "{{theStatus.getStatusColor()}}";
+                                
+        });
+         $(document).ready(function() {
+            var byDefault={% if theStatus.getStatusByDefault()%}true{%else%}false{%endif%};
+            if(byDefault){
+                 document.getElementById("form_principalStatus2").checked=true;
+             }
+                      
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
+    <script>
+    $(function(){
+        $('#form_color2').colorpicker();
+    });
+    </script>
+{% endblock %}

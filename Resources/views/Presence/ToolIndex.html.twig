@@ -13,60 +13,72 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation" class="active"><a href="{{path("formalibre_presence_tool_index")}}">Accueil</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
+                    <li role="presentation" class="active"><a href="{{path("formalibre_presence_tool_index")}}">Accueil</a></li>
+                    {% if canViewArchives %}
+                        <li role="presentation"><a href="{{path("formalibre_presence_archives")}}">Archives</a></li>
+                    {% endif %}
                 </ul>
             </div>
+                        
             
-            <br /><br />
+            {% if canCheckPresences %}
+                <div style="text-align: center;">
+                    <H1>Relever les présences:</H1>
+                </div>
+                <br />
+                Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+                <br /><br />
+                Semaine n°: {{ "now"|date("W") }}
+                <br /><br /><br />
+                <div id='calendar'></div>
+            {% endif %}
+            
+            {% if canViewPersonalArchives%} 
+                <div style="text-align: center;">
+                    <H1>Tes présences:</H1>
+                </div>
+                <br />
+                Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+                <br /><br />
+                Semaine n°: {{ "now"|date("W") }}
 
-            Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
-            
-           
-            <br /><br />
-            Semaine n°: {{ "now"|date("W") }}
-            <br /><br /><br />
-            
-            <div id='calendar'></div>
-            
-            
-           Mes présences:
-           <br /><br /><br />
-            <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">Date</th>
-                        <th style="text-align: center;">Period</th>
-                            {#<th>Cours</th>#}
-                            <th style="text-align: center;">Classe</th>
-                            <th style="text-align: center;">Nom de l'étudiant</th>
-                            <th style="text-align: center;">Prénom de l'étudiant</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: center;">Responsable de l'appel</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for presence in presences%}
-                            {% if presence.getUserStudent.getId==user.getId%}
-                                <tr>
-                                    <td>{{presence.getDate()|date("y/m/d")}}</td>
-                                    <td>{{presence.getPeriod.getNumPeriod()}}</td>
-                {#                    <td>{{presence.getPeriod.getName()}}</td>#}
-                                    <td>{{presence.getGroup.getName()}}</td>
-                                    <td>{{presence.getUserStudent.getLastName()}}</td>
-                                    <td>{{presence.getUserStudent.getFirstName()}}</td>
-                                    {% if presence.getStatus() is null %}
-                                        <td>Non communiqué</td>
-                                    {% else %}
-                                    <td>{{presence.getStatus.getStatusName()}}</td>
-                                    {% endif %}
-                                    <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
-                                </tr>
+                <br /><br /><br />
+                <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center;">Date</th>
+                            <th style="text-align: center;">Period</th>
+                                {#<th>Cours</th>#}
+                                <th style="text-align: center;">Classe</th>
+                                <th style="text-align: center;">Nom de l'étudiant</th>
+                                <th style="text-align: center;">Prénom de l'étudiant</th>
+                                <th style="text-align: center;">Status</th>
+                                <th style="text-align: center;">Responsable de l'appel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presence in presences%}
+                                {% if presence.getUserStudent.getId==user.getId%}
+                                    <tr>
+                                        <td>{{presence.getDate()|date("y/m/d")}}</td>
+                                        <td>{{presence.getPeriod.getNumPeriod()}}</td>
+                    {#                   <td>{{presence.getPeriod.getName()}}</td>#}
+                                        <td>{{presence.getGroup.getName()}}</td>
+                                        <td>{{presence.getUserStudent.getLastName()}}</td>
+                                        <td>{{presence.getUserStudent.getFirstName()}}</td>
+                                        {% if presence.getStatus() is null %}
+                                            <td>Non communiqué</td>
+                                        {% else %}
+                                        <td>{{presence.getStatus.getStatusName()}}</td>
+                                        {% endif %}
+                                        <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                                    </tr>
                             {% endif %}
                         {% endfor %}
                         </tr>
                     </tbody>
                 </table>
+            {% endif %}
         </div>
     </div>
 

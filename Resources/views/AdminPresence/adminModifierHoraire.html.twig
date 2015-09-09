@@ -78,7 +78,6 @@
      <script>
       
         $("#supprimer-btn").on("click",function(){
-            console.log('ce que tu veux');
             var periodId=$(this).data("period-id");
             $.ajax({
                 url:Routing.generate("formalibre_period_supprimer",{"period":periodId}),

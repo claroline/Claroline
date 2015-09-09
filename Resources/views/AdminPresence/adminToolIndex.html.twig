@@ -14,6 +14,79 @@
             </div>
             
             <br /><br />
+            <h3>Configuration de l'horaire</h3>
+            <br /><br />
+            <h3>Configuration des status</h3>
+            <br />
+            <form method="post" {{ form_enctype(NewStatusForm) }} action="{{path("formalibre_presence_admin_tool_index")}}">
+                <div class="row">
+                    <div class="col-md-3">
+                        Choisissez un nom:
+                        {{form_widget(NewStatusForm.name)}}
+                    </div>    
+                    <div class="col-md-3">
+                        Choisissez une couleur:
+                        {{form_widget(NewStatusForm.color)}}
+                    </div> 
+                    <div class="col-md-3">
+                        Mise en évidence du status:
+                        {{form_widget(NewStatusForm.principalStatus)}}
+                    </div> 
+                    <div class="col-md-3">
+                        {{form_widget(NewStatusForm.valider)}}
+                    </div> 
+                </div>
+            </form>
+            </br><br />        
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>Status</th>
+                        <th>Couleur</th>
+                        <th>Mis en évidence</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for onestatus in listStatus %}
+                        <tr>
+                            <td>{{onestatus.getStatusName()}}</td>
+                            <td>
+                                <div style="color:{{onestatus.StatusColor}};">
+                                    {{onestatus.StatusColor}}
+                                </div>
+                            </td>
+                            <td>
+                                {% if onestatus.getStatusBydefault()==1%}
+                                    <i class="fa fa-check"></i>
+                                {% else %}
+                                    <i class="fa fa-close"></i>
+                                {% endif %}
+                            <td>
+                                <span class="btn btn-default modifier-status-btn"
+                                                           data-status-id="{{onestatus.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Modifier" 
+                                                           role="button">
+                                    <i class="fa fa-pencil"></i>
+                                </span>
+                                 <a class="btn btn-default supprimer-status-btn"
+                                                           data-status-id="{{onestatus.getId()}}"
+                                                           data-toggle="tooltip" 
+                                                           data-placement="bottom" 
+                                                           title="" 
+                                                           data-original-title="Supprimer" 
+                                                           role="button">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+               <i class="fa fa-info"></i> - Nous déconseillons de mettre plus de trois status en évidence.
+            </div>
+            <br /><br />
+            <h3>Configuration des droits</h3>
             <div class="table-responsive">
                 <table class="table">
                     
@@ -39,6 +112,7 @@
                                                checked
                                            {% endif %}>
                                 </td>
+                                
                             {% endfor %}
                         </tr>
                     {% endfor %}
@@ -53,6 +127,8 @@
 
 {% block stylesheets %}
        {{ parent() }}
+       
+        <link rel='stylesheet' type='text/css' href='{{  asset('bundles/frontend/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css') }}'/>
 {% endblock %}
 
 {% block javascripts %}
@@ -76,5 +152,38 @@
         
         
     </script>
+    <script type="text/javascript" src="{{ asset('bundles/frontend/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
+    <script>
+    $(function(){
+        $('#form_color').colorpicker();
+    });
+    </script>
+    <script>
+    $(".modifier-status-btn").on("click",function(){
+       var statusId=$(this).data("status-id");
+        window.Claroline.Modal.displayForm(
+                            Routing.generate("formalibre_status_modif",{"theStatus":statusId}),
+                            function() {
+                                window.location.reload();
+                            },
+                            function() {}
+                                );
+   
+    });      
+        $(".supprimer-status-btn").on("click",function(){
+            var statusId=$(this).data("status-id");
+            console.log(statusId);
+            $.ajax({
+                url:Routing.generate("formalibre_status_supprimer",{"theStatus":statusId}),
+                type:'GET',
+                async:false,
+                success:function(){
+                    window.parent.location.reload();
+                     }    
+            });        
+        });
+                
+    </script>
+        
 
 {% endblock javascripts %}

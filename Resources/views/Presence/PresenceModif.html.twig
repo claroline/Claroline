@@ -12,58 +12,62 @@
             </h3>
         </div>
         <div class="modal-body">
-            <div class="row">
-                <div class="col-md-6">
-                    Le {{presence.getPeriod.getDay()|date('d-m-Y')}} 
-                    de {{presence.getPeriod.getBeginHour()|date('H:i')}} 
-                    à {{presence.getPeriod.getEndHour()|date('H:i')}}
+            {% if canEditArchives%}
+                <div class="row">
+                    <div class="col-md-6">
+                        Le {{presence.getPeriod.getDay()|date('d-m-Y')}} 
+                        de {{presence.getPeriod.getBeginHour()|date('H:i')}} 
+                        à {{presence.getPeriod.getEndHour()|date('H:i')}}
+                    </div>
+                    <strong class="col-md-5 col-md-offset-1">
+                        {% if presence.getStatus() is null %}
+                            Status: Non communiqué
+                        {% else %}
+                            Status: {{presence.getStatus.getStatusName()}}
+                        {% endif %}
+
+                    </strong>
+                </div></br></br>
+                <div class="row">
+                    <div class="col-md-3" style="text-align: center;">
+                        <img id="photo" 
+                             style="height:150px;" 
+                             class="img-thumbnail" 
+                             src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}" 
+                             width="100" 
+                             alt="Photo de l'élève">
+                        {{presence.getUserStudent.getLastName()}}
+                        {{presence.getUserStudent.getFirstName()}}
+                     </div>
+                    <div class="col-md-8">
+                        <form id="ModifHoraireForm" 
+                              method="post" {{ form_enctype(ModifPresenceForm) }} 
+                              action="{{path("formalibre_presence_modif",{"id":presence.getId()})}}">
+                            Modifier le status:
+                            {{form_widget(ModifPresenceForm.Status)}}
+                            Commentaire(s):
+                            {{form_widget(ModifPresenceForm.Comment)}}  
+                            </br> </br>
+                             <button type="submit" 
+                                   class="btn btn-primary"
+                                   style="float: right;"
+                                   id="CollReleve_Valider"
+                                   name="ModifHoraireForm[Save]">
+                              Enregistrer 
+                           </button>
+                        </form>
+                    </div>
                 </div>
-                <strong class="col-md-5 col-md-offset-1">
-                    {% if presence.getStatus() is null %}
-                        Status: Non communiqué
-                    {% else %}
-                        Status: {{presence.getStatus.getStatusName()}}
-                    {% endif %}
-                   
-                </strong>
-            </div></br></br>
-            <div class="row">
-                <div class="col-md-3" style="text-align: center;">
-                    <img id="photo" 
-                         style="height:150px;" 
-                         class="img-thumbnail" 
-                         src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}" 
-                         width="100" 
-                         alt="Photo de l'élève">
-                    {{presence.getUserStudent.getLastName()}}
-                    {{presence.getUserStudent.getFirstName()}}
+                <div class="row"> </br></br>
+                    <div class="col-md-10">    
+                        Professeur responsable de l'appel:
+                        {{presence.getUserTeacher.getLastName()}}
+                        {{presence.getUserTeacher.getFirstName()}}
+                    </div>     
                  </div>
-                <div class="col-md-8">
-                    <form id="ModifHoraireForm" 
-                          method="post" {{ form_enctype(ModifPresenceForm) }} 
-                          action="{{path("formalibre_presence_modif",{"id":presence.getId()})}}">
-                        Modifier le status:
-                        {{form_widget(ModifPresenceForm.Status)}}
-                        Commentaire(s):
-                        {{form_widget(ModifPresenceForm.Comment)}}  
-                        </br> </br>
-                         <button type="submit" 
-                               class="btn btn-primary"
-                               style="float: right;"
-                               id="CollReleve_Valider"
-                               name="ModifHoraireForm[Save]">
-                          Enregistrer 
-                       </button>
-                    </form>
-                </div>
-            </div>
-            <div class="row"> </br></br>
-                <div class="col-md-10">    
-                    Professeur responsable de l'appel:
-                    {{presence.getUserTeacher.getLastName()}}
-                    {{presence.getUserTeacher.getFirstName()}}
-                </div>     
-             </div>
+        {% else %}
+            Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+        {% endif %}    
         </div>
     </div>
 </div>
@@ -72,8 +76,7 @@
          
        $(document).ready(function() {
            document.getElementById("form_Comment").defaultValue = "{{presence.getComment()}}";
-            console.log("test2");
-           
+                      
         });
     </script>
 {% endblock %}

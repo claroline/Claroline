@@ -8,119 +8,135 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
                   <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
-                  <li role="presentation" class="active"><a href="">Relevé</a></li>
-                  <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                  {% if canCheckPresences %}
+                    <li role="presentation" class="active"><a href="">Relevé</a></li>
+                    <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                  {% endif %}
                 </ul>
             </div>
             
-            
-            <br /><br />
-            Vous souhaitez faire l'appel pour la  
-            <a  href="{{path("formalibre_presence_tool_index")}}" 
-                role="button"
-                class="btn btn-primary">
-                {{period.getNumPeriod()}}° période du {{date}}
-            </a>
-            <br /><br />
-            Classe:
-            
-            <a class="btn btn-primary modifier-classe-btn"
-               data-period-id="{{period.getId()}}"
-               data-period-date="{{period.getDay()|date('d-m-Y')}}"
-               data-toggle="tooltip" 
-               data-placement="bottom" 
-               title="" 
-               data-original-title="changer de classe"  
-               role="button">
-            {{classe.getName()}}
-            </a>
-            
- 
-            <br />
-                <div class="col-md-2 col-md-offset-6"  style="text-align: left;"> 
-                   {{form_widget(sameStatus.singleStatus)}}
-                   <button type="button" 
-                           class="btn btn-primary"
-                           id="form_valider">
-                       Comfirmer ?
-                   </button>
-                </div>
-            
-            <br /><br /><br /><br /> 
-            <form method="post" {{ form_enctype(presForm) }}>
-            <table id="studentList" class="cell-border" cellspacing="0" width="50%">
-                <thead>
-                    <tr>
-                        <th>Trombinoscope</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Status</th>
-                        <th>Antécédents</th>
-                          
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for presence in presForm.releves  %} 
-                            <tr class="OneForm">
-                                {% for student in presences %}
-                                    {%if student.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
-                                <td> <img id="photo" style="height:150px;" 
-                                                     class="img-thumbnail" 
-                                                     src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
-                                                     width="100" 
-                                                     alt="Photo de l'élève">
-                                    <br />
-                                </td>
-                                <td>{{student.getUserStudent().getLastName()}}</td>
-                                <td>{{student.getUserStudent().getFirstName()}} </td>
-                                    {%endif%}
-                                {% endfor %}
-                                <td> {{form_widget(presence.Status)}}
-                        
-                        <span class="dropdown">
-                            
-                            <span class="btn btn-primary" data-toggle="dropdown">...</span>
-                            
-                            <ul class="dropdown-menu otherStatus" role="menu">
-                                
-                            </ul>
-                            
-                        </span>
+            {% if canCheckPresences %}
+                <div class="row">
+                    <br /><br />
+                    <div class="col-md-6">
+                        Vous souhaitez faire l'appel pour la  
+                        <a  href="{{path("formalibre_presence_tool_index")}}" 
+                            role="button"
+                            class="btn btn-primary ">
+                            {{period.getNumPeriod()}}° période du {{date}}
+                        </a>
 
-                    </td>
-                    <td>
-                        {% for periode in daypresences %}
-                            {%if periode.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
-                                {% if periode.getStatus() is null %}
-                                    {{periode.getPeriod().getNumPeriod}}° N.C.
-                                {% else %}
-                                    {% if periode.getPeriod().getNumPeriod < period.getNumPeriod()%}
-                                        <div style="color: {{periode.getStatus.getStatusColor()}};">
-                                            {{periode.getPeriod().getNumPeriod}}° {{periode.getStatus.getStatusName()}}
-                                        </div>    
+                        pour la classe de:
+
+                        <a class="btn btn-primary modifier-classe-btn"
+                           data-period-id="{{period.getId()}}"
+                           data-period-date="{{period.getDay()|date('d-m-Y')}}"
+                           data-toggle="tooltip" 
+                           data-placement="bottom" 
+                           title="" 
+                           data-original-title="changer de classe"  
+                           role="button">
+                        {{classe.getName()}}
+                        </a>
+                    </div>
+                </div>
+
+                <br />
+                    <div class="row"  style="text-align: left;"> 
+                        <div class="col-md-2 " >
+                            {{form_widget(sameStatus.singleStatus)}}
+                        </div> 
+                        <button type="button" 
+                                class="btn btn-primary col-md-1 "
+                                id="form_valider">
+                            Comfirmer ?
+                        </button>
+                       
+                    </div>
+
+                <br /><br /><br /><br /> 
+                <form method="post" {{ form_enctype(presForm) }}>
+                <table id="studentList" class="cell-border" cellspacing="0" width="50%">
+                    <thead>
+                        <tr>
+                            <th>Trombinoscope</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Status</th>
+                            <th>Antécédents</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for presence in presForm.releves  %} 
+                                <tr class="OneForm">
+                                    {% for student in presences %}
+                                        {%if student.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
+                                    <td> <img id="photo" style="height:150px;" 
+                                                         class="img-thumbnail" 
+                                                         src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
+                                                         width="100" 
+                                                         alt="Photo de l'élève">
+                                        <br />
+                                    </td>
+                                    <td>{{student.getUserStudent().getLastName()}}</td>
+                                    <td>{{student.getUserStudent().getFirstName()}} </td>
+                                        {%endif%}
+                                    {% endfor %}
+                                    <td> {{form_widget(presence.Status)}}
+
+                            <span class="dropdown">
+
+                                <span class="btn btn-primary" data-toggle="dropdown">...</span>
+
+                                <ul class="dropdown-menu otherStatus" role="menu">
+
+                                </ul>
+
+                            </span>
+
+                        </td>
+                        <td>
+                            {% for periode in daypresences %}
+                                {%if periode.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
+                                    {% if periode.getStatus() is null %}
+                                        {{periode.getPeriod().getNumPeriod}}° N.C.
+                                    {% else %}
+                                        {% if periode.getPeriod().getNumPeriod < period.getNumPeriod()%}
+                                            <div style="color: {{periode.getStatus.getStatusColor()}};">
+                                                {{periode.getPeriod().getNumPeriod}}° {{periode.getStatus.getStatusName()}}
+                                            </div>    
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                  
-                    
-                            </tr>
-                        {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            
+                            {% endfor %}
+                        </td>
 
-                <br/><br/>
-                  <button type="submit" 
-                           class="btn btn-primary"
-                           id="CollReleve_Valider"
-                           name="CollReleve[Valider]">
-                       Valider les présences ?
-                   </button>
-                
-            </form> 
+
+                                </tr>
+                            {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <br/><br/>
+                      <button type="submit" 
+                               class="btn btn-primary"
+                               id="CollReleve_Valider"
+                               name="CollReleve[Valider]">
+                           Valider les présences ?
+                       </button>
+
+                </form>
+            {% else %}
+                </br></br>
+                </br></br>
+                Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+                </br></br>
+                </br></br>
+
+            {% endif %}            
         </div>
     </div>
 {% endblock %}
@@ -196,18 +212,27 @@
 
         };
         
+        var statusByDefault=[];
+        $.ajax({
+            url:Routing.generate('formalibre_presence_listingstatusbydefault'),
+            type:'GET',
+            async:false,
+            success:function(data){
+                statusByDefault=data;
+            }
+        });
+        
+
           $('input').each(function (){
               var label=$(this).parent('label');
               var actualStatus = $(this).val();
-              if (actualStatus>3)
-              {
+              if (actualStatus in statusByDefault)
+               {
                var OneForm=$(this).closest('.OneForm');
                var oneOtherStatus =OneForm.find("ul");
                oneOtherStatus.append(label);
               }
-                  
-
-              
+  
           });
           
     </script>
@@ -222,7 +247,8 @@
                     "zeroRecords": "Rien trouvé - Désolé",
                     "info": "Affichage de la page _PAGE_ sur _PAGES_",
                     "infoEmpty": "Pas de présence valide",
-                    "infoFiltered": "(filtered from _MAX_ total records)"
+                    "infoFiltered": "(filtered from _MAX_ total records)",
+                    "search":"Trouver un élève "
                 }
             } );
         } );

@@ -20,6 +20,8 @@ use FormaLibre\PresenceBundle\Entity\Presence;
 use FormaLibre\PresenceBundle\Entity\Status;
 use FormaLibre\PresenceBundle\Entity\Releves;
 use Claroline\CoreBundle\Entity\User;
+use FormaLibre\PresenceBundle\Manager\PresenceManager;
+use FormaLibre\PresenceBundle\Entity\PresenceRights;
 
 use FormaLibre\PresenceBundle\Form\Type\ReleveType;
 use FormaLibre\PresenceBundle\Form\Type\CollReleveType;
@@ -34,6 +36,7 @@ class PresenceController extends Controller
     private $groupRepo;
     private $userRepo;
     private $router;
+    private $presenceManager;
     
     
     /**
@@ -41,12 +44,14 @@ class PresenceController extends Controller
      *      "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *      "em"                 = @DI\Inject("doctrine.orm.entity_manager"),
      *      "router"             = @DI\Inject("router"),
+     *      "presenceManager"    = @DI\Inject("formalibre.manager.presence_manager")
      * })
      */
     public function __construct(
         ObjectManager $om,
         EntityManager $em,
-        RouterInterface $router
+        RouterInterface $router,
+        PresenceManager $presenceManager
       )
     {   $this->router             =$router;          
         $this->om                 = $om;
@@ -56,7 +61,8 @@ class PresenceController extends Controller
         $this->groupRepo          = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User'); 
         $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
-        $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');  
+        $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');
+        $this->presenceManager    = $presenceManager;
     }
     
        /**
@@ -75,10 +81,16 @@ class PresenceController extends Controller
  
         $Presences = $this->presenceRepo->findAll() ;
         $Periods = $this->periodRepo->findByVisibility(true) ;
-        
-        
-        
-        return array('user'=>$user, 'presences'=>$Presences, 'periods'=>$Periods );
+        $canViewPersonalArchives=  $this->presenceManager->checkRights($user,PresenceRights::PERSONAL_ARCHIVES);
+        $canCkeckPresences=  $this->presenceManager->checkRights($user,  PresenceRights::CHECK_PRESENCES);
+        $canViewArchives= $this->presenceManager->checkRights($user,  PresenceRights::READING_ARCHIVES);
+                    
+        return array('user'=>$user, 
+                     'presences'=>$Presences, 
+                     'periods'=>$Periods, 
+                     'canViewPersonalArchives'=>$canViewPersonalArchives, 
+                     'canCheckPresences'=>$canCkeckPresences,
+                     'canViewArchives'=>$canViewArchives,);
          
     }
           /**
@@ -112,10 +124,15 @@ class PresenceController extends Controller
                 $form->handleRequest($request);
                 $classe = $form->get("selection")->getData();
                 
-                return $this->redirect($this->generateUrl('formalibre_presence_releve', array("period" => $period->getId(), "date" => $date, "classe" => $classe->getId())));
+                return $this->redirect($this->generateUrl('formalibre_presence_releve', array("period" => $period->getId(), 
+                                                                                              "date" => $date, 
+                                                                                              "classe" => $classe->getId())));
         }
             
-            return array('form'=>$form->createView(),'user'=>$user,'period'=>$period, 'date'=>$date);
+            return array('form'=>$form->createView(),
+                         'user'=>$user,
+                         'period'=>$period, 
+                         'date'=>$date);
   
     }
     
@@ -132,6 +149,9 @@ class PresenceController extends Controller
      */
     public function PresenceReleveAction(Request $request, User $user, Period $period, $date, Group $classe)
     {
+        
+        $canCkeckPresences=  $this->presenceManager->checkRights($user,  PresenceRights::CHECK_PRESENCES);
+                
         $dateFormat=new \DateTime($date);
  
         $Presences = $this->presenceRepo->OrderByStudent($classe,$date,$period);
@@ -206,7 +226,8 @@ class PresenceController extends Controller
                      'classe'=>$classe, 
                      'groups'=>$Groups, 
                      'users'=>$Users,
-                     'daypresences'=>$dayPresences);   
+                     'daypresences'=>$dayPresences,
+                     'canCheckPresences'=>$canCkeckPresences);   
     }
 
     
@@ -221,12 +242,16 @@ class PresenceController extends Controller
      * @param User $user
      * @EXT\Template()
      */
-    public function ArchivesAction()
+    public function ArchivesAction(User $user)
             
-    {
+    {   $canViewArchives= $this->presenceManager->checkRights($user,  PresenceRights::READING_ARCHIVES);
+        $canEditArchives= $this->presenceManager->checkRights($user, PresenceRights::EDIT_ARCHIVES);
+        
         $Presences = $this->presenceRepo->findAll();
        
-       return array('presences'=> $Presences);
+       return array('presences'=> $Presences,
+                    'canViewArchives'=>$canViewArchives,
+                    'canEditArchives'=>$canEditArchives);
     }
   
          
@@ -243,7 +268,10 @@ class PresenceController extends Controller
      */
     public function PresenceModifAction($id)
             
-    {   $Presence= $this->presenceRepo->findOneById($id) ;
+    {   
+        $canEditArchives= $this->presenceManager->checkRights($user, PresenceRights::EDIT_ARCHIVES);
+        
+        $Presence= $this->presenceRepo->findOneById($id) ;
         $ModifPresenceForm = $this ->createFormBuilder()
         ->add (
                  'Status',
@@ -288,7 +316,12 @@ class PresenceController extends Controller
 
                 }
         
-       return array('ModifPresenceForm' => $ModifPresenceForm->createView(),'presence' => $Presence);
+       return array('ModifPresenceForm' => $ModifPresenceForm->createView(),
+                    'presence' => $Presence,
+                    'canViewPersonalArchives'=>$canViewPersonalArchives, 
+                    'canCheckPresences'=>$canCkeckPresences,
+                    'canViewArchives'=>$canViewArchives,
+                    'canEditArchives'=>$canEditArchives);
     }
                  /**
      * @EXT\Route(
