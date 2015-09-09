@@ -118,6 +118,17 @@
                 'trigger': 'hover',
                 'html': true
             });
+            
+            $('#innova_collecticiel_common_form_manualPlanning_1').on('click', function() {
+                var hour1 = $("#innova_collecticiel_common_form_startAllowDrop_time").val();
+                var hour2 = $("#innova_collecticiel_common_form_endAllowDrop_time").val();
+                if (!hour1) {
+                    $("#innova_collecticiel_common_form_startAllowDrop_time").val("00:00");
+                }
+                if (!hour2) {
+                    $("#innova_collecticiel_common_form_endAllowDrop_time").val("00:00");
+                }
+            });
 
             $("input:radio[name='innova_collecticiel_common_form[manualState]']").click(function()
             {
