@@ -61,7 +61,6 @@ statisticsApp
         $scope.fetchVisitData = function() {
             if ($scope.selectedPortfolio != '') {
                 $scope.fetchingChartData = true;
-                console.log(" fetchingChartData start");
                 $('#chart').replaceWith('<div id="chart"></div>');
                 var url = urlInterpolator
                     .interpolate('/analytics/{{portfolioId}}/views/{{startDate}}/{{endDate}}',
@@ -76,9 +75,7 @@ statisticsApp
                 $http.get(url)
                     .success(function(data) {
                         $scope.fetchingChartData = false;
-                        console.log(" fetchingChartData end");
                         $scope.chartData = data;
-                        console.log(" chartData retrieved");
 
                         if ($scope.chartData.length > 0) {
                             $.jqplot('chart', [data], $scope.chartOptions);
