@@ -110,9 +110,14 @@
                 var ids = inputValue.split(',');
 
                 if (ids.length > 0 && ids[0] !== '') {
-
+                    selectedUserIds = [];
+                    
                     for (var i = 0; i < ids.length; i++) {
-                        selectedUserIds.push(parseInt(ids[i]));
+                        var id = parseInt(ids[i]);
+                        
+                        if (selectedUserIds.indexOf(id) === -1) {
+                            selectedUserIds.push(id);
+                        }
                     }
                 }
                 
