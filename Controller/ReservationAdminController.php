@@ -278,8 +278,13 @@ class ReservationAdminController extends Controller
         foreach ($roles as $role) {
             $resourceRights = $this->reservationManager->getResourceRightsByRoleAndResource($resource, $role);
 
-            $mask = array_key_exists($role->getId(), $maskByRole) ? $maskByRole[$role->getId()] : 0;
-            $resourceRights->setMask($mask);
+            //If it's the role admin, set the mask to the max
+            if ($role->getName() === 'ROLE_ADMIN') {
+                $resourceRights->setMask(7);
+            } else {
+                $mask = array_key_exists($role->getId(), $maskByRole) ? $maskByRole[$role->getId()] : 0;
+                $resourceRights->setMask($mask);
+            }
         }
 
         $this->em->flush();
