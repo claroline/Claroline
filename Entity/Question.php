@@ -7,87 +7,76 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Question
- *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\QuestionRepository")
  * @ORM\Table(name="ujm_question")
  */
 class Question
 {
     /**
-     * @var integer $id
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string $title
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=true)
+     * @ORM\Column
+     */
+    private $type;
+
+    /**
+     * @ORM\Column
      */
     private $title;
 
     /**
-     * @var string $description
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(type="text")
      */
     private $description;
 
     /**
-     * @var \Datetime $dateCreate
-     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $feedback;
+
+    /**
      * @ORM\Column(name="date_create", type="datetime")
      */
     private $dateCreate;
 
     /**
-     * @var \Datetime $dateModify
-     *
      * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      */
     private $dateModify;
 
     /**
-     * @var boolean $locked
-     *
-     * @ORM\Column(name="locked", type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $locked;
+    private $locked = false;
 
     /**
-     * @var boolean $model
-     *
-     * @ORM\Column(name="model", type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $model;
+    private $model = false;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Document")
-     * @ORM\JoinTable(
-     *     name="ujm_document_question",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="question_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="document_id", referencedColumnName="id")
-     *     }
-     * )
+     /**
+     * @ORM\ManyToOne(targetEntity="Category")
      */
-    private $documents;
+    private $category;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
     private $user;
 
-     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Category")
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Hint",
+     *     mappedBy="question",
+     *     cascade={"remove", "persist"}
+     * )
      */
-    private $category;
+    private $hints;
 
     /**
      * Note: used for joins only.
@@ -98,14 +87,27 @@ class Question
 
     public function __construct()
     {
-        $this->documents = new ArrayCollection();
-        $this->setLocked(false);
-        $this->setModel(false);
+        $this->hints = new ArrayCollection();
+        $this->exerciseQuestions = new ArrayCollection();
     }
 
     /**
-     * Get id
-     *
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * @return integer
      */
     public function getId()
@@ -114,8 +116,6 @@ class Question
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      */
     public function setTitle($title)
@@ -124,8 +124,6 @@ class Question
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
     public function getTitle()
@@ -134,8 +132,6 @@ class Question
     }
 
     /**
-     * Set description
-     *
      * @param string $description
      */
     public function setDescription($description)
@@ -144,8 +140,6 @@ class Question
     }
 
     /**
-     * Get description
-     *
      * @return string
      */
     public function getDescription()
@@ -154,8 +148,22 @@ class Question
     }
 
     /**
-     * Set dateCreate
-     *
+     * @param string $feedback
+     */
+    public function setFeedback($feedback)
+    {
+        $this->feedback = $feedback;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeedback()
+    {
+        return $this->feedback;
+    }
+
+    /**
      * @param \Datetime $dateCreate
      */
     public function setDateCreate(\DateTime $dateCreate)
@@ -164,8 +172,6 @@ class Question
     }
 
     /**
-     * Get dateCreate
-     *
      * @return \Datetime
      */
     public function getDateCreate()
@@ -174,8 +180,6 @@ class Question
     }
 
     /**
-     * Set dateModify
-     *
      * @param \Datetime $dateModify
      */
     public function setDateModify(\DateTime $dateModify)
@@ -184,8 +188,6 @@ class Question
     }
 
     /**
-     * Get dateModify
-     *
      * @return \Datetime
      */
     public function getDateModify()
@@ -194,8 +196,6 @@ class Question
     }
 
     /**
-     * Set locked
-     *
      * @param boolean $locked
      */
     public function setLocked($locked)
@@ -204,7 +204,7 @@ class Question
     }
 
     /**
-     * Get locked
+     * @return boolean
      */
     public function getLocked()
     {
@@ -212,8 +212,6 @@ class Question
     }
 
     /**
-     * Set model
-     *
      * @param boolean $model
      */
     public function setModel($model)
@@ -222,7 +220,7 @@ class Question
     }
 
     /**
-     * Get model
+     * @return boolean
      */
     public function getModel()
     {
@@ -230,42 +228,61 @@ class Question
     }
 
     /**
-     * Gets an array of Documents.
-     *
-     * @return array An array of Documents objects
+     * @return User
      */
-    public function getDocuments()
-    {
-        return $this->documents;
-    }
-
-    /**
-     * Add document
-     *
-     * @param Document $document
-     */
-    public function addDocument(Document $document)
-    {
-        $this->document[] = $document;
-    }
-
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * @param User $user
+     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
+    /**
+     * @return Category
+     */
     public function getCategory()
     {
         return $this->category;
     }
 
+    /**
+     * @param Category $category
+     */
     public function setCategory(Category $category)
     {
         $this->category = $category;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getHints()
+    {
+        return $this->hints;
+    }
+
+    /**
+     * @param Hint $hint
+     */
+    public function addHint(Hint $hint)
+    {
+        $this->hints->add($hint);
+        $hint->setQuestion($this);
+    }
+
+    /**
+     * @param \Traversable $hints
+     */
+    public function setHints(\Traversable $hints)
+    {
+        foreach ($hints as $hint) {
+            $this->addHint($hint);
+        }
     }
 }
