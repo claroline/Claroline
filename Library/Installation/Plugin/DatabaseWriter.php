@@ -203,8 +203,11 @@ class DatabaseWriter
             $this->persistResourceAction($resourceAction);
         }
 
+        $roles = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findAllPlatformRoles();
+
         foreach ($processedConfiguration['widgets'] as $widget) {
-            $this->createWidget($widget, $plugin, $pluginBundle);
+            $this->createWidget($widget, $plugin, $pluginBundle, $roles);
         }
 
         foreach ($processedConfiguration['tools'] as $tool) {
@@ -235,8 +238,11 @@ class DatabaseWriter
             $this->updateResourceAction($resourceAction);
         }
 
+        $roles = $this->em->getRepository('ClarolineCoreBundle:Role')
+            ->findAllPlatformRoles();
+
         foreach ($processedConfiguration['widgets'] as $widgetConfiguration) {
-            $this->updateWidget($widgetConfiguration, $pluginBundle, $plugin);
+            $this->updateWidget($widgetConfiguration, $pluginBundle, $plugin, $roles);
         }
 
         foreach ($processedConfiguration['tools'] as $toolConfiguration) {
@@ -308,13 +314,22 @@ class DatabaseWriter
      * @param PluginBundle $pluginBundle
      * @param Plugin       $plugin
      */
-    private function updateWidget($widgetConfiguration, PluginBundle $pluginBundle, Plugin $plugin)
+    private function updateWidget(
+        $widgetConfiguration,
+        PluginBundle $pluginBundle,
+        Plugin $plugin,
+        array $roles = array()
+    )
     {
         $widget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')
             ->findOneByName($widgetConfiguration['name']);
 
         if ($widget === null) {
             $widget = new Widget();
+
+            foreach ($roles as $role) {
+                $widget->addRole($role);
+            }
         }
 
         $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
@@ -571,9 +586,13 @@ class DatabaseWriter
      * @param Plugin       $plugin
      * @param PluginBundle $pluginBundle
      */
-    private function createWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
+    private function createWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, array $roles = array())
     {
         $widget = new Widget();
+
+        foreach ($roles as $role) {
+            $widget->addRole($role);
+        }
         $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
     }
 

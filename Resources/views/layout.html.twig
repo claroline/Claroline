@@ -87,7 +87,15 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    {% block breadcrumb %}{% endblock %}
+                    {% if workspace is defined and
+                          workspace.getOptions() is not empty and
+                          workspace.getOptions().getDetails() is not empty and 
+                          workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
+                          workspace.getOptions().getDetails()['hide_breadcrumb']
+                    %}
+                    {% else %}
+                        {% block breadcrumb %}{% endblock %}
+                    {% endif %}
                 </div>
             </div>
             <div class="row content">

@@ -112,9 +112,10 @@
                         <td>
                             {% if contact.getPicture() != '' %}
                                 <img src="{{ asset('uploads/pictures/') ~  contact.getPicture() }}"
-                                     class="profile_picture"
+                                     class="profile_picture img-circle"
                                      alt="{{ contact.getLastName() ~ ' ' ~ contact.getFirstName() }}"
                                      width="50px"
+                                     height="50px"
                                 >
                             {% else %}
                                 <h1 class="profile_picture_placeholder">

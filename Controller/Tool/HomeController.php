@@ -320,10 +320,10 @@ class HomeController extends Controller
      *
      * @return Response
      */
-    public function desktopWidgetInstanceCreateFormAction(HomeTab $homeTab)
+    public function desktopWidgetInstanceCreateFormAction(User $user, HomeTab $homeTab)
     {
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true),
+            new WidgetInstanceType(true, true, $user->getEntityRoles()),
             new WidgetInstance()
         );
         $displayConfigForm = $this->formFactory->create(
@@ -358,7 +358,7 @@ class HomeController extends Controller
         $widgetDisplayConfig = new WidgetDisplayConfig();
 
         $instanceForm = $this->formFactory->create(
-            new WidgetInstanceType(true),
+            new WidgetInstanceType(true, true, $user->getEntityRoles()),
             $widgetInstance
         );
         $displayConfigForm = $this->formFactory->create(
