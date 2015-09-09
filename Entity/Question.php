@@ -2,131 +2,117 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * UJM\ExoBundle\Entity\Exercise.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
- * @ORM\Table(name="ujm_exercise")
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\QuestionRepository")
+ * @ORM\Table(name="ujm_question")
  */
-class Exercise extends AbstractResource
+class Question
 {
     /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column
+     */
+    private $type;
+
+    /**
+     * @ORM\Column
      */
     private $title;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
+     * @ORM\Column(type="text")
+     * @Assert\NotBlank
      */
     private $description;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="shuffle", type="boolean", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $shuffle = false;
+    private $feedback;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="nb_question", type="integer")
+     * @ORM\Column(name="date_create", type="datetime")
      */
-    private $nbQuestion = 0;
+    private $dateCreate;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
+     * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      */
-    private $keepSameQuestion;
+    private $dateModify;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="duration", type="integer")
+     * @ORM\Column(type="boolean")
      */
-    private $duration = 0;
+    private $locked = false;
 
     /**
-     * @var boolean $doprint
-     *
-     * @ORM\Column(name="doprint", type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      */
-    private $doprint = false;
+    private $model = false;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="Category")
+     */
+    private $category;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="max_attempts", type="integer")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
-    private $maxAttempts = 0;
+    private $user;
 
     /**
-     * @todo mode should be at least a class constant
-     *
-     * @var string
-     *
-     * @ORM\Column(name="correction_mode", type="string", length=255)
+     * @ORM\OneToMany(
+     *     targetEntity="Hint",
+     *     mappedBy="question",
+     *     cascade={"remove", "persist"}
+     * )
      */
-    private $correctionMode = '1';
+    private $hints;
 
     /**
-     * @var \Datetime
+     * Note: used for joins only.
      *
-     * @ORM\Column(name="date_correction", type="datetime", nullable=true)
+     * @ORM\OneToMany(targetEntity="ExerciseQuestion", mappedBy="question")
      */
-    private $dateCorrection;
-
-    /**
-     * @todo mode should be at least a class constant
-     *
-     * @var string
-     *
-     * @ORM\Column(name="mark_mode", type="string", length=255)
-     */
-    private $markMode = '1';
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
-     */
-    private $dispButtonInterrupt = false;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
-     */
-    private $lockAttempt = false;
-
-    /**
-     * Flag indicating whether the exercise has been published at least
-     * one time. An exercise that has never been published has all its
-     * existing papers deleted at the first publication.
-     *
-     * @var bool
-     *
-     * @ORM\Column(name="published", type="boolean")
-     */
-    private $wasPublishedOnce = false;
+    private $exerciseQuestions;
 
     public function __construct()
     {
-        $this->dateCorrection = new \DateTime();
+        $this->hints = new ArrayCollection();
+        $this->exerciseQuestions = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
     }
 
     /**
-     * Get id.
+     * Note: this method is automatically called in AbstractInteraction#setQuestion
      *
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * @return int
      */
     public function getId()
@@ -135,8 +121,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set title.
-     *
      * @param string $title
      */
     public function setTitle($title)
@@ -145,8 +129,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get title.
-     *
      * @return string
      */
     public function getTitle()
@@ -155,8 +137,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set description.
-     *
      * @param string $description
      */
     public function setDescription($description)
@@ -165,8 +145,6 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get description.
-     *
      * @return string
      */
     public function getDescription()
@@ -175,233 +153,141 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set shuffle.
-     *
-     * @param bool $shuffle
+     * @param string $feedback
      */
-    public function setShuffle($shuffle)
+    public function setFeedback($feedback)
     {
-        $this->shuffle = $shuffle;
+        $this->feedback = $feedback;
     }
 
     /**
-     * Get shuffle.
-     */
-    public function getShuffle()
-    {
-        return $this->shuffle;
-    }
-
-    /**
-     * Set nbQuestion.
-     *
-     * @param int $nbQuestion
-     */
-    public function setNbQuestion($nbQuestion)
-    {
-        $this->nbQuestion = $nbQuestion;
-    }
-
-    /**
-     * Get nbQuestion.
-     *
-     * @return int
-     */
-    public function getNbQuestion()
-    {
-        return $this->nbQuestion;
-    }
-
-    /**
-     * Set keepSameQuestion.
-     *
-     * @param bool $keepSameQuestion
-     */
-    public function setKeepSameQuestion($keepSameQuestion)
-    {
-        $this->keepSameQuestion = $keepSameQuestion;
-    }
-
-    /**
-     * Get keepSameQuestion.
-     */
-    public function getKeepSameQuestion()
-    {
-        return $this->keepSameQuestion;
-    }
-
-    /**
-     * Set duration.
-     *
-     * @param int $duration
-     */
-    public function setDuration($duration)
-    {
-        $this->duration = $duration;
-    }
-
-    /**
-     * Get duration.
-     *
-     * @return int
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    /**
-     * Set doprint
-     *
-     * @param bool $doprint
-     */
-    public function setDoprint($doprint)
-    {
-        $this->doprint = $doprint;
-    }
-
-    /**
-     * Get doprint.
-     */
-    public function getDoprint()
-    {
-        return $this->doprint;
-    }
-
-    /**
-     * Set maxAttempts.
-     *
-     * @param int $maxAttempts
-     */
-    public function setMaxAttempts($maxAttempts)
-    {
-        $this->maxAttempts = $maxAttempts;
-    }
-
-    /**
-     * Get maxAttempts.
-     *
-     * @return int
-     */
-    public function getMaxAttempts()
-    {
-        return $this->maxAttempts;
-    }
-
-    /**
-     * Set correctionMode.
-     *
-     * @param string $correctionMode
-     */
-    public function setCorrectionMode($correctionMode)
-    {
-        $this->correctionMode = $correctionMode;
-    }
-
-    /**
-     * Get correctionMode.
-     *
      * @return string
      */
-    public function getCorrectionMode()
+    public function getFeedback()
     {
-        return $this->correctionMode;
+        return $this->feedback;
     }
 
     /**
-     * Set dateCorrection.
-     *
-     * @param \Datetime $dateCorrection
+     * @param \Datetime $dateCreate
      */
-    public function setDateCorrection(\DateTime $dateCorrection = null)
+    public function setDateCreate(\DateTime $dateCreate)
     {
-        $this->dateCorrection = $dateCorrection;
+        $this->dateCreate = $dateCreate;
     }
 
     /**
-     * Get dateCorrection.
-     *
      * @return \Datetime
      */
-    public function getDateCorrection()
+    public function getDateCreate()
     {
-        return $this->dateCorrection;
+        return $this->dateCreate;
     }
 
     /**
-     * Set markMode.
-     *
-     * @param string $markMode
+     * @param \Datetime $dateModify
      */
-    public function setMarkMode($markMode)
+    public function setDateModify(\DateTime $dateModify)
     {
-        $this->markMode = $markMode;
+        $this->dateModify = $dateModify;
     }
 
     /**
-     * Get markMode.
-     *
-     * @return string
+     * @return \Datetime
      */
-    public function getMarkMode()
+    public function getDateModify()
     {
-        return $this->markMode;
+        return $this->dateModify;
     }
 
     /**
-     * Set dispButtonInterrupt.
-     *
-     * @param bool $dispButtonInterrupt
+     * @param boolean $locked
      */
-    public function setDispButtonInterrupt($dispButtonInterrupt)
+    public function setLocked($locked)
     {
-        $this->dispButtonInterrupt = $dispButtonInterrupt;
+        $this->locked = $locked;
     }
 
     /**
-     * Get dispButtonInterrupt.
+     * @return boolean
      */
-    public function getDispButtonInterrupt()
+    public function getLocked()
     {
-        return $this->dispButtonInterrupt;
+        return $this->locked;
     }
 
     /**
-     * Set lockAttempt.
-     *
-     * @param bool $lockAttempt
+     * @param boolean $model
      */
-    public function setLockAttempt($lockAttempt)
+    public function setModel($model)
     {
-        $this->lockAttempt = $lockAttempt;
+        $this->model = $model;
     }
 
     /**
-     * Get lockAttempt.
+     * @return boolean
      */
-    public function getLockAttempt()
+    public function getModel()
     {
-        return $this->lockAttempt;
-    }
-
-    public function archiveExercise()
-    {
-        $this->resourceNode = null;
+        return $this->model;
     }
 
     /**
-     * @return bool
+     * @return User
      */
-    public function wasPublishedOnce()
+    public function getUser()
     {
-        return $this->wasPublishedOnce;
+        return $this->user;
     }
 
     /**
-     * @param bool $wasPublishedOnce
+     * @param User $user
      */
-    public function setPublishedOnce($wasPublishedOnce)
+    public function setUser(User $user)
     {
-        $this->wasPublishedOnce = $wasPublishedOnce;
+        $this->user = $user;
+    }
+
+    /**
+     * @return Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory(Category $category)
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getHints()
+    {
+        return $this->hints;
+    }
+
+    /**
+     * @param Hint $hint
+     */
+    public function addHint(Hint $hint)
+    {
+        $this->hints->add($hint);
+        $hint->setQuestion($this);
+    }
+
+    /**
+     * @param array $hints
+     */
+    public function setHints(array $hints)
+    {
+        foreach ($hints as $hint) {
+            $this->addHint($hint);
+        }
     }
 }
