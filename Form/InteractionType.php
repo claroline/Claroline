@@ -46,8 +46,6 @@ class InteractionType extends AbstractType
                     'label' => 'interaction_feedback', 'required' => false
                 )
             )
-            //->add('locked_expertise', 'checkbox', array('required' => false))
-            //->add('documents')
             ->add(
                 'hints', 'collection', array(
                     'type' => new HintType,
