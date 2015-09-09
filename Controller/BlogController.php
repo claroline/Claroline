@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class BlogController extends Controller
+class BlogController extends BaseController
 {
     /**
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
@@ -103,7 +103,6 @@ class BlogController extends Controller
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'pager'      => $pager,
-            'archives'   => $this->getArchiveDatas($blog),
             'tag'        => $tag,
             'author'     => $author,
             'date'       => $date
@@ -158,8 +157,7 @@ class BlogController extends Controller
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'user'       => $user,
             'pager'      => $pager,
-            'search'     => $search,
-            'archives'   => $this->getArchiveDatas($blog)
+            'search'     => $search
         );
     }
 
@@ -207,7 +205,6 @@ class BlogController extends Controller
             '_resource'  => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog),
             'user'       => $user
         );
     }
@@ -293,8 +290,7 @@ class BlogController extends Controller
             '_resource'  => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
             'form'       => $form->createView(),
-            'archives'   => $this->getArchiveDatas($blog),
-            'user'       => $user,
+            'user'       => $user
         );
     }
 

@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class WidgetController extends Controller
+class WidgetController extends BaseController
 {
     /**
      * @return \Icap\BlogBundle\Manager\WidgetManager

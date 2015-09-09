@@ -1,0 +1,13 @@
+<div id="panel0" class="panel panel-default search_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-body search_form">
+        <form action="{{ path('icap_blog_view', {'blogId': blog.id}) }}" method="get" class="form-horisontal" role="search">
+            <div class="input-group">
+                <input type="search" class="form-control" name="search" id="search_query" placeholder="{{ 'search'|trans({}, 'icap_blog') }}..." {% if search is defined %}value="{{ search }}" {% endif %}/>
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
+                </span>
+            </div>
+            <p class="help-block"><small>{{ 'search_in_title_and_content'|trans({}, 'icap_blog') }}</small></p>
+        </form>
+    </div>
+</div>

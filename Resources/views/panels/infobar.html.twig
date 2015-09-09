@@ -1,0 +1,15 @@
+<div id="panel1" class="panel panel-default infobar_panel {% if orderPanelInfo.visibility == 0 %}hidden{% endif %}">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'info_bar'|trans({}, 'icap_blog') }}
+            {% if is_granted('ADMINISTRATE', blog) %}
+            <a href="{{ path('icap_blog_edit_infos', {'blogId': blog.id}) }}" title="{{ 'edit_blog_infos'|trans({}, 'icap_blog') }}" class="btn btn-primary btn-xs pull-right white">
+                <span class="fa fa-edit"></span>
+            </a>
+            {% endif %}
+        </h3>
+    </div>
+    <div class="panel-body">
+        {{ blog.infos|raw }}
+    </div>
+</div>

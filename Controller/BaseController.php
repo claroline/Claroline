@@ -22,10 +22,10 @@ use Icap\BlogBundle\Event\Log\LogPostPublishEvent;
 use Icap\BlogBundle\Event\Log\LogPostReadEvent;
 use Icap\BlogBundle\Event\Log\LogPostUpdateEvent;
 use Icap\BlogBundle\Form\BlogBannerType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class Controller extends BaseController
+class BaseController extends Controller
 {
     const BLOG_TYPE         = 'icap_blog';
     const BLOG_POST_TYPE    = 'icap_blog_post';
@@ -65,6 +65,32 @@ class Controller extends BaseController
         $logEvent = new LogResourceReadEvent($blog->getResourceNode());
         $this->get('event_dispatcher')->dispatch('log', $logEvent);
     }
+
+
+    public function orderPanelsAction(Blog $blog)
+    {
+        $panelInfo = $this->get('icap_blog.manager.blog')->getPanelInfos();
+        $mask = $blog->getOptions()->getListWidgetBlog();
+        $orderPanelsTable = array();
+
+        for($maskPosition=0, $entreTableau=0; $maskPosition<strlen($mask); $maskPosition+=2, $entreTableau++)
+        {
+            $orderPanelsTable[] = array(
+                "nameTemplate" => $panelInfo[$mask{$maskPosition}],
+                "visibility" => (int) $mask{$maskPosition+1}
+            );
+        }
+
+        return $this->render(
+            'IcapBlogBundle::aside.html.twig',
+            array(
+                'orderPanelInfos' => $orderPanelsTable, 
+                'blog' => $blog,
+                'archives' => $this->getArchiveDatas($blog)
+            )
+        );
+    }
+
     /**
      * @param string $permission
      *
@@ -291,5 +317,6 @@ class Controller extends BaseController
         $event = new LogCommentPublishEvent($post, $comment);
 
         return $this->dispatch($event);
+
     }
 }
