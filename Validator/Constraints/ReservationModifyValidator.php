@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Validator("reservation_validator")
+ * @DI\Validator("reservation_modify_validator")
  */
 class ReservationModifyValidator extends ConstraintValidator
 {

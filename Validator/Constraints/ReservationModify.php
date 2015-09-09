@@ -13,7 +13,7 @@ class ReservationModify extends Constraint
 
     public function validatedBy()
     {
-        return 'reservation_validator';
+        return 'reservation_modify_validator';
     }
 
     public function getTargets()
