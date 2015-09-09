@@ -120,12 +120,12 @@ class AgendaController extends Controller
 
     /**
      * @EXT\Route(
-     *      "/accept/invitation/{event}",
-     *      name="claro_agenda_accept_invitation"
+     *      "/accept/invitation/{event}/{action}",
+     *      name="claro_agenda_invitation_action"
      * )
      * @EXT\Template("ClarolineAgendaBundle:Agenda:invitation.html.twig")
      */
-    public function acceptInvitationAction(Event $event)
+    public function invitationAction(Event $event, $action)
     {
         $user = $this->tokenStorage->getToken()->getUser();
         $invitation = $this->em->getRepository('ClarolineAgendaBundle:EventInvitation')->findOneBy([
@@ -133,19 +133,19 @@ class AgendaController extends Controller
             'user' => $user->getId()
         ]);
 
-        if ($invitation && !$invitation->getIsConfirm()) {
-            $invitation->setIsConfirm(true);
+        if ($invitation && $invitation->getStatus() != $action) {
+            $invitation->setStatus($action);
             $this->em->flush();
 
             return [
                 'invitation' => $invitation,
-                'already_accepted' => false
+                'already_done' => false
             ];
         }
 
         return [
             'invitation' => $invitation,
-            'already_accepted' => true
+            'already_done' => true
         ];
     }
 

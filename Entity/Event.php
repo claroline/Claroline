@@ -360,7 +360,7 @@ class Event
         foreach ($this->getEventInvitations() as $eventInvitation) {
             $guests[] = [
                 'user_name' => $eventInvitation->getUser()->getUserName(),
-                'is_confirm' => $eventInvitation->getIsConfirm()
+                'status' => $eventInvitation->getStatus()
             ];
 
             if ($eventInvitation->getUser() === $user) {
@@ -385,7 +385,13 @@ class Event
             'isEditable' => $this->isEditable() !== false && !$invitation,
             'durationEditable' => !$this->isTask() && $this->isEditable() !== false && !$invitation, // If it's a task, disable resizing
             'invitations' => $guests,
-            'is_guest' => !is_null($invitation)
+            'is_guest' => !is_null($invitation),
+            'event_invitation_status' => [
+                'ignore' => EventInvitation::IGNORE,
+                'join' => EventInvitation::JOIN,
+                'maybe' => EventInvitation::MAYBE,
+                'resign' => EventInvitation::RESIGN,
+            ] //We have to passed the status list of the eventInvitation for the popover render because twig.js doesn't have the constant function
         ];
     }
 }

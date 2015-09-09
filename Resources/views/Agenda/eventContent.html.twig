@@ -32,16 +32,19 @@
     {% endif %}
 {% endif %}
 
+
 {% if event.invitations|length > 0 %}
     {{ 'invitation_guests'|trans({}, 'agenda') }} :
     {% for invitation in event.invitations %}
-        {% set className = 'label-default' %}
-        {% if invitation.is_confirm %}
-            {% set className = 'label-success' %}
-        {% elseif invitation.is_confirm is null %}
-            {% set className = 'label-warning' %}
+        {% if invitation.status == event.event_invitation_status.ignore %}
+            <span class="label label-default" title="{{ 'invitation_ignore'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.join %}
+            <span class="label label-success" title="{{ 'invitation_join'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.maybe %}
+            <span class="label label-primary" title="{{ 'invitation_maybe'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
+        {% elseif invitation.status == event.event_invitation_status.resign %}
+            <span class="label label-danger" title="{{ 'invitation_resign'|trans({}, 'agenda') }}">{{ invitation.user_name }}</span>
         {% endif %}
-        <span class="label {{ className }}">{{ invitation.user_name }}</span>
     {% endfor %}
 {% endif %}
 

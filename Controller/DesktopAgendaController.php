@@ -12,6 +12,8 @@
 namespace Claroline\AgendaBundle\Controller;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\EventInvitation;
+use Claroline\AgendaBundle\Form\EventInvitationType;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\AgendaBundle\Manager\AgendaManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -199,18 +201,15 @@ class DesktopAgendaController extends Controller
      */
     public function guestUpdateAction(Event $event)
     {
-        $this->checkGuestAccess($event);
+        $invitation = $this->checkGuestAccess($event);
 
-        $formType = $this->get('claroline.form.agenda');
-        $formType->setGuestMode();
-        $formType->setIsDesktop();
-        $form = $this->createForm($formType, $event);
+        $form = $this->createForm(new EventInvitationType($this->translator), $invitation);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            $this->om->flush();
 
-
-            return new JsonResponse($event, 200);
+            return new JsonResponse($event->jsonSerialize($this->tokenStorage->getToken()->getUser()));
         }
 
         return array(
@@ -236,15 +235,10 @@ class DesktopAgendaController extends Controller
      */
     public function guestDeleteAction(Event $event)
     {
-        $this->checkGuestAccess($event);
+        $invitation = $this->checkGuestAccess($event);
 
-        foreach ($event->getEventInvitations() as $eventInvitation) {
-            if ($eventInvitation->getUser() === $this->tokenStorage->getToken()->getUser()) {
-                $eventInvitation->setIsConfirm(null);
-                $this->om->flush();
-                break;
-            }
-        }
+        $invitation->setStatus(EventInvitation::RESIGN);
+        $this->om->flush();
 
         return new JsonResponse($event->jsonSerialize(), 200);
     }
@@ -311,5 +305,7 @@ class DesktopAgendaController extends Controller
         if (!$eventInvitation) {
             throw new AccessDeniedException('You cannot change this invitation.');
         }
+
+        return $eventInvitation;
     }
 }

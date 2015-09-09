@@ -32,14 +32,24 @@
             <div class="alert alert-warning">
                 {{ 'invitation_not_found'|trans({}, 'agenda') }}
             </div>
-        {% elseif already_accepted %}
+        {% elseif already_done %}
             <div class="alert alert-info">
-                {{ 'invitation_already_accepted'|trans({}, 'agenda') }}
+                {{ 'invitation_already_done'|trans({}, 'agenda') }}
             </div>
         {% else %}
-            <div class="alert alert-success">
-                {{ 'invitation_confirmed'|trans({}, 'agenda') }}
-            </div>
+            {% if invitation.status == constant('Claroline\\AgendaBundle\\Entity\\EventInvitation::JOIN') %}
+                <div class="alert alert-success">
+                    {{ 'invitation_joined'|trans({}, 'agenda') }}
+                </div>
+            {% elseif invitation.status == constant('Claroline\\AgendaBundle\\Entity\\EventInvitation::MAYBE') %}
+                <div class="alert alert-success">
+                    {{ 'invitation_set_maybe'|trans({}, 'agenda') }}
+                </div>
+            {% elseif invitation.status == constant('Claroline\\AgendaBundle\\Entity\\EventInvitation::RESIGN') %}
+                <div class="alert alert-success">
+                    {{ 'invitation_canceled'|trans({}, 'agenda') }}
+                </div>
+            {% endif %}
         {% endif %}
 
         <a href="{{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}" class="btn btn-primary">{{ 'invitation_back_to_calendar'|trans({}, 'agenda') }}</a>

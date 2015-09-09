@@ -2,6 +2,7 @@
 
 namespace Claroline\AgendaBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -24,9 +25,9 @@ class EventInvitation
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_confirm", type="boolean")
+     * @ORM\Column(type="smallint")
      */
-    private $isConfirm = false;
+    private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\AgendaBundle\Entity\Event", inversedBy="eventInvitations")
@@ -41,18 +42,19 @@ class EventInvitation
     private $user;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $description;
 
-    public function __construct(Event $event)
+    public function __construct(Event $event, User $user)
     {
         $this->event = $event;
+        $this->user = $user;
     }
 
     /**
@@ -63,30 +65,6 @@ class EventInvitation
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set isConfirm
-     *
-     * @param boolean $isConfirm
-     *
-     * @return EventInvitation
-     */
-    public function setIsConfirm($isConfirm)
-    {
-        $this->isConfirm = $isConfirm;
-
-        return $this;
-    }
-
-    /**
-     * Get isConfirm
-     *
-     * @return boolean
-     */
-    public function getIsConfirm()
-    {
-        return $this->isConfirm;
     }
 
     /**
@@ -159,5 +137,29 @@ class EventInvitation
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @return EventInvitation
+     */
+    public function setUser(\Claroline\CoreBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Claroline\CoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

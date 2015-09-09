@@ -140,7 +140,9 @@ class AgendaManager
                 '%Start%' => $event->getStart(),
                 '%End%' => $event->getEnd(),
                 '%Description%' => $event->getDescription(),
-                '%href%' => $this->container->get('router')->generate('claro_agenda_accept_invitation', ['event' => $event->getId()]),
+                '%JoinAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::JOIN]),
+                '%MaybeAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::MAYBE]),
+                '%ResignAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::RESIGN]),
             ], 'agenda'),
             $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
             null,
@@ -158,7 +160,7 @@ class AgendaManager
         $workspaceEventsAndTasks = $this->om->getRepository('ClarolineAgendaBundle:Event')->findEventsAndTasksOfWorkspaceForTheUser($usr);
         $invitationEvents = $this->om->getRepository('ClarolineAgendaBundle:EventInvitation')->findBy([
             'user' => $usr,
-            'isConfirm' => true
+            'status' => [EventInvitation::JOIN, EventInvitation::MAYBE]
         ]);
 
         return array_merge(

@@ -167,7 +167,10 @@ class WorkspaceAgendaController extends Controller
 
         if ($form->isValid()) {
             $event = $form->getData();
-            $data = $this->agendaManager->addEvent($event, $workspace);
+
+            $users = $form->get('users')->getData();
+
+            $data = $this->agendaManager->addEvent($event, $workspace, $users);
 
             return new JsonResponse(array($data), 200);
         }
@@ -224,7 +227,10 @@ class WorkspaceAgendaController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $event = $this->agendaManager->updateEvent($event);
+            $users = $form->get('users')->getData();
+
+            $event = $this->agendaManager->updateEvent($event, $users);
+
 
             return new JsonResponse($event, 200);
         }

@@ -43,15 +43,24 @@ form:
   title: Titre
   author: Créé par
   invitations: Invitations
+  status: Status
 high: Haute
 hide_tasks: Cacher toutes les tâches
 import_agenda_file: 'Importer'
 invitation_to_an_event: Invitation à un évènement
 invitation_not_found: L'invitation à l'évènement n'a pas été trouvé. Il a peut-être été modifié ou supprimé.
-invitation_already_accepted: L'invitation à l'évènement a déjà été accépté. Aucune modification n'a été effectuée.
-invitation_confirmed: L'invitation a bien été acceptée. Un nouvel évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_already_done: L'action demandée a déjà été appliquée à l'évènement. Aucune modification n'a été effectuée.
+invitation_joined: L'invitation a bien été acceptée. Un nouvel évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_set_maybe: Vous avez bien marqué vous participerez peut-être à l'évènement. Cet évènement a été créé dans votre bureau. Vous pouvez ainsi voir qui participe également à cet évènement. Vous pouvez changer le titre et la description sans que les modifications ne se propagent chez les autres invités.
+invitation_canceled: L'invitation a bien été supprimée. Aucun évènement n'a été créé dans votre agenda. Vous pouvez, à tout moment, modifier votre choix en cliquant sur les autres actions disponibles dans le message privé reçu.
 invitation_back_to_calendar: Retourner sur le calendrier du bureau
 invitation_guests: Invités
+invitation_ignore: Invitation pas encore acceptée
+invitation_join: Invitation acceptée
+invitation_maybe: L'utilisateur participera peut-être
+invitation_resign: L'utilisateur ne participera pas
+invitation_join_label: Participer
+invitation_maybe_label: Peut-être
 in_x_days: Dans %nbDays% jours
 isAllDay: Toute la journée
 length: Durée
@@ -113,12 +122,7 @@ picker:
   next_century: Siècle suivant
 remove_event: Supprimer un évènement
 remove_event_confirm: Êtes-vous sûr de vouloir supprimer cet évènement ?
-send_message_content: |
-  Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%.
-
-  Cette évènement se déroule du %Start% au %End% avec comme description: %Description%.
-
-  Pour accepter l'invitation <a href="%href%">cliquez ici</a>.
+send_message_content: Vous avez reçu une invitation à rejoindre un évènement de la part de %Sender%.<br> Cette évènement se déroule du %Start% au %End% avec comme description: %Description%.<br><a href="%JoinAction%" class="btn btn-success">Participer</a> <a href="%MaybeAction%" class="btn btn-primary">Peut-être</a> <a href="%ResignAction%" class="btn btn-danger">Ne participe pas</a>
 send_message_object: Invitation à un évènement: %EventName%
 start_date: 'Date de début'
 show_task_only: Montrer que les tâches

@@ -13,6 +13,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventInvitation
 {
+
+    const IGNORE = 0;
+    const JOIN = 1;
+    const MAYBE = 2;
+    const RESIGN = 3;
+
     /**
      * @var integer
      *
@@ -25,9 +31,9 @@ class EventInvitation
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_confirm", type="boolean", nullable=true)
+     * @ORM\Column(type="smallint")
      */
-    private $isConfirm = false;
+    private $status = EventInvitation::IGNORE;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\AgendaBundle\Entity\Event", inversedBy="eventInvitations")
@@ -65,30 +71,6 @@ class EventInvitation
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set isConfirm
-     *
-     * @param boolean $isConfirm
-     *
-     * @return EventInvitation
-     */
-    public function setIsConfirm($isConfirm)
-    {
-        $this->isConfirm = $isConfirm;
-
-        return $this;
-    }
-
-    /**
-     * Get isConfirm
-     *
-     * @return boolean
-     */
-    public function getIsConfirm()
-    {
-        return $this->isConfirm;
     }
 
     /**
@@ -185,5 +167,29 @@ class EventInvitation
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set status
+     *
+     * @param integer $status
+     *
+     * @return EventInvitation
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }
