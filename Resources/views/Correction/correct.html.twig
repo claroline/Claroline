@@ -205,9 +205,6 @@
                                     </div><!-- /.direct-chat-msg -->
                                 <!-- sinon ... -->
                                 {% else %}
-
-
-
                                     <div class="direct-chat-msg">
                                         <div class="direct-chat-info clearfix">
                                             <span class="pull-right">
@@ -215,7 +212,6 @@
                                             <span class="direct-chat-timestamp"> - {{ comment.commentDate|date("d/m/Y (H:i:s)") }}</span>
                                             </span>
                                         </div><!-- /.direct-chat-info -->
-                                        <!-- <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image"> -->
                                         <!-- /.direct-chat-img -->
                                         <i class="direct-chat-img direct-chat-img-others fa fa-user" ></i>
                                         <div class="direct-chat-text">{{ comment.commentText|raw }}</div><!-- /.direct-chat-text -->
@@ -234,7 +230,6 @@
                 </div>
 
             {% endblock %}
-
 
         {% else %}
             {# TODO InnovaERV : partie "Non admin" qui n'a pas été analysée #}
