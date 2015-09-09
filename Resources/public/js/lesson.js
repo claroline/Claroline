@@ -3,7 +3,19 @@ function init(){
     $( document ).ready(function() {
         initTooltip();
         initCollapsor();
+        $(".lesson_tooltip.btn_up.btn-primary").hide();
         //fixLeftMenuAffixedSize();
+        
+        $(window).scroll(function(){
+            if ($(window).scrollTop() <= 100)
+            {
+                $(".lesson_tooltip.btn_up.btn-primary").hide();
+            }
+            else
+            {
+                $(".lesson_tooltip.btn_up.btn-primary").show();
+            } 
+        })
     });
 }
 
@@ -89,18 +101,23 @@ function initCollapsor(){
         $(this).click(function() {
             toggleCollapsor($(this));
         });
+        $('.deplie').hide();
     });
 
     $('#collapse_all').click(function() {
         $('.collapsor').each(function() {
             collapse($(this));
         });
+        $('.replie').hide();
+        $('.deplie').show();
     });
 
     $('#expand_all').click(function() {
         $('.collapsor').each(function() {
             expand($(this));
         });
+        $('.deplie').hide();
+        $('.replie').show();
     });
 }
 
