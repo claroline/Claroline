@@ -54,6 +54,8 @@
                            data-status="id"
                            data-multiple="single"
                        {% endif %}
+                   {% elseif selected_users|length > 0 %}
+                       value="{% for user in selected_users %}{{ user.getFirstName() }} {{ user.getLastName() }}{% if show_username %} ({{ user.getUsername() }}){% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
                    {% endif %}
                    id="user-picker-input-view-{{ timedPickerName }}"
                    placeholder="{{ 'add_user'|trans({}, 'platform') }}"
