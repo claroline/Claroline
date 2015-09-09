@@ -411,6 +411,7 @@ has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
+height: Height
 help_url: 'Help URL'
 hide: Hide
 hide_breadcrumb: 'Hide breadcrumb'
@@ -1089,6 +1090,7 @@ warning_workspace_impersonation: 'You are connected as %role% from the workspace
 warnings: Warnings
 widget: Widget
 widget_configuration: 'Widget configuration'
+widget_creation_roles: 'Roles that can create the widget in their desktop'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1096,6 +1098,7 @@ widget_visible_actions: 'Choose visible actions in the widget'
 widget_workspace_pick: 'Choose workspaces displayed in the widget'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
+width: Width
 with_role: 'with role'
 with_tutor: Tutored
 workspace: Workspace
