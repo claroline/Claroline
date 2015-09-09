@@ -44,6 +44,20 @@ statisticsApp
                     numberTicks: 5
                 }
             },
+            highlighter: {
+                show: true,
+                sizeAdjust: 1,
+                tooltipOffset:12,
+                tooltipLocation:'n',
+                tooltipAxes:'xy',
+                formatString:'%s <br/> %d',
+                tooltipFadeSpeed:'fast'
+            },
+            cursor: {
+                show: true,
+                zoom: true,
+                showTooltip: false
+            },
             seriesDefaults: {
                 showMarker:(true),
                 markerOptions:{shadow:false},
