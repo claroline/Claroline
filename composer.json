@@ -7,7 +7,8 @@
     "require": {
         "php": ">=5.4.1",
         "claroline/core-bundle": "~6.0",
-        "ddeboer/data-import": "~0.18"
+        "ddeboer/data-import": "~0.18",
+        "claroline/agenda-bundle": "~6.0"
     },
     "autoload": {
         "psr-0": { "FormaLibre\\ReservationBundle": "" }
