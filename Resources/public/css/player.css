@@ -13,6 +13,21 @@ input.form-control {
     border-color: #F39C12;
     color: #FFFFFF;
 }
+
+.direct-chat-img-you,
+.direct-chat-img-others {
+    font-size: 35px;
+    margin-top: 5px;
+}
+
+.direct-chat-img-you {
+    color: #f39c12;
+}
+
+.direct-chat-img-others {
+    color: lightgrey;
+    margin-left: 10px;
+}
     
 #delete_button_td {
     margin: auto;
