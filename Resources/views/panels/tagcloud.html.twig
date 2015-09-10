@@ -3,6 +3,6 @@
         <h3 class="panel-title">{{ 'tag_cloud'|trans({}, 'icap_blog') }}</h3>
     </div>
     <div class="tag-cloud-container panel-body">
-        {% include 'IcapBlogBundle:Layout:tags.html.twig' %}
+        {% include 'IcapBlogBundle:Layout:tags.html.twig' with {'blogOptions': blog.options} %}
     </div>
 </div>

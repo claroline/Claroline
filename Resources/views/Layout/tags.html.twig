@@ -1,13 +1,13 @@
-{% if blog.options.tagCloud == 1 %}
+{% if blogOptions.tagCloud == 1 %}
 <canvas width="320" height="320" id="tagCloudCanvas">
 {% endif %}
     <ul id="tagList" class="tag-cloud list-unstyled list-inline">
         {% for tag in blog_tags(blog) %}
-        <li><a class="w{{ tag.weight }}" href="{{ path('icap_blog_view_filter', {'blogId': blog.id, 'filter': tag.slug}) }}" title="{{ tag.name }}">{{ tag.name }}{% if blog.options.tagCloud == 2 %} ({{ tag.countPosts }}){% endif %}</a></li>
+        <li><a class="w{{ tag.weight }}" href="{{ path('icap_blog_view_filter', {'blogId': blog.id, 'filter': tag.slug}) }}" title="{{ tag.name }}">{{ tag.name }}{% if blogOptions.tagCloud == 2 %} ({{ tag.countPosts }}){% endif %}</a></li>
         {% else %}
         <li>{{ 'no_tags'|trans({}, 'icap_blog') }}</li>
         {% endfor %}
     </ul>
-{% if blog.options.tagCloud == 1 %}
+{% if blogOptions.tagCloud == 1 %}
 </canvas>
 {% endif %}
