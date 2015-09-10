@@ -300,6 +300,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $this->setPermissions($role, $entityRoles[$role['role']['name']], $root);
             }
         }
+
+        //throw new \Exception('boom');
     }
 
     public function export(Workspace $workspace, array &$_files, $object)
@@ -742,6 +744,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $role['role']['rights'],
                     $createdRights->getResourceNode()->getResourceType())
             );
+            $this->om->persist($createdRights);
         }
     }
 

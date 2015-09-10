@@ -148,7 +148,7 @@ class RightsManager
             array($this->getOneByRoleAndResource($role, $node));
 
         $this->log('Encoding masks for ' . count($arRights) . ' elements...');
-        
+
         foreach ($arRights as $toUpdate) {
 
             if ($isRecursive) {
@@ -181,10 +181,8 @@ class RightsManager
             $this->editCreationRights($creations, $role, $node, $isRecursive);
         }
 
-        $this->log('Flushing perms');
         $this->om->endFlushSuite();
-        $this->log('Done !');
-
+        
         return $arRights;
     }
 
