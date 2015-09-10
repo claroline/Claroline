@@ -10,7 +10,8 @@ namespace UJM\ExoBundle\Services\classes;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use \Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use \UJM\ExoBundle\Entity\Paper;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class PaperService {
 
@@ -254,11 +255,11 @@ class PaperService {
      * @access public
      *
      * @param integer $id id of exercise
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * @Param \UJM\ExoBundle\Entity\Exercise $exercise
      *
      * @return array
      */
-    public function prepareInteractionsPaper($id, Exercise $exercise) {
+    public function prepareInteractionsPaper($id,$exercise) {
         $orderInter = '';
         $tabOrderInter = array();
         $tab = array();
@@ -277,7 +278,6 @@ class PaperService {
         $tab['interactions'] = $interactions;
         $tab['orderInter'] = $orderInter;
         $tab['tabOrderInter'] = $tabOrderInter;
-
         return $tab;
     }
     
@@ -293,7 +293,7 @@ class PaperService {
      * @param boolean $dispButtonInterrupt to display or no the button "Interrupt"
      * @param integer $maxAttempsAllowed the number of max attemps allowed for the exercise
      * @param Claroline workspace $workspace
-     * @ParamConverter("Paper", class="UJMExoBundle:Paper")
+     * @param \UJM\ExoBundle\Entity\Paper $paper current paper
      * @param SessionInterface session
      *
      * @return Array
@@ -323,5 +323,74 @@ class PaperService {
         $array['_resource']              = $paper->getExercise();
 
         return $array;
+    }
+     /**
+     * To finish an assessment
+     *
+     * @access public
+     *
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+     public function finishExercise(SessionInterface $session)
+    {
+        $em = $this->doctrine->getManager();
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
+        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
+        $paper->setInterupt(0);
+        $paper->setEnd(new \Datetime());
+        $em->persist($paper);
+        $em->flush();
+
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
+
+        $session->remove('penalties');
+
+        return $paper;
+    }
+    
+    /**
+     * To force finish an assessment
+     *
+     * @access public
+     *
+     * @param \UJM\ExoBundle\Entity\Paper $paperToClose
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+    public function forceFinishExercise($paperToClose)
+    {
+        $em = $this->doctrine->getManager();
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
+        $paper = $paperToClose;
+        $paper->setInterupt(0);
+        $paper->setEnd(new \Datetime());
+        $em->persist($paper);
+        $em->flush();
+
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
+
+        return $paper;
+    }
+
+    /**
+     * To interupt an assessment
+     *
+     * @access public
+     * 
+     * @param SessionInterface session
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+    public function interuptExercise(SessionInterface $session)
+    {   
+        $em = $this->doctrine->getManager();
+        $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
+        $em->setInterupt(1);
+        $em->persist($paper);
+        $em->flush();
+
+        return $paper;
     }
 }

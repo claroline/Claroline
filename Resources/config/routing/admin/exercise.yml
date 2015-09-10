@@ -1,7 +1,0 @@
-ujm_exercise_docimology:
-     pattern:  /docimology/{exerciseId}/{nbPapers}
-     defaults: { _controller: "UJMExoBundle:Exercise:docimology" }
-
-ujm_exercise_import_question:
-    pattern: /{exoID}/import/{pageGoNow}/{maxPage}/{nbItem}/{displayAll}/{idExo}/{QuestionsExo}
-    defaults: { _controller: UJMExoBundle:Exercise:importQuestion, pageGoNow: 1, maxPage: 10, nbItem: 1, displayAll: 0, idExo: -1, QuestionsExo: false }
