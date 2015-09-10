@@ -245,12 +245,12 @@
         </div>
 {% endblock %}
 
-{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.2.1/' %}
+{% set calendarPath = 'bundles/frontend/jquery/plugin/fullcalendar-2.3.1/' %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolinecore/css/common/jquery-ui-bootstrap/jquery-ui-1.9.2.custom.css') }}'/>
-    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.css') }}'/>
+    <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
     {% stylesheets debug=false filter='lessphp'  output='css/icapblog/style.css'
       "@IcapBlogBundle/Resources/views/less/style.less"
@@ -272,8 +272,8 @@
         '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.spinner.min.js'
         %}<script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'lib/moment.min.js') }}' ></script>
-    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/moment.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
     <script type='text/javascript'src='{{ asset('bundles/frontend/jquery/plugin/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type='text/javascript'src='{{ asset('bundles/icapblog/js/jquery-tree.js') }}'></script>
 
