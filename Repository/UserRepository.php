@@ -1211,7 +1211,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = "
             SELECT u, ff
             FROM Claroline\CoreBundle\Entity\User u
-            LEFT JOIN u.fieldsFacetValue ff"
+            LEFT JOIN u.fieldsFacetValue ff
+            WHERE u.isEnabled = true"
         ;
 
         $query = $this->_em->createQuery($dql);
@@ -1230,8 +1231,9 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             LEFT JOIN g.roles gr
             LEFT JOIN gr.workspace grws
             LEFT JOIN ur.workspace uws
-            WHERE uws.id = :wsId
-            OR grws.id = :wsId
+            WHERE (uws.id = :wsId
+            OR grws.id = :wsId)
+            AND u.isEnabled = true
         ";
 
         $query = $this->_em->createQuery($dql);

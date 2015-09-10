@@ -18,6 +18,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+
 /**
  * @DI\Service("claroline.manager.file_manager")
  */
@@ -27,26 +29,30 @@ class FileManager
     private $fileDir;
     private $ut;
     private $resManager;
+    private $dispatcher;
 
     /**
      * @DI\InjectParams({
-     *      "om"      = @DI\Inject("claroline.persistence.object_manager"),
-     *      "fileDir" = @DI\Inject("%claroline.param.files_directory%"),
-     *      "ut"      = @DI\Inject("claroline.utilities.misc"),
-     *      "rm"      = @DI\Inject("claroline.manager.resource_manager")
+     *      "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *      "fileDir"    = @DI\Inject("%claroline.param.files_directory%"),
+     *      "ut"         = @DI\Inject("claroline.utilities.misc"),
+     *      "rm"         = @DI\Inject("claroline.manager.resource_manager"),
+     *      "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
         ObjectManager $om,
         $fileDir,
         ClaroUtilities $ut,
-        ResourceManager $rm
+        ResourceManager $rm,
+        StrictDispatcher $dispatcher
     )
     {
         $this->om = $om;
         $this->fileDir = $fileDir;
         $this->ut = $ut;
         $this->resManager = $rm;
+        $this->dispatcher = $dispatcher;
     }
 
     public function changeFile(File $file, UploadedFile $upload)
@@ -56,6 +62,12 @@ class FileManager
         $this->uploadContent($file, $upload);
         $this->resManager->resetIcon($file->getResourceNode());
         $this->om->endFlushSuite();
+
+        $this->dispatcher->dispatch(
+            'log',
+            'Log\LogResourceCustom',
+            array($file->getResourceNode(), 'update_file')
+        );
     }
 
     public function deleteContent(File $file)

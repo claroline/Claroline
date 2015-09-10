@@ -87,7 +87,7 @@ class FileImporter extends Importer implements ConfigurationInterface
         $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $array, $name)
+    public function import(array $array, $name, $created, $workspace)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -96,9 +96,13 @@ class FileImporter extends Importer implements ConfigurationInterface
             $tmpFile = new SfFile($this->getRootPath() . $ds . $item['file']['path']);
 
             return $this->container->get('claroline.listener.file_listener')->createFile(
-                $file, $tmpFile,  $name, $item['file']['mime_type']
+                $file, $tmpFile,  $name, $item['file']['mime_type'], $workspace
             );
         }
+
+        return $this->container->get('claroline.listener.file_listener')->createFile(
+            new File(), new SfFile(tempnam('/tmp', 'claroimport')),  $name, 'none', $workspace
+        );
     }
 
     public function export(Workspace $workspace, array &$_files, $object)

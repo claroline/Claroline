@@ -175,3 +175,5 @@ resource: Resource
 role: Role
 user: User
 workspace: Workspace
+log_resource-custom_action_update_file_shortname: Update
+log_resource-custom_action_update_file_sentence: The file was updated.

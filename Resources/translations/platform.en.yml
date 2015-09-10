@@ -487,6 +487,7 @@ last_30_days_activity: 'Activity over the last 30 days'
 last_action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 last_attempt_date: 'Last attempt'
 last_manager_error_message: 'You can''t remove every manager.'
+last_modification: Last modification
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
