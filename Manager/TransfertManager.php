@@ -220,7 +220,12 @@ class TransfertManager
             true
         );
 
-        $this->om->forceFlush();
+        $defaultZip = $this->container->getParameter('claroline.param.templates_directory') . 'default.zip';
+
+        //batch import with default template shouldn't be flushed
+        if ($configuration->getArchive() !== $defaultZip) {
+            $this->om->forceFlush();
+        }
 
         $this->log('Roles imported...');
         $owner->addRole($entityRoles['ROLE_WS_MANAGER']);
@@ -376,10 +381,17 @@ class TransfertManager
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
         $tool['data'] = $resourceImporter->exportResources($workspace, $resourceNodes, $files, null);
         $data['tools'] = array(0 => array('tool' => $tool));
+        $_resManagerData = array();
+
+        foreach ($data['tools'] as &$_tool) {
+            if ($_tool['tool']['type'] === 'resource_manager') {
+                $_resManagerData = &$_tool['tool'];
+            }
+        }
 
         if ($parseAndReplace) {
             $files = $this->container->get('claroline.importer.rich_text_formatter')
-                ->setPlaceHolders($files);
+                ->setPlaceHolders($files, $_resManagerData);
         }
 
         //throw new \Exception();

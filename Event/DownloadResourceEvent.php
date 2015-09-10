@@ -22,6 +22,7 @@ class DownloadResourceEvent extends Event
 {
     private $resource;
     private $item;
+    private $extension;
 
     /**
      * Constructor.
@@ -61,5 +62,15 @@ class DownloadResourceEvent extends Event
     public function getItem()
     {
         return $this->item;
+    }
+
+    public function setExtension($extension)
+    {
+        $this->extension = $extension;
+    }
+
+    public function getExtension()
+    {
+        return $this->extension;
     }
 }

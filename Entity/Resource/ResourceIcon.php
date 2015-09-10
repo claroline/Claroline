@@ -45,7 +45,7 @@ class ResourceIcon
     protected $relativeUrl;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceIcon", cascade={"all"})
      * @ORM\JoinColumn(name="shortcut_id", onDelete="SET NULL")
      */
     protected $shortcutIcon;

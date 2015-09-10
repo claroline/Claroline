@@ -158,6 +158,11 @@ class Log
     protected $isDisplayedInWorkspace = false;
 
     /**
+     * @ORM\Column(name="other_element_id", type="integer", nullable=true)
+     */
+    protected $otherElementId;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -295,7 +300,8 @@ class Log
     /**
      * Set doerSessionId
      *
-     * @param  string $doerIp
+     * @param string $doerSessionId
+     *
      * @return Log
      */
     public function setDoerSessionId($doerSessionId)
@@ -628,4 +634,23 @@ class Log
         return $this->isDisplayedInWorkspace;
     }
 
+    /**
+     * @return integer
+     */
+    public function getOtherElementId()
+    {
+        return $this->otherElementId;
+    }
+
+    /**
+     * @param integer $otherElementId
+     *
+     * @return Log
+     */
+    public function setOtherElementId($otherElementId)
+    {
+        $this->otherElementId = $otherElementId;
+
+        return $this;
+    }
 }

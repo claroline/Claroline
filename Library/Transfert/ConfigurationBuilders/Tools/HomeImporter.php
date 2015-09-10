@@ -164,11 +164,11 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $this->om->persist($widgetInstance);
 
                 $widgetConfig = new WidgetDisplayConfig();
-                $widgetConfig->setRow($widget['widget']['row']);
-                $widgetConfig->setColumn($widget['widget']['column']);
-                $widgetConfig->setWidth($widget['widget']['width']);
-                $widgetConfig->setHeight($widget['widget']['height']);
-                $widgetConfig->setColor($widget['widget']['color']);
+                if ($widget['widget']['row'])    $widgetConfig->setRow($widget['widget']['row']);
+                if ($widget['widget']['column']) $widgetConfig->setColumn($widget['widget']['column']);
+                if ($widget['widget']['width'])  $widgetConfig->setWidth($widget['widget']['width']);
+                if ($widget['widget']['height']) $widgetConfig->setHeight($widget['widget']['height']);
+                if ($widget['widget']['color'])  $widgetConfig->setColor($widget['widget']['color']);
                 $widgetConfig->setWorkspace($workspace);
                 $widgetConfig->setWidgetInstance($widgetInstance);
                 $this->om->persist($widgetConfig);
@@ -221,18 +221,18 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                     array($widgetConfig->getWidgetInstance())
                 );
 
-                $widgetDisplayConfig = $widgetDisplayConfigs[0];
+                $widgetDisplayConfig = isset($widgetDisplayConfigs[0]) ? $widgetDisplayConfigs[0]: null;
 
                 //export the widget content here
                 $widgetData = array('widget' => array(
                     'name'   => $widgetConfig->getWidgetInstance()->getName(),
                     'type'   => $widgetConfig->getWidgetInstance()->getWidget()->getName(),
                     'data'   => $data,
-                    'row'    => $widgetDisplayConfig->getRow(),
-                    'column' => $widgetDisplayConfig->getColumn(),
-                    'width'  => $widgetDisplayConfig->getWidth(),
-                    'height' => $widgetDisplayConfig->getHeight(),
-                    'color'  => $widgetDisplayConfig->getColor()
+                    'row'    => $widgetDisplayConfig ? $widgetDisplayConfig->getRow(): null,
+                    'column' => $widgetDisplayConfig ? $widgetDisplayConfig->getColumn(): null,
+                    'width'  => $widgetDisplayConfig ? $widgetDisplayConfig->getWidth(): null,
+                    'height' => $widgetDisplayConfig ? $widgetDisplayConfig->getHeight(): null,
+                    'color'  => $widgetDisplayConfig ? $widgetDisplayConfig->getColor(): null
                 ));
 
                 $widgets[] = $widgetData;

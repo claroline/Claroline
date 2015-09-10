@@ -302,7 +302,8 @@ class LogManager
                 $userSearch = $decodeFilter->user;
             }
         } else {
-            $tmpForm = $this->container->get('form.factory')->create($logFilterFormType);
+            $dataClass['resourceClass'] = $resourceClass ? $resourceClass: null;
+            $tmpForm = $this->container->get('form.factory')->create($logFilterFormType, $dataClass);
             $tmpForm->submit($request);
             $formData = $tmpForm->getData();
             $action = isset($formData['action']) ? $formData['action']: null;

@@ -330,7 +330,7 @@ class LogRepository extends EntityRepository
         return $result[0]['users'];
     }
 
-    private function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)
+    public function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)
     {
         if (null !== $actionRestriction) {
             if ('admin' === $actionRestriction) {
@@ -355,7 +355,7 @@ class LogRepository extends EntityRepository
      *
      * @return QueryBuilder
      */
-    private function addDateRangeFilterToQueryBuilder(QueryBuilder $queryBuilder, $range)
+    public function addDateRangeFilterToQueryBuilder(QueryBuilder $queryBuilder, $range)
     {
         if ($range !== null and count($range) == 2) {
             $startDate = new \DateTime();
@@ -480,7 +480,7 @@ class LogRepository extends EntityRepository
         return $queryBuilder;
     }
 
-    private function extractChartData($result, $range)
+    public function extractChartData($result, $range)
     {
         $chartData = array();
         if (count($result) > 0) {
@@ -517,5 +517,35 @@ class LogRepository extends EntityRepository
         }
 
         return $chartData;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param User         $owner
+     *
+     * @return QueryBuilder
+     */
+    public function addOwnerFilterToQueryBuilder(QueryBuilder $queryBuilder, User $owner)
+    {
+        $queryBuilder
+            ->andWhere("log.owner = :owner")
+            ->setParameter('owner', $owner);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param integer      $otherElementId
+     *
+     * @return QueryBuilder
+     */
+    public function addOtherElementIdFilterToQueryBuilder(QueryBuilder $queryBuilder, $otherElementId)
+    {
+        $queryBuilder
+            ->andWhere("log.otherElementId = :otherElementId")
+            ->setParameter('otherElementId', $otherElementId);
+
+        return $queryBuilder;
     }
 }

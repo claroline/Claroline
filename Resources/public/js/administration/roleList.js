@@ -167,7 +167,7 @@
     }
 
     var changeNameCallback = function(data, row) {
-        row.find('.change-name-field').val(trans('platform', data['translationKey']));
+        row.find('.change-name-field').val(Translator.trans('platform', data['translationKey']));
         showAlert(Translator.trans('role_name_changed_success', {}, 'platform'), 'alert-success');
     }
 

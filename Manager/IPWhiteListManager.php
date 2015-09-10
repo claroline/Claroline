@@ -53,7 +53,7 @@ class IPWhiteListManager
     {
         if (file_exists($this->ipFile)) {
             $ips = Yaml::parse($this->ipFile);
-            
+
             if (is_array($ips)) {
                 foreach ($ips as $ip) {
                     if ($ip === $_SERVER['REMOTE_ADDR']) return true;

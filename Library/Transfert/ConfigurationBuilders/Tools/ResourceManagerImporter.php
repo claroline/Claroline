@@ -46,6 +46,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private $om;
     private $availableCreators;
     private $env;
+    private $extendedData;
 
     /**
      * @DI\InjectParams({
@@ -303,11 +304,11 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function export(Workspace $workspace, array &$_files, $object)
     {
-        $data = [];
+        $_data = [];
         //first we get the root
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $rootRights = $root->getRights();
-        $data['root'] = array(
+        $_data['root'] = array(
             'uid'   => $root->getId(),
             'roles' => $this->getPermsArray($root)
         );
@@ -316,7 +317,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         foreach ($resourceNodes as $resourceNode) {
             if ($resourceNode->getParent() !== null) {
-                $data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
+                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
             }
         }
 
@@ -324,38 +325,38 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $children = $resourceNode->getChildren();
 
             foreach ($children as $child) {
-                $child = $this->resourceManager->getRealTarget($child, false);
-
                 if ($child && $child->getResourceType()->getName() !== 'directory') {
-                    $data['items'][] = $this->getResourceElement($child, $workspace, $_files);
+                    $_data['items'][] = $this->getResourceElement($child, $workspace, $_files, $_data);
                 }
             }
         }
 
-        return $data;
+        return $_data;
     }
 
     public function exportResources(Workspace $workspace, array $resourceNodes, array &$_files)
     {
-        $data = array();
+        $_data = array();
 
         foreach ($resourceNodes as $resourceNode) {
             $resourceTypeName = $resourceNode->getResourceType()->getName();
 
             if ($resourceTypeName === 'directory') {
-                $data['directories'][] = $this->getDirectoryElement($resourceNode, $_files, true);
+                $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files, true);
                 $this->exportChildrenResources(
                     $workspace,
                     $resourceNode->getChildren()->toArray(),
                     $_files,
-                    $data
+                    $_data
                 );
             } else {
-                $data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, true);
+                if ($this->container->get('security.context')->isGranted('EXPORT', $resourceNode)) {
+                    $_data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, $_data, true);
+                }
             }
         }
 
-        return $data;
+        return $_data;
     }
 
     private function exportChildrenResources(
@@ -369,7 +370,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $resourceTypeName = $child->getResourceType()->getName();
 
             if ($resourceTypeName === 'directory') {
-                $data['directories'][] = $this->getDirectoryElement($child, $_files);
+                $_data['directories'][] = $this->getDirectoryElement($child, $_files);
                 $this->exportChildrenResources(
                     $workspace,
                     $child->getChildren()->toArray(),
@@ -377,7 +378,9 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $_data
                 );
             } else {
-                $data['items'][] = $this->getResourceElement($child, $workspace, $_files);
+                if ($this->container->get('security.context')->isGranted('EXPORT', $child)) {
+                    $_data['items'][] = $this->getResourceElement($child, $workspace, $_files, $_data);
+                }
             }
         }
     }
@@ -790,21 +793,25 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         ResourceNode $resourceNode,
         Workspace $workspace,
         &$_files,
+        &$_data,
         $setParentNull = false
     )
     {
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
         $data = array();
         $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
 
         if ($importer) {
+            $importer->setExtendedData($_data);
             $data = $importer->export(
                 $workspace,
                 $_files,
-                $this->resourceManager->getResourceFromNode($resourceNode)
+                $this->resourceManager->getResourceFromNode($resourceNode),
+                $_data
             );
         }
-
-        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId(): null;
+        
         if ($setParentNull) $parentId = null;
 
         $resElement = array('item' => array(

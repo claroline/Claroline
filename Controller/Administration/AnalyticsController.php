@@ -62,7 +62,7 @@ class AnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/analytics/",
+     *     "/",
      *     name="claro_admin_analytics_show"
      * )
      *
@@ -93,7 +93,7 @@ class AnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/analytics/connections",
+     *     "/connections",
      *     name="claro_admin_analytics_connections"
      * )
      *
@@ -140,7 +140,7 @@ class AnalyticsController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/analytics/resources",
+     *     "/resources",
      *     name="claro_admin_analytics_resources"
      * )
      *
@@ -159,15 +159,22 @@ class AnalyticsController extends Controller
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->countResourcesByType();
 
+        /** @var \Claroline\CoreBundle\Event\Analytics\PlatformContentItemEvent $event */
+        $event = $this->get("claroline.event.event_dispatcher")->dispatch(
+            'administration_analytics_platform_content_item_add',
+            'Analytics\PlatformContentItem'
+        );
+
         return array(
             'wsCount' => $wsCount,
-            'resourceCount' => $resourceCount
+            'resourceCount' => $resourceCount,
+            'otherItems' => $event->getItems()
         );
     }
 
     /**
      * @EXT\Route(
-     *     "/analytics/top/{topType}",
+     *     "/top/{topType}",
      *     name="claro_admin_analytics_top",
      *     defaults={"topType" = "top_users_connections"}
      * )
@@ -207,5 +214,22 @@ class AnalyticsController extends Controller
             'form_criteria' => $criteriaForm->createView(),
             'list_data' => $listData
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/item/{item}",
+     *     name="claro_admin_analytics_other_details"
+     * )
+     */
+    public function analyticsItemAction($item)
+    {
+        /** @var \Claroline\CoreBundle\Event\Analytics\PlatformContentItemDetailsEvent $event */
+        $event = $this->get("claroline.event.event_dispatcher")->dispatch(
+            'administration_analytics_platform_content_item_details_' . $item,
+            'Analytics\PlatformContentItemDetails'
+        );
+
+        return new Response($event->getContent());
     }
 }

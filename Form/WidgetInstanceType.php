@@ -20,15 +20,22 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class WidgetInstanceType extends AbstractType
 {
     private $isDesktop;
+    private $withRole;
+    private $roles;
 
-    public function __construct($isDesktop = true)
+    public function __construct($isDesktop = true, $withRole = false, array $roles = array())
     {
         $this->isDesktop = $isDesktop;
+        $this->withRole = $withRole;
+        $this->roles = $roles;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $isDesktop = $this->isDesktop;
+        $datas['is_desktop'] = $this->isDesktop;
+        $datas['with_role'] = $this->withRole;
+        $datas['roles'] = $this->roles;
+
         $builder->add('name', 'text', array('constraints' => new NotBlank()));
         $builder->add(
             'widget',
@@ -38,10 +45,23 @@ class WidgetInstanceType extends AbstractType
                 'choice_translation_domain' => true,
                 'expanded' => false,
                 'multiple' => false,
-                'query_builder' => function (WidgetRepository $widgetRepo) use ($isDesktop) {
-                    if ($isDesktop) {
-                        return $widgetRepo->createQueryBuilder('w')
-                            ->where('w.isDisplayableInDesktop = true');
+                'constraints' => new NotBlank(),
+                'query_builder' => function (WidgetRepository $widgetRepo) use ($datas) {
+                    if ($datas['is_desktop']) {
+
+                        if ($datas['with_role']) {
+
+                            return $widgetRepo->createQueryBuilder('w')
+                                ->join('w.roles', 'r')
+                                ->where('w.isDisplayableInDesktop = true')
+                                ->andWhere("r IN (:roles)")
+                                ->setParameter('roles', $datas['roles']);
+
+                        } else {
+
+                            return $widgetRepo->createQueryBuilder('w')
+                                ->where('w.isDisplayableInDesktop = true');
+                        }
                     } else {
                         return $widgetRepo->createQueryBuilder('w')
                             ->where('w.isDisplayableInWorkspace = true');

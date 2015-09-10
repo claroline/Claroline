@@ -93,6 +93,7 @@ analytics_connections: 'Visites utilisateurs'
 analytics_home: 'Vue d''ensemble'
 analytics_resources: 'Contenu plateforme'
 analytics_top: 'Top des activités'
+analytics_return_platform_content: "Retour aux statistiques globales du contenu plateforme"
 anonymous: Anonyme
 answer: Répondre
 anywhere: 'N''importe où'
@@ -240,7 +241,7 @@ date_range.first_day: '1'
 date_range.format: d/m/Y
 date_range.format.with_hours: 'd/m/Y H:i:s'
 date_range.from: De
-date_range.js_format: dd/MM/yyyy
+date_range.js_format: DD/MM/YYYY
 date_range.last_month: 'Mois précédent'
 date_range.last_school_year: 'Année sco. précédente'
 date_range.last_seven_days: '7 derniers jours'
@@ -410,8 +411,10 @@ has_been_unregistered_from_workspace: 'a été désincrit de l''espace d''activi
 has_been_updated: 'a été mis à jour'
 has_not_been_imported: 'n''a pas été importé(e)'
 has_not_been_imported_into_the_group: 'n''a pas été importé(e) dans le groupe'
+height: Hauteur
 help_url: 'URL de l''aide'
 hide: Cacher
+hide_breadcrumb: 'Cacher le fil d''Ariane'
 hide_tools_menu: 'Cacher le menu d''outils (sauf pour les gestionnaires)'
 history: Historique
 home: Accueil
@@ -487,6 +490,7 @@ last_30_days_activity: 'Activités des 30 derniers jours'
 last_action: '{1} Dernière action|[1,Inf] %logAmount% dernières actions'
 last_attempt_date: 'Date de la dernière tentative'
 last_manager_error_message: 'Vous ne pouvez pas retirer tous les gestionnaires.'
+last_modification: Dernière modification
 last_name: Nom
 layout: Layout
 learning_outcomes: 'Référentiel de compétences'
@@ -1086,6 +1090,7 @@ warning_workspace_impersonation: 'Vous êtes connecté en tant que %role% du wor
 warnings: Attention
 widget: Widget
 widget_configuration: 'Configuration du widget'
+widget_creation_roles: 'Rôles pouvant créer le widget sur leur bureau'
 widget_home_tab_delete_confirm_message: 'Voulez-vous vraiment retirer ce widget de cet onglet ?'
 widget_home_tab_delete_confirm_title: 'Suppression du widget de l''onglet'
 widget_settings: 'Paramètres des widgets'
@@ -1093,6 +1098,7 @@ widget_visible_actions: 'Choisissez les actions visibles dans le widget'
 widget_workspace_pick: 'Choisissez les espaces de travail affichés par le widget'
 widgets: Widgets
 widgets_configuration: 'Configuration des widgets'
+width: Largeur
 with_role: 'avec le rôle'
 with_tutor: Tutoré
 workspace: 'Espace d''activités'

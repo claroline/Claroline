@@ -93,6 +93,7 @@ analytics_connections: Connections
 analytics_home: Home
 analytics_resources: Resources
 analytics_top: Top
+analytics_return_platform_content: "Back to global platform content statistics"
 anonymous: Anonymous
 answer: Answer
 anywhere: Anywhere
@@ -240,7 +241,7 @@ date_range.first_day: '0'
 date_range.format: m/d/Y
 date_range.format.with_hours: 'm/d/Y H:i:s'
 date_range.from: From
-date_range.js_format: MM/dd/yyyy
+date_range.js_format: MM/DD/YYYY
 date_range.last_month: 'Last month'
 date_range.last_school_year: 'Last school year'
 date_range.last_seven_days: 'Last 7 days'
@@ -410,8 +411,10 @@ has_been_unregistered_from_workspace: 'has been unregistered from workspace'
 has_been_updated: 'has been updated'
 has_not_been_imported: 'has not been imported'
 has_not_been_imported_into_the_group: 'has not been imported into the group'
+height: Height
 help_url: 'Help URL'
 hide: Hide
+hide_breadcrumb: 'Hide breadcrumb'
 hide_tools_menu: 'Hide tools menu (except for managers)'
 history: History
 home: Home
@@ -487,6 +490,7 @@ last_30_days_activity: 'Activity over the last 30 days'
 last_action: '{1} Last action|[1,Inf] Last %logAmount% actions'
 last_attempt_date: 'Last attempt'
 last_manager_error_message: 'You can''t remove every manager.'
+last_modification: Last modification
 last_name: 'Last name'
 layout: Layout
 learning_outcomes: 'Learning outcomes'
@@ -1086,6 +1090,7 @@ warning_workspace_impersonation: 'You are connected as %role% from the workspace
 warnings: Warnings
 widget: Widget
 widget_configuration: 'Widget configuration'
+widget_creation_roles: 'Roles that can create the widget in their desktop'
 widget_home_tab_delete_confirm_message: 'Do you really want to remove this widget from this Home tab?'
 widget_home_tab_delete_confirm_title: 'Remove widget from Home tab'
 widget_settings: 'Widget settings'
@@ -1093,6 +1098,7 @@ widget_visible_actions: 'Choose visible actions in the widget'
 widget_workspace_pick: 'Choose workspaces displayed in the widget'
 widgets: Widgets
 widgets_configuration: 'Widgets configuration'
+width: Width
 with_role: 'with role'
 with_tutor: Tutored
 workspace: Workspace
