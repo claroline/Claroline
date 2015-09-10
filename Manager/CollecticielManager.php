@@ -1,6 +1,7 @@
 <?php
 namespace Innova\CollecticielBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Entity\User;
 use Innova\CollecticielBundle\Entity\Dropzone;
@@ -51,5 +52,32 @@ class CollecticielManager
         }
 
         return $adminInnova;
+    }
+
+    /**
+     * Import a Collecticiel into the platform
+     * @param array $data
+     * @param array $created
+     * @return Dropzone
+     */
+    public function import(array $data, array $created)
+    {
+        $collecticiel = new Dropzone();
+
+        return $collecticiel;
+    }
+
+    /**
+     * Export a Collecticiel
+     * @param  Workspace $workspace
+     * @param  array $files
+     * @param  Dropzone $dropzone
+     * @return array
+     */
+    public function export(Workspace $workspace, array $files, Dropzone $dropzone)
+    {
+        $data = array ();
+
+        return $data;
     }
 }

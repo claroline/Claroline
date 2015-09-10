@@ -7,6 +7,7 @@ plugin:
           class: Innova\CollecticielBundle\Entity\Dropzone
           is_visible: true
           is_browsable: false
+          is_exportable: true
           icon: icap_eval_icon.png
           actions:
             - name: open
