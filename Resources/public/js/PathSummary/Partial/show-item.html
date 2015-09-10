@@ -16,19 +16,19 @@
     <div class="step-progression dropdown" data-ng-switch="pathSummaryShowCtrl.userProgression[step.id].status">
         <a href="" id="step-progression-{{ step.id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
             <!-- Step has never be seen -->
-            <span data-ng-switch-default="" class="fa fa-eye-slash text-muted" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_unseen'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-default="" class="fa fa-fw fa-eye-slash text-muted" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_unseen'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is seen -->
-            <span data-ng-switch-when="seen" class="fa fa-eye" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_seen'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="seen" class="fa fa-fw fa-eye" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_seen'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is done -->
-            <span data-ng-switch-when="to_do" class="text-warning fa fa-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_do'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="to_do" class="text-warning fa fa-fw fa-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_do'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is done -->
-            <span data-ng-switch-when="done" class="text-success fa fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_done'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="done" class="text-success fa fa-fw fa-check-square-o" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_done'|trans:{}:'path_wizards' }}"></span>
 
             <!-- Step is to review -->
-            <span data-ng-switch-when="to_review" class="text-info fa fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
+            <span data-ng-switch-when="to_review" class="text-info fa fa-fw fa-retweet" data-container="body" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'user_progression_step_to_review'|trans:{}:'path_wizards' }}"></span>
 
             <span class="caret"></span>
         </a>
