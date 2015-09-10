@@ -66,18 +66,18 @@
                         <tr>
                             <th class="classic">{{ 'start_date' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
-+                                {% if resource.getAccessibleFrom() %}
-+                                    {{ resource.getAccessibleFrom()|date('d/m/Y \\- H\\hi\\ms\\s') }}
-+                                {% else %}
-+                                    -
-+                                {% endif %}
-+                            </td>
+                                {% if resource.getAccessibleFrom() %}
+                                    {{ resource.getAccessibleFrom()|date('d/m/Y \\- H\\hi\\ms\\s') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                         </tr>
                         <tr>
                             <th class="classic">{{ 'end_date' | trans({}, 'ujm_exo') }}</th>
                             <td class="classic">
                                 {% if resource.getAccessibleUntil() %}
-+                                    {{ resource.getAccessibleUntil()|date('d/m/Y \\- H\\hi\\ms\\s') }}
+                                    {{ resource.getAccessibleUntil()|date('d/m/Y \\- H\\hi\\ms\\s') }}
                                 {% else %}
                                     -
                                 {% endif %}
@@ -105,16 +105,16 @@
                                 </td>
                             </tr>
 
-                           {#---not operational---#}
-                                {#<tr class="hiddencells">
-                                <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
-                                <td class="classic">
-                                    {% if exercise.keepSameQuestion == 0 %}
-                                        <i class="fa fa-times-circle"></i>
-                                    {% else %}
-                                        <i class="fa fa-check-circle"></i>
-                                    {% endif %}
-                                </td> #}
+                            {#---not operational---#}
+                            {#<tr class="hiddencells">
+                            <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
+                            <td class="classic">
+                                {% if exercise.keepSameQuestion == 0 %}
+                                    <i class="fa fa-times-circle"></i>
+                                {% else %}
+                                    <i class="fa fa-check-circle"></i>
+                                {% endif %}
+                            </td> #}
                             </tr>
 
                             {#---not operational---#}

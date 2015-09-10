@@ -1,28 +1,11 @@
-<div class="panel panel-default">
-    <div class="panel-heading clearfix">
-        <h3 class="panel-title pull-left">{{ 'sequence_panel_title'|trans:{}:'ujm_sequence' }} - {{sequencePlayCtrl.sequence.meta.title}}</h3>
-    </div>
-    <div class="panel-body">
-        <!-- Exercise metas what do we want to see ??  -->
-        <div data-ng-if="sequencePlayCtrl.sequence.meta" class="form-inline question-row row-bordered">
-            <!-- meta authors -->
-            <div data-ng-repeat="(metaKey, metaValue) in sequencePlayCtrl.sequence.meta">                
-                <div data-ng-if="metaKey === 'authors'">
-                    <strong>{{ 'meta_authors'|trans:{}:'ujm_sequence' }}:</strong>
-                    <ul>
-                        <li data-ng-repeat="author in metaValue"> 
-                            {{author}}
-                        </li>
-                    </ul>
-                </div>
-                <div data-ng-if="metaKey === 'description' && metaValue !== ''">
-                    <strong>{{ 'meta_description'|trans:{}:'ujm_sequence' }}:</strong>
-                    <div data-ng-bind-html="metaValue"></div>
-                </div>
-                <div data-ng-if="metaKey === 'maxAttempts' && metaValue !== 0">
-                    <strong>{{ 'meta_max_attempts'|trans:{}:'ujm_sequence' }}:</strong>
-                    {{metaValue}}
-                </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-8">
+                <h3>{{sequencePlayCtrl.sequence.meta.title}} - Etape {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.getNbStep()}}</h3> 
+            </div>
+            <div class="col-md-4">        
+                <span class="pull-right"><strong>{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.getNbAttempts()}:'ujm_sequence'}} </strong></span>
             </div>
         </div>
         <hr/>

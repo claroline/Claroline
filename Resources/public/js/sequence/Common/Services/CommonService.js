@@ -1,5 +1,5 @@
 /**
- * Page Service
+ * CommonService
  */
 (function () {
     'use strict';

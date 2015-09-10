@@ -3,8 +3,8 @@
         <div class="step-container" data-ng-repeat="item in stepShowCtrl.currentStep.items">
             <!-- switch on item type -->
             <div data-ng-switch="item.type">
-                <div data-ng-switch-when="application/x.choice+json">                   
-                    <choice-question data-step="stepShowCtrl.currentStep" data-question="item"></choice-question>
+                <div data-ng-switch-when="application/x.choice+json">      
+                    <choice-question data-question="item"></choice-question>
                 </div>
                 <!--
                 <div data-ng-switch-when="application/x.match+json">

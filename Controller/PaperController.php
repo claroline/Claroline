@@ -5,10 +5,8 @@ namespace UJM\ExoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
-
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -16,8 +14,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  * Paper controller.
  *
  */
-class PaperController extends Controller
-{
+class PaperController extends Controller {
+
     /**
      * Lists all Paper entities.
      *
@@ -29,8 +27,7 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($exoID, $page, $all)
-    {
+    public function indexAction($exoID, $page, $all) {
         $nbUserPaper = 0;
         $retryButton = false;
         $nbAttemptAllowed = -1;
@@ -51,16 +48,15 @@ class PaperController extends Controller
 
         if ($exoAdmin === true) {
             $paper = $this->getDoctrine()
-                            ->getManager()
-                            ->getRepository('UJMExoBundle:Paper')
-                            ->getExerciseAllPapers($exoID);
-            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(),
-                                                    $exercise->getId());
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Paper')
+                    ->getExerciseAllPapers($exoID);
+            $nbUserPaper = $exerciseSer->getNbPaper($user->getId(), $exercise->getId());
         } else {
             $paper = $this->getDoctrine()
-                            ->getManager()
-                            ->getRepository('UJMExoBundle:Paper')
-                            ->getExerciseUserPapers($user->getId(), $exoID);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Paper')
+                    ->getExerciseUserPapers($user->getId(), $exoID);
             $nbUserPaper = count($paper);
         }
 
@@ -76,9 +72,9 @@ class PaperController extends Controller
 
         try {
             $papers = $pagerfanta
-                ->setMaxPerPage($max)
-                ->setCurrentPage($page)
-                ->getCurrentPageResults();
+                    ->setMaxPerPage($max)
+                    ->setCurrentPage($page)
+                    ->getCurrentPageResults();
         } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
@@ -93,10 +89,8 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_paper')->getInfosPaper($p);
         }
 
-        if (($exerciseSer->controlDate($exoAdmin, $exercise) === true)
-            && ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true)
-            && ( ($exercise->getResourceNode()->isPublished() === true) || ($exoAdmin == 1) )
-        ) {
+        if ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true 
+                && ($exercise->getResourceNode()->isPublished() || $exoAdmin == 1 )) {
             $retryButton = true;
         }
 
@@ -107,29 +101,27 @@ class PaperController extends Controller
         }
 
         $badgesInfoUser = $badgeExoSer->badgesInfoUser(
-        $user->getId(), $exercise->getResourceNode()->getId(),
-        $this->container->getParameter('locale'));
+                $user->getId(), $exercise->getResourceNode()->getId(), $this->container->getParameter('locale'));
 
         $nbQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                          ->getCountQuestion($exoID);
+                ->getCountQuestion($exoID);
 
         return $this->render(
-            'UJMExoBundle:Paper:index.html.twig',
-            array(
-                'workspace'        => $workspace,
-                'papers'           => $papers,
-                'isAdmin'          => $exoAdmin,
-                'pager'            => $pagerfanta,
-                'exoID'            => $exoID,
-                'display'          => $display,
-                'retryButton'      => $retryButton,
-                'nbAttemptAllowed' => $nbAttemptAllowed,
-                'badgesInfoUser'   => $badgesInfoUser,
-                'nbUserPaper'      => $nbUserPaper,
-                'nbQuestions'      => $nbQuestions['nbq'],
-                '_resource'        => $exercise,
-                'arrayMarkPapers'  => $arrayMarkPapers
-            )
+                        'UJMExoBundle:Paper:index.html.twig', array(
+                    'workspace' => $workspace,
+                    'papers' => $papers,
+                    'isAdmin' => $exoAdmin,
+                    'pager' => $pagerfanta,
+                    'exoID' => $exoID,
+                    'display' => $display,
+                    'retryButton' => $retryButton,
+                    'nbAttemptAllowed' => $nbAttemptAllowed,
+                    'badgesInfoUser' => $badgesInfoUser,
+                    'nbUserPaper' => $nbUserPaper,
+                    'nbQuestions' => $nbQuestions['nbq'],
+                    '_resource' => $exercise,
+                    'arrayMarkPapers' => $arrayMarkPapers
+                        )
         );
     }
 
@@ -143,22 +135,20 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id, $p = -2)
-    {
+    public function showAction($id, $p = -2) {
         $nbAttemptAllowed = -1;
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $badgeExoSer = $this->container->get('ujm.exo_badge');
-        $paperSer    = $this->container->get('ujm.exo_paper');
+        $paperSer = $this->container->get('ujm.exo_paper');
 
         $user = $exerciseSer->getUser();
-        $uid  = $exerciseSer->getUserId();
+        $uid = $exerciseSer->getUserId();
         $em = $this->getDoctrine()->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($id);
         $exercise = $paper->getExercise();
 
-        if ( ($uid == 'anonymous') || ($exerciseSer->controlMaxAttemps($exercise,
-                $uid, $exerciseSer->isExerciseAdmin($exercise))) ) {
+        if (($uid == 'anonymous') || ($exerciseSer->controlMaxAttemps($exercise, $uid, $exerciseSer->isExerciseAdmin($exercise)))) {
             $retryButton = true;
         }
 
@@ -179,47 +169,44 @@ class PaperController extends Controller
         $infosPaper = $paperSer->getInfosPaper($paper);
 
         $hintViewed = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:LinkHintPaper')
-            ->getHintViewed($paper->getId());
+                ->getManager()
+                ->getRepository('UJMExoBundle:LinkHintPaper')
+                ->getHintViewed($paper->getId());
 
         $nbMaxQuestion = count($infosPaper['interactions']);
 
         $badgesInfoUser = $badgeExoSer->badgesInfoUser(
-        $uid, $exercise->getResourceNode()->getId(),
-        $this->container->getParameter('locale'));
+                $uid, $exercise->getResourceNode()->getId(), $this->container->getParameter('locale'));
 
         if ($exercise->getMaxAttempts() > 0) {
             if (!$exerciseSer->isExerciseAdmin($exercise)) {
-                $nbpaper = $exerciseSer->getNbPaper($user->getId(),
-                                                    $exercise->getId());
+                $nbpaper = $exerciseSer->getNbPaper($user->getId(), $exercise->getId());
 
                 $nbAttemptAllowed = $exercise->getMaxAttempts() - $nbpaper;
             }
         }
 
         return $this->render(
-            'UJMExoBundle:Paper:show.html.twig',
-            array(
-                'workspace'        => $worspace,
-                'exoId'            => $paper->getExercise()->getId(),
-                'interactions'     => $infosPaper['interactions'],
-                'responses'        => $infosPaper['responses'],
-                'scorePaper'       => $infosPaper['scorePaper'],
-                'scoreTemp'        => $infosPaper['scoreTemp'],
-                'maxExoScore'      => $infosPaper['maxExoScore'],
-                'hintViewed'       => $hintViewed,
-                'correction'       => $paper->getExercise()->getCorrectionMode(),
-                'display'          => $display,
-                'admin'            => $admin,
-                'nbAttemptAllowed' => $nbAttemptAllowed,
-                'badgesInfoUser'   => $badgesInfoUser,
-                '_resource'        => $paper->getExercise(),
-                'p'                => $p,
-                'nbMaxQuestion'    => $nbMaxQuestion,
-                'paperID'          => $paper->getId(),
-                'retryButton'      => $retryButton
-            )
+                        'UJMExoBundle:Paper:show.html.twig', array(
+                    'workspace' => $worspace,
+                    'exoId' => $paper->getExercise()->getId(),
+                    'interactions' => $infosPaper['interactions'],
+                    'responses' => $infosPaper['responses'],
+                    'scorePaper' => $infosPaper['scorePaper'],
+                    'scoreTemp' => $infosPaper['scoreTemp'],
+                    'maxExoScore' => $infosPaper['maxExoScore'],
+                    'hintViewed' => $hintViewed,
+                    'correction' => $paper->getExercise()->getCorrectionMode(),
+                    'display' => $display,
+                    'admin' => $admin,
+                    'nbAttemptAllowed' => $nbAttemptAllowed,
+                    'badgesInfoUser' => $badgesInfoUser,
+                    '_resource' => $paper->getExercise(),
+                    'p' => $p,
+                    'nbMaxQuestion' => $nbMaxQuestion,
+                    'paperID' => $paper->getId(),
+                    'retryButton' => $retryButton
+                        )
         );
     }
 
@@ -233,14 +220,12 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function markedOpenAction($respid, $maxScore)
-    {
+    public function markedOpenAction($respid, $maxScore) {
         return $this->render(
-            'UJMExoBundle:Paper:q_open_mark.html.twig', array(
-                'respid'   => $respid,
-                'maxScore' => $maxScore
-
-            )
+                        'UJMExoBundle:Paper:q_open_mark.html.twig', array(
+                    'respid' => $respid,
+                    'maxScore' => $maxScore
+                        )
         );
     }
 
@@ -253,8 +238,7 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function markedOpenRecordAction(Request $request)
-    {
+    public function markedOpenRecordAction(Request $request) {
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
             /** @var \UJM\ExoBundle\Entity\Response $response */
@@ -280,10 +264,9 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchUserPaperAction()
-    {
-        $papersOneUser   = array();
-        $papersUser      = array();
+    public function searchUserPaperAction() {
+        $papersOneUser = array();
+        $papersUser = array();
         $arrayMarkPapers = array();
 
         $display = 'none';
@@ -292,18 +275,18 @@ class PaperController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $nameUser = $request->query->get('userName');
-        $exoID    = $request->query->get('exoID');
+        $exoID = $request->query->get('exoID');
 
         $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($nameUser);
         $end = count($userList);
 
         for ($i = 0; $i < $end; $i++) {
             $papersOneUser[] = $em->getRepository('UJMExoBundle:Paper')
-                                  ->findBy(array(
-                                            'user' => $userList[$i]->getId(),
-                                            'exercise' => $exoID
-                                            )
-                                          );
+                    ->findBy(array(
+                'user' => $userList[$i]->getId(),
+                'exercise' => $exoID
+                    )
+            );
 
             if ($i > 0) {
                 $papersUser = array_merge($papersOneUser[$i - 1], $papersOneUser[$i]);
@@ -316,16 +299,16 @@ class PaperController extends Controller
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_exercise')->getInfosPaper($p);
         }
 
-        if(count($papersUser) > 0) {
+        if (count($papersUser) > 0) {
             $display = $this->ctrlDisplayPaper($papersUser[0]);
         }
 
         $divResultSearch = $this->render(
-            'UJMExoBundle:Paper:userPaper.html.twig', array(
-                'papers'          => $papersUser,
-                'arrayMarkPapers' => $arrayMarkPapers,
-                'display'         => $display
-            )
+                'UJMExoBundle:Paper:userPaper.html.twig', array(
+            'papers' => $papersUser,
+            'arrayMarkPapers' => $arrayMarkPapers,
+            'display' => $display
+                )
         );
         // If request is ajax (first display of the first search result (page = 1))
         if ($request->isXmlHttpRequest()) {
@@ -336,9 +319,9 @@ class PaperController extends Controller
 
             // Send the form to search and the result
             return $this->render(
-                'UJMExoBundle:Paper:index.html.twig', array(
-                'divResultSearch' => $divResultSearch
-                )
+                            'UJMExoBundle:Paper:index.html.twig', array(
+                        'divResultSearch' => $divResultSearch
+                            )
             );
         }
     }
@@ -352,22 +335,21 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportResCSVAction($exerciseId)
-    {
+    public function exportResCSVAction($exerciseId) {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
 
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
             $iterableResult = $this->getDoctrine()
-                                   ->getManager()
-                                   ->getRepository('UJMExoBundle:Paper')
-                                   ->getExerciseAllPapersIterator($exerciseId);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Paper')
+                    ->getExerciseAllPapersIterator($exerciseId);
             $handle = fopen('php://memory', 'r+');
 
             while (false !== ($row = $iterableResult->next())) {
                 $rowCSV = array();
                 $infosPaper = $this->container->get('ujm.exo_exercise')->getInfosPaper($row[0]);
-                $score = $infosPaper['scorePaper'] /  $infosPaper['maxExoScore'];
+                $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
                 $score = $score * 20;
 
                 $rowCSV[] = $row[0]->getUser()->getLastName() . '-' . $row[0]->getUser()->getFirstName();
@@ -393,7 +375,6 @@ class PaperController extends Controller
                 'Content-Type' => 'application/force-download',
                 'Content-Disposition' => 'attachment; filename="export.csv"'
             ));
-
         } else {
 
             throw new AccessDeniedException();
@@ -407,8 +388,7 @@ class PaperController extends Controller
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exo
      */
-    private function checkAccess($exo)
-    {
+    private function checkAccess($exo) {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
 
         if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
@@ -425,23 +405,22 @@ class PaperController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function ctrlDisplayPaper($paper)
-    {
+    private function ctrlDisplayPaper($paper) {
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $uid = $exerciseSer->getUserId();
         $display = 'none';
 
         if (($this->container->get('ujm.exo_exercise')->isExerciseAdmin($paper->getExercise())) ||
-            ( ( $uid == 'anonymous' && $paper->getUser() == null ) || ( $uid == $paper->getUser()->getId() ) ) &&
-            (($paper->getExercise()->getCorrectionMode() == 1) ||
-            (($paper->getExercise()->getCorrectionMode() == 3) &&
-            ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
-            (($paper->getExercise()->getCorrectionMode() == 2) &&
-            ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exo_exercise')->getNbPaper(
-                $uid, $paper->getExercise()->getId()
-            )
-            ))
-            )
+                ( ( $uid == 'anonymous' && $paper->getUser() == null ) || ( $uid == $paper->getUser()->getId() ) ) &&
+                (($paper->getExercise()->getCorrectionMode() == 1) ||
+                (($paper->getExercise()->getCorrectionMode() == 3) &&
+                ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
+                (($paper->getExercise()->getCorrectionMode() == 2) &&
+                ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exo_exercise')->getNbPaper(
+                        $uid, $paper->getExercise()->getId()
+                )
+                ))
+                )
         ) {
             $display = 'all';
         } else if (($uid == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
@@ -450,4 +429,5 @@ class PaperController extends Controller
 
         return $display;
     }
+
 }

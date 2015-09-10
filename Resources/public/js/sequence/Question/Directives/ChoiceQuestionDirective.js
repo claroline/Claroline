@@ -10,8 +10,7 @@
                 controller: 'ChoiceQuestionCtrl',
                 controllerAs: 'choiceQuestionCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/choice.question.html',
-                scope: {
-                    step: '=',
+                scope: {                    
                     question: '='
                 },
                 link: function (scope, element, attr, choiceQuestionCtrl) {

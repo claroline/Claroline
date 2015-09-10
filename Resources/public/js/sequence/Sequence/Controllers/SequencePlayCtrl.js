@@ -71,9 +71,8 @@
              * @returns {undefined}
              */
             this.validateStep = function () {
-                console.log('youpi');
                 var data = CommonService.getStudentData();
-                console.log('student data are below');
+                //console.log('student data are below');
                 console.log(data);
             };
         }
