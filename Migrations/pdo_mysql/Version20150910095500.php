@@ -8,21 +8,23 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/07/21 11:49:54
+ * Generation date: 2015/09/10 09:55:01
  */
-class Version20150721114954 extends AbstractMigration
+class Version20150910095500 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__blog_options CHANGE display_widget_right gender_code SMALLINT DEFAULT NULL
+            ALTER TABLE icap__blog_options 
+            ADD display_list_widget_blog_right VARCHAR(255) DEFAULT '01112131415161' NOT NULL
         ");
     }
 
     public function down(Schema $schema)
     {
         $this->addSql("
-            ALTER TABLE icap__blog_options CHANGE gender_code display_widget_right SMALLINT DEFAULT NULL
+            ALTER TABLE icap__blog_options 
+            DROP display_list_widget_blog_right
         ");
     }
 }

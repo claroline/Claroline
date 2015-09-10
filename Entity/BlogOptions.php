@@ -150,7 +150,7 @@ class BlogOptions
      *
      * Option to display the widget bar on the right
      *
-     * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false)
+     * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false, options={"default" = "01112131415161"})
      */
     protected $listWidgetBlog = "01112131415161" ;
 
