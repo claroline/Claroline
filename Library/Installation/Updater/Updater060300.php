@@ -18,11 +18,13 @@ class Updater060300 extends Updater
 {
     private $container;
     private $om;
+    private $adminToolRepo;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
+        $this->adminToolRepo = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool');
     }
 
     public function postUpdate()
@@ -36,11 +38,15 @@ class Updater060300 extends Updater
     private function createWidgetsManagementAdminTool()
     {
         $this->log('Creating Widgets management admin tool...');
-        $widgetsTool = new AdminTool();
-        $widgetsTool->setName('widgets_management');
-        $widgetsTool->setClass('list-alt');
-        $this->om->persist($widgetsTool);
-        $this->om->flush();
+        $widgetsTools = $this->adminToolRepo->findByName('widgets_management');
+
+        if (count($widgetsTools) === 0) {
+            $widgetsTool = new AdminTool();
+            $widgetsTool->setName('widgets_management');
+            $widgetsTool->setClass('list-alt');
+            $this->om->persist($widgetsTool);
+            $this->om->flush();
+        }
     }
 
     private function initializeWidgetsRoles()
