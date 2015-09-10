@@ -40,27 +40,7 @@
                     </div>
                     <div class="panel-body">
                         {{ form_row(edit_form.title) }}
-                        {{ form_row(edit_form.description) }}
-                        <div class="form-group row date picker">
-                            {{ form_label(edit_form.start_date) }}
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    {{ form_widget(edit_form.start_date) }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            {{ form_label(edit_form.useDateEnd) }}
-                            <div class="col-md-9">{{ form_widget(edit_form.useDateEnd) }}</div>
-                        </div>
-                        <div class="form-group row date picker" id="dateEnd" style="display: none;">
-                            {{ form_label(edit_form.end_date) }}
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    {{ form_widget(edit_form.end_date) }}
-                                </div>
-                            </div>
-                        </div>
+                        {{ form_row(edit_form.description) }}                       
                     </div>
                 </div>
                 {#--------------------------------------------- Questions -----------------------------------------------#}
@@ -148,24 +128,12 @@
         $(document).ready(function() {
             $('#ujm_exobundle_exercisetype_doprint').attr("disabled", true);
             $('#ujm_exobundle_exercisetype_duration').attr("disabled", true);
-            $('#ujm_exobundle_exercisetype_lockAttempt').attr("disabled", true);
-
-            if($("#ujm_exobundle_exercisetype_useDateEnd").attr("checked")) {
-                $('#dateEnd').css({"display" : "block"});
-            }
+            $('#ujm_exobundle_exercisetype_lockAttempt').attr("disabled", true);           
 
             if ($("*[id$='_exercisetype_correctionMode']").val() == 3) {
                 $('#CorrectionMode').css({"display" : "block"});
             }
-        });
-
-        $("#ujm_exobundle_exercisetype_useDateEnd").change(function () {
-            if(this.checked) {
-                $('#dateEnd').css({"display" : "block"});
-            } else {
-                $('#dateEnd').css({"display" : "none"});
-            }
-        });
+        });       
 
         $("#ujm_exobundle_exercisetype_correctionMode").change(function () {
             if ($("*[id$='_exercisetype_correctionMode']").val() == 3) {

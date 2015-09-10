@@ -188,17 +188,15 @@ class ExerciseListener {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $resource = $event->getResource();
 
-        $exerciseToCopy = $em->getRepository('UJMExoBundle:Exercise')->find($resource->getId());
-        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->findBy(array('exercise' => $exerciseToCopy->getId()));
+        $exerciseToCopy = $event->getResource();
+        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(['exercise' => $exerciseToCopy->getId()]);
 
         $newExercise = new Exercise();
-        $newExercise->setName($resource->getName());
+        $newExercise->setName($exerciseToCopy->getName());
         $newExercise->setTitle($exerciseToCopy->getTitle());
         $newExercise->setDescription($exerciseToCopy->getDescription());
         $newExercise->setShuffle($exerciseToCopy->getShuffle());
         $newExercise->setNbQuestion($exerciseToCopy->getNbQuestion());
-        $newExercise->setDateCreate($exerciseToCopy->getDateCreate());
         $newExercise->setDuration($exerciseToCopy->getDuration());
         $newExercise->setNbQuestionPage($exerciseToCopy->getNbQuestionPage());
         $newExercise->setDoprint($exerciseToCopy->getDoprint());
@@ -206,9 +204,6 @@ class ExerciseListener {
         $newExercise->setCorrectionMode($exerciseToCopy->getCorrectionMode());
         $newExercise->setDateCorrection($exerciseToCopy->getDateCorrection());
         $newExercise->setMarkMode($exerciseToCopy->getMarkMode());
-        $newExercise->setStartDate($exerciseToCopy->getStartDate());
-        $newExercise->setUseDateEnd($exerciseToCopy->getUseDateEnd());
-        $newExercise->setEndDate($exerciseToCopy->getEndDate());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
 
