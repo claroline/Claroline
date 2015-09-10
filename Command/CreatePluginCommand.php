@@ -68,6 +68,12 @@ class CreatePluginCommand extends ContainerAwareCommand
             InputOption::VALUE_REQUIRED,
             'When set to true, add a default config for the theme'
         );
+        $this->addOption(
+            'file_player_mime',
+            null,
+            InputOption::VALUE_REQUIRED,
+            'When set to true, add a player for the file_player mime type'
+        );
         //todo admin tool
         //todo top bar shortcut
 
@@ -143,6 +149,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         $wType = $input->getOption('widget');
         $eAuth = $input->getOption('external_authentication');
         $theme = $input->getOption('theme');
+        $fmime = $input->getOption('file_player_mime');
 
         $config = array(
             'plugin' => array(
@@ -155,6 +162,7 @@ class CreatePluginCommand extends ContainerAwareCommand
         if ($wType) $this->addWidget($rootDir, $ivendor, $ibundle, $wType, $config);
         if ($eAuth) $this->addAuthentication($rootDir, $ivendor, $ibundle, $eAuth, $config);
         if ($theme) $this->addTheme($rootDir, $ivendor, $ibundle, $theme, $config);
+        if ($fmime) $this->addPlayer($rootDir, $ivendor, $ibundle, $fmime, $config);
 
         $yaml = Yaml::dump($config, 5);
         file_put_contents($rootDir . '/Resources/config/config.yml', $yaml);
@@ -166,7 +174,8 @@ class CreatePluginCommand extends ContainerAwareCommand
             $rType,
             $tType,
             $wType,
-            $eAuth
+            $eAuth,
+            $fmime
         );
 
         if ($input->getOption('install')) {
@@ -433,7 +442,20 @@ class CreatePluginCommand extends ContainerAwareCommand
         foreach ($fileList as $file) {
             copy($tempthemedir . '/' . $file, $themedir . '/' . $file);
         }
+    }
 
+    public function addPlayer($rootDir, $ivendor, $ibundle, $fmime, &$config)
+    {
+        $className = ucfirst($fmime) . 'PlayerListener';
+        $newPath = $rootDir . '/Listener/' . $className . '.php';
+        $templateDir = $this->getContainer()->getParameter('claroline.param.plugin_template_player_directory');
+        $content = file_get_contents($templateDir . '/listener.tmp');
+        file_put_contents($newPath, $content);
+
+        $viewName = strtolower($fmime);
+        $newPath = $rootDir . '/Resources/views/' . $viewName . '.html.twig';
+        $content = file_get_contents($templateDir . '/view.tmp');
+        file_put_contents($newPath, $content);
     }
 
     private function getNewRoutingFile($rootDir)
@@ -485,7 +507,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $rType = null,
         $tType = null,
         $wType = null,
-        $eAuth = null
+        $eAuth = null,
+        $fmime = null
     ) {
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
@@ -498,7 +521,7 @@ class CreatePluginCommand extends ContainerAwareCommand
                 $content = file_get_contents($filepath);
                 file_put_contents(
                     $filepath,
-                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth)
+                    $this->replaceCommonPlaceHolders($content, $vendor, $bundle, $rType, $tType, $wType, $eAuth, $fmime)
                 );
             }
         }
@@ -531,7 +554,8 @@ class CreatePluginCommand extends ContainerAwareCommand
         $rType = '',
         $tType = '',
         $wType = '',
-        $eAuth = ''
+        $eAuth = '',
+        $fmime = ''
     )
     {
         $patterns = array(
@@ -545,7 +569,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             '/\[\[tool\]\]/',
             '/\[\[Widget\]\]/',
             '/\[\[widget\]\]/',
-            '/\[\[external_authentication\]\]/'
+            '/\[\[external_authentication\]\]/',
+            '/\[\[File_Mime\]\]/',
+            '/\[\[file_mime\]\]/'
         );
 
         $replacements = array(
@@ -559,7 +585,9 @@ class CreatePluginCommand extends ContainerAwareCommand
             strtolower($tType),
             ucfirst($wType),
             strtolower($wType),
-            strtolower($eAuth)
+            strtolower($eAuth),
+            ucfirst($fmime),
+            strtolower($fmime)
         );
 
         return preg_replace($patterns, $replacements, $content);

@@ -27,12 +27,16 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
  */
 class RightsManager
 {
+    use LoggableTrait;
+
     /** @var MaskManager */
     private $maskManager;
     /** @var ResourceRightsRepository */
@@ -85,6 +89,7 @@ class RightsManager
         $this->roleManager = $roleManager;
         $this->maskManager = $maskManager;
         $this->container = $container;
+        $this->logger = null;
     }
 
     /**
@@ -132,6 +137,7 @@ class RightsManager
         $creations = array()
     )
     {
+        $this->log('Editing permissions...');
         //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
         //weren't created already
         //(ResourceRights duplicate)
@@ -141,6 +147,8 @@ class RightsManager
             $this->updateRightsTree($role, $node):
             array($this->getOneByRoleAndResource($role, $node));
 
+        $this->log('Encoding masks for ' . count($arRights) . ' elements...');
+        
         foreach ($arRights as $toUpdate) {
 
             if ($isRecursive) {
@@ -161,7 +169,6 @@ class RightsManager
             $this->om->persist($toUpdate);
             $this->logChangeSet($toUpdate);
             $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
-
         }
 
         //exception for activities
@@ -174,7 +181,9 @@ class RightsManager
             $this->editCreationRights($creations, $role, $node, $isRecursive);
         }
 
+        $this->log('Flushing perms');
         $this->om->endFlushSuite();
+        $this->log('Done !');
 
         return $arRights;
     }
@@ -249,6 +258,7 @@ class RightsManager
      */
     public function updateRightsTree(Role $role, ResourceNode $node)
     {
+        $this->log('Updating the right tree');
         $alreadyExistings = $this->rightsRepo->findRecursiveByResourceAndRole($node, $role);
         $descendants = $this->resourceRepo->findDescendants($node, true);
         $finalRights = array();
@@ -273,6 +283,7 @@ class RightsManager
         }
 
         $this->om->flush();
+        $this->log('Right tree updated');
 
         return $finalRights;
     }
@@ -655,5 +666,10 @@ class RightsManager
         }
 
         return false;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }
