@@ -179,8 +179,14 @@ class WidgetListener
         /** @var \icap\BlogBundle\Entity\WidgetTagListBlog $widgetTagListBlog */
         $widgetTagListBlog = $this->widgetManager->getWidgetTagListBlogByWdgetInstance($event->getInstance());
 
+        $tagCloud = 0;
+
+        if ($widgetTagListBlog !== null) {
+            $tagCloud = $widgetTagListBlog->getTagCloud();
+        }
+
         $blogOptions = new BlogOptions();
-        $blogOptions->setTagCloud($widgetTagListBlog->getTagCloud());
+        $blogOptions->setTagCloud($tagCloud);
 
         $content = $this->templatingEngine->render(
             'IcapBlogBundle:widget:tags.html.twig',
