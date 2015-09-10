@@ -11,6 +11,7 @@
 
 namespace Claroline\TagBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -102,33 +103,50 @@ class TagManager
         return $tag;
     }
 
-    public function tagObject($tagName, $object, User $user = null)
+    public function tagObject(array $tags, $object, User $user = null)
     {
+        $uniqueTags = array();
+        
+        foreach ($tags as $tag) {
+            $value = trim($tag);
+
+            if (!empty($value)) {
+                $uniqueTags[strtolower($value)] = $value;
+            }
+        }
+
         if (method_exists($object, 'getId')) {
+            $this->om->startFlushSuite();
             $objectId = $object->getId();
             $objectClass = str_replace('Proxies\\__CG__\\', '', get_class($object));
-            $tag = is_null($user) ?
-                $this->getOrCreatePlatformTag($tagName) :
-                $this->getOrCreateUserTag($user, $tagName);
+            $tagsList = array();
 
-            $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
-
-            if (is_null($taggedObject)) {
-                $taggedObject = new TaggedObject();
-                $taggedObject->setTag($tag);
-                $taggedObject->setObjectId($objectId);
-                $taggedObject->setObjectClass($objectClass);
-
-                if (method_exists($object, '__toString')) {
-                    $taggedObject->setObjectName((string)$object);
-                }
-                $this->persistTaggedObject($taggedObject);
+            foreach ($uniqueTags as $tagName) {
+                $tag = is_null($user) ?
+                    $this->getOrCreatePlatformTag($tagName) :
+                    $this->getOrCreateUserTag($user, $tagName);
+                $tagsList[$tagName] = $tag;
             }
+            $this->om->forceFlush();
 
-            return $taggedObject;
-        } else {
+            foreach ($uniqueTags as $tagName) {
+                $tag = $tagsList[$tagName];
 
-            return null;
+                $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+
+                if (is_null($taggedObject)) {
+                    $taggedObject = new TaggedObject();
+                    $taggedObject->setTag($tag);
+                    $taggedObject->setObjectId($objectId);
+                    $taggedObject->setObjectClass($objectClass);
+
+                    if (method_exists($object, '__toString')) {
+                        $taggedObject->setObjectName((string)$object);
+                    }
+                    $this->persistTaggedObject($taggedObject);
+                }
+            }
+            $this->om->endFlushSuite();
         }
     }
 
@@ -194,6 +212,23 @@ class TagManager
     public function getOneUserTagByName(User $user, $name)
     {
         return $this->tagRepo->findOneUserTagByName($user, $name);
+    }
+
+    public function getTagsByResource(
+        ResourceNode $resourceNode,
+        User $user = null,
+        $withPlatform = false,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        return $this->tagRepo->findTagsByResource(
+            $resourceNode,
+            $user,
+            $withPlatform,
+            $orderedBy,
+            $order
+        );
     }
 
 

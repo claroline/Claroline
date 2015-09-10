@@ -1,3 +1,5 @@
+Claroline\CoreBundle\Entity\Resource\ResourceNode: Ressource 
 Claroline\CoreBundle\Entity\User: Utilisateur
 Claroline\CoreBundle\Entity\Workspace\Workspace: Espace d'activités
 no_tag: Aucun Tag
+tag_resource: Taguer la ressource

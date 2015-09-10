@@ -11,9 +11,12 @@
 
 namespace Claroline\TagBundle\Listener;
 
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @DI\Service
@@ -24,11 +27,19 @@ class TagListener
 
     /**
     * @DI\InjectParams({
-    *     "tagManager" = @DI\Inject("claroline.manager.tag_manager")
+    *     "httpKernel"   = @DI\Inject("http_kernel"),
+    *     "requestStack" = @DI\Inject("request_stack"),
+    *     "tagManager"   = @DI\Inject("claroline.manager.tag_manager")
     * })
     */
-    public function __construct(TagManager $tagManager)
+    public function __construct(
+        HttpKernelInterface $httpKernel,
+        RequestStack $requestStack,
+        TagManager $tagManager
+    )
     {
+        $this->httpKernel = $httpKernel;
+        $this->request = $requestStack->getCurrentRequest();
         $this->tagManager = $tagManager;
     }
 
@@ -74,5 +85,20 @@ class TagListener
             }
         }
         $event->setResponse($taggedObjects);
+    }
+
+    /**
+     * @DI\Observe("resource_action_tag_action")
+     */
+    public function onResourceTagAction(CustomActionResourceEvent $event)
+    {
+        $params = array();
+        $params['_controller'] = 'ClarolineTagBundle:Tag:resourceTagForm';
+        $params['resourceNode'] = $event->getResource()->getResourceNode()->getId();
+        $subRequest = $this->request->duplicate(array(), null, $params);
+        $response = $this->httpKernel
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
+        $event->stopPropagation();
     }
 }

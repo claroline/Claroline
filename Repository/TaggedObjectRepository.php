@@ -26,9 +26,9 @@ class TaggedObjectRepository extends EntityRepository
     {
         if (is_null($user)) {
             $dql = "
-                SELECT ti
-                FROM Claroline\TagBundle\Entity\TaggedObject ti
-                JOIN ti.tag t
+                SELECT to
+                FROM Claroline\TagBundle\Entity\TaggedObject to
+                JOIN to.tag t
                 WHERE t.user IS NULL
                 ORDER BY t.{$orderedBy} {$order}
             ";
@@ -37,18 +37,18 @@ class TaggedObjectRepository extends EntityRepository
 
             if ($withPlatform) {
                 $dql = "
-                    SELECT ti
-                    FROM Claroline\TagBundle\Entity\TaggedObject ti
-                    JOIN ti.tag t
+                    SELECT to
+                    FROM Claroline\TagBundle\Entity\TaggedObject to
+                    JOIN to.tag t
                     WHERE t.user IS NULL
                     OR t.user = :user
                     ORDER BY t.{$orderedBy} {$order}
                 ";
             } else {
                 $dql = "
-                    SELECT ti
-                    FROM Claroline\TagBundle\Entity\TaggedObject ti
-                    JOIN ti.tag t
+                    SELECT to
+                    FROM Claroline\TagBundle\Entity\TaggedObject to
+                    JOIN to.tag t
                     WHERE t.user = :user
                     ORDER BY t.{$orderedBy} {$order}
                 ";
@@ -70,9 +70,9 @@ class TaggedObjectRepository extends EntityRepository
     {
         if (is_null($user)) {
             $dql = "
-                SELECT ti
-                FROM Claroline\TagBundle\Entity\TaggedObject ti
-                JOIN ti.tag t
+                SELECT to
+                FROM Claroline\TagBundle\Entity\TaggedObject to
+                JOIN to.tag t
                 WHERE t.user IS NULL
                 AND UPPER(t.name) LIKE :search
                 ORDER BY t.{$orderedBy} {$order}
@@ -82,9 +82,9 @@ class TaggedObjectRepository extends EntityRepository
 
             if ($withPlatform) {
                 $dql = "
-                    SELECT ti
-                    FROM Claroline\TagBundle\Entity\TaggedObject ti
-                    JOIN ti.tag t
+                    SELECT to
+                    FROM Claroline\TagBundle\Entity\TaggedObject to
+                    JOIN to.tag t
                     WHERE (
                         t.user IS NULL
                         OR t.user = :user
@@ -94,9 +94,9 @@ class TaggedObjectRepository extends EntityRepository
                 ";
             } else {
                 $dql = "
-                    SELECT ti
-                    FROM Claroline\TagBundle\Entity\TaggedObject ti
-                    JOIN ti.tag t
+                    SELECT to
+                    FROM Claroline\TagBundle\Entity\TaggedObject to
+                    JOIN to.tag t
                     WHERE t.user = :user
                     AND UPPER(t.name) LIKE :search
                     ORDER BY t.{$orderedBy} {$order}
@@ -114,11 +114,11 @@ class TaggedObjectRepository extends EntityRepository
     public function findOneTaggedObjectByTagAndObject(Tag $tag, $objectId, $objectClass)
     {
         $dql = '
-            SELECT ti
-            FROM Claroline\TagBundle\Entity\TaggedObject ti
-            WHERE ti.tag = :tag
-            AND ti.objectId = :objectId
-            AND ti.objectClass = :objectClass
+            SELECT to
+            FROM Claroline\TagBundle\Entity\TaggedObject to
+            WHERE to.tag = :tag
+            AND to.objectId = :objectId
+            AND to.objectClass = :objectClass
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('tag', $tag);
@@ -131,9 +131,9 @@ class TaggedObjectRepository extends EntityRepository
     public function findTaggedObjectsByTags(array $tags, $orderedBy = 'name', $order = 'ASC')
     {
         $dql = "
-            SELECT ti
-            FROM Claroline\TagBundle\Entity\TaggedObject ti
-            JOIN ti.tag t
+            SELECT to
+            FROM Claroline\TagBundle\Entity\TaggedObject to
+            JOIN to.tag t
             WHERE t IN (:tags)
             ORDER BY t.{$orderedBy} {$order}
         ";

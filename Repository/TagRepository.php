@@ -11,6 +11,7 @@
 
 namespace Claroline\TagBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -137,5 +138,72 @@ class TagRepository extends EntityRepository
         $query->setParameter('name', $name);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function findTagsByResource(
+        ResourceNode $resourceNode,
+        User $user = null,
+        $withPlatform = false,
+        $orderedBy = 'name',
+        $order = 'ASC'
+    )
+    {
+        if (is_null($user)) {
+            $dql = "
+                SELECT t
+                FROM Claroline\TagBundle\Entity\Tag t
+                WHERE t.user IS NULL
+                AND EXISTS (
+                    SELECT to
+                    FROM Claroline\TagBundle\Entity\TaggedObject to
+                    WHERE to.tag = t
+                    AND to.objectId = :objectId
+                    AND to.objectClass = :objectClass
+                )
+                ORDER BY t.{$orderedBy} {$order}
+            ";
+            $query = $this->_em->createQuery($dql);
+        } else {
+
+            if ($withPlatform) {
+                $dql = "
+                    SELECT t
+                    FROM Claroline\TagBundle\Entity\Tag t
+                    WHERE (
+                        t.user IS NULL
+                        OR t.user = :user
+                    )
+                    AND EXISTS (
+                        SELECT to
+                        FROM Claroline\TagBundle\Entity\TaggedObject to
+                        WHERE to.tag = t
+                        AND to.objectId = :objectId
+                        AND to.objectClass = :objectClass
+                    )
+                    ORDER BY t.{$orderedBy} {$order}
+                ";
+            } else {
+                $dql = "
+                    SELECT t
+                    FROM Claroline\TagBundle\Entity\Tag t
+                    WHERE t.user = :user
+                    AND EXISTS (
+                        SELECT to
+                        FROM Claroline\TagBundle\Entity\TaggedObject to
+                        WHERE to.tag = t
+                        AND to.objectId = :objectId
+                        AND to.objectClass = :objectClass
+                    )
+                    ORDER BY t.{$orderedBy} {$order}
+                ";
+            }
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('user', $user);
+        }
+        $query->setParameter('objectId', $resourceNode->getId());
+        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+
+        return $query->getResult();
+
     }
 }

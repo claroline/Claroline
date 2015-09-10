@@ -31,36 +31,26 @@
         </h3>
     </div>
     <div class="panel-body">
-        
-{#        {% if search != '' or pager|length > 0 %}#}
-            <div class="input-group col-md-6 pull-right margin-top-sm">
-                <input class="form-control search-tag"
-                       type="text"
-                       id="search-tag-input"
-                       placeholder="{{ 'search'|trans({}, 'platform') }}"
-{#                       value="{{ search }}"#}
-{#                       data-ordered-by="{{ orderedBy }}"#}
-{#                       data-order="{{ order }}"#}
-{#                       data-max="{{ max }}"#}
+        <div class="input-group col-md-6 pull-right margin-top-sm">
+            <input class="form-control search-tag"
+                   type="text"
+                   id="search-tag-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-tag-btn"
+                        type="button"
+                        id="search-tag-btn"
                 >
-                <span class="input-group-btn">
-                    <button class="filter btn btn-default search-tag-btn"
-                            type="button"
-                            id="search-tag-btn"
-{#                            data-ordered-by="{{ orderedBy }}"#}
-{#                            data-order="{{ order }}"#}
-{#                            data-max="{{ max }}"#}
-                    >
-                        <i class="fa fa-search"></i>
-                    </button>
-                </span>
-            </div>
-            <br>
-            <br>
-            <div id="tags-display-box">
-                {{ render(controller('ClarolineTagBundle:AdminTag:adminTagsDisplay')) }}
-            </div>
-{#        {% endif %}#}
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+        <br>
+        <br>
+        <div id="tags-display-box">
+            {{ render(controller('ClarolineTagBundle:AdminTag:adminTagsDisplay')) }}
+        </div>
     </div>
 {% endblock %}
 

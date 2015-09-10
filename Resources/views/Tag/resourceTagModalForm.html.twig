@@ -1,0 +1,97 @@
+<div id="modal-resource-tag-form" 
+     class="modal-dialog" 
+     role="dialog" 
+     aria-labelledby="modalLabel" 
+     aria-hidden="true"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'tag_resource'|trans({}, 'tag') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <div class="well well-sm">
+                <b>{{'resource'|trans({}, 'platform') }} :</b>
+                {{ resourceNode.getName() }}
+                <br>
+                <b>{{'type'|trans({}, 'platform') }} :</b>
+                {{ resourceNode.getResourceType().getName()|trans({}, 'resource') }}
+            </div>
+            <br>
+            <div>
+                {% for resourceTag in resourceTags %}
+                    <span class="label label-info margin-bottom-sm margin-right-sm">
+                        {{ resourceTag.getName() }}
+                    </span>
+                {% endfor %}
+            </div>
+            <br>
+            <form id="course-create-form"
+                  action="{{ path('claro_tag_resource_tag', {'resourceNode': resourceNode.getId()}) }}"
+                  method="POST"
+                  novalidate="novalidate"
+            > 
+                {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
+                {{ form_widget(form) }}
+                
+                <br>
+                <span class="pull-right">
+                    <span class="btn btn-default" data-dismiss="modal">
+                        {{ 'cancel'|trans({},'platform') }}
+                    </span>
+                    <button type="submit" id='tag-btn' class="btn btn-primary">
+                        {{ 'ok'|trans({},'platform') }}
+                    </button>
+                </span>
+            </form>
+            <br>
+            <br>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    {#<script type="text/javascript" src='{{ asset('bundles/frontend/jquery/jquery-1.7.1.min.js') }}'></script>
+    <script src='{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.js') }}'
+            type="text/javascript"
+    >
+    </script>#}
+    <script src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script type="text/javascript">
+        var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
+        
+        function extractor(query) {
+            var result = /([^,]+)$/.exec(query);
+            if(result && result[1])
+                return result[1].trim();
+            return '';
+        }
+
+        $('#tag_form_tag').typeahead({
+            source: allTags,
+            updater: function(item) {
+                return this.$element.val().replace(/[^,]*$/,'')+item+',';
+            },
+            matcher: function (item) {
+              var tquery = extractor(this.query);
+              if(!tquery) return false;
+              return ~item.toLowerCase().indexOf(tquery.toLowerCase())
+            },
+            highlighter: function (item) {
+              var query = extractor(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+              return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+                return '<strong>' + match + '</strong>'
+              })
+            }
+        });
+        
+{#        $('#tag_form_tag').typeahead({source: allTags});#}
+    </script>
+{% endblock %}

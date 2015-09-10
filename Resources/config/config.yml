@@ -4,3 +4,7 @@ plugin:
   admin_tools:
     - name: claroline_tag_admin_tool
       class: tags
+
+  resource_actions:
+    - name: tag_action
+      is_form: true
