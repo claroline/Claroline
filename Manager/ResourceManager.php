@@ -1003,8 +1003,10 @@ class ResourceManager
                 'DownloadResource',
                 array($this->getResourceFromNode($nodes[0]))
             );
-
-            $data['name'] = $nodes[0]->getName();
+            $extension = $event->getExtension();
+            $data['name'] = empty($extension) ?
+                $nodes[0]->getName() :
+                $nodes[0]->getName() . '.' . $extension;
             $data['file'] = $event->getItem();
             $data['mimeType'] = $nodes[0]->getResourceType()->getName() === 'file' ?
                 $nodes[0]->getMimeType():
@@ -1043,6 +1045,11 @@ class ResourceManager
                         'DownloadResource',
                         array($resource)
                     );
+                    $extension = $event->getExtension();
+
+                    if (!empty($extension)) {
+                        $filename .= '.' . $extension;
+                    }
 
                     $obj = $event->getItem();
 
