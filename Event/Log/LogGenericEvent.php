@@ -47,6 +47,11 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     protected $isWorkspaceEnterEvent = false;
 
     /**
+     * @var integer
+     */
+    protected $otherElementId = null;
+
+    /**
      * Constructor.
      */
     public function __construct(
@@ -59,7 +64,8 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         Workspace $workspace = null,
         User $owner = null,
         $toolName = null,
-        $isWorkspaceEnterEvent = false
+        $isWorkspaceEnterEvent = false,
+        $elementId = null
     )
     {
         $this->action                 = $action;
@@ -72,6 +78,7 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
         $this->owner                  = $owner;
         $this->toolName               = $toolName;
         $this->isWorkspaceEnterEvent  = $isWorkspaceEnterEvent;
+        $this->otherElementId         = $elementId;
 
         $this->setVisibilityFromRestriction();
     }
@@ -238,5 +245,25 @@ abstract class LogGenericEvent extends Event implements RestrictionnableInterfac
     public function getDoer()
     {
         return $this->doer;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getOtherElementId()
+    {
+        return $this->otherElementId;
+    }
+
+    /**
+     * @param integer $otherElementId
+     *
+     * @return LogGenericEvent
+     */
+    public function setOtherElementId($otherElementId)
+    {
+        $this->otherElementId = $otherElementId;
+
+        return $this;
     }
 }
