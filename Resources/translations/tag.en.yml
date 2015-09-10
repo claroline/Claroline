@@ -2,4 +2,6 @@ Claroline\CoreBundle\Entity\Resource\ResourceNode: Resource
 Claroline\CoreBundle\Entity\User: User
 Claroline\CoreBundle\Entity\Workspace\Workspace: Workspace
 no_tag: No tag
+tag_deletion: Tag deletion
+tag_deletion_message: Are you sure you want to delete this Tag ?
 tag_resource: Tag the resource

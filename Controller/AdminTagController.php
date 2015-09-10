@@ -11,11 +11,13 @@
 
 namespace Claroline\TagBundle\Controller;
 
+use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -129,5 +131,20 @@ class AdminTagController extends Controller
             'page' => $page,
             'max' => $max
         );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/tag/{tag}/delete",
+     *     name="claro_tag_admin_tag_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTagDeleteAction(Tag $tag)
+    {
+        $this->tagManager->deleteTag($tag);
+
+        return new JsonResponse('success', 200);
     }
 }

@@ -9,44 +9,6 @@
 
 (function () {
     'use strict';
-
-//    $('#search-tag-btn').on('click', function () {
-//        var search = $('#search-tag-input').val();
-//        var orderedBy = $(this).data('ordered-by');
-//        var order = $(this).data('order');
-//        var max = $(this).data('max');
-//        var route = Routing.generate(
-//            'claro_tag_admin_tags_management',
-//            {
-//                'orderedBy': orderedBy,
-//                'order': order,
-//                'max': max,
-//                'search': search
-//            }
-//        );
-//
-//        window.location.href = route;
-//    });
-
-//    $('#search-tag-input').keypress(function(e) {
-//        if (e.keyCode === 13) {
-//            var search = $(this).val();
-//            var orderedBy = $(this).data('ordered-by');
-//            var order = $(this).data('order');
-//            var max = $(this).data('max');
-//            var route = Routing.generate(
-//                'claro_tag_admin_tags_management',
-//                {
-//                    'orderedBy': orderedBy,
-//                    'order': order,
-//                    'max': max,
-//                    'search': search
-//                }
-//            );
-//
-//            window.location.href = route;
-//        }
-//    });
     
     $('#search-tag-input').keyup(function(e) {
         var search = $(this).val();
@@ -63,4 +25,24 @@
             }
         });
     });
+    
+    $('#tags-display-box').on('click', '.delete-tag-btn', function () {
+        var tagId = $(this).data('tag-id');
+        var tagName = $(this).data('tag-name');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_tag_admin_tag_delete',
+                {'tag': tagId}
+            ),
+            removeTagRow,
+            tagId,
+            Translator.trans('tag_deletion_message', {}, 'tag'),
+            Translator.trans('tag_deletion', {}, 'tag') + ' [' + tagName + ']'
+        );
+    });
+    
+    var removeTagRow = function (event, tagId) {
+        $('#tag-row-' + tagId).remove();
+    };
 })();
