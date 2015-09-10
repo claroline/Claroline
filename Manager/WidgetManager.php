@@ -126,7 +126,7 @@ class WidgetManager
      */
     public function getWidgetTagListBlogByWdgetInstance(WidgetInstance $widgetInstance)
     {
-        return $this->entityManager ->getRepository('IcapBlogBundle:WidgetTagListBlog')->findOneByWidgetInstance($widgetInstance);
+        return $this->entityManager->getRepository('IcapBlogBundle:WidgetTagListBlog')->findOneByWidgetInstance($widgetInstance);
     }
 
     /**
