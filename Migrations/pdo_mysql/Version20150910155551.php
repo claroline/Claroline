@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  *
  * Generation date: 2015/09/03 03:55:53
  */
-class Version20150903155551 extends AbstractMigration
+class Version20150910155551 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
