@@ -1,0 +1,43 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'analytics_resources' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style type="text/css">
+        span.small {font-size: 14px;}
+    </style>
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'admin_analytics'|trans({}, 'platform'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'admin_analytics'|trans({}, 'platform') }}</h3>
+    </div>
+    <div class="panel-body" id="workspace-list-div">
+        {% include 'ClarolineCoreBundle:Administration\\Analytics:analytics_navbar.html.twig' with {'item_details_page': true} %}
+        <p>
+            <a href="{{ path('claro_admin_analytics_resources') }}" title="{{ 'analytics_return_platform_content'|trans({}, 'platform') }}">
+                <span class="fa fa-reply"></span>
+                {{ 'back'|trans({}, 'platform') }}
+            </a>
+        </p>
+
+        {% block itemContent %}{% endblock %}
+    </div>
+{% endblock %}

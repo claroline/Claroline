@@ -814,7 +814,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $_data
             );
         }
-
+        
         if ($setParentNull) $parentId = null;
 
         $resElement = array('item' => array(

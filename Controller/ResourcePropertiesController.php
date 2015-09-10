@@ -180,6 +180,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('EDIT', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
+        $wasPublished = $node->isPublished();
         $form = $this->formFactory->create(
             new ResourcePropertiesType($creatorUsername),
             $node
@@ -205,10 +206,17 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
+            if ($node->isPublished() !== $wasPublished) {
+                $eventName = "publication_change_{$node->getResourceType()->getName()}";
+                $resource = $this->resourceManager->getResourceFromNode($node);
+                $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
+            }
+
             $arrayNode = $this->resourceManager->toArray($node, $this->tokenStorage->getToken());
 
             return new JsonResponse($arrayNode);
         }
+
         $isDir = $node->getResourceType()->getName() === 'directory';
 
         return array(

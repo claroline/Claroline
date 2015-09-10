@@ -27,6 +27,9 @@ class LoadWidgetData implements RequiredFixture
      */
     public function load(ObjectManager $manager)
     {
+        $roles = $manager->getRepository('ClarolineCoreBundle:Role')
+            ->findAllPlatformRoles();
+
         //name, isConfigurable, isDisplayableInDesktop, isDisplayableInWorkspace
         $items = array(
             array('core_resource_logger', true, true, true),
@@ -42,6 +45,10 @@ class LoadWidgetData implements RequiredFixture
             $widget->setExportable(false);
             $widget->setDisplayableInDesktop($item[2]);
             $widget->setDisplayableInWorkspace($item[3]);
+
+            foreach ($roles as $role) {
+                $widget->addRole($role);
+            }
             $manager->persist($widget);
         }
     }
