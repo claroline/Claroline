@@ -89,24 +89,6 @@ class ExerciseType extends AbstractType
                     '2' => 'at_the_end_of_assessment'
                 ]
             ])
-            ->add('start_date', 'datetime', [
-                'widget' => 'single_text',
-                'input' => 'datetime',
-                'format' => 'dd/MM/yyyy H:mm:ss',
-                'attr' => ['data-format' => 'dd/MM/yyyy H:mm:ss'],
-                'label' => 'start_date',
-            ])
-            ->add('useDateEnd', 'checkbox', [
-                'required' => false,
-                'label' => 'use_date_end'
-            ])
-            ->add('end_date', 'datetime', [
-                'widget' => 'single_text',
-                'input' => 'datetime',
-                'format' => 'dd/MM/yyyy H:mm:ss',
-                'attr' => ['data-format' => 'dd/MM/yyyy H:mm:ss'],
-                'label' => 'end_date',
-            ])
             ->add('dispButtonInterrupt', 'checkbox', [
                 'required' => false,
                 'label' => 'test_exit'

@@ -72,7 +72,6 @@ class ExerciseHandler
     private function onSuccess(Exercise $exercise)
     {
         // \ pour instancier un objet du namespace global et non pas de l'actuel
-        $exercise->setDateCreate(new \Datetime());
         $exercise->setNbQuestionPage(1);
         $this->em->persist($exercise);
         $this->em->flush();

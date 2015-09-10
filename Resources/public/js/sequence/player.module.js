@@ -7,7 +7,9 @@
         'ui.bootstrap',
         'ui.tinymce',
         'ui.translation',
-        'ui.resourcePicker',        
+        'ui.resourcePicker',
+        'ngBootbox',
+        'Common',
         'Sequence'
     ])
     .filter(
