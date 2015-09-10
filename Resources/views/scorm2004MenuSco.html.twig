@@ -80,9 +80,13 @@
 
         $('#menu-display-btn').on('click', function () {
             if ($('#menu-box').hasClass('hidden')) {
+                $('#content-box').removeClass('col-md-12');
+                $('#content-box').addClass('col-md-9');
                 $('#menu-box').removeClass('hidden');
             } else {
                 $('#menu-box').addClass('hidden');
+                $('#content-box').removeClass('col-md-9');
+                $('#content-box').addClass('col-md-12');
             }
         });
     </script>
@@ -114,7 +118,7 @@
                     <br>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div id="content-box" class="col-md-12">
                 <div class="full-size">
                     <div id="twig-scorm-data"
                          data-sco-id="{{scoTracking.getSco().getId()}}">
