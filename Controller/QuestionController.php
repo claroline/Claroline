@@ -4,9 +4,6 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
-
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\InteractionMatching;
@@ -59,6 +56,7 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $services = $this->container->get('ujm.exo_question');
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
@@ -138,7 +136,7 @@ class QuestionController extends Controller
             }
         }
 
-        $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
+        $doublePagination = $paginationSer->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
 
         $interactionsPager = $doublePagination[0];
         $pagerfantaMy = $doublePagination[1];
@@ -498,6 +496,7 @@ class QuestionController extends Controller
     public function searchAction()
     {
         $request = $this->get('request');
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         $max = 10; // Max per page
 
@@ -509,7 +508,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
 
-            $pagination = $this->pagination($userList, $max, $page);
+            $pagination = $paginationSer->pagination($userList, $max, $page);
 
             $userListPager = $pagination[0];
             $pagerUserSearch = $pagination[1];
@@ -562,7 +561,8 @@ class QuestionController extends Controller
         $allowToDel = array();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
-
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
         $repository = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Document');
@@ -586,7 +586,7 @@ class QuestionController extends Controller
 
         $page = $request->query->get('page', 1); // Which page
 
-        $pagination = $this->pagination($listDoc, $max, $page);
+        $pagination = $paginationSer->pagination($listDoc, $max, $page);
 
         $listDocPager = $pagination[0];
         $pagerDoc= $pagination[1];
@@ -736,6 +736,7 @@ class QuestionController extends Controller
     {
         $request = $this->container->get('request');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         $max = 10; // Max per page
 
@@ -750,7 +751,7 @@ class QuestionController extends Controller
 
             $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
-            $pagination = $this->pagination($listDocSort, $max, $page);
+            $pagination = $paginationSer->pagination($listDocSort, $max, $page);
 
             $listDocSortPager = $pagination[0];
             $pagerSortDoc = $pagination[1];
@@ -803,7 +804,8 @@ class QuestionController extends Controller
     {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $request = $this->get('request');
-
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
         $max = 10; // Max per page
 
         $labelToFind = $request->query->get('labelToFind');
@@ -813,7 +815,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
 
-            $pagination = $this->pagination($listFindDoc, $max, $page);
+            $pagination = $paginationSer->pagination($listFindDoc, $max, $page);
 
             $listFindDocPager = $pagination[0];
             $pagerFindDoc = $pagination[1];
@@ -954,6 +956,8 @@ class QuestionController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
         $listInteractions = array();
         $questionWithResponse = array();
         $alreadyShared = array();
@@ -1041,7 +1045,7 @@ class QuestionController extends Controller
                         $max = count($listInteractions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
@@ -1066,7 +1070,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1186,7 +1190,7 @@ class QuestionController extends Controller
                         $max = count($listInteractions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
@@ -1211,7 +1215,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1371,7 +1375,7 @@ class QuestionController extends Controller
                         $max = count($listInteractions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listInteractions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
@@ -1396,7 +1400,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1680,97 +1684,4 @@ class QuestionController extends Controller
         }
 
     }
-
-    /**
-     * To paginate table
-     *
-     * @access private
-     *
-     * @param Doctrine Collection $entityToPaginate
-     * @param integer $max number max items by page
-     * @param integer $page number of actual page
-     *
-     * @return array
-     */
-    private function pagination($entityToPaginate, $max, $page)
-    {
-        $adapter = new ArrayAdapter($entityToPaginate);
-        $pager = new Pagerfanta($adapter);
-
-        try {
-            $entityPaginated = $pager
-                ->setMaxPerPage($max)
-                ->setCurrentPage($page)
-                ->getCurrentPageResults();
-        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-            throw $this->createNotFoundException("Cette page n'existe pas.");
-        }
-
-        $pagination[0] = $entityPaginated;
-        $pagination[1] = $pager;
-
-        return $pagination;
-    }
-
-    /**
-     * To paginate two tables on one page
-     *
-     * @access public
-     *
-     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
-     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
-     * @param integer $max number max items per page
-     * @param integer $pageOne set new page for the first pagination
-     * @param integer $pageTwo set new page for the second pagination
-     * @param integer $pageNowOne set current page for the first pagination
-     * @param integer $pageNowTwo set current page for the second pagination
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function doublePaginationWithIf($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo, $pageNowOne, $pageNowTwo)
-    {
-        $adapterOne = new ArrayAdapter($entityToPaginateOne);
-        $pagerOne = new Pagerfanta($adapterOne);
-
-        $adapterTwo = new ArrayAdapter($entityToPaginateTwo);
-        $pagerTwo = new Pagerfanta($adapterTwo);
-
-        try {
-            if ($pageNowOne == 0) {
-                $entityPaginatedOne = $pagerOne
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageOne)
-                    ->getCurrentPageResults();
-            } else {
-                $entityPaginatedOne = $pagerOne
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNowOne)
-                    ->getCurrentPageResults();
-            }
-
-            if ($pageNowTwo == 0) {
-                $entityPaginatedTwo = $pagerTwo
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageTwo)
-                    ->getCurrentPageResults();
-            } else {
-                $entityPaginatedTwo = $pagerTwo
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNowTwo)
-                    ->getCurrentPageResults();
-            }
-        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-            throw $this->createNotFoundException("Cette page n'existe pas.");
-        }
-
-        $doublePagination[0] = $entityPaginatedOne;
-        $doublePagination[1] = $pagerOne;
-
-        $doublePagination[2] = $entityPaginatedTwo;
-        $doublePagination[3] = $pagerTwo;
-
-        return $doublePagination;
-    }
-
-
 }

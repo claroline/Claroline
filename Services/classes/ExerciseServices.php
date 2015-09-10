@@ -11,6 +11,7 @@ use \Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
@@ -318,5 +319,72 @@ class ExerciseServices
 
         return $uid;
     }
+    
+     /**
+     * To finish an assessment
+     *
+     * @access public
+     *
+     * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+     public function finishExercise(SessionInterface $session)
+    {
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
+        $paper = $this->om->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
+        $paper->setInterupt(0);
+        $paper->setEnd(new \Datetime());
+        $this->om>persist($paper);
+        $this->om->flush();
 
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
+
+        $session->remove('penalties');
+
+        return $paper;
+    }
+    
+    /**
+     * To force finish an assessment
+     *
+     * @access public
+     *
+     * @ParamConverter("Paper", class="UJMExoBundle:Paper") $paperToClose
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+    public function forceFinishExercise(Paper $paperToClose)
+    {
+        /** @var \UJM\ExoBundle\Entity\Paper $paper */
+        $paper = $paperToClose;
+        $paper->setInterupt(0);
+        $paper->setEnd(new \Datetime());
+        $this->om->persist($paper);
+        $this->om->flush();
+
+        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
+
+        return $paper;
+    }
+
+    /**
+     * To interupt an assessment
+     *
+     * @access public
+     * 
+     * @param SessionInterface session
+     *
+     * @return \UJM\ExoBundle\Entity\Paper
+     */
+    public function interuptExercise(SessionInterface $session)
+    {     
+        $paper = $this->om->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
+        $paper->setInterupt(1);
+        $this->om->persist($paper);
+        $this->om->flush();
+
+        return $paper;
+    }
+    
 }

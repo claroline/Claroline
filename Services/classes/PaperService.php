@@ -10,6 +10,7 @@ namespace UJM\ExoBundle\Services\classes;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use \Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class PaperService {
 
@@ -246,5 +247,81 @@ class PaperService {
 
         return $orderFormated;
     }
+    
+    /**
+     * To create new paper
+     *
+     * @access public
+     *
+     * @param integer $id id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     *
+     * @return array
+     */
+    public function prepareInteractionsPaper($id, Exercise $exercise) {
+        $orderInter = '';
+        $tabOrderInter = array();
+        $tab = array();
 
+        $interactions = $this->doctrine->getManager()
+                ->getRepository('UJMExoBundle:Interaction')
+                ->getExerciseInteraction(
+                $this->doctrine->getManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion()
+        );
+
+        foreach ($interactions as $interaction) {
+            $orderInter = $orderInter . $interaction->getId() . ';';
+            $tabOrderInter[] = $interaction->getId();
+        }
+
+        $tab['interactions'] = $interactions;
+        $tab['orderInter'] = $orderInter;
+        $tab['tabOrderInter'] = $tabOrderInter;
+
+        return $tab;
+    }
+    
+        /**
+     * For the navigation in a paper
+     * Finds and displays the question selectionned by the User in an assesment
+     *
+     * @access public
+     *
+     * @param integer $numQuestionToDisplayed position of the question in the paper
+     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+     * @param String $typeInterToDisplayed
+     * @param boolean $dispButtonInterrupt to display or no the button "Interrupt"
+     * @param integer $maxAttempsAllowed the number of max attemps allowed for the exercise
+     * @param Claroline workspace $workspace
+     * @ParamConverter("Paper", class="UJMExoBundle:Paper")
+     * @param SessionInterface session
+     *
+     * @return Array
+     */
+    public function displayQuestion(
+        $numQuestionToDisplayed, $interactionToDisplay,
+        $typeInterToDisplayed, $dispButtonInterrupt, $maxAttempsAllowed,
+        $workspace,Paper $paper,SessionInterface $session
+    )
+    {
+        $tabOrderInter = $session->get('tabOrderInter');
+
+        $interSer       = $this->container->get('ujm.exo_' .  $interactionToDisplay->getType());
+        $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
+        $responseGiven  = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
+
+        $array['workspace']              = $workspace;
+        $array['tabOrderInter']          = $tabOrderInter;
+        $array['interactionToDisplayed'] = $interactionToDisplayed;
+        $array['interactionType']        = $typeInterToDisplayed;
+        $array['numQ']                   = $numQuestionToDisplayed;
+        $array['paper']                  = $session->get('paper');
+        $array['numAttempt']             = $paper->getNumPaper();
+        $array['response']               = $responseGiven;
+        $array['dispButtonInterrupt']    = $dispButtonInterrupt;
+        $array['maxAttempsAllowed']      = $maxAttempsAllowed;
+        $array['_resource']              = $paper->getExercise();
+
+        return $array;
+    }
 }
