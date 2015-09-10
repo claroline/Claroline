@@ -33,6 +33,9 @@ class DropController extends DropzoneBaseController
 {
     /**
      * @Route(
+     *      "/drop/{resourceId}/user/{userId}", name="innova_collecticiel_drop_switch_admin", requirements={"resourceId" = "\d+", "userId" = "\d+"}
+     * )
+     * @Route(
      *      "/{resourceId}/drop/user/{userId}", name="innova_collecticiel_drop_switch", requirements={"resourceId" = "\d+", "userId" = "\d+"}
      * )
      * @Route(
@@ -110,7 +113,7 @@ class DropController extends DropzoneBaseController
         $userNbTextToRead = array();
 
         $activeRoute = $this->getRequest()->attributes->get('_route');
-
+        
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,

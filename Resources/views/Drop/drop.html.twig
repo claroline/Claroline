@@ -77,12 +77,21 @@
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
         {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova) }}
 
-        {# Pour se positionner sur l'onglet par défaut ou sur l'onglet du type de document qui vient d'être créé. InnovaERV #}
-        {% set lastType = "file" %}
-        {% if activeRoute == "innova_collecticiel_drop_switch" %}
-            {% for document in drop.documents %}
-                {% set lastType = document.type %}
-            {% endfor %}
+        {% if adminInnova %}
+            {% set lastType = "file" %}
+            {% if activeRoute == "innova_collecticiel_drop_switch" %}
+                    {% for document in drop.documents %}
+                        {% set lastType = document.type %}
+                    {% endfor %}
+            {% endif %}
+        {% else %}
+            {# Pour se positionner sur l'onglet par défaut ou sur l'onglet du type de document qui vient d'être créé. InnovaERV #}
+            {% set lastType = "file" %}
+            {% if activeRoute == "innova_collecticiel_drop_switch" %}
+                    {% for document in drop.documents %}
+                        {% set lastType = document.type %}
+                    {% endfor %}
+            {% endif %}
         {% endif %}
 
         <br/>
