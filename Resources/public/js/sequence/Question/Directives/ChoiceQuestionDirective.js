@@ -12,12 +12,13 @@
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Question/Partials/choice.question.html',
                 scope: {
                     step: '=',
-                    question: '=',
-                    selfRemove:"&"
+                    question: '='
                 },
                 link: function (scope, element, attr, choiceQuestionCtrl) {
                     console.log('choiceQuestion directive link method called');
                     choiceQuestionCtrl.setQuestion(scope.question);
+                    choiceQuestionCtrl.initAnswers();
+                    choiceQuestionCtrl.initChoicesOrder();
                 }
             };
         }

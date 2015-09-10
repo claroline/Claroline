@@ -165,17 +165,7 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmmark }
             
-    ujm.listener.sequence_listener:
-        class: UJM\ExoBundle\Listener\Resource\SequenceListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_form_ujm_sequence, method: onCreateForm }
-            - { name: kernel.event_listener, event: create_ujm_sequence, method: onCreate }
-            - { name: kernel.event_listener, event: open_ujm_sequence, method: onOpen }
-            - { name: kernel.event_listener, event: delete_ujm_sequence, method: onDelete }
-            - { name: kernel.event_listener, event: copy_ujm_sequence, method: onCopy }
-            - { name: kernel.event_listener, event: ujm_sequence_administrate_ujm_sequence, method: onAdministrate }
+    
             
     ujm_exo_bundle.manager.sequence:
         class: UJM\ExoBundle\Manager\Sequence\SequenceManager 

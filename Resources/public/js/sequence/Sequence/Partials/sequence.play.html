@@ -26,10 +26,17 @@
             </div>
         </div>
         <hr/>
-        <!-- steps -->
         <div class="row">
             <div class="col-md-12">
-                 <step-show class="step-container" data-steps="sequencePlayCtrl.sequence.steps"></step-show>
+                <step-show class="step-container" data-step="sequencePlayCtrl.getCurrentStep()"></step-show>
+            </div>
+        </div>
+        <hr/>
+        <div class="row pull-right">
+            <div class="col-md-12">
+                <button role="button" type="button" ng-bootbox-confirm="Alert message!" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                    {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
+                </button>
             </div>
         </div>
     </div>

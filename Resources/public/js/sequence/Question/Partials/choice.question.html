@@ -1,79 +1,14 @@
 <div class="panel panel-primary">
     <div class="panel-heading clearfix">
         <h5 class="panel-title pull-left">{{question.title}}</h5>
+        <!--
         <div class="btn-group pull-right">
             <button type="button" role="button" class="btn btn-default fa" data-toggle="tooltip" data-container="body" data-ng-class="{' fa-arrow-circle-down':choiceQuestionCtrl.isCollapsed, ' fa-arrow-circle-up':!choiceQuestionCtrl.isCollapsed}" data-ng-click="choiceQuestionCtrl.isCollapsed = !choiceQuestionCtrl.isCollapsed" title="{{ 'question_panel_hide'|trans:{}:'ujm_sequence' }}"></button>
             <button type="button" role="button" class="btn btn-danger fa fa-trash" data-toggle="tooltip" data-container="body" data-ng-click="selfRemove()" title="{{ 'question_remove'|trans:{}:'ujm_sequence' }}"></button>
         </div>
+        -->
     </div>
     <div class="panel-body" ng-hide="choiceQuestionCtrl.isCollapsed">
-        <!-- Question configuration row -->
-        <div class="form-inline question-row row-bordered">          
-            <div class="checkbox">                
-                <label>
-                    <input type="checkbox" data-ng-model="choiceQuestionCtrl.question.multiple">  {{ 'question_allow_multiple_choice'|trans:{}:'ujm_sequence' }}
-                </label>
-            </div>           
-            <div class="checkbox">                
-                <label>
-                    <input type="checkbox" data-ng-model="choiceQuestionCtrl.question.random"> {{ 'question_randomize_choices'|trans:{}:'ujm_sequence' }}
-                </label>
-            </div>
-        </div>
-        <!-- Question meta row -->
-        <div data-ng-if="choiceQuestionCtrl.question.meta" class="form-inline question-row row-bordered">
-            <!-- meta authors -->
-            <div data-ng-repeat="(metaKey, metaValue) in choiceQuestionCtrl.question.meta">                
-                <div data-ng-if="metaKey === 'authors'">
-                    <strong>{{ 'meta_authors'|trans:{}:'ujm_sequence' }}:</strong>
-                    <ul>
-                        <li data-ng-repeat="author in metaValue"> 
-                            <span data-ng-if="author.name"> {{ 'meta_author_name'|trans:{}:'ujm_sequence' }}: {{author.name}}</span>
-                            <span data-ng-if="author.status"> - {{ 'meta_author_status'|trans:{}:'ujm_sequence' }}: {{author.status}}</span>
-                            <span data-ng-if="author.email"> - {{ 'meta_author_mail'|trans:{}:'ujm_sequence' }}: {{author.email}}</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <!-- meta others -->
-            <div data-ng-if="choiceQuestionCtrl.questionHasOtherMeta()">
-                <strong>{{ 'meta_others'|trans:{}:'ujm_sequence' }}:</strong>
-                <ul>
-                    <li data-ng-repeat="(metaKey, metaValue) in choiceQuestionCtrl.question.meta" data-ng-if="metaKey !== 'authors'">
-                        <span data-ng-if="metaKey === 'license'"><strong>{{ 'meta_licence'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}</span>
-                        <span data-ng-if="metaKey === 'created'"><strong>{{ 'meta_created'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}</span>
-                        <span data-ng-if="metaKey === 'modified'"><strong>{{ 'meta_updated'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}</span>
-                        <span data-ng-if="metaKey === 'description'"><strong>{{ 'meta_description'|trans:{}:'ujm_sequence' }}:</strong> {{metaValue}}</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Question hints row -->
-        <div data-ng-if="choiceQuestionCtrl.question.hints" class="form-inline question-row row-bordered">
-            <div class="form-group">
-                <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
-                <ul>
-                    <li data-ng-repeat="hint in choiceQuestionCtrl.question.hints">
-                        Text: {{hint.text}}, Penalty: {{hint.penalty}}
-                    </li>  
-                </ul>
-            </div>
-        </div>
-        <!-- Question objects row -->
-        <div data-ng-if="choiceQuestionCtrl.question.objects" class="form-inline question-row row-bordered">
-            <div class="form-group">
-                <label>{{ 'question_objects'|trans:{}:'ujm_sequence' }}:</label>
-                <div data-ng-repeat="object in choiceQuestionCtrl.question.objects">
-                    <div data-ng-if="object.type === 'rich-text'" ng-bind-html="object.data"></div>
-                    <div data-ng-if="object.type === 'simple-text'">
-                        {{object.data}}
-                    </div>
-                    <div data-ng-if="object.type === 'web-image'">
-                        <img data-ng-src="{{object.url}}" />
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Question resources row -->
         <div data-ng-if="choiceQuestionCtrl.question.resources" class="form-inline question-row row-bordered">
             <div class="form-group">
@@ -88,32 +23,56 @@
         <!-- Question feedback row -->
         <div data-ng-if="choiceQuestionCtrl.question.feedback" class="question-row">
             <label><strong>{{ 'question_global_feedback'|trans:{}:'ujm_sequence' }}:</strong></label>
-            <p>{{choiceQuestionCtrl.question.feedback}}</p>
+            <div data-ng-bind-html="choiceQuestionCtrl.question.feedback"></div>
         </div>
         <!-- Question choices row -->
         <div data-ng-if="choiceQuestionCtrl.question.choices" class="question-row">
             <label><strong>{{ 'question_choices'|trans:{}:'ujm_sequence' }}:</strong></label>
             <div class="form-inline choice-item-col" data-ng-repeat="choice in choiceQuestionCtrl.question.choices">
                 <div data-ng-class="{'bordered' : !$last}">
+                    <!-- checkboxes / radiobuttons  -->
                     <div class="form-group">
                         <div class="checkbox">                
                             <label>
-                                <input data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.getSolution(choice.id).id ? 'checked':''" disabled name="multiple-choice" type="checkbox">
-                                <input data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-checked="choiceQuestionCtrl.getSolution(choice.id).id ? 'checked':''" disabled name="unique-choice" type="radio">
+                                <input data-ng-if="choiceQuestionCtrl.question.multiple" data-ng-click="choiceQuestionCtrl.updateQuestionChoices()" data-ng-model="choiceQuestionCtrl.answer[choice.id]" value="{{choice.id}}" name="multiple-choice" type="checkbox">
+                                <input data-ng-if="!choiceQuestionCtrl.question.multiple" data-ng-click="choiceQuestionCtrl.updateQuestionChoices()" data-ng-model="choiceQuestionCtrl.answer" value="{{choice.id}}" name="unique-choice"  type="radio">
                             </label>
                         </div>
                     </div>
+                    <!-- content for each checkbox / radiobutton -->
                     <div class="form-group">
-                        <img data-ng-if="choice.type == 'encoded-image'" data-ng-src="data:{{choice.mimeType}};{{choice.encoding}}, {{choice.data}}"/>
-                        <img data-ng-if="choice.type == 'web-image'" data-ng-src="{{choice.url}}"/>
+                        <img data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'encoded-image'" data-ng-src="data:{{choice.type}};{{choice.encoding}}, {{choice.data}}"/>
+                        <img data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'web-image'" data-ng-src="{{choice.url}}"/>
+                        <div data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'simple-text'">
+                            {{choice.data}}
+                        </div>
+                        <div data-ng-if="choiceQuestionCtrl.getChoiceSimpleType(choice) == 'html-text'" data-ng-bind-html="choice.data | unsafe">
+
+                        </div>
                     </div>
+                    <!--
                     <div class="form-group"> 
                         <label>{{ 'question_choice_score'|trans:{}:'ujm_sequence' }}:</label>
                         <input data-ng-if="choiceQuestionCtrl.getSolution(choice.id)" type="text" data-ng-model="choiceQuestionCtrl.getSolution(choice.id).score" class="form-control score-input">
                         <span data-ng-if="!choiceQuestionCtrl.getSolution(choice.id)">0</span>
                     </div>
+                    -->
                 </div>
             </div>
         </div>
+        <hr/>
+        <!-- Question hints row -->
+        <div data-ng-if="choiceQuestionCtrl.question.hints" class="form-inline question-row row-bordered">
+            <div class="form-group">
+                <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
+
+                <div data-ng-repeat="hint in choiceQuestionCtrl.question.hints">
+                    <button type="button" role="button" class="btn btn-default fa fa-eye" title="voir l'indice" id="{{hint.id}}" ng-bootbox-confirm="sur ?? ça fera une pénalité de : {{hint.penalty}}" ng-bootbox-confirm-action="choiceQuestionCtrl.showHint(hint)"> Indice {{$index + 1}}</button>
+                    <span style="display: none;">{{hint.text}}</span>
+                </div>  
+
+            </div>
+        </div>
+
     </div>
 </div>
