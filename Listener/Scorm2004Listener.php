@@ -265,6 +265,7 @@ class Scorm2004Listener
     public function onDownload(DownloadResourceEvent $event)
     {
         $event->setItem($this->filePath . $event->getResource()->getHashName());
+        $event->setExtension('zip');
         $event->stopPropagation();
     }
 
