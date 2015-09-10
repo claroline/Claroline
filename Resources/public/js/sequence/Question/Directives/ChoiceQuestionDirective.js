@@ -17,9 +17,8 @@
                 link: function (scope, element, attr, choiceQuestionCtrl) {
                     console.log('choiceQuestion directive link method called');
                     choiceQuestionCtrl.setQuestion(scope.question);
-                    // init answers with answers[answer.id} = false;
                     choiceQuestionCtrl.initAnswers();
-                    console.log(scope.question);
+                    choiceQuestionCtrl.initChoicesOrder();
                 }
             };
         }

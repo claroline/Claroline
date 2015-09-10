@@ -8,8 +8,7 @@
 
 {% block content %} 
     <div class="ujm-sequence-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
-        <sequence-play class="sequence-container" data-sequence="{{ data }}"></sequence-play>
-        <step-show class="step-container" data-sequence="{{ data }}"></step-show>
+        <sequence-play class="player-container" data-sequence="{{ data }}"></sequence-play>       
     </div>
 {% endblock %}
 
@@ -21,6 +20,7 @@
 
 
     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm_sequence_show.js'
+
         
         '@UJMExoBundle/Resources/public/js/sequence/Common/*'
         '@UJMExoBundle/Resources/public/js/sequence/Common/Services/*'

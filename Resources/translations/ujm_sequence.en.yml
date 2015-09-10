@@ -51,5 +51,6 @@ sequence_save: Save sequence
 sequence_step_panel_title: Steps
 sequence_select_available_question: Select a question
 sequence_step_add_question: Add question
+sequence_attempts_infos: You have %1% attempt(s) - Attempt N° %2% / %1%
 step_question_shuffle: Shuffle question order for this step
 

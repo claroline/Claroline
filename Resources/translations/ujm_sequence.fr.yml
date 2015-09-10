@@ -15,7 +15,7 @@ meta_max_attempts: Nombre d'essais maximum
 
 
 # q
-question_hints: Aides
+question_hints: Indices
 question_objects: Objets
 question_global_feedback: Retour global
 question_resources: Ressources
@@ -52,4 +52,5 @@ sequence_save: Sauvegarder la séquence
 sequence_step_panel_title: Etapes
 sequence_select_available_question: Sélectionner une question
 sequence_step_add_question: Ajouter une question
+sequence_attempts_infos: Vous avez le droit à %1% essai(s) - Essais N° %2% / %1%
 step_question_shuffle: Ordre des questions aléatoire pour cette étape

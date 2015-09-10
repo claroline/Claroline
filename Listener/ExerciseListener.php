@@ -112,10 +112,20 @@ class ExerciseListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $subRequest = $this->container->get('request_stack')
+       /* $subRequest = $this->container->get('request_stack')
             ->getCurrentRequest()
             ->duplicate([], null, [
                 '_controller' => 'UJMExoBundle:Sequence\Sequence:play',
+                'id' => $event->getResource()->getId()
+            ]);
+        $response = $this->container->get('http_kernel')
+            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
+        $event->stopPropagation();*/
+         $subRequest = $this->container->get('request_stack')
+            ->getCurrentRequest()
+            ->duplicate([], null, [
+                '_controller' => 'UJMExoBundle:Exercise:open',
                 'id' => $event->getResource()->getId()
             ]);
         $response = $this->container->get('http_kernel')

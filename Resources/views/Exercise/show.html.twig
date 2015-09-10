@@ -106,16 +106,16 @@
                                 </td>
                             </tr>
                             {#---not operational---#}
-                                {#<tr class="hiddencells">
-                                <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
-                                <td class="classic">
-                                    {% if exercise.keepSameQuestion == 0 %}
-                                        <i class="fa fa-times-circle"></i>
-                                    {% else %}
-                                        <i class="fa fa-check-circle"></i>
-                                    {% endif %}
-                                </td>
-                            </tr>#}
+                            {#<tr class="hiddencells">
+                            <th class="classic">{{ 'keep_same_question' | trans({}, 'ujm_exo') }}</th>
+                            <td class="classic">
+                                {% if exercise.keepSameQuestion == 0 %}
+                                    <i class="fa fa-times-circle"></i>
+                                {% else %}
+                                    <i class="fa fa-check-circle"></i>
+                                {% endif %}
+                            </td>
+                        </tr>#}
                             <tr class="hiddencells">
                                 <th class="classic">{{ 'creation_date' | trans({}, 'ujm_exo') }}</th>
                                 <td class="classic">{{ resource.getCreationDate()|date('d/m/Y \\- H\\hi\\ms\\s') }}</td>
@@ -208,6 +208,11 @@
             </div>
             <div class="text-center panel-footer">
                 {% if allowedToCompose and nbQuestion > 0 %}
+                    <a class="btn btn-primary" href="{{ path('ujm_exercise_play', { 'id': exercise.id }) }}">
+                        <i class="fa fa-check-square-o"></i> Jouer
+                    </a>
+                {% endif %}
+                {% if allowedToCompose and nbQuestion > 0 %}
                     {% if nbUserPaper == 0 %}
                         <a class="btn btn-primary" href="{{ path('ujm_exercise_paper', { 'id': exercise.id }) }}">
                             <i class="fa fa-check-square-o"></i> {{ 'compose' | trans({}, 'ujm_exo') }}
@@ -256,19 +261,19 @@
     <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/exercise.js') }}"></script>
 
     <script language="JavaScript">
-        $('#less').css({"display" : "none"});
+        $('#less').css({"display": "none"});
         lessInformation();
 
         function moreInformation() {
             $('.hiddencells').show();
-            $('#less').css({"display" : "block"});
-            $('#more').css({"display" : "none"});
+            $('#less').css({"display": "block"});
+            $('#more').css({"display": "none"});
         }
 
         function lessInformation() {
             $('.hiddencells').hide();
-            $('#more').css({"display" : "block"});
-            $('#less').css({"display" : "none"});
+            $('#more').css({"display": "block"});
+            $('#less').css({"display": "none"});
         }
     </script>
 {% endblock %}

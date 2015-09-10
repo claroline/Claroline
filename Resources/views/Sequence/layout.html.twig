@@ -43,7 +43,15 @@
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
+    
+    {# bootbox #}
+     {% javascripts debug=false filter='jsmin' output='vendor/ujmexo/ujm-exo-libs.js'
+        '@UJMExoBundle/Resources/public/js/libs/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/*'
+        '@UJMExoBundle/Resources/public/js/libs/angular-libs/bootbox/*'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
     
 
     {# Set some vars needed by Angular parts #}

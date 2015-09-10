@@ -8,10 +8,28 @@
         '$filter',
         '$q',
         function StepService($http, $filter, $q) {
+
             this.sequence = {};
-            this.steps = {};
-            this.currentStep = {};
+            this.currentQuestion = {};
+            this.currentAnswer = {};
+            this.currentPenalty = 0;
+
             return {
+                /**
+                 * Set the current sequence
+                 * Used for share data between directives
+                 * @param {type} sequence
+                 * @returns {undefined}
+                 */
+                setSequence: function (sequence) {
+                    this.sequence = sequence;
+                },
+                getSequence: function () {
+                    return this.sequence;
+                },
+                getSequenceMeta: function () {
+                    return this.sequence.meta;
+                },
                 /**
                  * @param {object} object a javascript object with type property
                  * @returns null or string
@@ -50,47 +68,17 @@
                     }
                     return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
                 },
-                /**
-                 * set the sequence
-                 * @param {object} sequence
-                 */
-                setSequence: function (sequence) {
-                    this.sequence = sequence;
-                    return this.sequence;
+                setCurrentQuestionAndAnswer: function (answer, question, penalty) {
+                    this.currentPenalty = penalty;
+                    this.currentAnswer = answer;
+                    this.currentQuestion = question;
                 },
-                /**
-                 * get the sequence
-                 * @returns {object}
-                 */
-                getSequence: function () {
-                    return this.sequence;
-                },
-                setSteps: function () {
-                    this.steps = this.sequence.steps;
-                    return this.steps;
-                },
-                getSteps:function(){
-                    return this.steps;
-                },
-                /**
-                 * set the current step
-                 * @param {object} step
-                 */
-                setCurrentStep: function (step) {
-                    this.currentStep = step;
-                    return this.currentStep;
-                },
-                /**
-                 * get the current step
-                 * @returns {object}
-                 */
-                getCurrentStep: function () {
-                    return this.currentStep;
-                },
-                validateStep: function (choices) {
-                    // check if answers are ok
-                    // check other conditions (when conditional sequence will be on)
-                    // return points ?
+                getStudentData: function () {
+                    return{
+                        penalty: this.currentPenalty,
+                        answer: this.currentAnswer,
+                        question: this.currentQuestion
+                    };
                 }
             };
         }

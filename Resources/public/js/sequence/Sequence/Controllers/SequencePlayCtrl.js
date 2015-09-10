@@ -7,8 +7,12 @@
         function (SequenceService, CommonService) {
 
             this.sequence = {};
+            this.currentStep = {};
+            this.nbAttempts = 1;
+            
             this.setSequence = function (sequence) {
-                this.sequence = CommonService.setSequence(sequence);
+                this.sequence = sequence;
+                CommonService.setSequence(sequence);
             };
 
             this.getSequence = function () {
@@ -19,10 +23,67 @@
              * Check if the question has meta like created / licence / description...
              */
             this.questionHasOtherMeta = function () {
-                
                 return CommonService.objectHasOtherMeta(this.sequence);
-                //console.log(this.sequence.meta);
-                //return this.sequence.meta.licence || this.sequence.meta.created || this.sequence.meta.modified || (this.sequence.meta.description && this.sequence.meta.description != '');
+            };
+
+            this.setSteps = function () {
+                this.steps = this.sequence.steps;
+            };
+            
+            this.getSteps = function () {
+                return this.sequence.steps;
+            };
+
+            /**
+             * 
+             * @returns {undefined}
+             */
+            this.getNbStep = function () {
+                return this.sequence.steps.length;
+            };
+
+            this.setCurrentStep = function (index) {
+                this.currentStep = this.sequence.steps[index];
+            };
+            this.getCurrentStep = function () {
+                return this.currentStep;
+            };
+            
+
+            this.getCurrentStepIndex = function () {
+                var index = this.sequence.steps.indexOf(this.currentStep);
+                return  index + 1;
+            };
+
+            this.setNbAttempts = function (nb) {
+                this.nbAttempts = nb;
+                //return CommonService.setNbAttempts(nb);
+            };
+
+            this.getNbAttempts = function () {
+                return this.nbAttempts;
+                //return CommonService.getNbAttempts();
+            };
+            
+            /**
+             * Validate the current step after confirm
+             * If next step get next step
+             * @returns {undefined}
+             */
+            this.validateStep = function () {
+                console.log('youpi');
+                var data = CommonService.getStudentData();
+                console.log('student data are below');
+                console.log(data);
+                /*
+                var index = this.steps.indexOf(this.currentStep);
+                
+                var newIndex = index + 1;
+                if (this.steps[newIndex]) {
+                    this.setCurrentStep(this.steps[newIndex]);
+                } else {
+                    this.setCurrentStep(this.steps[0]);
+                }*/
             };
         }
     ]);

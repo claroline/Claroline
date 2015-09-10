@@ -1,38 +1,23 @@
 <div class="row">
     <div class="col-md-12">
-        <div data-ng-if="stepShowCtrl.stepHasQuestions()">
-            <div class="step-container" data-ng-repeat="item in stepShowCtrl.currentStep.items">
-                <!-- switch on item type -->
-                <div data-ng-switch="item.type">
-                    <div data-ng-switch-when="application/x.choice+json">                   
-                        <choice-question data-step="stepShowCtrl.currentStep" data-question="item"></choice-question>
-                    </div>
-                    <!--
-                    <div data-ng-switch-when="application/x.match+json">
-                        <match-question data-step="stepShowCtrl.currentStep" data-question="item"></match-question>
-                    </div>
-                    <div data-ng-switch-when="application/x.sort+json">
-                        <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
-                    </div>
-                    <div data-ng-switch-when="application/x.cloze+json">
-                        <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
-                    </div> 
-                    -->
+        <div class="step-container" data-ng-repeat="item in stepShowCtrl.currentStep.items">
+            <!-- switch on item type -->
+            <div data-ng-switch="item.type">
+                <div data-ng-switch-when="application/x.choice+json">                   
+                    <choice-question data-step="stepShowCtrl.currentStep" data-question="item"></choice-question>
                 </div>
-                <!-- item title  -->
-
-            </div>
-            <hr/>
-            <div class="row pull-right">
-                <div class="col-md-12">
-                    <button role="button" type="button" data-ng-click="" class="btn btn-default">
-                        {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
-                    </button>
+                <!--
+                <div data-ng-switch-when="application/x.match+json">
+                    <match-question data-step="stepShowCtrl.currentStep" data-question="item"></match-question>
                 </div>
+                <div data-ng-switch-when="application/x.sort+json">
+                    <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
+                </div>
+                <div data-ng-switch-when="application/x.cloze+json">
+                    <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
+                </div> 
+                -->
             </div>
-        </div>
-        <div data-ng-if="!stepShowCtrl.stepHasQuestions()">
-            <h3>Aucune question pour cette étape</h3>
         </div>
     </div>
 </div>
