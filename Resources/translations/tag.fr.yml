@@ -10,6 +10,8 @@ delete_tag: Supprimer le Tag
 no_tag: Aucun Tag
 remove_tag: Retirer le Tag
 remove_tag_from_object_message: Êtes-vous sûr de vouloir retirer ce Tag de cet objet ?
+tag_action: Taguer
 tag_deletion: Suppression du Tag
 tag_deletion_message: Êtes-vous sûr de vouloir supprimer ce Tag ?
+tag_group: Taguer le groupe
 tag_resource: Taguer la ressource

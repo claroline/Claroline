@@ -11,7 +11,6 @@
 
 namespace Claroline\TagBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
@@ -140,8 +139,8 @@ class TagRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function findTagsByResource(
-        ResourceNode $resourceNode,
+    public function findTagsByObject(
+        $object,
         User $user = null,
         $withPlatform = false,
         $orderedBy = 'name',
@@ -200,10 +199,10 @@ class TagRepository extends EntityRepository
             $query = $this->_em->createQuery($dql);
             $query->setParameter('user', $user);
         }
-        $query->setParameter('objectId', $resourceNode->getId());
-        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $query->setParameter('objectId', $object->getId());
+        $objectClass = str_replace('Proxies\\__CG__\\', '', get_class($object));
+        $query->setParameter('objectClass', $objectClass);
 
         return $query->getResult();
-
     }
 }

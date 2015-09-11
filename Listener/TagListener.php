@@ -13,34 +13,47 @@ namespace Claroline\TagBundle\Listener;
 
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service
  */
 class TagListener
 {
+    private $httpKernel;
+    private $request;
+    private $router;
     private $tagManager;
+    private $translator;
 
     /**
     * @DI\InjectParams({
     *     "httpKernel"   = @DI\Inject("http_kernel"),
     *     "requestStack" = @DI\Inject("request_stack"),
-    *     "tagManager"   = @DI\Inject("claroline.manager.tag_manager")
+    *     "router"       = @DI\Inject("router"),
+    *     "tagManager"   = @DI\Inject("claroline.manager.tag_manager"),
+    *     "translator"   = @DI\Inject("translator")
     * })
     */
     public function __construct(
         HttpKernelInterface $httpKernel,
         RequestStack $requestStack,
-        TagManager $tagManager
+        UrlGeneratorInterface $router,
+        TagManager $tagManager,
+        TranslatorInterface $translator
     )
     {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
+        $this->router = $router;
         $this->tagManager = $tagManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -100,5 +113,28 @@ class TagListener
             ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("claroline_group_additional_action")
+     *
+     * @param \Claroline\CoreBundle\Menu\GroupAdditionalActionEvent $event
+     */
+    public function onGroupActionMenuRender(GroupAdditionalActionEvent $event)
+    {
+        $group = $event->getGroup();
+        $url = $this->router->generate(
+            'claro_tag_group_tag_form',
+            array('group' => $group->getId())
+        );
+
+        $menu = $event->getMenu();
+        $menu->addChild(
+            $this->translator->trans('tag_action', array(), 'tag'),
+            array('uri' => $url)
+        )->setExtra('icon', 'fa fa-tags')
+        ->setExtra('display', 'modal_form');
+
+        return $menu;
     }
 }

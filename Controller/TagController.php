@@ -11,10 +11,12 @@
 
 namespace Claroline\TagBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\TagBundle\Form\TagType;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
@@ -58,7 +60,7 @@ class TagController extends Controller
     {
         $form = $this->formFactory->create(new TagType());
         $tags = $this->tagManager->getPlatformTags();
-        $resourceTags = $this->tagManager->getTagsByResource($resourceNode);
+        $resourceTags = $this->tagManager->getTagsByObject($resourceNode);
 
         return array(
             'form' => $form->createView(),
@@ -90,13 +92,70 @@ class TagController extends Controller
             return new JsonResponse('success', 200);
         } else {
             $tags = $this->tagManager->getPlatformTags();
-            $resourceTags = $this->tagManager->getTagsByResource($resourceNode);
+            $resourceTags = $this->tagManager->getTagsByObject($resourceNode);
 
             return array(
                 'form' => $form->createView(),
                 'resourceNode' => $resourceNode,
                 'tags' => $tags,
                 'resourceTags' => $resourceTags
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/group/{group}/tag/form",
+     *     name="claro_tag_group_tag_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:groupTagModalForm.html.twig")
+     */
+    public function groupTagFormAction(Group $group)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $tags = $this->tagManager->getPlatformTags();
+        $groupTags = $this->tagManager->getTagsByObject($group);
+
+        return array(
+            'form' => $form->createView(),
+            'group' => $group,
+            'tags' => $tags,
+            'groupTags' => $groupTags
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/group/{group}/tag",
+     *     name="claro_tag_group_tag",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:groupTagModalForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
+     */
+    public function groupTagAction(Group $group)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $tagsList = $form->get('tag')->getData();
+            $tags = explode(',', $tagsList);
+            $this->tagManager->tagObject($tags, $group);
+
+            return new JsonResponse('success', 200);
+        } else {
+            $tags = $this->tagManager->getPlatformTags();
+            $groupTags = $this->tagManager->getTagsByObject($group);
+
+            return array(
+                'form' => $form->createView(),
+                'group' => $group,
+                'tags' => $tags,
+                'groupTags' => $groupTags
             );
         }
     }

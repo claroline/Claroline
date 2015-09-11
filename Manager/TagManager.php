@@ -11,7 +11,6 @@
 
 namespace Claroline\TagBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -214,16 +213,16 @@ class TagManager
         return $this->tagRepo->findOneUserTagByName($user, $name);
     }
 
-    public function getTagsByResource(
-        ResourceNode $resourceNode,
+    public function getTagsByObject(
+        $object,
         User $user = null,
         $withPlatform = false,
         $orderedBy = 'name',
         $order = 'ASC'
     )
     {
-        return $this->tagRepo->findTagsByResource(
-            $resourceNode,
+        return $this->tagRepo->findTagsByObject(
+            $object,
             $user,
             $withPlatform,
             $orderedBy,
