@@ -13,7 +13,8 @@
         </div> #}
 
     <div class="row">
-        <div class='col-md-8'>
+{#  InnovaERV : élargissement de la zone de saisie du texte #}
+        <div class='col-md-10'>
             <div class='input-group'>
                 {{ form_widget(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_text' }) }}
 {#  InnovaERV : ajout de la classe addButtonToTop afin de positionner le bouton "Ajouter" dans le texte #}
