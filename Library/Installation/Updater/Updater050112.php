@@ -46,19 +46,19 @@ class Updater050112 extends Updater
         $i = 0;
 
         foreach ($workspaces as $workspace) {
-            $this->log('Checking ' . $workspace->getName() . '...');
+            $this->log('Checking ' . $workspace->getCode() . '...');
             $roles = $workspace->getRoles();
             $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
-            if ($root) {
-                foreach ($root->getRights() as $right) {
-                    $collaboratorFound = false;
-                    $collaboratorRole = null;
+            $collaboratorRole = $roleManager->getCollaboratorRole($workspace);
 
-                    if ($right->getRole()->getName() == 'ROLE_WS_COLLABORATOR_' . $workspace->getGuid()) {
+            if ($root) {
+                $collaboratorFound = false;
+
+                foreach ($root->getRights() as $right) {
+                    if ($right->getRole()->getName() == $roleManager->getCollaboratorRole($workspace)->getName()) {
                         $collaboratorFound = true;
                     }
                 }
-
 
                 if (!$collaboratorFound) {
                     $this->log('Adding missing right on root for ' . $workspace->getCode() . '.');
