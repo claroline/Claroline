@@ -122,6 +122,12 @@ class DropzoneListener extends ContainerAware
     public function onDelete(DeleteResourceEvent $event)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
+
+        foreach ($resource->getDrops() as $drop) {
+            $em->remove($drop);
+        }
+        
         $em->remove($event->getResource());
         $event->stopPropagation();
     }
