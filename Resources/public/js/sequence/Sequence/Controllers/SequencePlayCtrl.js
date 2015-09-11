@@ -65,10 +65,12 @@
 
             this.setNbAttempts = function (nb) {
                 this.nbAttempts = nb;
+                //return CommonService.setNbAttempts(nb);
             };
 
             this.getNbAttempts = function () {
                 return this.nbAttempts;
+                //return CommonService.getNbAttempts();
             };
             
             /**
