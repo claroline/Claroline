@@ -2,14 +2,14 @@
     "use strict";
 
     $(function() {
-        var addCollectionButton            = $("#add_collection");
-        var collectionsList                = $("#collections_list");
-        var newCollectionTemplate          = collectionsList.attr("data-collection-template");
-        var apiUrl                         = collectionsList.attr("data-action-url");
-        var noCollectionElement            = $("#no_collection");
-        var deletingCollectionElement      = $("#deleting_collection");
+        var addCollectionButton = $("#add_collection");
+        var collectionsList = $("#collections_list");
+        var newCollectionTemplate = collectionsList.attr("data-collection-template");
+        var apiUrl = collectionsList.attr("data-action-url");
+        var noCollectionElement = $("#no_collection");
+        var deletingCollectionElement = $("#deleting_collection");
         var deletingCollectionBadgeElement = $(collectionsList.attr("data-delete-collection-badge-template"));
-        var errorContainer                 = $("#error_container");
+        var errorContainer = $("#error_container");
 
         $("button.close", errorContainer).click(function(event) {
             errorContainer.hide();
