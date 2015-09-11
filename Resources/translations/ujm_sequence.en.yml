@@ -52,5 +52,6 @@ sequence_step_panel_title: Steps
 sequence_select_available_question: Select a question
 sequence_step_add_question: Add question
 sequence_attempts_infos: You have %1% attempt(s) - Attempt N° %2% / %1%
+sequence_next_step_confirm: Are you sure you want to go to the next step ? <br/> Yon won't be able to go back
 step_question_shuffle: Shuffle question order for this step
 

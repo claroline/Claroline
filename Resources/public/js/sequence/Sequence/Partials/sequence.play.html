@@ -11,13 +11,13 @@
         <hr/>
         <div class="row">
             <div class="col-md-12">
-                <step-show class="step-container" data-step="sequencePlayCtrl.getCurrentStep()"></step-show>
+                <step-show class="step-container" data-step="sequencePlayCtrl.currentStep"></step-show>
             </div>
         </div>
         <hr/>
         <div class="row pull-right">
             <div class="col-md-12">
-                <button role="button" type="button" ng-bootbox-confirm="Alert message!" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                <button role="button" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
                     {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
                 </button>
             </div>

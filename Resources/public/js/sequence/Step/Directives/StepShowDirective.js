@@ -13,9 +13,8 @@
                     step: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    console.log('step show directive link method called');    
-                    console.log(scope.step);
-                    stepShowCtrl.setCurrentStep(scope.step);
+                    console.log('step show directive link method called'); 
+                    stepShowCtrl.setCurrentStep(scope.step);                    
                 }
             };
         }

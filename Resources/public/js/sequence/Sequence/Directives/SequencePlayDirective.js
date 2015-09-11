@@ -7,7 +7,7 @@
                 restrict: 'E',
                 replace: true,
                 controller: 'SequencePlayCtrl',
-                controllerAs: 'sequencePlayCtrl',
+                controllerAs: 'sequencePlayCtrl',                
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Sequence/Partials/sequence.play.html',
                 scope: {
                     sequence: '='

@@ -43,6 +43,8 @@
                 for (var i = 0; i < this.question.choices.length; i++) {
                     this.answer[this.question.choices[i].id] = false;
                 }
+                // init the answer objects
+                this.updateQuestionChoices();
             };
 
             /**
@@ -91,6 +93,9 @@
              * For that purpose we use a shared service
              */
             this.updateQuestionChoices = function () {
+                console.log(this.answer);
+                console.log(this.question);
+                console.log(this.penalty);
                 CommonService.setCurrentQuestionAndAnswer(this.answer, this.question, this.penalty);
             };
         }
