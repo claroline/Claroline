@@ -212,4 +212,9 @@ class OrderedTool
     {
         $this->locked = $locked;
     }
+
+    public function __toString()
+    {
+        return '[' . $this->workspace->getName() . '] ' . $this->name;
+    }
 }

@@ -211,4 +211,9 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     {
         $this->models->removeElement($model);
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
