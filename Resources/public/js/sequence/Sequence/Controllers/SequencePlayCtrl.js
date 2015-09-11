@@ -2,12 +2,14 @@
     'use strict';
 
     angular.module('Sequence').controller('SequencePlayCtrl', [
+        '$scope',
         'SequenceService',
         'CommonService',
-        function (SequenceService, CommonService) {
+        function ($scope, SequenceService, CommonService) {
 
             this.sequence = {};
             this.currentStep = {};
+            this.steps = {};
             this.nbAttempts = 1;
             this.studentResults = Array();
             
@@ -26,13 +28,13 @@
             this.questionHasOtherMeta = function () {
                 return CommonService.objectHasOtherMeta(this.sequence);
             };
-
-            this.setSteps = function () {
-                this.steps = this.sequence.steps;
+            
+            this.setSteps = function(steps){
+                this.steps = steps;
             };
             
             this.getSteps = function () {
-                return this.sequence.steps;
+                return this.steps;
             };
 
             /**
@@ -40,18 +42,13 @@
              * @returns {undefined}
              */
             this.getNbStep = function () {
-                return this.sequence.steps.length;
+                return this.steps.length;
             };
 
             this.setCurrentStep = function (index) {
-                
-                this.currentStep = this.sequence.steps[index];
-                /*
-                 * for (var prop in this.sequence.steps[index]) {
-                    this.currentStep[prop] =  this.sequence.steps[index][prop];
-                }
-                 */
+                this.currentStep = this.steps[index];
             };
+            
             this.getCurrentStep = function () {
                 return this.currentStep;
             };
@@ -61,18 +58,17 @@
              * @returns {Number|SequencePlayCtrl_L7@pro;sequence@pro;steps@call;indexOf}
              */
             this.getCurrentStepIndex = function () {
-                var index = this.sequence.steps.indexOf(this.currentStep);
+                var index = this.steps.indexOf(this.currentStep);
+                console.log('current index ' + index);
                 return  index + 1;
             };
 
             this.setNbAttempts = function (nb) {
                 this.nbAttempts = nb;
-                //return CommonService.setNbAttempts(nb);
             };
 
             this.getNbAttempts = function () {
                 return this.nbAttempts;
-                //return CommonService.getNbAttempts();
             };
             
             /**
@@ -91,16 +87,21 @@
                 // save step results
                 this.studentResults.push(stepResult);
                 // go to next step
-                var currentStepIndex = this.sequence.steps.indexOf(this.currentStep);
-                var length = this.sequence.steps.length;
+                var currentStepIndex = this.steps.indexOf(this.currentStep);
+                var length = this.steps.length;
                 var newIndex = currentStepIndex + 1;
                 if(newIndex < length){
-                    this.setCurrentStep(newIndex);
+                    this.setCurrentStep(newIndex); 
                 }
                 else{
                     console.log('you reached the end of the exercise you will be redirected to correction page');
+                    this.endSequence();
                 }
                 
+            };
+            
+            this.endSequence = function(){
+                console.log('TODO');
             };
         }
     ]);

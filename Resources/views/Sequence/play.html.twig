@@ -8,7 +8,7 @@
 
 {% block content %} 
     <div class="ujm-sequence-container" data-ng-app="SequencePlayerApp" data-ng-cloak="">
-        <sequence-play class="player-container" data-sequence="{{ data }}"></sequence-play>       
+        <sequence-play class="player-container" data-steps="{{ steps }}" data-current-step="{{ currentStep }}" data-sequence="{{ sequence }}"></sequence-play>       
     </div>
 {% endblock %}
 

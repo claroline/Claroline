@@ -28,8 +28,18 @@ class SequenceController extends Controller
     {
         // get api manager
         $manager = $this->get('ujm.exo.api_manager');
-        $data = json_encode($manager->exportExercise($exercise));
+        $exo = $manager->exportExercise($exercise);
 
-        return $this->render('UJMExoBundle:Sequence:play.html.twig', array('_resource' => $exercise, 'data' => $data));
+        $steps = $exo['steps'];
+        $currentStep = isset($steps[0]) ? $steps[0]:null;
+        $data = json_encode($exo);
+
+        return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
+            '_resource' => $exercise, 
+            'steps' => json_encode($steps),
+            'currentStep' => json_encode($currentStep),
+            'sequence' => $data
+                )
+        );
     }
 }
