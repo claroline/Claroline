@@ -339,4 +339,9 @@ class Tool
     {
         return $this->pwsToolConfig;
     }
+
+    public function __toString()
+    {
+        return $this->getDisplayName();
+    }
 }
