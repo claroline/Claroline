@@ -16,17 +16,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
-
+use FormaLibre\PresenceBundle\Entity\PresenceRights;
 use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
 use FormaLibre\PresenceBundle\Entity\Status;
 use FormaLibre\PresenceBundle\Entity\Releves;
+use FormaLibre\PresenceBundle\Entity\SchoolYear;
+
 use Claroline\CoreBundle\Entity\User;
 use FormaLibre\PresenceBundle\Manager\PresenceManager;
 
 use FormaLibre\PresenceBundle\Form\Type\ReleveType;
 use FormaLibre\PresenceBundle\Form\Type\CollReleveType;
-use FormaLibre\PresenceBundle\Entity\PresenceRights;
+
 
 
 
@@ -42,6 +44,7 @@ class AdminPresenceController extends Controller
     private $periodRepo;
     private $groupRepo;
     private $userRepo;
+    private $schoolYearRepo;
     private $router;
     private $config;
     private $presenceManager;
@@ -70,7 +73,8 @@ class AdminPresenceController extends Controller
         $this->periodRepo         = $om->getRepository('FormaLibrePresenceBundle:Period');
         $this->groupRepo          = $om->getRepository('ClarolineCoreBundle:Group');
         $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User'); 
-        $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
+        $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status'); 
+        $this->schoolYearRepo         = $om->getRepository('FormaLibrePresenceBundle:SchoolYear'); 
         $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');  
         $this->config             = $config;
         $this->presenceManager    = $presenceManager;
@@ -148,14 +152,177 @@ class AdminPresenceController extends Controller
                 $this->em->flush();
  
             }
+            
+            $ActualSchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(1);
+            $AllSchoolYear=$this->schoolYearRepo->findAll();
+               
+            $NewSchoolYearForm = $this ->createFormBuilder()
+        
+            ->add('name','text')
+            ->add('beginDate','text')
+            ->add('endDate','text')
+            ->add('beginHour','text')
+            ->add('endHour','text')
+            ->add('actual','checkbox',array(
+                  'required'  => false,)
+            )
+            ->add ('valider2','submit',array (
+                'label'=>'Ajouter'))
+               
+            ->getForm();
  
         return array('rightsForArray'=>$rightsForArray, 
                      'rightsValue'=>$rightsValue, 
                      'rightNameId'=>$rightNameId, 
                      'rightName'=>$rightName,
                      'NewStatusForm' => $NewStatusForm->createView(),
-                     'listStatus'=>$listStatus); 
+                     'NewSchoolYearForm' => $NewSchoolYearForm->createView(),
+                     'listStatus'=>$listStatus,
+                     'allSchoolYear'=>$AllSchoolYear,
+                     'actualSchoolYear'=>$ActualSchoolYear); 
     }
+    
+      /**
+     * @EXT\Route(
+     *     "/admin/presence/addSchoolYear/index",
+     *     name="formalibre_presence_admin_add_school_year",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminAddSchoolYearAction(){
+        
+         $NewSchoolYearForm = $this ->createFormBuilder()
+        
+            ->add('name','text')
+            ->add('beginDate','text')
+            ->add('endDate','text')
+            ->add('beginHour','text')
+            ->add('endHour','text')
+            ->add('actual','checkbox',array(
+                  'required'  => false,)
+            )
+            ->add ('valider2','submit',array (
+                'label'=>'Ajouter'))
+               
+            ->getForm();
+        
+         $request = $this->getRequest();
+            
+            if ($request->getMethod() === 'POST') {
+                
+                $NewSchoolYearForm->handleRequest($request);
+                
+                $name = $NewSchoolYearForm->get("name")->getData();
+                $beginDate = $NewSchoolYearForm->get("beginDate")->getData();
+                $endDate= $NewSchoolYearForm->get("endDate")->getData();
+                $beginHour=$NewSchoolYearForm->get("beginHour")->getData();
+                $endHour = $NewSchoolYearForm->get("endHour")->getData();
+                $actual= $NewSchoolYearForm->get("actual")->getData();
+                
+                $beginDateFormat = \DateTime::createFromFormat('d-m-Y', $beginDate);
+                $endDateFormat = \DateTime::createFromFormat('d-m-Y', $endDate);
+                $beginHourFormat = \DateTime::createFromFormat('H:i', $beginHour);
+                $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
+                
+                $actualSchoolYear = new SchoolYear();
+                $actualSchoolYear->setSchoolYearName($name);
+                $actualSchoolYear->setSchoolYearBegin($beginDateFormat);
+                $actualSchoolYear->setSchoolYearEnd($endDateFormat);
+                $actualSchoolYear->setSchoolDayBeginHour($beginHourFormat);
+                $actualSchoolYear->setSchoolDayEndHour($endHourFormat);
+                $actualSchoolYear->setSchoolYearActual($actual);
+                $this->em->persist($actualSchoolYear);
+                $this->em->flush();
+      
+            } 
+                return $this->redirect($this->generateUrl('formalibre_presence_admin_tool_index'));    
+    }
+    
+    
+               /**
+     * @EXT\Route(
+     *     "/presence/schoolYear_modif/id/{theSchoolYear}",
+     *     name="formalibre_school_year_modif",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     * @EXT\Template()
+     */
+    public function SchoolYearModifAction(SchoolYear $theSchoolYear)
+            
+    {      
+        $NewSchoolYearForm = $this ->createFormBuilder()
+        
+            ->add('nameModifSchoolYear','text')
+            ->add('beginDateModifSchoolYear','text')
+            ->add('endDateModifSchoolYear','text')
+            ->add('beginHourModifSchoolYear','text')
+            ->add('endHourModifSchoolYear','text')
+            ->add('actualModifSchoolYear','checkbox',array(
+                  'required'  => false,)
+            )
+            ->add ('validerModifSchoolYear','submit',array (
+                'label'=>'Ajouter'))
+               
+            ->getForm();
+        
+         $request = $this->getRequest();
+            
+            if ($request->getMethod() === 'POST') {
+                
+                $NewSchoolYearForm->handleRequest($request);
+                
+                $name = $NewSchoolYearForm->get("name")->getData();
+                $beginDate = $NewSchoolYearForm->get("beginDate")->getData();
+                $endDate= $NewSchoolYearForm->get("endDate")->getData();
+                $beginHour=$NewSchoolYearForm->get("beginHour")->getData();
+                $endHour = $NewSchoolYearForm->get("endHour")->getData();
+                $actual= $NewSchoolYearForm->get("actual")->getData();
+                
+                $beginDateFormat = \DateTime::createFromFormat('d-m-Y', $beginDate);
+                $endDateFormat = \DateTime::createFromFormat('d-m-Y', $endDate);
+                $beginHourFormat = \DateTime::createFromFormat('H:i', $beginHour);
+                $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
+                
+                $actualSchoolYear->setSchoolYearName($name);
+                $actualSchoolYear->setSchoolYearBegin($beginDateFormat);
+                $actualSchoolYear->setSchoolYearEnd($endDateFormat);
+                $actualSchoolYear->setSchoolDayBeginHour($beginHourFormat);
+                $actualSchoolYear->setSchoolDayEndHour($endHourFormat);
+                $actualSchoolYear->setSchoolYearActual($actual);
+                $this->em->persist($actualSchoolYear);
+                $this->em->flush();
+      
+                return new JsonResponse("success",200);
+                }
+        
+       return array('ModifStatusForm' => $ModifStatusForm->createView(),
+                    'theStatus'=>$theStatus);
+    }
+                 /**
+     * @EXT\Route(
+     *     "/presence/schoolYear_supprimerf/id/{theSchoolYear}",
+     *     name="formalibre_school_year_supprimer",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     */
+    public function SchoolYearSupprimerAction(SchoolYear $theSchoolYear)
+            
+    {      
+                $this->em->remove($theSchoolYear);
+                $this->em->flush();
+ 
+       return new JsonResponse("success",200);
+    }
+  
     
       /**
      * @EXT\Route(

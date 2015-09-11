@@ -17,6 +17,13 @@ use Doctrine\ORM\Mapping as ORM;
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+     /**
+     * @ORM\ManyToOne(
+     *     targetEntity="FormaLibre\PresenceBundle\Entity\SchoolYear"
+     * )
+     * @ORM\JoinColumn(name="schoolYear_id", onDelete="CASCADE")
+     */
+    protected $schoolYearId;
     /**
      * @ORM\Column(name="num_period")
      */
@@ -118,6 +125,15 @@ use Doctrine\ORM\Mapping as ORM;
     {
         $this->visibility = $visibility;
     }
+    function getSchoolYearId() {
+        return $this->schoolYearId;
+    }
+
+    function setSchoolYearId($schoolYearId) {
+        $this->schoolYearId = $schoolYearId;
+    }
+
+
     
     
 }
