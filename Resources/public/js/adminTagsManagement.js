@@ -42,7 +42,26 @@
         );
     });
     
+    $('#tags-display-box').on('click', '.remove-tag-from-object-btn', function () {
+        var taggedObjectId = $(this).data('tagged-object-id');
+
+        window.Claroline.Modal.confirmRequest(
+            Routing.generate(
+                'claro_tag_admin_tagged_object_delete',
+                {'taggedObject': taggedObjectId}
+            ),
+            removeTaggedObjectRow,
+            taggedObjectId,
+            Translator.trans('remove_tag_from_object_message', {}, 'tag'),
+            Translator.trans('remove_tag', {}, 'tag')
+        );
+    });
+    
     var removeTagRow = function (event, tagId) {
         $('#tag-row-' + tagId).remove();
+    };
+    
+    var removeTaggedObjectRow = function (event, taggedObjectId) {
+        $('#tagged-object-row-' + taggedObjectId).remove();
     };
 })();

@@ -1,7 +1,16 @@
-Claroline\CoreBundle\Entity\Resource\ResourceNode: Resource 
+Claroline\CoreBundle\Entity\Group: Group
+Claroline\CoreBundle\Entity\Resource\ResourceNode: Resource
+Claroline\CoreBundle\Entity\Role: Role
+Claroline\CoreBundle\Entity\Tool\AdminTool: Admin tool
+Claroline\CoreBundle\Entity\Tool\OrderedTool: Tool
+Claroline\CoreBundle\Entity\Tool\Tool: Tool
 Claroline\CoreBundle\Entity\User: User
 Claroline\CoreBundle\Entity\Workspace\Workspace: Workspace
+delete_tag: Delete Tag
 no_tag: No tag
+remove_tag: Remove Tag
+remove_tag_from_object_message: Are you sure you want to remove this Tag from this object ?
+rename_tag: Rename Tag
 tag_deletion: Tag deletion
 tag_deletion_message: Are you sure you want to delete this Tag ?
 tag_resource: Tag the resource

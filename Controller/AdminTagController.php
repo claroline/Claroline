@@ -12,6 +12,7 @@
 namespace Claroline\TagBundle\Controller;
 
 use Claroline\TagBundle\Entity\Tag;
+use Claroline\TagBundle\Entity\TaggedObject;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -118,7 +119,8 @@ class AdminTagController extends Controller
             }
             $datas[$firstChar][$tagName]['objects'][$objectClass][] = array(
                 'id' => $objectId,
-                'name' => $objectName
+                'name' => $objectName,
+                'tagged_object_id' => $taggedObject->getId()
             );
         }
 
@@ -144,6 +146,21 @@ class AdminTagController extends Controller
     public function adminTagDeleteAction(Tag $tag)
     {
         $this->tagManager->deleteTag($tag);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/tagged/object/{taggedObject}/delete",
+     *     name="claro_tag_admin_tagged_object_delete",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminTaggedObjectDeleteAction(TaggedObject $taggedObject)
+    {
+        $this->tagManager->deleteTaggedObject($taggedObject);
 
         return new JsonResponse('success', 200);
     }
