@@ -14,7 +14,7 @@
     {% endif %}
     {% set badge = userBadge.badge %}
     {% set user = userBadge.user %}
-    <h1>{{ badge.name }} <small>{{ 'collection_owned_by_user'|trans({'%user%': user.firstname ~ ' ' ~ user.lastName}) }}</small></h1>
+    <h1>{{ 'badge'|trans({}, 'icap_badge') }} {{ badge.name }} <small>{{ 'collection_owned_by_user'|trans({'%user%': user.firstname ~ ' ' ~ user.lastName}) }}</small></h1>
     <p></p>
     <div class="panel panel-default">
         <div class="panel-heading">
