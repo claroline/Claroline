@@ -14,11 +14,13 @@ use UJM\ExoBundle\Entity\Interaction;
  */
 class InteractionRepository extends EntityRepository
 {
+
     /**
-     * Get Interaction linked with a question.
+     * Get Interaction linked with a question
      *
+     * @access public
      *
-     * @param int $questionId id Question
+     * @param integer $questionId id Question
      *
      * Return array[Interaction]
      */
@@ -33,10 +35,11 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Get Interactions of an user.
+     * Get Interactions of an user
      *
+     * @access public
      *
-     * @param int $uid id User
+     * @param integer $uid id User
      *
      * Return array[Interaction]
      */
@@ -55,10 +58,11 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Get models of an user.
+     * Get models of an user
      *
+     * @access public
      *
-     * @param int $uid id User
+     * @param integer $uid id User
      *
      * Return array[Interaction]
      */
@@ -81,7 +85,6 @@ class InteractionRepository extends EntityRepository
      * Returns all the interactions linked to a given exercise.
      *
      * @param Exercise $exercise
-     *
      * @return Interaction[]
      */
     public function findByExercise(Exercise $exercise)
@@ -99,13 +102,14 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Get Interaction of an exercise or for a paper.
+     * Get Interaction of an exercise or for a paper
      *
+     * @access public
      *
      * @param Doctrine Entity Manager $em
-     * @param intger                  $exoId       id Exercise
-     * @param bool                    $shuffle     if for paper
-     * @param int                     $nbQuestions if for paper
+     * @param intger $exoId id Exercise
+     * @param boolean $shuffle if for paper
+     * @param integer $nbQuestions if for paper
      *
      * Return array[Interaction]
      */
@@ -140,7 +144,7 @@ class InteractionRepository extends EntityRepository
                 unset($questionsList[$y]);
                 $questionsList = array_merge($questionsList);
                 $nbQuestionsTot = count($questionsList);
-                ++$i;
+                $i++;
             }
             $questionsList = array();
             $questionsList = $newQuestionsList;
@@ -149,7 +153,7 @@ class InteractionRepository extends EntityRepository
         foreach ($questionsList as $q) {
             if ($q) { //this is a quick patch because sometimes $q is null and an error is thrown here
                 $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
-                    .'WHERE q='.$q;
+                    . 'WHERE q=' . $q;
                 $query = $em->createQuery($dql);
                 $inter = $query->getResult();
                 $interactions[] = $inter[0];
@@ -160,19 +164,20 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * To import exercise's questions in an other exercise.
+     * To import exercise's questions in an other exercise
      *
+     * @access public
      *
      * @param Doctrine EntityManager $em
-     * @param int                    $exoSearch id of exercise selected in the filter
-     * @param int                    $exoImport id of exercise in which one I want to import questions
+     * @param integer $exoSearch id of exercise selected in the filter
+     * @param integer $exoImport id of exercise in which one I want to import questions
      *
      * Return array[Interaction]
+     *
      */
-    public function getExerciseInteractionImport($em, $exoSearch, $exoImport)
-    {
+    public function getExerciseInteractionImport($em, $exoSearch, $exoImport){
         $questionsList = array();
-        $interactions = array();
+        $interactions  = array();
 
         $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                JOIN eq.question q
@@ -194,21 +199,24 @@ class InteractionRepository extends EntityRepository
 
         foreach ($questionsList as $q) {
             $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q '
-                .'WHERE q='.$q;
+                . 'WHERE q=' . $q;
             $query = $em->createQuery($dql);
             $inter = $query->getResult();
             $interactions[] = $inter[0];
         }
 
         return $interactions;
+
+
     }
 
     /**
-     * Interactions linked to the paper.
+     * Interactions linked to the paper
      *
+     * @access public
      *
      * @param Doctrine EntityManager $em
-     * @param String                 $ids list of id of Interaction of the paper
+     * @param String $ids list of id of Interaction of the paper
      *
      * Return \UJM\ExoBundle\Entity\Interaction[]
      */
@@ -217,7 +225,7 @@ class InteractionRepository extends EntityRepository
         $interactions = array();
 
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i '
-            .'WHERE i.id IN (\''.$ids.'\') ';
+            . 'WHERE i.id IN (\'' . $ids . '\') ';
         $query = $em->createQuery($dql);
         $interactions = $query->getResult();
 
@@ -225,12 +233,13 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * To import user's questions in an exercise.
+     * To import user's questions in an exercise
      *
+     * @access public
      *
      * @param Doctrine EntityManager $em
-     * @param int                    $uid   id of User
-     * @param int                    $exoId id of exercise
+     * @param integer $uid id of User
+     * @param integer $exoId id of exercise
      *
      * Return array[Interaction]
      */
@@ -255,7 +264,7 @@ class InteractionRepository extends EntityRepository
            ->join('q.user', 'u')
            ->where($qb->expr()->in('u.id', $uid));
         if (count($questions) > 0) {
-            $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
         }
         $qb->orderBy('c.value', 'ASC')
            ->addOrderBy('q.title', 'ASC');
@@ -264,12 +273,13 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * To import model's user in an exercise.
+     * To import model's user in an exercise
      *
+     * @access public
      *
      * @param Doctrine EntityManager $em
-     * @param int                    $uid   id of User
-     * @param int                    $exoId id of exercise
+     * @param integer $uid id of User
+     * @param integer $exoId id of exercise
      *
      * Return array[Interaction]
      */
@@ -295,7 +305,7 @@ class InteractionRepository extends EntityRepository
            ->where($qb->expr()->in('u.id', $uid))
            ->andWhere('q.model in (1)');
         if (count($questions) > 0) {
-            $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
         }
         $qb->orderBy('c.value', 'ASC')
            ->addOrderBy('q.title', 'ASC');
@@ -304,10 +314,11 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Search interactions of one user by type.
+     * Search interactions of one user by type
      *
+     * @access public
      *
-     * @param int    $userId     id of User
+     * @param integer $userId id of User
      * @param string $whatToFind the type to find
      *
      * Return array[Interaction]
@@ -325,10 +336,11 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Search interactions of one user by contain.
+     * Search interactions of one user by contain
      *
+     * @access public
      *
-     * @param int    $userId     id of User
+     * @param integer $userId id of User
      * @param string $whatToFind the contain to find
      *
      * Return array[Interaction]
@@ -346,24 +358,25 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
-     * Search interactions of one user by all criteria.
+     * Search interactions of one user by all criteria
      *
+     * @access public
      *
-     * @param int    $userId         id of User
-     * @param string $whatToFind     parameter to find
-     * @param bool   $searchToImport if the search is realized from the exercise import and if the interaction can be imported
-     * @param int    $exoID          id Exercise if user is in an exercise
+     * @param integer $userId id of User
+     * @param string $whatToFind parameter to find
+     * @param boolean $searchToImport if the search is realized from the exercise import and if the interaction can be imported
+     * @param integer $exoID id Exercise if user is in an exercise
      *
      * Return array[Interaction]
      */
-    public function findByAll($userId, $whatToFind, $searchToImport = false, $exoID = -1)
+    public function findByAll($userId, $whatToFind, $searchToImport = FALSE, $exoID = -1)
     {
         $params = array(1 => "%$whatToFind%", 2 => $userId);
         $dql = 'SELECT i FROM UJM\ExoBundle\Entity\Interaction i JOIN i.question q JOIN q.category c
             WHERE (i.invite LIKE ?1 OR i.type LIKE ?1 OR c.value LIKE ?1 OR q.title LIKE ?1)
             AND q.user = ?2';
 
-        if ($searchToImport === true) {
+        if ($searchToImport === TRUE) {
             $dql .= ' AND q.id NOT IN
                     (SELECT q2.id FROM UJM\ExoBundle\Entity\ExerciseQuestion eq
                     JOIN eq.question q2
@@ -379,6 +392,9 @@ class InteractionRepository extends EntityRepository
     }
 
     /**
+     *
+     * @access public
+     *
      * @return String[]
      */
     public function getType()

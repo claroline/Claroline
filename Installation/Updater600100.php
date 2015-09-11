@@ -208,7 +208,7 @@ class Updater600100
             UPDATE ujm_question AS question
             JOIN ujm_interaction AS interaction
             ON question.id = interaction.question_id
-            SET question.type = CONCAT('UJM\\\\ExoBundle\\\\Entity', interaction.type)
+            SET question.type = CONCAT('UJM\\\\ExoBundle\\\\Entity\\\\', interaction.type)
         ";
         $descQuery = '
             UPDATE ujm_question AS question
