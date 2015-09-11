@@ -13,7 +13,7 @@ use Icap\DropzoneBundle\Form\DropzoneCommonType;
 use Icap\DropzoneBundle\Form\DropzoneCriteriaType;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
-use Claroline\CoreBundle\Entity\Event;
+use Claroline\AgendaBundle\Entity\Event;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -56,7 +56,13 @@ class DropzoneController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
-        $form = $this->createForm(new DropzoneCommonType(), $dropzone, array('language' => $platformConfigHandler->getParameter('locale_language'), 'date_format' => $this->get('translator')->trans('date_form_format', array(), 'platform')));
+        $dateFormat = $this->get('translator')->trans('date_form_format', array(), 'platform');
+        $lang = $platformConfigHandler->getParameter('locale_language');
+        $form = $this->createForm(
+            new DropzoneCommonType(),
+            $dropzone,
+            array('language' => $lang, 'date_format' => $dateFormat)
+        );
 
         if ($request->isMethod('POST')) {
             // see if manual plannification option has changed.
@@ -76,13 +82,6 @@ class DropzoneController extends DropzoneBaseController
             if ($dropzone->getEditionState() < 2) {
                 $dropzone->setEditionState(2);
             }
-            /*
-            if (!$dropzone->getDisplayNotationToLearners() and !$dropzone->getDisplayNotationMessageToLearners()) {
-                $form->get('displayNotationToLearners')->addError(new FormError('Choose at least one type of ranking'));
-                $form
-                    ->get('displayNotationMessageToLearners')
-                    ->addError(new FormError('Choose at least one type of ranking'));
-            }*/
 
             if (
                 !$dropzone->getAllowWorkspaceResource()
@@ -106,33 +105,29 @@ class DropzoneController extends DropzoneBaseController
 
                     if (array_key_exists('startAllowDrop', $form_array)) {
                         $dateStr = implode(' ', $form_array['startAllowDrop']);
-                        if ($this->validateDate($dateStr)) {
-                            $startAllowDrop = new DateTime($dateStr);
-                            $dropzone->setStartAllowDrop($startAllowDrop);
+                        if ($startDrop = $this->validateDate($dateStr, $dateFormat)) {
+                            $dropzone->setStartAllowDrop($startDrop);
                         }
                     }
 
                     if (array_key_exists('endAllowDrop', $form_array)) {
                         $dateStr = implode(' ', $form_array['endAllowDrop']);
-                        if ($this->validateDate($dateStr)) {
-                            $endAllowDrop = new DateTime($dateStr);
-                            $dropzone->setEndAllowDrop($endAllowDrop);
+                        if ($endDrop = $this->validateDate($dateStr, $dateFormat)) {
+                            $dropzone->setEndAllowDrop($endDrop);
+                        }
+                    }
+
+                    if (array_key_exists('startReview', $form_array)) {
+                        $dateStr = implode(' ', $form_array['startReview']);
+                        if ($startReview = $this->validateDate($dateStr, $dateFormat)) {
+                            $dropzone->setStartReview($startReview);
                         }
                     }
 
                     if (array_key_exists('endReview', $form_array)) {
                         $dateStr = implode(' ', $form_array['endReview']);
-                        if ($this->validateDate($dateStr)) {
-                            $endReview = new DateTime(implode(' ', $form_array['endReview']));
+                        if ($endReview = $this->validateDate($dateStr, $dateFormat)) {
                             $dropzone->setEndReview($endReview);
-                        }
-                    }
-
-                    if (array_key_exists('endAllowDrop', $form_array)) {
-                        $dateStr = implode(' ', $form_array['endAllowDrop']);
-                        if ($this->validateDate($dateStr)) {
-                            $endAllowDrop = new DateTime(implode(' ', $form_array['endAllowDrop']));
-                            $dropzone->setEndAllowDrop($endAllowDrop);
                         }
                     }
 
@@ -144,11 +139,10 @@ class DropzoneController extends DropzoneBaseController
                         //if event already exist
                         if ($dropzone->getEventDrop() != null) {
 
-
                             // update event
                             $eventDrop = $dropzone->getEventDrop();
-                            $eventDrop->setStart($dropzone->getStartAllowDrop());
-                            $eventDrop->setEnd($dropzone->getEndAllowDrop());
+                            $eventDrop->setStart($dropzone->getStartAllowDrop()->getTimeStamp());
+                            $eventDrop->setEnd($dropzone->getEndAllowDrop()->getTimeStamp());
 
                             $AgendaManager->updateEvent($eventDrop);
 
@@ -177,18 +171,11 @@ class DropzoneController extends DropzoneBaseController
                         } else {
                             //create event
                             $eventReview = $this->createAgendaEventDrop($dropzone->getStartReview(), $dropzone->getEndReview(), $user, $dropzone, 'correction');
-
                             $AgendaManager->addEvent($eventReview, $workspace);
                             $dropzone->setEventCorrection($eventReview);
-
                         }
                     }
 
-                    //$dropzone->setStartAllowDrop()
-                    /*var_dump( $test_date);
-                    var_dump($form_array);
-                    die;
-                    */
                     if ($dropzone->getStartAllowDrop() == null) {
                         $form->get('startAllowDrop')->addError(new FormError('Choose a date'));
                     }
@@ -230,24 +217,17 @@ class DropzoneController extends DropzoneBaseController
                 // if manual mode, we delete agenda events related to
                 $AgendaManager = $this->get('claroline.manager.agenda_manager');
 
-
                 if ($dropzone->getEventDrop() != null) {
                     $event = $dropzone->getEventDrop();
                     $AgendaManager->deleteEvent($event);
                     $dropzone->setEventDrop(NULL);
-
-
                 }
 
                 if ($dropzone->getEventCorrection() != null) {
                     $event = $dropzone->getEventCorrection();
                     $AgendaManager->deleteEvent($event);
                     $dropzone->setEventCorrection(NULL);
-
-
                 }
-
-
             }
 
 
@@ -550,17 +530,15 @@ class DropzoneController extends DropzoneBaseController
      */
     private function validateDate($date, $format = 'Y-m-d H:i:s')
     {
-
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) == $date;
+        return DateTime::createFromFormat($format, $date);
     }
 
 
     private function createAgendaEventDrop($startDate, $endDate, $user, Dropzone $dropzone, $type = "drop")
     {
         $event = new Event();
-        $event->setStart($startDate);
-        $event->setEnd($endDate);
+        $event->setStart($startDate->getTimeStamp());
+        $event->setEnd($endDate->getTimeStamp());
         $event->setUser($user);
 
         $dropzoneName = $dropzone->getResourceNode()->getName();
