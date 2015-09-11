@@ -265,6 +265,20 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function groupActionsMenu(FactoryInterface $factory, array $options)
+    {
+        $group = $options['group'];
+        $menu = $factory->createItem($group->getName())
+            ->setChildrenAttribute('class', 'btn-group menu group-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_group_additional_action',
+            new GroupAdditionalActionEvent($factory, $menu, $group)
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)
