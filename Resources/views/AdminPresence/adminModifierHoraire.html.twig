@@ -10,7 +10,7 @@
                 &times;
             </button>
             <h3 class="modal-title">
-                Modifier une période
+                Modifier une tranche horaire
             </h3>
         </div>
         <div class="modal-body">
@@ -30,15 +30,17 @@
                              <div class="row">
                             <button class="btn btn-primary col-md-4 col-md-offset-1" 
                                     type="submit" 
-                                    name="form[modifier]">Modifier la période
+                                    name="form[modifier]">Modifier la tranche
                             </button> 
                             <button class="btn btn-danger col-md-4 col-md-offset-2" 
                                     id="supprimer-btn"
                                     data-dismiss="modal"
                                     data-period-id="{{period.getId()}}">
-                            Supprimer la période
+                            Supprimer la tranche
                             </button> 
+                         
                         </div>
+                          
                         </div>
                     </div>
                     <br />
@@ -76,20 +78,21 @@
         });
     </script>
      <script>
-      
+             
         $("#supprimer-btn").on("click",function(){
             var periodId=$(this).data("period-id");
-            $.ajax({
-                url:Routing.generate("formalibre_period_supprimer",{"period":periodId}),
-                type:'GET',
-                async:false,
-                success:function(){
-                    window.parent.location.reload();
-                }    
-            });        
-        });
-                       
-       
+            window.Claroline.Modal.confirmRequest(
+                Routing.generate("formalibre_period_supprimer",{"period":periodId}),
+                function() {
+                    window.location.reload();
+                },
+                periodId,
+                "Etes-vous certain de vouloir supprimer cette tranche horaire ? Cela effacera également toutes les présences liées.",
+                "Supression tranche horaire"
+                    );
+   
+    });  
+                     
     </script>
 
 {% endblock %}

@@ -7,6 +7,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use FormaLibre\PresenceBundle\Entity\PresenceRights;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  *@DI\Service("formalibre.manager.presence_manager")
@@ -18,19 +19,22 @@ class PresenceManager
     private $om;
     private $rightsRepo;
     private $roleManager;
+    private $authorization;
      
     /**
      * @DI\InjectParams({
      *      "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *      "roleManager"        = @DI\Inject("claroline.manager.role_manager")
+     *      "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
+     *      "authorization"        = @DI\Inject("security.authorization_checker")
      * })
      * 
      */        
-    public function __construct(ObjectManager $om, RoleManager $roleManager) {
+    public function __construct(ObjectManager $om, RoleManager $roleManager, AuthorizationCheckerInterface $authorization) {
         
         $this->om =$om;
         $this->rightsRepo=$om->getRepository("FormaLibrePresenceBundle:PresenceRights");
         $this->roleManager =$roleManager;
+        $this->authorization =$authorization;
         
     }
     
@@ -68,6 +72,9 @@ class PresenceManager
     
     public function checkRights(User $user, $theRight){
         
+        if($this->authorization->isGranted('ROLE_ADMIN')){
+            return true;
+        }
         $roles=$user->getEntityRoles();
         $rights=$this->rightsRepo->findPresenceRightsByRolesAndValue($roles, $theRight);
         return count($rights)>0;

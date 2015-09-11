@@ -18,7 +18,25 @@
             <div style="text-align: center;">
                     <H1>Archives:</H1>
             </div>
-            
+            {{macros.flashBox()}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Période affichée : {{schoolYearName}}</h4>
+                </div>
+            </div>
+            <form method="post" {{ form_enctype(schoolYearSelection) }} 
+                  action="{{path("formalibre_presence_archives")}}">
+                <div class="row">
+                    <div class="col-md-2">
+                        {{form_widget(schoolYearSelection.selection)}}
+                    </div>
+                    <div class="col-md-2">
+                        {{form_widget(schoolYearSelection.valider)}}
+                    </div>
+                </div>
+            </form>        
+            </br></br>
+
             <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>

@@ -1,0 +1,143 @@
+<div class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
+     aria-hidden="true"
+     id="modifier-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                Modifier une période
+            </h3>
+        </div>
+        <div class="modal-body">
+
+            <form id="ModifHoraireForm" 
+                  method="post" {{ form_enctype(ModifSchoolYearForm) }} 
+                  action="{{path("formalibre_school_year_modif",{"theSchoolYear":theSchoolYear.getId()})}}">  
+                Nom:
+                {{form_widget(ModifSchoolYearForm.nameModifSchoolYear)}}
+                Date de début:
+                {{form_widget(ModifSchoolYearForm.beginDateModifSchoolYear)}}
+                Date de fin:
+                {{form_widget(ModifSchoolYearForm.endDateModifSchoolYear)}}
+                Heure d'ouverture:
+                {{form_widget(ModifSchoolYearForm.beginHourModifSchoolYear)}}
+                Heure de fermeture:
+                {{form_widget(ModifSchoolYearForm.endHourModifSchoolYear)}}
+                Periode en cours ?
+                {{form_widget(ModifSchoolYearForm.actualModifSchoolYear)}}
+                </br> </br>
+                
+
+                <div class="row">
+                    <div class="row">
+                        <button class="btn btn-primary col-md-4 col-md-offset-1" 
+                                type="submit" 
+                                name="form[validerModifSchoolYear]">Modifier la période
+                        </button> 
+                    </div>
+                </div>
+            </form>
+        </div>
+                    
+    </div>
+            </form>
+         
+
+</div>
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/bootstrap-datetimepicker.min.js') }}"></script>
+    
+     <script>
+         
+       $(document).ready(function() {
+           document.getElementById("form_nameModifSchoolYear").defaultValue = "{{theSchoolYear.getSchoolYearName()}}";                        
+        });
+        
+          $(document).ready(function() {
+           document.getElementById("form_beginDateModifSchoolYear").defaultValue = "{{theSchoolYear.getSchoolYearBegin()|date('d-m-Y')}}";                        
+        });
+        
+          $(document).ready(function() {
+           document.getElementById("form_endDateModifSchoolYear").defaultValue = "{{theSchoolYear.getSchoolYearEnd()|date('d-m-Y')}}";                        
+        });
+        
+          $(document).ready(function() {
+           document.getElementById("form_beginHourModifSchoolYear").defaultValue = "{{theSchoolYear.getSchoolDayBeginHour()|date('H:i')}}";                        
+        });
+        
+          $(document).ready(function() {
+           document.getElementById("form_endHourModifSchoolYear").defaultValue = "{{theSchoolYear.getSchoolDayEndHour()|date('H:i')}}";                        
+        });
+        
+        
+     
+         $(document).ready(function() {
+            var current={% if theSchoolYear.getSchoolYearActual()%}true{%else%}false{%endif%};
+            if(current){
+                 document.getElementById("form_actualModifSchoolYear").checked=true;
+             }
+                      
+        });
+    </script>
+    <script>
+        $(function () {
+            $('#form_beginDateModifSchoolYear').datetimepicker({
+                format: 'D-M-YYYY',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+        $(function () {
+            $('#form_endDateModifSchoolYear').datetimepicker({
+                format: 'D-M-YYYY',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down"
+        }
+            });
+        });
+         $(function () {
+            $('#form_beginHourModifSchoolYear').datetimepicker({
+                format: 'HH:mm',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down",
+            next: "fa fa-arrow-right",
+            previous:"fa fa-arrow-left"
+        }
+            });
+        });
+        $(function () {
+            $('#form_endHourModifSchoolYear').datetimepicker({
+                format: 'HH:mm',
+                locale:'fr',
+                 icons: {
+            time: "fa fa-clock-o",
+            date: "fa fa-calendar",
+            up: "fa fa-arrow-up",
+            down: "fa fa-arrow-down",
+            next: "fa fa-arrow-right",
+            previous:"fa fa-arrow-left"
+        }
+            });
+        });
+    </script>
+   
+
+{% endblock %}

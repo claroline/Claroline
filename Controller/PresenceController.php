@@ -19,6 +19,8 @@ use FormaLibre\PresenceBundle\Entity\Period;
 use FormaLibre\PresenceBundle\Entity\Presence;
 use FormaLibre\PresenceBundle\Entity\Status;
 use FormaLibre\PresenceBundle\Entity\Releves;
+use FormaLibre\PresenceBundle\Entity\SchoolYear;
+
 use Claroline\CoreBundle\Entity\User;
 use FormaLibre\PresenceBundle\Manager\PresenceManager;
 use FormaLibre\PresenceBundle\Entity\PresenceRights;
@@ -35,6 +37,7 @@ class PresenceController extends Controller
     private $periodRepo;
     private $groupRepo;
     private $userRepo;
+    private $schoolYearRepo;
     private $router;
     private $presenceManager;
     
@@ -62,6 +65,7 @@ class PresenceController extends Controller
         $this->userRepo           = $om->getRepository('ClarolineCoreBundle:User'); 
         $this->statuRepo          = $om->getRepository('FormaLibrePresenceBundle:Status');  
         $this->presenceRepo       = $om->getRepository('FormaLibrePresenceBundle:Presence');
+        $this->schoolYearRepo     = $om->getRepository('FormaLibrePresenceBundle:SchoolYear');
         $this->presenceManager    = $presenceManager;
     }
     
@@ -247,11 +251,54 @@ class PresenceController extends Controller
     {   $canViewArchives= $this->presenceManager->checkRights($user,  PresenceRights::READING_ARCHIVES);
         $canEditArchives= $this->presenceManager->checkRights($user, PresenceRights::EDIT_ARCHIVES);
         
-        $Presences = $this->presenceRepo->findAll();
-       
-       return array('presences'=> $Presences,
-                    'canViewArchives'=>$canViewArchives,
-                    'canEditArchives'=>$canEditArchives);
+        $SchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(true);
+        if(!is_null($SchoolYear)){
+            $Presences = $this->presenceRepo->findBySchoolYear($SchoolYear);
+            $SchoolYearSelection = $this ->createFormBuilder()
+           
+                ->add ('selection','entity',array (
+                    'class' => 'FormaLibrePresenceBundle:SchoolYear',
+                    'property' => 'schoolYearName',
+                    'empty_value' =>' Changer de période',))
+                ->add ('valider','submit',array (
+                    'label'=>'Comfirmer ?'))
+                ->getForm();
+
+            $Presences = $this->presenceRepo->findBySchoolYear($SchoolYear);
+
+            $SchoolYearName=$SchoolYear->getSchoolYearName();
+
+            $request = $this->getRequest();
+                if ($request->getMethod() == 'POST')
+                {
+                    $SchoolYearSelection->handleRequest($request);
+                    $name = $SchoolYearSelection->get("selection")->getData();
+                    $Presences = $this->presenceRepo->findBySchoolYear($name);
+                    $SchoolYearName=$name->getSchoolYearName();
+                }  
+        }
+        
+        else{
+              $Presences = $this->presenceRepo->findAll();
+              $SchoolYearName="Aucune période existante";
+              
+              $SchoolYearSelection = $this ->createFormBuilder()
+           
+                ->add ('selection','entity',array (
+                    'class' => 'FormaLibrePresenceBundle:SchoolYear',
+                    'property' => 'schoolYearName',
+                    'empty_value' =>' Aucune période existante',))
+                ->add ('valider','submit',array (
+                    'label'=>'Comfirmer'))
+                ->getForm();
+        }
+            return array('presences'=> $Presences,
+                        'canViewArchives'=>$canViewArchives,
+                        'canEditArchives'=>$canEditArchives,
+                        'schoolYear'=>$SchoolYear,
+                        'schoolYearName'=>$SchoolYearName,
+                        'schoolYearSelection'=>$SchoolYearSelection->createView());
+        
     }
   
          

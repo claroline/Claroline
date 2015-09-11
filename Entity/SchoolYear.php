@@ -50,7 +50,7 @@ class SchoolYear
      * @ORM\Column(name="schoolYearActual", type="boolean" )
      */
     private $schoolYearActual = false;
-
+    
     function getId() {
         return $this->id;
     }
@@ -105,6 +105,8 @@ class SchoolYear
     function setSchoolYearActual($schoolYearActual) {
         $this->schoolYearActual = $schoolYearActual;
     }
+
+ 
 
 
 

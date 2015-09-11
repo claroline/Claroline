@@ -33,7 +33,7 @@
                 <div id='calendar'></div>
             {% endif %}
             
-            {% if canViewPersonalArchives%} 
+            {% if canViewPersonalArchives and presences is not empty%} 
                 <div style="text-align: center;">
                     <H1>Tes présences:</H1>
                 </div>
@@ -78,6 +78,8 @@
                         </tr>
                     </tbody>
                 </table>
+            {% else%}
+                Il n'y a pas d'archives vous concernant pour le moment.
             {% endif %}
         </div>
     </div>
@@ -87,9 +89,9 @@
    
 {% block stylesheets %}
 {{ parent() }}
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.css') }}'/>
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/fullcalendar-2.3.1/fullcalendar.min.css') }}'/>
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css') }}'/>
-<link rel='stylesheet' type='text/css' href='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.print.css') }}' media='print' />
+<link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/fullcalendar-2.3.1//fullcalendar.print.css') }}' media='print' />
 <link rel='stylesheet' type='text/css' href='{{ asset('bundles/frontend/jquery/plugin/datepicker/css/datepicker.css') }}'>
 <style>
     .fc-day-grid-event > .fc-content {
@@ -108,7 +110,7 @@
      {{ parent() }}
             
     <script type="text/javascript" src="{{ asset('bundles/frontend/moment.min.js') }}"></script>
-    <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/vendor/fullcalendar-2.3.1/fullcalendar.min.js') }}' ></script>
+    <script type='text/javascript' src='{{ asset('bundles/frontend/jquery/plugin/fullcalendar-2.3.1/fullcalendar.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/clarolineagenda/js/calendar.js') }}'></script>
     <script type='text/javascript' src='{{ asset('bundles/frontend/date.js') }}'></script>
     <script type='text/javascript' src='{{ asset('bundles/formalibrepresence/js/fr.js') }}'></script>

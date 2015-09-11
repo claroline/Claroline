@@ -213,6 +213,7 @@ class AdminPresenceController extends Controller
             
             if ($request->getMethod() === 'POST') {
                 
+                
                 $NewSchoolYearForm->handleRequest($request);
                 
                 $name = $NewSchoolYearForm->get("name")->getData();
@@ -227,6 +228,13 @@ class AdminPresenceController extends Controller
                 $beginHourFormat = \DateTime::createFromFormat('H:i', $beginHour);
                 $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
                 
+                
+                if($actual){
+                    $AllSchoolYear=$this->schoolYearRepo->findAll();
+                    foreach ($AllSchoolYear as $oneSchoolYear) {
+                        $oneSchoolYear->setSchoolYearActual(false);  
+                    }
+                }
                 $actualSchoolYear = new SchoolYear();
                 $actualSchoolYear->setSchoolYearName($name);
                 $actualSchoolYear->setSchoolYearBegin($beginDateFormat);
@@ -256,7 +264,7 @@ class AdminPresenceController extends Controller
     public function SchoolYearModifAction(SchoolYear $theSchoolYear)
             
     {      
-        $NewSchoolYearForm = $this ->createFormBuilder()
+        $ModifSchoolYearForm = $this ->createFormBuilder()
         
             ->add('nameModifSchoolYear','text')
             ->add('beginDateModifSchoolYear','text')
@@ -274,39 +282,48 @@ class AdminPresenceController extends Controller
          $request = $this->getRequest();
             
             if ($request->getMethod() === 'POST') {
+                 
                 
-                $NewSchoolYearForm->handleRequest($request);
+                $ModifSchoolYearForm->handleRequest($request);
                 
-                $name = $NewSchoolYearForm->get("name")->getData();
-                $beginDate = $NewSchoolYearForm->get("beginDate")->getData();
-                $endDate= $NewSchoolYearForm->get("endDate")->getData();
-                $beginHour=$NewSchoolYearForm->get("beginHour")->getData();
-                $endHour = $NewSchoolYearForm->get("endHour")->getData();
-                $actual= $NewSchoolYearForm->get("actual")->getData();
+                $modifName = $ModifSchoolYearForm->get("nameModifSchoolYear")->getData();
+                $modifBeginDate = $ModifSchoolYearForm->get("beginDateModifSchoolYear")->getData();
+                $modifEndDate= $ModifSchoolYearForm->get("endDateModifSchoolYear")->getData();
+                $modifBeginHour=$ModifSchoolYearForm->get("beginHourModifSchoolYear")->getData();
+                $modifEndHour = $ModifSchoolYearForm->get("endHourModifSchoolYear")->getData();
+                $modifActual= $ModifSchoolYearForm->get("actualModifSchoolYear")->getData();
                 
-                $beginDateFormat = \DateTime::createFromFormat('d-m-Y', $beginDate);
-                $endDateFormat = \DateTime::createFromFormat('d-m-Y', $endDate);
-                $beginHourFormat = \DateTime::createFromFormat('H:i', $beginHour);
-                $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
+                if($modifActual){
+                    $AllSchoolYear=$this->schoolYearRepo->findAll();
+                    foreach ($AllSchoolYear as $oneSchoolYear) {
+                        $oneSchoolYear->setSchoolYearActual(false);  
+                    }                
+                }
+               
                 
-                $actualSchoolYear->setSchoolYearName($name);
-                $actualSchoolYear->setSchoolYearBegin($beginDateFormat);
-                $actualSchoolYear->setSchoolYearEnd($endDateFormat);
-                $actualSchoolYear->setSchoolDayBeginHour($beginHourFormat);
-                $actualSchoolYear->setSchoolDayEndHour($endHourFormat);
-                $actualSchoolYear->setSchoolYearActual($actual);
-                $this->em->persist($actualSchoolYear);
+                $beginDateFormat = \DateTime::createFromFormat('d-m-Y', $modifBeginDate);
+                $endDateFormat = \DateTime::createFromFormat('d-m-Y', $modifEndDate);
+                $beginHourFormat = \DateTime::createFromFormat('H:i', $modifBeginHour);
+                $endHourFormat = \DateTime::createFromFormat('H:i', $modifEndHour);
+                
+                $theSchoolYear->setSchoolYearName($modifName);
+                $theSchoolYear->setSchoolYearBegin($beginDateFormat);
+                $theSchoolYear->setSchoolYearEnd($endDateFormat);
+                $theSchoolYear->setSchoolDayBeginHour($beginHourFormat);
+                $theSchoolYear->setSchoolDayEndHour($endHourFormat);
+                $theSchoolYear->setSchoolYearActual($modifActual);
+                $this->em->persist($theSchoolYear);
                 $this->em->flush();
       
                 return new JsonResponse("success",200);
                 }
         
-       return array('ModifStatusForm' => $ModifStatusForm->createView(),
-                    'theStatus'=>$theStatus);
+       return array('ModifSchoolYearForm' => $ModifSchoolYearForm->createView(),
+                    'theSchoolYear'=>$theSchoolYear);
     }
                  /**
      * @EXT\Route(
-     *     "/presence/schoolYear_supprimerf/id/{theSchoolYear}",
+     *     "/presence/schoolYear_supprimer/theSchoolYear/{theSchoolYear}",
      *     name="formalibre_school_year_supprimer",
      *     options={"expose"=true}
      * )
@@ -317,8 +334,8 @@ class AdminPresenceController extends Controller
     public function SchoolYearSupprimerAction(SchoolYear $theSchoolYear)
             
     {      
-                $this->em->remove($theSchoolYear);
-                $this->em->flush();
+        $this->em->remove($theSchoolYear);
+        $this->em->flush();
  
        return new JsonResponse("success",200);
     }
@@ -360,7 +377,8 @@ class AdminPresenceController extends Controller
     public function adminHoraireAction()
             
     {
-       $Periods = $this->periodRepo->findByVisibility(1) ; 
+       $Periods = $this->periodRepo->findAll() ; 
+       $SchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(true);
         
        $NewPeriodForm = $this ->createFormBuilder()
         
@@ -397,35 +415,48 @@ class AdminPresenceController extends Controller
                 
                 $startHourFormat = \DateTime::createFromFormat('H:i', $startHour);
                 $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
+                           
+                if(!is_null($SchoolYear)){
+                    $BeginSchoolYearDate=$SchoolYear->getSchoolYearBegin();
+                    $EndSchoolYearDate=$SchoolYear->getSchoolYearEnd();
+      
                 
-                foreach ($wichDay as $oneDay) {
-                    $begin = new \DateTime('2015-09-01 09:00:00', new \DateTimeZone('Europe/Paris')); //j'initialise ainsi car je ne suis pas le 1/09
-                    $begin->modify('last '.$oneDay);  
-                    $interval = new \DateInterval('P1W'); //interval d'une semaine
-                    $end = new \DateTime('2016-06-30 09:00:00', new \DateTimeZone('Europe/Paris'));
-                    $end->modify('next '.$oneDay); //dernier jour du mois
-                    $period = new \DatePeriod($begin, $interval, $end);
-                    foreach ($period as $date) {
-                         
-                        $dateFormat = $date->format("Y-m-d");
-                        $dayNameFormat=$date->format("l");
+                    foreach ($wichDay as $oneDay) {
+                        $begin = $BeginSchoolYearDate;
+                        $begin->modify('last '.$oneDay);  
+                        $interval = new \DateInterval('P1W'); //interval d'une semaine
+                        $end = $EndSchoolYearDate;
+                        $end->modify('next '.$oneDay); //dernier jour du mois
+                        $period = new \DatePeriod($begin, $interval, $end);
+                        foreach ($period as $date) {
 
-                        $actualPeriod = new Period();
-                        $actualPeriod->setBeginHour($startHourFormat);
-                        $actualPeriod->setEndHour($endHourFormat);
-                        $actualPeriod->setDay($date);
-                        $actualPeriod->setDayName($dayNameFormat);
-                        $actualPeriod->setName($name);
-                        $actualPeriod->setNumPeriod($number);
+                            $dateFormat = $date->format("Y-m-d");
+                            $dayNameFormat=$date->format("l");
 
-                        $this->em->persist($actualPeriod);
-                        $this->em->flush();  
+                            $actualPeriod = new Period();
+                            $actualPeriod->setBeginHour($startHourFormat);
+                            $actualPeriod->setEndHour($endHourFormat);
+                            $actualPeriod->setDay($date);
+                            $actualPeriod->setDayName($dayNameFormat);
+                            $actualPeriod->setName($name);
+                            $actualPeriod->setNumPeriod($number);
+                            $actualPeriod->setSchoolYearId($SchoolYear);
+
+                            $this->em->persist($actualPeriod);
+                            $this->em->flush();  
+                        }
                     }
+                }  
+                else{
+                    $session=$request->getSession();
+                    $session->getFlashBag()->add('error',"Vous n'avez pas selectionner l'année courante dans le menu de configuration");
                 }
-   
+                
             return $this->redirect($this->generateUrl('formalibre_presence_horaire'));    
         }  
-       return array('NewPeriodForm' => $NewPeriodForm->createView(), 'periods' => $Periods);
+       return array('NewPeriodForm' => $NewPeriodForm->createView(), 
+                    'periods' => $Periods,
+                    'schoolYear'=>$SchoolYear);
     }
     
      
@@ -498,9 +529,7 @@ class AdminPresenceController extends Controller
      * @param User $user
      */
     public function adminPeriodSupprimerAction(Period $period){
-        
-        
-        
+
         $startHour = $period->getBeginHour();
         $endHour = $period->getEndHour(); 
         $dayName = $period->getDayName();
@@ -511,7 +540,7 @@ class AdminPresenceController extends Controller
 
         foreach ($PeriodToModif as $OnePeriodToModif) {
             
-            $OnePeriodToModif->setVisibility(0);
+            $this->em->remove($PeriodToModif);
            
             }
             
