@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Expertise
+ * UJM\ExoBundle\Entity\Expertise.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_expertise")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Expertise
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,21 +22,21 @@ class Expertise
     private $id;
 
     /**
-     * @var string $title
+     * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @var text $description
+     * @var text
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var string $status
+     * @var string
      *
      * @ORM\Column(name="status", type="string", length=255)
      */
@@ -54,19 +54,18 @@ class Expertise
      */
     private $users;
 
-
     /**
-     * Constructs a new instance of Users /
+     * Constructs a new instance of Users /.
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -74,7 +73,7 @@ class Expertise
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      */
@@ -84,7 +83,7 @@ class Expertise
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -94,7 +93,7 @@ class Expertise
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param text $description
      */
@@ -104,7 +103,7 @@ class Expertise
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return text
      */
@@ -114,7 +113,7 @@ class Expertise
     }
 
     /**
-     * Set status
+     * Set status.
      *
      * @param string $status
      */
@@ -124,7 +123,7 @@ class Expertise
     }
 
     /**
-     * Get status
+     * Get status.
      *
      * @return string
      */
@@ -144,7 +143,7 @@ class Expertise
     }
 
     /**
-     * Add User
+     * Add User.
      *
      * @param Claroline\CoreBundle\Entity\User $user
      */

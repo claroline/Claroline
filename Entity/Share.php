@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Share
+ * UJM\ExoBundle\Entity\Share.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ShareRepository")
  * @ORM\Table(name="ujm_share")
@@ -25,12 +25,11 @@ class Share
     private $question;
 
     /**
-     * @var boolean $allowToModify
+     * @var bool
      *
      * @ORM\Column(name="allowToModify", type="boolean")
      */
     private $allowToModify;
-
 
     public function __construct(\Claroline\CoreBundle\Entity\User $user, \UJM\ExoBundle\Entity\Question $question)
     {
@@ -59,9 +58,9 @@ class Share
     }
 
     /**
-     * Set allowToModify
+     * Set allowToModify.
      *
-     * @param boolean $allowToModify
+     * @param bool $allowToModify
      */
     public function setAllowToModify($allowToModify)
     {
@@ -69,9 +68,9 @@ class Share
     }
 
     /**
-     * Get allowToModify
+     * Get allowToModify.
      *
-     * @return boolean
+     * @return bool
      */
     public function getAllowToModify()
     {

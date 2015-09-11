@@ -2,39 +2,34 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
-
+class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler
+{
     protected $validator;
 
     /**
-     * To validate wordResponse of the InteractionHole
+     * To validate wordResponse of the InteractionHole.
      *
-     * @access public
      *
      * @param Validator $validator
-     *
      */
-    public function setValidator($validator) {
+    public function setValidator($validator)
+    {
         $this->validator = $validator;
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
             //Uses the default category if no category selected
             $this->checkCategory();
             //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if ( $this->form->isValid() ) {
-                if($this->validateNbClone() === FALSE) {
+            if ($this->form->isValid()) {
+                if ($this->validateNbClone() === false) {
                     return 'infoDuplicateQuestion';
                 }
                 foreach ($this->form->getData()->getHoles() as $h) {
@@ -55,9 +50,8 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
      */
@@ -95,9 +89,8 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionHole $originalInterHole
      *
@@ -116,10 +109,10 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 foreach ($this->form->getData()->getHoles() as $h) {
                     foreach ($h->getWordResponses() as $wr) {
                         $errorList = $this->validator->validate($wr);
@@ -138,10 +131,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -198,55 +188,44 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
     }
 
     /**
-     * To delete keywords during the update of interactionHole
+     * To delete keywords during the update of interactionHole.
      *
-     * @access private
      *
-     * @param \UJM\ExoBundle\Entity\Hole $hole
+     * @param \UJM\ExoBundle\Entity\Hole               $hole
      * @param Collection of \UJM\ExoBundle\Entity\Hole $originalHoles
-     *
      */
     private function delKeyWord($hole, $originalHoles)
     {
         $wordResponses = $hole->getWordResponses()->toArray();
 
-        foreach($originalHoles as $holeOrig)
-        {
+        foreach ($originalHoles as $holeOrig) {
             $originalWords = $holeOrig->getwordResponses()->getSnapshot();
-            if($hole->getId() === $holeOrig->getId())
-            {
-                foreach($wordResponses as $word)
-                {
-                    foreach($originalWords as $key => $toDel)
-                    {
-                        if ($toDel->getId() === $word->getId())
-                        {
+            if ($hole->getId() === $holeOrig->getId()) {
+                foreach ($wordResponses as $word) {
+                    foreach ($originalWords as $key => $toDel) {
+                        if ($toDel->getId() === $word->getId()) {
                             unset($originalWords[$key]);
                         }
                     }
                 }
 
                 // remove the relationship between the hole and the interactionhole
-                foreach ($originalWords as $word)
-                {
+                foreach ($originalWords as $word) {
                     // remove the wr from the wordResponse
                     $hole->getWordResponses()->removeElement($word);
 
                     // if you wanted to delete the Hole entirely, you can also do that
                     $this->em->remove($word);
                 }
-
             }
         }
     }
 
     /**
-     * To generate the html (text with hole) without value
+     * To generate the html (text with hole) without value.
      *
-     * @access private
      *
      * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
-     *
      */
     private function htmlWithoutValue($interHole)
     {
@@ -255,13 +234,12 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         $tabInputValue = explode('value="', $html);
         $tabHoles = array();
 
-        foreach($interHole->getHoles() as $hole)
-        {
+        foreach ($interHole->getHoles() as $hole) {
             if ($hole->getSelector() === false) {
                 $tabHoles[$hole->getPosition()] = $hole;
             } else {
-                $selectInHtml = explode('<select id="' . $hole->getPosition() . '" class="blank" name="blank_' . $hole->getPosition() . '">', $html);
-                $selectInHtml = explode ('</select>', $selectInHtml[1]);
+                $selectInHtml = explode('<select id="'.$hole->getPosition().'" class="blank" name="blank_'.$hole->getPosition().'">', $html);
+                $selectInHtml = explode('</select>', $selectInHtml[1]);
                 $html = str_replace($selectInHtml[0], '', $html);
 
                 $pos = $hole->getPosition();
@@ -285,8 +263,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         ksort($tabHoles);
         $tabHoles = array_values($tabHoles);
 
-        for( $i= 0; $i < count($tabInputValue); $i++)
-        {
+        for ($i = 0; $i < count($tabInputValue); ++$i) {
             $inputValue = explode('"', $tabInputValue[$i]);
             $regExpr = 'value="'.$inputValue[0].'"';
             $html = str_replace($regExpr, 'value=""', $html);
@@ -294,6 +271,5 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
         $interHole->setHtmlWithoutValue($html);
         $this->em->persist($interHole);
         $this->em->flush();
-
     }
 }

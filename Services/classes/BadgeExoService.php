@@ -1,27 +1,22 @@
 <?php
 
 /**
- *
  * Services for the badges linked with the exercices
- * To display the badge obtained by an user in his list of copies
+ * To display the badge obtained by an user in his list of copies.
  */
-
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-class BadgeExoService {
-
+class BadgeExoService
+{
     private $doctrine;
 
-
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
-     *
      */
     public function __construct(Registry $doctrine)
     {
@@ -29,14 +24,12 @@ class BadgeExoService {
     }
 
     /**
+     * to return infos badges for an exercise and an user.
      *
-     * to return infos badges for an exercise and an user
      *
-     * @access public
-     *
-     * @param integer $userId id User
-     * @param integer $resourceId id Claroline Resource
-     * @param String $locale given by container->getParameter('locale') FR, EN ....
+     * @param int    $userId     id User
+     * @param int    $resourceId id Claroline Resource
+     * @param String $locale     given by container->getParameter('locale') FR, EN ....
      *
      * @return \Icap\BadgeBundle\Entity\Badge[]
      */
@@ -47,33 +40,31 @@ class BadgeExoService {
         $i = 0;
 
         $exoBadges = $this->getBadgeLinked($resourceId);
-        foreach($exoBadges as $badge) {
-                $brs = $this->getBadgeRules($badge);
-                if (count($brs) == 1) {
-                    $trans = $this->getBadgeTrans($badge, $locale);
-                    $badgesInfoUser[$i]['badgeName'] = $trans->getName();
+        foreach ($exoBadges as $badge) {
+            $brs = $this->getBadgeRules($badge);
+            if (count($brs) == 1) {
+                $trans = $this->getBadgeTrans($badge, $locale);
+                $badgesInfoUser[$i]['badgeName'] = $trans->getName();
 
-                    $userBadge = $this->getUserBadge($userId, $badge);
-                    if ($userBadge) {
-                        $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
-                    } else {
-                        $badgesInfoUser[$i]['issued'] = -1;
-                    }
-
-                    $i++;
+                $userBadge = $this->getUserBadge($userId, $badge);
+                if ($userBadge) {
+                    $badgesInfoUser[$i]['issued'] = $userBadge->getIssuedAt();
+                } else {
+                    $badgesInfoUser[$i]['issued'] = -1;
                 }
+
+                ++$i;
+            }
         }
 
         return $badgesInfoUser;
     }
 
     /**
+     * to return badges linked with the exercise.
      *
-     * to return badges linked with the exercise
      *
-     * @access public
-     *
-     * @param integer $resourceId id Claroline Resource
+     * @param int $resourceId id Claroline Resource
      *
      * @return \Icap\BadgeBundle\Entity\Badge[]
      */
@@ -87,7 +78,7 @@ class BadgeExoService {
         foreach ($badgesRules as $br) {
             $badge = $em->getRepository('IcapBadgeBundle:Badge')
                           ->findBy(array('id' => $br->getAssociatedBadge(), 'deletedAt' => null));
-            if($badge) {
+            if ($badge) {
                 $badges[] = $br->getAssociatedBadge();
             }
         }
@@ -96,10 +87,8 @@ class BadgeExoService {
     }
 
     /**
+     * get badge's rules.
      *
-     * get badge's rules
-     *
-     * @access private
      *
      * @param \Icap\BadgeBundle\Entity\Badge $badge
      *
@@ -110,20 +99,18 @@ class BadgeExoService {
         $em = $this->doctrine->getManager();
         $badgeRules = $em->getRepository('IcapBadgeBundle:BadgeRule')
                          ->findBy(array(
-                              'associatedBadge' => $badge->getId()
+                              'associatedBadge' => $badge->getId(),
                            ));
 
         return $badgeRules;
     }
 
     /**
+     * get badge translation.
      *
-     * get badge translation
-     *
-     * @access private
      *
      * @param \Icap\BadgeBundle\Entity\Badge $badge
-     * @param String $locale given by container->getParameter('locale') FR, EN ....
+     * @param String                         $locale given by container->getParameter('locale') FR, EN ....
      *
      * @return \Icap\BadgeBundle\Entity\BadgeTranslation
      */
@@ -132,20 +119,18 @@ class BadgeExoService {
         $em = $this->doctrine->getManager();
         $badgeTranslation = $em->getRepository('IcapBadgeBundle:BadgeTranslation')
                                ->findOneBy(array(
-                                    'badge'  => $badge->getId(),
-                                    'locale' => $locale
+                                    'badge' => $badge->getId(),
+                                    'locale' => $locale,
                                  ));
 
         return $badgeTranslation;
     }
 
     /**
+     * To verify if an user obtained the badge.
      *
-     * To verify if an user obtained the badge
      *
-     * @access private
-     *
-     * @param integer $userId id User
+     * @param int                            $userId id User
      * @param \Icap\BadgeBundle\Entity\Badge $badge
      *
      * @return \Icap\BadgeBundle\Entity\UserBadge
@@ -155,11 +140,10 @@ class BadgeExoService {
         $em = $this->doctrine->getManager();
         $userBadge = $em->getRepository('IcapBadgeBundle:UserBadge')
                         ->findOneBy(array(
-                                    'user'  => $userId,
-                                    'badge' => $badge->getId()
+                                    'user' => $userId,
+                                    'badge' => $badge->getId(),
                                    ));
 
         return $userBadge;
-
     }
 }

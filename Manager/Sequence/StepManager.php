@@ -8,39 +8,44 @@ use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Sequence\Step;
 
 /**
- * Description of StepManager
- *
+ * Description of StepManager.
  */
-class StepManager {
-
+class StepManager
+{
     protected $em;
     protected $translator;
 
-    public function __construct(EntityManager $em, TranslatorInterface $translator) {
+    public function __construct(EntityManager $em, TranslatorInterface $translator)
+    {
         $this->em = $em;
         $this->translator = $translator;
     }
 
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->em->getRepository('UJMExoBundle:Sequence\Step');
     }
 
     /**
-     * Get all steps
+     * Get all steps.
+     *
      * @param Sequence $s
+     *
      * @return ArrayCollection
      */
-    public function getSteps(Sequence $s) {
+    public function getSteps(Sequence $s)
+    {
         $steps = $this->getRepository()->findBy(array('sequence' => $s), array('position' => 'ASC'));
+
         return $steps;
     }
 
     /**
-     * 
      * @param Sequence $s
-     * @param type $steps
+     * @param type     $steps
      */
-    public function updateSteps(Sequence $s, $steps) {
+    public function updateSteps(Sequence $s, $steps)
+    {
 
         // validate data or throws exception
         $this->validateStepsData($steps);
@@ -66,7 +71,6 @@ class StepManager {
             $this->em->persist($stepEntity);
             $this->em->flush();
 
-
             // handle step questions
             if (!empty($step['questions'])) {
                 // print_r($step['questions']);die;
@@ -78,8 +82,8 @@ class StepManager {
         return $this->getSteps($s);
     }
 
-    private function handleStepQuestions(Step $step, $questions) {
-        
+    private function handleStepQuestions(Step $step, $questions)
+    {
         $position = 1;
         foreach ($questions as $question) {
             // Get the question entity
@@ -95,22 +99,27 @@ class StepManager {
             $stepQuestion->setPosition($position);
             $this->em->persist($stepQuestion);
             $this->em->flush();
-            $position++;
+            ++$position;
         }
     }
 
     /**
-     * Since we get an array from angular service we have to check the received data for each step
+     * Since we get an array from angular service we have to check the received data for each step.
+     *
      * @param Array $steps
-     * @return boolean
+     *
+     * @return bool
+     *
      * @throws Exception
      */
-    private function validateStepsData($steps) {
+    private function validateStepsData($steps)
+    {
         $valid = true;
 
         if (!$valid) {
             throw new Exception('error');
         }
+
         return $valid;
     }
 
@@ -118,11 +127,13 @@ class StepManager {
      * Compare two Step(s) collection, the old one and the new one
      * if an item is in the old collection and in the new one we keep it
      * if an item in the new collection has no id we also keep it
-     * if an item has an id but can not be found in the new collection we remove it
+     * if an item has an id but can not be found in the new collection we remove it.
+     *
      * @param ArrayCollection $oldCollection
-     * @param Array $newCollection
+     * @param Array           $newCollection
      */
-    private function deleteUnusedSteps($oldCollection, $newCollection) {
+    private function deleteUnusedSteps($oldCollection, $newCollection)
+    {
         foreach ($oldCollection as $toCheck) {
             $toKeep = false;
             $currentId = $toCheck->getId();
@@ -140,8 +151,8 @@ class StepManager {
         }
     }
 
-    public function addStep(Sequence $s, $step) {
-
+    public function addStep(Sequence $s, $step)
+    {
         $stepEntity = new Step();
         $stepEntity->setExercisePlayer($s);
         $stepEntity->setPosition($step['position']);
@@ -150,5 +161,4 @@ class StepManager {
         $this->em->persist($stepEntity);
         $this->em->flush();
     }
-
 }

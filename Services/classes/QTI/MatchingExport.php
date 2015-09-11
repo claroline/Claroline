@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To export a Matching question in QTI
- *
+ * To export a Matching question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class MatchingExport extends QtiExport
@@ -14,12 +12,11 @@ class MatchingExport extends QtiExport
     private $correctResponse;
     private $cardinality;
 
-     /**
-     * Implements the abstract method
+    /**
+     * Implements the abstract method.
      *
-     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository $qtiRepos
+     * @param qtiRepository                     $qtiRepos
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -39,7 +36,7 @@ class MatchingExport extends QtiExport
         $matchingType = 'match';
 
         $this->qtiHead($matchingType, $this->question->getTitle());
-        $this->qtiResponseDeclaration('RESPONSE','identifier', $this->cardinality);
+        $this->qtiResponseDeclaration('RESPONSE', 'identifier', $this->cardinality);
         $this->qtiOutComeDeclaration();
 
         $this->correctResponseTag();
@@ -48,61 +45,55 @@ class MatchingExport extends QtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if(($this->interactionmatching->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionmatching->getInteraction()->getFeedBack()!="") ){
+        if (($this->interactionmatching->getInteraction()->getFeedBack() != null)
+                && ($this->interactionmatching->getInteraction()->getFeedBack() != '')) {
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
 
         return $this->getResponse();
-
     }
 
     /**
-     * add the tag matchingInteraction in itemBody
-     *
-     * @access private
+     * add the tag matchingInteraction in itemBody.
      */
     protected function matchingInteractionTag()
     {
-        $i=0;
+        $i = 0;
         foreach ($this->interactionmatching->getProposals() as $pr) {
-            $i++;
+            ++$i;
         }
-        if($this->cardinality == "multiple") {
-            $w=0;
+        if ($this->cardinality == 'multiple') {
+            $w = 0;
             foreach ($this->interactionmatching->getLabels() as $pr) {
-                $w++;
+                ++$w;
             }
             $maxAssociation = $w * $i;
         } else {
             $maxAssociation = $i;
         }
-        if($this->interactionmatching->getShuffle() == 1 ) {
-            $shuffle = "true";
+        if ($this->interactionmatching->getShuffle() == 1) {
+            $shuffle = 'true';
         } else {
-            $shuffle = "false";
+            $shuffle = 'false';
         }
         $this->matchInteraction = $this->document->CreateElement('matchInteraction');
-        $this->matchInteraction->setAttribute("responseIdentifier", "RESPONSE");
-        $this->matchInteraction->setAttribute("shuffle", $shuffle);
-        $this->matchInteraction->setAttribute("maxAssociation", $maxAssociation);
+        $this->matchInteraction->setAttribute('responseIdentifier', 'RESPONSE');
+        $this->matchInteraction->setAttribute('shuffle', $shuffle);
+        $this->matchInteraction->setAttribute('maxAssociation', $maxAssociation);
         $this->itemBody->appendChild($this->matchInteraction);
-
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
+     * Implements the abstract method.
      */
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
         $this->matchInteraction->appendChild($prompt);
 
-        $prompttxt =  $this->document
+        $prompttxt = $this->document
                 ->CreateTextNode(
                         $this->interactionmatching->getInteraction()->getInvite()
                         );
@@ -113,26 +104,23 @@ class MatchingExport extends QtiExport
     }
 
     /**
-     * add the simpleMatchSetTag
-     *
-     * @access protected
+     * add the simpleMatchSetTag.
      */
     protected function qtiProposal()
     {
         $proposal = $this->document->CreateElement('simpleMatchSet');
         $this->matchInteraction->appendChild($proposal);
-        $i=-1;
+        $i = -1;
         foreach ($this->interactionmatching->getProposals() as $pr) {
-            $i++;
+            ++$i;
             //for add proposals
             $this->simpleMatchSetTagProposal($pr, $i, $proposal);
         }
     }
 
     /**
-     * add the simpleAssociableChoiceTag
+     * add the simpleAssociableChoiceTag.
      *
-     * @access protected
      *
      * @param type $proposal
      * @param type $numberProposal
@@ -141,10 +129,10 @@ class MatchingExport extends QtiExport
     protected function simpleMatchSetTagProposal($proposal, $numberProposal, $elementProposal)
     {
         //for the maxConnection in the tag simpleAssociableChoice of proposals
-        if($this->cardinality == "multiple") {
-            $w=0;
+        if ($this->cardinality == 'multiple') {
+            $w = 0;
             foreach ($this->interactionmatching->getLabels() as $la) {
-                $w++;
+                ++$w;
             }
             $maxAssociation = $w;
         } else {
@@ -159,38 +147,35 @@ class MatchingExport extends QtiExport
 
         $simpleProposal = $this->document->CreateElement('simpleAssociableChoice');
 
-        $simpleProposal->setAttribute("identifier", "left".$numberProposal);
-        $simpleProposal->setAttribute("fixed", $positionForced);
-        $simpleProposal->setAttribute("matchMax", $maxAssociation);
+        $simpleProposal->setAttribute('identifier', 'left'.$numberProposal);
+        $simpleProposal->setAttribute('fixed', $positionForced);
+        $simpleProposal->setAttribute('matchMax', $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleProposal);
-        $simpleProposaltxt =  $this->document->CreateTextNode($proposal->getValue());
+        $simpleProposaltxt = $this->document->CreateTextNode($proposal->getValue());
 
         $simpleProposal->appendChild($simpleProposaltxt);
         $elementProposal->appendChild($simpleProposal);
     }
 
     /**
-     * add the simpleMatchSetTag
-     *
-     * @access protected
+     * add the simpleMatchSetTag.
      */
     protected function qtiLabel()
     {
         $label = $this->document->CreateElement('simpleMatchSet');
         $this->matchInteraction->appendChild($label);
-        $i=-1;
+        $i = -1;
         foreach ($this->interactionmatching->getLabels() as $la) {
-            $i++;
+            ++$i;
             //for add labels
             $this->simpleMatchSetTagLabel($la, $i, $label);
         }
     }
 
     /**
-     * add the simpleAssociableChoiceTag
+     * add the simpleAssociableChoiceTag.
      *
-     * @access protected
      *
      * @param type $label
      * @param type $numberLabel
@@ -198,10 +183,10 @@ class MatchingExport extends QtiExport
      */
     protected function simpleMatchSetTagLabel($label, $numberLabel, $elementLabel)
     {
-        if($this->cardinality == "multiple") {
+        if ($this->cardinality == 'multiple') {
             $w = 0;
             foreach ($this->interactionmatching->getProposals() as $pr) {
-                $w++;
+                ++$w;
             }
             $maxAssociation = $w;
         } else {
@@ -216,12 +201,12 @@ class MatchingExport extends QtiExport
 
         $simpleLabel = $this->document->CreateElement('simpleAssociableChoice');
 
-        $simpleLabel->setAttribute("identifier", "right".$numberLabel);
-        $simpleLabel->setAttribute("fixed", $positionForced);
-        $simpleLabel->setAttribute("matchMax", $maxAssociation);
+        $simpleLabel->setAttribute('identifier', 'right'.$numberLabel);
+        $simpleLabel->setAttribute('fixed', $positionForced);
+        $simpleLabel->setAttribute('matchMax', $maxAssociation);
 
         $this->matchInteraction->appendChild($simpleLabel);
-        $simpleLabeltxt =  $this->document->CreateTextNode($label->getValue());
+        $simpleLabeltxt = $this->document->CreateTextNode($label->getValue());
 
         $simpleLabel->appendChild($simpleLabeltxt);
         $elementLabel->appendChild($simpleLabel);
@@ -229,9 +214,7 @@ class MatchingExport extends QtiExport
 
     /**
      * Implements the abstract method
-     * add the tag correctResponse in responseDeclaration
-     *
-     * @access protected
+     * add the tag correctResponse in responseDeclaration.
      */
     protected function correctResponseTag()
     {
@@ -241,23 +224,20 @@ class MatchingExport extends QtiExport
     }
 
     /**
-     * for the notation
-     *
-     * @access protected
+     * for the notation.
      */
     protected function notation()
     {
         $mapping = $this->document->CreateElement('mapping');
-        $mapping->setAttribute("defaultValue", "0");
+        $mapping->setAttribute('defaultValue', '0');
         //get associations
         $this->AssociationsMapEntry($mapping);
         $this->responseDeclaration[0]->appendChild($mapping);
     }
 
     /**
-     * get associations and put it in mapEntry
+     * get associations and put it in mapEntry.
      *
-     * @access protected
      *
      * @param type $mapping
      */
@@ -273,7 +253,6 @@ class MatchingExport extends QtiExport
         $nbrLabelAssociated = $this->nbrLabel($nbrLabel, $labels, $allAssocLabel);
 
         foreach ($allAssocLabel as $key => $assocLabel) {
-
             foreach ($assocLabel as $label) {
 
                 //recup of each id label of relations
@@ -283,14 +262,14 @@ class MatchingExport extends QtiExport
                 foreach ($labels as $key2 => $la2) {
 
                     //compare two labels for know the index in mapEntry
-                    if($la2 == $associatedLabel) {
-                        $mapEntry= $this->document->CreateElement('mapEntry');
-                        $mapEntry->setAttribute("mapKey", "left".$key." right".$key2);
+                    if ($la2 == $associatedLabel) {
+                        $mapEntry = $this->document->CreateElement('mapEntry');
+                        $mapEntry->setAttribute('mapKey', 'left'.$key.' right'.$key2);
 
-                        if ( $nbrLabelAssociated[$la2] == 0 ) {
-                            $mapEntry->setAttribute("mappedValue", $points[$key2]);
+                        if ($nbrLabelAssociated[$la2] == 0) {
+                            $mapEntry->setAttribute('mappedValue', $points[$key2]);
                         } else {
-                            $mapEntry->setAttribute("mappedValue", $points[$key2] / $nbrLabelAssociated[$la2]);
+                            $mapEntry->setAttribute('mappedValue', $points[$key2] / $nbrLabelAssociated[$la2]);
                         }
                         $mapping->appendChild($mapEntry);
                     }
@@ -300,9 +279,8 @@ class MatchingExport extends QtiExport
     }
 
     /**
-     * get number of labels for the division of the notation
+     * get number of labels for the division of the notation.
      *
-     * @access protected
      *
      * @param type $nbrLabel
      * @param type $labels
@@ -313,25 +291,23 @@ class MatchingExport extends QtiExport
     protected function nbrLabel($nbrLabel, $labels, $allAssocLabel)
     {
         foreach ($allAssocLabel as $assocLabel) {
-
             foreach ($assocLabel as $label) {
                 $associatedLabel = $label->getId();
 
                 foreach ($labels as $la2) {
-
-                    if($la2 == $associatedLabel) {
-                        $nbrLabel[$la2] = $nbrLabel[$la2] +1;
+                    if ($la2 == $associatedLabel) {
+                        $nbrLabel[$la2] = $nbrLabel[$la2] + 1;
                     }
                 }
             }
         }
+
         return $nbrLabel;
     }
 
     /**
-     * get associations and put it in value
+     * get associations and put it in value.
      *
-     * @access protected
      *
      * @param type $elementParent
      */
@@ -343,8 +319,7 @@ class MatchingExport extends QtiExport
         $allAssocLabel = $this->AssociatedLabels();
 
         foreach ($allAssocLabel as $key => $assocLabel) {
-
-            foreach ($assocLabel as $label){
+            foreach ($assocLabel as $label) {
                 //to know labels of associatedLabel in the table proposal
                 $idAssociatedLabel = $label->getId();
 
@@ -352,9 +327,9 @@ class MatchingExport extends QtiExport
                 foreach ($labels as $key2 => $la2) {
 
                     //compare two labels for know the index in mapEntry
-                    if($la2 == $idAssociatedLabel) {
-                        $value= $this->document->CreateElement('value');
-                        $valuetxt = $this->document->CreateTextNode("left".$key." right".$key2);
+                    if ($la2 == $idAssociatedLabel) {
+                        $value = $this->document->CreateElement('value');
+                        $valuetxt = $this->document->CreateTextNode('left'.$key.' right'.$key2);
                         $value->appendChild($valuetxt);
                         $elementParent->appendChild($value);
                     }
@@ -364,9 +339,8 @@ class MatchingExport extends QtiExport
     }
 
     /**
-     * returns associated labels
+     * returns associated labels.
      *
-     * @access protected
      *
      * @return $assocLabels
      */
@@ -375,6 +349,7 @@ class MatchingExport extends QtiExport
         foreach ($this->interactionmatching->getProposals() as $key => $la) {
             $assocLabels[$key] = $la->getAssociatedLabel();
         }
+
         return $assocLabels;
     }
 }

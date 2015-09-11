@@ -1,24 +1,22 @@
 <?php
 
 /**
- *
- * Services for the matching
+ * Services for the matching.
  */
-
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class Open extends Interaction {
+class Open extends Interaction
+{
     /**
-     * implement the abstract method
-     * To process the user's response for a paper(or a test)
-     *
-     * @access public
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
-     *
-     * @return mixed[]
-     */
+      * implement the abstract method
+      * To process the user's response for a paper(or a test).
+      *
+      *
+      * @param \Symfony\Component\HttpFoundation\Request $request
+      * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+      *
+      * @return mixed[]
+      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
          $interactionOpenID = $request->request->get('interactionOpenToValidated');
@@ -36,21 +34,20 @@ class Open extends Interaction {
          $score = $this->mark($interOpen, $response, $penalty);
 
          $res = array(
-             'penalty'   => $penalty,
+             'penalty' => $penalty,
              'interOpen' => $interOpen,
-             'response'  => $response,
-             'score'     => $score,
-             'tempMark'  => $tempMark
+             'response' => $response,
+             'score' => $score,
+             'tempMark' => $tempMark,
          );
 
-        return $res;
+         return $res;
      }
 
      /**
       * implement the abstract method
-      * To calculate the score
+      * To calculate the score.
       *
-      * @access public
       * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
       * @param String $response
       * @param float $penalty penalty if the user showed hints
@@ -61,13 +58,12 @@ class Open extends Interaction {
              \UJM\ExoBundle\Entity\InteractionOpen $interOpen = null,
              $response = null,
              $penalty = null
-     )
-     {
+     ) {
          if ($interOpen->getTypeOpenQuestion() == 'long') {
              $score = -1;
-         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+         } elseif ($interOpen->getTypeOpenQuestion() == 'oneWord') {
              $score = $this->getScoreOpenOneWord($response, $interOpen);
-         } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+         } elseif ($interOpen->getTypeOpenQuestion() == 'short') {
              $score = $this->getScoreShortResponse($response, $interOpen);
          }
 
@@ -83,11 +79,10 @@ class Open extends Interaction {
          return $score;
      }
 
-    /**
+     /**
       * implement the abstract method
-      * Get score max possible for an open question
+      * Get score max possible for an open question.
       *
-      * @access public
       *
       * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
       *
@@ -100,10 +95,10 @@ class Open extends Interaction {
 
          if ($interOpen->getTypeOpenQuestion() == 'long') {
              $scoreMax = $interOpen->getScoreMaxLongResp();
-         } else if ($interOpen->getTypeOpenQuestion() == 'oneWord') {
+         } elseif ($interOpen->getTypeOpenQuestion() == 'oneWord') {
              $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                             ->getScoreMaxOneWord($interOpen->getId());
-         } else if ($interOpen->getTypeOpenQuestion() == 'short') {
+         } elseif ($interOpen->getTypeOpenQuestion() == 'short') {
              $scoreMax = $em->getRepository('UJMExoBundle:WordResponse')
                             ->getScoreMaxShort($interOpen->getId());
          }
@@ -112,13 +107,12 @@ class Open extends Interaction {
      }
 
      /**
-     * implement the abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionOpen
-     */
+      * implement the abstract method.
+      *
+      * @param Integer $interId id of interaction
+      *
+      * @return \UJM\ExoBundle\Entity\InteractionOpen
+      */
      public function getInteractionX($interId)
      {
          $em = $this->doctrine->getManager();
@@ -128,12 +122,11 @@ class Open extends Interaction {
          return $interOpen;
      }
 
-      /**
-      * implement the abstract method
+     /**
+      * implement the abstract method.
       *
       * call getAlreadyResponded and prepare the interaction to displayed if necessary
       *
-      * @access public
       * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
@@ -147,10 +140,9 @@ class Open extends Interaction {
          return $responseGiven;
      }
 
-     /**
-     * Get the types of open question long, short, numeric, one word
+    /**
+     * Get the types of open question long, short, numeric, one word.
      *
-     * @access public
      *
      * @return array
      */
@@ -169,12 +161,11 @@ class Open extends Interaction {
         return $typeOpen;
     }
 
-     /**
-     * Get score for an open question with one word
+    /**
+     * Get score for an open question with one word.
      *
-     * @access private
      *
-     * @param String $response
+     * @param String                                $response
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      *
      * @return float
@@ -187,15 +178,13 @@ class Open extends Interaction {
         }
 
         return $score;
-
     }
 
     /**
-     * Get score for an open question with short answer
+     * Get score for an open question with short answer.
      *
-     * @access private
      *
-     * @param String $response
+     * @param String                                $response
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      *
      * @return float
@@ -204,7 +193,7 @@ class Open extends Interaction {
     {
         $score = 0;
 
-        foreach($interOpen->getWordResponses() as $wr) {
+        foreach ($interOpen->getWordResponses() as $wr) {
             $pattern = '/'.$wr->getResponse().'/';
             if (!$wr->getCaseSensitive()) {
                 $pattern .= 'i';

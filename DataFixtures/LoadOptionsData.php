@@ -8,7 +8,6 @@ use UJM\ExoBundle\Entity\TypeMatching;
 use UJM\ExoBundle\Entity\TypeOpenQuestion;
 use UJM\ExoBundle\Entity\TypeQCM;
 
-
 class LoadOptionsData extends AbstractFixture
 {
     private $manager;
@@ -73,5 +72,4 @@ class LoadOptionsData extends AbstractFixture
 
         $this->manager->persist($tmatch);
     }
-
 }

@@ -19,7 +19,7 @@ class TypeMatchingType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\TypeMatching',
-                'translation_domain' => 'ujm_exo'
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

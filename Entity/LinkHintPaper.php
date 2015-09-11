@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\LinkHintPaper
+ * UJM\ExoBundle\Entity\LinkHintPaper.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\LinkHintPaperRepository")
  * @ORM\Table(name="ujm_link_hint_paper")
@@ -25,7 +25,7 @@ class LinkHintPaper
     private $paper;
 
     /**
-     * @var boolean $view
+     * @var bool
      *
      * @ORM\Column(name="view", type="boolean")
      */
@@ -58,9 +58,9 @@ class LinkHintPaper
     }
 
     /**
-     * Set view
+     * Set view.
      *
-     * @param boolean $view
+     * @param bool $view
      */
     public function setView($view)
     {
@@ -68,7 +68,7 @@ class LinkHintPaper
     }
 
     /**
-     * Get view
+     * Get view.
      */
     public function getView()
     {

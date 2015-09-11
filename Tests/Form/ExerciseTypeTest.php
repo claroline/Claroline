@@ -34,7 +34,7 @@ class ExerciseTypeTest extends TypeTestCase
     {
         $formData = [
             'title' => 'Ex 1',
-            'publish' => '1'
+            'publish' => '1',
         ];
 
         $form = $this->factory->create(new ExerciseType(true));
@@ -56,7 +56,7 @@ class ExerciseTypeTest extends TypeTestCase
             'title' => 'Ex 1',
             'description' => 'Desc...',
             'duration' => '3600',
-            'lockAttempt' => '1'
+            'lockAttempt' => '1',
         ];
 
         $form = $this->factory->create(new ExerciseType(), new Exercise());

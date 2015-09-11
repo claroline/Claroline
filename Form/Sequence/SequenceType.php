@@ -16,24 +16,24 @@ class SequenceType extends AbstractType
             )
             ->add('description', 'tinymce', array(
                     'attr' => array('data-new-tab' => 'yes'),
-                    'label' => 'Description', 'required' => false
+                    'label' => 'Description', 'required' => false,
                 )
             )
             ->add('startDate', 'datetime', array(
                     'data' => new \DateTime(),
-                    'attr'=>array('style'=>'display:none;'),
-                    'widget' => 'single_text',                    
+                    'attr' => array('style' => 'display:none;'),
+                    'widget' => 'single_text',
                     'label' => ' ',
-                    'input' => 'datetime'
+                    'input' => 'datetime',
                 )
             )
-            ->add('endDate', 'datetime', array(        
+            ->add('endDate', 'datetime', array(
                     'data' => null,
-                    'attr'=>array('style'=>'display:none;'),
+                    'attr' => array('style' => 'display:none;'),
                     'label' => ' ',
                     'widget' => 'single_text',
-                    'required' => false ,
-                    'input' => 'datetime'
+                    'required' => false,
+                    'input' => 'datetime',
                 )
             );
     }

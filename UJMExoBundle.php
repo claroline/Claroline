@@ -19,7 +19,7 @@ class UJMExoBundle extends PluginBundle implements ConfigurationProviderInterfac
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__ . '/Resources/config/routing.yml', null, 'exercise');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'exercise');
     }
 
     public function getRequiredFixturesDirectory($environment)

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Question
+ * UJM\ExoBundle\Entity\Question.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\QuestionRepository")
  * @ORM\Table(name="ujm_question")
@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Question
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -24,42 +24,42 @@ class Question
     private $id;
 
     /**
-     * @var string $title
+     * @var string
      *
      * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
     private $title;
 
     /**
-     * @var string $description
+     * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var \Datetime $dateCreate
+     * @var \Datetime
      *
      * @ORM\Column(name="date_create", type="datetime")
      */
     private $dateCreate;
 
     /**
-     * @var \Datetime $dateModify
+     * @var \Datetime
      *
      * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      */
     private $dateModify;
 
     /**
-     * @var boolean $locked
+     * @var bool
      *
      * @ORM\Column(name="locked", type="boolean", nullable=true)
      */
     private $locked;
 
     /**
-     * @var boolean $model
+     * @var bool
      *
      * @ORM\Column(name="model", type="boolean", nullable=true)
      */
@@ -89,7 +89,7 @@ class Question
      */
     private $user;
 
-     /**
+    /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Category")
      */
     private $category;
@@ -109,9 +109,9 @@ class Question
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -119,7 +119,7 @@ class Question
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      */
@@ -129,7 +129,7 @@ class Question
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -139,7 +139,7 @@ class Question
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
      */
@@ -149,7 +149,7 @@ class Question
     }
 
     /**
-     * Get description
+     * Get description.
      *
      * @return string
      */
@@ -159,7 +159,7 @@ class Question
     }
 
     /**
-     * Set dateCreate
+     * Set dateCreate.
      *
      * @param \Datetime $dateCreate
      */
@@ -169,7 +169,7 @@ class Question
     }
 
     /**
-     * Get dateCreate
+     * Get dateCreate.
      *
      * @return \Datetime
      */
@@ -179,7 +179,7 @@ class Question
     }
 
     /**
-     * Set dateModify
+     * Set dateModify.
      *
      * @param \Datetime $dateModify
      */
@@ -189,7 +189,7 @@ class Question
     }
 
     /**
-     * Get dateModify
+     * Get dateModify.
      *
      * @return \Datetime
      */
@@ -199,9 +199,9 @@ class Question
     }
 
     /**
-     * Set locked
+     * Set locked.
      *
-     * @param boolean $locked
+     * @param bool $locked
      */
     public function setLocked($locked)
     {
@@ -209,7 +209,7 @@ class Question
     }
 
     /**
-     * Get locked
+     * Get locked.
      */
     public function getLocked()
     {
@@ -217,9 +217,9 @@ class Question
     }
 
     /**
-     * Set model
+     * Set model.
      *
-     * @param boolean $model
+     * @param bool $model
      */
     public function setModel($model)
     {
@@ -227,7 +227,7 @@ class Question
     }
 
     /**
-     * Get model
+     * Get model.
      */
     public function getModel()
     {
@@ -255,7 +255,7 @@ class Question
     }
 
     /**
-     * Add document
+     * Add document.
      *
      * @param Document $document
      */

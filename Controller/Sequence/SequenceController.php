@@ -14,14 +14,13 @@ use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Exercise;
 
 /**
- * Description of SequenceController
- *
+ * Description of SequenceController.
  */
 class SequenceController extends Controller
 {
-
     /**
-     * Play the selected Exercise
+     * Play the selected Exercise.
+     *
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      */
@@ -30,7 +29,7 @@ class SequenceController extends Controller
         // get api manager
         $manager = $this->get('ujm.exo.api_manager');
         $data = json_encode($manager->exportExercise($exercise));
+
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array('_resource' => $exercise, 'data' => $data));
     }
-
 }

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionOpen
+ * UJM\ExoBundle\Entity\InteractionOpen.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionOpenRepository")
  * @ORM\Table(name="ujm_interaction_open")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class InteractionOpen
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,7 +22,7 @@ class InteractionOpen
     private $id;
 
     /**
-     * @var boolean $orthographyCorrect
+     * @var bool
      *
      * @ORM\Column(name="orthography_correct", type="boolean")
      */
@@ -32,7 +32,6 @@ class InteractionOpen
      * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
      */
     private $interaction;
-
 
     /**
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeOpenQuestion")
@@ -45,7 +44,7 @@ class InteractionOpen
     private $wordResponses;
 
     /**
-     * @var float $scoreMaxLongResp
+     * @var float
      *
      * @ORM\Column(name="scoreMaxLongResp", type="float", nullable=true)
      */
@@ -53,13 +52,13 @@ class InteractionOpen
 
     public function __construct()
     {
-        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -67,9 +66,9 @@ class InteractionOpen
     }
 
     /**
-     * Set orthographyCorrect
+     * Set orthographyCorrect.
      *
-     * @param boolean $orthographyCorrect
+     * @param bool $orthographyCorrect
      */
     public function setOrthographyCorrect($orthographyCorrect)
     {
@@ -77,7 +76,7 @@ class InteractionOpen
     }
 
     /**
-     * Get orthographyCorrect
+     * Get orthographyCorrect.
      */
     public function getOrthographyCorrect()
     {
@@ -106,7 +105,6 @@ class InteractionOpen
 
     public function getWordResponses()
     {
-
         return $this->wordResponses;
     }
 
@@ -119,11 +117,10 @@ class InteractionOpen
 
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-
     }
 
     /**
-     * Set scoreMaxLongResp
+     * Set scoreMaxLongResp.
      *
      * @param float $scoreMaxLongResp
      */
@@ -133,27 +130,27 @@ class InteractionOpen
     }
 
     /**
-     * Get scoreMaxLongResp
+     * Get scoreMaxLongResp.
      */
     public function getScoreMaxLongResp()
     {
         return $this->scoreMaxLongResp;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 
             $this->interaction = clone $this->interaction;
 
-            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->wordResponses as $wordResponse) {
                 $newWordResponse = clone $wordResponse;
                 $newWordResponse->setInteractionOpen($this);
                 $newWordResponses->add($newWordResponse);
             }
             $this->wordResponses = $newWordResponses;
-
         }
     }
 }
