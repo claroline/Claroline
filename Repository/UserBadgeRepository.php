@@ -168,4 +168,26 @@ class UserBadgeRepository extends EntityRepository
 
         return $executeQuery ? $query->getResult(): $query;
     }
+
+    /**
+     * @param string $badgeSlug
+     *
+     * @param bool $executeQuery
+     *
+     * @return Query|array
+     */
+    public function findOneByBadgeSlug($badgeSlug, $executeQuery = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery(
+                'SELECT userBadge, badge, badgeTranslation
+                FROM IcapBadgeBundle:UserBadge userBadge
+                JOIN userBadge.badge badge
+                JOIN badge.translations badgeTranslation
+                WHERE badgeTranslation.slug = :badgeSlug
+            ')
+            ->setParameter('badgeSlug', $badgeSlug);
+
+        return $executeQuery ? $query->getOneOrNullResult(): $query;
+    }
 }

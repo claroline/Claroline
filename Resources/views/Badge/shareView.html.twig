@@ -1,0 +1,62 @@
+{% extends "IcapBadgeBundle::layout.html.twig" %}
+
+{% block title %}{{ 'badge'|trans({}, 'icap_badge') }} {{ userBadge.badge.name }}{% endblock %}
+
+{% trans_default_domain "icap_badge" %}
+
+{% block content %}
+    {{ macros.flashBox() }}
+
+    {% if showBanner %}
+    <div class="alert alert-info">
+        <strong>{{ 'page_public_look'|trans }}</strong>
+    </div>
+    {% endif %}
+    {% set badge = userBadge.badge %}
+    {% set user = userBadge.user %}
+    <h1>{{ badge.name }} <small>{{ 'collection_owned_by_user'|trans({'%user%': user.firstname ~ ' ' ~ user.lastName}) }}</small></h1>
+    <p></p>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{ badge.name }}</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-2 text-center">
+                    <img src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}" class="badge_image_informations" />
+                </div>
+                <div class="col-md-7">
+                    <div class="table-responsive">
+                        <table class="badge_informations table table-condensed">
+                            <colgroup>
+                                <col class="fieldLabelCol">
+                                <col class="dataCol">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                  <td class="section-head text-muted" colspan="2">{{ 'badge_details'|trans }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_name'|trans }}</td>
+                                  <td>{{ badge.name }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_awarding_date'|trans }}</td>
+                                  <td>{{ userBadge.issuedAt|date('date_format'|trans({}, 'platform')) }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_description'|trans }}</td>
+                                  <td>{{ badge.description }}</td>
+                                </tr>
+                                <tr>
+                                  <td class="fieldlabel">{{ 'badge_form_criteria'|trans }}</td>
+                                  <td><a href="{{ path('icap_badge_view_badge', {'slug': badge.slug}) }}">{{ url('icap_badge_view_badge', {'slug': badge.slug}) }}</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
