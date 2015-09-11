@@ -215,6 +215,8 @@ class OrderedTool
 
     public function __toString()
     {
-        return '[' . $this->workspace->getName() . '] ' . $this->name;
+        return is_null($this->workspace) ?
+            $this->name :
+            '[' . $this->workspace->getName() . '] ' . $this->name;
     }
 }
