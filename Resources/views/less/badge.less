@@ -262,16 +262,27 @@ table.badge_informations {
         }
 
         &.owned_badge {
-            .panel-heading small {
-                color: green;
+            border-color: #4cae4c;
+            border-width: 1px;
+            .panel-heading {
+                border-color: #4cae4c;
+                border-width: 1px;
+            }
+            .award_text {
+                font-size: 1.20em;
+                color: #4cae4c;
             }
         }
         &.available_badges {
-            .panel-heading .finished {
-                color: white;
-            }
-            .panel-heading .claimed {
-                color: #428bca;
+            background-color: #f5f5f5;
+            .panel-heading {
+                background-color: #f5f5f5;
+                .finished {
+                    color: white;
+                }
+                .claimed {
+                    color: #428bca;
+                }
             }
         }
     }
