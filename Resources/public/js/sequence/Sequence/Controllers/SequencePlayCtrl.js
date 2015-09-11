@@ -89,8 +89,8 @@
                 // also save the current progression ?
                 this.studentResults.push(stepResult);
                 // go to next step
-                var currentStepIndex = this.steps.indexOf(this.currentStep);
-                var length = this.steps.length;
+                var currentStepIndex = this.sequence.steps.indexOf(this.currentStep);
+                var length = this.sequence.steps.length;
                 var newIndex = currentStepIndex + 1;
                 if(newIndex < length){
                     this.setCurrentStep(newIndex);
@@ -99,7 +99,7 @@
                 else{
                     console.log('you reached the end of the exercise you will be redirected to summary page');
                     this.isFinished = true;
-                    this.endSequence();
+               
                     // TODO save the results in db
                     // save the hints used (table ujm_link_hint_paper) -> really need this ?
                     // save the paper (table ujm_paper) (and the question order for the paper...)
@@ -107,15 +107,6 @@
                     // redirect user to correction summary page
                 }
                 
-            };
-            
-            /**
-             * 
-             * @returns {undefined}
-             */
-            this.endSequence = function(){
-                console.log('TODO display a summary page!');
-                console.log(this.studentResults);
             };
         }
     ]);

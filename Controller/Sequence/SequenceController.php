@@ -3,8 +3,13 @@
 namespace UJM\ExoBundle\Controller\Sequence;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Exercise;
 
@@ -13,6 +18,7 @@ use UJM\ExoBundle\Entity\Exercise;
  */
 class SequenceController extends Controller
 {
+
     /**
      * Play the selected Exercise.
      *
@@ -35,4 +41,5 @@ class SequenceController extends Controller
                 )
         );
     }
+
 }
