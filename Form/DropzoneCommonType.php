@@ -17,7 +17,7 @@ class DropzoneCommonType extends AbstractType
             'component'     => true,
             'autoclose'     => true,
             'language'      => $options['language'],
-            'format'        => $options['date_format']
+            'date_format'   => $options['date_format']
         );
 
         $builder
