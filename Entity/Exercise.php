@@ -2,11 +2,11 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Exercise
+ * UJM\ExoBundle\Entity\Exercise.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ExerciseRepository")
  * @ORM\Table(name="ujm_exercise")
@@ -14,164 +14,120 @@ use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 class Exercise extends AbstractResource
 {
     /**
-     * @var string $title
+     * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @var text $description
+     * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @var boolean $shuffle
+     * @var bool
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
-    private $shuffle;
+    private $shuffle = false;
 
     /**
-     * @var integer $nbQuestion
+     * @var int
      *
      * @ORM\Column(name="nb_question", type="integer")
      */
-    private $nbQuestion;
+    private $nbQuestion = 0;
 
     /**
-     * @var boolean $keepSameQuestion
+     * @var bool
      *
      * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
      */
     private $keepSameQuestion;
 
     /**
-     * @var datetime $dateCreate
-     *
-     * @ORM\Column(name="date_create", type="datetime")
-     */
-    private $dateCreate;
-
-    /**
-     * @var integer $duration
+     * @var int
      *
      * @ORM\Column(name="duration", type="integer")
      */
-    private $duration;
-
-    /**
-     * @var integer $nbQuestionPage
-     *
-     * @ORM\Column(name="nb_question_page", type="integer")
-     */
-    private $nbQuestionPage;
+    private $duration = 0;
 
     /**
      * @var boolean $doprint
      *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
      */
-    private $doprint;
+    private $doprint = false;
 
     /**
-     * @var integer $maxAttempts
+     * @var int
      *
      * @ORM\Column(name="max_attempts", type="integer")
      */
-    private $maxAttempts;
+    private $maxAttempts = 0;
 
     /**
-     * @var string $correctionMode
+     * @todo mode should be at least a class constant
+     *
+     * @var string
      *
      * @ORM\Column(name="correction_mode", type="string", length=255)
      */
-    private $correctionMode;
+    private $correctionMode = '1';
 
     /**
-     * @var datetime $dateCorrection
+     * @var \Datetime
      *
      * @ORM\Column(name="date_correction", type="datetime", nullable=true)
      */
     private $dateCorrection;
 
     /**
-     * @var string $markMode
+     * @todo mode should be at least a class constant
+     *
+     * @var string
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode;
+    private $markMode = '1';
 
     /**
-     * @var datetime $startDate
-     *
-     * @ORM\Column(name="start_date", type="datetime")
-     */
-    private $startDate;
-
-    /**
-     * @var boolean $useDateEnd
-     *
-     * @ORM\Column(name="use_date_end", type="boolean", nullable=true)
-     */
-    private $useDateEnd;
-
-    /**
-     * @var datetime $end_date
-     *
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
-     */
-    private $endDate;
-
-    /**
-     * @var boolean $dispButtonInterrupt
+     * @var bool
      *
      * @ORM\Column(name="disp_button_interrupt", type="boolean", nullable=true)
      */
-    private $dispButtonInterrupt;
+    private $dispButtonInterrupt = false;
 
     /**
-     * @var boolean $lockAttempt
+     * @var bool
      *
      * @ORM\Column(name="lock_attempt", type="boolean", nullable=true)
      */
-    private $lockAttempt;
+    private $lockAttempt = false;
 
     /**
-     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Groupes")
-     * @ORM\JoinTable(
-     *     name="ujm_exercise_group",
-     *     joinColumns={
-     *         @ORM\JoinColumn(name="exercise_id", referencedColumnName="id")
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     */
-    private $groupes;
-
-    /**
-     * @var boolean $published
+     * Flag indicating whether the exercise has been published at least
+     * one time. An exercise that has never been published has all its
+     * existing papers deleted at the first publication.
+     *
+     * @var bool
      *
      * @ORM\Column(name="published", type="boolean")
      */
-    private $published;
+    private $wasPublishedOnce = false;
 
     public function __construct()
     {
-        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection;
-        $this->lockAttempt = false;
-        $this->dispButtonInterrupt  = false;
-        $this->doprint = false;
-        $this->shuffle = false;
+        $this->dateCorrection = new \DateTime();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -179,7 +135,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      */
@@ -189,7 +145,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
@@ -199,9 +155,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set description
+     * Set description.
      *
-     * @param text $description
+     * @param string $description
      */
     public function setDescription($description)
     {
@@ -209,9 +165,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get description
+     * Get description.
      *
-     * @return text
+     * @return string
      */
     public function getDescription()
     {
@@ -219,9 +175,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set shuffle
+     * Set shuffle.
      *
-     * @param boolean $shuffle
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -229,7 +185,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get shuffle
+     * Get shuffle.
      */
     public function getShuffle()
     {
@@ -237,9 +193,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set nbQuestion
+     * Set nbQuestion.
      *
-     * @param integer $nbQuestion
+     * @param int $nbQuestion
      */
     public function setNbQuestion($nbQuestion)
     {
@@ -247,9 +203,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get nbQuestion
+     * Get nbQuestion.
      *
-     * @return integer
+     * @return int
      */
     public function getNbQuestion()
     {
@@ -257,9 +213,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set keepSameQuestion
+     * Set keepSameQuestion.
      *
-     * @param boolean $keepSameQuestion
+     * @param bool $keepSameQuestion
      */
     public function setKeepSameQuestion($keepSameQuestion)
     {
@@ -267,7 +223,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get keepSameQuestion
+     * Get keepSameQuestion.
      */
     public function getKeepSameQuestion()
     {
@@ -275,29 +231,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set dateCreate
+     * Set duration.
      *
-     * @param datetime $dateCreate
-     */
-    public function setDateCreate($dateCreate)
-    {
-        $this->dateCreate = $dateCreate;
-    }
-
-    /**
-     * Get dateCreate
-     *
-     * @return datetime
-     */
-    public function getDateCreate()
-    {
-        return $this->dateCreate;
-    }
-
-    /**
-     * Set duration
-     *
-     * @param integer $duration
+     * @param int $duration
      */
     public function setDuration($duration)
     {
@@ -305,9 +241,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get duration
+     * Get duration.
      *
-     * @return integer
+     * @return int
      */
     public function getDuration()
     {
@@ -315,29 +251,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set nbQuestionPage
-     *
-     * @param integer $nbQuestionPage
-     */
-    public function setNbQuestionPage($nbQuestionPage)
-    {
-        $this->nbQuestionPage = $nbQuestionPage;
-    }
-
-    /**
-     * Get nbQuestionPage
-     *
-     * @return integer
-     */
-    public function getNbQuestionPage()
-    {
-        return $this->nbQuestionPage;
-    }
-
-    /**
      * Set doprint
      *
-     * @param boolean $doprint
+     * @param bool $doprint
      */
     public function setDoprint($doprint)
     {
@@ -345,7 +261,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get doprint
+     * Get doprint.
      */
     public function getDoprint()
     {
@@ -353,9 +269,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set maxAttempts
+     * Set maxAttempts.
      *
-     * @param integer $maxAttempts
+     * @param int $maxAttempts
      */
     public function setMaxAttempts($maxAttempts)
     {
@@ -363,9 +279,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get maxAttempts
+     * Get maxAttempts.
      *
-     * @return integer
+     * @return int
      */
     public function getMaxAttempts()
     {
@@ -373,7 +289,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set correctionMode
+     * Set correctionMode.
      *
      * @param string $correctionMode
      */
@@ -383,7 +299,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get correctionMode
+     * Get correctionMode.
      *
      * @return string
      */
@@ -393,19 +309,19 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set dateCorrection
+     * Set dateCorrection.
      *
-     * @param datetime $dateCorrection
+     * @param \Datetime $dateCorrection
      */
-    public function setDateCorrection($dateCorrection)
+    public function setDateCorrection(\DateTime $dateCorrection = null)
     {
         $this->dateCorrection = $dateCorrection;
     }
 
     /**
-     * Get dateCorrection
+     * Get dateCorrection.
      *
-     * @return datetime
+     * @return \Datetime
      */
     public function getDateCorrection()
     {
@@ -413,7 +329,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set markMode
+     * Set markMode.
      *
      * @param string $markMode
      */
@@ -423,7 +339,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get markMode
+     * Get markMode.
      *
      * @return string
      */
@@ -433,67 +349,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set startDate
+     * Set dispButtonInterrupt.
      *
-     * @param datetime $startDate
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-    }
-
-    /**
-     * Get startDate
-     *
-     * @return datetime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-     /**
-     * Set useDateEnd
-     *
-     * @param boolean $useDateEnd
-     */
-    public function setUseDateEnd($useDateEnd)
-    {
-        $this->useDateEnd = $useDateEnd;
-    }
-
-    /**
-     * Get useDateEnd
-     */
-    public function getUseDateEnd()
-    {
-        return $this->useDateEnd;
-    }
-
-    /**
-     * Set endDate
-     *
-     * @param datetime $endDate
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-    }
-
-    /**
-     * Get endDate
-     *
-     * @return datetime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * Set dispButtonInterrupt
-     *
-     * @param boolean $dispButtonInterrupt
+     * @param bool $dispButtonInterrupt
      */
     public function setDispButtonInterrupt($dispButtonInterrupt)
     {
@@ -501,7 +359,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get dispButtonInterrupt
+     * Get dispButtonInterrupt.
      */
     public function getDispButtonInterrupt()
     {
@@ -509,9 +367,9 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set lockAttempt
+     * Set lockAttempt.
      *
-     * @param boolean $lockAttempt
+     * @param bool $lockAttempt
      */
     public function setLockAttempt($lockAttempt)
     {
@@ -519,31 +377,11 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Get lockAttempt
+     * Get lockAttempt.
      */
     public function getLockAttempt()
     {
         return $this->lockAttempt;
-    }
-
-    /**
-     * Gets an array of Groupes.
-     *
-     * @return array An array of Groupes objects
-     */
-    public function getGroupes()
-    {
-        return $this->groupes;
-    }
-
-    /**
-     * Add Groupe
-     *
-     * @param UJM\ExoBundle\Entity\Groupes $Groupe
-     */
-    public function addGroupe(\UJM\ExoBundle\Entity\Groupes $groupe)
-    {
-        $this->groupes[] = $groupe;
     }
 
     public function archiveExercise()
@@ -552,20 +390,18 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set published
-     *
-     * @param boolean $published
+     * @return bool
      */
-    public function setPublished($published)
+    public function wasPublishedOnce()
     {
-        $this->published = $published;
+        return $this->wasPublishedOnce;
     }
 
     /**
-     * Get published
+     * @param bool $wasPublishedOnce
      */
-    public function getpublished()
+    public function setPublishedOnce($wasPublishedOnce)
     {
-        return $this->published;
+        $this->wasPublishedOnce = $wasPublishedOnce;
     }
 }
