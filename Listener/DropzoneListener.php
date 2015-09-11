@@ -61,6 +61,7 @@ class DropzoneListener extends ContainerAware
 
     public function onOpen(OpenResourceEvent $event)
     {
+
         // Modification ERV (août 2015) InnovaERV
         // suite demande JJQ, voir son document de référence d'août 2015
         // il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
@@ -102,19 +103,41 @@ class DropzoneListener extends ContainerAware
             }
         }
 
-
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
     public function onOpenCustom(CustomActionResourceEvent $event)
     {
+
+        $em = $this->container->get('doctrine.orm.entity_manager');
+            
+        $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
+            ->find($event->getResource()->getId());
+
+        $dropzoneVoter = $this->container->get('innova.manager.dropzone_voter');
+
+        $canEdit = $dropzoneVoter->checkEditRight($dropzone);
+        
+        if (!$canEdit) {
+            $route = $this->container
+                ->get('router')
+                ->generate(
+                    'innova_collecticiel_drop',
+                    array('resourceId' => $event->getResource()->getId())
+                );
+        }
+        else
+        {
         $route = $this->container
-            ->get('router')
-            ->generate(
-                'innova_collecticiel_drop',
-                array('resourceId' => $event->getResource()->getId())
-            );
+                ->get('router')
+                ->generate(
+                    'innova_collecticiel_shared_spaces',
+                    array('resourceId' => $event->getResource()->getId())
+                );
+
+        }
+
         $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
