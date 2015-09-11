@@ -1,55 +1,51 @@
 <?php
 
 /**
- *
- * Services for the hole
+ * Services for the hole.
  */
-
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class Hole extends Interaction {
-
+class Hole extends Interaction
+{
     /**
-     * implement the abstract method
-     * To process the user's response for a paper(or a test)
-     *
-     * @access public
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
-     *
-     * @return mixed[]
-     */
+      * implement the abstract method
+      * To process the user's response for a paper(or a test).
+      *
+      *
+      * @param \Symfony\Component\HttpFoundation\Request $request
+      * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+      *
+      * @return mixed[]
+      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
-        $em = $this->doctrine->getManager();
-        $interactionHoleID = $request->request->get('interactionHoleToValidated');
+         $em = $this->doctrine->getManager();
+         $interactionHoleID = $request->request->get('interactionHoleToValidated');
 
-        $session = $request->getSession();
+         $session = $request->getSession();
 
-        $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
+         $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
 
-        $penalty = $this->getPenalty($interHole->getInteraction(), $session, $paperID);
+         $penalty = $this->getPenalty($interHole->getInteraction(), $session, $paperID);
 
-        $score = $this->mark($interHole, $request->request, $penalty);
+         $score = $this->mark($interHole, $request->request, $penalty);
 
-        $response = $this->getJsonResponse($interHole, $request);
+         $response = $this->getJsonResponse($interHole, $request);
 
-        $res = array(
-            'penalty'   => $penalty,
+         $res = array(
+            'penalty' => $penalty,
             'interHole' => $interHole,
-            'response'  => $response,
-            'score'     => $score
+            'response' => $response,
+            'score' => $score,
         );
 
-        return $res;
+         return $res;
      }
 
      /**
       * implement the abstract method
-      * To calculate the score
+      * To calculate the score.
       *
-      * @access public
       * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
       * @param \Symfony\Component\HttpFoundation\Request $request
       * @param float $penalty penalty if the user showed hints
@@ -60,12 +56,11 @@ class Hole extends Interaction {
              \UJM\ExoBundle\Entity\InteractionHole $interHole = null,
              $request = null,
              $penalty = null
-     )
-     {
+     ) {
          $score = 0;
          $scoreMax = $this->maxScore($interHole);
 
-         foreach($interHole->getHoles() as $hole) {
+         foreach ($interHole->getHoles() as $hole) {
              $response = $request->get('blank_'.$hole->getPosition());
              $response = trim($response);
              $response = preg_replace('/\s+/', ' ', $response);
@@ -83,11 +78,10 @@ class Hole extends Interaction {
          return $score;
      }
 
-    /**
+     /**
       * implement the abstract method
-      * Get score max possible for a question with holes question
+      * Get score max possible for a question with holes question.
       *
-      * @access public
       *
       * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
       *
@@ -110,13 +104,12 @@ class Hole extends Interaction {
      }
 
      /**
-     * implement the abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionHole
-     */
+      * implement the abstract method.
+      *
+      * @param Integer $interId id of interaction
+      *
+      * @return \UJM\ExoBundle\Entity\InteractionHole
+      */
      public function getInteractionX($interId)
      {
          $em = $this->doctrine->getManager();
@@ -127,11 +120,10 @@ class Hole extends Interaction {
      }
 
      /**
-      * implement the abstract method
+      * implement the abstract method.
       *
       * call getAlreadyResponded and prepare the interaction to displayed if necessary
       *
-      * @access public
       * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
@@ -146,8 +138,6 @@ class Hole extends Interaction {
      }
 
      /**
-      *
-      * @access private
       * @param \UJM\ExoBundle\Entity\InteractionHole $interHole
       * @param \Symfony\Component\HttpFoundation\Request $request
       *
@@ -156,7 +146,7 @@ class Hole extends Interaction {
      private function getJsonResponse($interHole, $request)
      {
          $em = $this->doctrine->getManager();
-         foreach($interHole->getHoles() as $hole) {
+         foreach ($interHole->getHoles() as $hole) {
              $response = $request->get('blank_'.$hole->getPosition());
              $response = trim($response);
              $response = preg_replace('/\s+/', ' ', $response);
@@ -175,8 +165,6 @@ class Hole extends Interaction {
      }
 
      /**
-      *
-      * @access private
       * @param \UJM\ExoBundle\Entity\Hole $hole
       * @param String $response
       *

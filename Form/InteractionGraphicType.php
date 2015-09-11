@@ -5,19 +5,17 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Claroline\CoreBundle\Entity\User;
 
 class InteractionGraphicType extends AbstractType
 {
-
     private $user;
     private $catID;
     private $docID;
 
     public function __construct(User $user, $catID = -1, $docID = -1)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->catID = $catID;
         $this->docID = $docID;
     }
@@ -40,7 +38,7 @@ class InteractionGraphicType extends AbstractType
                             return $repository->createQueryBuilder('d')
                                 ->where('d.user = ?1')
                                 ->andwhere('d.type like \'%.png%\' OR d.type like \'%.jpeg%\' '
-                                        . 'OR d.type like \'%.jpg%\' OR d.type like \'%.gif%\' OR d.type like \'%.bmp%\'')
+                                        .'OR d.type like \'%.jpg%\' OR d.type like \'%.gif%\' OR d.type like \'%.bmp%\'')
                                 ->setParameter(1, $id);
                         } else {
                             return $repository->createQueryBuilder('d')
@@ -58,7 +56,7 @@ class InteractionGraphicType extends AbstractType
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionGraphic',
                 'cascade_validation' => true,
-                'translation_domain' => 'ujm_exo'
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

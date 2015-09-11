@@ -3,20 +3,16 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use UJM\ExoBundle\Entity\LinkHintPaper;
 
 /**
  * Hint controller.
- *
  */
 class HintController extends Controller
 {
-
     /**
      * Finds and displays a Hint entity.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -54,11 +50,10 @@ class HintController extends Controller
 
             return $this->container->get('templating')->renderResponse(
                 'UJMExoBundle:Hint:show.html.twig', array(
-                'entity'      => $entity,
+                'entity' => $entity,
                 )
             );
         } else {
-
             return 0;
         }
     }

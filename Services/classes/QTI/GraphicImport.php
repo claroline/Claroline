@@ -1,30 +1,28 @@
 <?php
 
 /**
- * To import a QCM question in QTI
- *
+ * To import a QCM question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Coords;
 use UJM\ExoBundle\Entity\Document;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 
-class GraphicImport extends QtiImport {
-
+class GraphicImport extends QtiImport
+{
     protected $interactionGraph;
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      * @param qtiRepository $qtiRepos
-     * @param DOMElement $assessmentItem assessmentItem of the question to imported
+     * @param DOMElement    $assessmentItem assessmentItem of the question to imported
      *
      * @return UJM\ExoBundle\Entity\InteractionGraphic
      */
-    public function import(qtiRepository $qtiRepos, $assessmentItem) {
+    public function import(qtiRepository $qtiRepos, $assessmentItem)
+    {
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
@@ -42,13 +40,11 @@ class GraphicImport extends QtiImport {
     }
 
     /**
-     * Create the InteractionGraphic object
-     *
-     * @access protected
-     *
+     * Create the InteractionGraphic object.
      */
-    protected function createInteractionGraphic() {
-        $spi = $this->assessmentItem->getElementsByTagName("selectPointInteraction")->item(0);
+    protected function createInteractionGraphic()
+    {
+        $spi = $this->assessmentItem->getElementsByTagName('selectPointInteraction')->item(0);
         $ob = $spi->getElementsByTagName('object')->item(0);
 
         $this->interactionGraph = new InteractionGraphic();
@@ -64,15 +60,13 @@ class GraphicImport extends QtiImport {
     }
 
     /**
-     * Create the Coords
-     *
-     * @access protected
-     *
+     * Create the Coords.
      */
-    protected function createCoords() {
-        $am = $this->assessmentItem->getElementsByTagName("areaMapping")->item(0);
+    protected function createCoords()
+    {
+        $am = $this->assessmentItem->getElementsByTagName('areaMapping')->item(0);
 
-        foreach ($am->getElementsByTagName("areaMapEntry") as $areaMapEntry) {
+        foreach ($am->getElementsByTagName('areaMapEntry') as $areaMapEntry) {
             $tabCoords = explode(',', $areaMapEntry->getAttribute('coords'));
             $coords = new Coords();
             $x = $tabCoords[0] - $tabCoords[2];
@@ -89,15 +83,13 @@ class GraphicImport extends QtiImport {
     }
 
     /**
-     * Create the Document
+     * Create the Document.
      *
      * @param DOMELEMENT $ob object tag
-     * @access protected
-     *
      */
-    protected function createPicture($objectTag) {
-
-        $user    = $this->container->get('security.token_storage')->getToken()->getUser();
+    protected function createPicture($objectTag)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $userDir = './uploads/ujmexo/users_documents/'.$user->getUsername();
         $picName = $this->cpPicture($objectTag->getAttribute('data'), $userDir);
 
@@ -113,18 +105,16 @@ class GraphicImport extends QtiImport {
         $this->interactionGraph->setDocument($document);
         $this->om->persist($this->interactionGraph);
         $this->om->flush();
-
     }
 
     /**
-     * Copy the picture in the user's directory
+     * Copy the picture in the user's directory.
      *
      * @param String $picture picture's name
      * @param String $userDir user's directory
-     * @access protected
-     *
      */
-    protected function cpPicture($picture, $userDir) {
+    protected function cpPicture($picture, $userDir)
+    {
         $src = $this->qtiRepos->getUserDir().'/'.$picture;
 
         if (!is_dir('./uploads/ujmexo/')) {
@@ -149,7 +139,7 @@ class GraphicImport extends QtiImport {
         while (file_exists($dest)) {
             $picName = $i.'_'.$this->getPictureName($picture);
             $dest = $userDir.'/images/'.$picName;
-            $i++;
+            ++$i;
         }
 
         copy($src, $dest);
@@ -158,9 +148,6 @@ class GraphicImport extends QtiImport {
     }
 
     /**
-     *
-     * @access private
-     *
      * @param String $picture
      *
      * @return String
@@ -172,19 +159,15 @@ class GraphicImport extends QtiImport {
         return $dirs[count($dirs) - 1];
     }
 
-
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function getPrompt()
     {
         $text = '';
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        if ($ib->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $ib->getElementsByTagName("prompt")->item(0);
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
+        if ($ib->getElementsByTagName('prompt')->item(0)) {
+            $prompt = $ib->getElementsByTagName('prompt')->item(0);
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
             $text = str_replace('</prompt>', '', $text);

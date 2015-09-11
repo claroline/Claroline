@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Coords
+ * UJM\ExoBundle\Entity\Coords.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_coords")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Coords
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,28 +22,28 @@ class Coords
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
     /**
-     * @var string $shape
+     * @var string
      *
      * @ORM\Column(name="shape", type="string", length=255)
      */
     private $shape;
 
     /**
-     * @var string $color
+     * @var string
      *
      * @ORM\Column(name="color", type="string", length=255)
      */
     private $color;
 
     /**
-     * @var float $score_coords
+     * @var float
      *
      * @ORM\Column(name="score_coords", type="float")
      */
@@ -56,23 +56,23 @@ class Coords
     private $interactionGraphic;
 
     /**
-     * @var float $size
+     * @var float
      *
      * @ORM\Column(name="size", type="float")
      */
     private $size;
-    
-     /**
-     * @var text $feedback
+
+    /**
+     * @var text
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -80,7 +80,7 @@ class Coords
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -90,7 +90,7 @@ class Coords
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -100,7 +100,7 @@ class Coords
     }
 
     /**
-     * Set shape
+     * Set shape.
      *
      * @param string $shape
      */
@@ -110,7 +110,7 @@ class Coords
     }
 
     /**
-     * Get shape
+     * Get shape.
      *
      * @return string
      */
@@ -120,7 +120,7 @@ class Coords
     }
 
     /**
-     * Set color
+     * Set color.
      *
      * @param string $color
      */
@@ -130,7 +130,7 @@ class Coords
     }
 
     /**
-     * Get color
+     * Get color.
      *
      * @return string
      */
@@ -140,7 +140,7 @@ class Coords
     }
 
     /**
-     * Set scoreCoords
+     * Set scoreCoords.
      *
      * @param float $scoreCoords
      */
@@ -150,7 +150,7 @@ class Coords
     }
 
     /**
-     * Get scoreCoords
+     * Get scoreCoords.
      *
      * @return float
      */
@@ -160,7 +160,7 @@ class Coords
     }
 
     /**
-     * Set sizes
+     * Set sizes.
      *
      * @param float $size
      */
@@ -170,7 +170,7 @@ class Coords
     }
 
     /**
-     * Get size
+     * Get size.
      *
      * @return float
      */
@@ -188,22 +188,24 @@ class Coords
     {
         $this->interactionGraphic = $interactionGraphic;
     }
-    
+
     /**
-     * get feedback
+     * get feedback.
+     *
      * @return string
      */
-    function getFeedback() {
+    public function getFeedback()
+    {
         return $this->feedback;
     }
 
     /**
-     * set feedback
+     * set feedback.
+     *
      * @param \UJM\ExoBundle\Entity\text $feedback
      */
-    function setFeedback($feedback) {
+    public function setFeedback($feedback)
+    {
         $this->feedback = $feedback;
     }
-
-
 }

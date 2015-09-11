@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionGraphic
+ * UJM\ExoBundle\Entity\InteractionGraphic.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionGraphicRepository")
  * @ORM\Table(name="ujm_interaction_graphic")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class InteractionGraphic
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,20 +22,20 @@ class InteractionGraphic
     private $id;
 
     /**
-     * @var integer $width
+     * @var int
      *
      * @ORM\Column(name="width", type="integer")
      */
     private $width;
 
     /**
-     * @var integer $height
+     * @var int
      *
      * @ORM\Column(name="height", type="integer")
      */
     private $height;
 
-     /**
+    /**
      * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
      */
     private $interaction;
@@ -51,17 +51,17 @@ class InteractionGraphic
     private $coords;
 
     /**
-     * Constructs a new instance of choices
+     * Constructs a new instance of choices.
      */
     public function __construct()
     {
-        $this->coords = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->coords = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -69,9 +69,9 @@ class InteractionGraphic
     }
 
     /**
-     * Set width
+     * Set width.
      *
-     * @param integer $width
+     * @param int $width
      */
     public function setWidth($width)
     {
@@ -79,9 +79,9 @@ class InteractionGraphic
     }
 
     /**
-     * Get width
+     * Get width.
      *
-     * @return integer
+     * @return int
      */
     public function getWidth()
     {
@@ -89,9 +89,9 @@ class InteractionGraphic
     }
 
     /**
-     * Set height
+     * Set height.
      *
-     * @param integer $height
+     * @param int $height
      */
     public function setHeight($height)
     {
@@ -99,9 +99,9 @@ class InteractionGraphic
     }
 
     /**
-     * Get height
+     * Get height.
      *
-     * @return integer
+     * @return int
      */
     public function getHeight()
     {
@@ -145,13 +145,14 @@ class InteractionGraphic
         $coord->setInteractionGraphic($this);
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 
             $this->interaction = clone $this->interaction;
 
-            $newCoords = new \Doctrine\Common\Collections\ArrayCollection;
+            $newCoords = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->coords as $coord) {
                 $newCoord = clone $coord;
                 $newCoord->setInteractionGraphic($this);

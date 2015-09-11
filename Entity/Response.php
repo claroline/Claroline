@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Response
+ * UJM\ExoBundle\Entity\Response.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ResponseRepository")
  * @ORM\Table(name="ujm_response")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Response
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,28 +22,28 @@ class Response
     private $id;
 
     /**
-     * @var string $ip
+     * @var string
      *
      * @ORM\Column(name="ip", type="string", length=255)
      */
     private $ip;
 
     /**
-     * @var float $mark
+     * @var float
      *
      * @ORM\Column(name="mark", type="float")
      */
     private $mark;
 
     /**
-     * @var integer $nbTries
+     * @var int
      *
      * @ORM\Column(name="nb_tries", type="integer")
      */
     private $nbTries;
 
     /**
-     * @var text $response
+     * @var text
      *
      * @ORM\Column(name="response", type="text", nullable=true)
      */
@@ -60,9 +60,9 @@ class Response
     private $interaction;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -70,7 +70,7 @@ class Response
     }
 
     /**
-     * Set ip
+     * Set ip.
      *
      * @param string $ip
      */
@@ -80,7 +80,7 @@ class Response
     }
 
     /**
-     * Get ip
+     * Get ip.
      *
      * @return string
      */
@@ -90,7 +90,7 @@ class Response
     }
 
     /**
-     * Set mark
+     * Set mark.
      *
      * @param float $mark
      */
@@ -100,7 +100,7 @@ class Response
     }
 
     /**
-     * Get mark
+     * Get mark.
      *
      * @return float
      */
@@ -110,9 +110,9 @@ class Response
     }
 
     /**
-     * Set nbTries
+     * Set nbTries.
      *
-     * @param integer $nbTries
+     * @param int $nbTries
      */
     public function setNbTries($nbTries)
     {
@@ -120,9 +120,9 @@ class Response
     }
 
     /**
-     * Get nbTries
+     * Get nbTries.
      *
-     * @return integer
+     * @return int
      */
     public function getNbTries()
     {
@@ -130,7 +130,7 @@ class Response
     }
 
     /**
-     * Set response
+     * Set response.
      *
      * @param text $response
      */
@@ -140,7 +140,7 @@ class Response
     }
 
     /**
-     * Get response
+     * Get response.
      *
      * @return text
      */

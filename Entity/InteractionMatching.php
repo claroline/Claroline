@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * UJM\ExoBundle\Entity\InteractionMatching
+ * UJM\ExoBundle\Entity\InteractionMatching.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionMatchingRepository")
  * @ORM\Table(name="ujm_interaction_matching")
@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class InteractionMatching
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -23,7 +23,7 @@ class InteractionMatching
     private $id;
 
     /**
-     * @var boolean $shuffle
+     * @var bool
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
@@ -51,18 +51,18 @@ class InteractionMatching
     private $typeMatching;
 
     /**
-     * Constructs a new instance of label and proposal
+     * Constructs a new instance of label and proposal.
      */
     public function __construct()
     {
-        $this->labels   = new ArrayCollection;
-        $this->proposals = new ArrayCollection;
+        $this->labels = new ArrayCollection();
+        $this->proposals = new ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -70,9 +70,9 @@ class InteractionMatching
     }
 
     /**
-     * Set shuffle
+     * Set shuffle.
      *
-     * @param boolean $shuffle
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -80,7 +80,7 @@ class InteractionMatching
     }
 
     /**
-     * Get shuffle
+     * Get shuffle.
      */
     public function getShuffle()
     {
@@ -113,8 +113,7 @@ class InteractionMatching
     }
 
     /**
-     * Add label
-     *
+     * Add label.
      */
     public function addLabel(\UJM\ExoBundle\Entity\Label $label)
     {
@@ -129,7 +128,7 @@ class InteractionMatching
     }
 
     /**
-     * Get Proposals
+     * Get Proposals.
      *
      * @return Doctrine Collection of proposals
      */
@@ -139,8 +138,7 @@ class InteractionMatching
     }
 
     /**
-     * Add proposal
-     *
+     * Add proposal.
      */
     public function addProposal(\UJM\ExoBundle\Entity\Proposal $proposal)
     {
@@ -149,10 +147,10 @@ class InteractionMatching
     }
 
     /**
-     * Clone this interactionMatching
-     *
+     * Clone this interactionMatching.
      */
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 
@@ -160,8 +158,8 @@ class InteractionMatching
 
             $this->interaction = clone $this->interaction;
 
-            $newLabels = new \Doctrine\Common\Collections\ArrayCollection;
-            $newProposals = new \Doctrine\Common\Collections\ArrayCollection;
+            $newLabels = new \Doctrine\Common\Collections\ArrayCollection();
+            $newProposals = new \Doctrine\Common\Collections\ArrayCollection();
 
             foreach ($this->labels as $label) {
                 $newLabel = clone $label;
@@ -191,23 +189,23 @@ class InteractionMatching
         }
     }
 
-    public function shuffleProposals ()
+    public function shuffleProposals()
     {
         $this->sortProposals();
         $i = 0;
         $tabShuffle = array();
-        $tabFixed   = array();
-        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $tabFixed = array();
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection();
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $this->proposals[$i]->getPositionForce() === false ) {
+        while ($i < $proposalCount) {
+            if ($this->proposals[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         shuffle($tabShuffle);
@@ -215,8 +213,8 @@ class InteractionMatching
         $i = 0;
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $tabFixed[$i] != -1 ) {
+        while ($i < $proposalCount) {
+            if ($tabFixed[$i] != -1) {
                 $proposals [] = $this->proposals[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -224,7 +222,7 @@ class InteractionMatching
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
         $this->proposals = $proposals;
     }
@@ -232,7 +230,7 @@ class InteractionMatching
     public function sortProposals()
     {
         $tab = array();
-        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection();
 
         foreach ($this->proposals as $proposal) {
             $tab[] = $proposal->getOrdre();
@@ -247,24 +245,24 @@ class InteractionMatching
         $this->proposals = $proposals;
     }
 
-    public function shuffleLabels ()
+    public function shuffleLabels()
     {
         $this->sortLabels();
 
         $i = 0;
         $tabShuffle = array();
-        $tabFixed   = array();
-        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+        $tabFixed = array();
+        $labels = new \Doctrine\Common\Collections\ArrayCollection();
         $labelCount = count($this->labels);
 
-        while ( $i < $labelCount ) {
-            if ( $this->labels[$i]->getPositionForce() === false ) {
+        while ($i < $labelCount) {
+            if ($this->labels[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         $i = 0;
@@ -272,8 +270,8 @@ class InteractionMatching
 
         shuffle($tabShuffle);
 
-        while ( $i < $labelCount ) {
-          if ($tabFixed[$i] != -1) {
+        while ($i < $labelCount) {
+            if ($tabFixed[$i] != -1) {
                 $labels [] = $this->labels[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -281,18 +279,18 @@ class InteractionMatching
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
 
         $this->labels = $labels;
     }
 
-    public function sortLabels ()
+    public function sortLabels()
     {
         $tab = array();
-        $labels = new \Doctrine\Common\Collections\ArrayCollection;
+        $labels = new \Doctrine\Common\Collections\ArrayCollection();
 
-        foreach ($this->labels as $label ) {
+        foreach ($this->labels as $label) {
             $tab[] = $label->getOrdre();
         }
 

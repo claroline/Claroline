@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To export question with holes in QTI
- *
+ * To export question with holes in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class HoleExport extends QtiExport
@@ -13,12 +11,10 @@ class HoleExport extends QtiExport
     private $correctResponse = array();
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository $qtiRepos
-     *
+     * @param qtiRepository                     $qtiRepos
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -31,7 +27,7 @@ class HoleExport extends QtiExport
                                 ->findOneBy(array('interaction' => $interaction->getId()));
 
         $this->qtiHead('textEntry', $this->question->getTitle());
-        foreach($this->interactionhole->getHoles() as $hole) {
+        foreach ($this->interactionhole->getHoles() as $hole) {
             $numberBlank = $this->nbResponseDeclaration + 1;
             $this->qtiResponseDeclaration('blank_'.$numberBlank, 'string', 'single');
             $this->correctResponseTag();
@@ -43,8 +39,8 @@ class HoleExport extends QtiExport
         $this->promptTag();
         $this->textWithHole();
 
-        if(($this->interactionhole->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionhole->getInteraction()->getFeedBack()!="") ){
+        if (($this->interactionhole->getInteraction()->getFeedBack() != null)
+                && ($this->interactionhole->getInteraction()->getFeedBack() != '')) {
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
@@ -55,10 +51,7 @@ class HoleExport extends QtiExport
 
     /**
      * Implements the abstract method
-     * add the tag correctResponse in responseDeclaration
-     *
-     * @access protected
-     *
+     * add the tag correctResponse in responseDeclaration.
      */
     protected function correctResponseTag()
     {
@@ -68,20 +61,18 @@ class HoleExport extends QtiExport
     }
 
     /**
-     * add the tag mapping in responseDeclaration
+     * add the tag mapping in responseDeclaration.
      *
-     * @access private
      *
      * @param \UJM\ExoBundle\Entity\Hole $hole
-     *
      */
-    private  function mappingTag($hole)
+    private function mappingTag($hole)
     {
         $responseDeclaration = $this->responseDeclaration[$this->nbResponseDeclaration - 1];
         $correctResponse = $this->correctResponse[$this->nbResponseDeclaration - 1];
         $correctWordResponse = '';
-        $mapping = $this->document->createElement("mapping");
-        $mapping->setAttribute("defaultValue", "0");
+        $mapping = $this->document->createElement('mapping');
+        $mapping->setAttribute('defaultValue', '0');
 
         foreach ($hole->getWordResponses() as $resp) {
             $i = 0;
@@ -93,23 +84,23 @@ class HoleExport extends QtiExport
                 }
             }
 
-            $mapEntry =  $this->document->createElement("mapEntry");
+            $mapEntry = $this->document->createElement('mapEntry');
             if (!$hole->getSelector()) {
-                $mapEntry->setAttribute("mapKey", $resp->getResponse());
+                $mapEntry->setAttribute('mapKey', $resp->getResponse());
             } else {
-                $mapEntry->setAttribute("mapKey", 'choice_'.$resp->getId());
+                $mapEntry->setAttribute('mapKey', 'choice_'.$resp->getId());
             }
-            $mapEntry->setAttribute("mappedValue",$resp->getScore());
-            $mapEntry->setAttribute("caseSensitive",$resp->getCaseSensitive());
+            $mapEntry->setAttribute('mappedValue', $resp->getScore());
+            $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
-            $i++;
+            ++$i;
         }
-        $Tagvalue = $this->document->CreateElement("value");
+        $Tagvalue = $this->document->CreateElement('value');
         if (!$hole->getSelector()) {
-            $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+            $responsevalue = $this->document->CreateTextNode($correctWordResponse->getResponse());
         } else {
-            $responsevalue =  $this->document->CreateTextNode('choice_'.$correctWordResponse->getId());
+            $responsevalue = $this->document->CreateTextNode('choice_'.$correctWordResponse->getId());
         }
         $Tagvalue->appendChild($responsevalue);
         $correctResponse->appendChild($Tagvalue);
@@ -120,10 +111,7 @@ class HoleExport extends QtiExport
 
     /**
      * Implements the abstract method
-     * add the tag prompt in itemBody
-     *
-     * @access protected
-     *
+     * add the tag prompt in itemBody.
      */
     protected function promptTag()
     {
@@ -134,10 +122,7 @@ class HoleExport extends QtiExport
     }
 
     /**
-     * Text with hole
-     *
-     * @access private
-     *
+     * Text with hole.
      */
     private function textWithHole()
     {
@@ -145,8 +130,8 @@ class HoleExport extends QtiExport
         $newId = 1;
         $html = htmlspecialchars_decode($this->interactionhole->getHtmlWithoutValue());
         //delete the line break in $html
-        $html = str_replace(CHR(10),"", $html);
-        $html = str_replace(CHR(13),"", $html);
+        $html = str_replace(CHR(10), '', $html);
+        $html = str_replace(CHR(13), '', $html);
         $html = html_entity_decode($html);
         $regex = '(<input.*?class="blank".*?>|<select.*?class="blank".*?>.*?</select>)';
         preg_match_all($regex, $html, $matches);
@@ -165,7 +150,7 @@ class HoleExport extends QtiExport
                 $textEntryInteraction = str_replace('autocomplete="off"', '', $textEntryInteraction);
                 $textEntryInteraction = str_replace('size="'.$size.'"', 'expectedLength="'.$size.'"', $textEntryInteraction);
             } else { //hole with select element
-                $name   = $tabMatche[5];
+                $name = $tabMatche[5];
                 $textEntryInteraction = str_replace('</select>', '</inlineChoiceInteraction>', $matche);
                 $textEntryInteraction = str_replace('select', 'inlineChoiceInteraction', $textEntryInteraction);
                 $textEntryInteraction = str_replace('id="'.$id.'"', 'responseIdentifier="blank_'.$newId.'"', $textEntryInteraction);
@@ -177,14 +162,14 @@ class HoleExport extends QtiExport
                 preg_match_all($regexOpt, $textEntryInteraction, $matchesOpt);
                 foreach ($matchesOpt[0] as $matcheOpt) {
                     $tabMatcheOpt = explode('"', $matcheOpt);
-                    $holeID       = $tabMatcheOpt[1];
+                    $holeID = $tabMatcheOpt[1];
                     $opt = str_replace('value="'.$holeID.'"', 'identifier="choice_'.$holeID.'"', $matcheOpt);
                     $textEntryInteraction = str_replace($matcheOpt, $opt, $textEntryInteraction);
                 }
             }
-            $textEntryInteraction = str_replace('&nbsp;', ' ',$textEntryInteraction);
+            $textEntryInteraction = str_replace('&nbsp;', ' ', $textEntryInteraction);
             $html = str_replace($matche, $textEntryInteraction, $html);
-            $newId++;
+            ++$newId;
         }
 
         //For the question created before the 2014/10/09

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Proposal
+ * UJM\ExoBundle\Entity\Proposal.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ProposalRepository")
  * @ORM\Table(name="ujm_proposal")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Proposal
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,21 +22,21 @@ class Proposal
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="text")
      */
     private $value;
 
     /**
-     * @var boolean $positionForce
+     * @var bool
      *
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
     private $positionForce;
 
-     /**
-     * @var integer $ordre
+    /**
+     * @var int
      *
      * @ORM\Column(name="ordre", type="integer")
      */
@@ -56,9 +56,9 @@ class Proposal
     private $associatedLabel;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -66,7 +66,7 @@ class Proposal
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -76,7 +76,7 @@ class Proposal
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -86,7 +86,7 @@ class Proposal
     }
 
     /**
-     * Get InteractionMatching
+     * Get InteractionMatching.
      *
      * @return InteractionMatching
      */
@@ -96,8 +96,7 @@ class Proposal
     }
 
     /**
-     * Set InteractionMatching
-     *
+     * Set InteractionMatching.
      */
     public function setInteractionMatching(\UJM\ExoBundle\Entity\InteractionMatching $interactionMatching)
     {
@@ -105,7 +104,7 @@ class Proposal
     }
 
     /**
-     * Get InteractionMatching
+     * Get InteractionMatching.
      *
      * @return Label
      */
@@ -115,8 +114,7 @@ class Proposal
     }
 
     /**
-     * Set Label
-     *
+     * Set Label.
      */
     public function addAssociatedLabel(\UJM\ExoBundle\Entity\Label $label)
     {
@@ -124,18 +122,17 @@ class Proposal
     }
 
     /**
-     * Remove Label
-     *
+     * Remove Label.
      */
     public function removeAssociatedLabel()
     {
-        $this->associatedLabel = NULL;
+        $this->associatedLabel = null;
     }
 
     /**
-     * Set positionForce
+     * Set positionForce.
      *
-     * @param boolean $positionForce
+     * @param bool $positionForce
      */
     public function setPositionForce($positionForce)
     {
@@ -143,7 +140,7 @@ class Proposal
     }
 
     /**
-     * Get positionForce
+     * Get positionForce.
      */
     public function getPositionForce()
     {
@@ -151,9 +148,9 @@ class Proposal
     }
 
     /**
-     * Set ordre
+     * Set ordre.
      *
-     * @param integer $ordre
+     * @param int $ordre
      */
     public function setOrdre($ordre)
     {
@@ -161,13 +158,12 @@ class Proposal
     }
 
     /**
-     * Get ordre
+     * Get ordre.
      *
-     * @return integer
+     * @return int
      */
     public function getOrdre()
     {
         return $this->ordre;
     }
-
 }

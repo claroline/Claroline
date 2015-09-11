@@ -1,8 +1,8 @@
 <?php
 
 namespace UJM\ExoBundle\Controller;
-use Symfony\Component\Form\FormError;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use UJM\ExoBundle\Entity\InteractionGraphic;
@@ -11,21 +11,10 @@ use UJM\ExoBundle\Form\InteractionGraphicHandler;
 
 /**
  * InteractionGraphic controller.
- *
  */
 class InteractionGraphicController extends Controller
 {
-
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:show'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     array vars
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction()
@@ -42,37 +31,30 @@ class InteractionGraphicController extends Controller
         $listeCoords = $repository->findBy(array('interactionGraphic' => $interactionGraph));
 
         $vars['interactionToDisplayed'] = $interactionGraph;
-        $vars['listeCoords']            = $listeCoords;
-        $vars['exoID']                  = $attr->get('exoID');
+        $vars['listeCoords'] = $listeCoords;
+        $vars['exoID'] = $attr->get('exoID');
 
         return $this->render('UJMExoBundle:InteractionGraphic:paper.html.twig', $vars);
     }
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:formNew'
-     * Parameters posted :
-     *     integer exoID
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction()
     {
-       $attr = $this->get('request')->attributes;
-       $entity = new InteractionGraphic();
-       $form   = $this->createForm(
+        $attr = $this->get('request')->attributes;
+        $entity = new InteractionGraphic();
+        $form = $this->createForm(
            new InteractionGraphicType(
                $this->container->get('security.token_storage')
                    ->getToken()->getUser()
            ), $entity
        );
 
-       return $this->container->get('templating')->renderResponse(
+        return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionGraphic:new.html.twig', array(
-           'exoID'  => $attr->get('exoID'),
+           'exoID' => $attr->get('exoID'),
            'entity' => $entity,
-           'form'   => $form->createView()
+           'form' => $form->createView(),
            )
        );
     }
@@ -80,7 +62,6 @@ class InteractionGraphicController extends Controller
     /**
      * Creates a new InteractionGraphic entity.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -103,18 +84,17 @@ class InteractionGraphicController extends Controller
             $user, $exercise, $this->get('translator')
         );
 
-         $graphicHandler = $formHandler->processAdd();
-         if ($graphicHandler === TRUE) {
+        $graphicHandler = $formHandler->processAdd();
+        if ($graphicHandler === true) {
             $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
-
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_question_index', array(
                             'categoryToFind' => base64_encode($categoryToFind),
-                            'titleToFind' => base64_encode($titleToFind)
+                            'titleToFind' => base64_encode($titleToFind),
                         )
                     )
                 );
@@ -125,25 +105,25 @@ class InteractionGraphicController extends Controller
                         array(
                             'id' => $exoID,
                             'categoryToFind' => $categoryToFind,
-                            'titleToFind' => $titleToFind
+                            'titleToFind' => $titleToFind,
                         )
                     )
                 );
             }
-         }
+        }
 
-         if ($graphicHandler == 'infoDuplicateQuestion') {
+        if ($graphicHandler == 'infoDuplicateQuestion') {
             $form->addError(new FormError(
                     $this->get('translator')->trans('info_duplicate_question', array(), 'ujm_exo')
                     ));
         }
-        
+
         $formWithError = $this->render(
             'UJMExoBundle:InteractionGraphic:new.html.twig', array(
             'entity' => $interGraph,
-            'form'   => $form->createView(),
-            'error'  => true,
-            'exoID'  => $exoID,
+            'form' => $form->createView(),
+            'error' => true,
+            'exoID' => $exoID,
             )
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
@@ -152,31 +132,21 @@ class InteractionGraphicController extends Controller
         return $this->render(
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
-                'exoID'  => $exoID,
-                'linkedCategory' =>  $catSer->getLinkedCategories(),
+                'exoID' => $exoID,
+                'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
-                'interactionType' => $interactionType
+                'interactionType' => $interactionType,
             )
         );
     }
 
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:edit'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     integer catID
-     *     \Claroline\CoreBundle\Entity\User user
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction()
     {
         $attr = $this->get('request')->attributes;
-        $graphSer  = $this->container->get('ujm.exo_InteractionGraphic');
+        $graphSer = $this->container->get('ujm.exo_InteractionGraphic');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -185,7 +155,7 @@ class InteractionGraphicController extends Controller
                                ->getInteractionGraphic($attr->get('interaction')->getId());
 
         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
-            array('interactionGraphic' => $interactionGraph->getId()
+            array('interactionGraphic' => $interactionGraph->getId(),
             )
         );
 
@@ -199,13 +169,13 @@ class InteractionGraphicController extends Controller
 
         $linkedCategory = $catSer->getLinkedCategories();
 
-        $variables['entity']         = $interactionGraph;
-        $variables['edit_form']      = $editForm->createView();
-        $variables['nbResponses']    = $graphSer->getNbReponses($attr->get('interaction'));
+        $variables['entity'] = $interactionGraph;
+        $variables['edit_form'] = $editForm->createView();
+        $variables['nbResponses'] = $graphSer->getNbReponses($attr->get('interaction'));
         $variables['linkedCategory'] = $linkedCategory;
-        $variables['position']       = $position;
-        $variables['exoID']          = $attr->get('exoID');
-        $variables['locker']         = $catSer->getLockCategory();
+        $variables['position'] = $position;
+        $variables['exoID'] = $attr->get('exoID');
+        $variables['locker'] = $catSer->getLockCategory();
 
         if ($attr->get('exoID') != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
@@ -218,15 +188,14 @@ class InteractionGraphicController extends Controller
     /**
      * Edits an existing InteractionGraphic entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionGraphic
+     * @param int $id id of InteractionGraphic
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
-        $user  = $this->container->get('security.token_storage')
+        $user = $this->container->get('security.token_storage')
                                  ->getToken()->getUser();
         $exoID = $this->container->get('request')->request->get('exercise');
         $catID = -1;
@@ -262,10 +231,8 @@ class InteractionGraphicController extends Controller
 
         if ($formHandler->processUpdate($entity)) {
             if ($exoID == -1) {
-
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
-
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',
@@ -281,7 +248,7 @@ class InteractionGraphicController extends Controller
             'UJMExoBundle:Question:edit', array(
                 'id' => $entity->getInteraction()->getQuestion()->getId(),
                 'form' => $editForm,
-                'exoID' => $exoID
+                'exoID' => $exoID,
             )
         );
     }
@@ -289,9 +256,8 @@ class InteractionGraphicController extends Controller
     /**
      * Deletes a InteractionGraphic entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionGraphic
+     * @param int    $id      id of InteractionGraphic
      * @param intger $pageNow for pagination, actual page
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -311,7 +277,7 @@ class InteractionGraphicController extends Controller
         }
 
         $stop = count($coords);
-        for ($i = 0; $i < $stop; $i++) {
+        for ($i = 0; $i < $stop; ++$i) {
             $em->remove($coords[$i]);
         }
 
@@ -324,7 +290,6 @@ class InteractionGraphicController extends Controller
     /**
      * Display the twig view to add a new picture to the user's document.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -336,7 +301,6 @@ class InteractionGraphicController extends Controller
     /**
      * Get the adress of the selected picture in order to display it.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -357,19 +321,18 @@ class InteractionGraphicController extends Controller
                 $pic = $repository->findOneBy(array('label' => $label));
                 $suffix = substr($pic->getUrl(), 9); // Get the end of the src of the picture
             } else {
-                $suffix = ""; // Else don't display anything
+                $suffix = ''; // Else don't display anything
             }
         }
 
-        $url = $prefix . $suffix; // Concatenate the beginning and the end of the src of the picture
+        $url = $prefix.$suffix; // Concatenate the beginning and the end of the src of the picture
 
         return new Response($url); // Send back the src if the picture
     }
 
     /**
-     * Fired when compose an exercise
+     * Fired when compose an exercise.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -387,17 +350,16 @@ class InteractionGraphicController extends Controller
         $exerciseSer = $this->container->get('ujm.exo_InteractionGraphic');
         $res = $exerciseSer->response($request);
 
-        $vars['point']   = $res['point']; // Score of the student without penalty
+        $vars['point'] = $res['point']; // Score of the student without penalty
         $vars['penalty'] = $res['penalty']; // Penalty (hints)
-        $vars['interG']  = $res['interG']; // The entity interaction graphic (for the id ...)
-        $vars['coords']  = $res['coords']; // The coordonates of the right answer zones
-        $vars['doc']     = $res['doc']; // The answer picture (label, src ...)
-        $vars['total']   = $res['total']; // Score max if all answers right and no penalty
-        $vars['rep']     = $res['rep']; // Coordonates of the answer zones of the student's answer
-        $vars['score']   = $res['score']; // Score of the student (right answer - penalty)
-        $vars['exoID']   = $postVal['exoID'];
+        $vars['interG'] = $res['interG']; // The entity interaction graphic (for the id ...)
+        $vars['coords'] = $res['coords']; // The coordonates of the right answer zones
+        $vars['doc'] = $res['doc']; // The answer picture (label, src ...)
+        $vars['total'] = $res['total']; // Score max if all answers right and no penalty
+        $vars['rep'] = $res['rep']; // Coordonates of the answer zones of the student's answer
+        $vars['score'] = $res['score']; // Score of the student (right answer - penalty)
+        $vars['exoID'] = $postVal['exoID'];
 
         return $this->render('UJMExoBundle:InteractionGraphic:graphicOverview.html.twig', $vars);
     }
-
 }

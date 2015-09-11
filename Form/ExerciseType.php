@@ -23,7 +23,7 @@ class ExerciseType extends AbstractType
     {
         $builder->add('title', 'text', [
             'label' => 'title',
-            'constraints' => [new NotBlank()]
+            'constraints' => [new NotBlank()],
         ]);
 
         if ($this->isCreationForm) {
@@ -31,40 +31,40 @@ class ExerciseType extends AbstractType
                 'required' => true,
                 'mapped' => false,
                 'label' => 'publish_resource',
-                'translation_domain' => 'platform'
+                'translation_domain' => 'platform',
            ]);
         }
 
         $builder
             ->add('name', 'hidden', [
-                'data' => 'exercise'
+                'data' => 'exercise',
             ])
             ->add('description', 'tinymce', [
                 'attr' => ['data-new-tab' => 'yes'],
                 'label' => 'Description',
-                'required' => false
+                'required' => false,
             ])
             ->add('shuffle', 'checkbox', [
                 'required' => false,
-                'label' => 'random_questions'
+                'label' => 'random_questions',
             ])
             ->add('nbQuestion', 'text', [
                 'label' => 'number_questions_draw',
-                'required' => false
+                'required' => false,
             ])
             ->add('keepSameQuestion', 'checkbox', [
                 'required' => false,
-                'label' => 'keep_same_question'
+                'label' => 'keep_same_question',
             ])
             ->add('duration', 'text', [
-                'label' => 'duration'
+                'label' => 'duration',
             ])
             ->add('doprint', 'checkbox', [
                 'required' => false,
-                'label' => 'print_paper'
+                'label' => 'print_paper',
             ])
             ->add('maxAttempts', 'text', [
-                'label' => 'maximum_tries'
+                'label' => 'maximum_tries',
             ])
             ->add('correctionMode', 'choice', [
                 'label' => 'availability_of_correction',
@@ -72,8 +72,8 @@ class ExerciseType extends AbstractType
                     '1' => 'at_the_end_of_assessment',
                     '2' => 'after_the_last_attempt',
                     '3' => 'from',
-                    '4' => 'never'
-                ]
+                    '4' => 'never',
+                ],
             ])
             ->add('dateCorrection', 'datetime', [
                 'widget' => 'single_text',
@@ -86,16 +86,16 @@ class ExerciseType extends AbstractType
                 'label' => 'availability_of_score',
                 'choices' => [
                     '1' => 'at_the_same_time_that_the_correction',
-                    '2' => 'at_the_end_of_assessment'
-                ]
+                    '2' => 'at_the_end_of_assessment',
+                ],
             ])
             ->add('dispButtonInterrupt', 'checkbox', [
                 'required' => false,
-                'label' => 'test_exit'
+                'label' => 'test_exit',
             ])
             ->add('lockAttempt', 'checkbox', [
                  'required' => false,
-                 'label' => 'lock_attempt'
+                 'label' => 'lock_attempt',
             ]);
     }
 
@@ -103,7 +103,7 @@ class ExerciseType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'UJM\ExoBundle\Entity\Exercise',
-            'translation_domain' => 'ujm_exo'
+            'translation_domain' => 'ujm_exo',
         ]);
     }
 

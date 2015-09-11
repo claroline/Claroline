@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\LockAttempt
+ * UJM\ExoBundle\Entity\LockAttempt.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_lock_attempt")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class LockAttempt
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,14 +22,14 @@ class LockAttempt
     private $id;
 
     /**
-     * @var string $keyLock
+     * @var string
      *
      * @ORM\Column(name="key_lock", type="string", length=255)
      */
     private $keyLock;
 
     /**
-     * @var date $date
+     * @var date
      *
      * @ORM\Column(name="date", type="date")
      */
@@ -41,9 +41,9 @@ class LockAttempt
     private $paper;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class LockAttempt
     }
 
     /**
-     * Set keyLock
+     * Set keyLock.
      *
      * @param string $keyLock
      */
@@ -61,7 +61,7 @@ class LockAttempt
     }
 
     /**
-     * Get keyLock
+     * Get keyLock.
      *
      * @return string
      */
@@ -71,7 +71,7 @@ class LockAttempt
     }
 
     /**
-     * Set date
+     * Set date.
      *
      * @param date $date
      */
@@ -81,7 +81,7 @@ class LockAttempt
     }
 
     /**
-     * Get date
+     * Get date.
      *
      * @return date
      */

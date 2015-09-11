@@ -6,53 +6,44 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class InteractionOpen extends \Twig_Extension
 {
-
-    protected  $doctrine;
+    protected $doctrine;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     *
      */
     public function __construct(Registry $doctrine)
     {
-        $this->doctrine  = $doctrine;
+        $this->doctrine = $doctrine;
     }
 
     public function getName()
     {
-        return "InteractionOpen";
+        return 'InteractionOpen';
     }
 
-     /**
-     * Get functions
-     *
-     * @access public
-     *
-     * Return array
+    /**
+     * Get functions.
      */
     public function getFunctions()
     {
-          return array(
+        return array(
               'goodResponseOpenOneWord' => new \Twig_Function_Method($this, 'goodResponseOpenOneWord'),
           );
     }
 
-     /**
-     * return the good response for an open question with one word
+    /**
+     * return the good response for an open question with one word.
      *
-     * @access public
      *
-     * @param integer $interOpenId id InteractionOpen
+     * @param int $interOpenId id InteractionOpen
      *
      * Return integer
      */
     public function goodResponseOpenOneWord($interOpenId)
     {
-
         return $this->doctrine
                     ->getManager()
                     ->getRepository('UJMExoBundle:WordResponse')

@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
-
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\InteractionHoleType;
@@ -13,21 +12,10 @@ use UJM\ExoBundle\Form\InteractionHoleHandler;
 
 /**
  * InteractionHole controller.
- *
  */
 class InteractionHoleController extends Controller
 {
-
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:show'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     array vars
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction()
@@ -40,41 +28,34 @@ class InteractionHoleController extends Controller
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
                               ->getInteractionHole($attr->get('interaction')->getId());
 
-        $form   = $this->createForm(new ResponseType(), $response);
+        $form = $this->createForm(new ResponseType(), $response);
 
         $vars['interactionToDisplayed'] = $interactionHole;
-        $vars['form']            = $form->createView();
-        $vars['exoID']           = $attr->get('exoID');
+        $vars['form'] = $form->createView();
+        $vars['exoID'] = $attr->get('exoID');
 
         return $this->render('UJMExoBundle:InteractionHole:paper.html.twig', $vars);
     }
 
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:formNew'
-     * Parameters posted :
-     *     integer exoID
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction()
     {
-       $attr = $this->get('request')->attributes;
-       $entity = new InteractionHole();
-       $form   = $this->createForm(
+        $attr = $this->get('request')->attributes;
+        $entity = new InteractionHole();
+        $form = $this->createForm(
            new InteractionHoleType(
                $this->container->get('security.token_storage')
                    ->getToken()->getUser()
            ), $entity
        );
 
-       return $this->container->get('templating')->renderResponse(
+        return $this->container->get('templating')->renderResponse(
                         'UJMExoBundle:InteractionHole:new.html.twig', array(
-                        'exoID'  => $attr->get('exoID'),
+                        'exoID' => $attr->get('exoID'),
                         'entity' => $entity,
-                        'form'   => $form->createView()
+                        'form' => $form->createView(),
                         )
                     );
     }
@@ -82,14 +63,13 @@ class InteractionHoleController extends Controller
     /**
      * Creates a new InteractionHole entity.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function createAction()
     {
-        $interHole  = new InteractionHole();
-        $form      = $this->createForm(
+        $interHole = new InteractionHole();
+        $form = $this->createForm(
             new InteractionHoleType(
                 $this->container->get('security.token_storage')->getToken()->getUser()
             ), $interHole
@@ -111,20 +91,20 @@ class InteractionHoleController extends Controller
         $formHandler->setValidator($this->get('validator'));
 
         $holeHandler = $formHandler->processAdd();
-        if ( $holeHandler === true) {
+        if ($holeHandler === true) {
             $categoryToFind = $interHole->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interHole->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind))
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
                     )
                 );
             } else {
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )
                     )
                 );
             }
@@ -137,16 +117,15 @@ class InteractionHoleController extends Controller
                         ));
             } else {
                 $form->addError(new FormError($holeHandler));
-
             }
         }
 
         $formWithError = $this->render(
             'UJMExoBundle:InteractionHole:new.html.twig', array(
             'entity' => $interHole,
-            'form'   => $form->createView(),
-            'error'  => true,
-            'exoID'  => $exoID
+            'form' => $form->createView(),
+            'error' => true,
+            'exoID' => $exoID,
 
             )
         );
@@ -156,51 +135,41 @@ class InteractionHoleController extends Controller
         return $this->render(
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
-                'exoID'  => $exoID,
-                'linkedCategory' =>  $catSer->getLinkedCategories(),
+                'exoID' => $exoID,
+                'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
-                'interactionType' => $interactionType
+                'interactionType' => $interactionType,
             )
         );
     }
 
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:edit'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     integer catID
-     *     \Claroline\CoreBundle\Entity\User user
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction()
     {
         $attr = $this->get('request')->attributes;
-        $holeSer  = $this->container->get('ujm.exo_InteractionHole');
+        $holeSer = $this->container->get('ujm.exo_InteractionHole');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
                               ->getInteractionHole($attr->get('interaction')->getId());
 
-         $editForm = $this->createForm(
+        $editForm = $this->createForm(
              new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
          );
 
-         $linkedCategory = $catSer->getLinkedCategories();
+        $linkedCategory = $catSer->getLinkedCategories();
 
-         return $this->render(
+        return $this->render(
              'UJMExoBundle:InteractionHole:edit.html.twig', array(
-             'entity'         => $interactionHole,
-             'edit_form'      => $editForm->createView(),
-             'nbResponses'    => $holeSer->getNbReponses($attr->get('interaction')),
+             'entity' => $interactionHole,
+             'edit_form' => $editForm->createView(),
+             'nbResponses' => $holeSer->getNbReponses($attr->get('interaction')),
              'linkedCategory' => $linkedCategory,
-             'exoID'          => $attr->get('exoID'),
-             'locker'         => $catSer->getLockCategory()
+             'exoID' => $attr->get('exoID'),
+             'locker' => $catSer->getLockCategory(),
              )
          );
     }
@@ -208,16 +177,15 @@ class InteractionHoleController extends Controller
     /**
      * Edits an existing InteractionHole entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionHole
+     * @param int $id id of InteractionHole
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function updateAction($id)
     {
         $exoID = $this->container->get('request')->request->get('exercise');
-        $user  = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID = -1;
 
         $em = $this->getDoctrine()->getManager();
@@ -232,7 +200,7 @@ class InteractionHoleController extends Controller
             $catID = $interHole->getInteraction()->getQuestion()->getCategory()->getId();
         }
 
-        $editForm   = $this->createForm(
+        $editForm = $this->createForm(
             new InteractionHoleType(
                 $this->container->get('security.token_storage')->getToken()->getUser(),
                 $catID
@@ -250,10 +218,8 @@ class InteractionHoleController extends Controller
         $holeHandler = $formHandler->processUpdate($interHole);
         if ($holeHandler === true) {
             if ($exoID == -1) {
-
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
-
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',
@@ -273,7 +239,7 @@ class InteractionHoleController extends Controller
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
                 'id' => $interHole->getInteraction()->getQuestion()->getId(),
-                'form' => $editForm
+                'form' => $editForm,
             )
         );
     }
@@ -281,9 +247,8 @@ class InteractionHoleController extends Controller
     /**
      * Deletes a InteractionHole entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionHole
+     * @param int    $id      id of InteractionHole
      * @param intger $pageNow for pagination, actual page
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -304,9 +269,8 @@ class InteractionHoleController extends Controller
     }
 
     /**
-     * To test the question with holes by the teacher
+     * To test the question with holes by the teacher.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -324,13 +288,12 @@ class InteractionHoleController extends Controller
         $interSer = $this->container->get('ujm.exo_InteractionHole');
         $res = $interSer->response($request);
 
-        $vars['score']     = $res['score'];
-        $vars['penalty']   = $res['penalty'];
+        $vars['score'] = $res['score'];
+        $vars['penalty'] = $res['penalty'];
         $vars['interHole'] = $res['interHole'];
-        $vars['response']  = $res['response'];
-        $vars['exoID']     = $postVal['exoID'];
+        $vars['response'] = $res['response'];
+        $vars['exoID'] = $postVal['exoID'];
 
         return $this->render('UJMExoBundle:InteractionHole:holeOverview.html.twig', $vars);
     }
-
 }
