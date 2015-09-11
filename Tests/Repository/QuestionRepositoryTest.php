@@ -5,7 +5,6 @@ namespace UJM\ExoBundle\Repository;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\ExerciseQuestion;
-use UJM\ExoBundle\Entity\Interaction;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 
@@ -18,7 +17,7 @@ class InteractionRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
-        $this->repo = $this->om->getRepository('UJMExoBundle:Interaction');
+        $this->repo = $this->om->getRepository('UJMExoBundle:Question');
     }
 
     public function testFindByExercise()
@@ -29,10 +28,8 @@ class InteractionRepositoryTest extends TransactionalTestCase
         $e1 = $this->persistExercise('ex1', [$q1, $q2]);
         $this->om->flush();
 
-        $interactions = $this->repo->findByExercise($e1);
-        $this->assertEquals(2, count($interactions));
-        $this->assertEquals($q1, $interactions[0]->getQuestion());
-        $this->assertEquals($q2, $interactions[1]->getQuestion());
+        $questions = $this->repo->findByExercise($e1);
+        $this->assertEquals([$q1, $q2], $questions);
     }
 
     private function persistQcmQuestion($title, array $choices = [])
@@ -40,17 +37,12 @@ class InteractionRepositoryTest extends TransactionalTestCase
         $question = new Question();
         $question->setTitle($title);
         $question->setDateCreate(new \DateTime());
-
-        $interaction = new Interaction();
-        $interaction->setType('InteractionQCM');
-        $interaction->setQuestion($question);
-        $interaction->setInvite('Invite...');
+        $question->setDescription('Description...');
 
         $interactionQcm = new InteractionQCM();
-        $interactionQcm->setInteraction($interaction);
+        $interactionQcm->setQuestion($question);
 
         $this->om->persist($interactionQcm);
-        $this->om->persist($interaction);
         $this->om->persist($question);
 
         return $question;

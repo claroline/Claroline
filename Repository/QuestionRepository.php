@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use UJM\ExoBundle\Entity\Exercise;
 
 /**
  * QuestionRepository
@@ -12,6 +13,24 @@ use Doctrine\ORM\EntityRepository;
  */
 class QuestionRepository extends EntityRepository
 {
+    /**
+     * Returns all the interactions linked to a given exercise.
+     *
+     * @param Exercise $exercise
+     * @return Interaction[]
+     */
+    public function findByExercise(Exercise $exercise)
+    {
+        return $this->createQueryBuilder('q')
+            ->join('q.exerciseQuestions', 'eq')
+            ->join('eq.exercise', 'e')
+            ->where('e = :exercise')
+            ->orderBy('eq.ordre')
+            ->setParameter(':exercise', $exercise)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * Get user's Questions
      *
@@ -92,5 +111,46 @@ class QuestionRepository extends EntityRepository
                       ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
 
         return $query->getResult();
+    }
+
+    /**
+     * To import model's user in an exercise
+     *
+     * @access public
+     *
+     * @param Doctrine EntityManager $em
+     * @param integer $uid id of User
+     * @param integer $exoId id of exercise
+     *
+     * Return array[Interaction]
+     */
+    public function getUserModelImport($em, $uid, $exoId)
+    {
+        $questions = array();
+
+        $dql = 'SELECT eq FROM UJM\ExoBundle\Entity\ExerciseQuestion eq WHERE eq.exercise= ?1
+                ORDER BY eq.ordre';
+
+        $query = $em->createQuery($dql)->setParameter(1, $exoId);
+        $eqs = $query->getResult();
+
+        foreach ($eqs as $eq) {
+            $questions[] = $eq->getQuestion()->getId();
+        }
+
+        $qb = $this->createQueryBuilder('i');
+
+        $qb->join('i.question', 'q')
+           ->join('q.category', 'c')
+           ->join('q.user', 'u')
+           ->where($qb->expr()->in('u.id', $uid))
+           ->andWhere('q.model in (1)');
+        if (count($questions) > 0) {
+             $qb->andWhere('q.id not in ('.implode(',', $questions).')');
+        }
+        $qb->orderBy('c.value', 'ASC')
+           ->addOrderBy('q.title', 'ASC');
+
+        return $qb->getQuery()->getResult();
     }
 }

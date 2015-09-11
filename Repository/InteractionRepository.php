@@ -81,25 +81,25 @@ class InteractionRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * Returns all the interactions linked to a given exercise.
-     *
-     * @param Exercise $exercise
-     * @return Interaction[]
-     */
-    public function findByExercise(Exercise $exercise)
-    {
-        return $this->createQueryBuilder('i')
-            ->select('i')
-            ->join('i.question', 'q')
-            ->join('q.exerciseQuestions', 'eq')
-            ->join('eq.exercise', 'e')
-            ->where('e = :exercise')
-            ->orderBy('eq.ordre')
-            ->setParameter(':exercise', $exercise)
-            ->getQuery()
-            ->getResult();
-    }
+//    /**
+//     * Returns all the interactions linked to a given exercise.
+//     *
+//     * @param Exercise $exercise
+//     * @return Interaction[]
+//     */
+//    public function findByExercise(Exercise $exercise)
+//    {
+//        return $this->createQueryBuilder('i')
+//            ->select('i')
+//            ->join('i.question', 'q')
+//            ->join('q.exerciseQuestions', 'eq')
+//            ->join('eq.exercise', 'e')
+//            ->where('e = :exercise')
+//            ->orderBy('eq.ordre')
+//            ->setParameter(':exercise', $exercise)
+//            ->getQuery()
+//            ->getResult();
+//    }
 
     /**
      * Get Interaction of an exercise or for a paper

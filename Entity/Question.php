@@ -92,6 +92,8 @@ class Question
     }
 
     /**
+     * Note: this method is automatically called in AbstractInteraction#setQuestion
+     *
      * @param string $type
      */
     public function setType($type)

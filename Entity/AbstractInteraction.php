@@ -33,6 +33,7 @@ class AbstractInteraction
     public function setQuestion(Question $question)
     {
         $this->question = $question;
+        $question->setType(get_class($this));
     }
 
     public function getQuestion()

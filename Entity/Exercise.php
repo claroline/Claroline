@@ -314,7 +314,7 @@ class Exercise extends AbstractResource
      *
      * @param \Datetime $dateCorrection
      */
-    public function setDateCorrection(\DateTime $dateCorrection)
+    public function setDateCorrection(\DateTime $dateCorrection = null)
     {
         $this->dateCorrection = $dateCorrection;
     }
