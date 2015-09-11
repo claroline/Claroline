@@ -11,12 +11,6 @@ html, body {
 .layout-boxed html, .layout-boxed body {
     height: 100%;
 }
-body {
-    font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
-    font-weight: 400;
-    overflow-x: hidden;
-    overflow-y: auto;
-}
 .wrapper {
     min-height: 100%;
     overflow: hidden;
@@ -93,13 +87,7 @@ body {
     max-width: 100%;
 }
 .content {
-    margin-left: auto;
-    margin-right: auto;
     min-height: 250px;
-    padding: 15px;
-}
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: 'Source Sans Pro',sans-serif;
 }
 a {
     color: #3C8DBC;
