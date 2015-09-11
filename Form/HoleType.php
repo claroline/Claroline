@@ -16,28 +16,28 @@ class HoleType extends AbstractType
             )
             ->add(
                 'size', 'text', array(
-                'attr'  => array( 'size' => '4')
+                'attr' => array('size' => '4'),
                 )
 
             )
             //->add('position', 'text')
             ->add(
                 'orthography', 'checkbox', array(
-                    'required' => false, 'label' => 'orthography'
+                    'required' => false, 'label' => 'orthography',
                 )
             )
             ->add(
                 'selector', 'checkbox', array(
-                    'required' => false, 'label' => 'hole_selector'
+                    'required' => false, 'label' => 'hole_selector',
                 )
             )
             ->add(
                 'wordResponses', 'collection', array(
-                    'type' => new WordResponseType,
+                    'type' => new WordResponseType(),
                     'prototype' => true,
                     //'by_reference' => false,
                     'allow_add' => true,
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 )
             );
     }
@@ -47,7 +47,7 @@ class HoleType extends AbstractType
         $resolver->setDefaults(
                 array('data_class' => 'UJM\ExoBundle\Entity\Hole',
                       'cascade_validation' => true,
-                      'translation_domain' => 'ujm_exo'
+                      'translation_domain' => 'ujm_exo',
                 )
         );
     }

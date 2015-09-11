@@ -4,14 +4,10 @@ namespace UJM\ExoBundle\Services\classes;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-
 use Doctrine\Bundle\DoctrineBundle\Registry;
-
-use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-
 use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\Paper;
 use UJM\ExoBundle\Event\Log\LogExerciseEvaluatedEvent;
@@ -27,16 +23,14 @@ class ExerciseServices
     protected $container;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
-     * @param \Claroline\CoreBundle\Persistence\ObjectManager $om Dependency Injection
+     * @param \Claroline\CoreBundle\Persistence\ObjectManager                              $om                   Dependency Injection
      * @param \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker Dependency Injection
-     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher Dependency Injection
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
-     * @param \Symfony\Component\DependencyInjection\Container $container
-     *
+     * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface                  $eventDispatcher      Dependency Injection
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry                                     $doctrine             Dependency Injection;
+     * @param \Symfony\Component\DependencyInjection\Container                             $container
      */
     public function __construct(
         ObjectManager $om,
@@ -44,25 +38,23 @@ class ExerciseServices
         EventDispatcherInterface $eventDispatcher,
         Registry $doctrine,
         Container $container
-    )
-    {
+    ) {
         $this->om = $om;
         $this->authorizationChecker = $authorizationChecker;
-        $this->eventDispatcher      = $eventDispatcher;
-        $this->doctrine             = $doctrine;
-        $this->container            = $container;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->doctrine = $doctrine;
+        $this->container = $container;
     }
 
     /**
-     * Return the number of papers for an exercise and for an user
+     * Return the number of papers for an exercise and for an user.
      *
-     * @access public
      *
-     * @param integer $uid id User
-     * @param integer $exoId id Exercise
-     * @param boolean $finished to count or no paper n o finished
+     * @param int  $uid      id User
+     * @param int  $exoId    id Exercise
+     * @param bool $finished to count or no paper n o finished
      *
-     * @return integer
+     * @return int
      */
     public function getNbPaper($uid, $exoID, $finished = false)
     {
@@ -74,11 +66,10 @@ class ExerciseServices
     }
 
     /**
-     * Get max score possible for an exercise
+     * Get max score possible for an exercise.
      *
-     * @access public
      *
-     * @param integer $exoID id Exercise
+     * @param int $exoID id Exercise
      *
      * @return float
      */
@@ -96,9 +87,9 @@ class ExerciseServices
                                 ->getInteraction($eq->getQuestion()->getId());
             $typeInter = $interaction->getType();
 
-            $interSer        = $this->container->get('ujm.exo_' . $typeInter);
-            $interactionX    = $interSer->getInteractionX($interaction->getId());
-            $scoreMax        = $interSer->maxScore($interactionX);
+            $interSer = $this->container->get('ujm.exo_'.$typeInter);
+            $interactionX = $interSer->getInteractionX($interaction->getId());
+            $scoreMax = $interSer->maxScore($interactionX);
 
             $exoTotalScore += $scoreMax;
         }
@@ -107,13 +98,11 @@ class ExerciseServices
     }
 
     /**
-     * To link a question with an exercise
+     * To link a question with an exercise.
      *
-     * @access public
      *
-     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
+     * @param UJM\ExoBundle\Entity\Exercise               $exercise instance of Exercise
      * @param InteractionQCM or InteractionGraphic or ... $interX
-     *
      */
     public function setExerciseQuestion($exercise, $interX, $order = -1)
     {
@@ -121,7 +110,7 @@ class ExerciseServices
 
         if ($order == -1) {
             $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
-                  . 'WHERE eq.exercise='.$exercise->getId();
+                  .'WHERE eq.exercise='.$exercise->getId();
             $query = $this->doctrine->getManager()->createQuery($dql);
             $maxOrdre = $query->getResult();
 
@@ -135,13 +124,12 @@ class ExerciseServices
     }
 
     /**
-     * To know if an user is the creator of an exercise
+     * To know if an user is the creator of an exercise.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
      *
-     * @return boolean
+     * @return bool
      */
     public function isExerciseAdmin($exercise)
     {
@@ -154,12 +142,11 @@ class ExerciseServices
     }
 
     /**
-     * For all papers for an user and an exercise get scorePaper, maxExoScore, scoreTemp (all questions marked or no)
+     * For all papers for an user and an exercise get scorePaper, maxExoScore, scoreTemp (all questions marked or no).
      *
-     * @access public
      *
-     * @param integer $userId id User
-     * @param integer $exoId id Exercise
+     * @param int $userId id User
+     * @param int $exoId  id Exercise
      *
      * @return array
      */
@@ -174,23 +161,21 @@ class ExerciseServices
 
         foreach ($papers as $paper) {
             $infosPaper = $this->container->get('ujm.exo_paper')->getInfosPaper($paper);
-            $tabScoresUser[$i]['score']       = $infosPaper['scorePaper'];
+            $tabScoresUser[$i]['score'] = $infosPaper['scorePaper'];
             $tabScoresUser[$i]['maxExoScore'] = $infosPaper['maxExoScore'];
-            $tabScoresUser[$i]['scoreTemp']   = $infosPaper['scoreTemp'];
+            $tabScoresUser[$i]['scoreTemp'] = $infosPaper['scoreTemp'];
 
-            $i++;
+            ++$i;
         }
 
         return $tabScoresUser;
     }
 
     /**
-     * Trigger an event to log informations after to execute an exercise if the score is not temporary
+     * Trigger an event to log informations after to execute an exercise if the score is not temporary.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Paper\paper $paper
-     *
      */
     public function manageEndOfExercise(Paper $paper)
     {
@@ -203,15 +188,14 @@ class ExerciseServices
     }
 
     /**
-     * To control the max attemps, allow to know if an user can again execute an exercise
+     * To control the max attemps, allow to know if an user can again execute an exercise.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
-     * @param integer $uid
-     * @param boolean $exoAdmin
+     * @param int                            $uid
+     * @param bool                           $exoAdmin
      *
-     * @return boolean
+     * @return bool
      */
     public function controlMaxAttemps($exercise, $uid, $exoAdmin)
     {
@@ -226,13 +210,12 @@ class ExerciseServices
     }
 
     /**
-     * Add an Interaction in an exercise if created from an exercise
+     * Add an Interaction in an exercise if created from an exercise.
      *
-     * @access public
      *
-     * @param type $inter
+     * @param type                          $inter
      * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise
-     * @param Doctrine EntityManager $em
+     * @param Doctrine EntityManager        $em
      */
     public function addQuestionInExercise($inter, $exercise)
     {
@@ -244,13 +227,12 @@ class ExerciseServices
     }
 
     /**
-     * To know if an user is allowed to open an exercise
+     * To know if an user is allowed to open an exercise.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise
      *
-     * @return boolean
+     * @return bool
      */
     public function allowToOpen($exercise)
     {
@@ -263,9 +245,6 @@ class ExerciseServices
     }
 
     /**
-     *
-     * @access public
-     *
      * @return Claroline\CoreBundle\Entity\User
      */
     public function getUser()
@@ -274,14 +253,10 @@ class ExerciseServices
                                 ->getToken()->getUser();
 
         return $user;
-
     }
 
     /**
-     *
-     * @access public
-     *
-     * @return integer or String
+     * @return int or String
      */
     public function getUserId()
     {
@@ -294,5 +269,4 @@ class ExerciseServices
 
         return $uid;
     }
-        
 }

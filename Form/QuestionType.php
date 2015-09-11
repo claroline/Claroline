@@ -5,20 +5,17 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
 use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Repository\CategoryRepository;
 
 class QuestionType extends AbstractType
 {
-
     private $user;
     private $catID;
 
     public function __construct(User $user, $catID = -1)
     {
-        $this->user  = $user;
+        $this->user = $user;
         $this->catID = $catID;
     }
 
@@ -31,7 +28,7 @@ class QuestionType extends AbstractType
                 'title', 'text', array(
                     'label' => 'title',
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'question_title'),
+                    'attr' => array('placeholder' => 'question_title'),
                 )
             )
             ->add(
@@ -55,9 +52,9 @@ class QuestionType extends AbstractType
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
                     'required' => false,
-                    'attr'  => array( 'placeholder' => 'question_description',
-                                      'class'=> 'form-control',
-                                      'data-new-tab' => 'yes'
+                    'attr' => array('placeholder' => 'question_description',
+                                      'class' => 'form-control',
+                                      'data-new-tab' => 'yes',
                                     ),
                 )
             )
@@ -65,7 +62,7 @@ class QuestionType extends AbstractType
                 'model', 'checkbox', array(
                     'required' => false,
                     'label' => 'question_model',
-                    'translation_domain' => 'ujm_exo'
+                    'translation_domain' => 'ujm_exo',
                 )
             );
     }
@@ -75,7 +72,7 @@ class QuestionType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\Question',
-                'translation_domain' => 'ujm_exo'
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

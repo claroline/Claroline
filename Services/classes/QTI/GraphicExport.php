@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To export a graphic question in QTI
- *
+ * To export a graphic question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class GraphicExport extends QtiExport
@@ -13,12 +11,10 @@ class GraphicExport extends QtiExport
     private $selectPointInteraction;
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository $qtiRepos
-     *
+     * @param qtiRepository                     $qtiRepos
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -30,7 +26,7 @@ class GraphicExport extends QtiExport
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
                                 ->findOneBy(array('interaction' => $interaction->getId()));
 
-        if (count($this->interactiongraph->getCoords()) > 1 ) {
+        if (count($this->interactiongraph->getCoords()) > 1) {
             $cardinality = 'multiple';
         } else {
             $cardinality = 'single';
@@ -45,8 +41,8 @@ class GraphicExport extends QtiExport
         $this->selectPointInteractionTag();
         $this->promptTag();
 
-        if(($this->interactiongraph->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactiongraph->getInteraction()->getFeedBack()!="") ){
+        if (($this->interactiongraph->getInteraction()->getFeedBack() != null)
+                && ($this->interactiongraph->getInteraction()->getFeedBack() != '')) {
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
@@ -66,10 +62,9 @@ class GraphicExport extends QtiExport
      */
     private function qtiCoord($coords)
     {
-
-        $Coords_value= $coords->getValue();
+        $Coords_value = $coords->getValue();
         $Coords_size = $coords->getSize();
-        $radius = $Coords_size/2;
+        $radius = $Coords_size / 2;
         list($x, $y) = explode(',', $Coords_value);
 
         $x_center_circle = $x + ($radius);
@@ -80,18 +75,15 @@ class GraphicExport extends QtiExport
 
     /**
      * Implements the abstract method
-     * add the tag correctResponse in responseDeclaration
-     *
-     * @access protected
-     *
+     * add the tag correctResponse in responseDeclaration.
      */
     protected function correctResponseTag()
     {
-        $correctResponse = $this->document->createElement("correctResponse");
+        $correctResponse = $this->document->createElement('correctResponse');
         foreach ($this->interactiongraph->getCoords() as $c) {
             $xy = $this->qtiCoord($c);
-            $Tagvalue = $this->document->CreateElement("value");
-            $responsevalue = $this->document->CreateTextNode($xy[0]." ".$xy[1]);
+            $Tagvalue = $this->document->CreateElement('value');
+            $responsevalue = $this->document->CreateTextNode($xy[0].' '.$xy[1]);
             $Tagvalue->appendChild($responsevalue);
             $correctResponse->appendChild($Tagvalue);
         }
@@ -100,65 +92,55 @@ class GraphicExport extends QtiExport
     }
 
     /**
-     * add the tag areaMapping in responseDeclaration
-     *
-     * @access private
-     *
+     * add the tag areaMapping in responseDeclaration.
      */
     private function areaMappingTag()
     {
-        $areaMapping = $this->document->createElement("areaMapping");
-        $areaMapping->setAttribute("defaultValue", "0");
+        $areaMapping = $this->document->createElement('areaMapping');
+        $areaMapping->setAttribute('defaultValue', '0');
         $this->responseDeclaration[0]->appendChild($areaMapping);
 
         foreach ($this->interactiongraph->getCoords() as $c) {
             $xy = $this->qtiCoord($c);
-            $areaMapEntry = $this->document->createElement("areaMapEntry");
-            $areaMapEntry->setAttribute("shape", $c->getShape());
-            $areaMapEntry->setAttribute("coords",$xy[0].",".$xy[1].",".$xy[2]);
-            $areaMapEntry->setAttribute("mappedValue", $c->getScoreCoords());
+            $areaMapEntry = $this->document->createElement('areaMapEntry');
+            $areaMapEntry->setAttribute('shape', $c->getShape());
+            $areaMapEntry->setAttribute('coords', $xy[0].','.$xy[1].','.$xy[2]);
+            $areaMapEntry->setAttribute('mappedValue', $c->getScoreCoords());
             $areaMapping->appendChild($areaMapEntry);
         }
     }
 
     /**
-     * add the tag selectPointInteractionTag in itemBody
-     *
-     * @access private
-     *
+     * add the tag selectPointInteractionTag in itemBody.
      */
     private function selectPointInteractionTag()
     {
         $taburl = explode('/', $this->interactiongraph->getDocument()->getUrl());
         $pictureName = end($taburl);
-        $this->selectPointInteraction = $this->document->createElement("selectPointInteraction");
-        $this->selectPointInteraction->setAttribute("responseIdentifier", "RESPONSE");
-        $this->selectPointInteraction->setAttribute("maxChoices",
+        $this->selectPointInteraction = $this->document->createElement('selectPointInteraction');
+        $this->selectPointInteraction->setAttribute('responseIdentifier', 'RESPONSE');
+        $this->selectPointInteraction->setAttribute('maxChoices',
                 count($this->interactiongraph->getCoords()));
 
         $object = $this->document->CreateElement('object');
         $mimetype = $this->interactiongraph->getDocument()->getType();
         if (strpos($mimetype, 'image/') === false) {
-            $mimetype = "image/". $mimetype;
+            $mimetype = 'image/'.$mimetype;
         }
-        $object->setAttribute("type", $mimetype);
-        $object->setAttribute("width", $this->interactiongraph->getWidth());
-        $object->setAttribute("height", $this->interactiongraph->getHeight());
-        $object->setAttribute("data", $pictureName);
+        $object->setAttribute('type', $mimetype);
+        $object->setAttribute('width', $this->interactiongraph->getWidth());
+        $object->setAttribute('height', $this->interactiongraph->getHeight());
+        $object->setAttribute('data', $pictureName);
         $objecttxt = $this->document->CreateTextNode($this->interactiongraph->getDocument()->getLabel());
         $object->appendChild($objecttxt);
         $this->selectPointInteraction->appendChild($object);
-
 
         $this->itemBody->appendChild($this->selectPointInteraction);
     }
 
     /**
      * Implements the abstract method
-     * add the tag prompt in selectPointInteraction
-     *
-     * @access protected
-     *
+     * add the tag prompt in selectPointInteraction.
      */
     protected function promptTag()
     {
@@ -169,10 +151,7 @@ class GraphicExport extends QtiExport
     }
 
     /**
-     * add the picture in the archive
-     *
-     * @access private
-     *
+     * add the picture in the archive.
      */
     private function getPicture()
     {
@@ -182,9 +161,7 @@ class GraphicExport extends QtiExport
         $pictureName = end($taburl);
         $dest = $this->qtiRepos->getUserDir().$pictureName;
         copy($src, $dest);
-        $ressource = array ('name' => $pictureName, 'url' => $dest);
+        $ressource = array('name' => $pictureName, 'url' => $dest);
         $this->resourcesLinked[] = $ressource;
-
     }
-
 }

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * UJM\ExoBundle\Entity\Subscription
+ * UJM\ExoBundle\Entity\Subscription.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\SubscriptionRepository")
  * @ORM\Table(name="ujm_subscription")
@@ -21,26 +21,24 @@ class Subscription
     private $id;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      */
     private $user;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
      */
     private $exercise;
 
     /**
-     * @var boolean $creator
+     * @var bool
      *
      * @ORM\Column(name="creator", type="boolean")
      */
     private $creator;
 
     /**
-     * @var boolean $admin
+     * @var bool
      *
      * @ORM\Column(name="admin", type="boolean")
      */
@@ -73,9 +71,9 @@ class Subscription
     }
 
     /**
-     * Set creator
+     * Set creator.
      *
-     * @param boolean $creator
+     * @param bool $creator
      */
     public function setCreator($creator)
     {
@@ -83,7 +81,7 @@ class Subscription
     }
 
     /**
-     * Get creator
+     * Get creator.
      */
     public function getCreator()
     {
@@ -91,9 +89,9 @@ class Subscription
     }
 
     /**
-     * Set admin
+     * Set admin.
      *
-     * @param boolean $admin
+     * @param bool $admin
      */
     public function setAdmin($admin)
     {
@@ -101,7 +99,7 @@ class Subscription
     }
 
     /**
-     * Get admin
+     * Get admin.
      */
     public function getAdmin()
     {

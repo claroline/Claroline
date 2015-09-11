@@ -5,9 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
-
 use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Subscription;
 
@@ -20,32 +18,26 @@ class ExerciseHandler
     protected $action;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
-     * @param \Symfony\Component\Form\Form $form for an exercise
+     * @param \Symfony\Component\Form\Form              $form    for an exercise
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param Doctrine EntityManager $em
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param String $action
-     *
+     * @param Doctrine EntityManager                    $em
+     * @param \Claroline\CoreBundle\Entity\User         $user
+     * @param String                                    $action
      */
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $action)
     {
-        $this->form    = $form;
+        $this->form = $form;
         $this->request = $request;
-        $this->em      = $em;
-        $this->user    = $user;
-        $this->action  = $action;
+        $this->em = $em;
+        $this->user = $user;
+        $this->action = $action;
     }
 
     /**
-     * Verify if the form Exercise is valid and call the method to create an Exercise
-     *
-     * @access public
-     *
-     * Return boolean
+     * Verify if the form Exercise is valid and call the method to create an Exercise.
      */
     public function process()
     {
@@ -63,9 +55,8 @@ class ExerciseHandler
     }
 
     /**
-     * Create an Exercise
+     * Create an Exercise.
      *
-     * @access private
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exercise exercise to create
      */

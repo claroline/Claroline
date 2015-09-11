@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Hint
+ * UJM\ExoBundle\Entity\Hint.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_hint")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Hint
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,14 +22,14 @@ class Hint
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
     /**
-     * @var float $penalty
+     * @var float
      *
      * @ORM\Column(name="penalty", type="float")
      */
@@ -41,9 +41,9 @@ class Hint
     private $interaction;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Hint
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -61,7 +61,7 @@ class Hint
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -71,7 +71,7 @@ class Hint
     }
 
     /**
-     * Set penalty
+     * Set penalty.
      *
      * @param float $penalty
      */
@@ -81,7 +81,7 @@ class Hint
     }
 
     /**
-     * Get penalty
+     * Get penalty.
      *
      * @return float
      */

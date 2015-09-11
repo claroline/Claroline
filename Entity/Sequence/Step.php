@@ -4,20 +4,18 @@ namespace UJM\ExoBundle\Entity\Sequence;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use UJM\ExoBundle\Entity\Sequence\Sequence;
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Sequence Step Entity
+ * Sequence Step Entity.
  *
  * @ORM\Table(name="ujm_sequence_step")
  * @ORM\Entity
  */
-class Step implements \JsonSerializable {
-
+class Step implements \JsonSerializable
+{
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -33,7 +31,7 @@ class Step implements \JsonSerializable {
     protected $description;
 
     /**
-     * @var Number $position
+     * @var Number
      *
      * @ORM\Column(name="position", type="smallint")
      * @Assert\NotBlank
@@ -41,37 +39,35 @@ class Step implements \JsonSerializable {
     protected $position;
 
     /**
-     * 
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="shuffle", type="boolean")
      */
     protected $shuffle;
 
     /**
-     *
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="is_first", type="boolean") 
      */
     protected $isFirst;
 
     /**
-     *
-     * @var boolean
+     * @var bool
      * @ORM\Column(name="is_last", type="boolean") 
      */
     protected $isLast;
-    
+
     /**
      * There is two types of Steps : content step and question step
      * Content steps have no questions
-     * Both types are draggable excepts for isFirst and isLast steps
-     * @var boolean
+     * Both types are draggable excepts for isFirst and isLast steps.
+     *
+     * @var bool
      * @ORM\Column(name="is_content_step", type="boolean") 
      */
     protected $isContentStep;
 
     /**
-     * @var ExercisePlayer 
+     * @var ExercisePlayer
      * 
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Sequence\Sequence", inversedBy="steps")
      * @ORM\JoinColumn(name="sequence_id", nullable=false)
@@ -79,13 +75,15 @@ class Step implements \JsonSerializable {
     protected $sequence;
 
     /**
-     * Mapping Entity which allow ordering informations
+     * Mapping Entity which allow ordering informations.
+     *
      * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Sequence\StepQuestion", cascade={"all"}, orphanRemoval=true, mappedBy="step")
      * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $stepQuestions;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->shuffle = false;
         $this->isFirst = false;
         $this->isLast = false;
@@ -94,176 +92,197 @@ class Step implements \JsonSerializable {
     }
 
     /**
-     * Get page Id
-     * @return integer
+     * Get page Id.
+     *
+     * @return int
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
     /**
-     * 
      * @param string $description
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setDescription($description) {
+    public function setDescription($description)
+    {
         $this->description = $description;
+
         return $this;
     }
 
     /**
-     * 
      * @param Sequence $sequence
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setSequence(Sequence $sequence) {
+    public function setSequence(Sequence $sequence)
+    {
         $this->sequence = $sequence;
+
         return $this;
     }
 
     /**
-     * 
      * @return sequence
      */
-    public function getSequence() {
+    public function getSequence()
+    {
         return $this->sequence;
     }
 
     /**
-     * 
-     * @param integer $position
+     * @param int $position
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setPosition($position) {
+    public function setPosition($position)
+    {
         $this->position = $position;
+
         return $this;
     }
 
     /**
-     * 
-     * @return integer
+     * @return int
      */
-    public function getPosition() {
+    public function getPosition()
+    {
         return $this->position;
     }
 
     /**
-     * 
-     * @param boolean $shuffle
+     * @param bool $shuffle
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setShuffle($shuffle) {
+    public function setShuffle($shuffle)
+    {
         $this->shuffle = $shuffle;
+
         return $this;
     }
 
     /**
-     * 
-     * @return boolean
+     * @return bool
      */
-    public function getShuffle() {
+    public function getShuffle()
+    {
         return $this->shuffle;
     }
 
     /**
-     * 
-     * @param boolean $isLast
+     * @param bool $isLast
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setIsLast($isLast) {
+    public function setIsLast($isLast)
+    {
         $this->isLast = $isLast;
+
         return $this;
     }
 
     /**
-     * 
-     * @return boolean
+     * @return bool
      */
-    public function getIsLast() {
+    public function getIsLast()
+    {
         return $this->isLast;
     }
 
     /**
-     * 
-     * @param boolean $isFirst
+     * @param bool $isFirst
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setIsFirst($isFirst) {
+    public function setIsFirst($isFirst)
+    {
         $this->isFirst = $isFirst;
+
         return $this;
     }
 
     /**
-     * 
-     * @return boolean
+     * @return bool
      */
-    public function getIsFirst() {
+    public function getIsFirst()
+    {
         return $this->isFirst;
     }
-    
+
     /**
-     * 
-     * @param boolean $isContentStep
+     * @param bool $isContentStep
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function setIsContentStep($isContentStep){
+    public function setIsContentStep($isContentStep)
+    {
         $this->isContentStep = $isContentStep;
+
         return $this;
     }
 
     /**
-     * 
-     * @return boolean
+     * @return bool
      */
-    public function getIsContentStep(){
+    public function getIsContentStep()
+    {
         return $this->isContentStep;
     }
-    
+
     /**
-     * 
      * @param \UJM\ExoBundle\Entity\Sequence\StepQuestion $stepQuestion
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function addStepQuestion(StepQuestion $stepQuestion) {
+    public function addStepQuestion(StepQuestion $stepQuestion)
+    {
         $this->stepQuestions[] = $stepQuestion;
+
         return $this;
     }
 
     /**
-     * 
      * @param \UJM\ExoBundle\Entity\Sequence\StepQuestion $stepQuestion
+     *
      * @return \UJM\ExoBundle\Entity\Sequence\Step
      */
-    public function removeStepQuestion(StepQuestion $stepQuestion) {
+    public function removeStepQuestion(StepQuestion $stepQuestion)
+    {
         $this->stepQuestions->removeElement($stepQuestion);
+
         return $this;
     }
 
     /**
-     * 
      * @return ArrayCollection
      */
-    public function getStepQuestions() {
+    public function getStepQuestions()
+    {
         return $this->stepQuestions;
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         // TODO serialize questions arraycollection
         return array(
-            'id'                => $this->id,
-            'position'          => $this->position,
-            'shuffle'           => $this->shuffle,
-            'isFirst'           => $this->isFirst,
-            'isLast'            => $this->isLast,
-            'isContentStep'     => $this->isContentStep,
-            'description'       => $this->description,
-            'sequenceId'        => $this->sequence->getId(),
-            'questions'         => $this->stepQuestions
+            'id' => $this->id,
+            'position' => $this->position,
+            'shuffle' => $this->shuffle,
+            'isFirst' => $this->isFirst,
+            'isLast' => $this->isLast,
+            'isContentStep' => $this->isContentStep,
+            'description' => $this->description,
+            'sequenceId' => $this->sequence->getId(),
+            'questions' => $this->stepQuestions,
         );
     }
-
 }

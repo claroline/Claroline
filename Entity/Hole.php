@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Hole
+ * UJM\ExoBundle\Entity\Hole.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_hole")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Hole
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,28 +22,28 @@ class Hole
     private $id;
 
     /**
-     * @var integer $size
+     * @var int
      *
      * @ORM\Column(name="size", type="integer")
      */
     private $size;
 
     /**
-     * @var integer $position
+     * @var int
      *
      * @ORM\Column(name="position", type="integer", nullable=true)
      */
     private $position;
 
     /**
-     * @var boolean $orthography
+     * @var bool
      *
      * @ORM\Column(name="orthography", type="boolean", nullable=true)
      */
     private $orthography;
 
     /**
-     * @var boolean $selector
+     * @var bool
      *
      * @ORM\Column(name="selector", type="boolean", nullable=true)
      */
@@ -56,22 +56,22 @@ class Hole
     private $interactionHole;
 
     /**
-    * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="hole", cascade={"remove"})
-    */
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="hole", cascade={"remove"})
+     */
     private $wordResponses;
 
     /**
-    * Constructs a new instance of choices
-    */
+     * Constructs a new instance of choices.
+     */
     public function __construct()
     {
-        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -79,9 +79,9 @@ class Hole
     }
 
     /**
-     * Set size
+     * Set size.
      *
-     * @param integer $size
+     * @param int $size
      */
     public function setSize($size)
     {
@@ -89,9 +89,9 @@ class Hole
     }
 
     /**
-     * Get size
+     * Get size.
      *
-     * @return integer
+     * @return int
      */
     public function getSize()
     {
@@ -99,9 +99,9 @@ class Hole
     }
 
     /**
-     * Set position
+     * Set position.
      *
-     * @param integer $position
+     * @param int $position
      */
     public function setPosition($position)
     {
@@ -109,9 +109,9 @@ class Hole
     }
 
     /**
-     * Get position
+     * Get position.
      *
-     * @return integer
+     * @return int
      */
     public function getPosition()
     {
@@ -119,9 +119,9 @@ class Hole
     }
 
     /**
-     * Set orthography
+     * Set orthography.
      *
-     * @param integer $orthography
+     * @param int $orthography
      */
     public function setOrthography($orthography)
     {
@@ -129,7 +129,7 @@ class Hole
     }
 
     /**
-     * Get orthography
+     * Get orthography.
      */
     public function getOrthography()
     {
@@ -137,9 +137,9 @@ class Hole
     }
 
     /**
-     * Set selector
+     * Set selector.
      *
-     * @param integer $selector
+     * @param int $selector
      */
     public function setSelector($selector)
     {
@@ -147,7 +147,7 @@ class Hole
     }
 
     /**
-     * Get selector
+     * Get selector.
      */
     public function getSelector()
     {
@@ -178,21 +178,20 @@ class Hole
 
     public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 
-            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection;
+            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->wordResponses as $wordResponse) {
                 $newWordResponse = clone $wordResponse;
                 $newWordResponse->setHole($this);
                 $newWordResponses->add($newWordResponse);
             }
             $this->wordResponses = $newWordResponses;
-
         }
     }
 }

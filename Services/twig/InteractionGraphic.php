@@ -6,48 +6,40 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class InteractionGraphic extends \Twig_Extension
 {
-
     protected $dotrine;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection
-     *
      */
     public function __construct(Registry $doctrine)
     {
-        $this->doctrine  = $doctrine;
+        $this->doctrine = $doctrine;
     }
 
     public function getName()
     {
-        return "InteractionGraphic";
+        return 'InteractionGraphic';
     }
 
-     /**
-     * Get functions
-     *
-     * @access public
-     *
-     * Return array
+    /**
+     * Get functions.
      */
     public function getFunctions()
     {
-          return array(
-              'getCoordsGraphTwig'      => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
-              'goodGraphCoords'         => new \Twig_Function_Method($this, 'goodGraphCoords'),
+        return array(
+              'getCoordsGraphTwig' => new \Twig_Function_Method($this, 'getCoordsGraphTwig'),
+              'goodGraphCoords' => new \Twig_Function_Method($this, 'goodGraphCoords'),
            );
     }
 
     /**
-     * Get the coords of response zones of an InteractionGraphic
+     * Get the coords of response zones of an InteractionGraphic.
      *
-     * @access public
      *
-     * @param integer $interGraphId id InteractionGraphic
+     * @param int $interGraphId id InteractionGraphic
      *
      * Return array[Coords]
      */
@@ -61,13 +53,13 @@ class InteractionGraphic extends \Twig_Extension
         return $coords;
     }
 
-      public function goodGraphCoords($interGraph)
+    public function goodGraphCoords($interGraph)
     {
-         $coords = $this->doctrine
+        $coords = $this->doctrine
                         ->getManager()
                         ->getRepository('UJMExoBundle:Coords')
                         ->findBy(array('interactionGraphic' => $interGraph->getId()));
 
-         return $coords;
+        return $coords;
     }
 }

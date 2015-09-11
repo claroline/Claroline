@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To export an open question in QTI
- *
+ * To export an open question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class OpenExport extends QtiExport
@@ -12,12 +10,10 @@ class OpenExport extends QtiExport
     protected $interactionopen;
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository $qtiRepos
-     *
+     * @param qtiRepository                     $qtiRepos
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -30,23 +26,20 @@ class OpenExport extends QtiExport
                                 ->findOneBy(array('interaction' => $interaction->getId()));
 
         $this->qtiHead('extendedText', $this->question->getTitle());
-        $this->qtiResponseDeclaration('RESPONSE','string', $this->getCardinality());
+        $this->qtiResponseDeclaration('RESPONSE', 'string', $this->getCardinality());
         $this->qtiOutComeDeclaration();
         $this->defaultValueTag();
         $this->itemBodyTag();
 
-        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
+        if (($this->interactionopen->getInteraction()->getFeedBack() != null)
+                && ($this->interactionopen->getInteraction()->getFeedBack() != '')) {
             $this->qtiFeedBack($interaction->getFeedBack());
         }
     }
 
     /**
      * Implements the abstract method
-     * add the tag prompt in extendedTextInteraction
-     *
-     * @access protected
-     *
+     * add the tag prompt in extendedTextInteraction.
      */
     protected function promptTag()
     {
@@ -59,13 +52,9 @@ class OpenExport extends QtiExport
         $node->appendChild($prompt);
     }
 
-
     /**
      * Implements the abstract method
-     * add the tag correctResponse in responseDeclaration
-     *
-     * @access protected
-     *
+     * add the tag correctResponse in responseDeclaration.
      */
     protected function correctResponseTag()
     {
@@ -74,25 +63,21 @@ class OpenExport extends QtiExport
     }
 
     /**
-     * add the tag defaultValue in outcomeDeclaration
-     *
-     * @access protected
-     *
+     * add the tag defaultValue in outcomeDeclaration.
      */
     protected function defaultValueTag()
     {
-        $defaultValue = $this->document->createElement("defaultValue");
-        $Tagvalue = $this->document->CreateElement("value");
-        $responsevalue =  $this->document->CreateTextNode($this->interactionopen->getScoreMaxLongResp());
+        $defaultValue = $this->document->createElement('defaultValue');
+        $Tagvalue = $this->document->CreateElement('value');
+        $responsevalue = $this->document->CreateTextNode($this->interactionopen->getScoreMaxLongResp());
         $Tagvalue->appendChild($responsevalue);
         $defaultValue->appendChild($Tagvalue);
         $this->outcomeDeclaration->appendChild($defaultValue);
     }
 
     /**
-     * add the tag defaultValue in outcomeDeclaration
+     * add the tag defaultValue in outcomeDeclaration.
      *
-     * @access private
      *
      * @return String value of cardinality for the responseDeclaration element
      */

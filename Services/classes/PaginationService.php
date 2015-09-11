@@ -6,22 +6,19 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
- * Services for the pagination
- *
+ * Services for the pagination.
  */
-class PaginationService {
-    
-    
+class PaginationService
+{
     /**
-     * To paginate two tables on one page
+     * To paginate two tables on one page.
      *
-     * @access private
      *
      * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
      * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
-     * @param integer $max number max items per page
-     * @param integer $pageOne set current page for the first pagination
-     * @param integer $pageTwo set current page for the second pagination
+     * @param int                                                      $max                 number max items per page
+     * @param int                                                      $pageOne             set current page for the first pagination
+     * @param int                                                      $pageTwo             set current page for the second pagination
      *
      * @return array
      */
@@ -47,7 +44,6 @@ class PaginationService {
             throw $this->createNotFoundException("Cette page n'existe pas.");
         }
 
-
         $doublePagination[0] = $entityPaginatedOne;
         $doublePagination[1] = $pagerOne;
 
@@ -56,16 +52,15 @@ class PaginationService {
 
         return $doublePagination;
     }
-    
+
     /**
-     * To paginate table
+     * To paginate table.
      *
-     * @access private
      *
      * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginate
-     * @param integer $max number max items per page
-     * @param integer $page set current page for the pagination
-     * @param integer $pageNow is the current page
+     * @param int                                                      $max              number max items per page
+     * @param int                                                      $page             set current page for the pagination
+     * @param int                                                      $pageNow          is the current page
      *
      * @return array
      */
@@ -95,14 +90,13 @@ class PaginationService {
 
         return $pagination;
     }
-     /**
-     * To paginate table
+    /**
+     * To paginate table.
      *
-     * @access private
      *
      * @param Doctrine Collection $entityToPaginate
-     * @param integer $max number max items by page
-     * @param integer $page number of actual page
+     * @param int                 $max              number max items by page
+     * @param int                 $page             number of actual page
      *
      * @return array
      */
@@ -125,18 +119,17 @@ class PaginationService {
 
         return $pagination;
     }
-        /**
-     * To paginate two tables on one page
+    /**
+     * To paginate two tables on one page.
      *
-     * @access public
      *
      * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
      * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
-     * @param integer $max number max items per page
-     * @param integer $pageOne set new page for the first pagination
-     * @param integer $pageTwo set new page for the second pagination
-     * @param integer $pageNowOne set current page for the first pagination
-     * @param integer $pageNowTwo set current page for the second pagination
+     * @param int                                                      $max                 number max items per page
+     * @param int                                                      $pageOne             set new page for the first pagination
+     * @param int                                                      $pageTwo             set new page for the second pagination
+     * @param int                                                      $pageNowOne          set current page for the first pagination
+     * @param int                                                      $pageNowTwo          set current page for the second pagination
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

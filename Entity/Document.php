@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Document
+ * UJM\ExoBundle\Entity\Document.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\DocumentRepository")
  * @ORM\Table(name="ujm_document")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Document
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,21 +22,21 @@ class Document
     private $id;
 
     /**
-     * @var string $label
+     * @var string
      *
      * @ORM\Column(name="label", type="string", length=255)
      */
     private $label;
 
     /**
-     * @var string $url
+     * @var string
      *
      * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
 
     /**
-     * @var string $type
+     * @var string
      *
      * @ORM\Column(name="type", type="string", length=255)
      */
@@ -48,9 +48,9 @@ class Document
     private $user;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -58,7 +58,7 @@ class Document
     }
 
     /**
-     * Set label
+     * Set label.
      *
      * @param string $label
      */
@@ -68,7 +68,7 @@ class Document
     }
 
     /**
-     * Get label
+     * Get label.
      *
      * @return string
      */
@@ -78,7 +78,7 @@ class Document
     }
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string $url
      */
@@ -88,7 +88,7 @@ class Document
     }
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
@@ -98,7 +98,7 @@ class Document
     }
 
     /**
-     * Set type
+     * Set type.
      *
      * @param string $type
      */
@@ -108,7 +108,7 @@ class Document
     }
 
     /**
-     * Get type
+     * Get type.
      *
      * @return string
      */

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Planning
+ * UJM\ExoBundle\Entity\Planning.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_planning")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Planning
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,14 +22,14 @@ class Planning
     private $id;
 
     /**
-     * @var datetime $startTime
+     * @var datetime
      *
      * @ORM\Column(name="start_time", type="datetime")
      */
     private $startTime;
 
     /**
-     * @var datetime $endTime
+     * @var datetime
      *
      * @ORM\Column(name="end_time", type="datetime")
      */
@@ -41,9 +41,9 @@ class Planning
     private $group;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -51,7 +51,7 @@ class Planning
     }
 
     /**
-     * Set startTime
+     * Set startTime.
      *
      * @param datetime $sartTime
      */
@@ -61,7 +61,7 @@ class Planning
     }
 
     /**
-     * Get startTime
+     * Get startTime.
      *
      * @return datetime
      */
@@ -71,7 +71,7 @@ class Planning
     }
 
     /**
-     * Set endTime
+     * Set endTime.
      *
      * @param datetime $endTime
      */
@@ -81,7 +81,7 @@ class Planning
     }
 
     /**
-     * Get endTime
+     * Get endTime.
      *
      * @return datetime
      */

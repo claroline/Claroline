@@ -6,8 +6,8 @@ use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use UJM\ExoBundle\Entity\Exercise;
 
-class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent {
-
+class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent
+{
     const ACTION = 'resource-ujm_exercise-exercise_evaluated';
 
     /**
@@ -17,13 +17,13 @@ class LogExerciseEvaluatedEvent extends AbstractLogResourceEvent {
     public function __construct(Exercise $exercise, $grade)
     {
         $details = array(
-            'exercise'  => array(
-                'id'    => $exercise->getId(),
-                'name'  => $exercise->getName(),
-                'title' => $exercise->getTitle()
+            'exercise' => array(
+                'id' => $exercise->getId(),
+                'name' => $exercise->getName(),
+                'title' => $exercise->getTitle(),
             ),
-            'result'      => $grade['scorePaper'],
-            'resultMax' => $grade['maxExoScore']
+            'result' => $grade['scorePaper'],
+            'resultMax' => $grade['maxExoScore'],
         );
 
         parent::__construct($exercise->getResourceNode(), $details);

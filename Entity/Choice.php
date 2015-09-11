@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Choice
+ * UJM\ExoBundle\Entity\Choice.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ChoiceRepository")
  * @ORM\Table(name="ujm_choice")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Choice
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,42 +22,42 @@ class Choice
     private $id;
 
     /**
-     * @var string $label
+     * @var string
      *
      * @ORM\Column(name="label", type="text")
      */
     private $label;
 
     /**
-     * @var integer $ordre
+     * @var int
      *
      * @ORM\Column(name="ordre", type="integer")
      */
     private $ordre;
 
     /**
-     * @var integer $weight
+     * @var int
      *
      * @ORM\Column(name="weight", type="float", nullable=true)
      */
     private $weight;
 
     /**
-     * @var text $feedback
+     * @var text
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
 
-     /**
-     * @var boolean $rightResponse
+    /**
+     * @var bool
      *
      * @ORM\Column(name="right_response", type="boolean", nullable=true)
      */
     private $rightResponse;
 
-     /**
-     * @var boolean $positionForce
+    /**
+     * @var bool
      *
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
@@ -70,9 +70,9 @@ class Choice
     private $interactionQCM;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -80,7 +80,7 @@ class Choice
     }
 
     /**
-     * Set label
+     * Set label.
      *
      * @param string $label
      */
@@ -90,7 +90,7 @@ class Choice
     }
 
     /**
-     * Get label
+     * Get label.
      *
      * @return string
      */
@@ -100,9 +100,9 @@ class Choice
     }
 
     /**
-     * Set ordre
+     * Set ordre.
      *
-     * @param integer $ordre
+     * @param int $ordre
      */
     public function setOrdre($ordre)
     {
@@ -110,9 +110,9 @@ class Choice
     }
 
     /**
-     * Get ordre
+     * Get ordre.
      *
-     * @return integer
+     * @return int
      */
     public function getOrdre()
     {
@@ -120,9 +120,9 @@ class Choice
     }
 
     /**
-     * Set weight
+     * Set weight.
      *
-     * @param integer $weight
+     * @param int $weight
      */
     public function setWeight($weight)
     {
@@ -130,9 +130,9 @@ class Choice
     }
 
     /**
-     * Get weight
+     * Get weight.
      *
-     * @return integer
+     * @return int
      */
     public function getWeight()
     {
@@ -140,7 +140,7 @@ class Choice
     }
 
     /**
-     * Set feedback
+     * Set feedback.
      *
      * @param text $feedback
      */
@@ -150,7 +150,7 @@ class Choice
     }
 
     /**
-     * Get feedback
+     * Get feedback.
      *
      * @return text
      */
@@ -158,7 +158,6 @@ class Choice
     {
         return $this->feedback;
     }
-
 
     public function getInteractionQCM()
     {
@@ -171,9 +170,9 @@ class Choice
     }
 
     /**
-     * Set rightResponse
+     * Set rightResponse.
      *
-     * @param boolean $rightResponse
+     * @param bool $rightResponse
      */
     public function setRightResponse($rightResponse)
     {
@@ -181,7 +180,7 @@ class Choice
     }
 
     /**
-     * Get rightResponse
+     * Get rightResponse.
      */
     public function getRightResponse()
     {
@@ -189,9 +188,9 @@ class Choice
     }
 
     /**
-     * Set positionForce
+     * Set positionForce.
      *
-     * @param boolean $positionForce
+     * @param bool $positionForce
      */
     public function setPositionForce($positionForce)
     {
@@ -199,7 +198,7 @@ class Choice
     }
 
     /**
-     * Get positionForce
+     * Get positionForce.
      */
     public function getPositionForce()
     {
