@@ -21,8 +21,8 @@ class CorrectionManager
     /**
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container"),
-     *        "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
-    "em" = @DI\Inject("doctrine.orm.entity_manager")
+     *     "maskManager" = @DI\Inject("claroline.manager.mask_manager"),
+     *     "em" = @DI\Inject("doctrine.orm.entity_manager")
      * })
      */
     public function __construct($container, MaskManager $maskManager, $em)

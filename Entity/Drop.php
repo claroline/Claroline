@@ -417,4 +417,3 @@ class Drop
         return $this->unlockedUser;
     }
 }
-
