@@ -10,7 +10,6 @@ delete_tag: Supprimer le Tag
 no_tag: Aucun Tag
 remove_tag: Retirer le Tag
 remove_tag_from_object_message: Êtes-vous sûr de vouloir retirer ce Tag de cet objet ?
-rename_tag: Renommer le Tag
 tag_deletion: Suppression du Tag
 tag_deletion_message: Êtes-vous sûr de vouloir supprimer ce Tag ?
 tag_resource: Taguer la ressource
