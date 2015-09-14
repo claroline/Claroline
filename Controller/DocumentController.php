@@ -69,7 +69,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDropDirectory = $drop->getHiddenDirectory();
 
-        if ($hiddenDropDirectory == null) {
+        if ($hiddenDropDirectory === null) {
             $hiddenDropDirectory = new Directory();
             // slugify user name
             $slugify = new Slugify();

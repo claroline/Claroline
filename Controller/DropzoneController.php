@@ -77,8 +77,8 @@ class DropzoneController extends DropzoneBaseController
 
             $manualStateChanged = false;
             $newManualState = null;
-            if ($dropzone->getManualPlanning() == true) {
-                if ($oldManualPlanning == false || $oldManualPlanningOption != $dropzone->getManualState()) {
+            if ($dropzone->getManualPlanning() === true) {
+                if ($oldManualPlanning === false || $oldManualPlanningOption != $dropzone->getManualState()) {
                     $manualStateChanged = true;
                     $newManualState = $dropzone->getManualState();
                 }
@@ -325,9 +325,9 @@ class DropzoneController extends DropzoneBaseController
     {
         if (
             !$dropzone->getAllowWorkspaceResource()
-            and !$dropzone->getAllowUpload()
-            and !$dropzone->getAllowUrl()
-            and !$dropzone->getAllowRichText()
+            && !$dropzone->getAllowUpload()
+            && !$dropzone->getAllowUrl()
+            && !$dropzone->getAllowRichText()
             ) {
             $form->get('allowWorkspaceResource')->addError(new FormError('Choose at least one type of document'));
             $form->get('allowUpload')->addError(new FormError('Choose at least one type of document'));
