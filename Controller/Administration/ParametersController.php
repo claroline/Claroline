@@ -195,7 +195,8 @@ class ParametersController extends Controller
                             'show_help_button' => $form['showHelpButton']->getData(),
                             'help_url' => $form['helpUrl']->getData(),
                             'register_button_at_login' => $form['registerButtonAtLogin']->getData(),
-                            'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData()
+                            'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData(),
+                            'domain_name' => $form['domainName']->getData()
                         )
                     );
 

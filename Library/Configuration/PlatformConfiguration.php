@@ -65,6 +65,7 @@ class PlatformConfiguration
     private $registerButtonAtLogin;
     private $sendMailAtWorkspaceRegistration;
     private $locales;
+    private $domainName;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -654,5 +655,15 @@ class PlatformConfiguration
     public function getLocales()
     {
         return $this->locales;
+    }
+
+    public function setDomainName($domainName)
+    {
+        $this->domainName = $domainName;
+    }
+
+    public function getDomainName()
+    {
+        return $this->domainName;
     }
 }
