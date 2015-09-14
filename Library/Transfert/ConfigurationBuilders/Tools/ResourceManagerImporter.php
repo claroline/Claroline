@@ -718,7 +718,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $map = $uow->getIdentityMap();
 
         //is it in the identity map ?
-        $createdRights = $this->rightManager->getRightsFromIdentityMap(
+        $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
             $role['role']['name'],
             $resourceEntity->getResourceNode()
         );
