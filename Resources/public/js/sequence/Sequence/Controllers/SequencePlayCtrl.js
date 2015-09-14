@@ -2,16 +2,17 @@
     'use strict';
 
     angular.module('Sequence').controller('SequencePlayCtrl', [
-        '$scope',
         'SequenceService',
         'CommonService',
-        function ($scope, SequenceService, CommonService) {
+        function (SequenceService, CommonService) {
 
             this.sequence = {};
             this.currentStep = {};
             this.steps = {};
             this.nbAttempts = 1;
             this.studentResults = Array();
+            this.isFinished = false;
+            this.isLastStep = false;
             
             this.setSequence = function (sequence) {
                 this.sequence = sequence;
@@ -39,7 +40,7 @@
 
             /**
              * 
-             * @returns {undefined}
+             * @returns number of steps in the collection
              */
             this.getNbStep = function () {
                 return this.steps.length;
@@ -55,11 +56,10 @@
             
             /**
              * use for display 
-             * @returns {Number|SequencePlayCtrl_L7@pro;sequence@pro;steps@call;indexOf}
+             * @returns the current step index (+1 for human readability)
              */
             this.getCurrentStepIndex = function () {
                 var index = this.steps.indexOf(this.currentStep);
-                console.log('current index ' + index);
                 return  index + 1;
             };
 
@@ -73,8 +73,7 @@
             
             /**
              * Validate the current step after confirm
-             * If next step get next step
-             * @returns {undefined}
+             * If next step get it
              */
             this.validateStep = function () {
                 var data = CommonService.getStudentData();
@@ -84,24 +83,37 @@
                     step : this.currentStep,
                     answers: this.data
                 };
-                // save step results
+                // save step results TODO save it in db !!!!
+                // also save the current progression ?
                 this.studentResults.push(stepResult);
                 // go to next step
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var length = this.steps.length;
                 var newIndex = currentStepIndex + 1;
                 if(newIndex < length){
-                    this.setCurrentStep(newIndex); 
+                    this.setCurrentStep(newIndex);
+                    this.isLastStep = newIndex === this.steps.length - 1 ? true:false;
                 }
                 else{
-                    console.log('you reached the end of the exercise you will be redirected to correction page');
+                    console.log('you reached the end of the exercise you will be redirected to summary page');
+                    this.isFinished = true;
                     this.endSequence();
+                    // TODO save the results in db
+                    // save the hints used (table ujm_link_hint_paper) -> really need this ?
+                    // save the paper (table ujm_paper) (and the question order for the paper...)
+                    // save answers (table ujm_response)
+                    // redirect user to correction summary page
                 }
                 
             };
             
+            /**
+             * 
+             * @returns {undefined}
+             */
             this.endSequence = function(){
-                console.log('TODO');
+                console.log('TODO display a summary page!');
+                console.log(this.studentResults);
             };
         }
     ]);

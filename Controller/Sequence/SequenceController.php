@@ -31,13 +31,11 @@ class SequenceController extends Controller
         $exo = $manager->exportExercise($exercise);
 
         $steps = $exo['steps'];
-        $currentStep = isset($steps[0]) ? $steps[0]:null;
         $data = json_encode($exo);
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
             '_resource' => $exercise, 
             'steps' => json_encode($steps),
-            'currentStep' => json_encode($currentStep),
             'sequence' => $data
                 )
         );

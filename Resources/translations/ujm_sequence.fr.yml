@@ -1,5 +1,6 @@
 # b
 btn_end_step_label: Terminer l'étape
+btn_end_sequence_label: Terminer la séquence
 
 # m
 meta_authors: Author(s)
@@ -53,5 +54,6 @@ sequence_step_panel_title: Etapes
 sequence_select_available_question: Sélectionner une question
 sequence_step_add_question: Ajouter une question
 sequence_attempts_infos: Vous avez le droit à %1% essai(s) - Essais N° %2% / %1%
-sequence_next_step_confirm: Etes vous sur de vouloir passer à l'étape suivante ? <br/> Vous ne pourrez pas revenir en arrière
+sequence_next_step_confirm: Etes vous sur de vouloir passer à l'étape suivante ? <br/> Vous ne pourrez pas revenir en arrière.
+sequence_end_sequence_confirm: Etes vous sur de vouloir terminer la séquence ? <br/> Vous ne pourrez pas revenir en arrière.
 step_question_shuffle: Ordre des questions aléatoire pour cette étape
