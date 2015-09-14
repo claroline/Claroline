@@ -497,4 +497,9 @@ class Workspace
 
         return $backgroundColor;
     }
+
+    public function __toString()
+    {
+        return $this->name . ' [' . $this->code . ']';
+    }
 }

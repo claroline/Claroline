@@ -1043,4 +1043,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $this->options = $options;
     }
+
+    public function __toString()
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
 }
