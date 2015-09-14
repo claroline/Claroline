@@ -178,3 +178,5 @@ badge_awarding_date: 'Date d''attribution'
 total_awarding: 'attribution|attributions'
 total_awarded_badge: 'badge attribué|badges attribués'
 total_not_awarded_badge: 'badge non-attribué|badges non-attribués'
+badge-shared: "Partagé"
+badge-private: "Privé"

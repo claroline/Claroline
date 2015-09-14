@@ -50,7 +50,7 @@
                         <button type="button" class="btn btn-xs btn-success" id="add_collection"
                                 data-loading-text="{{ 'add_collection_in_progress'|trans }}">{{ 'add_collection'|trans }}</button>
                     </div>
-                    {% set loadingState = '<img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" />' %}
+                    {% set loadingState = '<span class="fa fa-spinner fa-pulse"></span>' %}
                     {% set sharedState = '<span class="fa fa-unlock-alt publish_collection"></span> ' ~ 'shared'|trans %}
                     {% set privateState = '<span class="fa fa-lock publish_collection"></span> ' ~ 'private'|trans %}
                     {% set collectionTemplate = '<li class="collection well editing" data-id="__collectionId__" style="display: none">
@@ -97,12 +97,12 @@
                                         data-loading-state="' ~ loadingState|escape ~ '" data-shared-state="' ~ sharedState|escape ~ '" data-private-state="' ~ privateState|escape ~ '">
                                             ' ~ privateState|raw ~ '
                                     </a>
-                                    <ul class="dropdown-menu sharedoptions" role="menu">
+                                    <ul class="dropdown-menu shared_options" role="menu">
                                         <li role="presentation" class="active">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="fa fa-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0"><span class="fa fa-lock publish_collection"></span> ' ~ 'stop_share'|trans ~ '</a>
                                         </li>
                                         <li role="presentation">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="fa fa-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1"><span class="fa fa-unlock publish_collection"></span> ' ~ 'share'|trans ~ '</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -169,12 +169,12 @@
                                                 {{ privateState|raw }}
                                             {% endif %}
                                         </a>
-                                        <ul class="dropdown-menu sharedoptions" role="menu">
+                                        <ul class="dropdown-menu shared_options" role="menu">
                                             <li role="presentation" class="{% if false == isCollectionShared %} active{% endif %}">
-                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="fa fa-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0"><span class="fa fa-lock publish_collection"></span> {{ 'stop_share'|trans }}</a>
                                             </li>
                                             <li role="presentation" class="{% if isCollectionShared %} active{% endif %}">
-                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="fa fa-unlock publish_collection"></span> {{ 'share'|trans }}</a>
+                                                <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1"><span class="fa fa-unlock publish_collection"></span> {{ 'share'|trans }}</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -194,8 +194,8 @@
                         <button type="button" class="close" aria-hidden="true">&times;</button>
                         <p></p>
                     </div>
-                    <ul class="nodes badge_list list-unstyled well">
-                        {% set badgeLoadingState = '<img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" />' %}
+                    <ul class="nodes badge_list list-unstyled well" id="badge_list" data-action-url="{{ path('icap_badge_user_badge_edit') }}">
+                        {% set badgeLoadingState = '<span class="fa fa-spinner fa-pulse"></span>' %}
                         {% set badgeSharedState = '<span class="fa fa-unlock-alt publish_badge"></span> ' ~ 'badge-shared'|trans %}
                         {% set bagdePrivateState = '<span class="fa fa-lock publish_badge"></span> ' ~ 'badge-private'|trans %}
                         {% for userBadge in userBadges %}
@@ -210,7 +210,7 @@
                                     <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
                                     <p class="badge_name">{{ badge.name }}</p>
                                 </a>
-                                <div class="shared_options">
+                                <div class="shared_options_container">
                                     {% set isBadgeShared = userBadge.isIsShared %}
                                     <a href="{{ path('icap_badge_badge_share_view', {'badgeSlug': badge.slug}) }}"
                                        title="{{ 'see_shared_badge'|trans }}" data-title="{{ 'see_shared_badge'|trans }}"
@@ -228,12 +228,12 @@
                                             {{ bagdePrivateState|raw }}
                                         {% endif %}
                                     </a>
-                                    <ul class="dropdown-menu sharedoptions" role="menu">
+                                    <ul class="dropdown-menu shared_options" role="menu">
                                         <li role="presentation" class="{% if false == isBadgeShared %} active{% endif %}">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="fa fa-lock publish_badge"></span> {{ 'stop_share'|trans }}</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="0"><span class="fa fa-lock publish_badge"></span> {{ 'stop_share'|trans }}</a>
                                         </li>
                                         <li role="presentation" class="{% if isBadgeShared %} active{% endif %}">
-                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="fa fa-unlock publish_badge"></span> {{ 'share'|trans }}</a>
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="shared_option" data-value="1"><span class="fa fa-unlock publish_badge"></span> {{ 'share'|trans }}</a>
                                         </li>
                                     </ul>
                                 </div>

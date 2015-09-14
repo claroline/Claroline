@@ -4,8 +4,10 @@
     $(function() {
         var addCollectionButton = $("#add_collection");
         var collectionsList = $("#collections_list");
+        var badgeList = $("#badge_list");
         var newCollectionTemplate = collectionsList.attr("data-collection-template");
         var apiUrl = collectionsList.attr("data-action-url");
+        var badgeApiUrl = badgeList.attr("data-action-url");
         var noCollectionElement = $("#no_collection");
         var deletingCollectionElement = $("#deleting_collection");
         var deletingCollectionBadgeElement = $(collectionsList.attr("data-delete-collection-badge-template"));
@@ -349,12 +351,12 @@
             errorContainer.show();
         }
 
-        $("#collections_list").on("click", ".sharedoptions .sharedoption", function(event) {
+        $("#collections_list").on("click", ".shared_options .shared_option", function(event) {
             event.preventDefault();
             var target = $(event.currentTarget);
             var collectionContainer = target.parents('li.collection');
 
-            collectionContainer.find(".sharedoptions li.active").removeClass("active");
+            collectionContainer.find(".shared_options li.active").removeClass("active");
 
             var sharedLink = collectionContainer.find(".shared_toggle");
             sharedLink.html(sharedLink.attr("data-loading-state"));
@@ -404,5 +406,40 @@
                 sharedLink.parent().find(".share_collection").show();
             }
         }
+
+        $("#badge_list").on("click", ".shared_options .shared_option", function(event) {
+            event.preventDefault();
+            var target = $(event.currentTarget);
+            var badgeContainer = target.parents('.badge_container');
+
+            badgeContainer.find(".shared_options li.active").removeClass("active");
+
+            var sharedLink = badgeContainer.find(".shared_toggle");
+            sharedLink.html(sharedLink.attr("data-loading-state"));
+            target.parent().addClass("active");
+
+            var sharedState = target.attr("data-value");
+
+            var badgeUpdateRequest = $.ajax({
+                url: badgeApiUrl + '/' + badgeContainer.attr("data-id"),
+                type: 'PATCH',
+                data: {
+                    'user_badge_form[is_shared]': sharedState
+                }
+            });
+
+            badgeUpdateRequest
+                .success(function(data) {
+                    updateSharedState(sharedLink, sharedState);
+                })
+                .fail(function() {
+                    updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
+                    var errorMessage = "edit_is_shared_badge_error";
+                    if (1 == sharedState) {
+                        errorMessage = "edit_is_unshared_badge_error";
+                    }
+                    displayError(errorMessage);
+                });
+        });
     });
 })(jQuery);
