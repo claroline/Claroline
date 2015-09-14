@@ -138,9 +138,6 @@ class RightsManager
     )
     {
         $this->log('Editing permissions...');
-        //Bugfix: If the flushSuite is uncommented, doctrine returns an error. It probably happens because rights
-        //weren't created already
-        //(ResourceRights duplicate)
         $this->om->startFlushSuite();
 
         $arRights = $isRecursive ?
@@ -182,7 +179,7 @@ class RightsManager
         }
 
         $this->om->endFlushSuite();
-        
+
         return $arRights;
     }
 

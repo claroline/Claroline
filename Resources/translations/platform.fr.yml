@@ -1159,3 +1159,4 @@ your_workspace_activity_overview: 'Aperçu des activités récentes de vos espac
 initialize_your_password: Initialisation du mot de passe
 hide_client: Cacher un client
 hide_client_message: Êtes-vous sûr de vouloir cacher ce client ?
+domain_name: 'Nom de domaine'
