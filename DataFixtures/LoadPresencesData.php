@@ -37,9 +37,7 @@ class LoadPresencesData extends LoggableFixture implements ContainerAwareInterfa
 
     public function load(ObjectManager $manager)
     {
-        $creator = $this->getContainer()->get('claroline.manager.resource_manager');
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        
+              
         $actualdate = date("m", strtotime('now')); 
         if($actualdate>=9){
 
@@ -77,15 +75,15 @@ class LoadPresencesData extends LoggableFixture implements ContainerAwareInterfa
         $manager->persist($demoStatus);
         
         $demoStatus2= new Status();
-        $demoStatus->setStatusByDefault(true);
-        $demoStatus->setStatusColor("#f20000");
-        $demoStatus->setStatusName("Absent");
+        $demoStatus2->setStatusByDefault(true);
+        $demoStatus2->setStatusColor("#f20000");
+        $demoStatus2->setStatusName("Absent");
         $manager->persist($demoStatus2);
         
         $demoStatus3= new Status();
-        $demoStatus->setStatusByDefault(true);
-        $demoStatus->setStatusColor("#ffb31f");
-        $demoStatus->setStatusName("Retard");
+        $demoStatus3->setStatusByDefault(true);
+        $demoStatus3->setStatusColor("#ffb31f");
+        $demoStatus3->setStatusName("Retard");
         $manager->persist($demoStatus3);
         
 
