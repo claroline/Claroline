@@ -195,6 +195,9 @@
                         <p></p>
                     </div>
                     <ul class="nodes badge_list list-unstyled well">
+                        {% set badgeLoadingState = '<img src="' ~ asset('bundles/clarolinecore/images/loading.gif') ~ '" alt="Loading" />' %}
+                        {% set badgeSharedState = '<span class="fa fa-unlock-alt publish_badge"></span> ' ~ 'badge-shared'|trans %}
+                        {% set bagdePrivateState = '<span class="fa fa-lock publish_badge"></span> ' ~ 'badge-private'|trans %}
                         {% for userBadge in userBadges %}
                             {% set badge = userBadge.badge %}
                             {% set dataImage = '<img class="badge_image_mini" src="' ~ asset(badge.webPath) ~ '" alt="' ~ badge.name ~ '" />' %}
@@ -207,6 +210,33 @@
                                     <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
                                     <p class="badge_name">{{ badge.name }}</p>
                                 </a>
+                                <div class="shared_options">
+                                    {% set isBadgeShared = userBadge.isIsShared %}
+                                    <a href="{{ path('icap_badge_badge_share_view', {'badgeSlug': badge.slug}) }}"
+                                       title="{{ 'see_shared_badge'|trans }}" data-title="{{ 'see_shared_badge'|trans }}"
+                                       data-toggle="tooltip" data-placement="top" data-container="body"
+                                       class="pull-right share_badge"{% if false == isBadgeShared %} style="display: none"{% endif %}>
+                                        <span class="fa fa-share"></span>
+                                    </a>
+                                    <a data-toggle="dropdown" href="#" title="{% if isBadgeShared %}{{ 'badge-shared'|trans }}{% else %}{{ 'badge-private'|trans }}{% endif %}"
+                                       data-title="{% if isBadgeShared %}{{ 'badge-shared'|trans }}{% else %}{{ 'badge-private'|trans }}{% endif %}" data-toggle="tooltip"
+                                       data-placement="top" data-container="body" class="shared_toggle"
+                                       data-loading-state="{{ badgeLoadingState }}" data-shared-state="{{ badgeSharedState }}" data-private-state="{{ bagdePrivateState }}">
+                                        {% if isBadgeShared %}
+                                            {{ badgeSharedState|raw }}
+                                        {% else %}
+                                            {{ bagdePrivateState|raw }}
+                                        {% endif %}
+                                    </a>
+                                    <ul class="dropdown-menu sharedoptions" role="menu">
+                                        <li role="presentation" class="{% if false == isBadgeShared %} active{% endif %}">
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="0"><span class="fa fa-lock publish_badge"></span> {{ 'stop_share'|trans }}</a>
+                                        </li>
+                                        <li role="presentation" class="{% if isBadgeShared %} active{% endif %}">
+                                            <a role="menuitem" tabindex="-1" data-toggle="dropdown" href="#" class="sharedoption" data-value="1"><span class="fa fa-unlock publish_badge"></span> {{ 'share'|trans }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                         {% else %}
                             <li>{{ 'no_badges'|trans({}, 'icap_badge') }}</li>
