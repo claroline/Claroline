@@ -985,11 +985,6 @@ class DropController extends DropzoneBaseController
         // Récupération du Workspace
         $workspace = $dropzone->getResourceNode()->getWorkspace();
 
-        // Récupération des roles du Workspace
-        $roles =
-         $this->getDoctrine()->getManager()
-         ->getRepository('ClarolineCoreBundle:Role')->findByWorkspace($workspace);
-
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
 
         // Ajout du code pour afficher les élèves inscrits mais qui n'ont pas déposé. InnovaERV.

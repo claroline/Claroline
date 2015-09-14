@@ -46,7 +46,6 @@ class DropzoneController extends DropzoneBaseController
         $em                     = $this->getDoctrine()->getManager();
         $dropzoneVoter          = $this->get('innova.manager.dropzone_voter');
         $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
-        $agendaManager          = $this->get('claroline.manager.agenda_manager');
         $translator             = $this->get('translator');
         $platformConfigHandler  = $this->get('claroline.config.platform_config_handler');
 
@@ -62,7 +61,6 @@ class DropzoneController extends DropzoneBaseController
             // see if manual planification option has changed.
             $oldManualPlanning = $dropzone->getManualPlanning();
             $oldManualPlanningOption = $dropzone->getManualState();
-            $oldEndDropDate = $dropzone->getEndAllowDrop();
 
             $form->handleRequest($this->getRequest());
             $dropzone = $form->getData();

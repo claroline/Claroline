@@ -247,7 +247,6 @@ class DocumentController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        $formType = null;
         if ($documentType == 'url') {
             if (!$dropzone->getAllowUrl()) {
                 throw new AccessDeniedException();

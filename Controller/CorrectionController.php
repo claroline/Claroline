@@ -709,8 +709,6 @@ class CorrectionController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->getCorrectionAndDropAndUserAndDocuments($dropzone, $correctionId);
 
-        $countCorrection = count($correction);
-
         // Parcours des documents sélectionnés
         foreach ($correction->getDrop()->getDocuments() as $document) {
             if ($document->getId() == $documentOri->getId())
@@ -1376,7 +1374,6 @@ class CorrectionController extends DropzoneBaseController
         $form = $this->createForm(new CorrectionDenyType(), $correction);
 
         $dropUser = $correction->getDrop()->getUser();
-        $drop = $correction->getDrop();
         $dropId = $correction->getDrop()->getId();
         $dropzoneId = $dropzone->getId();
         // dropZone not in peerReview or corrections are not displayed to users or correction deny is not allowed
