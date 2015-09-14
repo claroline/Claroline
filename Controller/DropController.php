@@ -211,7 +211,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUser(Dropzone $dropzone, $userId)
+    private function unlockUser(Dropzone $dropzone, $userId)
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
@@ -248,7 +248,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUsers(Dropzone $dropzone)
+    private function unlockUsers(Dropzone $dropzone)
     {
         return $this->unlockOrLockUsers($dropzone, true);
     }
@@ -267,7 +267,7 @@ class DropController extends DropzoneBaseController
      * @internal param $user
      * @internal param $userId
      */
-    public function unlockUsersCancel(Dropzone $dropzone)
+    private function unlockUsersCancel(Dropzone $dropzone)
     {
         return $this->unlockOrLockUsers($dropzone, false);
     }
