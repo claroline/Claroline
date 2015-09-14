@@ -404,8 +404,8 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
             return $this->redirect($document->getUrl());
         } elseif (
             $document->getType() == 'text'
-            or $document->getType() == 'resource'
-            or $document->getType() == 'file'
+            || $document->getType() == 'resource'
+            || $document->getType() == 'file'
         ) {
             /** Issue #27 "il se produit un plantage au niveau de "temporary_access_resource_manager" InnovaERV */
             $this->get('innova.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);

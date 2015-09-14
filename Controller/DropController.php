@@ -715,8 +715,12 @@ class DropController extends DropzoneBaseController
             ->getRepository('InnovaCollecticielBundle:Correction')
             ->countFinished($dropzone, $user);
 
-        if ($dropzone->getDiplayCorrectionsToLearners() && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection() &&
-            $dropzone->getExpectedTotalCorrection() <= $nbCorrections || ($dropzone->isFinished() && $dropzone->getDiplayCorrectionsToLearners() or $drop->getUnlockedUser())
+        if ($dropzone->getDiplayCorrectionsToLearners()
+        && $drop->countFinishedCorrections() >= $dropzone->getExpectedTotalCorrection()
+        && $dropzone->getExpectedTotalCorrection() <= $nbCorrections
+        || ($dropzone->isFinished()
+        && $dropzone->getDiplayCorrectionsToLearners()
+        || $drop->getUnlockedUser())
         ) {
             $showCorrections = true;
         }
