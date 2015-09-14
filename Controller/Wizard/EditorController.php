@@ -99,6 +99,7 @@ class EditorController
 
         return array (
             '_resource'     => $path,
+            'workspace'     => $path->getWorkspace(),
             'resourceIcons' => $resourceIcons,
         );
     }
