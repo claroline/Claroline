@@ -48,7 +48,7 @@ class TeamRepository extends EntityRepository
             SELECT t
             FROM Claroline\TeamBundle\Entity\Team t
             JOIN t.users tu
-            WHERE tu.user = :user
+            WHERE tu = :user
             ORDER BY t.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
