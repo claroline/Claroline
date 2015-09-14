@@ -768,12 +768,10 @@ class CorrectionController extends DropzoneBaseController
                         $this->dispatch($event);
                     }
                 }
-                $em->flush();
                 // Fin ajout.
             }    
         }
-
-
+        $em->flush();
 
         $userId = $this->get('security.token_storage')->getToken()->getUser()->getId();
         if ($state == 'preview') {
