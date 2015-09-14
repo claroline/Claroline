@@ -81,6 +81,7 @@ class ImgFormatListener
                             $node,
                             $node->getWorkspace(),
                             $_files,
+                            $_data,
                             true
                         );
                         $el['item']['parent'] = 'data_folder';
