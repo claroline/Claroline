@@ -1,4 +1,11 @@
 <!-- Vue donnant la liste des espaces partagés. Exemple d'URL : innovacollecticielbundle/4/shared/spaces -->
+             {# Bloc "Rappel des instructions ..." #}
+             {% if dropzone.instruction != null %}
+                 {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacher.html.twig' %}
+                 <br/>
+              {% endif %}
+
+
 <table class="table table-striped table-hover sharedSpacesTable datatable">
     <thead>
     <th class="nameColumn">{{ 'Name'|trans({},'innova_collecticiel') }}</th>
