@@ -34,21 +34,6 @@
 {% endblock %}
 
 {% block drop_zone_content_edit %}
-    <style>
-        .dropzone-form-control-reduced {
-            width: 80%;
-        }
-
-        .dropzone-form-clean {
-            clear: both;
-        }
-
-        .dropzone_button_textarea {
-            float: left;
-            display: block;
-        }
-    </style>
-    <div class="container">
         {# InnovaERV : affichage enlevé car affiché en double
         <h3>
             {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
@@ -147,7 +132,6 @@
             {{ form_end(form) }}
 
             <br/>
-    </div>
 
     <div id="picker-wrapper"></div>
 {% endblock %}
