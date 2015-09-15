@@ -60,7 +60,7 @@ class Updater050112 extends Updater
                     }
                 }
 
-                //if (!$collaboratorFound) {
+                if (!$collaboratorFound) {
                     $this->log('Adding missing right on root for ' . $workspace->getCode() . '.');
                     $collaboratorRole = $roleManager->getCollaboratorRole($workspace);
                     $rightsManager->editPerms(5, $collaboratorRole, $root, true, array(), true);
@@ -71,7 +71,7 @@ class Updater050112 extends Updater
                         $om->forceFlush();
                         $om->clear();
                     }
-                //}
+                }
             }
         }
 
