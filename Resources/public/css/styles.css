@@ -133,6 +133,7 @@ li.custom_field div div {
 }
 
 .chapter_content_text{
+    margin-top: 40px;
     padding: 20px;
     text-align: justify;
     min-height: 535px;
@@ -197,7 +198,7 @@ li.custom_field div div {
 }
 
 .chapter_menu_labels{
-    font-size:11px;
+    font-size:14px;
     margin-left:2px;
 }
 
@@ -208,10 +209,17 @@ li.custom_field div div {
 }
 
 .chapter_list_header{
-    text-align: center;
+    margin-left: 5px;
     font-weight: bold;
     color: #777;
     font-size: 1.2em;
+    margin-top: 5px;
+}
+
+.icon_chapter_list_header {
+    display: inline-block;
+    float: right;
+    margin-top:-5px;
 }
 
 .lesson_footer{
@@ -263,7 +271,7 @@ ul.jquery-sortable-list li i{
 }
 
 ul.jquery-sortable-list li .menu-item{
-    padding:5px;
+    padding: 5px 5px 5px 15px;
     font-size: 0.9em;
 }
 
@@ -322,4 +330,156 @@ ul.jquery-sortable-list li.placeholder:before {
 .draggable-list{
     border-top: 1px dashed #357EBD;
     border-left: 2px solid #357EBD;
+}
+
+.lesson_tooltip.menu_lesson_button {
+    display: inline-block;
+}
+
+.lesson_tooltip.menu_lesson_button {
+    display: inline-block;
+}
+
+.lesson_tooltip.menu_lesson_button{
+    display: inline-block;
+}
+
+.btncancel
+{
+    border:1px solid #CCCCCC;
+}
+
+.btncancel:hover
+{
+    border:1px solid #777777;
+}
+
+/* Boutons chapitre */
+
+.deletechapter.btn.lesson_tooltip {
+    margin-right: 15px;
+    background-color: red;
+    border-radius: 0 5px 5px 0;
+    color: white;
+    padding: 2px 7px;
+}
+
+.duplicatechapter.btn.lesson_tooltip {
+    border: 1px solid grey;
+    border-radius: 0;
+    color: black;
+    padding: 2px 7px;
+}
+
+.movechapter.btn.lesson_tooltip {
+    border: 1px solid grey;
+    border-radius: 5px 0 0 5px;
+    color: black;
+    margin-left: 15px;
+    padding: 2px 7px;
+}
+
+.editchapter.btn.lesson_tooltip{
+    border: 1px solid grey;
+    border-radius: 5px;
+    color: black;
+    margin-left: 15px;
+    padding: 2px 7px;
+}
+
+.createchapter.btn.lesson_tooltip{
+    border-radius: 5px;
+    color: white;
+    padding: 2px 7px;
+}
+
+.nav.navbar-nav.pull-right {
+    margin-top: 7px;
+}
+
+
+.createchapter.lesson_tooltip span, .editchapter.lesson_tooltip span{
+    font-size: 12px;
+}
+
+
+
+/*Hover*/
+
+.deletechapter.btn.lesson_tooltip:hover, .duplicatechapter.btn.lesson_tooltip:hover, .movechapter.btn.lesson_tooltip:hover, .editchapter.btn.lesson_tooltip:hover{
+    border:1px solid grey;
+    background:white;
+}
+
+
+/* Grip */
+.menu-item.cursor_move::before{
+    content: "..\A ..\A ..\A ..\A ";
+    display: inline-block;
+    line-height: 5px;
+    margin-left: -11px;
+    margin-top: -5px;
+    position: absolute;
+    width: 5px;
+}
+
+/* btn Chapter */
+
+.chapter_btn {
+    margin: 10px 0;
+}
+
+/*ajustements btns chapter menu */
+
+a#enable_move.icon_link.btn.btn-default{
+    padding:0;
+    box-shadow:auto;
+    color:inherit;
+    border:none;
+    background-color:inherit;
+}
+
+
+/* Barre nav */
+
+a.lesson_tooltip.btn-primary{
+    border-radius: 5px;
+    color: white;
+    display: inline-block;
+    padding: 5px;
+    text-decoration: none;
+}
+
+/* bouton retour haut page */
+
+a.btn_up.btn-primary{
+    border-radius: 5px;
+    display: inline-block;
+    padding: 15px;
+    text-decoration: none;
+    bottom: 80px;
+    left: 55px;
+    position: fixed;
+    z-index:1000;
+}
+
+a.btn_up.btn-primary .lesson_footer_icon {
+    font-size: 30px;
+}
+
+
+
+/* Media Queries */
+
+
+@media screen and (max-width: 1025px) {
+    
+    .nav.navbar-nav.pull-right {
+        float: none !important;
+    }
+
+    .deletechapter.btn.lesson_tooltip, .movechapter.btn.lesson_tooltip, .editchapter.btn.lesson_tooltip, .duplicatechapter.btn.lesson_tooltip, .createchapter.btn.lesson_tooltip{
+        margin:0 30px 2px 30px;
+    }
+
 }
