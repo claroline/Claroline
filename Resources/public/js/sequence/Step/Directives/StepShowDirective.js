@@ -10,12 +10,17 @@
                 controllerAs: 'stepShowCtrl',
                 templateUrl: AngularApp.webDir + 'bundles/ujmexo/js/sequence/Step/Partials/step.show.html',
                 scope: {
-                    step: '='
+                    currentStep: '='
                 },
                 link: function (scope, element, attr, stepShowCtrl) {
-                    console.log('step show directive link method called');    
-                    console.log(scope.step);
-                    stepShowCtrl.setCurrentStep(scope.step);
+                    console.log('step show directive link method called'); 
+                    scope.$watch('currentStep', function (newValue) {
+                        if (typeof newValue === 'string') {
+                            stepShowCtrl.currentStep = JSON.parse(newValue);
+                        } else {
+                            stepShowCtrl.currentStep = newValue;
+                        }
+                    });
                 }
             };
         }

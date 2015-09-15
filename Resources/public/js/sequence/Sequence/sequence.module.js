@@ -5,7 +5,8 @@
     'use strict';
 
     angular.module('Sequence', [
-        'Step'       
+        'Step',
+        'Correction'
     ]);
 })();
 
