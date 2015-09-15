@@ -212,7 +212,7 @@
                                 </a>
                                 <div class="shared_options_container">
                                     {% set isBadgeShared = userBadge.isIsShared %}
-                                    <a href="{{ path('icap_badge_badge_share_view', {'badgeSlug': badge.slug}) }}"
+                                    <a href="{{ path('icap_badge_badge_share_view', {'username': userBadge.user.username, 'badgeSlug': badge.slug}) }}"
                                        title="{{ 'see_shared_badge'|trans }}" data-title="{{ 'see_shared_badge'|trans }}"
                                        data-toggle="tooltip" data-placement="top" data-container="body"
                                        class="pull-right share_badge"{% if false == isBadgeShared %} style="display: none"{% endif %}>

@@ -113,12 +113,12 @@ class BadgeController extends Controller
     }
 
     /**
-     * @Route("/badge/{badgeSlug}", name="icap_badge_badge_share_view")
+     * @Route("/badge/{username}/{badgeSlug}", name="icap_badge_badge_share_view")
      * @Template
      */
-    public function shareViewAction(Request $request, $badgeSlug)
+    public function shareViewAction(Request $request, $username, $badgeSlug)
     {
-        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneByBadgeSlug($badgeSlug);
+        $userBadge = $this->getDoctrine()->getRepository('IcapBadgeBundle:UserBadge')->findOneByUsernameAndBadgeSlug($username, $badgeSlug);
 
         if ($userBadge === null) {
             throw $this->createNotFoundException("Cannot found badge.");

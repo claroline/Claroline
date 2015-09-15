@@ -57,6 +57,8 @@ class UserBadgeController extends Controller
             $data = array(
                 'user_badge' => array(
                     'id' => $userBadge->getId(),
+                    'username' => $userBadge->getUser()->getUsername(),
+                    'slug' => $userBadge->getBadge()->getSlug(),
                     'is_shared' => $userBadge->isIsShared()
                 )
             );
