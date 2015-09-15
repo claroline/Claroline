@@ -104,7 +104,7 @@ summary: Sommaire
 
 # t
 templates: Modèles
-sidebar_close: Fermer
+sidebar_close: Cacher le sommaire
 template_copy: Copier
 template_edit: Modifier
 template_delete: Supprimer
