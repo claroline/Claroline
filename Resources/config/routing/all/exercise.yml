@@ -1,8 +1,2 @@
-ujm_exercise_paper:
-    pattern:  /{id}/paper
-    defaults: { _controller: "UJMExoBundle:Exercise:exercisePaper" }
-
-ujm_exercise_paper_nav:
-    pattern:  /paper/nav/
-    defaults: { _controller: "UJMExoBundle:Exercise:exercisePaperNav" }
-    requirements: { _method: post }
+## YAML Template.
+---

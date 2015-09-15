@@ -3,30 +3,25 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 use UJM\ExoBundle\Entity\Document;
-
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
-
 use Symfony\Component\HttpFoundation\Response;
+
 /**
  * WSRest controller.
- * To create REST WS
- *
+ * To create REST WS.
  */
 class WSRestController extends Controller
 {
-
     /**
-     * To add a document
+     * To add a document.
      *
-     * @access public
      *
-     * @param boolean $redirection Add document on create/edit graphic question or Add document on manage documents
-     * @param integer $pageToGo for the pagination
-     * @param integer $maxPage for the pagination
-     * @param integer $nbItem for the pagination
+     * @param bool $redirection Add document on create/edit graphic question or Add document on manage documents
+     * @param int  $pageToGo    for the pagination
+     * @param int  $maxPage     for the pagination
+     * @param int  $nbItem      for the pagination
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -37,7 +32,7 @@ class WSRestController extends Controller
         // check also login matches to the connected user
 
         $request = $this->container->get('request');
-        $fileUp  = $request->files->get('picture');
+        $fileUp = $request->files->get('picture');
 
         if ($this->get('security.authorization_checker')->isGranted('ROLE_USER')) {
             $userDir = './uploads/ujmexo/users_documents/'.$this->container->get('security.token_storage')
@@ -46,8 +41,8 @@ class WSRestController extends Controller
             if (!is_dir($this->container->getParameter('ujm.param.exo_directory'))) {
                 mkdir($this->container->getParameter('ujm.param.exo_directory'));
             }
-            if (!is_dir($this->container->getParameter('ujm.param.exo_directory') . '/users_documents/')) {
-                mkdir($this->container->getParameter('ujm.param.exo_directory') . '/users_documents/');
+            if (!is_dir($this->container->getParameter('ujm.param.exo_directory').'/users_documents/')) {
+                mkdir($this->container->getParameter('ujm.param.exo_directory').'/users_documents/');
             }
 
             if (!is_dir($userDir)) {
@@ -66,7 +61,7 @@ class WSRestController extends Controller
                 $document = new Document();
 
                 $document->setLabel(trim($request->get('label')));
-                $document->setUrl($userDir.'/images/'. $file);
+                $document->setUrl($userDir.'/images/'.$file);
                 $document->setType(strrchr($file, '.'));
                 $document->setUser($this->container->get('security.token_storage')->getToken()->getUser());
 
@@ -77,7 +72,6 @@ class WSRestController extends Controller
                         strtolower($document->getType()) == '.gif' ||
                         strtolower($document->getType()) == '.bmp'))
                 ) {
-
                     $em->persist($document);
                 }
 
@@ -86,11 +80,9 @@ class WSRestController extends Controller
 
             // Add document on create/edit graphic question
             if ($redirection == 0) {
-
                 return new Response($document->getId().';'.$document->getLabel().';'.$document->getType());
             // Add document on manage documents
-            } else if ($redirection == 1) {
-
+            } elseif ($redirection == 1) {
                 $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
                 $repository = $this->getDoctrine()
@@ -125,7 +117,7 @@ class WSRestController extends Controller
                     'UJMExoBundle:Document:manageImg.html.twig',
                     array(
                         'listDoc' => $listDocPager,
-                        'pagerDoc' => $pagerDoc
+                        'pagerDoc' => $pagerDoc,
                     )
                 );
             }
@@ -135,9 +127,8 @@ class WSRestController extends Controller
     }
 
     /**
-     * to control if the document's name already exist
+     * to control if the document's name already exist.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -159,7 +150,7 @@ class WSRestController extends Controller
 
                 $end = count($list);
 
-                for ($i = 0; $i < $end; $i++) {
+                for ($i = 0; $i < $end; ++$i) {
                     if ($list[$i]->getLabel() == $label) {
                         $response = 'already';
                         break;

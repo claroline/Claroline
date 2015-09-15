@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
-
 use UJM\ExoBundle\Entity\InteractionMatching;
 use UJM\ExoBundle\Entity\Response;
 use UJM\ExoBundle\Form\InteractionMatchingType;
@@ -12,28 +11,17 @@ use UJM\ExoBundle\Form\ResponseType;
 use UJM\ExoBundle\Form\InteractionMatchingHandler;
 
 /**
- * InteractionMatching Controller
- *
+ * InteractionMatching Controller.
  */
 class InteractionMatchingController extends Controller
 {
-
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:show'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     array vars
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showAction()
     {
         $attr = $this->get('request')->attributes;
-        $em   = $this->get('doctrine')->getEntityManager();
+        $em = $this->get('doctrine')->getEntityManager();
         $vars = $attr->get('vars');
 
         $response = new Response();
@@ -58,35 +46,28 @@ class InteractionMatchingController extends Controller
     }
 
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:formNew'
-     * Parameters posted :
-     *     integer exoID
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function newAction()
     {
-       $attr = $this->get('request')->attributes;
-       $entity = new InteractionMatching();
-       $form   = $this->createForm(
+        $attr = $this->get('request')->attributes;
+        $entity = new InteractionMatching();
+        $form = $this->createForm(
            new InteractionMatchingType(
                $this->container->get('security.token_storage')
                    ->getToken()->getUser()
            ), $entity
        );
 
-       $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
-       $typeMatching = $interMatchSer->getTypeMatching();
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
+        $typeMatching = $interMatchSer->getTypeMatching();
 
-       return $this->container->get('templating')->renderResponse(
+        return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionMatching:new.html.twig', array(
-           'exoID'    => $attr->get('exoID'),
-           'entity'   => $entity,
+           'exoID' => $attr->get('exoID'),
+           'entity' => $entity,
            'typeMatching' => json_encode($typeMatching),
-           'form'     => $form->createView()
+           'form' => $form->createView(),
            )
        );
     }
@@ -94,7 +75,6 @@ class InteractionMatchingController extends Controller
     /**
      * Creates a new InteractionMatching entity.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -110,7 +90,7 @@ class InteractionMatchingController extends Controller
         );
 
         $exoID = $this->container->get('request')->request->get('exercise');
-        
+
         //Get the lock category
         $catSer = $this->container->get('ujm.exo_category');
 
@@ -122,21 +102,20 @@ class InteractionMatchingController extends Controller
                 $this->get('translator')
          );
         $matchingHandler = $formHandler->processAdd();
-        if ( $matchingHandler === TRUE ) {
+        if ($matchingHandler === true) {
             $categoryToFind = $interMatching->getInteraction()->getQuestion()->getCategory();
             $titleToFind = $interMatching->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
                     $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind))
+                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
                     )
                 );
             } else {
-               
                 return $this->redirect(
                     $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind)
+                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )
                     )
                 );
             }
@@ -152,10 +131,10 @@ class InteractionMatchingController extends Controller
         $formWithError = $this->render(
             'UJMExoBundle:InteractionMatching:new.html.twig', array(
             'entity' => $interMatching,
-            'form'   => $form->createView(),
-            'error'  => true,
-            'exoID'  => $exoID,
-            'typeMatching' => json_encode($typeMatching)
+            'form' => $form->createView(),
+            'error' => true,
+            'exoID' => $exoID,
+            'typeMatching' => json_encode($typeMatching),
             )
         );
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
@@ -164,26 +143,15 @@ class InteractionMatchingController extends Controller
         return $this->render(
                 'UJMExoBundle:Question:new.html.twig', array(
                 'formWithError' => $formWithError,
-                'exoID'  => $exoID,
-                'linkedCategory' =>  $catSer->getLinkedCategories(),
+                'exoID' => $exoID,
+                'linkedCategory' => $catSer->getLinkedCategories(),
                 'locker' => $catSer->getLockCategory(),
-                'interactionType' => $interactionType
+                'interactionType' => $interactionType,
             )
         );
-
     }
 
     /**
-     *
-     * @access public
-     *
-     * Forwarded by 'UJMExoBundle:Question:edit'
-     * Parameters posted :
-     *     \UJM\ExoBundle\Entity\Interaction interaction
-     *     integer exoID
-     *     integer catID
-     *     \Claroline\CoreBundle\Entity\User user
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction()
@@ -200,39 +168,39 @@ class InteractionMatchingController extends Controller
         foreach ($correspondence as $key => $corresp) {
             $correspondence[$key] = explode('-', $corresp);
         }
-        $tableLabel =  array();
+        $tableLabel = array();
         $tableProposal = array();
 
         $ind = 1;
 
-        foreach($interactionMatching->getLabels() as $label){
+        foreach ($interactionMatching->getLabels() as $label) {
             $tableLabel[$ind] = $label->getId();
-            $ind++;
+            ++$ind;
         }
 
         $ind = 1;
-        foreach($interactionMatching->getProposals() as $proposal){
+        foreach ($interactionMatching->getProposals() as $proposal) {
             $tableProposal[$proposal->getId()] = $ind;
-            $ind++;
+            ++$ind;
         }
 
         $editForm = $this->createForm(
-            new InteractionMatchingType($attr->get('user'),$attr->get('catID')), $interactionMatching
+            new InteractionMatchingType($attr->get('user'), $attr->get('catID')), $interactionMatching
         );
 
         $typeMatching = $matchSer->getTypeMatching();
         $linkedCategory = $catSer->getLinkedCategories();
 
-        $variables['entity']          = $interactionMatching;
-        $variables['edit_form']       = $editForm->createView();
-        $variables['nbResponses']     = $matchSer->getNbReponses($attr->get('interaction'));
-        $variables['linkedCategory']  = $linkedCategory;
-        $variables['typeMatching']    = json_encode($typeMatching);
-        $variables['exoID']           = $attr->get('exoID');
-        $variables['correspondence']  = json_encode($correspondence);
-        $variables['tableLabel']      = json_encode($tableLabel);
-        $variables['tableProposal']   = json_encode($tableProposal);
-        $variables['locker']          = $catSer->getLockCategory();
+        $variables['entity'] = $interactionMatching;
+        $variables['edit_form'] = $editForm->createView();
+        $variables['nbResponses'] = $matchSer->getNbReponses($attr->get('interaction'));
+        $variables['linkedCategory'] = $linkedCategory;
+        $variables['typeMatching'] = json_encode($typeMatching);
+        $variables['exoID'] = $attr->get('exoID');
+        $variables['correspondence'] = json_encode($correspondence);
+        $variables['tableLabel'] = json_encode($tableLabel);
+        $variables['tableProposal'] = json_encode($tableProposal);
+        $variables['locker'] = $catSer->getLockCategory();
 
         if ($attr->get('exoID') != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($attr->get('exoID'));
@@ -240,14 +208,13 @@ class InteractionMatchingController extends Controller
         }
 
         return $this->render('UJMExoBundle:InteractionMatching:edit.html.twig', $variables);
-   }
+    }
 
     /**
      * Edits an existing InteractionMatching entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionMatching
+     * @param int $id id of InteractionMatching
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -265,7 +232,7 @@ class InteractionMatchingController extends Controller
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
 
-        if ( $user->getId() != $interMatching->getInteraction()->getQuestion()->getUser()->getId() ) {
+        if ($user->getId() != $interMatching->getInteraction()->getQuestion()->getUser()->getId()) {
             $catID = $interMatching->getInteraction()->getQuestion()->getUser()->getId();
         }
 
@@ -273,7 +240,7 @@ class InteractionMatchingController extends Controller
             new InteractionMatchingType(
                 $this->container->get('security.token_storage')->getToken()->getUser(),
                 $catID
-            ),$interMatching
+            ), $interMatching
         );
         $formHandler = new InteractionMatchingHandler(
             $editForm, $this->get('request'), $this->getDoctrine()->getManager(),
@@ -282,15 +249,15 @@ class InteractionMatchingController extends Controller
             $this->get('translator')
         );
 
-        if ( $formHandler->processUpdate($interMatching) ) {
-            if ( $exoID == -1 ) {
+        if ($formHandler->processUpdate($interMatching)) {
+            if ($exoID == -1) {
                 return $this->redirect($this->generateUrl('ujm_question_index'));
             } else {
                 return $this->redirect(
                     $this->generateUrl(
                         'ujm_exercise_questions',
                             array(
-                                'id' => $exoID
+                                'id' => $exoID,
                             )
                     )
                 );
@@ -300,8 +267,8 @@ class InteractionMatchingController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id'    => $interMatching->getInteraction()->getQuestion()->getId(),
-                'form'  => $editForm
+                'id' => $interMatching->getInteraction()->getQuestion()->getId(),
+                'form' => $editForm,
             )
         );
     }
@@ -309,9 +276,8 @@ class InteractionMatchingController extends Controller
     /**
      * Deletes a InteractionMatching entity.
      *
-     * @access public
      *
-     * @param integer $id id of InteractionMatching
+     * @param int    $id      id of InteractionMatching
      * @param intger $pageNow for pagination, actual page
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -321,7 +287,7 @@ class InteractionMatchingController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('UJMExoBundle:InteractionMatching')->find($id);
 
-        if ( !$entity ) {
+        if (!$entity) {
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
 
@@ -332,9 +298,8 @@ class InteractionMatchingController extends Controller
     }
 
     /**
-     * To test the Matching by the teacher
+     * To test the Matching by the teacher.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -352,12 +317,12 @@ class InteractionMatchingController extends Controller
         $interSer = $this->container->get('ujm.exo_InteractionMatching');
         $res = $interSer->response($request);
 
-        $vars['score']            = $res['score'];
-        $vars['penalty']          = $res['penalty'];
-        $vars['interMatching']    = $res['interMatching'];
+        $vars['score'] = $res['score'];
+        $vars['penalty'] = $res['penalty'];
+        $vars['interMatching'] = $res['interMatching'];
         $vars['tabRightResponse'] = $res['tabRightResponse'];
         $vars['tabResponseIndex'] = $res['tabResponseIndex'];
-        $vars['exoID']            = $postVal['exoID'];
+        $vars['exoID'] = $postVal['exoID'];
 
         return $this->render('UJMExoBundle:InteractionMatching:matchingOverview.html.twig', $vars);
     }

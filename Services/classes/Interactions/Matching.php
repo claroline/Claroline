@@ -1,24 +1,22 @@
 <?php
 
 /**
- *
- * Services for the matching
+ * Services for the matching.
  */
-
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class Matching extends Interaction {
+class Matching extends Interaction
+{
     /**
-     * implement the abstract method
-     * To process the user's response for a paper(or a test)
-     *
-     * @access public
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
-     *
-     * @return mixed[]
-     */
+      * implement the abstract method
+      * To process the user's response for a paper(or a test).
+      *
+      *
+      * @param \Symfony\Component\HttpFoundation\Request $request
+      * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+      *
+      * @return mixed[]
+      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
          $interactionMatchingId = $request->request->get('interactionMatchingToValidated');
@@ -38,22 +36,21 @@ class Matching extends Interaction {
          $score = $this->mark($interMatching, $penalty, $tabRightResponse, $tabResponseIndex);
 
          $res = array(
-           'score'            => $score,
-           'penalty'          => $penalty,
-           'interMatching'    => $interMatching,
+           'score' => $score,
+           'penalty' => $penalty,
+           'interMatching' => $interMatching,
            'tabRightResponse' => $tabRightResponse,
            'tabResponseIndex' => $tabResponseIndex,
-           'response'         => $response
+           'response' => $response,
          );
 
-        return $res;
+         return $res;
      }
 
      /**
       * implement the abstract method
-      * To calculate the score
+      * To calculate the score.
       *
-      * @access public
       *
       * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
       * @param float $penality penalty if the user showed hints
@@ -64,17 +61,16 @@ class Matching extends Interaction {
       */
      public function mark(
              \UJM\ExoBundle\Entity\InteractionMatching $interMatching = null,
-             $penalty= null, $tabRightResponse= null,
-             $tabResponseIndex= null
-     )
-     {
+             $penalty = null, $tabRightResponse = null,
+             $tabResponseIndex = null
+     ) {
          $em = $this->doctrine->getManager();
          $scoretmp = 0;
          $scoreMax = $this->maxScore($interMatching);
 
          foreach ($tabRightResponse as $labelId => $value) {
-             if ( isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
-                     && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0)) ) {
+             if (isset($tabResponseIndex[$labelId]) && $tabRightResponse[$labelId] != null
+                     && (!substr_compare($tabRightResponse[$labelId], $tabResponseIndex[$labelId], 0))) {
                  $label = $em->getRepository('UJMExoBundle:Label')
                              ->find($labelId);
                  $scoretmp += $label->getScoreRightResponse();
@@ -92,15 +88,13 @@ class Matching extends Interaction {
          }
          $score .= '/'.$scoreMax;
 
-        return $score;
-
+         return $score;
      }
 
-    /**
+     /**
       * implement the abstract method
-      * Get score max possible for a matching question
+      * Get score max possible for a matching question.
       *
-      * @access public
       *
       * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
       *
@@ -118,9 +112,8 @@ class Matching extends Interaction {
      }
 
      /**
-      * implement the abstract method
+      * implement the abstract method.
       *
-      * @access public
       * @param Integer $interId id of interaction
       *
       * @return \UJM\ExoBundle\Entity\InteractionMatching
@@ -135,17 +128,16 @@ class Matching extends Interaction {
      }
 
      /**
-       * implement the abstract method
-       *
-       * call getAlreadyResponded and prepare the interaction to displayed if necessary
-       *
-       * @access public
-       * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
-       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
-       *
-       * @return \UJM\ExoBundle\Entity\Response
-       */
+      * implement the abstract method.
+      *
+      * call getAlreadyResponded and prepare the interaction to displayed if necessary
+      *
+      * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
+      * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
+      *
+      * @return \UJM\ExoBundle\Entity\Response
+      */
      public function getResponseGiven($interactionToDisplay, $session, $interactionX)
      {
          $responseGiven = $this->getAlreadyResponded($interactionToDisplay, $session);
@@ -161,10 +153,9 @@ class Matching extends Interaction {
          return $responseGiven;
      }
 
-     /**
-     * Get the types of Matching, Multiple response, unique response
+    /**
+     * Get the types of Matching, Multiple response, unique response.
      *
-     * @access public
      *
      * @return array
      */
@@ -183,20 +174,19 @@ class Matching extends Interaction {
         return $typeMatching;
     }
 
-     /**
-      * For the correction of a matching question :
-      * init array of responses of user indexed by labelId
-      * init array of rights responses indexed by labelId
-      *
-      * @access public
-      *
-      * @param String $response
-      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
-      *
-      * @return array of arrays
-      */
-    public function initTabResponseMatching($response, $interMatching) {
-
+    /**
+     * For the correction of a matching question :
+     * init array of responses of user indexed by labelId
+     * init array of rights responses indexed by labelId.
+     *
+     *
+     * @param String                                          $response
+     * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
+     *
+     * @return array of arrays
+     */
+    public function initTabResponseMatching($response, $interMatching)
+    {
         $tabsResponses = array();
 
         $tabResponseIndex = $this->getTabResponseIndex($response);
@@ -209,24 +199,22 @@ class Matching extends Interaction {
             }
         }
 
-
         $tabsResponses[0] = $tabResponseIndex;
         $tabsResponses[1] = $tabRightResponse;
 
         return $tabsResponses;
-
     }
 
     /**
-     * init array of rights responses indexed by labelId
+     * init array of rights responses indexed by labelId.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Paper\InteractionMatching $interMatching
      *
      * @return mixed[]
      */
-    public function initTabRightResponse($interMatching) {
+    public function initTabRightResponse($interMatching)
+    {
         $tabRightResponse = array();
 
         //array of rights responses indexed by labelId
@@ -236,7 +224,7 @@ class Matching extends Interaction {
                 foreach ($associateLabel as $associatedLabel) {
                     $index = $associatedLabel->getId();
                     if (isset($tabRightResponse[$index])) {
-                        $tabRightResponse[$index] .= '-' . $proposal->getId();
+                        $tabRightResponse[$index] .= '-'.$proposal->getId();
                     } else {
                         $tabRightResponse[$index] = $proposal->getId();
                     }
@@ -255,24 +243,24 @@ class Matching extends Interaction {
     }
 
     /**
-     * init array of student response indexed by labelId
+     * init array of student response indexed by labelId.
      *
-     * @access private
      *
      * @param String $response
      *
      * @return integer[]
      */
-    private function getTabResponseIndex($response) {
+    private function getTabResponseIndex($response)
+    {
         $tabResponse = explode(';', substr($response, 0, -1));
         $tabResponseIndex = array();
 
         //array of responses of user indexed by labelId
         foreach ($tabResponse as $rep) {
             $tabTmp = preg_split('(,)', $rep);
-            for ($i = 1; $i < count($tabTmp);$i++) {
+            for ($i = 1; $i < count($tabTmp);++$i) {
                 if (isset($tabResponseIndex[$tabTmp[$i]])) {
-                    $tabResponseIndex[$tabTmp[$i]] .= '-' . $tabTmp[0];
+                    $tabResponseIndex[$tabTmp[$i]] .= '-'.$tabTmp[0];
                 } else {
                     $tabResponseIndex[$tabTmp[$i]] = $tabTmp[0];
                 }

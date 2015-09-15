@@ -5,18 +5,17 @@ namespace UJM\ExoBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * WordResponseRepository
+ * WordResponseRepository.
  *
  * repository methods below.
  */
 class WordResponseRepository extends EntityRepository
 {
     /**
-     * Get the score max for an open question with one word
+     * Get the score max for an open question with one word.
      *
-     * @access public
      *
-     * @param integer $interOpenId id InteractionOpen
+     * @param int $interOpenId id InteractionOpen
      *
      * Return float
      */
@@ -33,11 +32,10 @@ class WordResponseRepository extends EntityRepository
     }
 
     /**
-     * Get the goods responses for an open question with one word
+     * Get the goods responses for an open question with one word.
      *
-     * @access public
      *
-     * @param integer $interOpenId id InteractionOpen
+     * @param int $interOpenId id InteractionOpen
      *
      * Return String
      */
@@ -55,11 +53,10 @@ class WordResponseRepository extends EntityRepository
     }
 
     /**
-     * Get the score max for an open question with short answer
+     * Get the score max for an open question with short answer.
      *
-     * @access public
      *
-     * @param integer $interOpenId id InteractionOpen
+     * @param int $interOpenId id InteractionOpen
      *
      * Return float
      */

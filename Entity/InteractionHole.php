@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionHole
+ * UJM\ExoBundle\Entity\InteractionHole.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionHoleRepository")
  * @ORM\Table(name="ujm_interaction_hole")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class InteractionHole
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,14 +22,14 @@ class InteractionHole
     private $id;
 
     /**
-     * @var text $html
+     * @var text
      *
      * @ORM\Column(name="html", type="text")
      */
     private $html;
 
     /**
-     * @var text $htmlWithoutValue
+     * @var text
      *
      * @ORM\Column(name="htmlWithoutValue", type="text", nullable=true)
      */
@@ -47,13 +47,13 @@ class InteractionHole
 
     public function __construct()
     {
-        $this->holes = new \Doctrine\Common\Collections\ArrayCollection;
+        $this->holes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -61,7 +61,7 @@ class InteractionHole
     }
 
     /**
-     * Set html
+     * Set html.
      *
      * @param text $html
      */
@@ -71,7 +71,7 @@ class InteractionHole
     }
 
     /**
-     * Get html
+     * Get html.
      *
      * @return text
      */
@@ -81,7 +81,7 @@ class InteractionHole
     }
 
     /**
-     * Set htmlWithoutValue
+     * Set htmlWithoutValue.
      *
      * @param text $htmlWithoutValue
      */
@@ -91,7 +91,7 @@ class InteractionHole
     }
 
     /**
-     * Get htmlWithoutValue
+     * Get htmlWithoutValue.
      *
      * @return text
      */
@@ -112,7 +112,6 @@ class InteractionHole
 
     public function getHoles()
     {
-
         return $this->holes;
     }
 
@@ -125,24 +124,22 @@ class InteractionHole
 
     public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)
     {
-
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 
             $this->interaction = clone $this->interaction;
 
-            $newHoles = new \Doctrine\Common\Collections\ArrayCollection;
+            $newHoles = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->holes as $hole) {
                 $newHole = clone $hole;
                 $newHole->setInteractionHole($this);
                 $newHoles->add($newHole);
             }
             $this->holes = $newHoles;
-
         }
     }
-
 }

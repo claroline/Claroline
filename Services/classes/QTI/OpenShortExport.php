@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To export an open short response question in QTI
- *
+ * To export an open short response question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class OpenShortExport  extends OpenExport
@@ -12,12 +10,10 @@ class OpenShortExport  extends OpenExport
     private $extendedTextInteraction;
 
     /**
-     * overload the export method
+     * overload the export method.
      *
-     * @access public
      * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository $qtiRepos
-     *
+     * @param qtiRepository                     $qtiRepos
      */
     public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
@@ -26,8 +22,8 @@ class OpenShortExport  extends OpenExport
         $this->mappingTag();
         $this->extendedTextInteractionTag();
 
-        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
+        if (($this->interactionopen->getInteraction()->getFeedBack() != null)
+                && ($this->interactionopen->getInteraction()->getFeedBack() != '')) {
             $this->qtiFeedBack($interaction->getFeedBack());
         }
 
@@ -37,10 +33,7 @@ class OpenShortExport  extends OpenExport
     }
 
     /**
-     * add the tag mapping in responseDeclaration
-     *
-     * @access private
-     *
+     * add the tag mapping in responseDeclaration.
      */
     private function mappingTag()
     {
@@ -50,8 +43,8 @@ class OpenShortExport  extends OpenExport
 
         $responseDeclaration = $this->responseDeclaration[$this->nbResponseDeclaration - 1];
         $correctWordResponse = '';
-        $mapping = $this->document->createElement("mapping");
-        $mapping->setAttribute("defaultValue", "0");
+        $mapping = $this->document->createElement('mapping');
+        $mapping->setAttribute('defaultValue', '0');
 
         foreach ($this->interactionopen->getWordResponses() as $resp) {
             $i = 0;
@@ -63,16 +56,16 @@ class OpenShortExport  extends OpenExport
                 }
             }
 
-            $mapEntry =  $this->document->createElement("mapEntry");
-            $mapEntry->setAttribute("mapKey", $resp->getResponse());
-            $mapEntry->setAttribute("mappedValue",$resp->getScore());
-            $mapEntry->setAttribute("caseSensitive",$resp->getCaseSensitive());
+            $mapEntry = $this->document->createElement('mapEntry');
+            $mapEntry->setAttribute('mapKey', $resp->getResponse());
+            $mapEntry->setAttribute('mappedValue', $resp->getScore());
+            $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
-            $i++;
+            ++$i;
         }
-        $Tagvalue = $this->document->CreateElement("value");
-        $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+        $Tagvalue = $this->document->CreateElement('value');
+        $responsevalue = $this->document->CreateTextNode($correctWordResponse->getResponse());
         $Tagvalue->appendChild($responsevalue);
         $correctResponse->appendChild($Tagvalue);
         $responseDeclaration->appendChild($correctResponse);
@@ -81,15 +74,12 @@ class OpenShortExport  extends OpenExport
     }
 
     /**
-     * add the tag extendedTextInteraction in itemBody
-     *
-     * @access private
-     *
+     * add the tag extendedTextInteraction in itemBody.
      */
     private function extendedTextInteractionTag()
     {
         $this->extendedTextInteraction = $this->document->CreateElement('extendedTextInteraction');
-        $this->extendedTextInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $this->extendedTextInteraction->setAttribute('responseIdentifier', 'RESPONSE');
         $this->itemBody->appendChild($this->extendedTextInteraction);
     }
 }

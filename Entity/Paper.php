@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Paper
+ * UJM\ExoBundle\Entity\Paper.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\PaperRepository")
  * @ORM\Table(name="ujm_paper")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Paper
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,49 +22,49 @@ class Paper
     private $id;
 
     /**
-     * @var integer $numPaper
+     * @var int
      *
      * @ORM\Column(name="num_paper", type="integer")
      */
     private $numPaper;
 
     /**
-     * @var \Datetime $start
+     * @var \Datetime
      *
      * @ORM\Column(name="start", type="datetime")
      */
     private $start;
 
     /**
-     * @var \Datetime $end
+     * @var \Datetime
      *
      * @ORM\Column(name="end", type="datetime", nullable=true)
      */
     private $end;
 
     /**
-     * @var text $ordreQuestion
+     * @var text
      *
      * @ORM\Column(name="ordre_question", type="text", nullable=true)
      */
     private $ordreQuestion;
 
     /**
-     * @var boolean $archive
+     * @var bool
      *
      * @ORM\Column(name="archive", type="boolean", nullable=true)
      */
     private $archive;
 
     /**
-     * @var date $dateArchive
+     * @var date
      *
      * @ORM\Column(name="date_archive", type="date", nullable=true)
      */
     private $dateArchive;
 
     /**
-     * @var boolean $interupt
+     * @var bool
      *
      * @ORM\Column(name="interupt", type="boolean", nullable=true)
      */
@@ -81,9 +81,9 @@ class Paper
     private $exercise;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -91,9 +91,9 @@ class Paper
     }
 
     /**
-     * Set numPaper
+     * Set numPaper.
      *
-     * @param integer $numPaper
+     * @param int $numPaper
      */
     public function setNumPaper($numPaper)
     {
@@ -101,9 +101,9 @@ class Paper
     }
 
     /**
-     * Get numPaper
+     * Get numPaper.
      *
-     * @return integer
+     * @return int
      */
     public function getNumPaper()
     {
@@ -111,7 +111,7 @@ class Paper
     }
 
     /**
-     * Set start
+     * Set start.
      *
      * @param \Datetime $start
      */
@@ -121,7 +121,7 @@ class Paper
     }
 
     /**
-     * Get start
+     * Get start.
      *
      * @return \Datetime
      */
@@ -131,7 +131,7 @@ class Paper
     }
 
     /**
-     * Set end
+     * Set end.
      *
      * @param \Datetime $end
      */
@@ -141,7 +141,7 @@ class Paper
     }
 
     /**
-     * Get end
+     * Get end.
      *
      * @return \Datetime
      */
@@ -151,7 +151,7 @@ class Paper
     }
 
     /**
-     * Set ordreQuestion
+     * Set ordreQuestion.
      *
      * @param text $ordreQuestion
      */
@@ -161,7 +161,7 @@ class Paper
     }
 
     /**
-     * Get ordreQuestion
+     * Get ordreQuestion.
      *
      * @return text
      */
@@ -171,9 +171,9 @@ class Paper
     }
 
     /**
-     * Set archive
+     * Set archive.
      *
-     * @param boolean $archive
+     * @param bool $archive
      */
     public function setArchive($archive)
     {
@@ -181,7 +181,7 @@ class Paper
     }
 
     /**
-     * Get archive
+     * Get archive.
      */
     public function getArchive()
     {
@@ -189,7 +189,7 @@ class Paper
     }
 
     /**
-     * Set dateArchive
+     * Set dateArchive.
      *
      * @param date $dateArchive
      */
@@ -199,7 +199,7 @@ class Paper
     }
 
     /**
-     * Get dateArchive
+     * Get dateArchive.
      *
      * @return date
      */
@@ -209,9 +209,9 @@ class Paper
     }
 
     /**
-     * Set interupt
+     * Set interupt.
      *
-     * @param boolean $interupt
+     * @param bool $interupt
      */
     public function setInterupt($interupt)
     {
@@ -219,7 +219,7 @@ class Paper
     }
 
     /**
-     * Get interupt
+     * Get interupt.
      */
     public function getInterupt()
     {

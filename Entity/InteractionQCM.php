@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionQCM
+ * UJM\ExoBundle\Entity\InteractionQCM.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionQCMRepository")
  * @ORM\Table(name="ujm_interaction_qcm")
@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class InteractionQCM
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,29 +22,29 @@ class InteractionQCM
      */
     private $id;
 
-     /**
-     * @var boolean $shuffle
+    /**
+     * @var bool
      *
      * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
-     * @var float $scoreRightResponse
+     * @var float
      *
      * @ORM\Column(name="score_right_response", type="float", nullable=true)
      */
     private $scoreRightResponse;
 
     /**
-     * @var float $scoreFalseResponse
+     * @var float
      *
      * @ORM\Column(name="score_false_response", type="float", nullable=true)
      */
     private $scoreFalseResponse;
 
-     /**
-     * @var boolean $weightResponse
+    /**
+     * @var bool
      *
      * @ORM\Column(name="weight_response", type="boolean", nullable=true)
      */
@@ -67,7 +67,7 @@ class InteractionQCM
     private $typeQCM;
 
     /**
-     * Constructs a new instance of choices
+     * Constructs a new instance of choices.
      */
     public function __construct()
     {
@@ -75,9 +75,9 @@ class InteractionQCM
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -105,9 +105,9 @@ class InteractionQCM
     }
 
     /**
-     * Set shuffle
+     * Set shuffle.
      *
-     * @param boolean $shuffle
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -115,7 +115,7 @@ class InteractionQCM
     }
 
     /**
-     * Get shuffle
+     * Get shuffle.
      */
     public function getShuffle()
     {
@@ -123,7 +123,7 @@ class InteractionQCM
     }
 
     /**
-     * Set scoreRightResponse
+     * Set scoreRightResponse.
      *
      * @param float $scoreRightResponse
      */
@@ -133,7 +133,7 @@ class InteractionQCM
     }
 
     /**
-     * Get scoreRightResponse
+     * Get scoreRightResponse.
      *
      * @return float
      */
@@ -143,7 +143,7 @@ class InteractionQCM
     }
 
     /**
-     * Set scoreFalseResponse
+     * Set scoreFalseResponse.
      *
      * @param float $scoreFalseResponse
      */
@@ -153,7 +153,7 @@ class InteractionQCM
     }
 
     /**
-     * Get scoreFalseResponse
+     * Get scoreFalseResponse.
      *
      * @return float
      */
@@ -163,9 +163,9 @@ class InteractionQCM
     }
 
     /**
-     * Set weightResponse
+     * Set weightResponse.
      *
-     * @param boolean $weightResponse
+     * @param bool $weightResponse
      */
     public function setWeightResponse($weightResponse)
     {
@@ -173,7 +173,7 @@ class InteractionQCM
     }
 
     /**
-     * Get weightResponse
+     * Get weightResponse.
      */
     public function getWeightResponse()
     {
@@ -202,7 +202,7 @@ class InteractionQCM
         $this->sortChoices();
         $i = 0;
         $tabShuffle = array();
-        $tabFixed   = array();
+        $tabFixed = array();
         $choices = new ArrayCollection();
         $choiceCount = count($this->choices);
 
@@ -214,7 +214,7 @@ class InteractionQCM
                 $tabFixed[] = $i;
             }
 
-            $i++;
+            ++$i;
         }
         shuffle($tabShuffle);
 
@@ -231,7 +231,7 @@ class InteractionQCM
                 $tabShuffle = array_merge($tabShuffle);
             }
 
-            $i++;
+            ++$i;
         }
 
         $this->choices = $choices;
@@ -255,7 +255,8 @@ class InteractionQCM
         $this->choices = $choices;
     }
 
-    public function __clone() {
+    public function __clone()
+    {
         if ($this->id) {
             $this->id = null;
 

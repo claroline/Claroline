@@ -1,44 +1,39 @@
 <?php
 
 /**
- *
- * Services for the docimology
+ * Services for the docimology.
  */
-
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Container;
 
-class Docimology {
-
+class Docimology
+{
     private $doctrine;
     private $container;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry         $doctrine  Dependency Injection;
      * @param \Symfony\Component\DependencyInjection\Container $container
-     *
      */
     public function __construct(Registry $doctrine, Container $container)
     {
-        $this->doctrine  = $doctrine;
+        $this->doctrine = $doctrine;
         $this->container = $container;
     }
 
     /**
      * Docimology
-     * To draw histogram of success
+     * To draw histogram of success.
      *
-     * @access public
      *
-     * @param integer $exerciseId
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param doctrine collection $papers papers linked with the exercise
+     * @param int                 $exerciseId
+     * @param doctrine collection $eqs        questions linked with the exercise
+     * @param doctrine collection $papers     papers linked with the exercise
      *
      * @return array
      */
@@ -61,12 +56,12 @@ class Docimology {
             $interQuestions = $paper->getOrdreQuestion();
             $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
 
-            $interQuestionsTab = explode(";", $interQuestions);
+            $interQuestionsTab = explode(';', $interQuestions);
             foreach ($interQuestionsTab as $interQuestion) {
                 $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(
                     array(
                         'interaction' => $interQuestion,
-                        'paper' => $paper->getId()
+                        'paper' => $paper->getId(),
                     )
                 );
 
@@ -80,7 +75,7 @@ class Docimology {
         //creation serie for the graph jqplot
         foreach ($questionsResponsesTab as $responses) {
             $tot = (int) $responses['correct'] + (int) $responses['partiallyRight'] + (int) $responses['wrong'] + (int) $responses['noResponse'];
-            if ($tot > $maxY ) {
+            if ($tot > $maxY) {
                 $maxY = $tot;
             }
             $seriesResponsesTab[0] .= (string) $responses['correct'].',';
@@ -102,13 +97,12 @@ class Docimology {
 
     /**
      * Docimology
-     * To draw histogram of discrimination
+     * To draw histogram of discrimination.
      *
-     * @access public
      *
-     * @param integer $exerciseId
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param doctrine collection $papers papers linked with the exercise
+     * @param int                 $exerciseId
+     * @param doctrine collection $eqs        questions linked with the exercise
+     * @param doctrine collection $papers     papers linked with the exercise
      *
      * @return float[]
      */
@@ -123,7 +117,7 @@ class Docimology {
         $productMarginMark = $this->getProductsMarginMark($eqs, $tabScoreQ, $tabScoreAverageQ, $tabScoreExo, $scoreAverageExo);
         $tabCoeffQ = $this->getCoeffOfDiscrimination($eqs, $productMarginMark, $tabScoreExo, $tabScoreQ);
 
-        $coeffQ = implode(",", $tabCoeffQ);
+        $coeffQ = implode(',', $tabCoeffQ);
         $histoDiscrimination['coeffQ'] = $coeffQ;
 
         return $histoDiscrimination;
@@ -131,11 +125,10 @@ class Docimology {
 
     /**
      * Docimology
-     * To draw histogram of marks
+     * To draw histogram of marks.
      *
-     * @access public
      *
-     * @param integer $exerciseId
+     * @param int $exerciseId
      *
      * @return array
      */
@@ -147,16 +140,16 @@ class Docimology {
         $tabMarks = $this->getArrayMarks($exercise);
         $histoMark = array();
 
-        $scoreList = implode(",", array_keys($tabMarks));
+        $scoreList = implode(',', array_keys($tabMarks));
 
         if (max($tabMarks) > 4) {
             $maxY = max($tabMarks);
         }
 
-        $frequencyMarks = implode(",", $tabMarks);
+        $frequencyMarks = implode(',', $tabMarks);
 
-        $histoMark['maxY']           = $maxY;
-        $histoMark['scoreList']      = $scoreList;
+        $histoMark['maxY'] = $maxY;
+        $histoMark['scoreList'] = $scoreList;
         $histoMark['frequencyMarks'] = $frequencyMarks;
 
         return $histoMark;
@@ -164,12 +157,11 @@ class Docimology {
 
     /**
      * Docimology
-     * To draw histogram of difficulty
+     * To draw histogram of difficulty.
      *
-     * @access public
      *
-     * @param integer $exerciseId
-     * @param doctrine collection $eqs questions linked with the exercise
+     * @param int                 $exerciseId
+     * @param doctrine collection $eqs        questions linked with the exercise
      *
      * @return string
      */
@@ -181,7 +173,6 @@ class Docimology {
         $measureTab = array();
 
         foreach ($eqs as $eq) {
-
             $responsesTab = $this->getCorrectAnswer($exerciseId, $eq);
 
             $up[] = $responsesTab['correct'];
@@ -190,39 +181,37 @@ class Docimology {
 
         $stop = count($up);
 
-        for ($i = 0; $i < $stop; $i++) {
-
+        for ($i = 0; $i < $stop; ++$i) {
             $measureTab[$i] = $paperSer->roundUpDown(($up[$i] / $down[$i]) * 100);
         }
 
-        $measure = implode(",", $measureTab);
+        $measure = implode(',', $measureTab);
 
         return $measure;
     }
 
     /**
      * Docimology
-     * To have the status of an answer
+     * To have the status of an answer.
      *
-     * @access private
      *
      * @param array $responses result of getExerciseInterResponsesWithCount (ResponseRepository)
-     * @param float $scoreMax score max possible for a question
+     * @param float $scoreMax  score max possible for a question
      *
      * @return array
      */
     private function responseStatus($responses, $scoreMax)
     {
         $responsesTab = array();
-        $responsesTab['correct']        = 0;
+        $responsesTab['correct'] = 0;
         $responsesTab['partiallyRight'] = 0;
-        $responsesTab['wrong']          = 0;
-        $responsesTab['noResponse']     = 0;
+        $responsesTab['wrong'] = 0;
+        $responsesTab['noResponse'] = 0;
 
         foreach ($responses as $rep) {
             if ($rep['mark'] == $scoreMax) {
                 $responsesTab['correct'] = $rep['nb'];
-            } else if ($rep['mark'] == 0) {
+            } elseif ($rep['mark'] == 0) {
                 $responsesTab['wrong'] = $rep['nb'];
             } else {
                 $responsesTab['partiallyRight'] += $rep['nb'];
@@ -233,39 +222,37 @@ class Docimology {
     }
 
     /**
-     * Docimology, to calulate the standard deviation for the discrimination coefficient
+     * Docimology, to calulate the standard deviation for the discrimination coefficient.
      *
      * @param type $x
      * @param type $mean
+     *
      * @return type
      */
     private function sd_square($x, $mean)
     {
         return pow($x - $mean, 2);
-
     }
 
     /**
-     *
-     * Docimology, to calulate the standard deviation for the discrimination coefficient
+     * Docimology, to calulate the standard deviation for the discrimination coefficient.
      *
      * @param type $array
+     *
      * @return type
      */
     private function sd($array)
     {
-
-        return sqrt(array_sum(array_map(array($this, "sd_square"), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
+        return sqrt(array_sum(array_map(array($this, 'sd_square'), $array, array_fill(0, count($array), (array_sum($array) / count($array))))) / (count($array) - 1));
     }
 
     /**
      * Docimology
-     * To get the number of answers with the 'correct' status
+     * To get the number of answers with the 'correct' status.
      *
-     * @access private
      *
-     * @param integer $exerciseId
-     * @param doctrine collection $eqs questions linked with the exercise
+     * @param int                 $exerciseId
+     * @param doctrine collection $eqs        questions linked with the exercise
      *
      * @return array
      */
@@ -278,7 +265,7 @@ class Docimology {
         $responses = $em->getRepository('UJMExoBundle:Response')
                         ->getExerciseInterResponsesWithCount($exerciseId, $interaction->getId());
         $typeInter = $interaction->getType();
-        $interSer  = $this->container->get('ujm.exo_' . $typeInter);
+        $interSer = $this->container->get('ujm.exo_'.$typeInter);
         $interX = $interSer->getInteractionX($interaction->getId());
         $scoreMax = $interSer->maxScore($interX);
         $responsesTab = $this->responseStatus($responses, $scoreMax);
@@ -288,9 +275,8 @@ class Docimology {
 
     /**
      * Docimology
-     * To get array of marks for an exercise
+     * To get array of marks for an exercise.
      *
-     * @access private
      *
      * @param UJM\ExoBundle\Entity\Exercise $exercise
      *
@@ -308,7 +294,7 @@ class Docimology {
             if ($exercise->getNbQuestion() > 0) {
                 $exoScoreMax = $this->container->get('ujm.exo_paper')->getPaperTotalScore($mark['paper']);
             }
-            $scoreU = round(($mark["noteExo"] / $exoScoreMax) * 20, 2);
+            $scoreU = round(($mark['noteExo'] / $exoScoreMax) * 20, 2);
 
             $score = $paperSer->roundUpDown($scoreU);
 
@@ -325,12 +311,9 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param integer $exerciseId
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param UJM\ExoBundle\Entity\Paper $papers papers linked with the exercise
+     * @param int                        $exerciseId
+     * @param doctrine collection        $eqs        questions linked with the exercise
+     * @param UJM\ExoBundle\Entity\Paper $papers     papers linked with the exercise
      *
      * @return float[][] Array of each question's score
      */
@@ -355,10 +338,7 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param integer $exerciseId
+     * @param int $exerciseId
      *
      * @return float[] Array of score for an exercise
      */
@@ -369,16 +349,13 @@ class Docimology {
         $tabScoreExo = array();
 
         foreach ($marks as $mark) {
-            $tabScoreExo[] = $mark["noteExo"];
+            $tabScoreExo[] = $mark['noteExo'];
         }
 
         return $tabScoreExo;
     }
 
     /**
-     *
-     * @access private
-     *
      * @param float[] $tabScoreExo
      *
      * @return float score average for an exercise
@@ -397,12 +374,9 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param float[] $tabScoreExo
-     * @param integer $nbPapers
+     * @param doctrine collection $eqs         questions linked with the exercise
+     * @param float[]             $tabScoreExo
+     * @param int                 $nbPapers
      *
      * @return float[] Array of average of each question's score
      */
@@ -423,14 +397,11 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param float[][] $tabScoreQ Array of each question's score
-     * @param float[] $tabScoreAverageQ Array of average of each question's score
-     * @param float[] $tabScoreExo Array of score for an exercise
-     * @param float $scoreAverageExo score average for an exercise
+     * @param doctrine collection $eqs              questions linked with the exercise
+     * @param float[][]           $tabScoreQ        Array of each question's score
+     * @param float[]             $tabScoreAverageQ Array of average of each question's score
+     * @param float[]             $tabScoreExo      Array of score for an exercise
+     * @param float               $scoreAverageExo  score average for an exercise
      *
      * @return float[][] Array of (x-Mx)(y-My) by questions
      */
@@ -442,7 +413,7 @@ class Docimology {
             $allScoreQ = $tabScoreQ[$eq->getQuestion()->getId()];
             foreach ($allScoreQ as $sq) {
                 $productMarginMark[$eq->getQuestion()->getId()][] = ($sq - $tabScoreAverageQ[$eq->getQuestion()->getId()]) * ($tabScoreExo[$i] - $scoreAverageExo);
-                $i++;
+                ++$i;
             }
         }
 
@@ -450,13 +421,10 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param float[][] Array of (x-Mx)(y-My) by questions  $productMarginMark
-     * @param float[] $tabScoreExo Array of score for an exercise
-     * @param float[][] $tabScoreQ Array of each question's score
+     * @param doctrine collection                          $eqs               questions linked with the exercise
+     * @param float[][] Array of (x-Mx)(y-My) by questions $productMarginMark
+     * @param float[]                                      $tabScoreExo       Array of score for an exercise
+     * @param float[][]                                    $tabScoreQ         Array of each question's score
      *
      * @return float[] array of coefficient of discrimination for each questions
      */
@@ -486,9 +454,6 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
      * @param doctrine collection $eqs questions linked with the exercise
      *
      * @return String[] array of title of each question of an exercise
@@ -504,11 +469,8 @@ class Docimology {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param doctrine collection $eqs questions linked with the exercise
-     * @param integer $exerciseId
+     * @param doctrine collection $eqs        questions linked with the exercise
+     * @param int                 $exerciseId
      *
      * @return mixed[] array correcte response for each questions for an exercise
      */
@@ -518,10 +480,8 @@ class Docimology {
         foreach ($eqs as $eq) {
             $responsesTab = $this->getCorrectAnswer($exerciseId, $eq);
             $questionsResponsesTab[$eq->getQuestion()->getId()] = $responsesTab;
-
         }
 
         return $questionsResponsesTab;
     }
-
 }

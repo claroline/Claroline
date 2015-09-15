@@ -1,24 +1,22 @@
 <?php
 
 /**
- *
- * Services for the qcm
+ * Services for the qcm.
  */
 namespace UJM\ExoBundle\Services\classes\Interactions;
 
-class Qcm extends Interaction {
-
+class Qcm extends Interaction
+{
     /**
-     * implement the abstract method
-     * To process the user's response for a paper(or a test)
-     *
-     * @access public
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param integer $paperID id Paper or 0 if it's just a question test and not a paper
-     *
-     * @return mixed[]
-     */
+      * implement the abstract method
+      * To process the user's response for a paper(or a test).
+      *
+      *
+      * @param \Symfony\Component\HttpFoundation\Request $request
+      * @param int $paperID id Paper or 0 if it's just a question test and not a paper
+      *
+      * @return mixed[]
+      */
      public function response(\Symfony\Component\HttpFoundation\Request $request, $paperID = 0)
      {
          $interactionQCMID = $request->request->get('interactionQCMToValidated');
@@ -37,53 +35,49 @@ class Qcm extends Interaction {
          $score = $this->mark($interQCM, $response, $allChoices, $penalty);
 
          $res = array(
-             'score'    => $score,
-             'penalty'  => $penalty,
+             'score' => $score,
+             'penalty' => $penalty,
              'interQCM' => $interQCM,
-             'response' => $responseID
+             'response' => $responseID,
          );
 
          return $res;
-
      }
 
      /**
-     * implement the abstract method
-     * To calculate the score for a QCM
-     *
-     * @access public
-     *
-     * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
-     * @param array[integer] $response array of id Choice selected
-     * @param array[UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
-     * @param float $penalty penalty if the user showed hints
-     *
-     * @return string userScore/scoreMax
-     */
+      * implement the abstract method
+      * To calculate the score for a QCM.
+      *
+      *
+      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
+      * @param array[integer] $response array of id Choice selected
+      * @param array[UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
+      * @param float $penalty penalty if the user showed hints
+      *
+      * @return string userScore/scoreMax
+      */
      public function mark(
              \UJM\ExoBundle\Entity\InteractionQCM $interQCM = null,
              array $response = null,
              $allChoices = null,
              $penalty = null
-     )
-     {
-        $score = 0;
-        $scoreMax = $this->maxScore($interQCM);
+     ) {
+         $score = 0;
+         $scoreMax = $this->maxScore($interQCM);
 
-        if (!$interQCM->getWeightResponse()) {
-            $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty) . '/' . $scoreMax;
-        } else {
-            $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax) . '/' . $scoreMax;
-        }
+         if (!$interQCM->getWeightResponse()) {
+             $score = $this->markGlobal($allChoices, $response, $interQCM, $penalty).'/'.$scoreMax;
+         } else {
+             $score = $this->markWeightResponse($allChoices, $response, $penalty, $scoreMax).'/'.$scoreMax;
+         }
 
-        return $score;
+         return $score;
      }
 
      /**
       * implement the abstract method
-      * Get score max possible for a QCM
+      * Get score max possible for a QCM.
       *
-      * @access public
       *
       * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
       *
@@ -107,13 +101,12 @@ class Qcm extends Interaction {
      }
 
      /**
-     * implement the abstract method
-     *
-     * @access public
-     * @param Integer $interId id of interaction
-     *
-     * @return \UJM\ExoBundle\Entity\InteractionQCM
-     */
+      * implement the abstract method.
+      *
+      * @param Integer $interId id of interaction
+      *
+      * @return \UJM\ExoBundle\Entity\InteractionQCM
+      */
      public function getInteractionX($interId)
      {
          $em = $this->doctrine->getManager();
@@ -124,11 +117,10 @@ class Qcm extends Interaction {
      }
 
      /**
-      * implement the abstract method
+      * implement the abstract method.
       *
       * call getAlreadyResponded and prepare the interaction to displayed if necessary
       *
-      * @access public
       * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
       * @param Symfony\Component\HttpFoundation\Session\SessionInterface $session
       * @param \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...) $interactionX
@@ -149,9 +141,8 @@ class Qcm extends Interaction {
      }
 
      /**
-      * Get the types of QCM, Multiple response, unique response
+      * Get the types of QCM, Multiple response, unique response.
       *
-      * @access public
       *
       * @return array
       */
@@ -171,13 +162,11 @@ class Qcm extends Interaction {
      }
 
      /**
-      * Get response in array
+      * Get response in array.
       *
-      * @access private
       *
       * @param array[integer] or int $response
-      * @param integer $qcmCode type of qcm (multiple or simple)
-      *
+      * @param int $qcmCode type of qcm (multiple or simple)
       *
       * @return integer[]
       */
@@ -197,9 +186,8 @@ class Qcm extends Interaction {
      }
 
      /**
-      * Get response in String
+      * Get response in String.
       *
-      * @access private
       *
       * @param array[integer] or int $response
       *
@@ -216,13 +204,11 @@ class Qcm extends Interaction {
          }
 
          return $responseID;
-
      }
 
      /**
-      * Calculate the score with weightResponse
+      * Calculate the score with weightResponse.
       *
-      * @access private
       *
       * @param array[UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
       * @param array[integer] $response array of id Choice selected
@@ -257,9 +243,8 @@ class Qcm extends Interaction {
      }
 
      /**
-      * Calculate the score with global mark
+      * Calculate the score with global mark.
       *
-      * @access private
       *
       * @param array[\UJM\ExoBundle\Entity\Choice] $allChoices choices linked at the QCM
       * @param array[integer] $response array of id Choice selected
@@ -292,5 +277,4 @@ class Qcm extends Interaction {
 
          return $score;
      }
-
 }

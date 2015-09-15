@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\TypeMatching
+ * UJM\ExoBundle\Entity\TypeMatching.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_type_matching")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TypeMatching
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,23 +22,23 @@ class TypeMatching
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
     /**
-     * @var integer $code
+     * @var int
      *
      * @ORM\Column(unique=true, name="code", type="integer")
      */
     private $code;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -46,7 +46,7 @@ class TypeMatching
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -56,7 +56,7 @@ class TypeMatching
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -66,9 +66,9 @@ class TypeMatching
     }
 
     /**
-     * Set code
+     * Set code.
      *
-     * @param integer $code
+     * @param int $code
      */
     public function setCode($code)
     {
@@ -76,9 +76,9 @@ class TypeMatching
     }
 
     /**
-     * Get code
+     * Get code.
      *
-     * @return integer
+     * @return int
      */
     public function getCode()
     {
