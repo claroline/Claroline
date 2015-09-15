@@ -48,10 +48,11 @@
         }
     </style>
     <div class="container">
+        {# InnovaERV : affichage enlevé car affiché en double
         <h3>
-            {# InnovaERV : affichage enlevé car affiché en double
-            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}  #}
+            {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
         </h3>
+        #}
 
         {{ macros.flashBox() }}
 
@@ -65,11 +66,15 @@
         {# affichage : INSTRUCTIONS/CONSIGNES #}
         {# innovaERV : JJQ veut que les consignes s'affichent #}
         {# seulement si on est étudiant, pas enseignant #}
+        {# Changement septembre 2015 : on affiche la consigne mais dans un accordéon différent suivant le rôle #}
         {% if not adminInnova %}
             {% if dropzone.instruction != null %}
-                {#{% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}#}
-                    {{ dropzone.instruction|raw }}
-                <br/>
+                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
+            {% endif %}
+        {% else %}
+            {# Bloc "Rappel des instructions ..." #}
+            {% if dropzone.instruction != null %}
+                {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacher.html.twig' %}
             {% endif %}
         {% endif %}
 
