@@ -14,6 +14,8 @@ var PathBaseCtrl = function PathBaseCtrl($window, $route, $routeParams, PathServ
 
     this.currentStep = $routeParams;
 
+    this.summaryState = this.pathService.getSummaryState();
+
     // Force reload of the route (as ng-view is deeper in the directive tree, route resolution is deferred and it causes issues)
     $route.reload();
 
@@ -36,3 +38,16 @@ PathBaseCtrl.prototype.path = {};
  * Current step ID (used to generate edit and preview routes)
  */
 PathBaseCtrl.prototype.currentStep = {};
+
+/**
+ * Current state of the summary
+ * @type {object}
+ */
+PathBaseCtrl.prototype.summaryState = {};
+
+/**
+ * Allow toggle Summary
+ */
+PathBaseCtrl.prototype.toggleSummary = function toggleSummary() {
+    this.pathService.toggleSummaryState();
+};

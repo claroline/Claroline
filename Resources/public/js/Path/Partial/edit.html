@@ -13,6 +13,14 @@
 
                     <nav class="navbar navbar-default navbar-static-top" role="navigation">
                         <ul class="nav navbar-nav navbar-left">
+                            <!-- Path summary -->
+                            <li data-ng-class="{ 'active': pathEditCtrl.summaryState.opened }">
+                                <a href="" data-ng-click="pathEditCtrl.toggleSummary()" data-placement="top" data-toggle="tooltip" data-original-title="{{ 'toggle_summary'|trans:{}:'path_wizards' }}">
+                                    <span class="fa fa-sitemap"></span>
+                                    <span class="sr-only">{{ 'toggle_summary'|trans:{}:'path_wizards' }}</span>
+                                </a>
+                            </li>
+
                             <!-- Undo from history button -->
                             <li data-ng-class="{ 'disabled': pathEditCtrl.historyDisabled.undo }">
                                 <a href="" data-ng-click="pathEditCtrl.undo()" data-placement="bottom" data-toggle="tooltip" data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}">
