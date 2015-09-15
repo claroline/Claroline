@@ -93,9 +93,6 @@
              * For that purpose we use a shared service
              */
             this.updateQuestionChoices = function () {
-                console.log(this.answer);
-                console.log(this.question);
-                console.log(this.penalty);
                 CommonService.setCurrentQuestionAndAnswer(this.answer, this.question, this.penalty);
             };
         }

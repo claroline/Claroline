@@ -65,32 +65,27 @@
 
             this.setNbAttempts = function (nb) {
                 this.nbAttempts = nb;
-                //return CommonService.setNbAttempts(nb);
             };
 
             this.getNbAttempts = function () {
                 return this.nbAttempts;
-                //return CommonService.getNbAttempts();
             };
             
             /**
              * Validate the current step after confirm
-             * If next step get it
+             * If next step get it (also save student progression)
+             * Else terminate sequence (also save student paper)
              */
             this.validateStep = function () {
                 var data = CommonService.getStudentData();
                 console.log('student data are below');
                 console.log(data);
-                var stepResult = {
-                    step : this.currentStep,
-                    answers: this.data
-                };
                 // save step results TODO save it in db !!!!
                 // also save the current progression ?
-                this.studentResults.push(stepResult);
+                this.studentResults.push(data);
                 // go to next step
-                var currentStepIndex = this.sequence.steps.indexOf(this.currentStep);
-                var length = this.sequence.steps.length;
+                var currentStepIndex = this.steps.indexOf(this.currentStep);
+                var length = this.steps.length;
                 var newIndex = currentStepIndex + 1;
                 if(newIndex < length){
                     this.setCurrentStep(newIndex);
@@ -99,12 +94,11 @@
                 else{
                     console.log('you reached the end of the exercise you will be redirected to summary page');
                     this.isFinished = true;
-               
                     // TODO save the results in db
                     // save the hints used (table ujm_link_hint_paper) -> really need this ?
                     // save the paper (table ujm_paper) (and the question order for the paper...)
                     // save answers (table ujm_response)
-                    // redirect user to correction summary page
+                    // show correction summary page
                 }
                 
             };
