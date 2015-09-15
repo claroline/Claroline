@@ -1,3 +1,4 @@
+{# InnovaERV : "Espaces partagés" puis "Afficher"  #}
 {% extends "InnovaCollecticielBundle:Dropzone:edit.html.twig" %}
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
@@ -67,16 +68,7 @@
         {# innovaERV : JJQ veut que les consignes s'affichent #}
         {# seulement si on est étudiant, pas enseignant #}
         {# Changement septembre 2015 : on affiche la consigne mais dans un accordéon différent suivant le rôle #}
-        {% if not adminInnova %}
-            {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %}
-            {% endif %}
-        {% else %}
-            {# Bloc "Rappel des instructions ..." #}
-            {% if dropzone.instruction != null %}
-                {% include 'InnovaCollecticielBundle:Dropzone:recallInstructionTeacher.html.twig' %}
-            {% endif %}
-        {% endif %}
+        {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
 
         {# DOCUMENTS ALREADY ADDED #}
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
