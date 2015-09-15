@@ -1,3 +1,4 @@
+{# InnovaERV : Liste des commentaires et saisie des commentaires  #}
 {% extends "InnovaCollecticielBundle::layout.html.twig" %}
 
 {% form_theme form "InnovaCollecticielBundle::form_theme_bootstrap3.html.twig" %}
@@ -91,11 +92,7 @@
 {#           <br/> #}
 
             {# Bloc "Rappel des instructions ..." #}
-            {% if dropzone.instruction != null %}
-            {#    {% include 'InnovaCollecticielBundle:Dropzone:recallInstruction.html.twig' %} #}
-                {{ dropzone.instruction|raw }}
-                <br/>
-            {% endif %}
+            {% include 'InnovaCollecticielBundle:Dropzone:callInstruction.html.twig' %}
 
             {# Bloc "Instructions aux correcteurs ..." #}
             {% if dropzone.correctionInstruction|default
