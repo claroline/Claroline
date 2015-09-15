@@ -232,8 +232,6 @@ class QuestionRepository extends EntityRepository
     /**
      * Get user's Questions
      *
-     * @access public
-     *
      * @param integer $userId id User
      *
      * Return array[Question]
@@ -250,10 +248,8 @@ class QuestionRepository extends EntityRepository
     /**
      * Allow to know if the User is the owner of this Question
      *
-     * @access public
-     *
-     * @param integer $user id User
-     * @param integer $question id Question
+     * @param int $user
+     * @param int $question
      *
      * Return array[Question]
      */

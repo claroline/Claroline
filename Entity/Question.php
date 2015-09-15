@@ -111,7 +111,7 @@ class Question
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

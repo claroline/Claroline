@@ -41,12 +41,12 @@ class InteractionMatching extends AbstractInteraction
     private $typeMatching;
 
     /**
-     * Constructs a new instance of label and proposal
+     * Constructs a new instance of label and proposal.
      */
     public function __construct()
     {
-        $this->labels   = new ArrayCollection;
-        $this->proposals = new ArrayCollection;
+        $this->labels = new ArrayCollection();
+        $this->proposals = new ArrayCollection();
     }
 
     /**
@@ -120,18 +120,18 @@ class InteractionMatching extends AbstractInteraction
         $this->sortProposals();
         $i = 0;
         $tabShuffle = array();
-        $tabFixed   = array();
-        $proposals = new \Doctrine\Common\Collections\ArrayCollection;
+        $tabFixed = array();
+        $proposals = new \Doctrine\Common\Collections\ArrayCollection();
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $this->proposals[$i]->getPositionForce() === false ) {
+        while ($i < $proposalCount) {
+            if ($this->proposals[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         shuffle($tabShuffle);
@@ -139,8 +139,8 @@ class InteractionMatching extends AbstractInteraction
         $i = 0;
         $proposalCount = count($this->proposals);
 
-        while ( $i < $proposalCount ) {
-            if ( $tabFixed[$i] != -1 ) {
+        while ($i < $proposalCount) {
+            if ($tabFixed[$i] != -1) {
                 $proposals [] = $this->proposals[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -148,7 +148,7 @@ class InteractionMatching extends AbstractInteraction
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
         $this->proposals = $proposals;
     }
@@ -171,7 +171,7 @@ class InteractionMatching extends AbstractInteraction
         $this->proposals = $proposals;
     }
 
-    public function shuffleLabels ()
+    public function shuffleLabels()
     {
         $this->sortLabels();
 
@@ -181,14 +181,14 @@ class InteractionMatching extends AbstractInteraction
         $labels = new ArrayCollection;
         $labelCount = count($this->labels);
 
-        while ( $i < $labelCount ) {
-            if ( $this->labels[$i]->getPositionForce() === false ) {
+        while ($i < $labelCount) {
+            if ($this->labels[$i]->getPositionForce() === false) {
                 $tabShuffle[$i] = $i;
                 $tabFixed[] = -1;
             } else {
                 $tabFixed[] = $i;
             }
-            $i++;
+            ++$i;
         }
 
         $i = 0;
@@ -196,8 +196,8 @@ class InteractionMatching extends AbstractInteraction
 
         shuffle($tabShuffle);
 
-        while ( $i < $labelCount ) {
-          if ($tabFixed[$i] != -1) {
+        while ($i < $labelCount) {
+            if ($tabFixed[$i] != -1) {
                 $labels [] = $this->labels[$i];
             } else {
                 $index = $tabShuffle[0];
@@ -205,18 +205,18 @@ class InteractionMatching extends AbstractInteraction
                 unset($tabShuffle[0]);
                 $tabShuffle = array_merge($tabShuffle);
             }
-            $i++;
+            ++$i;
         }
 
         $this->labels = $labels;
     }
 
-    public function sortLabels ()
+    public function sortLabels()
     {
         $tab = [];
         $labels = new ArrayCollection;
 
-        foreach ($this->labels as $label ) {
+        foreach ($this->labels as $label) {
             $tab[] = $label->getOrdre();
         }
 

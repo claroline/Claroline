@@ -8,24 +8,26 @@ use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Sequence\Step;
 
 /**
- * Description of SequenceManager
- *
+ * Description of SequenceManager.
  */
-class SequenceManager {
-
+class SequenceManager
+{
     protected $em;
     protected $translator;
 
-    public function __construct(EntityManager $em, TranslatorInterface $translator) {
+    public function __construct(EntityManager $em, TranslatorInterface $translator)
+    {
         $this->em = $em;
         $this->translator = $translator;
     }
 
-    public function getRepository() {
+    public function getRepository()
+    {
         return $this->em->getRepository('UJMExoBundle:Sequence\Sequence');
     }
 
-    public function createFirstAndLastStep(Sequence $s) {
+    public function createFirstAndLastStep(Sequence $s)
+    {
 
         // add first page
         $first = new Step();
@@ -47,13 +49,15 @@ class SequenceManager {
 
         $this->em->persist($s);
         $this->em->flush();
+
         return $s;
     }
 
-    public function update(Sequence $s) {
+    public function update(Sequence $s)
+    {
         $this->em->persist($s);
         $this->em->flush();
+
         return $s;
     }
-
 }

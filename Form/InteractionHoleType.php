@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\User;
 
 class InteractionHoleType extends AbstractType
 {
-
     private $user;
     private $catID;
 
@@ -27,18 +26,18 @@ class InteractionHoleType extends AbstractType
                     $this->catID
                     )
             )
-            ->add('html','tinymce', array(
+            ->add('html', 'tinymce', array(
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'hole',
                     'attr' => array('data-before-unload' => 'off'),
-                    'required' => false
+                    'required' => false,
                 )
             )
-            ->add('holes', 'collection', array('type' => new HoleType,
+            ->add('holes', 'collection', array('type' => new HoleType(),
                                                'prototype' => true,
                                                //'by_reference' => false,
                                                'allow_add' => true,
-                                               'allow_delete' => true));
+                                               'allow_delete' => true, ));
             //->add('interaction')
         ;
     }
@@ -49,7 +48,7 @@ class InteractionHoleType extends AbstractType
             array(
                 'data_class' => 'UJM\ExoBundle\Entity\InteractionHole',
                 'cascade_validation' => true,
-                'translation_domain' => 'ujm_exo'
+                'translation_domain' => 'ujm_exo',
             )
         );
     }

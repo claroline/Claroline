@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Validator\Constraints;
 
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-
 use Symfony\Component\HttpFoundation\Request;
 
 class isValidQCMGlobalMarkValidator extends ConstraintValidator

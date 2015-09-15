@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InteractionQCM extends AbstractInteraction
 {
-     /**
+    /**
      * @ORM\Column(type="boolean")
      */
     private $shuffle = false;
@@ -26,7 +26,7 @@ class InteractionQCM extends AbstractInteraction
      */
     private $scoreFalseResponse;
 
-     /**
+    /**
      * @ORM\Column(name="weight_response", type="boolean")
      */
     private $weightResponse = false;
@@ -47,7 +47,7 @@ class InteractionQCM extends AbstractInteraction
     private $typeQCM;
 
     /**
-     * Constructs a new instance of choices
+     * Constructs a new instance of choices.
      */
     public function __construct()
     {
@@ -168,7 +168,7 @@ class InteractionQCM extends AbstractInteraction
                 $tabFixed[] = $i;
             }
 
-            $i++;
+            ++$i;
         }
 
         shuffle($tabShuffle);
@@ -186,7 +186,7 @@ class InteractionQCM extends AbstractInteraction
                 $tabShuffle = array_merge($tabShuffle);
             }
 
-            $i++;
+            ++$i;
         }
 
         $this->choices = $choices;

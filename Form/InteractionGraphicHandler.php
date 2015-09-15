@@ -6,24 +6,19 @@ use UJM\ExoBundle\Entity\Coords;
 
 class InteractionGraphicHandler extends QuestionHandler
 {
-
     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
-     * Return boolean
+     * Implements the abstract method.
      */
     public function processAdd()
     {
         if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
-            $data=$this->form->getData();
+            $data = $this->form->getData();
             //Uses the default category if no category selected
             $this->checkCategory($data);
             //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if($this->validateNbClone() === FALSE) {
+            if ($this->validateNbClone() === false) {
                 return 'infoDuplicateQuestion';
             }
 
@@ -38,9 +33,8 @@ class InteractionGraphicHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
      */
@@ -50,7 +44,7 @@ class InteractionGraphicHandler extends QuestionHandler
         $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
         $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
 
-        if ($this->request != NULL) {
+        if ($this->request != null) {
             $width = $this->request->get('imagewidth'); // Get the width of the image
             $height = $this->request->get('imageheight'); // Get the height of the image
 
@@ -65,18 +59,16 @@ class InteractionGraphicHandler extends QuestionHandler
 
             $allCoords = $this->persitNewCoords($coord, $interGraph, $lengthCoord);
         } else {
-
             $allCoords = $interGraph->getCoords();
 
             $lengthCoord = count($allCoords);
-
         }
 
         $this->em->persist($interGraph);
         $this->em->persist($interGraph->getInteraction()->getQuestion());
         $this->em->persist($interGraph->getInteraction());
 
-        for ($i = 0; $i < $lengthCoord; $i++) {
+        for ($i = 0; $i < $lengthCoord; ++$i) {
             $this->em->persist($allCoords[$i]);
         }
 
@@ -90,9 +82,8 @@ class InteractionGraphicHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
      *
@@ -106,10 +97,10 @@ class InteractionGraphicHandler extends QuestionHandler
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalHints);
 
                 return true;
@@ -120,10 +111,7 @@ class InteractionGraphicHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -153,46 +141,43 @@ class InteractionGraphicHandler extends QuestionHandler
             $this->em->remove($ctd);
         }
 
-        for ($i = 0; $i < $lengthCoord; $i++) {
+        for ($i = 0; $i < $lengthCoord; ++$i) {
             $this->em->persist($allCoords[$i]);
         }
 
         $this->em->persist($interGraphic);
         $this->em->flush();
-
     }
 
     /**
      * Persist coordonates of the answer zones into the database.
      *
-     * @access private
      *
-     * @param array $coord coords of good responses
+     * @param array                                    $coord       coords of good responses
      * @param \UJM\ExoBundle\Entity\InteractionGraphic $interGraph
-     * @param integer $lengthCoord number of good coords
+     * @param int                                      $lengthCoord number of good coords
      *
      * @return array
      */
     private function persitNewCoords($coord, $interGraph, $lengthCoord)
     {
         $result = array();
-        for ($i = 0; $i < $lengthCoord; $i++) {
-
+        for ($i = 0; $i < $lengthCoord; ++$i) {
             $inter = preg_split('[§§]', $coord[$i]); // Divide the src of the answer zone and the other informations
 
-            $before = array("|-|","~~","^^");
-            $after = array(",",",",",");
+            $before = array('|-|','~~','^^');
+            $after = array(',',',',',');
 
             $data = str_replace($before, $after, $inter[1]); // replace separation punctuation of the informations ...
-            
-            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}, ${'feedback'.$i}) = explode(",", $data); //... in order to split informations
-  
+
+            list(${'value'.$i}, ${'point'.$i}, ${'size'.$i}, ${'feedback'.$i}) = explode(',', $data); //... in order to split informations
+
             ${'point'.$i} = str_replace('/', '.', ${'point'.$i}); // set the score to a correct value
 
             // And persist it into the Database
             ${'url'.$i} = $inter[0];
 
-            ${'value'.$i} = str_replace("__", ",", ${'value'.$i});
+            ${'value'.$i} = str_replace('__', ',', ${'value'.$i});
             ${'url'.$i} = substr(${'url'.$i}, strrpos(${'url'.$i}, '/bundles'));
 
             ${'shape'.$i} = $this->getShape(${'url'.$i});
@@ -215,9 +200,8 @@ class InteractionGraphicHandler extends QuestionHandler
     }
 
     /**
-     * Get the shape of the answer zone
+     * Get the shape of the answer zone.
      *
-     * @access private
      *
      * @param String route of response zone
      *
@@ -229,17 +213,16 @@ class InteractionGraphicHandler extends QuestionHandler
         $temp = strrpos($url, 'graphic/') + 8;
         $chain = substr($url, $temp, 1);
 
-        if ($chain == "s") {
-            return "square";
-        } else if ($chain == "c") {
-            return "circle";
+        if ($chain == 's') {
+            return 'square';
+        } elseif ($chain == 'c') {
+            return 'circle';
         }
     }
 
     /**
-     * Get the color of the answer zone
+     * Get the color of the answer zone.
      *
-     * @access private
      *
      * @param String route of response zone
      *
@@ -252,26 +235,26 @@ class InteractionGraphicHandler extends QuestionHandler
         $chain = substr($url, $temp, 1);
 
         switch ($chain) {
-            case "w" :
-                return "white";
-            case "g" :
-                return "green";
-            case "p" :
-                return "purple";
-            case "b" :
-                return "blue";
-            case "r" :
-                return "red";
-            case "o" :
-                return "orange";
-            case "y" :
-                return "yellow";
-            case "k" :
-                return "black";
-            case "n" :
-                return "brown";
+            case 'w' :
+                return 'white';
+            case 'g' :
+                return 'green';
+            case 'p' :
+                return 'purple';
+            case 'b' :
+                return 'blue';
+            case 'r' :
+                return 'red';
+            case 'o' :
+                return 'orange';
+            case 'y' :
+                return 'yellow';
+            case 'k' :
+                return 'black';
+            case 'n' :
+                return 'brown';
             default :
-                return "white";
+                return 'white';
         }
     }
 }

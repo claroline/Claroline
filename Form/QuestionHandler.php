@@ -17,73 +17,62 @@ abstract class QuestionHandler
     protected $exoServ;
     protected $user;
     protected $exercise;
-    protected $isClone = FALSE;
+    protected $isClone = false;
     protected $translator;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
-     * @param \Symfony\Component\Form\Form $form for an Interaction
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param Doctrine EntityManager $em
+     * @param \Symfony\Component\Form\Form                     $form       for an Interaction
+     * @param \Symfony\Component\HttpFoundation\Request        $request
+     * @param Doctrine EntityManager                           $em
      * @param \UJM\ExoBundle\Services\classes\exerciseServices $exoServ
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param UJM\ExoBundle\Entity\Exercise $exercise instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
-     * @param Translation $translator
-     *
+     * @param \Claroline\CoreBundle\Entity\User                $user
+     * @param UJM\ExoBundle\Entity\Exercise                    $exercise   instance of Exercise if the Interaction is created or modified since an exercise if since the bank $exercise=-1
+     * @param Translation                                      $translator
      */
-    public function __construct(Form $form = NULL, Request $request = NULL, EntityManager $em, $exoServ, User $user, $exercise=-1, TranslatorInterface $translator=NULL)
+    public function __construct(Form $form = null, Request $request = null, EntityManager $em, $exoServ, User $user, $exercise = -1, TranslatorInterface $translator = null)
     {
-        $this->form     = $form;
-        $this->request  = $request;
-        $this->em       = $em;
-        $this->exoServ  = $exoServ;
-        $this->user     = $user;
+        $this->form = $form;
+        $this->request = $request;
+        $this->em = $em;
+        $this->exoServ = $exoServ;
+        $this->user = $user;
         $this->exercise = $exercise;
         $this->translator = $translator;
     }
 
     /**
-     * abstract method to valid the form of an Interaction and call the method to create an Interaction
-     *
-     * @access public
+     * abstract method to valid the form of an Interaction and call the method to create an Interaction.
      */
     abstract public function processAdd();
 
     /**
-     * abstract method to create an Interaction
+     * abstract method to create an Interaction.
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
-     *
-     * @access protected
      */
     abstract protected function onSuccessAdd($interaction);
 
     /**
-     * abstract method to valid the form of an Interaction and call the method to edit an Interaction
+     * abstract method to valid the form of an Interaction and call the method to edit an Interaction.
      *
-     * @access public
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $interaction
      */
     abstract public function processUpdate($interaction);
 
     /**
-     * abstract method to edit an Interaction
-     *
-     * @access protected
+     * abstract method to edit an Interaction.
      */
     abstract protected function onSuccessUpdate();
 
     /**
-     * To persit hints of an Interaction
+     * To persit hints of an Interaction.
      *
-     * @access protected
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
-     *
      */
     protected function persistHints($inter) {
         foreach ($inter->getQuestion()->getHints() as $hint) {
@@ -94,15 +83,14 @@ abstract class QuestionHandler
     }
 
     /**
-     * To modify hints of an Interaction
+     * To modify hints of an Interaction.
      *
-     * @access protected
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
-     * @param Collection of \UJM\ExoBundle\Entity\Hint $originalHints
-     *
+     * @param Collection of \UJM\ExoBundle\Entity\Hint                    $originalHints
      */
-    protected function modifyHints($inter, $originalHints) {
+    protected function modifyHints($inter, $originalHints)
+    {
 
         // filter $originalHints to contain hint no longer present
         foreach ($inter->getQuestion()->getHints() as $hint) {
@@ -130,7 +118,7 @@ abstract class QuestionHandler
         }
     }
     /**
-     * retrieve the first 50 characters of the issue if no title
+     * retrieve the first 50 characters of the issue if no title.
      */
     protected function checkTitle()
     {
@@ -144,138 +132,123 @@ abstract class QuestionHandler
         }
     }
     /**
-     * Check the category
+     * Check the category.
      */
     protected function checkCategory()
     {
         $data = $this->form->getData()->getQuestion();
         $default = $this->translator->trans('default', array(), 'ujm_exo');
-        $uid=$this->user->getId();
-        $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
+        $uid = $this->user->getId();
+        $ListeCategroy = $this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
 
-        $this->lockCategoryDefault($default,$ListeCategroy,$data);
+        $this->lockCategoryDefault($default, $ListeCategroy, $data);
 
-            if($data->getCategory()== null)
-            {
-                $this->categoryDefault($default,$ListeCategroy,$data);
-            }
-    }
-
-    /**
-     * Lock the category default
-     * @param string $default
-     * @param array $ListeCategroy
-     */
-    protected function lockCategoryDefault($default,$ListeCategroy)
-    {
-
-        foreach($ListeCategroy as $category)
-        {
-             if($category->getValue()== $default)
-             {
-                $category->setLocker('1');
-             }
+        if ($data->getCategory() == null) {
+            $this->categoryDefault($default, $ListeCategroy, $data);
         }
     }
 
     /**
-     * Creates or uses the default category
+     * Lock the category default.
+     *
+     * @param string $default
+     * @param array  $ListeCategroy
+     */
+    protected function lockCategoryDefault($default, $ListeCategroy)
+    {
+        foreach ($ListeCategroy as $category) {
+            if ($category->getValue() == $default) {
+                $category->setLocker('1');
+            }
+        }
+    }
+
+    /**
+     * Creates or uses the default category.
+     *
      * @param type $default
      * @param type $ListeCategroy
      * @param type $data
      */
-    protected function categoryDefault($default,$ListeCategroy,$data)
+    protected function categoryDefault($default, $ListeCategroy, $data)
     {
-        $checkCategory = False;
-        foreach($ListeCategroy as $category)
-                {
-                     if($category->getlocker()== '1')
-                     {
-                        $data->setCategory($category);
-                        $checkCategory = true;
-                     }
-                }
-                if($checkCategory==false)
-                {
-                    $newCategory= new Category();
-                    $newCategory->setValue($default);
-                    $newCategory->setLocker(1);
-                    $newCategory->setUser($this->user);
-                    $this->em->persist($newCategory);
-                    $this->em->flush();
-                    $data->setCategory($newCategory);
-                }
+        $checkCategory = false;
+        foreach ($ListeCategroy as $category) {
+            if ($category->getlocker() == '1') {
+                $data->setCategory($category);
+                $checkCategory = true;
+            }
+        }
+        if ($checkCategory == false) {
+            $newCategory = new Category();
+            $newCategory->setValue($default);
+            $newCategory->setLocker(1);
+            $newCategory->setUser($this->user);
+            $this->em->persist($newCategory);
+            $this->em->flush();
+            $data->setCategory($newCategory);
+        }
     }
     /**
-     * Add the Interaction in the exercise if created since an exercise
+     * Add the Interaction in the exercise if created since an exercise.
      *
-     * @access protected
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
-     *
      */
-    protected function addAnExercise($inter) {
-
+    protected function addAnExercise($inter)
+    {
         $this->exoServ->addQuestionInExercise($inter, $this->exercise);
     }
 
     /**
-     * Duplicate the Interaction during the creation
+     * Duplicate the Interaction during the creation.
      *
-     * @access protected
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
-     *
      */
-    protected function duplicateInter($inter) {
+    protected function duplicateInter($inter)
+    {
         $request = $this->request;
-        if ($this->isClone === FALSE && $request->request->get('nbq') > 0)
-        {
+        if ($this->isClone === false && $request->request->get('nbq') > 0) {
             $nbCop = 0;
             while ($nbCop < $request->request->get('nbq')) {
-                $nbCop ++;
+                ++$nbCop;
                 $this->singleDuplicateInter($inter);
             }
         }
     }
 
     /**
-     * To limit the number of the clone 10 max
-     *
-     * @access protected
-     *
-     * Return boolean
-     *
+     * To limit the number of the clone 10 max.
      */
-    protected function validateNbClone() {
-
-        $int =  $this->request->request->get('nbq');
+    protected function validateNbClone()
+    {
+        $int = $this->request->request->get('nbq');
         if (preg_match('/^[0-9]$/', $int)) {
-            if ($int>=0 && $int<= 10 ) {
-                return TRUE;
+            if ($int >= 0 && $int <= 10) {
+                return true;
             } else {
-                return FALSE;
+                return false;
             }
         } else {
-            return FALSE;
+            return false;
         }
     }
 
     /**
-     * Duplicate once
+     * Duplicate once.
      *
-     * @access protected
      *
      * @param object type of InteractionQCM or InteractionGraphic or .... $inter
-     *
      */
-    public function singleDuplicateInter($inter) {
+    public function singleDuplicateInter($inter)
+    {
         $copy = clone $inter;
         $title = $copy->getQuestion()->getTitle();
         $copy->getQuestion()
              ->setTitle($title.' #');
 
-        $this->isClone = TRUE;
+        $this->isClone = true;
         $this->onSuccessAdd($copy);
     }
 }

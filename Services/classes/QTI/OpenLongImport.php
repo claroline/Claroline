@@ -1,20 +1,17 @@
 <?php
 
 /**
- * To import a long open question
- *
+ * To import a long open question.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 class OpenLongImport extends OpenImport
 {
     /**
-     * overload the export method
+     * overload the export method.
      *
-     * @access public
      * @param qtiRepository $qtiRepos
-     * @param DOMElement $assessmentItem assessmentItem of the question to imported
+     * @param DOMElement    $assessmentItem assessmentItem of the question to imported
      *
      * @return UJM\ExoBundle\Entity\InteractionOpen
      */
@@ -28,16 +25,14 @@ class OpenLongImport extends OpenImport
 
     /**
      *
-     * @access protected
-     *
      */
     protected function getPromptChild()
     {
         $text = '';
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        $eti = $ib->getElementsByTagName("extendedTextInteraction")->item(0);
-        if ($eti->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $eti->getElementsByTagName("prompt")->item(0);
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
+        $eti = $ib->getElementsByTagName('extendedTextInteraction')->item(0);
+        if ($eti->getElementsByTagName('prompt')->item(0)) {
+            $prompt = $eti->getElementsByTagName('prompt')->item(0);
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
             $text = str_replace('</prompt>', '', $text);

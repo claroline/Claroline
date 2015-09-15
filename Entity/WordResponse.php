@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\WordResponse
+ * UJM\ExoBundle\Entity\WordResponse.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\WordResponseRepository")
  * @ORM\Table(name="ujm_word_response")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class WordResponse
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,21 +22,21 @@ class WordResponse
     private $id;
 
     /**
-     * @var string $response
+     * @var string
      *
      * @ORM\Column(name="response", type="string", length=255)
      */
     private $response;
 
     /**
-     * @var boolean $caseSensitive
+     * @var bool
      *
      * @ORM\Column(name="caseSensitive", type="boolean", nullable=true)
      */
     private $caseSensitive;
 
     /**
-     * @var float $score
+     * @var float
      *
      * @ORM\Column(name="score", type="float")
      */
@@ -53,18 +53,18 @@ class WordResponse
      * @ORM\JoinColumn(name="hole_id", referencedColumnName="id")
      */
     private $hole;
-    
-     /**
-     * @var text $feedback
+
+    /**
+     * @var text
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -72,7 +72,7 @@ class WordResponse
     }
 
     /**
-     * Set response
+     * Set response.
      *
      * @param string $response
      */
@@ -82,9 +82,9 @@ class WordResponse
     }
 
     /**
-     * Get caseSensitive
+     * Get caseSensitive.
      *
-     * @return boolean
+     * @return bool
      */
     public function getCaseSensitive()
     {
@@ -92,9 +92,9 @@ class WordResponse
     }
 
     /**
-     * Set caseSensitive
+     * Set caseSensitive.
      *
-     * @param boolean $caseSensitive
+     * @param bool $caseSensitive
      */
     public function setCaseSensitive($caseSensitive)
     {
@@ -102,7 +102,7 @@ class WordResponse
     }
 
     /**
-     * Get response
+     * Get response.
      *
      * @return string
      */
@@ -112,7 +112,7 @@ class WordResponse
     }
 
     /**
-     * Set score
+     * Set score.
      *
      * @param float $score
      */
@@ -122,7 +122,7 @@ class WordResponse
     }
 
     /**
-     * Get score
+     * Get score.
      *
      * @return float
      */
@@ -150,22 +150,24 @@ class WordResponse
     {
         $this->hole = $hole;
     }
-    
+
     /**
-     * get feedback
+     * get feedback.
+     *
      * @return string
      */
-    function getFeedback() {
+    public function getFeedback()
+    {
         return $this->feedback;
     }
 
     /**
-     * set feedback
+     * set feedback.
+     *
      * @param \UJM\ExoBundle\Entity\text $feedback
      */
-    function setFeedback($feedback) {
+    public function setFeedback($feedback)
+    {
         $this->feedback = $feedback;
     }
-
-
 }

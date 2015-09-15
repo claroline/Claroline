@@ -1,10 +1,8 @@
 <?php
 
 /**
- * To import a question with holes in QTI
- *
+ * To import a question with holes in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use UJM\ExoBundle\Entity\Hole;
@@ -19,11 +17,10 @@ class HoleImport extends QtiImport
     protected $tabWrOpt = array();
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      * @param qtiRepository $qtiRepos
-     * @param DOMElement $assessmentItem assessmentItem of the question to imported
+     * @param DOMElement    $assessmentItem assessmentItem of the question to imported
      *
      * @return UJM\ExoBundle\Entity\InteractionHole
      */
@@ -49,10 +46,7 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Create the InteractionHole object
-     *
-     * @access protected
-     *
+     * Create the InteractionHole object.
      */
     protected function createInteractionHole()
     {
@@ -67,10 +61,7 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Get property html
-     *
-     * @access protected
-     *
+     * Get property html.
      */
     protected function getHtml()
     {
@@ -81,7 +72,7 @@ class HoleImport extends QtiImport
         foreach ($matches[0] as $matche) {
             $tabMatche = explode('"', $matche);
             $responseIdentifier = $tabMatche[1];
-            $correctResponse    = $this->getCorrectResponse($responseIdentifier);
+            $correctResponse = $this->getCorrectResponse($responseIdentifier);
             if (substr($matche, 1, 20) == 'textEntryInteraction') {
                 $expectedLength = $tabMatche[3];
                 $text = str_replace('textEntryInteraction', 'input', $matche);
@@ -95,24 +86,24 @@ class HoleImport extends QtiImport
                 $text = str_replace('expectedLength="'.$expectedLength.'"', 'size="'.$expectedLength.'" type="text" value="'.$correctResponse.'"', $text);
                 $this->createHole($expectedLength, $responseIdentifier, false, $newId);
             } else {
-               $text = str_replace('inlineChoiceInteraction', 'select', $matche);
-               $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
-               $text = str_replace('inlineChoice', 'option', $text);
-               $regexOpt = '(<option identifier=.*?>)';
-               preg_match_all($regexOpt, $text, $matchesOpt);
-               foreach ($matchesOpt[0] as $matcheOpt) {
-                   $tabMatcheOpt = explode('"', $matcheOpt);
-                   $holeID       = $tabMatcheOpt[1];
-                   if ($correctResponse == $holeID) {
-                       $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="1"', $matcheOpt);
-                   } else {
-                       $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="0"', $matcheOpt);
-                   }
-                   $text = str_replace($matcheOpt, $opt, $text);
-               }
-               $this->createHole(15, $responseIdentifier, true, $newId);
+                $text = str_replace('inlineChoiceInteraction', 'select', $matche);
+                $text = str_replace('responseIdentifier="'.$responseIdentifier.'"', 'id="'.$newId.'" class="blank" name="blank_'.$newId.'"', $text);
+                $text = str_replace('inlineChoice', 'option', $text);
+                $regexOpt = '(<option identifier=.*?>)';
+                preg_match_all($regexOpt, $text, $matchesOpt);
+                foreach ($matchesOpt[0] as $matcheOpt) {
+                    $tabMatcheOpt = explode('"', $matcheOpt);
+                    $holeID = $tabMatcheOpt[1];
+                    if ($correctResponse == $holeID) {
+                        $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="1"', $matcheOpt);
+                    } else {
+                        $opt = preg_replace('(\s*identifier="'.$holeID.'")', ' holeCorrectResponse="0"', $matcheOpt);
+                    }
+                    $text = str_replace($matcheOpt, $opt, $text);
+                }
+                $this->createHole(15, $responseIdentifier, true, $newId);
             }
-            $newId++;
+            ++$newId;
             $this->textHtml = str_replace($matche, $text, $this->textHtml);
             $textHtmlClean = preg_replace('(<option holeCorrectResponse="0".*?</option>)', '', $this->textHtml);
             $textHtmlClean = str_replace(' holeCorrectResponse="1"', '', $textHtmlClean);
@@ -121,20 +112,18 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Get correctResponse
+     * Get correctResponse.
      *
-     * @access protected
      *
      * @param String $identifier identifier of hole
-     *
      */
     protected function getCorrectResponse($identifier)
     {
         $correctResponse = '';
-        foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
-            if ($rp->getAttribute("identifier") == $identifier) {
-                $correctResponse = $rp->getElementsByTagName("correctResponse")
-                                      ->item(0)->getElementsByTagName("value")
+        foreach ($this->assessmentItem->getElementsByTagName('responseDeclaration') as $rp) {
+            if ($rp->getAttribute('identifier') == $identifier) {
+                $correctResponse = $rp->getElementsByTagName('correctResponse')
+                                      ->item(0)->getElementsByTagName('value')
                                       ->item(0)->nodeValue;
             }
         }
@@ -143,10 +132,7 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Get property htmlWithoutValue
-     *
-     * @access protected
-     *
+     * Get property htmlWithoutValue.
      */
     protected function getHtmlWithoutValue()
     {
@@ -165,10 +151,7 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * addOptionValue : to add the id of wordreponse object as a value for the option element
-     *
-     * @access protected
-     *
+     * addOptionValue : to add the id of wordreponse object as a value for the option element.
      */
     protected function addOptionValue()
     {
@@ -190,7 +173,7 @@ class HoleImport extends QtiImport
                 $optVal->value = $wr->getId();
                 $opt->appendChild($optVal);
                 $newSelect = str_replace($option, $domOpt->saveHTML(), $newSelect);
-                $numOpt++;
+                ++$numOpt;
             }
             $htmlWithoutValue = str_replace($select, $newSelect,  $htmlWithoutValue);
         }
@@ -200,15 +183,13 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Create hole
+     * Create hole.
      *
-     * @access protected
      *
-     * @param Intger $size hole's size for the input
-     * @param String $qtiId id of hole in the qti file
-     * @param boolean $selector text or list
+     * @param Intger  $size     hole's size for the input
+     * @param String  $qtiId    id of hole in the qti file
+     * @param bool    $selector text or list
      * @param Integer $position position of hole in the text
-     *
      */
     protected function createHole($size, $qtiId, $selector, $position)
     {
@@ -223,23 +204,21 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Create wordResponse
+     * Create wordResponse.
      *
-     * @access protected
      *
-     * @param String $qtiId id of hole in the qti file
+     * @param String                    $qtiId id of hole in the qti file
      * @param UJM\ExoBundle\Entity\Hole $hole
-     *
      */
     protected function createWordResponse($qtiId, $hole)
     {
-        foreach($this->assessmentItem->getElementsByTagName("responseDeclaration") as $rp) {
-            if ($rp->getAttribute("identifier") == $qtiId) {
-                $mapping = $rp->getElementsByTagName("mapping")->item(0);
+        foreach ($this->assessmentItem->getElementsByTagName('responseDeclaration') as $rp) {
+            if ($rp->getAttribute('identifier') == $qtiId) {
+                $mapping = $rp->getElementsByTagName('mapping')->item(0);
                 if ($hole->getSelector() === false) {
                     $this->wordResponseForSimpleHole($mapping, $hole);
                 } else {
-                    $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+                    $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
                     $this->wordResponseForList($qtiId, $ib, $mapping, $hole);
                 }
             }
@@ -247,17 +226,15 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Create wordResponseForSimpleHole
+     * Create wordResponseForSimpleHole.
      *
-     * @access protected
      *
-     * @param DOMNodelist::item $mapping element mapping
+     * @param DOMNodelist::item         $mapping element mapping
      * @param UJM\ExoBundle\Entity\Hole $hole
-     *
      */
     protected function wordResponseForSimpleHole($mapping, $hole)
     {
-        foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+        foreach ($mapping->getElementsByTagName('mapEntry') as $mapEntry) {
             $keyWord = new WordResponse();
             $keyWord->setResponse($mapEntry->getAttribute('mapKey'));
             $keyWord->setScore($mapEntry->getAttribute('mappedValue'));
@@ -272,26 +249,24 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Create wordResponseForList
+     * Create wordResponseForList.
      *
-     * @access protected
      *
-     * @param String $qtiId id of hole in the qti file
-     * @param DOMNodelist::item $ib element itemBody
-     * @param DOMNodelist::item $mapping element mapping
+     * @param String                    $qtiId   id of hole in the qti file
+     * @param DOMNodelist::item         $ib      element itemBody
+     * @param DOMNodelist::item         $mapping element mapping
      * @param UJM\ExoBundle\Entity\Hole $hole
-     *
      */
     protected function wordResponseForList($qtiId, $ib, $mapping, $hole)
     {
-        foreach ($ib->getElementsByTagName("inlineChoiceInteraction") as $ici) {
+        foreach ($ib->getElementsByTagName('inlineChoiceInteraction') as $ici) {
             if ($ici->getAttribute('responseIdentifier') == $qtiId) {
                 foreach ($ici->getElementsByTagName('inlineChoice') as $ic) {
                     $keyWord = new WordResponse();
                     $score = 0;
                     $matchScore = false;
                     $keyWord->setResponse($ic->nodeValue);
-                    foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                    foreach ($mapping->getElementsByTagName('mapEntry') as $mapEntry) {
                         if ($mapEntry->getAttribute('mapKey') == $ic->getAttribute('identifier')) {
                             $score = $mapEntry->getAttribute('mappedValue');
                             $matchScore = true;
@@ -303,7 +278,7 @@ class HoleImport extends QtiImport
                         }
                     }
                     if ($matchScore === false) {
-                        foreach ($mapping->getElementsByTagName("mapEntry") as $mapEntry) {
+                        foreach ($mapping->getElementsByTagName('mapEntry') as $mapEntry) {
                             if ($mapEntry->getAttribute('mapKey') == $ic->nodeValue) {
                                 $score = $mapEntry->getAttribute('mappedValue');
                             }
@@ -320,14 +295,11 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Get qtiTextWithHoles
-     *
-     * @access protected
-     *
+     * Get qtiTextWithHoles.
      */
     protected function getQtiTextWithHoles()
     {
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
         $text = $this->domElementToString($ib);
         $text = str_replace('<itemBody>', '', $text);
         $text = str_replace('</itemBody>', '', $text);
@@ -335,22 +307,19 @@ class HoleImport extends QtiImport
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function getPrompt()
     {
         $text = '';
-        $ib = $this->assessmentItem->getElementsByTagName("itemBody")->item(0);
-        if ($ib->getElementsByTagName("prompt")->item(0)) {
-            $prompt = $ib->getElementsByTagName("prompt")->item(0);
+        $ib = $this->assessmentItem->getElementsByTagName('itemBody')->item(0);
+        if ($ib->getElementsByTagName('prompt')->item(0)) {
+            $prompt = $ib->getElementsByTagName('prompt')->item(0);
             $text = $this->domElementToString($prompt);
             $text = str_replace('<prompt>', '', $text);
             $text = str_replace('</prompt>', '', $text);
             $text = html_entity_decode($text);
-            $ib->removeChild($ib->getElementsByTagName("prompt")->item(0));
+            $ib->removeChild($ib->getElementsByTagName('prompt')->item(0));
         }
 
         return $text;

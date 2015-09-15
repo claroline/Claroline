@@ -1,32 +1,27 @@
 <?php
 
 /**
- *
- * Services for the paper
+ * Services for the paper.
  */
-
 namespace UJM\ExoBundle\Services\classes;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
-use \UJM\ExoBundle\Entity\Paper;
+use UJM\ExoBundle\Entity\Paper;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class PaperService {
-
+class PaperService
+{
     private $doctrine;
     private $container;
 
-
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine Dependency Injection;
+     * @param \Doctrine\Bundle\DoctrineBundle\Registry         $doctrine  Dependency Injection;
      * @param \Symfony\Component\DependencyInjection\Container $container
-     *
      */
     public function __construct(Registry $doctrine, Container $container)
     {
@@ -35,25 +30,22 @@ class PaperService {
     }
 
     /**
-     * Get IP client
+     * Get IP client.
      *
-     * @access public
      * @param Request $request
      *
      * @return IP Client
      */
     public function getIP(Request $request)
     {
-
         return $request->getClientIp();
     }
 
     /**
-     * Get total score for an paper
+     * Get total score for an paper.
      *
-     * @access public
      *
-     * @param integer $paperID id Paper
+     * @param int $paperID id Paper
      *
      * @return float
      */
@@ -66,12 +58,12 @@ class PaperService {
 
         $interQuestions = $paper->getOrdreQuestion();
         $interQuestions = substr($interQuestions, 0, strlen($interQuestions) - 1);
-        $interQuestionsTab = explode(";", $interQuestions);
+        $interQuestionsTab = explode(';', $interQuestions);
 
         foreach ($interQuestionsTab as $interQuestion) {
             $interaction = $em->getRepository('UJMExoBundle:Question')->find($interQuestion);
-            $interSer        = $this->container->get('ujm.exo_' . $interaction->getType());
-            $interactionX    = $interSer->getInteractionX($interaction->getId());
+            $interSer = $this->container->get('ujm.exo_'.$interaction->getType());
+            $interactionX = $interSer->getInteractionX($interaction->getId());
             $exercisePaperTotalScore += $interSer->maxScore($interactionX);
         }
 
@@ -79,9 +71,8 @@ class PaperService {
     }
 
     /**
-     * To round up and down a score
+     * To round up and down a score.
      *
-     * @access public
      *
      * @param float $toBeAdjusted
      *
@@ -93,9 +84,8 @@ class PaperService {
     }
 
     /**
-     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions graphiced or no)
+     * Get informations about a paper response, maxExoScore, scorePaper, scoreTemp (all questions graphiced or no).
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Paper\paper $paper
      *
@@ -132,12 +122,11 @@ class PaperService {
     }
 
     /**
-     * sort the array of interactions in the order recorded for the paper
+     * sort the array of interactions in the order recorded for the paper.
      *
-     * @access private
      *
      * @param Collection of \UJM\ExoBundle\Entity\Interaction $interactions
-     * @param String $order
+     * @param String                                          $order
      *
      * @return UJM\ExoBundle\Entity\Interaction[]
      */
@@ -161,12 +150,11 @@ class PaperService {
     }
 
     /**
-     * sort the array of responses to match the order of questions
+     * sort the array of responses to match the order of questions.
      *
-     * @access private
      *
      * @param Collection of \UJM\ExoBundle\Entity\Response $responses
-     * @param String $order
+     * @param String                                       $order
      *
      * @return UJM\ExoBundle\Entity\Response[]
      */
@@ -178,7 +166,7 @@ class PaperService {
             $tem = 0;
             foreach ($responses as $key => $response) {
                 if ($response->getQuestion()->getId() == $interId) {
-                    $tem++;
+                    ++$tem;
                     $resp[] = $response;
                     unset($responses[$key]);
                     break;
@@ -198,9 +186,6 @@ class PaperService {
     }
 
     /**
-     *
-     * @access private
-     *
      * @param String $order
      *
      * Return \UJM\ExoBundle\Interaction[]
@@ -215,10 +200,7 @@ class PaperService {
     }
 
     /**
-     *
-     * @access private
-     *
-     * @param integer $paperId
+     * @param int $paperId
      *
      * Return \UJM\ExoBundle\Entity\Interaction[]
      */
@@ -233,9 +215,6 @@ class PaperService {
     }
 
     /**
-     *
-     * @access private
-     *
      * @param String $order
      *
      * Return integer[];
@@ -247,18 +226,18 @@ class PaperService {
 
         return $orderFormated;
     }
-    
+
     /**
-     * To create new paper
+     * To create new paper.
      *
-     * @access public
      *
-     * @param integer $id id of exercise
+     * @param int $id id of exercise
      * @Param \UJM\ExoBundle\Entity\Exercise $exercise
      *
      * @return array
      */
-    public function prepareInteractionsPaper($id,$exercise) {
+    public function prepareInteractionsPaper($id, $exercise)
+    {
         $orderInter = '';
         $tabOrderInter = array();
         $tab = array();
@@ -267,7 +246,7 @@ class PaperService {
             ->pickQuestions($exercise);
 
         foreach ($questions as $question) {
-            $orderInter .= $question->getId() . ';';
+            $orderInter .= $question->getId().';';
             $tabOrderInter[] = $question->getId();
         }
 
@@ -277,20 +256,19 @@ class PaperService {
 
         return $tab;
     }
-    
-        /**
+
+    /**
      * For the navigation in a paper
-     * Finds and displays the question selectionned by the User in an assesment
+     * Finds and displays the question selectionned by the User in an assesment.
      *
-     * @access public
      *
-     * @param integer $numQuestionToDisplayed position of the question in the paper
-     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay interaction (question) to displayed
-     * @param String $typeInterToDisplayed
-     * @param boolean $dispButtonInterrupt to display or no the button "Interrupt"
-     * @param integer $maxAttempsAllowed the number of max attemps allowed for the exercise
-     * @param Claroline workspace $workspace
-     * @param \UJM\ExoBundle\Entity\Paper $paper current paper
+     * @param int                               $numQuestionToDisplayed position of the question in the paper
+     * @param \UJM\ExoBundle\Entity\Interaction $interactionToDisplay   interaction (question) to displayed
+     * @param String                            $typeInterToDisplayed
+     * @param bool                              $dispButtonInterrupt    to display or no the button "Interrupt"
+     * @param int                               $maxAttempsAllowed      the number of max attemps allowed for the exercise
+     * @param Claroline workspace               $workspace
+     * @param \UJM\ExoBundle\Entity\Paper       $paper                  current paper
      * @param SessionInterface session
      *
      * @return Array
@@ -298,60 +276,58 @@ class PaperService {
     public function displayQuestion(
         $numQuestionToDisplayed, $interactionToDisplay,
         $typeInterToDisplayed, $dispButtonInterrupt, $maxAttempsAllowed,
-        $workspace,Paper $paper,SessionInterface $session
-    )
-    {
+        $workspace, Paper $paper, SessionInterface $session
+    ) {
         $tabOrderInter = $session->get('tabOrderInter');
 
-        $interSer       = $this->container->get('ujm.exo_' .  $interactionToDisplay->getType());
+        $interSer = $this->container->get('ujm.exo_'.$interactionToDisplay->getType());
         $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
-        $responseGiven  = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
+
+        $responseGiven = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
         $typeParts = explode('\\', $typeInterToDisplayed);
 
-        $array['workspace']              = $workspace;
-        $array['tabOrderInter']          = $tabOrderInter;
+        $array['workspace'] = $workspace;
+        $array['tabOrderInter'] = $tabOrderInter;
         $array['interactionToDisplayed'] = $interactionToDisplayed;
-        $array['interactionType']        = array_pop($typeParts);
-        $array['numQ']                   = $numQuestionToDisplayed;
-        $array['paper']                  = $session->get('paper');
-        $array['numAttempt']             = $paper->getNumPaper();
-        $array['response']               = $responseGiven;
-        $array['dispButtonInterrupt']    = $dispButtonInterrupt;
-        $array['maxAttempsAllowed']      = $maxAttempsAllowed;
-        $array['_resource']              = $paper->getExercise();
+        $array['interactionType'] = array_pop($typeParts);
+        $array['numQ'] = $numQuestionToDisplayed;
+        $array['paper'] = $session->get('paper');
+        $array['numAttempt'] = $paper->getNumPaper();
+        $array['response'] = $responseGiven;
+        $array['dispButtonInterrupt'] = $dispButtonInterrupt;
+        $array['maxAttempsAllowed'] = $maxAttempsAllowed;
+        $array['_resource'] = $paper->getExercise();
 
         return $array;
     }
      /**
-     * To finish an assessment
-     *
-     * @access public
-     *
-     * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
-     *
-     * @return \UJM\ExoBundle\Entity\Paper
-     */
+      * To finish an assessment.
+      *
+      *
+      * @param Symfony\Component\HttpFoundation\Session\SessionInterface  $session
+      *
+      * @return \UJM\ExoBundle\Entity\Paper
+      */
      public function finishExercise(SessionInterface $session)
-    {
-        $em = $this->doctrine->getManager();
+     {
+         $em = $this->doctrine->getManager();
         /** @var \UJM\ExoBundle\Entity\Paper $paper */
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
-        $paper->setInterupt(0);
-        $paper->setEnd(new \Datetime());
-        $em->persist($paper);
-        $em->flush();
+         $paper->setInterupt(0);
+         $paper->setEnd(new \Datetime());
+         $em->persist($paper);
+         $em->flush();
 
-        $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
+         $this->container->get('ujm.exo_exercise')->manageEndOfExercise($paper);
 
-        $session->remove('penalties');
+         $session->remove('penalties');
 
-        return $paper;
-    }
-    
+         return $paper;
+     }
+
     /**
-     * To force finish an assessment
+     * To force finish an assessment.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\Paper $paperToClose
      *
@@ -373,16 +349,15 @@ class PaperService {
     }
 
     /**
-     * To interupt an assessment
+     * To interupt an assessment.
      *
-     * @access public
      * 
      * @param SessionInterface session
      *
      * @return \UJM\ExoBundle\Entity\Paper
      */
     public function interuptExercise(SessionInterface $session)
-    {   
+    {
         $em = $this->doctrine->getManager();
         $paper = $em->getRepository('UJMExoBundle:Paper')->find($session->get('paper'));
         $em->setInterupt(1);

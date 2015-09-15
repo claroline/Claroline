@@ -1,12 +1,11 @@
 <?php
 
 /**
- * To export an open long response question in QTI
- *
+ * To export an open long response question in QTI.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use UJM\ExoBundle\Entity\Question;
 
 class OpenLongExport extends OpenExport
@@ -14,12 +13,12 @@ class OpenLongExport extends OpenExport
     private $extendedTextInteraction;
 
     /**
-     * overload the export method
+     * overload the export method.
      *
      * @access public
      * @param Question $question
      * @param qtiRepository $qtiRepos
-     * @return \UJM\ExoBundle\Services\classes\QTI\BinaryFileResponse|void
+     * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
     {
@@ -33,15 +32,12 @@ class OpenLongExport extends OpenExport
     }
 
     /**
-     * add the tag extendedTextInteraction in itemBody
-     *
-     * @access private
-     *
+     * add the tag extendedTextInteraction in itemBody.
      */
     private function extendedTextInteractionTag()
     {
         $this->extendedTextInteraction = $this->document->CreateElement('extendedTextInteraction');
-        $this->extendedTextInteraction->setAttribute("responseIdentifier", "RESPONSE");
+        $this->extendedTextInteraction->setAttribute('responseIdentifier', 'RESPONSE');
         $this->itemBody->appendChild($this->extendedTextInteraction);
     }
 }

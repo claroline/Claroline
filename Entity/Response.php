@@ -48,7 +48,7 @@ class Response
     private $question;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -88,7 +88,7 @@ class Response
     }
 
     /**
-     * @param integer $nbTries
+     * @param int $nbTries
      */
     public function setNbTries($nbTries)
     {
@@ -96,7 +96,7 @@ class Response
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getNbTries()
     {

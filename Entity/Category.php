@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\User;
 
 /**
- * UJM\ExoBundle\Entity\Category
+ * UJM\ExoBundle\Entity\Category.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\CategoryRepository")
  * @ORM\Table(name="ujm_category")
@@ -14,7 +14,7 @@ use Claroline\CoreBundle\Entity\User;
 class Category
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -23,20 +23,18 @@ class Category
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
-     /**
-     *
-     * @var boolean $locker
+    /**
+     * @var bool
      *
      * @ORM\Column(name="locker", type="boolean")
      */
     private $locker = false;
-
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -44,9 +42,9 @@ class Category
     private $user;
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -54,7 +52,7 @@ class Category
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -64,7 +62,7 @@ class Category
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -88,21 +86,22 @@ class Category
         $this->user = $user;
     }
     /**
-     * get locker
+     * get locker.
      *
-     * @return boolean
+     * @return bool
      */
-    function getLocker() {
+    public function getLocker()
+    {
         return $this->locker;
     }
 
     /**
-     * set locker
+     * set locker.
      *
-     * @param boolean $locker
+     * @param bool $locker
      */
-    function setLocker($locker) {
+    public function setLocker($locker)
+    {
         $this->locker = $locker;
     }
-
 }

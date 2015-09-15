@@ -12,22 +12,21 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Paper controller.
- *
  */
-class PaperController extends Controller {
-
+class PaperController extends Controller
+{
     /**
      * Lists all Paper entities.
      *
-     * @access public
      *
-     * @param integer $exoID id of exercise
-     * @param integer $page for the pagination, page destination
-     * @param boolean $all for use or not use the pagination
+     * @param int  $exoID id of exercise
+     * @param int  $page  for the pagination, page destination
+     * @param bool $all   for use or not use the pagination
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($exoID, $page, $all) {
+    public function indexAction($exoID, $page, $all)
+    {
         $nbUserPaper = 0;
         $retryButton = false;
         $nbAttemptAllowed = -1;
@@ -89,8 +88,8 @@ class PaperController extends Controller {
             $arrayMarkPapers[$p->getId()] = $this->container->get('ujm.exo_paper')->getInfosPaper($p);
         }
 
-        if ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true 
-                && ($exercise->getResourceNode()->isPublished() || $exoAdmin == 1 )) {
+        if ($exerciseSer->controlMaxAttemps($exercise, $user->getId(), $exoAdmin) === true
+                && ($exercise->getResourceNode()->isPublished() || $exoAdmin == 1)) {
             $retryButton = true;
         }
 
@@ -120,7 +119,7 @@ class PaperController extends Controller {
                     'nbUserPaper' => $nbUserPaper,
                     'nbQuestions' => $nbQuestions['nbq'],
                     '_resource' => $exercise,
-                    'arrayMarkPapers' => $arrayMarkPapers
+                    'arrayMarkPapers' => $arrayMarkPapers,
                         )
         );
     }
@@ -128,14 +127,14 @@ class PaperController extends Controller {
     /**
      * Finds and displays a Paper entity.
      *
-     * @access public
      *
-     * @param integer $id id of paper
-     * @param integer $p to chose the elements to display (marks, question correction ...)
+     * @param int $id id of paper
+     * @param int $p  to chose the elements to display (marks, question correction ...)
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id, $p = -2) {
+    public function showAction($id, $p = -2)
+    {
         $nbAttemptAllowed = -1;
         $retryButton = false;
         $exerciseSer = $this->container->get('ujm.exo_exercise');
@@ -205,40 +204,40 @@ class PaperController extends Controller {
                     'p' => $p,
                     'nbMaxQuestion' => $nbMaxQuestion,
                     'paperID' => $paper->getId(),
-                    'retryButton' => $retryButton
+                    'retryButton' => $retryButton,
                         )
         );
     }
 
     /**
-     * To display the modal to mark an open question
+     * To display the modal to mark an open question.
      *
-     * @access public
      *
-     * @param integer $respid id of reponse
-     * @param integer $maxScore score maximun for the open question
+     * @param int $respid   id of reponse
+     * @param int $maxScore score maximun for the open question
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function markedOpenAction($respid, $maxScore) {
+    public function markedOpenAction($respid, $maxScore)
+    {
         return $this->render(
                         'UJMExoBundle:Paper:q_open_mark.html.twig', array(
                     'respid' => $respid,
-                    'maxScore' => $maxScore
+                    'maxScore' => $maxScore,
                         )
         );
     }
 
     /**
-     * To record the score for a response of an open question
+     * To record the score for a response of an open question.
      *
-     * @access public
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function markedOpenRecordAction(Request $request) {
+    public function markedOpenRecordAction(Request $request)
+    {
         if ($request->isXmlHttpRequest()) {
             $em = $this->getDoctrine()->getManager();
             /** @var \UJM\ExoBundle\Entity\Response $response */
@@ -258,13 +257,13 @@ class PaperController extends Controller {
     }
 
     /**
-     * To search paper
+     * To search paper.
      *
-     * @access public
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchUserPaperAction() {
+    public function searchUserPaperAction()
+    {
         $papersOneUser = array();
         $papersUser = array();
         $arrayMarkPapers = array();
@@ -280,11 +279,11 @@ class PaperController extends Controller {
         $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($nameUser);
         $end = count($userList);
 
-        for ($i = 0; $i < $end; $i++) {
+        for ($i = 0; $i < $end; ++$i) {
             $papersOneUser[] = $em->getRepository('UJMExoBundle:Paper')
                     ->findBy(array(
                 'user' => $userList[$i]->getId(),
-                'exercise' => $exoID
+                'exercise' => $exoID,
                     )
             );
 
@@ -307,7 +306,7 @@ class PaperController extends Controller {
                 'UJMExoBundle:Paper:userPaper.html.twig', array(
             'papers' => $papersUser,
             'arrayMarkPapers' => $arrayMarkPapers,
-            'display' => $display
+            'display' => $display,
                 )
         );
         // If request is ajax (first display of the first search result (page = 1))
@@ -320,22 +319,22 @@ class PaperController extends Controller {
             // Send the form to search and the result
             return $this->render(
                             'UJMExoBundle:Paper:index.html.twig', array(
-                        'divResultSearch' => $divResultSearch
+                        'divResultSearch' => $divResultSearch,
                             )
             );
         }
     }
 
     /**
-     * To export results in CSV
+     * To export results in CSV.
      *
-     * @access public
      *
-     * @param integer $exerciseId id of exercise
+     * @param int $exerciseId id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exportResCSVAction($exerciseId) {
+    public function exportResCSVAction($exerciseId)
+    {
         $em = $this->getDoctrine()->getManager();
         $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
 
@@ -352,7 +351,7 @@ class PaperController extends Controller {
                 $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
                 $score = $score * 20;
 
-                $rowCSV[] = $row[0]->getUser()->getLastName() . '-' . $row[0]->getUser()->getFirstName();
+                $rowCSV[] = $row[0]->getUser()->getLastName().'-'.$row[0]->getUser()->getFirstName();
                 $rowCSV[] = $row[0]->getNumPaper();
                 $rowCSV[] = $row[0]->getStart()->format('Y-m-d H:i:s');
                 if ($row[0]->getEnd()) {
@@ -373,22 +372,21 @@ class PaperController extends Controller {
 
             return new Response($content, 200, array(
                 'Content-Type' => 'application/force-download',
-                'Content-Disposition' => 'attachment; filename="export.csv"'
+                'Content-Disposition' => 'attachment; filename="export.csv"',
             ));
         } else {
-
             throw new AccessDeniedException();
         }
     }
 
     /**
-     * To check the right to open exo or not
+     * To check the right to open exo or not.
      *
-     * @access private
      *
      * @param \UJM\ExoBundle\Entity\Exercise $exo
      */
-    private function checkAccess($exo) {
+    private function checkAccess($exo)
+    {
         $collection = new ResourceCollection(array($exo->getResourceNode()));
 
         if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
@@ -397,24 +395,24 @@ class PaperController extends Controller {
     }
 
     /**
-     * To control if the user is allowed to display the paper
+     * To control if the user is allowed to display the paper.
      *
-     * @access private
      *
      * @param \UJM\ExoBundle\Entity\Paper $paper paper to display
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    private function ctrlDisplayPaper($paper) {
+    private function ctrlDisplayPaper($paper)
+    {
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $uid = $exerciseSer->getUserId();
         $display = 'none';
 
         if (($this->container->get('ujm.exo_exercise')->isExerciseAdmin($paper->getExercise())) ||
-                ( ( $uid == 'anonymous' && $paper->getUser() == null ) || ( $uid == $paper->getUser()->getId() ) ) &&
+                (($uid == 'anonymous' && $paper->getUser() == null) || ($uid == $paper->getUser()->getId())) &&
                 (($paper->getExercise()->getCorrectionMode() == 1) ||
                 (($paper->getExercise()->getCorrectionMode() == 3) &&
-                ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date("Y-m-d H:i:s"))) ||
+                ($paper->getExercise()->getDateCorrection()->format('Y-m-d H:i:s') <= date('Y-m-d H:i:s'))) ||
                 (($paper->getExercise()->getCorrectionMode() == 2) &&
                 ($paper->getExercise()->getMaxAttempts() <= $this->container->get('ujm.exo_exercise')->getNbPaper(
                         $uid, $paper->getExercise()->getId()
@@ -423,11 +421,10 @@ class PaperController extends Controller {
                 )
         ) {
             $display = 'all';
-        } else if (($uid == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
+        } elseif (($uid == $paper->getUser()->getId()) && ($paper->getExercise()->getMarkMode() == 2)) {
             $display = 'score';
         }
 
         return $display;
     }
-
 }

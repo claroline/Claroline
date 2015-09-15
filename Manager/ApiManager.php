@@ -34,6 +34,7 @@ class ApiManager
      * @todo add user parameter...
      *
      * @param Exercise $exercise
+     *
      * @return array
      */
     public function exportExercise(Exercise $exercise)
@@ -41,7 +42,7 @@ class ApiManager
         return [
             'id' => $exercise->getId(),
             'meta' => $this->getMetadata($exercise),
-            'steps' => $this->getSteps($exercise)
+            'steps' => $this->getSteps($exercise),
         ];
     }
 
@@ -49,6 +50,7 @@ class ApiManager
      * @todo add duration
      *
      * @param Exercise $exercise
+     *
      * @return array
      */
     private function getMetadata(Exercise $exercise)
@@ -64,7 +66,7 @@ class ApiManager
             'description' => $exercise->getDescription(),
             'pick' => $exercise->getNbQuestion(),
             'random' => $exercise->getShuffle(),
-            'maxAttempts' => $exercise->getMaxAttempts()
+            'maxAttempts' => $exercise->getMaxAttempts(),
         ];
     }
 
@@ -73,6 +75,7 @@ class ApiManager
      * @todo add optional question description (schema)
      *
      * @param Exercise $exercise
+     *
      * @return array
      */
     private function getSteps(Exercise $exercise)
@@ -95,7 +98,7 @@ class ApiManager
                     'id' => $question->getId(),
                     'type' => $type,
                     'title' => $question->getTitle(),
-                    'hints' => ''
+                    'hints' => '',
                 ])]
             ];
 
@@ -108,7 +111,7 @@ class ApiManager
                     return [
                         'id' => $hint->getId(),
                         'text' => $hint->getValue(),
-                        'penalty' => $hint->getPenalty()
+                        'penalty' => $hint->getPenalty(),
                     ];
                 }, $hints);
             }
@@ -137,7 +140,7 @@ class ApiManager
                 return [
                     'id' => $choice->getId(),
                     'type' => 'text/html',
-                    'data' => $choice->getLabel()
+                    'data' => $choice->getLabel(),
                 ];
             }, $qcm->getChoices()->toArray()),
         ];

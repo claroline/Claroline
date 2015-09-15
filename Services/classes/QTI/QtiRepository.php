@@ -1,17 +1,15 @@
 <?php
 
 /**
- * To create temporary repository for QTI files
- *
+ * To create temporary repository for QTI files.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class QtiRepository {
-
+class QtiRepository
+{
     private $user;
     private $userRootDir;
     private $userDir;
@@ -22,13 +20,11 @@ class QtiRepository {
     private $importedQuestions = array();
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
      * @param Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorageInterface Dependency Injection
-     * @param \Symfony\Component\DependencyInjection\Container $container
-     *
+     * @param \Symfony\Component\DependencyInjection\Container                                   $container
      */
     public function __construct(TokenStorageInterface $tokenStorageInterface, $container)
     {
@@ -37,45 +33,39 @@ class QtiRepository {
         $this->user = $this->tokenStorageInterface->getToken()->getUser();
     }
 
-    /**
-     *
-     * @access public
-     */
-     public function razValues ()
+     /**
+      *
+      */
+     public function razValues()
      {
          $this->exercise = null;
          $this->exerciseQuestions = array();
      }
 
     /**
-     * get user
-     *
-     * @access public
-     *
+     * get user.
      */
     public function getQtiUser()
     {
-
         return $this->user;
     }
 
     /**
-     * Create the repository
+     * Create the repository.
      *
-     * @access public
      * @param String $directory directory
-     * @param boolean $clear to clear or no the directory userRootDir
+     * @param bool   $clear     to clear or no the directory userRootDir
      */
-    public function createDirQTI($directory = 'default', $clear = TRUE)
+    public function createDirQTI($directory = 'default', $clear = true)
     {
         $fs = new FileSystem();
-        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory') . '/qti/'.$this->user->getUsername().'/';
+        $this->userRootDir = $this->container->getParameter('ujm.param.exo_directory').'/qti/'.$this->user->getUsername().'/';
         $this->userDir = $this->userRootDir.$directory.'/';
-        if ($clear === TRUE) {
+        if ($clear === true) {
             $this->removeDirectory();
         }
-        if (!is_dir($this->container->getParameter('ujm.param.exo_directory') . '/qti/')) {
-            $fs->mkdir($this->container->getParameter('ujm.param.exo_directory') . '/qti/');
+        if (!is_dir($this->container->getParameter('ujm.param.exo_directory').'/qti/')) {
+            $fs->mkdir($this->container->getParameter('ujm.param.exo_directory').'/qti/');
         }
         if (!is_dir($this->userRootDir.$directory.'/zip')) {
             $fs->mkdir($this->userRootDir.$directory.'/zip');
@@ -83,41 +73,37 @@ class QtiRepository {
     }
 
     /**
-     * Delete the repository
-     *
-     * @access public
-     *
+     * Delete the repository.
      */
     public function removeDirectory()
     {
-         if(is_dir($this->userRootDir)) {
-            exec ('rm -rf '.$this->userRootDir.'*');
+        if (is_dir($this->userRootDir)) {
+            exec('rm -rf '.$this->userRootDir.'*');
             $fs = new FileSystem();
             $iterator = new \DirectoryIterator($this->userRootDir);
 
             foreach ($iterator as $el) {
-                if ($el->isDir()) $fs->rmDir($el->getRealPath(), true);
-                if ($el->isFile()) $fs->rm($el->getRealPath());
+                if ($el->isDir()) {
+                    $fs->rmDir($el->getRealPath(), true);
+                }
+                if ($el->isFile()) {
+                    $fs->rm($el->getRealPath());
+                }
             }
         }
     }
 
     /**
-     * get userDir
-     *
-     * @access public
-     *
+     * get userDir.
      */
     public function getUserDir()
     {
-
         return $this->userDir;
     }
 
     /**
-     * Scan the QTI files
+     * Scan the QTI files.
      *
-     * @access public
      *
      * @return true or code error
      */
@@ -126,7 +112,7 @@ class QtiRepository {
         $xmlFileFound = false;
         if ($dh = opendir($this->getUserDir())) {
             while (($file = readdir($dh)) !== false) {
-                 if (substr($file, -4, 4) == '.xml'
+                if (substr($file, -4, 4) == '.xml'
                         && $this->alreadyImported($file) === false) {
                     $xmlFileFound = true;
                     $document_xml = new \DomDocument();
@@ -134,10 +120,10 @@ class QtiRepository {
                     foreach ($document_xml->getElementsByTagName('assessmentItem') as $ai) {
                         $imported = false;
                         $ib = $ai->getElementsByTagName('itemBody')->item(0);
-                        foreach ($ib->childNodes as $node){
+                        foreach ($ib->childNodes as $node) {
                             if ($imported === false) {
                                 switch ($node->nodeName) {
-                                    case "choiceInteraction": //qcm
+                                    case 'choiceInteraction': //qcm
                                         $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionQCM');
                                         $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
@@ -149,7 +135,7 @@ class QtiRepository {
                                         break;
                                     case 'hotspotInteraction': //graphic with the tag hotspotInteraction
                                         $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionGraphic');
-                                        $interX= $qtiImport->import($this, $ai);
+                                        $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                     case 'extendedTextInteraction': /*open (long or short)*/
@@ -159,7 +145,7 @@ class QtiRepository {
                                         break;
                                     case 'matchInteraction': //matching
                                         $qtiImport = $this->container->get('ujm.exo_qti_import_matching');
-                                        $interX =  $qtiImport->import($this, $ai);
+                                        $interX = $qtiImport->import($this, $ai);
                                         $imported = true;
                                         break;
                                 }
@@ -170,7 +156,6 @@ class QtiRepository {
                             $interX = $other[0];
                             $imported = $other[1];
                             if ($imported == false) {
-
                                 return 'qti unsupported format';
                             }
                         }
@@ -182,7 +167,6 @@ class QtiRepository {
                 }
             }
             if ($xmlFileFound === false) {
-
                 return 'qti xml not found';
             }
             closedir($dh);
@@ -194,12 +178,10 @@ class QtiRepository {
     }
 
     /**
-    *
-    * @access private
-    * @param String name of the xml file
-    *
-    * @return boolean
-    */
+     * @param String name of the xml file
+     *
+     * @return bool
+     */
     private function alreadyImported($fileName)
     {
         $alreadyImported = false;
@@ -212,25 +194,24 @@ class QtiRepository {
     }
 
     /**
-     * to try import other type of question
+     * to try import other type of question.
      *
-     * @access private
-     * @param  DOMElement $ai
+     * @param DOMElement $ai
      *
      *  @return array
      */
     private function importOther($ai)
     {
         $imported = false;
-        $interX   = NULL;
+        $interX = null;
         $response = array();
         $ib = $ai->getElementsByTagName('itemBody')->item(0);
         $nbNodes = 0;
         $promptTag = false;
         $textEntryInteractionTag = false;
         foreach ($ib->childNodes as $node) {
-            if(!($node instanceof \DomText)) {
-                $nbNodes++;
+            if (!($node instanceof \DomText)) {
+                ++$nbNodes;
             }
             if ($node->nodeName == 'prompt') {
                 $promptTag = true;
@@ -243,11 +224,11 @@ class QtiRepository {
             $qtiImport = $this->container->get('ujm.exo_qti_import_open_one_word');
             $interX = $qtiImport->import($this, $ai);
             $imported = true;
-        } else if (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
+        } elseif (($ib->getElementsByTagName('textEntryInteraction')->length > 0)
                     || ($ib->getElementsByTagName('inlineChoiceInteraction')->length > 0)) { //question with hole
                         $qtiImport = $this->container->get('ujm.exo_qti_import_InteractionHole');
-                        $interX = $qtiImport->import($this, $ai);
-                        $imported = true;
+            $interX = $qtiImport->import($this, $ai);
+            $imported = true;
         }
 
         $response[] = $interX;
@@ -257,14 +238,13 @@ class QtiRepository {
     }
 
     /**
-     * to determine if an open question is with long answer or short answer
+     * to determine if an open question is with long answer or short answer.
      *
-     * @access private
-     * @param  DOMElement $ai
+     * @param DOMElement $ai
      *
      * @return Service Container
      */
-    private function longOrShort ($ai)
+    private function longOrShort($ai)
     {
         if ($ai->getElementsByTagName('mapping')->item(0)) {
             $qtiImport = $this->container->get('ujm.exo_qti_import_open_short');
@@ -280,30 +260,25 @@ class QtiRepository {
      *
      * @access public
      * @param  \UJM\ExoBundle\Entity\Question $question
-     *
      */
     public function export($question)
     {
         if ($question->getType() !== 'UJM\ExoBundle\Entity\InteractionOpen') {
-            $service = 'ujm.exo_qti_export_' . $question->getType();
+            $service = 'ujm.exo_qti_export_'.$question->getType();
             $qtiExport = $this->container->get($service);
         } else {
             $qtiExport = $this->serviceOpenQuestion($question->getId());
         }
 
         return $qtiExport->export($question, $this);
-
     }
 
     /**
-     * To select the service (long, oneWord, ...) for an open question
+     * To select the service (long, oneWord, ...) for an open question.
      *
-     * @access private
-     *
-     * @param integer $questionId
+     * @param int $questionId
      *
      * @return instance of service ujm.qti_open
-     *
      */
     private function serviceOpenQuestion($questionId)
     {
@@ -316,11 +291,9 @@ class QtiRepository {
         return $serv;
     }
 
-
     /**
-     * Call scanFiles method for ExoImporter
+     * Call scanFiles method for ExoImporter.
      *
-     * @access public
      *
      * @param UJM\ExoBundle\Entity\Exercise $exercise
      */
@@ -328,7 +301,7 @@ class QtiRepository {
     {
         $this->exercise = $exercise;
         $scanFile = $this->scanFiles();
-        if ($scanFile === true ) {
+        if ($scanFile === true) {
             return true;
         } else {
             return $scanFile;
@@ -336,9 +309,6 @@ class QtiRepository {
     }
 
     /**
-     *
-     * @access private
-     *
      * @param UJM\ExoBundle\Entity\InteractionQCM or InteractionGraphic or .... $interX
      */
     private function addQuestionInExercise($interX, $order = -1)
@@ -349,19 +319,16 @@ class QtiRepository {
 
     /**
      *
-     * @access public
-     *
-     * Associate an imported question with an exercise
      */
     public function assocExerciseQuestion($ws = false)
     {
         $order = 1;
-        foreach($this->exerciseQuestions as $xmlName) {
+        foreach ($this->exerciseQuestions as $xmlName) {
             if ($ws === false) {
                 $order = -1;
             }
             $this->addQuestionInExercise($this->importedQuestions[$xmlName], $order);
-            $order ++;
+            ++$order;
         }
-     }
+    }
 }

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Label
+ * UJM\ExoBundle\Entity\Label.
  *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\LabelRepository")
  * @ORM\Table(name="ujm_label")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Label
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,28 +22,28 @@ class Label
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="text")
      */
     private $value;
 
     /**
-     * @var float $scoreRightResponse
+     * @var float
      *
      * @ORM\Column(name="score_right_response", type="float", nullable=true)
      */
     private $scoreRightResponse;
 
     /**
-     * @var boolean $positionForce
+     * @var bool
      *
      * @ORM\Column(name="position_force", type="boolean", nullable=true)
      */
     private $positionForce;
 
-     /**
-     * @var integer $ordre
+    /**
+     * @var int
      *
      * @ORM\Column(name="ordre", type="integer")
      */
@@ -56,16 +56,16 @@ class Label
     private $interactionMatching;
 
     /**
-     * @var text $feedback
+     * @var text
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
-    
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -73,7 +73,7 @@ class Label
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -83,7 +83,7 @@ class Label
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -93,7 +93,7 @@ class Label
     }
 
     /**
-     * Set scoreRightResponse
+     * Set scoreRightResponse.
      *
      * @param float $scoreRightResponse
      */
@@ -103,7 +103,7 @@ class Label
     }
 
     /**
-     * Get scoreRightResponse
+     * Get scoreRightResponse.
      *
      * @return float
      */
@@ -113,7 +113,7 @@ class Label
     }
 
     /**
-     * Get InteractionMatching
+     * Get InteractionMatching.
      *
      * @return InteractionMatching
      */
@@ -123,8 +123,7 @@ class Label
     }
 
     /**
-     * Set InteractionMatching
-     *
+     * Set InteractionMatching.
      */
     public function setInteractionMatching(\UJM\ExoBundle\Entity\InteractionMatching $interactionMatching)
     {
@@ -132,9 +131,9 @@ class Label
     }
 
     /**
-     * Set positionForce
+     * Set positionForce.
      *
-     * @param boolean $positionForce
+     * @param bool $positionForce
      */
     public function setPositionForce($positionForce)
     {
@@ -142,7 +141,7 @@ class Label
     }
 
     /**
-     * Get positionForce
+     * Get positionForce.
      */
     public function getPositionForce()
     {
@@ -150,9 +149,9 @@ class Label
     }
 
     /**
-     * Set ordre
+     * Set ordre.
      *
-     * @param integer $ordre
+     * @param int $ordre
      */
     public function setOrdre($ordre)
     {
@@ -160,29 +159,31 @@ class Label
     }
 
     /**
-     * Get ordre
+     * Get ordre.
      *
-     * @return integer
+     * @return int
      */
     public function getOrdre()
     {
         return $this->ordre;
     }
     /**
-     * get feedback
+     * get feedback.
+     *
      * @return string
      */
-    function getFeedback() {
+    public function getFeedback()
+    {
         return $this->feedback;
     }
 
     /**
-     * set feedback
+     * set feedback.
+     *
      * @param \UJM\ExoBundle\Entity\text $feedback
      */
-    function setFeedback($feedback) {
+    public function setFeedback($feedback)
+    {
         $this->feedback = $feedback;
     }
-
-
 }

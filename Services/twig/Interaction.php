@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Services\twig;
 
-use \Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Container;
 
 class Interaction extends \Twig_Extension
 {
@@ -10,12 +10,10 @@ class Interaction extends \Twig_Extension
     protected $container;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @access public
      *
      * @param \Symfony\Component\DependencyInjection\Container $container
-     *
      */
     public function __construct(Container $container)
     {
@@ -23,67 +21,54 @@ class Interaction extends \Twig_Extension
     }
 
     /**
-     * Get name
-     *
-     * @access public
-     *
-     * Return String
+     * Get name.
      */
     public function getName()
     {
-        return "twigExtensions";
+        return 'twigExtensions';
     }
 
     /**
-     * Get functions
-     *
-     * @access public
-     *
-     * Return array
+     * Get functions.
      */
     public function getFunctions()
     {
-
         return array(
-            'regexTwig'               => new \Twig_Function_Method($this, 'regexTwig'),
-            'getInterTwig'            => new \Twig_Function_Method($this, 'getInterTwig'),
-            'roundUpOrDown'           => new \Twig_Function_Method($this, 'roundUpOrDown'),
-            'getQuestionRights'       => new \Twig_Function_Method($this, 'getQuestionRights'),
-            'explodeString'           => new \Twig_Function_Method($this, 'explodeString'),
+            'regexTwig' => new \Twig_Function_Method($this, 'regexTwig'),
+            'getInterTwig' => new \Twig_Function_Method($this, 'getInterTwig'),
+            'roundUpOrDown' => new \Twig_Function_Method($this, 'roundUpOrDown'),
+            'getQuestionRights' => new \Twig_Function_Method($this, 'getQuestionRights'),
+            'explodeString' => new \Twig_Function_Method($this, 'explodeString'),
         );
-
     }
 
     /**
-     * preg_match for twig
+     * preg_match for twig.
      *
-     * @access public
      *
      * @param mixed $patern cast into string
-     * @param mixed $str cast into string
+     * @param mixed $str    cast into string
      *
      * Return integer
      */
     public function regexTwig($pattern, $str)
     {
-
         return preg_match((string) $pattern, (string) $str);
     }
 
     /**
-     * Get the InteractionX (InteractionQCM or InteractionGraphic or ...) and the score max of the interaction
+     * Get the InteractionX (InteractionQCM or InteractionGraphic or ...) and the score max of the interaction.
      *
-     * @access public
      *
-     * @param integer $interId id InteractionX
+     * @param int    $interId   id InteractionX
      * @param String $typeInter type of interaction (QCM, graphic, ...)
      *
      * Return array
      */
     public function getInterTwig($interId, $typeInter)
     {
-        $interSer        = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\\' . $typeInter);
-        $interactionX    = $interSer->getInteractionX($interId);
+        $interSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\\'.$typeInter);
+        $interactionX = $interSer->getInteractionX($interId);
         $inter['question'] = $interactionX;
         $inter['maxScore'] = $interSer->maxScore($interactionX);
 
@@ -91,9 +76,8 @@ class Interaction extends \Twig_Extension
     }
 
     /**
-     * To round up and down a score
+     * To round up and down a score.
      *
-     * @access public
      *
      * @param float $markToBeAdjusted
      *
@@ -107,102 +91,89 @@ class Interaction extends \Twig_Extension
     }
 
     /**
-     * To explode a string
+     * To explode a string.
      *
-     * @access public
      *
      * @param string $lim the boundary string
      * @param string $str The input string
      *
      * Return array
-     *
      */
-    public function explodeString($lim, $str) {
-
+    public function explodeString($lim, $str)
+    {
         return explode($lim, $str);
     }
 
     /**
-     * Cet rights for a question and an user, this method is used in the views with a table of questions
+     * Cet rights for a question and an user, this method is used in the views with a table of questions.
      *
-     * @access public
      *
      * @param String $questionsList the type of the list (share, import, my, exoList)
-     * @param boolean $shareRight if the user can be edit a shared question
-     * @param integer $actionQ info right about a question
-     * @param boolean $qexoEdit if the user can edit a question in an exercise
+     * @param bool   $shareRight    if the user can be edit a shared question
+     * @param int    $actionQ       info right about a question
+     * @param bool   $qexoEdit      if the user can edit a question in an exercise
      *
      * Return array
      */
     public function getQuestionRights($questionsList, $shareRight, $actionQ, $qexoEdit)
     {
-
         $questionRights = array();
-        $questionRights['dispSharedBy']                  = FALSE;
-        $questionRights['allowShareQuestion']            = FALSE;
-        $questionRights['allowDuplicateQuestion']        = FALSE;
-        $questionRights['allowEditQuestion']             = FALSE;
-        $questionRights['allowDeleteQuestion']           = FALSE;
-        $questionRights['allowDeleteQuestionOfMyBank']   = FALSE;
-        $questionRights['allowDeleteQuestionOfExercise'] = FALSE;
-        $questionRights['allowImportQuestion']           = FALSE;
+        $questionRights['dispSharedBy'] = false;
+        $questionRights['allowShareQuestion'] = false;
+        $questionRights['allowDuplicateQuestion'] = false;
+        $questionRights['allowEditQuestion'] = false;
+        $questionRights['allowDeleteQuestion'] = false;
+        $questionRights['allowDeleteQuestionOfMyBank'] = false;
+        $questionRights['allowDeleteQuestionOfExercise'] = false;
+        $questionRights['allowImportQuestion'] = false;
 
         //display shared by
-        if ( ($questionsList == 'share') || ($questionsList == 'importShare')
-                || ( ($questionsList == 'exoList') && $actionQ == 2)
-                || ( ($questionsList == 'importExoList') && ($actionQ == 2) ) ) {
-
-            $questionRights['dispSharedBy'] = TRUE;
+        if (($questionsList == 'share') || ($questionsList == 'importShare')
+                || (($questionsList == 'exoList') && $actionQ == 2)
+                || (($questionsList == 'importExoList') && ($actionQ == 2))) {
+            $questionRights['dispSharedBy'] = true;
         }
 
         //allow to share a question
-        if ( ($questionsList == 'my') || ( ($questionsList == 'exoList')
-                && ($actionQ == 1) ) ) {
-
-            $questionRights['allowShareQuestion'] = TRUE;
+        if (($questionsList == 'my') || (($questionsList == 'exoList')
+                && ($actionQ == 1))) {
+            $questionRights['allowShareQuestion'] = true;
         }
 
         //allow to duplicate a question
-        if ( ($questionsList == 'my') || ($questionsList == 'share') || ($actionQ <= 2) ) {
-
-            $questionRights['allowDuplicateQuestion'] = TRUE;
+        if (($questionsList == 'my') || ($questionsList == 'share') || ($actionQ <= 2)) {
+            $questionRights['allowDuplicateQuestion'] = true;
         }
 
         //allow to edit a question
-        if ( (($questionsList == 'my' ) || ($shareRight === TRUE) || ($qexoEdit == 1)
-                || ( ($questionsList == 'exoList') && ($actionQ == 1) ))
-             && ($questionsList != 'importExoList') ){
-
-            $questionRights['allowEditQuestion'] = TRUE;
+        if ((($questionsList == 'my') || ($shareRight === true) || ($qexoEdit == 1)
+                || (($questionsList == 'exoList') && ($actionQ == 1)))
+             && ($questionsList != 'importExoList')) {
+            $questionRights['allowEditQuestion'] = true;
         }
 
         //allow to delete a question
         if ($questionsList == 'my') {
-
-            $questionRights['allowDeleteQuestion'] = TRUE;
+            $questionRights['allowDeleteQuestion'] = true;
         }
 
         //allow to delete a question of my bank
-        if ( ($questionsList == 'share') || (($questionsList == 'exoList')
-                && ($actionQ <= 2)) ) {
-
-            $questionRights['allowDeleteQuestionOfMyBank'] = TRUE;
+        if (($questionsList == 'share') || (($questionsList == 'exoList')
+                && ($actionQ <= 2))) {
+            $questionRights['allowDeleteQuestionOfMyBank'] = true;
         }
 
         //allow to delete a question of an exercise
         if ($questionsList == 'exercise') {
-
-            $questionRights['allowDeleteQuestionOfExercise'] = TRUE;
+            $questionRights['allowDeleteQuestionOfExercise'] = true;
         }
 
         //allow to import question in an exercise
         if ($questionsList == 'importMy' || $questionsList == 'importShare'
                 || $questionsList == 'importExoList') {
-
-            $questionRights['allowImportQuestion'] = TRUE;
+            $questionRights['allowImportQuestion'] = true;
         }
 
         return $questionRights;
-
     }
 }

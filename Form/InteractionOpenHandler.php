@@ -4,27 +4,24 @@ namespace UJM\ExoBundle\Form;
 
 class InteractionOpenHandler extends QuestionHandler
 {
-
-     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+    /**
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
             //Uses the default category if no category selected
             $this->checkCategory();
             //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if($this->validateNbClone() === FALSE) {
-                    return 'infoDuplicateQuestion';
+            if ($this->validateNbClone() === false) {
+                return 'infoDuplicateQuestion';
             }
-            if ( $this->form->isValid() ) {
-                    $this->onSuccessAdd($this->form->getData());
-                    return true;
+            if ($this->form->isValid()) {
+                $this->onSuccessAdd($this->form->getData());
+
+                return true;
             }
         }
 
@@ -32,9 +29,8 @@ class InteractionOpenHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionOpen $interOpen
      */
@@ -60,13 +56,11 @@ class InteractionOpenHandler extends QuestionHandler
         $this->addAnExercise($interOpen);
 
         $this->duplicateInter($interOpen);
-
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionOpen $originalInterOpen
      *
@@ -84,10 +78,10 @@ class InteractionOpenHandler extends QuestionHandler
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalWrs, $originalHints);
 
                 return true;
@@ -98,10 +92,7 @@ class InteractionOpenHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -135,6 +126,5 @@ class InteractionOpenHandler extends QuestionHandler
         }
 
         $this->em->flush();
-
     }
 }

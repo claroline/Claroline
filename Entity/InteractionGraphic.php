@@ -36,7 +36,7 @@ class InteractionGraphic extends AbstractInteraction
     private $coords;
 
     /**
-     * Constructs a new instance of choices
+     * Constructs a new instance of choices.
      */
     public function __construct()
     {
@@ -52,7 +52,7 @@ class InteractionGraphic extends AbstractInteraction
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getWidth()
     {
@@ -60,7 +60,7 @@ class InteractionGraphic extends AbstractInteraction
     }
 
     /**
-     * @param integer $height
+     * @param int $height
      */
     public function setHeight($height)
     {
@@ -68,7 +68,7 @@ class InteractionGraphic extends AbstractInteraction
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getHeight()
     {

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Unit
+ * UJM\ExoBundle\Entity\Unit.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_unit")
@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Unit
 {
     /**
-     * @var integer $id
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -22,17 +22,16 @@ class Unit
     private $id;
 
     /**
-     * @var string $value
+     * @var string
      *
      * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -40,7 +39,7 @@ class Unit
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      */
@@ -50,7 +49,7 @@ class Unit
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */

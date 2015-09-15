@@ -49,7 +49,7 @@ class InteractionOpen extends AbstractInteraction
     }
 
     /**
-     * Get orthographyCorrect
+     * Get orthographyCorrect.
      */
     public function getOrthographyCorrect()
     {

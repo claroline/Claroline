@@ -4,26 +4,22 @@ namespace UJM\ExoBundle\Form;
 
 class InteractionQCMHandler extends QuestionHandler
 {
-
     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
             $this->checkCategory();
             //If title null, uses the first 50 characters of "invite" (enuncicate)
             $this->checkTitle();
-            if($this->validateNbClone() === FALSE) {
+            if ($this->validateNbClone() === false) {
                 return 'infoDuplicateQuestion';
             }
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;
@@ -34,9 +30,8 @@ class InteractionQCMHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access protected
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $interQCM
      */
@@ -70,13 +65,11 @@ class InteractionQCMHandler extends QuestionHandler
         $this->addAnExercise($interQCM);
 
         $this->duplicateInter($interQCM);
-
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionQCM $originalInterQCM
      *
@@ -95,10 +88,10 @@ class InteractionQCMHandler extends QuestionHandler
             $originalHints[] = $hint;
         }
 
-        if ( $this->request->getMethod() == 'POST' ) {
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalChoices, $originalHints);
 
                 return true;
@@ -109,10 +102,7 @@ class InteractionQCMHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -158,6 +148,5 @@ class InteractionQCMHandler extends QuestionHandler
         }
 
         $this->em->flush();
-
     }
 }

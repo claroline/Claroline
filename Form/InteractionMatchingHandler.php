@@ -4,27 +4,22 @@ namespace UJM\ExoBundle\Form;
 
 class InteractionMatchingHandler extends QuestionHandler
 {
-
     /**
-     * Implements the abstract method
-     *
-     * @access public
-     *
+     * Implements the abstract method.
      */
     public function processAdd()
     {
-        if ( $this->request->getMethod() == 'POST' ) {           
+        if ($this->request->getMethod() == 'POST') {
             $this->form->handleRequest($this->request);
              //Uses the default category if no category selected
-            $this->checkCategory();            
+            $this->checkCategory();
             //If title null, uses the first 50 characters of "invite" (enuncicate)
-            $this->checkTitle();           
-            if ( $this->validateNbClone() === FALSE ) {
-
+            $this->checkTitle();
+            if ($this->validateNbClone() === false) {
                 return 'infoDuplicateQuestion';
             }
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessAdd($this->form->getData());
 
                 return true;
@@ -35,12 +30,10 @@ class InteractionMatchingHandler extends QuestionHandler
     }
 
     /**
-     * Implements the abstract Method
+     * Implements the abstract Method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionMatching $interMatching
-     *
      */
     protected function onSuccessAdd($interMatching)
     {
@@ -59,15 +52,15 @@ class InteractionMatchingHandler extends QuestionHandler
             $label->setInteractionMatching($interMatching);
             $this->em->persist($label);
 
-            if ($this->isClone === FALSE) {
-                if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
-                    foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
+            if ($this->isClone === false) {
+                if (count($this->request->get($indLabel.'_correspondence')) > 0) {
+                    foreach ($this->request->get($indLabel.'_correspondence') as $indProposal) {
                         $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     }
                 }
             }
 
-            $indLabel++;
+            ++$indLabel;
         }
 
         foreach ($proposals as $proposal) {
@@ -82,13 +75,11 @@ class InteractionMatchingHandler extends QuestionHandler
         $this->addAnExercise($interMatching);
 
         $this->duplicateInter($interMatching);
-
     }
 
     /**
-     * Implements the abstract method
+     * Implements the abstract method.
      *
-     * @access public
      *
      * @param \UJM\ExoBundle\Entity\InteractionMatching $originalInterMatching
      *
@@ -101,34 +92,32 @@ class InteractionMatchingHandler extends QuestionHandler
         $originalHints = array();
 
         //create an array of currente Label of the database
-        foreach ( $originalInterMatching->getLabels() as $label ) {
+        foreach ($originalInterMatching->getLabels() as $label) {
             $originalLabel[] = $label;
         }
-        foreach ( $originalInterMatching->getProposals() as $proposal ) {
+        foreach ($originalInterMatching->getProposals() as $proposal) {
             $originalProposal[] = $proposal;
         }
-        foreach ( $originalInterMatching->getQuestion()->getHints() as $hints ) {
+
+        foreach ($originalInterMatching->getQuestion()->getHints() as $hints ) {
             $originalHints[] = $hints;
         }
 
-        if ( $this->request->getMethod()  == 'POST' ) {
+        if ($this->request->getMethod()  == 'POST') {
             $this->form->handleRequest($this->request);
 
-            if ( $this->form->isValid() ) {
+            if ($this->form->isValid()) {
                 $this->onSuccessUpdate($this->form->getData(), $originalLabel, $originalProposal, $originalHints);
 
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
-     * Implements the abstract method
-     *
-     * @access protected
-     *
+     * Implements the abstract method.
      */
     protected function onSuccessUpdate()
     {
@@ -193,14 +182,14 @@ class InteractionMatchingHandler extends QuestionHandler
 
         $proposals = array_merge($interMatching->getProposals()->toArray());
         foreach ($interMatching->getLabels() as $label) {
-            if(count($this->request->get($indLabel.'_correspondence')) > 0 ) {
-                foreach($this->request->get($indLabel.'_correspondence') as $indProposal) {
+            if (count($this->request->get($indLabel.'_correspondence')) > 0) {
+                foreach ($this->request->get($indLabel.'_correspondence') as $indProposal) {
                     $proposals[$indProposal - 1]->addAssociatedLabel($label);
                     $this->em->persist($proposals[$indProposal - 1]);
                 }
             }
 
-            $indLabel++;
+            ++$indLabel;
         }
         $this->em->flush();
     }

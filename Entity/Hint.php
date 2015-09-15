@@ -33,7 +33,7 @@ class Hint
     private $question;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {

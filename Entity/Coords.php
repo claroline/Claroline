@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\Coords
+ * UJM\ExoBundle\Entity\Coords.
  *
  * @ORM\Entity
  * @ORM\Table(name="ujm_coords")
@@ -50,13 +50,13 @@ class Coords
      */
     private $size;
     
-     /**
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $feedback;
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -158,11 +158,11 @@ class Coords
     {
         $this->interactionGraphic = $interactionGraphic;
     }
-    
+
     /**
      * @return string
      */
-    function getFeedback()
+    public function getFeedback()
     {
         return $this->feedback;
     }
@@ -170,7 +170,7 @@ class Coords
     /**
      * @param $feedback
      */
-    function setFeedback($feedback)
+    public function setFeedback($feedback)
     {
         $this->feedback = $feedback;
     }

@@ -1,23 +1,22 @@
 <?php
 
 /**
- * To export in QTI an open question with one word
- *
+ * To export in QTI an open question with one word.
  */
-
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use UJM\ExoBundle\Entity\Question;
 
 class OpenOneWordExport extends OpenExport
 {
     /**
-     * overload the export method
+     * overload the export method.
      *
      * @access public
      * @param Question $question
      * @param qtiRepository $qtiRepos
-     * @return \UJM\ExoBundle\Services\classes\QTI\BinaryFileResponse|void
+     * @return BinaryFileResponse
      */
     public function export(Question $question, qtiRepository $qtiRepos)
     {
@@ -32,10 +31,7 @@ class OpenOneWordExport extends OpenExport
     }
 
     /**
-     * add the tag mapping in responseDeclaration
-     *
-     * @access private
-     *
+     * add the tag mapping in responseDeclaration.
      */
     private function mappingTag()
     {
@@ -45,8 +41,8 @@ class OpenOneWordExport extends OpenExport
 
         $responseDeclaration = $this->responseDeclaration[$this->nbResponseDeclaration - 1];
         $correctWordResponse = '';
-        $mapping = $this->document->createElement("mapping");
-        $mapping->setAttribute("defaultValue", "0");
+        $mapping = $this->document->createElement('mapping');
+        $mapping->setAttribute('defaultValue', '0');
 
         foreach ($this->interactionopen->getWordResponses() as $resp) {
             $i = 0;
@@ -58,16 +54,16 @@ class OpenOneWordExport extends OpenExport
                 }
             }
 
-            $mapEntry =  $this->document->createElement("mapEntry");
-            $mapEntry->setAttribute("mapKey", $resp->getResponse());
-            $mapEntry->setAttribute("mappedValue",$resp->getScore());
-            $mapEntry->setAttribute("caseSensitive",$resp->getCaseSensitive());
+            $mapEntry = $this->document->createElement('mapEntry');
+            $mapEntry->setAttribute('mapKey', $resp->getResponse());
+            $mapEntry->setAttribute('mappedValue', $resp->getScore());
+            $mapEntry->setAttribute('caseSensitive', $resp->getCaseSensitive());
             $mapping->appendChild($mapEntry);
 
-            $i++;
+            ++$i;
         }
-        $Tagvalue = $this->document->CreateElement("value");
-        $responsevalue =  $this->document->CreateTextNode($correctWordResponse->getResponse());
+        $Tagvalue = $this->document->CreateElement('value');
+        $responsevalue = $this->document->CreateTextNode($correctWordResponse->getResponse());
         $Tagvalue->appendChild($responsevalue);
         $correctResponse->appendChild($Tagvalue);
         $responseDeclaration->appendChild($correctResponse);
@@ -76,10 +72,7 @@ class OpenOneWordExport extends OpenExport
     }
 
     /**
-     * add the tag textEntryInteraction in itemBody
-     *
-     * @access private
-     *
+     * add the tag textEntryInteraction in itemBody.
      */
     private function textEntryInteractionTag()
     {
