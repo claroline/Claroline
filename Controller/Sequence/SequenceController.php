@@ -21,7 +21,7 @@ class SequenceController extends Controller
     /**
      * Play the selected Exercise.
      *
-     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
+     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      */
     public function playAction(Exercise $exercise)
@@ -32,6 +32,8 @@ class SequenceController extends Controller
 
         $steps = $exo['steps'];
         $data = json_encode($exo);
+        
+        // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
             '_resource' => $exercise, 
@@ -39,5 +41,16 @@ class SequenceController extends Controller
             'sequence' => $data
                 )
         );
+    }
+    
+    /**
+     * Show the sequence correction
+     *
+     * @Route("/correct/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_correction", options={"expose"=true})
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     */
+    public function correctionAction(Exercise $exercise)
+    {
+        
     }
 }

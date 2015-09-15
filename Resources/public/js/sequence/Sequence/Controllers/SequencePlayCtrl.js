@@ -73,19 +73,16 @@
             
             /**
              * Validate the current step after confirm
-             * If next step get it
+             * If next step get it (also save student progression)
+             * Else terminate sequence (also save student paper)
              */
             this.validateStep = function () {
                 var data = CommonService.getStudentData();
                 console.log('student data are below');
                 console.log(data);
-                var stepResult = {
-                    step : this.currentStep,
-                    answers: this.data
-                };
                 // save step results TODO save it in db !!!!
                 // also save the current progression ?
-                this.studentResults.push(stepResult);
+                this.studentResults.push(data);
                 // go to next step
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var length = this.steps.length;
@@ -97,23 +94,13 @@
                 else{
                     console.log('you reached the end of the exercise you will be redirected to summary page');
                     this.isFinished = true;
-                    this.endSequence();
                     // TODO save the results in db
                     // save the hints used (table ujm_link_hint_paper) -> really need this ?
                     // save the paper (table ujm_paper) (and the question order for the paper...)
                     // save answers (table ujm_response)
-                    // redirect user to correction summary page
+                    // show correction summary page
                 }
                 
-            };
-            
-            /**
-             * 
-             * @returns {undefined}
-             */
-            this.endSequence = function(){
-                console.log('TODO display a summary page!');
-                console.log(this.studentResults);
             };
         }
     ]);

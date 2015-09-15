@@ -111,7 +111,7 @@ class ExerciseController extends Controller
     /**
      * Displays an exercise.
      *
-     * @EXT\Route("/{id}", name="ujm_exercise_open")
+     * @EXT\Route("/{id}", name="ujm_exercise_open", options={"expose"=true})
      *
      * @param Exercise $exercise
      *
