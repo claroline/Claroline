@@ -1,26 +1,35 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-8">
-                <h3>{{sequencePlayCtrl.sequence.meta.title}} - Etape {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.getNbStep()}}</h3> 
-            </div>
-            <div class="col-md-4">        
-                <span class="pull-right"><strong>{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.getNbAttempts()}:'ujm_sequence'}} </strong></span>
-            </div>
+<div>
+    <!-- PLAY -->
+    <div data-ng-if="!sequencePlayCtrl.isFinished" class="panel panel-default">
+        <div class="panel-heading clearfix">
+            <h3 class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - Etape {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.getNbStep()}}</h3>
+            <span class="pull-right">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.getNbAttempts()}:'ujm_sequence'}} </span>
         </div>
-        <hr/>
-        <div class="row">
-            <div class="col-md-12">
-                <step-show class="step-container" data-step="sequencePlayCtrl.getCurrentStep()"></step-show>
-            </div>
-        </div>
-        <hr/>
-        <div class="row pull-right">
-            <div class="col-md-12">
-                <button role="button" type="button" ng-bootbox-confirm="Alert message!" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
-                    {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
-                </button>
+        <div class="panel-body">           
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <step-show class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row pull-right">
+                        <div class="col-md-12" data-ng-if="!sequencePlayCtrl.isLastStep">
+                            <button role="button" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                                {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
+                            </button>
+                        </div>
+                        <div class="col-md-12" data-ng-if="sequencePlayCtrl.isLastStep">
+                            <button role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                                {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- END -->
+    <correction-show data-ng-if="sequencePlayCtrl.isFinished" data-sequence="sequencePlayCtrl.sequence" data-answers="sequencePlayCtrl.studentResults"></correction-show>
 </div>

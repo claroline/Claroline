@@ -1,11 +1,10 @@
-<div class="panel panel-primary">
-    <div class="panel-heading clearfix">
-        <h5 class="panel-title pull-left">{{question.title}}</h5>
-    </div>
-    <div class="panel-body">        
+<div class="row">
+    <div class="col-md-12">
+        <h4>{{question.title}}</h4>
+        <hr/>
         <!-- Question choices row -->
         <div data-ng-if="choiceQuestionCtrl.question.choices" class="question-row">
-            <label><strong>{{ 'question_choices'|trans:{}:'ujm_sequence' }}:</strong></label>
+            
             <div class="form-inline choice-item-col" data-ng-repeat="choice in choiceQuestionCtrl.question.choices">
                 <div data-ng-class="{'bordered' : !$last}">
                     <!-- checkboxes / radiobuttons  -->
@@ -27,18 +26,19 @@
                 </div>
             </div>
         </div>
-        <hr/>
-        <!-- Question hints row -->
-        <div data-ng-if="choiceQuestionCtrl.question.hints" class="form-inline question-row row-bordered">
-            <div class="form-group">
-                <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
-
-                <div data-ng-repeat="hint in choiceQuestionCtrl.question.hints">
-                    <button type="button" role="button" class="btn btn-default fa fa-eye" title="voir l'indice" id="{{hint.id}}" ng-bootbox-confirm="sur ?? ça fera une pénalité de : {{hint.penalty}}" ng-bootbox-confirm-action="choiceQuestionCtrl.showHint(hint)"> Indice {{$index + 1}}</button>
-                    <span style="display: none;">{{hint.text}}</span>
-                </div>  
-
+        <div data-ng-if="choiceQuestionCtrl.question.hints">
+            <hr/>
+            <!-- Question hints row -->
+            <div class="form-inline">
+                <div class="form-group">
+                    <label>{{ 'question_hints'|trans:{}:'ujm_sequence' }}:</label>
+                    <div data-ng-repeat="hint in choiceQuestionCtrl.question.hints" style="margin-bottom: 10px;">
+                        <button type="button" role="button" class="btn btn-default fa fa-eye" title="voir l'indice" id="{{hint.id}}" ng-bootbox-confirm="{{ 'question_show_hint_confirm'|trans:{'1' : hint.penalty}:'ujm_sequence'}}" ng-bootbox-confirm-action="choiceQuestionCtrl.showHint(hint)"> Indice {{$index + 1}}</button>
+                        <span style="display: none;">{{hint.text}}</span>
+                    </div>  
+                </div>
             </div>
         </div>
     </div>
 </div>
+

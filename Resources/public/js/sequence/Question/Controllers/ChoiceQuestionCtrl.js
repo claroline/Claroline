@@ -43,6 +43,8 @@
                 for (var i = 0; i < this.question.choices.length; i++) {
                     this.answer[this.question.choices[i].id] = false;
                 }
+                // init the answer objects
+                this.updateQuestionChoices();
             };
 
             /**
