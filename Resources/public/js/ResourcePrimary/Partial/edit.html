@@ -11,8 +11,8 @@
 
         <btn-resource-picker data-parameters="resourcesPrimaryEditCtrl.resourcePicker" class="btn btn-sm btn-primary">
             <span class="fa fa-plus"></span>
-            <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resources_browse'|trans:{}:'path_wizards' }}</span>
-            <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{ 'resources_replace'|trans:{}:'path_wizards' }}</span>
+            <span data-ng-show="!resourcesPrimaryEditCtrl.resources || resourcesPrimaryEditCtrl.resources.length == 0">{{ 'resource_primary_add'|trans:{}:'path_wizards' }}</span>
+            <span data-ng-show="resourcesPrimaryEditCtrl.resources && resourcesPrimaryEditCtrl.resources.length != 0">{{  'resource_primary_replace'|trans:{}:'path_wizards' }}</span>
         </btn-resource-picker>
     </div>
 

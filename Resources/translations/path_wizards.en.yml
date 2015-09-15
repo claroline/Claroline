@@ -69,11 +69,12 @@ step_delete_confirm: Are you sure you want to delete this resource ?
 step_delete_title: <span class="trash-o"></span> Delete step : <strong>&lt;%resourceName%&gt;</strong>
 resource_hide_parent: Hide in this step
 resource_no_propagate : Make unavailable in children
+resource_primary_add: Add resource
+resource_primary_replace: Replace
 resource_propagate : Make available in children
+resource_secondary_add: Secondary resource
 resource_show: Show resource
 resource_show_parent: Display in this step
-resources_browse: Add resource
-resources_replace: Replace
 root_default_name: untitled
 
 # s
