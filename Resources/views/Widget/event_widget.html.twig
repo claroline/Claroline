@@ -39,18 +39,12 @@
             {{ event.getStartInDateTime()|date('d/m/Y') }},
         {% endif %}
 
-        <a href="
-        {% if event.workspace is null %}
-            {{ path('claro_desktop_open_tool', {'toolName': 'agenda_'}) }}?year={{ event.getStartInDateTime()|date('Y') }}&month={{ event.getStartInDateTime()|date('m') }}&day={{ event.getStartInDateTime()|date('d') }}
-        {% else %}
-            {{ path('claro_workspace_open_tool', {'workspaceId': event.workspace.id, 'toolName': 'agenda_'}) }}?year={{ event.getStartInDateTime()|date('Y') }}&month={{ event.getStartInDateTime()|date('m') }}&day={{ event.getStartInDateTime()|date('d') }}
-        {% endif %}"
+        <a href="#"
            class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
            tabindex="0"
            role="button"
            data-placement="top"
            data-toggle="popover"
-           data-trigger="hover"
            title="{{ event.title }}"
            data-container="body"
            data-content="{% include "ClarolineAgendaBundle:Widget:popover.html.twig" %}">
