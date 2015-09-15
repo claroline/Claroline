@@ -18,6 +18,7 @@ use UJM\ExoBundle\Entity\Exercise;
  */
 class SequenceController extends Controller
 {
+
     /**
      * Play the selected Exercise
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
