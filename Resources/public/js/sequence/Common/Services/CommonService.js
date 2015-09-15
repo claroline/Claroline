@@ -79,6 +79,18 @@
                         answer: this.currentAnswer,
                         question: this.currentQuestion
                     };
+                },
+                generateUrl: function (witch) {                                    
+                    switch (witch) {
+                        case 'exercise-home':
+                            return Routing.generate('ujm_exercise_open', {id: this.sequence.id});
+                            break;
+                        case 'exercise-paper-list':
+                            break;
+                        case 'exercise-play':
+                            return Routing.generate('ujm_exercise_play', {id: this.sequence.id})
+                            break;
+                    }
                 }
             };
         }

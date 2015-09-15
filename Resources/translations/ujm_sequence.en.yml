@@ -1,5 +1,6 @@
 # b
 btn_end_step_label: End step
+btn_end_sequence_label: End sequence
 
 # m
 meta_authors: Author(s)
@@ -28,6 +29,7 @@ question_cloze_text: Cloze text
 question_solutions: Solutions
 question_solution_answers: Answer(s)
 question_solution_score: Score
+question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 
 # s
 sequence_panel_title: Sequence
@@ -52,5 +54,7 @@ sequence_step_panel_title: Steps
 sequence_select_available_question: Select a question
 sequence_step_add_question: Add question
 sequence_attempts_infos: You have %1% attempt(s) - Attempt N° %2% / %1%
+sequence_next_step_confirm: Are you sure you want to go to the next step ? <br/> Yon won't be able to go back.
+sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
 step_question_shuffle: Shuffle question order for this step
 
