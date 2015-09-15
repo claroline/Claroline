@@ -162,7 +162,7 @@ class RightsManager
             }
 
             if (is_int($permissions)) {
-                $permissions = $permissions | $toUpdate->getMask();
+                if ($mergePerms) $permissions = $permissions | $toUpdate->getMask();
                 $toUpdate->setMask($permissions);
             } else {
                 $this->setPermissions($toUpdate, $permissions);

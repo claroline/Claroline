@@ -32,8 +32,7 @@ class DebugRightsCommand extends ContainerAwareCommand
             ->setDescription('Recursively change the permissions of a root directory.');
         $this->setDefinition(
             array(
-                new InputArgument('code', InputArgument::REQUIRED, 'The workspace code'),
-                new InputArgument('role', InputArgument::REQUIRED, 'The new role name')
+                new InputArgument('code', InputArgument::REQUIRED, 'The workspace code')
             )
         );
     }
@@ -42,8 +41,7 @@ class DebugRightsCommand extends ContainerAwareCommand
     {
         //@todo ask authentication source
         $params = array(
-            'code' => 'The workspace code: ',
-            'role' => 'The new role name: '
+            'code' => 'The workspace code: '
         );
 
         foreach ($params as $argument => $argumentName) {
@@ -81,13 +79,19 @@ class DebugRightsCommand extends ContainerAwareCommand
         );
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
         $code = $input->getArgument('code');
-        $role = $input->getArgument('role');
 
-        $workspace = $this->getContainer()->get('claroline.manager.workspace_manager')->getWorkspaceByCode($code);
-        $root = $this->getContainer()->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
-        $roleEntity = $this->getContainer()->get('claroline.manager.role_manager')->createBaseRole('ROLE_' . $role, $role);
+        $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+        $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
+        $resourceManager = $this->getContainer()->get('claroline.manager.resource_manager');
         $rightsManager = $this->getContainer()->get('claroline.manager.rights_manager');
         $rightsManager->setLogger($consoleLogger);
-        $rightsManager->editPerms(1, $roleEntity, $root, true);
+
+        $workspace = $workspaceManager->getWorkspaceByCode($code);
+        $roles = $roleManager->getWorkspaceConfigurableRoles($workspace);
+        $root = $resourceManager->getWorkspaceRoot($workspace);
+
+        foreach ($roles as $role) {
+            $rightsManager->editPerms(5, $role, $root, true);
+        }
     }
 }
