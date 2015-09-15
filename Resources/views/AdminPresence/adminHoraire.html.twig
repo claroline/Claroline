@@ -22,7 +22,11 @@
             <br /><br />
             {{macros.flashBox()}}
             <div style="text-align:center;font-size:36px";>Horaire type: </div>
-            <h4>Periode de relevée: {{schoolYear.getSchoolYearName()}}</h4>
+            {% if schoolYear is null %}
+                 <h4>Periode de relevée: Aucune période existante</h4>
+            {% else %}
+                <h4>Periode de relevée: {{schoolYear.getSchoolYearName()}}</h4>
+            {% endif %}
             <br /><br />
             <form method="post" {{ form_enctype(NewPeriodForm) }}>    
                 <div class="row">

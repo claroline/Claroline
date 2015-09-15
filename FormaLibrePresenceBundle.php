@@ -19,4 +19,9 @@ class FormaLibrePresenceBundle extends PluginBundle
         return true;
     }
     
+    public function getRequiredFixturesDirectory($environment)
+    {
+        return 'DataFixtures';
+    }
+    
 }

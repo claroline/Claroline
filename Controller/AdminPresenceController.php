@@ -417,6 +417,7 @@ class AdminPresenceController extends Controller
                 $endHourFormat = \DateTime::createFromFormat('H:i', $endHour);
                            
                 if(!is_null($SchoolYear)){
+                    
                     $BeginSchoolYearDate=$SchoolYear->getSchoolYearBegin();
                     $EndSchoolYearDate=$SchoolYear->getSchoolYearEnd();
       
