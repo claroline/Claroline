@@ -54,7 +54,8 @@
            title="{{ event.title }}"
            data-container="body"
            data-content="{% include "ClarolineAgendaBundle:Widget:popover.html.twig" %}">
-            {{ event.title }}</a>,
+            {{ event.title }}
+        </a>,
 
         {% if event.allDay %}
             {% set time = 'all_day'|trans({}, 'agenda') %}

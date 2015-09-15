@@ -9,7 +9,7 @@
 {% if event.description is not empty %}
     <div>
         {{ 'form.description'|trans({}, 'agenda') }} :
-        <div>{{ event.description |raw }}</div>
+        <div>{{ event.description }}</div>
     </div>
 {% endif %}
 <div>
