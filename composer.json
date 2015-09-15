@@ -1,21 +1,37 @@
 {
     "name": "innova/collecticiel-bundle",
     "license": "MIT",
-    "type": "project",
-    "description": "Collecticiel",
     "type": "claroline-plugin",
+    "description": "Claroline Collecticiel Bundle",
+    "type": "claroline-plugin",
+    "authors" : [
+        {
+            "name" : "Eric Vincent",
+            "email" : "eric.vincent@u-grenoble3.fr"
+        },
+        {
+            "name" : "Nicolas Dufour",
+            "email" : "nicolas.dufour@u-grenoble3.fr"
+        },
+        {
+            "name" : "Arnaud Bey",
+            "email" : "arnaud.bey@u-grenoble3.fr"
+        },
+        {
+            "name" : "Donovan Tengblad",
+            "email" : "donovan.tengblad@u-grenoble3.fr"
+        }
+    ],
+    "keywords" : [
+        "Claroline",
+        "Collecticiel"
+    ],
     "require": {
-        "php": ">=5.4.1",
-        "ext-intl": "*",
-        "claroline/core-bundle": "~5.0",
-        "icap/notification-bundle": "~5.0",
-        "claroline/agenda-bundle": "~5.0"
+        "claroline/core-bundle" : "~6.0",
+        "claroline/agenda-bundle": "~6.0"
     },
     "autoload": {
         "psr-0": { "Innova\\CollecticielBundle": "" }
     },
-    "target-dir": "Innova/CollecticielBundle",
-    "require-dev": {
-        "phpunit/phpunit": "4.1.*"
-    }
+    "target-dir": "Innova/CollecticielBundle"
 }
