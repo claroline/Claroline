@@ -160,6 +160,7 @@ class ResourceRightsController
         $collection = new ResourceCollection(array($node));
         $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
+        //throw new \Exception(var_dump($datas));
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
 
         foreach ($datas as $data) {
@@ -426,26 +427,13 @@ class ResourceRightsController
             $roles = array();
         }
 
-        foreach (array_keys($rows) as $roleId) {
-            if (!array_key_exists($roleId, $roles)) {
-                foreach ($permsMap as $perm) {
-                    $changedPerms[$perm] = false;
-                }
-
-                $data[] = array(
-                    'role' => $this->roleManager->getRole($roleId),
-                    'permissions' => $changedPerms
-                );
-            }
-        }
-
         foreach ($roles as $roleId => $perms) {
 
             foreach ($permsMap as $perm) {
                 $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
             }
 
-            $data[] = array(
+            $data[$roleId] = array(
                 'role' => $this->roleManager->getRole($roleId),
                 'permissions' => $changedPerms
             );

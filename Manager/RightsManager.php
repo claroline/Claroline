@@ -126,6 +126,7 @@ class RightsManager
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      * @param boolean                                            $isRecursive
      * @param array                                              $creations
+     * @param boolean                                            $mergePerm do we want to merge the permissions (only work for integers perm)
      *
      * @return array|\Claroline\CoreBundle\Entity\Resource\ResourceRights[]
      */
@@ -134,7 +135,8 @@ class RightsManager
         Role $role,
         ResourceNode $node,
         $isRecursive = false,
-        $creations = array()
+        $creations = array(),
+        $mergePerm = false
     )
     {
         $this->log('Editing permissions...');
@@ -159,13 +161,20 @@ class RightsManager
                 }
             }
 
-            is_int($permissions) ?
-                $toUpdate->setMask($permissions) :
+            if (is_int($permissions)) {
+                if ($mergePerms) $permissions = $permissions | $toUpdate->getMask();
+                $toUpdate->setMask($permissions);
+            } else {
                 $this->setPermissions($toUpdate, $permissions);
+            }
 
             $this->om->persist($toUpdate);
-            $this->logChangeSet($toUpdate);
-            $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+
+            //this is bad but for a huge datatree, logging everythings takes way too much time.
+            if (!$isRecursive) {
+                $this->logChangeSet($toUpdate);
+                $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', array($node, $toUpdate));
+            }
         }
 
         //exception for activities
