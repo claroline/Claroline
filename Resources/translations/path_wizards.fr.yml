@@ -95,6 +95,7 @@ step_duration: Durée prévue
 step_edit: Modifier l'étape
 step_has_duration: l'étape a une durée
 step_no_resource: Il n'y a aucune ressource rattachée à cette étape.
+step_not_accessible: Cette étape n'est pas accessible pour le moment.
 step_paste: Coller
 step_to_template: Sauvegarder comme modèle
 step_who: Modalité de travail

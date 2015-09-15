@@ -96,6 +96,7 @@ step_duration: Expected duration
 step_edit: Edit step
 step_has_duration: step has a duration
 step_no_resource: There is no resource linked to this step.
+step_not_accessible: This step is not accessible for the time being.
 step_paste: Paste
 step_to_template: Save as template
 step_where: Learning place
