@@ -13,6 +13,7 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Yaml\Parser;
+use UJM\ExoBundle\Entity\Question;
 
 class QuestionService {
 
@@ -66,12 +67,12 @@ class QuestionService {
      *
      * @access public
      *
-     * @param Collection of \UJM\ExoBundle\Entity\Interaction $listInteractions
+     * @param Collection of \UJM\ExoBundle\Entity\Question $listQuestions
      * @param integer $userID id User
      *
      * @return mixed[]
      */
-    public function getActionsAllQuestions($listInteractions, $userID)
+    public function getActionsAllQuestions($listQuestions, $userID)
     {
         $em = $this->doctrine->getEntityManager();
 
@@ -82,26 +83,26 @@ class QuestionService {
         $sharedWithMe         = array();
         $shareRight           = array();
 
-        foreach ($listInteractions as $interaction) {
-            if ($interaction->getQuestion()->getUser()->getId() == $userID) {
-                $actionQ[$interaction->getQuestion()->getId()] = 1; // my question
+        foreach ($listQuestions as $question) {
+            if ($question->getUser()->getId() == $userID) {
+                $actionQ[$question->getId()] = 1; // my question
 
-                $actions = $this->getActionInteraction($interaction);
+                $actions = $this->getActionQuestion($question);
                 $questionWithResponse += $actions[0];
                 $alreadyShared += $actions[1];
             } else {
                 $sharedQ = $em->getRepository('UJMExoBundle:Share')
-                ->findOneBy(array('user' => $userID, 'question' => $interaction->getQuestion()->getId()));
+                ->findOneBy(array('user' => $userID, 'question' => $question->getId()));
 
-                if (count($sharedQ) > 0) {
-                    $actionQ[$interaction->getQuestion()->getId()] = 2; // shared question
+                if ($sharedQ) {
+                    $actionQ[$question->getId()] = 2; // shared question
 
                     $actionsS = $this->getActionShared($sharedQ);
                     $sharedWithMe += $actionsS[0];
                     $shareRight += $actionsS[1];
                     $questionWithResponse += $actionsS[2];
                 } else {
-                    $actionQ[$interaction->getQuestion()->getId()] = 3; // other
+                    $actionQ[$question->getId()] = 3; // other
                 }
             }
         }
@@ -120,48 +121,46 @@ class QuestionService {
      *
      * @access public
      *
-     * @param integer $questionID id Question
+     * @param integer $questionId
      *
-     * @return Doctrine Query Result
+     * @return mixed
      */
-    public function controlUserQuestion($questionID)
+    public function controlUserQuestion($questionId)
     {
         $em   = $this->doctrine->getEntityManager();
         $user = $this->tokenStorage->getToken()->getUser();
 
-        $question = $em
-            ->getRepository('UJMExoBundle:Question')
-            ->getControlOwnerQuestion($user->getId(), $questionID);
-
-        return $question;
+        return $em->getRepository('UJMExoBundle:Question')
+            ->findOneBy(['id' => $questionId, 'user' => $user]);
     }
 
     /**
-     * For an interaction know if it's linked with response and if it's shared
+     * For a question know if it's linked with response and if it's shared
      *
      * @access public
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     *
+     * @param Question $question
      * @return boolean[]
      */
-    public function getActionInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
+    public function getActionQuestion(Question $question)
     {
         $em = $this->doctrine->getEntityManager();
         $response = $em->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $interaction->getId()));
-        if (count($response) > 0) {
-            $questionWithResponse[$interaction->getId()] = 1;
+            ->findOneByQuestion($question);
+
+        if ($response) {
+            $questionWithResponse[$question->getId()] = 1;
         } else {
-            $questionWithResponse[$interaction->getId()] = 0;
+            $questionWithResponse[$question->getId()] = 0;
         }
 
         $share = $em->getRepository('UJMExoBundle:Share')
-            ->findBy(array('question' => $interaction->getQuestion()->getId()));
-        if (count($share) > 0) {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 1;
+            ->findOneByQuestion($question);
+
+        if ($share) {
+            $alreadyShared[$question->getId()] = 1;
         } else {
-            $alreadyShared[$interaction->getQuestion()->getId()] = 0;
+            $alreadyShared[$question->getId()] = 0;
         }
 
         $actions[0] = $questionWithResponse;
@@ -183,19 +182,18 @@ class QuestionService {
     public function getActionShared($shared)
     {
         $em = $this->doctrine->getEntityManager();
-        $inter = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $shared->getQuestion()->getId()));
+        $question = $shared->getQuestion();
 
-        $sharedWithMe[$shared->getQuestion()->getId()] = $inter;
-        $shareRight[$inter->getId()] = $shared->getAllowToModify();
+        $sharedWithMe[$shared->getQuestion()->getId()] = $question;
+        $shareRight[$question->getId()] = $shared->getAllowToModify();
 
         $response = $em->getRepository('UJMExoBundle:Response')
-            ->findBy(array('interaction' => $inter->getId()));
+            ->findOneByQuestion($question);
 
-        if (count($response) > 0) {
-            $questionWithResponse[$inter->getId()] = 1;
+        if ($question) {
+            $questionWithResponse[$question->getId()] = 1;
         } else {
-            $questionWithResponse[$inter->getId()] = 0;
+            $questionWithResponse[$question->getId()] = 0;
         }
 
         $actionsS[0] = $sharedWithMe;

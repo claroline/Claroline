@@ -9,7 +9,7 @@ use UJM\ExoBundle\Entity\Category;
 use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\User;
 
-abstract class InteractionHandler
+abstract class QuestionHandler
 {
     protected $form;
     protected $request;
@@ -86,9 +86,9 @@ abstract class InteractionHandler
      *
      */
     protected function persistHints($inter) {
-        foreach ($inter->getInteraction()->getHints() as $hint) {
+        foreach ($inter->getQuestion()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $hint->setInteraction($inter->getInteraction());
+            $hint->setQuestion($inter->getQuestion());
             $this->em->persist($hint);
         }
     }
@@ -105,7 +105,7 @@ abstract class InteractionHandler
     protected function modifyHints($inter, $originalHints) {
 
         // filter $originalHints to contain hint no longer present
-        foreach ($inter->getInteraction()->getHints() as $hint) {
+        foreach ($inter->getQuestion()->getHints() as $hint) {
             foreach ($originalHints as $key => $toDel) {
                 if ($toDel->getId() == $hint->getId()) {
                     unset($originalHints[$key]);
@@ -116,16 +116,16 @@ abstract class InteractionHandler
         // remove the relationship between the hint and the interactionqcm
         foreach ($originalHints as $hint) {
             // remove the Hint from the interactionqcm
-            $inter->getInteraction()->getHints()->removeElement($hint);
+            $inter->getQuestion()->getHints()->removeElement($hint);
 
             // if you wanted to delete the Hint entirely, you can also do that
             $this->em->remove($hint);
         }
 
         //On persite tous les hints de l'entité interaction
-        foreach ($inter->getInteraction()->getHints() as $hint) {
+        foreach ($inter->getQuestion()->getHints() as $hint) {
             $hint->setPenalty(ltrim($hint->getPenalty(), '-'));
-            $inter->getInteraction()->addHint($hint);
+            $inter->getQuestion()->addHint($hint);
             $this->em->persist($hint);
         }
     }
@@ -134,15 +134,13 @@ abstract class InteractionHandler
      */
     protected function checkTitle()
     {
-        $title = $this->form->getData()->getInteraction()->getQuestion();
-        $invite =  $this->form->getData()->getInteraction()->getInvite();
-        if($title->getTitle() == "")
-        {
-            //removes html tags and entity code html
-            $provTitle=html_entity_decode(strip_tags($invite));
+        $question = $this->form->getData()->getQuestion();
 
-            $newTitle=substr($provTitle,0,50);
-            $title->setTitle($newTitle);
+        if ($question->getTitle() == "") {
+            //removes html tags and entity code html
+            $provTitle = html_entity_decode(strip_tags($question->getDescription()));
+            $newTitle = substr($provTitle,0,50);
+            $question->setTitle($newTitle);
         }
     }
     /**
@@ -150,7 +148,7 @@ abstract class InteractionHandler
      */
     protected function checkCategory()
     {
-        $data = $this->form->getData()->getInteraction()->getQuestion();
+        $data = $this->form->getData()->getQuestion();
         $default = $this->translator->trans('default', array(), 'ujm_exo');
         $uid=$this->user->getId();
         $ListeCategroy=$this->em->getRepository('UJMExoBundle:Category')->getListCategory($uid);
@@ -273,8 +271,8 @@ abstract class InteractionHandler
      */
     public function singleDuplicateInter($inter) {
         $copy = clone $inter;
-        $title = $copy->getInteraction()->getQuestion()->getTitle();
-        $copy->getInteraction()->getQuestion()
+        $title = $copy->getQuestion()->getTitle();
+        $copy->getQuestion()
              ->setTitle($title.' #');
 
         $this->isClone = TRUE;

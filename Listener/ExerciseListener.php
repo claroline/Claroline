@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
-
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -22,8 +21,8 @@ use UJM\ExoBundle\Form\ExerciseType;
 /**
  * @DI\Service("ujm.exo.exercise_listener")
  */
-class ExerciseListener
-{
+class ExerciseListener {
+
     private $container;
 
     /**
@@ -33,8 +32,7 @@ class ExerciseListener
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(ContainerInterface $container) {
         $this->container = $container;
     }
 
@@ -43,17 +41,15 @@ class ExerciseListener
      *
      * @param CreateFormResourceEvent $event
      */
-    public function onCreateForm(CreateFormResourceEvent $event)
-    {
+    public function onCreateForm(CreateFormResourceEvent $event) {
         $form = $this->container->get('form.factory')
-            ->create(new ExerciseType(true));
+                ->create(new ExerciseType(true));
         $twig = $this->container->get('templating');
         $content = $twig->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'form'  => $form->createView(),
-                'resourceType' => 'ujm_exercise'
-            ]
+                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'form' => $form->createView(),
+            'resourceType' => 'ujm_exercise'
+                ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -64,12 +60,11 @@ class ExerciseListener
      *
      * @param CreateResourceEvent $event
      */
-    public function onCreate(CreateResourceEvent $event)
-    {
+    public function onCreate(CreateResourceEvent $event) {
         $request = $this->container->get('request');
         $form = $this->container
-            ->get('form.factory')
-            ->create(new ExerciseType(true));
+                ->get('form.factory')
+                ->create(new ExerciseType(true));
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -94,11 +89,10 @@ class ExerciseListener
         }
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
-                'resourceType' => 'ujm_exercise',
-                'form'   => $form->createView()
-            ]
+                'ClarolineCoreBundle:Resource:createForm.html.twig', [
+            'resourceType' => 'ujm_exercise',
+            'form' => $form->createView()
+                ]
         );
 
         $event->setErrorFormContent($content);
@@ -110,16 +104,16 @@ class ExerciseListener
      *
      * @param OpenResourceEvent $event
      */
-    public function onOpen(OpenResourceEvent $event)
-    {
+    public function onOpen(OpenResourceEvent $event) {
+
         $subRequest = $this->container->get('request_stack')
-            ->getCurrentRequest()
-            ->duplicate([], null, [
-                '_controller' => 'UJMExoBundle:Sequence\Sequence:play',
-                'id' => $event->getResource()->getId()
-            ]);
+                ->getCurrentRequest()
+                ->duplicate([], null, [
+            '_controller' => 'UJMExoBundle:Exercise:open',
+            'id' => $event->getResource()->getId()
+        ]);
         $response = $this->container->get('http_kernel')
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -129,16 +123,15 @@ class ExerciseListener
      * @DI\Observe("ujm_exercise_administrate_ujm_exercise")
      * @param CustomActionResourceEvent $event
      */
-    public function onAdministrate(CustomActionResourceEvent $event)
-    {
+    public function onAdministrate(CustomActionResourceEvent $event) {
         $subRequest = $this->container->get('request_stack')
-            ->getCurrentRequest()
-            ->duplicate([], null, [
-                '_controller' => 'UJMExoBundle:Exercise:open',
-                'id' => $event->getResource()->getId()
-            ]);
+                ->getCurrentRequest()
+                ->duplicate([], null, [
+            '_controller' => 'UJMExoBundle:Exercise:open',
+            'id' => $event->getResource()->getId()
+        ]);
         $response = $this->container->get('http_kernel')
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+                ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -148,24 +141,23 @@ class ExerciseListener
      *
      * @param DeleteResourceEvent $event
      */
-    public function onDelete(DeleteResourceEvent $event)
-    {
+    public function onDelete(DeleteResourceEvent $event) {
         $em = $this->container->get('doctrine.orm.entity_manager');
 
         $papers = $em->getRepository('UJMExoBundle:Paper')
-            ->findOneByExercise($event->getResource());
+                ->findOneByExercise($event->getResource());
 
         if (count($papers) == 0) {
 
-             $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->findByExercise($event->getResource());
+            $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')
+                    ->findByExercise($event->getResource());
 
             foreach ($eqs as $eq) {
                 $em->remove($eq);
             }
 
             $subscriptions = $em->getRepository('UJMExoBundle:Subscription')
-                ->findByExercise($event->getResource());
+                    ->findByExercise($event->getResource());
 
             foreach ($subscriptions as $subscription) {
                 $em->remove($subscription);
@@ -174,7 +166,6 @@ class ExerciseListener
             $em->flush();
 
             $em->remove($event->getResource());
-
         } else {
             $exercise = $event->getResource();
             $resourceNode = $exercise->getResourceNode();
@@ -193,13 +184,12 @@ class ExerciseListener
      *
      * @param CopyResourceEvent $event
      */
-    public function onCopy(CopyResourceEvent $event)
-    {
+    public function onCopy(CopyResourceEvent $event) {
         $em = $this->container->get('doctrine.orm.entity_manager');
+        $resource = $event->getResource();
 
         $exerciseToCopy = $event->getResource();
-        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-            ->findBy(['exercise' => $exerciseToCopy->getId()]);
+        $listQuestionsExoToCopy = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(['exercise' => $exerciseToCopy->getId()]);
 
         $newExercise = new Exercise();
         $newExercise->setName($exerciseToCopy->getName());
@@ -215,13 +205,14 @@ class ExerciseListener
         $newExercise->setMarkMode($exerciseToCopy->getMarkMode());
         $newExercise->setDispButtonInterrupt($exerciseToCopy->getDispButtonInterrupt());
         $newExercise->setLockAttempt($exerciseToCopy->getLockAttempt());
-        
+
 
         $em->persist($newExercise);
         $em->flush();
 
         foreach ($listQuestionsExoToCopy as $eq) {
-            $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());;
+            $questionToAdd = $em->getRepository('UJMExoBundle:Question')->find($eq->getQuestion());
+            ;
             $exerciseQuestion = new ExerciseQuestion($newExercise, $questionToAdd);
             $exerciseQuestion->setOrdre($eq->getOrdre());
 
@@ -245,8 +236,7 @@ class ExerciseListener
      *
      * @param PublicationChangeEvent $event
      */
-    public function onPublicationChange(PublicationChangeEvent $event)
-    {
+    public function onPublicationChange(PublicationChangeEvent $event) {
         $exercise = $event->getResource();
 
         if ($exercise->getResourceNode()->isPublished() && !$exercise->wasPublishedOnce()) {
@@ -263,10 +253,10 @@ class ExerciseListener
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktop(DisplayToolEvent $event)
-    {
+    public function onDisplayDesktop(DisplayToolEvent $event) {
         $subRequest = $this->container->get('request')->duplicate([], null, ['_controller' => 'UJMExoBundle:Question:index']);
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }
+
 }

@@ -1,11 +1,23 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">This is the "show exercise player" partial panel header</h3>        
-    </div>
-    <div class="panel-body">
-        <h1>This is the "show exercise player" partial panel body</h1>
-        <hr/>
-        <h2>Nothing is implemented in the player yet :(</h2>
-        <h3>Please use the administrate resource menu to see the actual exercise player interface in edit mode.</h3>
+<div class="row">
+    <div class="col-md-12">
+        <div class="step-container" data-ng-repeat="item in stepShowCtrl.currentStep.items">
+            <!-- switch on item type -->
+            <div data-ng-switch="item.type">
+                <div data-ng-switch-when="application/x.choice+json">      
+                    <choice-question data-question="item"></choice-question>
+                </div>
+                <!--
+                <div data-ng-switch-when="application/x.match+json">
+                    <match-question data-step="stepShowCtrl.currentStep" data-question="item"></match-question>
+                </div>
+                <div data-ng-switch-when="application/x.sort+json">
+                    <sort-question data-step="stepShowCtrl.currentStep" data-question="item"></sort-question>
+                </div>
+                <div data-ng-switch-when="application/x.cloze+json">
+                    <cloze-question data-step="stepShowCtrl.currentStep" data-question="item"></cloze-question>
+                </div> 
+                -->
+            </div>
+        </div>
     </div>
 </div>

@@ -18,15 +18,15 @@ class InteractionMatchingRepository extends EntityRepository
      *
      * @access public
      *
-     * @param integer $interactionId id Interaction
+     * @param integer $questionId
      *
      * Return array[InteractionMatching]
      */
-    public function getInteractionMatching($interactionId)
+    public function getInteractionMatching($questionId)
     {
         $qb = $this->createQueryBuilder('im');
-        $qb->join('im.interaction', 'i')
-            ->where($qb->expr()->in('i.id', $interactionId));
+        $qb->join('im.question', 'q')
+            ->where($qb->expr()->in('q.id', $questionId));
 
         return $qb->getQuery()->getSingleResult();
     }

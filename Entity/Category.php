@@ -35,7 +35,7 @@ class Category
      *
      * @ORM\Column(name="locker", type="boolean")
      */
-    private $locker;
+    private $locker = false;
 
 
     /**

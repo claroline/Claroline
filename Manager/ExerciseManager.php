@@ -12,9 +12,6 @@ use UJM\ExoBundle\Entity\Exercise;
 class ExerciseManager
 {
     private $om;
-    private $paperRepo;
-    private $linkHintPaperRepo;
-    private $responseRepo;
 
     /**
      * @DI\InjectParams({
@@ -26,9 +23,6 @@ class ExerciseManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->paperRepo = $this->om->getRepository('UJMExoBundle:Paper');
-        $this->linkHintPaperRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
-        $this->responseRepo = $this->om->getRepository('UJMExoBundle:Response');
     }
 
     /**
@@ -84,16 +78,19 @@ class ExerciseManager
             );
         }
 
-        $papers = $this->paperRepo->findByExercise($exercise);
+        $paperRepo = $this->om->getRepository('UJMExoBundle:Paper');
+        $linkHintPaperRepo = $this->om->getRepository('UJMExoBundle:LinkHintPaper');
+        $responseRepo = $this->om->getRepository('UJMExoBundle:Response');
+        $papers = $paperRepo->findByExercise($exercise);
 
         foreach ($papers as $paper) {
-            $links = $this->linkHintPaperRepo->findByPaper($paper);
+            $links = $linkHintPaperRepo->findByPaper($paper);
 
             foreach ($links as $link) {
                 $this->om->remove($link);
             }
 
-            $responses = $this->responseRepo->findByPaper($paper);
+            $responses = $responseRepo->findByPaper($paper);
 
             foreach ($responses as $response) {
                 $this->om->remove($response);
@@ -103,5 +100,38 @@ class ExerciseManager
         }
 
         $this->om->flush();
+    }
+
+    /**
+     * Returns a question list according to the *shuffle* and
+     * *nbQuestions* parameters of an exercise, i.e. filtered
+     * and/or randomized if needed.
+     *
+     * @param Exercise $exercise
+     * @return array
+     */
+    public function pickQuestions(Exercise $exercise)
+    {
+        $originalQuestions = $questions = $this->om
+            ->getRepository('UJMExoBundle:Question')
+            ->findByExercise($exercise);
+        $questionCount = count($questions);
+
+        if ($exercise->getShuffle() && $questionCount > 1) {
+            while ($questions === $originalQuestions) {
+                shuffle($questions); // shuffle until we have a new order
+            }
+        }
+
+        if (($questionToPick = $exercise->getNbQuestion()) > 0) {
+            while ($questionToPick > 0) {
+                $index = rand(0, count($questions) - 1);
+                unset($questions[$index]);
+                $questions = array_values($questions); // "re-index" the array
+                $questionToPick--;
+            }
+        }
+
+        return $questions;
     }
 }

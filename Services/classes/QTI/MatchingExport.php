@@ -7,6 +7,8 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use UJM\ExoBundle\Entity\Question;
+
 class MatchingExport extends QtiExport
 {
     private $matchInteraction;
@@ -14,22 +16,23 @@ class MatchingExport extends QtiExport
     private $correctResponse;
     private $cardinality;
 
-     /**
+    /**
      * Implements the abstract method
      *
      * @access public
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param Question $question
      * @param qtiRepository $qtiRepos
+     * @return \UJM\ExoBundle\Services\classes\QTI\BinaryFileResponse
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(Question $question, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
+        $this->question = $question;
 
         $this->interactionmatching = $this->doctrine
                                     ->getManager()
                                     ->getRepository('UJMExoBundle:InteractionMatching')
-                                    ->findOneBy(array('interaction' => $interaction->getId()));
+                                    ->findOneByQuestion($question);
 
         if ($this->interactionmatching->getTypeMatching() == 'To bind') {
             $this->cardinality = 'multiple';
@@ -48,9 +51,9 @@ class MatchingExport extends QtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if(($this->interactionmatching->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionmatching->getInteraction()->getFeedBack()!="") ){
-            $this->qtiFeedBack($interaction->getFeedBack());
+        if(($this->interactionmatching->getQuestion()->getFeedBack()!=Null)
+                && ($this->interactionmatching->getQuestion()->getFeedBack()!="") ){
+            $this->qtiFeedBack($question->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
@@ -104,7 +107,7 @@ class MatchingExport extends QtiExport
 
         $prompttxt =  $this->document
                 ->CreateTextNode(
-                        $this->interactionmatching->getInteraction()->getInvite()
+                        $this->interactionmatching->getQuestion()->getDescription()
                         );
         $prompt->appendChild($prompttxt);
         $this->qtiProposal();

@@ -17,18 +17,18 @@ class ResponseRepository extends EntityRepository
      *
      * @access public
      *
-     * @param integer $paperID id Paper
-     * @param integer $interactionID id Interaction
+     * @param integer $paperID
+     * @param integer $questionID
      *
      * Return array[Response]
      */
-    public function getAlreadyResponded($paperID, $interactionID)
+    public function getAlreadyResponded($paperID, $questionID)
     {
         $qb = $this->createQueryBuilder('r');
         $qb->join('r.paper', 'p')
-            ->join('r.interaction', 'i')
+            ->join('r.question', 'q')
             ->where($qb->expr()->in('p.id', $paperID))
-            ->andWhere($qb->expr()->in('i.id', $interactionID));
+            ->andWhere($qb->expr()->in('q.id', $questionID));
 
         return $qb->getQuery()->getResult();
     }
@@ -82,19 +82,26 @@ class ResponseRepository extends EntityRepository
      *
      * @access public
      *
-     * @param integer $exoId id Exercise
-     * @param integer $interId id Interaction
+     * @param integer $exoId
+     * @param integer $questionId
      *
      * Return array[Response]
      */
-    public function getExerciseInterResponsesWithCount($exoId, $interId)
+    public function getExerciseInterResponsesWithCount($exoId, $questionId)
     {
-        $dql = 'SELECT r.mark, count(r.mark) as nb
-            FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
-            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise= ?1 AND r.interaction = ?2 AND r.response != \'\' GROUP BY r.mark';
+        $dql = '
+            SELECT r.mark, count(r.mark) as nb
+            FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
+            WHERE r.question=q.id
+            AND r.paper=p.id
+            AND p.exercise= ?1
+            AND r.question = ?2
+            AND r.response != \'\'
+            GROUP BY r.mark
+        ';
 
         $query = $this->_em->createQuery($dql)
-                      ->setParameters(array(1 => $exoId, 2 => $interId));
+                      ->setParameters(array(1 => $exoId, 2 => $questionId));
 
         return $query->getResult();
     }
@@ -104,19 +111,25 @@ class ResponseRepository extends EntityRepository
      *
      * @access public
      *
-     * @param integer $exoId id Exercise
-     * @param integer $interId id Interaction
+     * @param integer $exoId
+     * @param integer $questionId
      *
      * Return array[Response]
      */
-    public function getExerciseInterResponses($exoId, $interId)
+    public function getExerciseInterResponses($exoId, $questionId)
     {
-        $dql = 'SELECT r.mark
-            FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Interaction i, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
-            WHERE r.interaction=i.id AND i.question=q.id AND r.paper=p.id AND p.exercise= ?1 AND r.interaction = ?2 ORDER BY p.id';
+        $dql = '
+            SELECT r.mark
+            FROM UJM\ExoBundle\Entity\Response r, UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Paper p
+            WHERE r.question=q.id
+            AND r.paper=p.id
+            AND p.exercise= ?1
+            AND r.question = ?2
+            ORDER BY p.id
+        ';
 
         $query = $this->_em->createQuery($dql)
-                      ->setParameters(array(1 => $exoId, 2 => $interId));
+                      ->setParameters(array(1 => $exoId, 2 => $questionId));
 
         return $query->getResult();
     }

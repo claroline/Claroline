@@ -1,6 +1,6 @@
-{% if inter.interaction.feedback != '' %}
+{% if inter.question.feedback != '' %}
     <hr/>
-    <p>{{ inter.interaction.feedback|raw }}</p>
+    <p>{{ inter.question.feedback|raw }}</p>
 {% endif %}
 
 <hr/>
@@ -12,7 +12,7 @@
     {% endif %}
 {% endfor %}
 
-{% if (inter.interaction.type == 'InteractionOpen') %}
+{% if (inter.question.type == 'InteractionOpen') %}
     {% if responses[p].mark != -1 %}
         {{ 'score' | trans({}, 'ujm_exo') }} : <span id="open_mark_value_{{ responses[p].id }}">{{ responses[p].mark }} / {{ interInfo['maxScore'] }}</span>
         {% set exoMark = exoMark + responses[p].mark %}

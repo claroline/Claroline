@@ -1,15 +1,15 @@
 
     <div class="form-group row">
         <label class="control-label col-md-1">{{ 'title' | trans({}, 'ujm_exo') }}</label>
-        <div class="col-md-5">{{ form_widget(form.interaction.question.title) }}</div>
+        <div class="col-md-5">{{ form_widget(form.question.title) }}</div>
         <a id="idCategoryButton" class="btn btn-default " data-toggle="collapse" data-target="#categoryDiv" onClick="statusButton('idCategory','categoryDiv');" ><i id="idCategory" class=""></i>&nbsp;{{'category' | trans({}, 'ujm_exo') }}</a>
         <a id="idDescriptionButton" class="btn btn-default" data-toggle="collapse" data-target="#descriptionDiv" onClick="statusButton('idDescription','descriptionDiv');" ><i id="idDescription" class=""></i>&nbsp;{{'description' | trans({}, 'ujm_exo') }}</a>
-        {{ form_errors(form.interaction.question.category) }}
+        {{ form_errors(form.question.category) }}
     </div>
    <div id="categoryDiv" class="form-group row collapse">
          <label class="control-label col-md-1">{{ 'category' | trans({}, 'ujm_exo') }}</label>
         <div class="col-md-5">
-            {{ form_widget(form.interaction.question.category) }}
+            {{ form_widget(form.question.category) }}
         </div>
         <a title="{{ 'edit_category' | trans({}, 'ujm_exo') }}" id="editCategory" style="display: none;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop', {'edit': 1} ) }}');"><i class="fa fa-pencil"></i></a>
         <a title="{{ 'create_a_new_category' | trans({}, 'ujm_exo') }}" id="addCategory" style="display: inline-block;" class="btn btn-primary" onclick="openCat('{{ path('ujm_category_new_pop') }}');"><i class="fa fa-plus"></i></a>
@@ -18,28 +18,28 @@
    <div id="descriptionDiv" class="form-group row collapse">
        <label class="col-md-1">{{ 'description' | trans({}, 'ujm_exo') }}</label>
        <div class="col-md-7">
-           {{ form_widget(form.interaction.question.description) }}
+           {{ form_widget(form.question.title) }}
        </div>
        <a id="buttonEdition" class="btn btn-primary" title="{{'advanced_edition' | trans({}, 'ujm_exo') }}" onClick="advancedEdition('interaction_question_description','buttonEdition',event);"><i class="fa fa-font"></i></a>
    </div>
-   <div class="form-group row {% if not form.interaction.invite.vars.valid %} has-error{% endif %}">
+   <div class="form-group row {% if not form.question.description.vars.valid %} has-error{% endif %}">
        <label class="control-label col-md-1">{{ 'question' | trans({}, 'ujm_exo') }}</label>
        <div class="control-label col-md-7">
-           {{ form_widget(form.interaction.invite) }}
-           {{ form_errors(form.interaction.invite) }}
+           {{ form_widget(form.question.description) }}
+           {{ form_errors(form.question.description) }}
        </div>
        <div id="divHint" >
            <div id="hintError"></div>
-           <div id="tableHint" class="control-label col-md-4 {% if not form.interaction.hints.vars.valid %} has-error{% endif %}"></div>
-           {{ form_widget(form.interaction.hints) }}
-           {{ form_errors(form.interaction.hints) }}
+           <div id="tableHint" class="control-label col-md-4 {% if not form.question.hints.vars.valid %} has-error{% endif %}"></div>
+           {{ form_widget(form.question.hints) }}
+           {{ form_errors(form.question.hints) }}
        </div>
    </div>
 
 <div class="form-group">
     <a id="idFeedbackButton" class="btn btn-default" data-toggle="collapse" data-target="#collepseinteraction" title="{{ 'interaction_feedback' | trans({}, 'ujm_exo') }}" onClick="statusButton('idFeedback','collepseinteraction');"><i id="idFeedback" class=""></i>&nbsp;{{ 'feedback' | trans({}, 'ujm_exo') }}</a>
     <div id="collepseinteraction" class="list-group collapse">
-        <div class="list-group-item">{{ form_widget(form.interaction.feedBack) }}</div>
+        <div class="list-group-item">{{ form_widget(form.question.feedBack) }}</div>
     </div>
 </div>
 

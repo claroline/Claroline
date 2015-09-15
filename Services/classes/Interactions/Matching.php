@@ -29,7 +29,7 @@ class Matching extends Interaction {
 
          $session = $request->getSession();
 
-         $penalty = $this->getPenalty($interMatching->getInteraction(), $session, $paperID);
+         $penalty = $this->getPenalty($interMatching->getQuestion(), $session, $paperID);
 
          $tabsResponses = $this->initTabResponseMatching($response, $interMatching);
          $tabRightResponse = $tabsResponses[1];

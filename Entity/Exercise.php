@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Entity;
 
+
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -48,6 +49,7 @@ class Exercise extends AbstractResource
      * @ORM\Column(name="keepSameQuestion", type="boolean", nullable=true)
      */
     private $keepSameQuestion;
+   
 
     /**
      * @var integer $duration
@@ -93,7 +95,7 @@ class Exercise extends AbstractResource
      *
      * @ORM\Column(name="mark_mode", type="string", length=255)
      */
-    private $markMode = '1';
+    private $markMode = '1';   
 
     /**
      * @var boolean $dispButtonInterrupt

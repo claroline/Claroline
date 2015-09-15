@@ -4,9 +4,6 @@ namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
-
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\InteractionHole;
 use UJM\ExoBundle\Entity\InteractionMatching;
@@ -59,6 +56,7 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $services = $this->container->get('ujm.exo_question');
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         if ($resourceId != -1) {
             $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($resourceId);
@@ -86,14 +84,13 @@ class QuestionController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $uid = $user->getId();
 
-        $interactions = $this->getDoctrine()
+        $questions = $this->getDoctrine()
             ->getManager()
-            ->getRepository('UJMExoBundle:Interaction')
-            ->getUserInteraction($uid);
+            ->getRepository('UJMExoBundle:Question')
+            ->findByUser($user);
 
-        foreach ($interactions as $interaction) {
-
-            $actions = $services->getActionInteraction($interaction);
+        foreach ($questions as $question) {
+            $actions = $services->getActionQuestion($question);
             $questionWithResponse += $actions[0];
             $alreadyShared += $actions[1];
         }
@@ -112,11 +109,11 @@ class QuestionController extends Controller
             $i = 1 ;
             $pos = 0 ;
             $temp = 0;
-            foreach ($interactions as $interaction) {
-                if ($interaction->getQuestion()->getCategory() == $categoryToFind) {
+            foreach ($questions as $question) {
+                if ($question->getCategory() == $categoryToFind) {
                     $temp = $i;
                 }
-                if ($interaction->getQuestion()->getTitle() == $titleToFind && $temp == $i) {
+                if ($question->getTitle() == $titleToFind && $temp == $i) {
                     $pos = $i;
                     break;
                 }
@@ -131,14 +128,14 @@ class QuestionController extends Controller
         }
 
         if ($displayAll == 1) {
-            if (count($interactions) > count($shared)) {
-                $max = count($interactions);
+            if (count($questions) > count($shared)) {
+                $max = count($questions);
             } else {
                 $max = count($shared);
             }
         }
 
-        $doublePagination = $this->doublePaginationWithIf($interactions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
+        $doublePagination = $paginationSer->doublePaginationWithIf($questions, $sharedWithMe, $max, $pagerMy, $pagerShared, $pageNow, $pageNowShared);
 
         $interactionsPager = $doublePagination[0];
         $pagerfantaMy = $doublePagination[1];
@@ -268,18 +265,17 @@ class QuestionController extends Controller
         $question = $questionSer->controlUserQuestion($id);
         $sharedQuestion = $questionSer->controlUserSharedQuestion($id);
 
-        if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess == 1) {
+        if ($question || count($sharedQuestion) > 0 || $allowToAccess == 1) {
             $interaction = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getInteraction($id);
+                ->getRepository('UJMExoBundle:Question')
+                ->find($id);
 
-            $typeInter = $interaction->getType();
+            $typeParts = explode('\\', $interaction->getType());
 
             return $this->forward(
-                        'UJMExoBundle:' . $typeInter . ':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars
-                            ));
-
+                'UJMExoBundle:' . array_pop($typeParts) . ':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars
+            ));
         } else {
 
             return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -367,25 +363,20 @@ class QuestionController extends Controller
         $user     = $this->container->get('security.token_storage')->getToken()->getUser();
         $catID    = -1;
 
-        if(count($share) > 0) {
+        if (count($share) > 0) {
             $shareAllowEdit = $share[0]->getAllowToModify();
         }
 
-        if ( (count($question) > 0) || ($shareAllowEdit) ) {
-            $interaction = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getInteraction($id);
+        if ($question || $shareAllowEdit) {
+            $typeParts = explode('\\', $question->getType());
 
-            $typeInter = $interaction->getType();
-
-            if ($user->getId() != $interaction->getQuestion()->getUser()->getId()) {
-                $catID = $interaction->getQuestion()->getCategory()->getId();
+            if ($user->getId() != $question->getUser()->getId()) {
+                $catID = $question->getCategory()->getId();
             }
 
             return $this->forward(
-                        'UJMExoBundle:' . $typeInter . ':edit', array('interaction' => $interaction, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user
-                            ));
+                'UJMExoBundle:' . array_pop($typeParts) . ':edit', array('interaction' => $question, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user
+            ));
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
@@ -409,8 +400,7 @@ class QuestionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $question = $this->container->get('ujm.exo_question')->controlUserQuestion($id);
 
-        if (count($question) > 0) {
-
+        if ($question) {
             $eq = $this->getDoctrine()
                 ->getManager()
                 ->getRepository('UJMExoBundle:ExerciseQuestion')
@@ -422,12 +412,8 @@ class QuestionController extends Controller
 
             $em->flush();
 
-            $interaction = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getInteraction($id);
-
-            $typeInter = $interaction->getType();
+            $type = $question->getType();
+            $typeParts = explode('\\', $type);
 
              // If delete last item of page, display the previous one
             $rest = $nbItem % $maxPage;
@@ -436,11 +422,11 @@ class QuestionController extends Controller
                 $pageNow -= 1;
             }
 
-            $interSer  = $this->container->get('ujm.exo_' . $typeInter);
-            $interX    = $interSer->getInteractionX($interaction->getId());
+            $interSer  = $this->container->get('ujm.exo_' . $type);
+            $interX    = $interSer->getInteractionX($question->getId());
 
             return $this->forward(
-                        'UJMExoBundle:' . $typeInter . ':delete', array(
+                        'UJMExoBundle:' . array_pop($typeParts) . ':delete', array(
                             'id' => $interX->getId(),
                             'pageNow' => $pageNow
                         )
@@ -498,6 +484,7 @@ class QuestionController extends Controller
     public function searchAction()
     {
         $request = $this->get('request');
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         $max = 10; // Max per page
 
@@ -509,7 +496,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $userList = $em->getRepository('ClarolineCoreBundle:User')->findByName($search);
 
-            $pagination = $this->pagination($userList, $max, $page);
+            $pagination = $paginationSer->pagination($userList, $max, $page);
 
             $userListPager = $pagination[0];
             $pagerUserSearch = $pagination[1];
@@ -562,7 +549,8 @@ class QuestionController extends Controller
         $allowToDel = array();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
-
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
         $repository = $this->getDoctrine()
             ->getManager()
             ->getRepository('UJMExoBundle:Document');
@@ -586,7 +574,7 @@ class QuestionController extends Controller
 
         $page = $request->query->get('page', 1); // Which page
 
-        $pagination = $this->pagination($listDoc, $max, $page);
+        $pagination = $paginationSer->pagination($listDoc, $max, $page);
 
         $listDocPager = $pagination[0];
         $pagerDoc= $pagination[1];
@@ -736,6 +724,7 @@ class QuestionController extends Controller
     {
         $request = $this->container->get('request');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $paginationSer = $this->container->get('ujm.exo_pagination');
 
         $max = 10; // Max per page
 
@@ -750,7 +739,7 @@ class QuestionController extends Controller
 
             $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
-            $pagination = $this->pagination($listDocSort, $max, $page);
+            $pagination = $paginationSer->pagination($listDocSort, $max, $page);
 
             $listDocSortPager = $pagination[0];
             $pagerSortDoc = $pagination[1];
@@ -803,7 +792,8 @@ class QuestionController extends Controller
     {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $request = $this->get('request');
-
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
         $max = 10; // Max per page
 
         $labelToFind = $request->query->get('labelToFind');
@@ -813,7 +803,7 @@ class QuestionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $listFindDoc = $em->getRepository('UJMExoBundle:Document')->findByLabel($labelToFind, $userId, 1);
 
-            $pagination = $this->pagination($listFindDoc, $max, $page);
+            $pagination = $paginationSer->pagination($listFindDoc, $max, $page);
 
             $listFindDocPager = $pagination[0];
             $pagerFindDoc = $pagination[1];
@@ -954,7 +944,9 @@ class QuestionController extends Controller
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
-        $listInteractions = array();
+        $paginationSer = $this->container->get('ujm.exo_pagination');
+        
+        $listQuestions = array();
         $questionWithResponse = array();
         $alreadyShared = array();
 
@@ -971,7 +963,6 @@ class QuestionController extends Controller
         if ($type && $whatToFind && $where) {
             $em = $this->getDoctrine()->getManager();
             $questionRepository = $em->getRepository('UJMExoBundle:Question');
-            $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
 
             // Get the matching questions depending on :
             //  * in which database search,
@@ -982,82 +973,68 @@ class QuestionController extends Controller
             if ($where == 'my') {
                 switch ($type) {
                     case 'Category':
-                        $questions = $questionRepository->findByCategory($user->getId(), $whatToFind);
-
-                        $end = count($questions);
-
-                        for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
-                        }
+                        $listQuestions = $questionRepository->findByUserAndCategoryName($user, $whatToFind);
                         break;
-
                     case 'Type':
-                        $listInteractions = $interactionRepository->findByType($user->getId(), $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndType($user, $whatToFind);
                         break;
-
                     case 'Title':
-                        $questions = $questionRepository->findByTitle($user->getId(), $whatToFind);
-
-                        $end = count($questions);
-
-                        for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
-                        }
+                        $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                         break;
-
                     case 'Contain':
-                        $listInteractions = $interactionRepository->findByContain($user->getId(), $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
                         break;
-
                     case 'All':
-                        $listInteractions = $interactionRepository->findByAll($user->getId(), $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
                         break;
                 }
 
-                // For all the matching interactions search if ...
-                foreach ($listInteractions as $interaction) {
-                    // ... the interaction is link to a paper (interaction in the test has already been passed)
+                // For all the matching questions search if ...
+                foreach ($listQuestions as $question) {
+                    // ... the question is link to a paper (question in the test has already been passed)
                     $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findBy(array('interaction' => $interaction->getId()));
-                    if (count($response) > 0) {
-                        $questionWithResponse[$interaction->getId()] = 1;
+                        ->findOneByQuestion($question);
+
+                    if ($response) {
+                        $questionWithResponse[$question->getId()] = 1;
                     } else {
-                        $questionWithResponse[$interaction->getId()] = 0;
+                        $questionWithResponse[$question->getId()] = 0;
                     }
 
-                    // ...the interaction is shared or not
+                    // ...the question is shared or not
                     $share = $em->getRepository('UJMExoBundle:Share')
-                        ->findBy(array('question' => $interaction->getQuestion()->getId()));
-                    if (count($share) > 0) {
-                        $alreadyShared[$interaction->getQuestion()->getId()] = 1;
+                        ->findOneByQuestion($question);
+
+                    if ($share) {
+                        $alreadyShared[$question->getId()] = 1;
                     } else {
-                        $alreadyShared[$interaction->getQuestion()->getId()] = 0;
+                        $alreadyShared[$question->getId()] = 0;
                     }
                 }
 
                 if ($exoID == -1) {
 
                     if ($displayAll == 1) {
-                        $max = count($listInteractions);
+                        $max = count($listQuestions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listQuestions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
                     $finalList = array();
-                    $length = count($listInteractions);
+                    $length = count($listQuestions);
                     $already = false;
 
                     for ($i = 0; $i < $length; $i++) {
                         foreach ($exoQuestions as $exoQuestion) {
-                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                            if ($exoQuestion->getQuestion()->getId() == $listQuestions[$i]->getId()) {
                                 $already = true;
                                 break;
                             }
                         }
                         if ($already == false) {
-                            $finalList[] = $listInteractions[$i];
+                            $finalList[] = $listQuestions[$i];
                         }
                         $already = false;
                     }
@@ -1066,7 +1043,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1126,11 +1103,10 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
-                        break;
 
+                        break;
                     case 'Type':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTypeShared($user->getId(), $whatToFind);
@@ -1138,11 +1114,10 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
-                        break;
 
+                        break;
                     case 'Title':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTitleShared($user->getId(), $whatToFind);
@@ -1150,11 +1125,10 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
-                        break;
 
+                        break;
                     case 'Contain':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByContainShared($user->getId(), $whatToFind);
@@ -1162,11 +1136,10 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
-                        break;
 
+                        break;
                     case 'All':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByAllShared($user->getId(), $whatToFind);
@@ -1174,35 +1147,35 @@ class QuestionController extends Controller
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
                 }
 
                 if ($exoID == -1) {
 
                     if ($displayAll == 1) {
-                        $max = count($listInteractions);
+                        $max = count($listQuestions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listQuestions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
                     $finalList = array();
-                    $length = count($listInteractions);
+                    $length = count($listQuestions);
                     $already = false;
 
                     for ($i = 0; $i < $length; $i++) {
                         foreach ($exoQuestions as $exoQuestion) {
-                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                            if ($exoQuestion->getQuestion()->getId() == $listQuestions[$i]->getId()) {
                                 $already = true;
                                 break;
                             }
                         }
                         if ($already == false) {
-                            $finalList[] = $listInteractions[$i];
+                            $finalList[] = $listQuestions[$i];
                         }
                         $already = false;
                     }
@@ -1211,7 +1184,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1262,132 +1235,113 @@ class QuestionController extends Controller
             } else if ($where == 'all') {
                 switch ($type) {
                     case 'Category':
-                        $questions = $questionRepository->findByCategory($user->getId(), $whatToFind);
-
-                        $end = count($questions);
-
-                        for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
-                        }
-
+                        $listQuestions = $questionRepository->findByUserAndCategoryName($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByCategoryShared($user->getId(), $whatToFind);
 
                         $ends = count($sharedQuestion);
 
                         for ($i = 0; $i < $ends; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
-
                     case 'Type':
-                        $listInteractions = $interactionRepository->findByType($user->getId(), $whatToFind);
-
+                        $listQuestions = $questionRepository->findByUserAndType($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTypeShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
-
                     case 'Title':
-                        $questions = $questionRepository->findByTitle($user->getId(), $whatToFind);
-
-                        $end = count($questions);
-
-                        for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $interactionRepository->findOneBy(array('question' => $questions[$i]->getId()));
-                        }
-
+                        $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByTitleShared($user->getId(), $whatToFind);
 
-                        $ends = count($sharedQuestion);
+                        $end = count($sharedQuestion);
 
-                        for ($i = 0; $i < $ends; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                        for ($i = 0; $i < $end; $i++) {
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
-
                     case 'Contain':
-                         $listInteractions = $interactionRepository->findByContain($user->getId(), $whatToFind);
-
+                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByContainShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
-
                     case 'All':
-                        $listInteractions = $interactionRepository->findByAll($user->getId(), $whatToFind);
-
+                        $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByAllShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
                         for ($i = 0; $i < $end; $i++) {
-                            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+                            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
                         }
+
                         break;
                 }
 
                 // For all the matching interactions search if ...
-                foreach ($listInteractions as $interaction) {
+                foreach ($listQuestions as $question) {
                     // ... the interaction is link to a paper (interaction in the test has already been passed)
                     $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findBy(array('interaction' => $interaction->getId()));
-                    if (count($response) > 0) {
-                        $questionWithResponse[$interaction->getId()] = 1;
+                        ->findOneByQuestion($question);
+
+                    if ($response) {
+                        $questionWithResponse[$question->getId()] = 1;
                     } else {
-                        $questionWithResponse[$interaction->getId()] = 0;
+                        $questionWithResponse[$question->getId()] = 0;
                     }
 
                     // ...the interaction is shared or not
                     $share = $em->getRepository('UJMExoBundle:Share')
-                        ->findBy(array('question' => $interaction->getQuestion()->getId()));
-                    if (count($share) > 0) {
-                        $alreadyShared[$interaction->getQuestion()->getId()] = 1;
+                        ->findOneByQuestion($question);
+
+                    if ($share) {
+                        $alreadyShared[$question->getId()] = 1;
                     } else {
-                        $alreadyShared[$interaction->getQuestion()->getId()] = 0;
+                        $alreadyShared[$question->getId()] = 0;
                     }
                 }
 
                 if ($exoID == -1) {
 
                     if ($displayAll == 1) {
-                        $max = count($listInteractions);
+                        $max = count($listQuestions);
                     }
 
-                    $pagination = $this->pagination($listInteractions, $max, $page);
+                    $pagination = $paginationSer->pagination($listQuestions, $max, $page);
                 } else {
                     $exoQuestions = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(array('exercise' => $exoID));
 
                     $finalList = array();
-                    $length = count($listInteractions);
+                    $length = count($listQuestions);
                     $already = false;
 
                     for ($i = 0; $i < $length; $i++) {
                         foreach ($exoQuestions as $exoQuestion) {
-                            if ($exoQuestion->getQuestion()->getId() == $listInteractions[$i]->getQuestion()->getId()) {
+                            if ($exoQuestion->getQuestion()->getId() == $listQuestions[$i]->getId()) {
                                 $already = true;
                                 break;
                             }
                         }
                         if ($already == false) {
-                            $finalList[] = $listInteractions[$i];
+                            $finalList[] = $listQuestions[$i];
                         }
                         $already = false;
                     }
@@ -1396,7 +1350,7 @@ class QuestionController extends Controller
                         $max = count($finalList);
                     }
 
-                    $pagination = $this->pagination($finalList, $max, $page);
+                    $pagination = $paginationSer->pagination($finalList, $max, $page);
                 }
 
                 $listQuestionsPager = $pagination[0];
@@ -1530,45 +1484,30 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function briefSearchAction ()
+    public function briefSearchAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $interactionRepository = $em->getRepository('UJMExoBundle:Interaction');
-
+        $questionRepository = $em->getRepository('UJMExoBundle:Question');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
-
         $services = $this->container->get('ujm.exo_question');
-        
-        $listInteractions = array();
-        $actionQ = array();
-        $questionWithResponse = array();
-        $alreadyShared = array();
-        $shareRight = array();
-
-        $searchToImport = FALSE;
 
         $userSearch = $request->request->get('userSearch');
         $exoID = $request->request->get('exoID');
+        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $where = $request->request->get('where');
 
-        if ($where == 'import') {
-            $searchToImport = TRUE;
-        }
-
-        $listInteractions = $interactionRepository->findByAll($user->getId(), $userSearch, $searchToImport, $exoID);
-
+        $listQuestions = $questionRepository->findByUserAndContent($user, $userSearch, $exercise);
         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
             ->findByAllShared($user->getId(), $userSearch);
 
         $end = count($sharedQuestion);
 
         for ($i = 0; $i < $end; $i++) {
-            $listInteractions[] = $em->getRepository('UJMExoBundle:Interaction')
-                ->findOneBy(array('question' => $sharedQuestion[$i]->getQuestion()->getId()));
+            $listQuestions[] = $sharedQuestion[$i]->getQuestion();
         }
 
-        $allActions = $services->getActionsAllQuestions($listInteractions, $user->getId());
+        $allActions = $services->getActionsAllQuestions($listQuestions, $user->getId());
 
         $actionQ = $allActions[0];
         $questionWithResponse = $allActions[1];
@@ -1581,7 +1520,7 @@ class QuestionController extends Controller
                     ->getRepository('UJMExoBundle:Exercise')
                     ->getExerciseAdmin($user->getId());
 
-        $vars['interactions']         = $listInteractions;
+        $vars['interactions']         = $listQuestions;
         $vars['actionQ']              = $actionQ;
         $vars['questionWithResponse'] = $questionWithResponse;
         $vars['alreadyShared']        = $alreadyShared;
@@ -1615,23 +1554,17 @@ class QuestionController extends Controller
      *
      * @access public
      *
-     * @param integer $interID id Interaction
+     * @param integer $questionId id Question
      * @param integer $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function duplicateAction ($interID, $exoID)
+    public function duplicateAction ($questionId, $exoID)
     {
         $exercise = null;
-        $interaction = $this->getDoctrine()
-                            ->getManager()
-                            ->getRepository('UJMExoBundle:Interaction')
-                            ->find($interID);
         $service = $this->container->get('ujm.exo_question');
-
-        $question = $service->controlUserQuestion($interaction->getQuestion()->getId());
-        $sharedQuestion = $service->controlUserSharedQuestion($interID);
-
+        $question = $service->controlUserQuestion($questionId);
+        $sharedQuestions = $service->controlUserSharedQuestion($questionId);
         $allowToAccess = FALSE;
 
         if ($exoID != -1) {
@@ -1642,13 +1575,15 @@ class QuestionController extends Controller
                 $allowToAccess = TRUE;
             }
         }
-        if (count($question) > 0 || count($sharedQuestion) > 0 || $allowToAccess === TRUE) {
+        if ($question && (count($sharedQuestions) > 0 || $allowToAccess)) {
+            $typeParts = explode('\\', $question->getType());
+            $type = array_pop($typeParts);
+            $handlerType = '\UJM\ExoBundle\Form\\' . $type . 'Handler';
 
-            $typeInter = $interaction->getType();
-            $handlerType = '\UJM\ExoBundle\Form\\' . $typeInter . 'Handler';
-
-            $interSer        = $this->container->get('ujm.exo_' . $typeInter);
-            $interactionX    = $interSer->getInteractionX($interaction->getId());
+            $interactionX = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:' . $type)
+                ->findOneByQuestion($question);
 
             $interXHandler = new $handlerType(
                         NULL , NULL, $this->getDoctrine()->getManager(),
@@ -1659,8 +1594,8 @@ class QuestionController extends Controller
 
             $interXHandler->singleDuplicateInter($interactionX);
 
-            $categoryToFind = $interactionX->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interactionX->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interactionX->getQuestion()->getCategory();
+            $titleToFind = $interactionX->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -1680,97 +1615,4 @@ class QuestionController extends Controller
         }
 
     }
-
-    /**
-     * To paginate table
-     *
-     * @access private
-     *
-     * @param Doctrine Collection $entityToPaginate
-     * @param integer $max number max items by page
-     * @param integer $page number of actual page
-     *
-     * @return array
-     */
-    private function pagination($entityToPaginate, $max, $page)
-    {
-        $adapter = new ArrayAdapter($entityToPaginate);
-        $pager = new Pagerfanta($adapter);
-
-        try {
-            $entityPaginated = $pager
-                ->setMaxPerPage($max)
-                ->setCurrentPage($page)
-                ->getCurrentPageResults();
-        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-            throw $this->createNotFoundException("Cette page n'existe pas.");
-        }
-
-        $pagination[0] = $entityPaginated;
-        $pagination[1] = $pager;
-
-        return $pagination;
-    }
-
-    /**
-     * To paginate two tables on one page
-     *
-     * @access public
-     *
-     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateOne
-     * @param Doctrine Collection of \UJM\ExoBundle\Entity\Interaction $entityToPaginateTwo
-     * @param integer $max number max items per page
-     * @param integer $pageOne set new page for the first pagination
-     * @param integer $pageTwo set new page for the second pagination
-     * @param integer $pageNowOne set current page for the first pagination
-     * @param integer $pageNowTwo set current page for the second pagination
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    private function doublePaginationWithIf($entityToPaginateOne, $entityToPaginateTwo, $max, $pageOne, $pageTwo, $pageNowOne, $pageNowTwo)
-    {
-        $adapterOne = new ArrayAdapter($entityToPaginateOne);
-        $pagerOne = new Pagerfanta($adapterOne);
-
-        $adapterTwo = new ArrayAdapter($entityToPaginateTwo);
-        $pagerTwo = new Pagerfanta($adapterTwo);
-
-        try {
-            if ($pageNowOne == 0) {
-                $entityPaginatedOne = $pagerOne
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageOne)
-                    ->getCurrentPageResults();
-            } else {
-                $entityPaginatedOne = $pagerOne
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNowOne)
-                    ->getCurrentPageResults();
-            }
-
-            if ($pageNowTwo == 0) {
-                $entityPaginatedTwo = $pagerTwo
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageTwo)
-                    ->getCurrentPageResults();
-            } else {
-                $entityPaginatedTwo = $pagerTwo
-                    ->setMaxPerPage($max)
-                    ->setCurrentPage($pageNowTwo)
-                    ->getCurrentPageResults();
-            }
-        } catch (\Pagerfanta\Exception\NotValidCurrentPageException $e) {
-            throw $this->createNotFoundException("Cette page n'existe pas.");
-        }
-
-        $doublePagination[0] = $entityPaginatedOne;
-        $doublePagination[1] = $pagerOne;
-
-        $doublePagination[2] = $entityPaginatedTwo;
-        $doublePagination[3] = $pagerTwo;
-
-        return $doublePagination;
-    }
-
-
 }

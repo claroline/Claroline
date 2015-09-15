@@ -82,7 +82,7 @@ class Interaction extends \Twig_Extension
      */
     public function getInterTwig($interId, $typeInter)
     {
-        $interSer        = $this->container->get('ujm.exo_' . $typeInter);
+        $interSer        = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\\' . $typeInter);
         $interactionX    = $interSer->getInteractionX($interId);
         $inter['question'] = $interactionX;
         $inter['maxScore'] = $interSer->maxScore($interactionX);

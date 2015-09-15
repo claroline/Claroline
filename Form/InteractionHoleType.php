@@ -22,7 +22,7 @@ class InteractionHoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('interaction', new InteractionType(
+            ->add('interaction', new QuestionType(
                     $this->user,
                     $this->catID
                     )

@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Form;
 
 use UJM\ExoBundle\Entity\Coords;
 
-class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionGraphicHandler extends QuestionHandler
 {
 
     /**

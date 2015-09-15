@@ -1,5 +1,5 @@
-{% if inter.interaction.feedback != '' %}
-    <p>{{ inter.interaction.feedback|raw }}</p>
+{% if inter.question.feedback != '' %}
+    <p>{{ inter.question.feedback|raw }}</p>
     <hr/>
 {% endif %}
 
@@ -9,7 +9,7 @@
         <br/><hr/>
     {% endif %}
 
-    {% if (inter.interaction.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
+    {% if (inter.question.type == 'InteractionOpen' and inter.typeopenquestion == 'long') %}
        {{ 'not_yet_mark' | trans({}, 'ujm_exo') }}.
     {% else %}
         {{ 'score' | trans({}, 'ujm_exo') }} : <span id="score">{{ score }}.</span>

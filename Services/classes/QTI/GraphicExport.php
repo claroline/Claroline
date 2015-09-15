@@ -7,6 +7,8 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use UJM\ExoBundle\Entity\Question;
+
 class GraphicExport extends QtiExport
 {
     private $interactiongraph;
@@ -16,19 +18,19 @@ class GraphicExport extends QtiExport
      * Implements the abstract method
      *
      * @access public
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param Question $question
      * @param qtiRepository $qtiRepos
-     *
+     * @return \UJM\ExoBundle\Services\classes\QTI\BinaryFileResponse
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(Question $question, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
+        $this->question = $question;
 
         $this->interactiongraph = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
-                                ->findOneBy(array('interaction' => $interaction->getId()));
+                                ->findOneByQuestion($question);
 
         if (count($this->interactiongraph->getCoords()) > 1 ) {
             $cardinality = 'multiple';
@@ -45,9 +47,9 @@ class GraphicExport extends QtiExport
         $this->selectPointInteractionTag();
         $this->promptTag();
 
-        if(($this->interactiongraph->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactiongraph->getInteraction()->getFeedBack()!="") ){
-            $this->qtiFeedBack($interaction->getFeedBack());
+        if(($this->interactiongraph->getQuestion()->getFeedBack()!=Null)
+                && ($this->interactiongraph->getQuestion()->getFeedBack()!="") ){
+            $this->qtiFeedBack($question->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');

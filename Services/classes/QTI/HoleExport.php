@@ -7,6 +7,8 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use UJM\ExoBundle\Entity\Question;
+
 class HoleExport extends QtiExport
 {
     private $interactionhole;
@@ -16,19 +18,19 @@ class HoleExport extends QtiExport
      * Implements the abstract method
      *
      * @access public
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param Question $question
      * @param qtiRepository $qtiRepos
-     *
+     * @return \UJM\ExoBundle\Services\classes\QTI\BinaryFileResponse
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(Question $question, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
+        $this->question = $question;
 
         $this->interactionhole = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionHole')
-                                ->findOneBy(array('interaction' => $interaction->getId()));
+                                ->findOneByQuestion($question);
 
         $this->qtiHead('textEntry', $this->question->getTitle());
         foreach($this->interactionhole->getHoles() as $hole) {
@@ -43,9 +45,9 @@ class HoleExport extends QtiExport
         $this->promptTag();
         $this->textWithHole();
 
-        if(($this->interactionhole->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionhole->getInteraction()->getFeedBack()!="") ){
-            $this->qtiFeedBack($interaction->getFeedBack());
+        if(($this->interactionhole->getQuestion()->getFeedBack()!=Null)
+                && ($this->interactionhole->getQuestion()->getFeedBack()!="") ){
+            $this->qtiFeedBack($question->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');

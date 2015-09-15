@@ -89,6 +89,7 @@ class Question
     {
         $this->hints = new ArrayCollection();
         $this->exerciseQuestions = new ArrayCollection();
+        $this->dateCreate = new \DateTime();
     }
 
     /**
@@ -279,9 +280,9 @@ class Question
     }
 
     /**
-     * @param \Traversable $hints
+     * @param array $hints
      */
-    public function setHints(\Traversable $hints)
+    public function setHints(array $hints)
     {
         foreach ($hints as $hint) {
             $this->addHint($hint);

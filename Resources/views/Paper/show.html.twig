@@ -42,9 +42,8 @@
         {% set temporaryMark = false %}
 
         {% if p >= 0 %}
-
-            {% include "UJMExoBundle:Partial:paper/show/#{interactions[p].type}.html.twig" %}
-
+            {% set type = interactions[p].type|split('\\')|last %}
+            {% include "UJMExoBundle:Partial:paper/show/#{type}.html.twig" %}
         {% endif %}
 
         {% if p == -2 or p == -1%}
@@ -75,25 +74,25 @@
             <h3 class="panel-title">{{ 'list_question' | trans({}, 'ujm_exo') }} :</h3>
                 <ol>
                     {% set i = 0 %}
-                    {% for interaction in interactions %}
+                    {% for question in interactions %}
 
                         {% if (display == 'all') %}
                             {% if responses[i].mark == -1 %}
                                 {% set needLegend = true %}
                                 <li>
                                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}" style="color: red;">
-                                        {{ interaction.question.title }}
+                                        {{ question.title }}
                                     </a>
                                 </li>
                             {% else %}
                                 <li>
                                     <a href="{{ path('ujm_paper_show', { 'id': paperID, 'p': i }) }}">
-                                        {{ interaction.question.title }}
+                                        {{ question.title }}
                                     </a>
                                 </li>
                             {% endif %}
                         {% else %}
-                            <li>{{ interaction.question.title }}</li>
+                            <li>{{ question.title }}</li>
                         {% endif %}
 
                         {% set i = i + 1 %}

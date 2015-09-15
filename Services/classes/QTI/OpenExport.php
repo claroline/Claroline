@@ -7,6 +7,8 @@
 
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use UJM\ExoBundle\Entity\Question;
+
 class OpenExport extends QtiExport
 {
     protected $interactionopen;
@@ -15,19 +17,18 @@ class OpenExport extends QtiExport
      * Implements the abstract method
      *
      * @access public
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param Question $question
      * @param qtiRepository $qtiRepos
-     *
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(Question $question, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
+        $this->question = $question;
 
         $this->interactionopen = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionOpen')
-                                ->findOneBy(array('interaction' => $interaction->getId()));
+                                ->findOneByQuestion($question);
 
         $this->qtiHead('extendedText', $this->question->getTitle());
         $this->qtiResponseDeclaration('RESPONSE','string', $this->getCardinality());
@@ -35,9 +36,10 @@ class OpenExport extends QtiExport
         $this->defaultValueTag();
         $this->itemBodyTag();
 
-        if(($this->interactionopen->getInteraction()->getFeedBack()!=Null)
-                && ($this->interactionopen->getInteraction()->getFeedBack()!="") ){
-            $this->qtiFeedBack($interaction->getFeedBack());
+        if(($this->interactionopen->getQuestion()->getFeedBack()!=Null)
+                && ($this->interactionopen->getQuestion()->getFeedBack()!="") ){
+
+            $this->qtiFeedBack($question->getFeedBack());
         }
     }
 

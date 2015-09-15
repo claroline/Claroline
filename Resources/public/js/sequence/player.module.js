@@ -8,7 +8,8 @@
         'ui.tinymce',
         'ui.translation',
         'ui.resourcePicker',
-        'Step',
+        'ngBootbox',
+        'Common',
         'Sequence'
     ])
     .filter(

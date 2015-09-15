@@ -46,51 +46,55 @@ services:
         class: UJM\ExoBundle\Services\classes\ExerciseServices
         arguments: [@claroline.persistence.object_manager, @security.authorization_checker, @event_dispatcher, @doctrine, @service_container]
 
-    ujm.exo_InteractionGraphic:
+    ujm.exo_UJM\ExoBundle\Entity\InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\Interactions\Graphic
         arguments: [@doctrine]
 
-    ujm.exo_InteractionHole:
+    ujm.exo_UJM\ExoBundle\Entity\InteractionHole:
         class: UJM\ExoBundle\Services\classes\Interactions\Hole
         arguments: [@doctrine]
 
-    ujm.exo_InteractionMatching:
+    ujm.exo_UJM\ExoBundle\Entity\InteractionMatching:
         class: UJM\ExoBundle\Services\classes\Interactions\Matching
         arguments: [@doctrine]
 
-    ujm.exo_InteractionOpen:
+    ujm.exo_UJM\ExoBundle\Entity\InteractionOpen:
         class: UJM\ExoBundle\Services\classes\Interactions\Open
         arguments: [@doctrine]
 
-    ujm.exo_InteractionQCM:
+    ujm.exo_UJM\ExoBundle\Entity\InteractionQCM:
         class: UJM\ExoBundle\Services\classes\Interactions\Qcm
         arguments: [@doctrine]
 
     ujm.exo_paper:
         class: UJM\ExoBundle\Services\classes\PaperService
         arguments: [@doctrine, @service_container]
+        
+    ujm.exo_pagination:
+        class: UJM\ExoBundle\Services\classes\PaginationService
+        arguments: [@doctrine, @service_container]
 
-    ujm.exo_qti_export_InteractionQCM:
+    ujm.exo_qti_export_UJM\ExoBundle\Entity\InteractionQCM:
         class: UJM\ExoBundle\Services\classes\QTI\QcmExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
-    ujm.exo_qti_import_InteractionQCM:
+    ujm.exo_qti_import_UJM\ExoBundle\Entity\InteractionQCM:
         class: UJM\ExoBundle\Services\classes\QTI\QcmImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.exo_qti_export_InteractionGraphic:
+    ujm.exo_qti_export_UJM\ExoBundle\Entity\InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\QTI\GraphicExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
 
-    ujm.exo_qti_import_InteractionGraphic:
+    ujm.exo_qti_import_UJM\ExoBundle\Entity\InteractionGraphic:
         class: UJM\ExoBundle\Services\classes\QTI\GraphicImport
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.exo_qti_export_InteractionHole:
+    ujm.exo_qti_export_UJM\ExoBundle\Entity\InteractionHole:
         class: UJM\ExoBundle\Services\classes\QTI\HoleExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
@@ -130,7 +134,7 @@ services:
         scope: prototype
         arguments: [@claroline.persistence.object_manager, @security.token_storage, @service_container]
 
-    ujm.exo_qti_export_InteractionMatching:
+    ujm.exo_qti_export_UJM\ExoBundle\Entity\InteractionMatching:
         class: UJM\ExoBundle\Services\classes\QTI\MatchingExport
         scope: prototype
         arguments: [@doctrine, @security.token_storage, @service_container]
@@ -165,17 +169,7 @@ services:
         tags:
             - { name: validator.constraint_validator, alias: ujm.exercise_isvalidqcmmark }
             
-    ujm.listener.sequence_listener:
-        class: UJM\ExoBundle\Listener\Resource\SequenceListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_form_ujm_sequence, method: onCreateForm }
-            - { name: kernel.event_listener, event: create_ujm_sequence, method: onCreate }
-            - { name: kernel.event_listener, event: open_ujm_sequence, method: onOpen }
-            - { name: kernel.event_listener, event: delete_ujm_sequence, method: onDelete }
-            - { name: kernel.event_listener, event: copy_ujm_sequence, method: onCopy }
-            - { name: kernel.event_listener, event: ujm_sequence_administrate_ujm_sequence, method: onAdministrate }
+    
             
     ujm_exo_bundle.manager.sequence:
         class: UJM\ExoBundle\Manager\Sequence\SequenceManager 

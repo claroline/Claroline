@@ -23,7 +23,7 @@ class InteractionOpenType extends AbstractType
     {
         $builder
             ->add(
-                'interaction', new InteractionType(
+                'interaction', new QuestionType(
                     $this->user, $this->catID
                 )
             );

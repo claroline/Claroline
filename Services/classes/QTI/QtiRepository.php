@@ -279,19 +279,19 @@ class QtiRepository {
      * call method to export a question
      *
      * @access public
-     * @param  UJM\ExoBundle\Entity\Interaction $interaction
+     * @param  \UJM\ExoBundle\Entity\Question $question
      *
      */
-    public function export($interaction)
+    public function export($question)
     {
-        if ($interaction->getType() != 'InteractionOpen') {
-            $service = 'ujm.exo_qti_export_' . $interaction->getType();
+        if ($question->getType() !== 'UJM\ExoBundle\Entity\InteractionOpen') {
+            $service = 'ujm.exo_qti_export_' . $question->getType();
             $qtiExport = $this->container->get($service);
         } else {
-            $qtiExport = $this->serviceOpenQuestion($interaction->getId());
+            $qtiExport = $this->serviceOpenQuestion($question->getId());
         }
 
-        return $qtiExport->export($interaction, $this);
+        return $qtiExport->export($question, $this);
 
     }
 
@@ -300,16 +300,16 @@ class QtiRepository {
      *
      * @access private
      *
-     * @param  Integer $interId id of the interaction
+     * @param integer $questionId
      *
      * @return instance of service ujm.qti_open
      *
      */
-    private function serviceOpenQuestion($interId)
+    private function serviceOpenQuestion($questionId)
     {
         $em = $this->container->get('doctrine')->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                        ->getInteractionOpen($interId);
+            ->findByQuestion($questionId);
         $type = ucfirst($interOpen->getTypeOpenQuestion());
         $serv = $this->container->get('ujm.exo_qti_export_open_'.$type);
 

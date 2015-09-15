@@ -77,4 +77,55 @@ class ExerciseManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($node->isPublished());
     }
+
+    public function testPickQuestionsShufflesThemIfNeeded()
+    {
+        $exercise = new Exercise();
+        $exercise->setShuffle(true);
+
+        $this->mockRepository('UJM\ExoBundle\Repository\QuestionRepository')
+            ->expects($this->once())
+            ->method('findByExercise')
+            ->with($exercise)
+            ->willReturn([1, 2, 3, 4, 5]);
+
+        $questions = $this->manager->pickQuestions($exercise);
+        $this->assertEquals(5, count($questions));
+        $this->assertNotEquals([1, 2, 3, 4, 5], $questions);
+        $this->assertContains(1, $questions);
+        $this->assertContains(2, $questions);
+        $this->assertContains(3, $questions);
+        $this->assertContains(4, $questions);
+        $this->assertContains(5, $questions);
+    }
+
+    public function testPickQuestionsDiscardsSomeIfNeeded()
+    {
+        $exercise = new Exercise();
+        $exercise->setNbQuestion(2);
+
+        $this->mockRepository('UJM\ExoBundle\Repository\QuestionRepository')
+            ->expects($this->once())
+            ->method('findByExercise')
+            ->with($exercise)
+            ->willReturn([1, 2, 3, 4]);
+
+        $questions = $this->manager->pickQuestions($exercise);
+        $this->assertEquals(2, count($questions));
+        $this->assertContains($questions[0], [1, 2, 3, 4]);
+        $this->assertContains($questions[1], [1, 2, 3, 4]);
+    }
+
+    private function mockRepository($entityFqcn)
+    {
+        $repo = $this->getMockBuilder($entityFqcn)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->om->expects($this->once())
+            ->method('getRepository')
+            ->with('UJMExoBundle:Question')
+            ->willReturn($repo);
+
+        return $repo;
+    }
 }

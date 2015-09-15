@@ -351,11 +351,11 @@ yes: Oui
 your_answer: Votre réponse
 
 # Data in the DB
-InteractionGraphic: Graphique
-InteractionHole: Texte à trous
-InteractionMatching: Association
-InteractionOpen: Ouverte
-InteractionQCM: QCM
+UJM\ExoBundle\Entity\InteractionGraphic: Graphique
+UJM\ExoBundle\Entity\InteractionHole: Texte à trous
+UJM\ExoBundle\Entity\InteractionMatching: Association
+UJM\ExoBundle\Entity\InteractionOpen: Ouverte
+UJM\ExoBundle\Entity\InteractionQCM: QCM
 Multiple response: Réponse multiples
 oneWord: Un mot
 To drag: Panier

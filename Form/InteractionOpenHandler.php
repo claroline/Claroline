@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionOpenHandler extends QuestionHandler
 {
 
      /**

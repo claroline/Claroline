@@ -14,7 +14,7 @@ class InteractionOpen extends AbstractInteraction
     /**
      * @ORM\Column(name="orthography_correct", type="boolean")
      */
-    private $orthographyCorrect;
+    private $orthographyCorrect = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="TypeOpenQuestion")

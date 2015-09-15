@@ -1,4 +1,4 @@
-{% if interactionToDisplayed.interaction.hints is not empty %}
+{% if interactionToDisplayed.question.hints is not empty %}
     <hr/>
     <div class="panel panel-default">
     <div class="panel-heading"><h3 class="panel-title">{{ 'hints' | trans({}, 'ujm_exo') }}</h3></div>
@@ -6,7 +6,7 @@
         <table>
             {% set penalties = app.session.get('penalties') %}
             {% set nbr_hint = 1 %}
-            {% for hint in interactionToDisplayed.interaction.hints %}
+            {% for hint in interactionToDisplayed.question.hints %}
                 <tr>
                     {% if penalties[hint.id] is defined %}
 

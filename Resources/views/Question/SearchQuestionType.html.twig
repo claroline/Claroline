@@ -68,7 +68,7 @@
                            href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">
                             <i class="fa fa-share"></i>
                         </a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'interID': FindQuestion.id }) }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'questionId': FindQuestion.id }) }}">
                             <i class="fa fa-repeat"></i>
                         </a>
                         {% if(questionWithResponse[FindQuestion.id] == 0) %}

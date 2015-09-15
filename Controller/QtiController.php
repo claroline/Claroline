@@ -236,16 +236,13 @@ class QtiController extends Controller {
      */
     public function ExportAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
         $question = $this->container->get('ujm.exo_question')->controlUserQuestion($id);
 
         $qtiRepos = $this->container->get('ujm.exo_qti_repository');
         $qtiRepos->createDirQTI();
 
-        if (count($question) > 0) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')
-                              ->getInteraction($id);
-            $export = $qtiRepos->export($interaction);
+        if ($question) {
+            $export = $qtiRepos->export($question);
         }
 
         return $export;

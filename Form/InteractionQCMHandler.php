@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionQCMHandler extends QuestionHandler
 {
 
     /**
@@ -42,11 +42,8 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interQCM)
     {
-
-        // \ pour instancier un objet du namespace global et non pas de l'actuel
-        $interQCM->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interQCM->getInteraction()->getQuestion()->setUser($this->user);
-        $interQCM->getInteraction()->setType('InteractionQCM');
+        $interQCM->getQuestion()->setDateCreate(new \Datetime());
+        $interQCM->getQuestion()->setUser($this->user);
 
         $pointsWrong = str_replace(',', '.', $interQCM->getScoreFalseResponse());
         $pointsRight = str_replace(',', '.', $interQCM->getScoreRightResponse());
@@ -54,9 +51,8 @@ class InteractionQCMHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $interQCM->setScoreFalseResponse($pointsWrong);
         $interQCM->setScoreRightResponse($pointsRight);
 
+        $this->em->persist($interQCM->getQuestion());
         $this->em->persist($interQCM);
-        $this->em->persist($interQCM->getInteraction()->getQuestion());
-        $this->em->persist($interQCM->getInteraction());
 
         // On persiste tous les choices de l'interaction QCM.
         $ord = 1;

@@ -2,9 +2,7 @@
 
 namespace UJM\ExoBundle\Form;
 
-use UJM\ExoBundle\Form\InteractionHandler;
-
-class InteractionMatchingHandler extends InteractionHandler
+class InteractionMatchingHandler extends QuestionHandler
 {
 
     /**
@@ -50,13 +48,11 @@ class InteractionMatchingHandler extends InteractionHandler
         $proposals = array_merge($interMatching->getProposals()->toArray());
 
         // to instantiate an object of the global namespace, and not of the current
-        $interMatching->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interMatching->getInteraction()->getQuestion()->setUser($this->user);
-        $interMatching->getInteraction()->setType('InteractionMatching');
+        $interMatching->getQuestion()->setDateCreate(new \Datetime());
+        $interMatching->getQuestion()->setUser($this->user);
 
         $this->em->persist($interMatching);
-        $this->em->persist($interMatching->getInteraction()->getQuestion());
-        $this->em->persist($interMatching->getInteraction());
+        $this->em->persist($interMatching->getQuestion());
 
         // Persist all labels of interactionMatching.
         foreach ($interMatching->getLabels() as $label) {
@@ -111,7 +107,7 @@ class InteractionMatchingHandler extends InteractionHandler
         foreach ( $originalInterMatching->getProposals() as $proposal ) {
             $originalProposal[] = $proposal;
         }
-        foreach ( $originalInterMatching->getInteraction()->getHints() as $hints ) {
+        foreach ( $originalInterMatching->getQuestion()->getHints() as $hints ) {
             $originalHints[] = $hints;
         }
 
@@ -183,8 +179,7 @@ class InteractionMatchingHandler extends InteractionHandler
         $this->modifyHints($interMatching, $originalHints);
 
         $this->em->persist($interMatching);
-        $this->em->persist($interMatching->getInteraction()->getQuestion());
-        $this->em->persist($interMatching->getInteraction());
+        $this->em->persist($interMatching->getQuestion());
 
         // Persist all Labels of interactionMatching
         foreach ($interMatching->getLabels() as $label) {

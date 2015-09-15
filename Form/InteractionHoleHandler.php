@@ -2,7 +2,8 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler{
+class InteractionHoleHandler extends QuestionHandler
+{
 
     protected $validator;
 
