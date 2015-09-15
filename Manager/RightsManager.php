@@ -501,7 +501,7 @@ class RightsManager
     {
         // extract base permissions ("open", "edit", etc. -> i.e. 5 out of 32
         // possible permissions) by getting the last 5 bits of the mask
-        $baseMask = $resourceMask % 32;
+        $baseMask = $resourceMask % 64;
         // keep only specific permissions
         $typeMask = $resourceMask - $baseMask;
 

@@ -422,12 +422,30 @@ class ResourceRightsController
         $roles = $this->request->getCurrentRequest()->request->get('roles');
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
         $data = array();
+        $falsePerms = array();
 
         if (is_null($roles)) {
             $roles = array();
         }
 
+       foreach (array_keys($rows) as $roleId) {
+           $changedPerms = array();
+            if (!array_key_exists($roleId, $roles)) {
+                foreach ($permsMap as $perm) {
+                    $changedPerms[$perm] = false;
+                }
+
+                $falsePerms[$roleId] = $changedPerms;
+            }
+        }
+
         foreach ($roles as $roleId => $perms) {
+            $changedPerms = array();
+            foreach ($falsePerms as $id => $setToFalse) {
+                if ($id === $roleId) {
+                    $changedPerms = $setToFalse;
+                }
+            }
 
             foreach ($permsMap as $perm) {
                 $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
