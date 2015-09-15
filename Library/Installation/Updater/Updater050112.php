@@ -63,7 +63,7 @@ class Updater050112 extends Updater
                 if (!$collaboratorFound) {
                     $this->log('Adding missing right on root for ' . $workspace->getCode() . '.');
                     $collaboratorRole = $roleManager->getCollaboratorRole($workspace);
-                    $rightsManager->editPerms(1, $collaboratorRole, $root, true);
+                    $rightsManager->editPerms(5, $collaboratorRole, $root, true);
                     $i++;
 
                     if ($i % self::MAX_BATCH_SIZE === 0) {
