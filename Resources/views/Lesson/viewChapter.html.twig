@@ -4,11 +4,18 @@
     <h3 class="lesson_title">{{ _resource.getResourceNode().getName() }}</h3>
 
     <div class="chapter_btn">
-      {% if is_granted('EDIT', node) %}
-         <li class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'><a data-chapter = '{{ chapter.id }}' href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}" class='btn-primary icon_link createchapter btn'><span class="fa fa-plus"  ></span><span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span></a></li>
-      {%  endif  %}
+        {% if is_granted('EDIT', node) and chapter is defined and chapter != null %}
+            <div class='lesson_tooltip menu_lesson_button' data-original-title='{{ 'create_root'|trans({}, 'icap_lesson') }}'>
+                <a data-chapter = '{{ chapter.id }}'
+                    href="{{ path('icap_lesson_new_chapter', { 'resourceId': _resource.id, 'parentChapterId': tree.id })}}"
+                   class='btn-primary icon_link createchapter btn'>
+                    <span class="fa fa-plus"></span>
+                    <span class='chapter_menu_labels'>{{ 'new_chapter'|trans({}, 'icap_lesson') }}</span>
+                </a>
+            </div>
+        {% endif %}
 
-      {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
+        {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}
     </div>
 
     {{ macros.flashBox() }}
