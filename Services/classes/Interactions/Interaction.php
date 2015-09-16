@@ -182,11 +182,11 @@ abstract class Interaction
      /**
       * abstract method.
       *
-      * @param Integer $interId id of interaction
+      * @param int $questionId
       *
       * @return \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...)
       */
-     abstract public function getInteractionX($interId);
+     abstract public function getInteractionX($questionId);
 
      /**
       * abstract method.

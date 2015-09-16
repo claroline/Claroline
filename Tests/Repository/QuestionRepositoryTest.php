@@ -8,7 +8,7 @@ use UJM\ExoBundle\Entity\ExerciseQuestion;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 
-class InteractionRepositoryTest extends TransactionalTestCase
+class QuestionRepositoryTest extends TransactionalTestCase
 {
     private $om;
     private $repo;

@@ -126,12 +126,9 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $this->new = false;
         $qtiServ = $this->container->get('ujm.exo_qti');
 
-        $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
-        $interactions = $interRepos->getExerciseInteraction(
-                $this->container->get('doctrine')->getManager(),
-                $object->getId(), false);
-
-        $this->createQuestionsDirectory($qtiRepos, $interactions);
+        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
+        $questions = $questionRepo->findByExercise($object->getId());
+        $this->createQuestionsDirectory($qtiRepos, $questions);
         $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
         $i = 'a';
@@ -198,14 +195,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * create the directory questions to export an exercise and export the qti files.
      *
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param collection of  UJM\ExoBundle\Entity\Interaction  $interactions
+     * @param collection of  UJM\ExoBundle\Entity\Question  $interactions
      */
-    private function createQuestionsDirectory($qtiRepos, $interactions)
+    private function createQuestionsDirectory($qtiRepos, $questions)
     {
         @mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
-        foreach ($interactions as $interaction) {
-            $qtiRepos->export($interaction);
+        foreach ($questions as $question) {
+            $qtiRepos->export($question);
             @mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {

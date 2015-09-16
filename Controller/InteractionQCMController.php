@@ -26,7 +26,7 @@ class InteractionQCMController extends Controller
 
         $response = new Response();
         $interactionQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
-                             ->getInteractionQCM($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         if ($interactionQCM->getShuffle()) {
             $interactionQCM->shuffleChoices();
@@ -159,7 +159,8 @@ class InteractionQCMController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionQCM = $em->getRepository('UJMExoBundle:InteractionQCM')
-                             ->getInteractionQCM($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
+
         //fired a sort function
         $interactionQCM->sortChoices();
 

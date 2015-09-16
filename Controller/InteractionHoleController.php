@@ -26,7 +26,7 @@ class InteractionHoleController extends Controller
 
         $response = new Response();
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
-                              ->getInteractionHole($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $form = $this->createForm(new ResponseType(), $response);
 
@@ -154,11 +154,11 @@ class InteractionHoleController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
-                              ->getInteractionHole($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $editForm = $this->createForm(
-             new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
-         );
+            new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
+        );
 
         $linkedCategory = $catSer->getLinkedCategories();
 
