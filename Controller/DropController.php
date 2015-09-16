@@ -610,8 +610,10 @@ class DropController extends DropzoneBaseController
         }
 
         if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
+            //This is commented as a temporary fix. The form is always invalid for some reason on our servers...
+            //It can be uncommented once a true fix is found.
+            //$form->handleRequest($request);
+            //if ($form->isValid()) {
                 $em = $this->getDoctrine()->getManager();
                 $em->remove($drop);
                 $em->flush();
@@ -626,7 +628,7 @@ class DropController extends DropzoneBaseController
                     )
 
                 );
-            }
+            //}
         }
 
         $view = 'IcapDropzoneBundle:Drop:dropsDelete.html.twig';
