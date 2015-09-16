@@ -13,6 +13,8 @@ namespace Claroline\TagBundle\Controller;
 
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TagBundle\Form\TagType;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -154,6 +156,118 @@ class TagController extends Controller
                 'group' => $group,
                 'tags' => $tags,
                 'groupTags' => $groupTags
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/tag/form",
+     *     name="claro_tag_user_tag_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:userTagModalForm.html.twig")
+     */
+    public function userTagFormAction(User $user)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $tags = $this->tagManager->getPlatformTags();
+        $userTags = $this->tagManager->getTagsByObject($user);
+
+        return array(
+            'form' => $form->createView(),
+            'user' => $user,
+            'tags' => $tags,
+            'userTags' => $userTags
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/tag",
+     *     name="claro_tag_user_tag",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:userTagModalForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
+     */
+    public function userTagAction(User $user)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $tags = $form->get('tags')->getData();
+            $this->tagManager->tagObject($tags, $user);
+
+            return new JsonResponse('success', 200);
+        } else {
+            $tags = $this->tagManager->getPlatformTags();
+            $userTags = $this->tagManager->getTagsByObject($user);
+
+            return array(
+                'form' => $form->createView(),
+                'user' => $user,
+                'tags' => $tags,
+                'userTags' => $userTags
+            );
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/tag/form",
+     *     name="claro_tag_workspace_tag_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:workspaceTagModalForm.html.twig")
+     */
+    public function workspaceTagFormAction(Workspace $workspace)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $tags = $this->tagManager->getPlatformTags();
+        $workspaceTags = $this->tagManager->getTagsByObject($workspace);
+
+        return array(
+            'form' => $form->createView(),
+            'workspace' => $workspace,
+            'tags' => $tags,
+            'workspaceTags' => $workspaceTags
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/{workspace}/tag",
+     *     name="claro_tag_workspace_tag",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Tag:workspaceTagModalForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
+     */
+    public function workspaceTagAction(Workspace $workspace)
+    {
+        $form = $this->formFactory->create(new TagType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $tags = $form->get('tags')->getData();
+            $this->tagManager->tagObject($tags, $workspace);
+
+            return new JsonResponse('success', 200);
+        } else {
+            $tags = $this->tagManager->getPlatformTags();
+            $workspaceTags = $this->tagManager->getTagsByObject($workspace);
+
+            return array(
+                'form' => $form->createView(),
+                'workspace' => $workspace,
+                'tags' => $tags,
+                'workspaceTags' => $workspaceTags
             );
         }
     }

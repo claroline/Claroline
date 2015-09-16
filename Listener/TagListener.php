@@ -14,6 +14,8 @@ namespace Claroline\TagBundle\Listener;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
+use Claroline\CoreBundle\Menu\UserAdditionalActionEvent;
+use Claroline\CoreBundle\Menu\WorkspaceAdditionalActionEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -126,6 +128,52 @@ class TagListener
         $url = $this->router->generate(
             'claro_tag_group_tag_form',
             array('group' => $group->getId())
+        );
+
+        $menu = $event->getMenu();
+        $menu->addChild(
+            $this->translator->trans('tag_action', array(), 'tag'),
+            array('uri' => $url)
+        )->setExtra('icon', 'fa fa-tags')
+        ->setExtra('display', 'modal_form');
+
+        return $menu;
+    }
+
+    /**
+     * @DI\Observe("claroline_user_additional_action")
+     *
+     * @param \Claroline\CoreBundle\Menu\UserAdditionalActionEvent $event
+     */
+    public function onUserActionMenuRender(UserAdditionalActionEvent $event)
+    {
+        $user = $event->getUser();
+        $url = $this->router->generate(
+            'claro_tag_user_tag_form',
+            array('user' => $user->getId())
+        );
+
+        $menu = $event->getMenu();
+        $menu->addChild(
+            $this->translator->trans('tag_action', array(), 'tag'),
+            array('uri' => $url)
+        )->setExtra('icon', 'fa fa-tags')
+        ->setExtra('display', 'modal_form');
+
+        return $menu;
+    }
+
+    /**
+     * @DI\Observe("claroline_workspace_additional_action")
+     *
+     * @param \Claroline\CoreBundle\Menu\UserAdditionalActionEvent $event
+     */
+    public function onWorkspaceActionMenuRender(WorkspaceAdditionalActionEvent $event)
+    {
+        $workspace = $event->getWorkspace();
+        $url = $this->router->generate(
+            'claro_tag_workspace_tag_form',
+            array('workspace' => $workspace->getId())
         );
 
         $menu = $event->getMenu();

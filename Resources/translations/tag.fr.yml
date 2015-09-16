@@ -15,3 +15,5 @@ tag_deletion: Suppression du Tag
 tag_deletion_message: Êtes-vous sûr de vouloir supprimer ce Tag ?
 tag_group: Taguer le groupe
 tag_resource: Taguer la ressource
+tag_user: Taguer l'utilisateur
+tag_workspace: Taguer l'espace d'activités

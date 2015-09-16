@@ -1,4 +1,4 @@
-<div id="modal-group-tag-form" 
+<div id="modal-user-tag-form" 
      class="modal-dialog" 
      role="dialog" 
      aria-labelledby="modalLabel" 
@@ -10,23 +10,23 @@
                 &times;
             </button>
             <h3 class="modal-title">
-                {{ 'tag_group'|trans({}, 'tag') }}
+                {{ 'tag_user'|trans({}, 'tag') }}
                 <br>
-                <small>{{ group.getName() }}</small>
+                <small>{{ user.getFirstName() }} {{ user.getLastName() }}</small>
             </h3>
         </div>
         <div class="modal-body">
             <div>
-                {% for groupTag in groupTags %}
+                {% for userTag in userTags %}
                     <span class="label label-success margin-bottom-sm margin-right-sm">
                         <i class="fa fa-tag"></i>
-                        {{ groupTag.getName() }}
+                        {{ userTag.getName() }}
                     </span>
                 {% endfor %}
             </div>
             <br>
-            <form id="group-tag-form"
-                  action="{{ path('claro_tag_group_tag', {'group': group.getId()}) }}"
+            <form id="user-tag-form"
+                  action="{{ path('claro_tag_user_tag', {'user': user.getId()}) }}"
                   method="POST"
                   novalidate="novalidate"
             > 
