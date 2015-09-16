@@ -19,8 +19,12 @@
                                     <a target="_blank"
                                        href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
                                 {% else %}
-                                    <a target="_blank"
-                                       href="{{ path('icap_dropzone_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                    {% if document.resourceNode %}
+                                        <a target="_blank"
+                                           href="{{ path('icap_dropzone_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.resourceNode.name }}</a>
+                                    {% else %}
+                                        {{ 'file_not_found'|trans({}, 'icap_dropzone') }}
+                                    {% endif %}
                                 {% endif %}
                             </td>
                             {% if mode == 'complete' %}
