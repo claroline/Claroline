@@ -26,7 +26,7 @@ class PlatformConfigurationHandler
 {
     private $configFile;
     private $parameters;
-    private $defaultParameters = array(
+    public static $defaultParameters = array(
         'name' => null,
         'nameActive' => true,
         'support_email' => null,
@@ -83,7 +83,8 @@ class PlatformConfigurationHandler
         'help_url' => 'http://claroline.net/workspaces/125/open/tool/home',
         'register_button_at_login' => false,
         'send_mail_at_workspace_registration' => true,
-        'locales' => array('fr', 'en', 'es')
+        'locales' => array('fr', 'en', 'es'),
+        'domain_name' => 'changeme.com'
     );
     private $lockedParameters;
 
@@ -194,6 +195,7 @@ class PlatformConfigurationHandler
         $config->setRegisterButtonAtLogin($this->parameters['register_button_at_login']);
         $config->setSendMailAtWorkspaceRegistration($this->parameters['send_mail_at_workspace_registration']);
         $config->setLocales($this->parameters['locales']);
+        $config->setDomainName($this->parameters['domain_name']);
 
         return $config;
     }
@@ -207,7 +209,7 @@ class PlatformConfigurationHandler
         }
 
         $configParameters = Yaml::parse(file_get_contents($this->configFile)) ?: array();
-        $parameters = $this->defaultParameters;
+        $parameters = self::$defaultParameters;
 
         foreach ($configParameters as $parameter => $value) {
             $parameters[$parameter] = $value;
@@ -232,7 +234,7 @@ class PlatformConfigurationHandler
 
     public function getDefaultParameters()
     {
-        return $this->defaultParameters;
+        return self::$defaultParameters;
     }
 
     public function getLockedParamaters()

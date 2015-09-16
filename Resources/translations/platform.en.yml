@@ -1159,3 +1159,4 @@ your_workspace_activity_overview: 'Overview of recent activities of your workspa
 initialize_your_password: Password initialization
 hide_client: Hide a client
 hide_client_message: Do you really want to hide this client ?
+domain_name: 'Domain name'

@@ -83,6 +83,14 @@ class GeneralType extends AbstractType
                 )
             )
             ->add(
+                'domainName',
+                'text',
+                array(
+                    'label' => 'domain_name',
+                    'disabled' => isset($this->lockedParams['domain_name'])
+                )
+            )
+            ->add(
                 'selfRegistration',
                 'checkbox',
                 array(
