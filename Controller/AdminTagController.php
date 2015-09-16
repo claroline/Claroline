@@ -40,9 +40,8 @@ class AdminTagController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/admin/tags/management/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
+     *     "/admin/tags/management",
      *     name="claro_tag_admin_tags_management",
-     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="name","order"="ASC"},
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})

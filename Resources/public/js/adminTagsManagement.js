@@ -57,6 +57,20 @@
         );
     });
     
+    $('#tags-display-box').on('click', '.pagination a', function (e) {
+        e.preventDefault();
+        var element = e.currentTarget;
+        var url = $(element).attr('href');
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (datas) {
+                $('#tags-display-box').html(datas);
+            }
+        });
+    });
+    
     var removeTagRow = function (event, tagId) {
         $('#tag-row-' + tagId).remove();
     };
