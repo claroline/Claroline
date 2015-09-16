@@ -149,6 +149,13 @@
             </div>
         </div>
 
+        {% if pager|length > 0 %}
+            {% set firstMenu = knp_menu_get('ClarolineCoreBundle:Builder:workspaceActionsMenu', [], {'workspace': pager|first} ) %}
+            {% set hasAdditionalAction = (firstMenu|length) > 0 %}
+        {% else %}
+            {% set hasAdditionalAction = false %}
+        {% endif %}
+        
         <div class="table-responsive">
             <table id="workspace-table" class="table table-striped table-bordered table-condensed">
                 <thead>
@@ -190,9 +197,14 @@
                                 {{ 'date'|trans({}, 'platform') }}
                             </a>
                         </th>
+                        {% if hasAdditionalAction %}
+                            <th>
+                                {{ 'actions'|trans({}, 'platform') }}
+                            </th>
+                        {% endif %}
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="workspace-table-body">
                 {% for w in pager.currentPageResults %}
                     <tr id="{{ w.getId() }}">
                         <td>
@@ -251,6 +263,12 @@
                                 -
                             {% endif %}
                         </td>
+                        {% if hasAdditionalAction %}
+                            <td>
+                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:workspaceActionsMenu', [], {'workspace': w} ) %}
+                                {{ knp_menu_render(menu, {}, 'workspace_additional_actions') }}
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -376,6 +394,24 @@
             {% endif %}
             
             window.location = url;
+        });
+    </script>
+    <script>
+        $('#workspace-table-body').on('click', '.workspace-additional-action', function (event) {
+            var child = $(this).children('.workspace-action');
+            var url = child.data('url');
+            var displayMode = child.data('display-mode');
+            
+            if (displayMode === 'modal_form') {
+                window.Claroline.Modal.displayForm(
+                    url,
+                    function () {},
+                    function() {}
+                );
+                
+            } else {
+                window.location = url;
+            }
         });
     </script>
 {% endblock %}
