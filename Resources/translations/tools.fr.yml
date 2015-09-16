@@ -19,5 +19,5 @@ resource_manager: Ressources
 roles_management: 'Gestion des rôles'
 user_management: 'Gestion des utilisateurs'
 users: Utilisateurs
-widgets_management: 'Gestion des Widgets'
+widgets_management: 'Gestion des widgets'
 workspace_management: 'Gestion des espaces d''activités'
