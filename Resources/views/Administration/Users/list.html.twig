@@ -205,6 +205,8 @@
                                 <a class='btn btn-default' href="{{ path('claro_admin_user_workspaces', {'user': user.getId()}) }}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{ 'workspaces'|trans({}, 'platform') }}" role="button">
                                     <i class='fa fa-book'></i>
                                 </a>
+                                {% set menu = knp_menu_get('ClarolineCoreBundle:Builder:userActionsMenu', [], {'user': user} ) %}
+                                {{ knp_menu_render(menu, {}, 'user_additional_actions') }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -264,5 +266,23 @@
             })
         });
 
+    </script>
+    <script>
+        $('#user-table-body').on('click', '.user-additional-action', function (event) {
+            var child = $(this).children('.user-action');
+            var url = child.data('url');
+            var displayMode = child.data('display-mode');
+            
+            if (displayMode === 'modal_form') {
+                window.Claroline.Modal.displayForm(
+                    url,
+                    function () {},
+                    function() {}
+                );
+                
+            } else {
+                window.location = url;
+            }
+        });
     </script>
 {% endblock %}

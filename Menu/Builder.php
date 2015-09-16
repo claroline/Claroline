@@ -279,6 +279,34 @@ class Builder extends ContainerAware
         return $menu;
     }
 
+    public function userActionsMenu(FactoryInterface $factory, array $options)
+    {
+        $user = $options['user'];
+        $menu = $factory->createItem($user->getUsername())
+            ->setChildrenAttribute('class', 'btn-group menu user-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_user_additional_action',
+            new UserAdditionalActionEvent($factory, $menu, $user)
+        );
+
+        return $menu;
+    }
+
+    public function workspaceActionsMenu(FactoryInterface $factory, array $options)
+    {
+        $workspace = $options['workspace'];
+        $menu = $factory->createItem($workspace->getCode())
+            ->setChildrenAttribute('class', 'btn-group menu user-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_workspace_additional_action',
+            new WorkspaceAdditionalActionEvent($factory, $menu, $workspace)
+        );
+
+        return $menu;
+    }
+
     public function addDivider($menu, $name)
     {
         $menu->addChild($name)
