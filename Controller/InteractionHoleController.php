@@ -92,8 +92,8 @@ class InteractionHoleController extends Controller
 
         $holeHandler = $formHandler->processAdd();
         if ($holeHandler === true) {
-            $categoryToFind = $interHole->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interHole->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interHole->getQuestion()->getCategory();
+            $titleToFind = $interHole->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -196,8 +196,8 @@ class InteractionHoleController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionHole entity.');
         }
 
-        if ($user->getId() != $interHole->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $interHole->getInteraction()->getQuestion()->getCategory()->getId();
+        if ($user->getId() != $interHole->getQuestion()->getUser()->getId()) {
+            $catID = $interHole->getQuestion()->getCategory()->getId();
         }
 
         $editForm = $this->createForm(
@@ -238,7 +238,7 @@ class InteractionHoleController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id' => $interHole->getInteraction()->getQuestion()->getId(),
+                'id' => $interHole->getQuestion()->getId(),
                 'form' => $editForm,
             )
         );

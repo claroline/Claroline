@@ -25,14 +25,7 @@ class QcmImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-
-        $this->createQuestion();
-
-        $this->createInteraction();
-        $this->interaction->setType('InteractionQCM');
-        $this->om->persist($this->interaction);
-        $this->om->flush();
-
+        $this->createQuestion(InteractionQCM::TYPE);
         $this->createInteractionQCM();
 
         return $this->interactionQCM;
@@ -65,7 +58,7 @@ class QcmImport extends QtiImport
     {
         $rp = $this->assessmentItem->getElementsByTagName('responseProcessing');
         $this->interactionQCM = new InteractionQCM();
-        $this->interactionQCM->setInteraction($this->interaction);
+        $this->interactionQCM->setQuestion($this->question);
         $this->getShuffle();
         $this->getQCMType();
         if ($rp->item(0) && $rp->item(0)->getElementsByTagName('responseCondition')->item(0)) {

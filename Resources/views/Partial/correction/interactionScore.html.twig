@@ -6,7 +6,7 @@
 <hr/>
 
 {% for hv in hintViewed %}
-    {% if( hv.hint.interaction.id == interactions[p].id ) %}
+    {% if( hv.hint.id == interactions[p].id ) %}
         {{ 'penalty' | trans({}, 'ujm_exo') }} : {{ hv.hint.penalty }}
         <br/><hr/>
     {% endif %}

@@ -26,7 +26,7 @@ class Hole extends Interaction
 
         $interHole = $em->getRepository('UJMExoBundle:InteractionHole')->find($interactionHoleID);
 
-        $penalty = $this->getPenalty($interHole->getInteraction(), $session, $paperID);
+        $penalty = $this->getPenalty($interHole->getQuestion(), $session, $paperID);
 
         $score = $this->mark($interHole, $request->request, $penalty);
 

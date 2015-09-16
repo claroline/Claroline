@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\MappedSuperclass
  */
-class AbstractInteraction
+abstract class AbstractInteraction implements QuestionTypeProviderInterface
 {
     /**
      * @ORM\Id
@@ -17,7 +17,7 @@ class AbstractInteraction
     protected $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Question")
+     * @ORM\OneToOne(targetEntity="Question", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $question;
@@ -30,12 +30,18 @@ class AbstractInteraction
         return $this->id;
     }
 
-    public function setQuestion(Question $question)
+    /**
+     * @param Question $question
+     */
+    final public function setQuestion(Question $question)
     {
         $this->question = $question;
-        $question->setType(get_class($this));
+        $question->setType(static::getQuestionType());
     }
 
+    /**
+     * @return Question
+     */
     public function getQuestion()
     {
         return $this->question;

@@ -145,7 +145,7 @@ class GraphicExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
+        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getQuestion()->getDescription());
         $prompt->appendChild($prompttxt);
         $this->selectPointInteraction->appendChild($prompt);
     }

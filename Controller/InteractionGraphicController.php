@@ -86,8 +86,8 @@ class InteractionGraphicController extends Controller
 
         $graphicHandler = $formHandler->processAdd();
         if ($graphicHandler === true) {
-            $categoryToFind = $interGraph->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interGraph->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interGraph->getQuestion()->getCategory();
+            $titleToFind = $interGraph->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -159,7 +159,7 @@ class InteractionGraphicController extends Controller
             array('interactionGraphic' => $interactionGraph->getId())
         );
 
-        if ($attr->get('user')->getId() != $interactionGraph->getInteraction()->getQuestion()->getUser()->getId()) {
+        if ($attr->get('user')->getId() != $interactionGraph->getQuestion()->getUser()->getId()) {
             $docID = $interactionGraph->getDocument()->getId();
         }
 
@@ -209,8 +209,8 @@ class InteractionGraphicController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionGraphic entity.');
         }
 
-        if ($user->getId() != $entity->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $entity->getInteraction()->getQuestion()->getCategory()->getId();
+        if ($user->getId() != $entity->getQuestion()->getUser()->getId()) {
+            $catID = $entity->getQuestion()->getCategory()->getId();
             $docID = $entity->getDocument()->getId();
         }
 
@@ -246,7 +246,7 @@ class InteractionGraphicController extends Controller
 
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
-                'id' => $entity->getInteraction()->getQuestion()->getId(),
+                'id' => $entity->getQuestion()->getId(),
                 'form' => $editForm,
                 'exoID' => $exoID,
             )

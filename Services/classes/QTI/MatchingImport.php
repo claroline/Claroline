@@ -26,11 +26,7 @@ class MatchingImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-        $this->createQuestion();
-        $this->createInteraction();
-        $this->interaction->setType('InteractionMatching');
-        $this->om->persist($this->interaction);
-        $this->om->flush();
+        $this->createQuestion(InteractionMatching::TYPE);
         $this->createInteractionMatching();
 
         return $this->interactionMatching;
@@ -65,7 +61,7 @@ class MatchingImport extends QtiImport
     protected function createInteractionMatching()
     {
         $this->interactionMatching = new InteractionMatching();
-        $this->interactionMatching->setInteraction($this->interaction);
+        $this->interactionMatching->setQuestion($this->question);
         //for recording the type of the question
         $this->matchingType();
         $this->getShuffle();

@@ -38,7 +38,7 @@ class Graphic extends Interaction
 
         $session = $request->getSession();
 
-        $penalty = $this->getPenalty($interG->getInteraction(), $session, $paperID);
+        $penalty = $this->getPenalty($interG->getQuestion(), $session, $paperID);
 
         $score = $point - $penalty; // Score of the student with penalty
 
