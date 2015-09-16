@@ -541,7 +541,7 @@ class AdminPresenceController extends Controller
 
         foreach ($PeriodToModif as $OnePeriodToModif) {
             
-            $this->em->remove($PeriodToModif);
+            $this->em->remove($OnePeriodToModif);
            
             }
             
