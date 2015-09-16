@@ -147,9 +147,12 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         //we need to add things that aren't here first...
         $_data =& $this->getExtendedData();
 
-        foreach ($object->getParameters()->getSecondaryResources() as $resource) {
-            if (!$this->container->get('claroline.importer.rich_text_formatter')->getItemFromUid($resource->getId(), $_data)) {
-                $this->addResourceToData($resource, $_data, $_files);
+        $parameters = $object->getParameters();
+        if (!empty($parameters)) {
+            foreach ($parameters->getSecondaryResources() as $resource) {
+                if (!$this->container->get('claroline.importer.rich_text_formatter')->getItemFromUid($resource->getId(), $_data)) {
+                    $this->addResourceToData($resource, $_data, $_files);
+                }
             }
         }
 
