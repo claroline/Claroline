@@ -17,7 +17,8 @@
         <div class="modal-body">
             <div>
                 {% for groupTag in groupTags %}
-                    <span class="label label-info margin-bottom-sm margin-right-sm">
+                    <span class="label label-success margin-bottom-sm margin-right-sm">
+                        <i class="fa fa-tag"></i>
                         {{ groupTag.getName() }}
                     </span>
                 {% endfor %}
@@ -47,51 +48,29 @@
     </div>
 </div>
 
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/css/jquery.tagit.css') }}"/>
+{% endblock %}
+
 {% block javascripts %}
-    <script src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'
-            type="text/javascript"
-    >
-    </script>
+    {% javascripts output='js/tags.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/tag-it/js/tag-it.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
     <script type="text/javascript">
         var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
         
-        function extract(query) {
-            var result = /([^,]+)$/.exec(query);
-            
-            if (result && result[1]) {
-                
-                return result[1].trim();
-            } else {
-                
-                return '';
-            }
-        }
-
-        $('#tag_form_tag').typeahead({
-            source: allTags,
-            updater: function (item) {
-                
-                return this.$element.val().replace(/[^,]*$/,'')+item+',';
-            },
-            matcher: function (item) {
-                var q = extract(this.query);
-
-                if (!q) {
-
-                    return false;
-                } else {
-
-                    return ~item.toLowerCase().indexOf(q.toLowerCase())
-                }
-            },
-            highlighter: function (item) {
-                var q = extract(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-
-                return item.replace(new RegExp('(' + q + ')', 'ig'), function (match) {
-
-                    return '<strong>' + match + '</strong>'
-                });
-            }
+        $(function() {
+            $("#tag_form_tags").tagit({
+{#                'availableTags' : allTags,#}
+                'allowSpaces' : true
+            });
         });
     </script>
 {% endblock %}

@@ -24,7 +24,8 @@
             <br>
             <div>
                 {% for resourceTag in resourceTags %}
-                    <span class="label label-info margin-bottom-sm margin-right-sm">
+                    <span class="label label-success margin-bottom-sm margin-right-sm">
+                        <i class="fa fa-tag"></i>
                         {{ resourceTag.getName() }}
                     </span>
                 {% endfor %}
@@ -54,17 +55,34 @@
     </div>
 </div>
 
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/css/jquery.tagit.css') }}"/>
+{% endblock %}
+
 {% block javascripts %}
-    <script src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'
-            type="text/javascript"
-    >
-    </script>
+    {% javascripts output='js/tags.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
+        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
+        '@FrontEndBundle/Resources/public/jquery/plugin/tag-it/js/tag-it.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
     <script type="text/javascript">
         var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
         
-        function extract(query) {
+        $(function() {
+            $("#tag_form_tags").tagit({
+{#                'availableTags' : allTags,#}
+                'allowSpaces' : true
+            });
+        });
+        
+        {#function extract(query) {
             var result = /([^,]+)$/.exec(query);
-            
+            a
             if (result && result[1]) {
                 
                 return result[1].trim();
@@ -74,11 +92,13 @@
             }
         }
 
-        $('#tag_form_tag').typeahead({
+        $('#tag_form_tags').typeahead({
             source: allTags,
             updater: function (item) {
+                console.log('item=' + item);
+                console.log(' - value=' + this.$element.val());
                 
-                return this.$element.val().replace(/[^,]*$/,'')+item+',';
+                return this.$element.val().replace(/[^,]*$/,'') + item + ',';
             },
             matcher: function (item) {
                 var q = extract(this.query);
@@ -99,6 +119,6 @@
                     return '<strong>' + match + '</strong>'
                 });
             }
-        });
+        });#}
     </script>
 {% endblock %}

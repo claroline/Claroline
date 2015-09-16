@@ -85,8 +85,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tagsList = $form->get('tag')->getData();
-            $tags = explode(',', $tagsList);
+            $tags = $form->get('tags')->getData();
             $this->tagManager->tagObject($tags, $resourceNode);
 
             return new JsonResponse('success', 200);
@@ -142,8 +141,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tagsList = $form->get('tag')->getData();
-            $tags = explode(',', $tagsList);
+            $tags = $form->get('tags')->getData();
             $this->tagManager->tagObject($tags, $group);
 
             return new JsonResponse('success', 200);

@@ -22,13 +22,9 @@ class TagType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'tag',
-            'text',
-            array(
-                'required' => true,
-                'mapped' => false,
-                'constraints' => new NotBlank()
-            )
+            'tags',
+            'tags',
+            array('mapped' => false)
         );
     }
 
