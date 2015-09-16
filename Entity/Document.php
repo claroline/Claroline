@@ -31,7 +31,8 @@ class Document {
     protected $url;
     /**
      * @ORM\ManyToOne(
-     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode"
+     *      targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode",
+     *      cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", onDelete="SET NULL")
      */
