@@ -1,12 +1,25 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% set duration ='00:50:00' %}
-{% set startday ='06:00:00' %}
-{% set endday ='20:00:00' %}
+
+{% if schoolYearBeginHour|date('i')<30%}
+    {% set startday =schoolYearBeginHour|date('H')~':00:00'%}
+{% else %}
+    {% set theHour =schoolYearBeginHour|date('H') %}
+    {% set oneHourMore = theHour+1%}
+    {% set startday =oneHourMore~':00:00'%}
+{% endif %}    
+
+{% if schoolYearEndHour|date('i')<30%}
+    {% set endday =schoolYearEndHour|date('H')~':00:00'%}
+{% else %}
+    {% set theHour =schoolYearEndHour|date('H') %}
+    {% set oneHourMore = theHour+1%}
+    {% set endday =oneHourMore~':00:00'%}
+{% endif %} 
 
 
 {% block section_content %} 
-  
 
     <div class="panel panel-default">
         <div class="panel-body">   

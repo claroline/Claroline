@@ -237,11 +237,13 @@
           
     </script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#studentList').DataTable( {
                 
-                paging: false,
+                paging: true,
+                "pageLength": 25,
                 "language": {
                     "lengthMenu": "Afficher _MENU_ étudiants par page",
                     "zeroRecords": "Rien trouvé - Désolé",

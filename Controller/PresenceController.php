@@ -82,19 +82,32 @@ class PresenceController extends Controller
      */
     public function ToolIndexAction(User $user)
     {
- 
+        $SchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(true);
         $Presences = $this->presenceRepo->findAll() ;
         $Periods = $this->periodRepo->findByVisibility(true) ;
         $canViewPersonalArchives=  $this->presenceManager->checkRights($user,PresenceRights::PERSONAL_ARCHIVES);
         $canCkeckPresences=  $this->presenceManager->checkRights($user,  PresenceRights::CHECK_PRESENCES);
         $canViewArchives= $this->presenceManager->checkRights($user,  PresenceRights::READING_ARCHIVES);
                     
+        
+        if(!is_null($SchoolYear)){
+            $SchoolYearBeginHour=$SchoolYear->getSchoolDayBeginHour();
+            $SchoolYearEndHour=$SchoolYear->getSchoolDayEndHour();
+        }
+        
+        else{
+            $SchoolYearBeginHour='08:00:00';
+            $SchoolYearEndHour='18:00:00';
+        }
+        
         return array('user'=>$user, 
                      'presences'=>$Presences, 
                      'periods'=>$Periods, 
                      'canViewPersonalArchives'=>$canViewPersonalArchives, 
                      'canCheckPresences'=>$canCkeckPresences,
-                     'canViewArchives'=>$canViewArchives,);
+                     'canViewArchives'=>$canViewArchives,
+                     'schoolYearBeginHour'=>$SchoolYearBeginHour,
+                     'schoolYearEndHour'=>$SchoolYearEndHour);
          
     }
           /**

@@ -377,10 +377,22 @@ class AdminPresenceController extends Controller
     public function adminHoraireAction()
             
     {
-       $Periods = $this->periodRepo->findAll() ; 
-       $SchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(true);
+        $Periods = $this->periodRepo->findAll() ; 
+        $SchoolYear=$this->schoolYearRepo->findOneBySchoolYearActual(true);
         
-       $NewPeriodForm = $this ->createFormBuilder()
+        if(!is_null($SchoolYear)){
+            $SchoolYearBeginHour=$SchoolYear->getSchoolDayBeginHour();
+            $SchoolYearEndHour=$SchoolYear->getSchoolDayEndHour();
+        }
+        
+        else{
+            $SchoolYearBeginHour='08:00:00';
+            $SchoolYearEndHour='18:00:00';
+        }
+            
+       
+        
+        $NewPeriodForm = $this ->createFormBuilder()
         
             ->add('day', 'choice', array(
                     'choices'   => array(
@@ -457,7 +469,9 @@ class AdminPresenceController extends Controller
         }  
        return array('NewPeriodForm' => $NewPeriodForm->createView(), 
                     'periods' => $Periods,
-                    'schoolYear'=>$SchoolYear);
+                    'schoolYear'=>$SchoolYear,
+                    'schoolYearBeginHour'=>$SchoolYearBeginHour,
+                    'schoolYearEndHour'=>$SchoolYearEndHour);
     }
     
      
