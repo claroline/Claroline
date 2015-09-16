@@ -225,7 +225,7 @@ cut: Couper
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
 database: 'Base de données'
-database_connection_failed: 'La connexion à la base de données à échoué.'
+database_connection_failed: 'La connexion à la base de données a échoué.'
 date: Date
 date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd-mm-yyyy
@@ -743,7 +743,7 @@ recent_all_workspace_activities_overview: 'Aperçu de toutes les activités réc
 recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoires'
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 redirect_uri: 'Url de redirection'
-refresh: Raffraîchir
+refresh: Rafraîchir
 refresh_explanation: "Certains problèmes peuvent être causés car les fichiers javascripts et css n'ont pas été bien générés. </br>\nAfin de tenter de résoudre, veuillez sur \"Raffraîchir\"  </br>\nPour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
 register: Inscription
 register_to_a_public_workspace: 'Inscription à un espace d''activités public'
