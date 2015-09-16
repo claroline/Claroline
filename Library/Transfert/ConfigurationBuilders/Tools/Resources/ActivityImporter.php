@@ -144,45 +144,49 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
 
     public function export(Workspace $workspace, array &$_files, $object)
     {
-        //we need to add things that aren't here first...
+        // we need to add things that aren't here first...
         $_data =& $this->getExtendedData();
 
+        // Get primary resource
+        $primaryResource = $object->getPrimaryResource() ? $object->getPrimaryResource()->getId() : null;
+
+        // Get secondary resources
+        $secondaryResources = array();
+
+        /** @var \Claroline\CoreBundle\Entity\Activity\ActivityParameters $parameters */
         $parameters = $object->getParameters();
         if (!empty($parameters)) {
+            /** @var \Claroline\CoreBundle\Entity\Resource\ResourceNode $resource */
             foreach ($parameters->getSecondaryResources() as $resource) {
                 if (!$this->container->get('claroline.importer.rich_text_formatter')->getItemFromUid($resource->getId(), $_data)) {
                     $this->addResourceToData($resource, $_data, $_files);
                 }
+
+                $secondaryResources[] = array('uid' => $resource->getId());
             }
         }
 
-        $uid = uniqid() . '.txt';
+        // Process rich text description
         $uid = uniqid() . '.txt';
         $tmpPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $uid;
         $content = $object->getDescription();
         file_put_contents($tmpPath, $content);
         $_files[$uid] = $tmpPath;
-        $parameters = $object->getParameters();
-        $resources = $parameters->getSecondaryResources();
-        $secondaryResources = array();
-        //$rules = array();
 
-        foreach ($resources as $resource) {
-            $secondaryResources[] = array('uid' => $resource->getId());
-        }
-
-        $primaryResource = $object->getPrimaryResource() ? $object->getPrimaryResource()->getId(): null;
-
-        $data = array(array('activity' => array(
-            'description' => $uid,
-            'title' => $object->getTitle(),
-            'primary_resource' => $primaryResource,
-            'max_duration' => $parameters->getMaxDuration(),
-            'who' => $parameters->getWho(),
-            'where' => $parameters->getWhere(),
-            'evaluation_type' => $parameters->getEvaluationType(),
-            'secondary_resources' => $secondaryResources
-        )));
+        $data = array(
+            array(
+                'activity' => array(
+                    'description'         => $uid,
+                    'title'               => $object->getTitle(),
+                    'primary_resource'    => $primaryResource,
+                    'max_duration'        => $parameters->getMaxDuration(),
+                    'who'                 => $parameters->getWho(),
+                    'where'               => $parameters->getWhere(),
+                    'evaluation_type'     => $parameters->getEvaluationType(),
+                    'secondary_resources' => $secondaryResources
+                )
+            )
+        );
 
         return $data;
     }
