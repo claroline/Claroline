@@ -316,9 +316,9 @@ class Step implements \JsonSerializable
     {
         if (!empty($this->activity)) {
             return $this->activity->getResourceNode()->getName();
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     /**
@@ -329,9 +329,35 @@ class Step implements \JsonSerializable
     {
         if (!empty($this->activity) && ' ' != $this->activity->getDescription()) {
             return $this->activity->getDescription();
-        } else {
-            return '';
         }
+
+        return '';
+    }
+
+    /**
+     * Wrapper to access ResourceNode accessibleFrom property
+     * @return \DateTime
+     */
+    public function getAccessibleFrom()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getResourceNode()->getAccessibleFrom();
+        }
+
+        return null;
+    }
+
+    /**
+     * Wrapper to access ResourceNode accessibleUntil property
+     * @return \DateTime
+     */
+    public function getAccessibleUntil()
+    {
+        if (!empty($this->activity)) {
+            return $this->activity->getResourceNode()->getAccessibleUntil();
+        }
+
+        return null;
     }
 
     /**
@@ -462,12 +488,15 @@ class Step implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        $accessibleFrom  = $this->getAccessibleFrom();
+        $accessibleUntil = $this->getAccessibleUntil();
+
         // Initialize data array
         $jsonArray = array (
-            'id'                => $this->id,               // A local ID for the step in the path (reuse step ID)
-            'resourceId'        => $this->id,               // The real ID of the Step into the DB
+            'id'                => $this->getId(),          // A local ID for the step in the path (reuse step ID)
+            'resourceId'        => $this->getId(),          // The real ID of the Step into the DB
             'activityId'        => null,
-            'lvl'               => $this->lvl,              // The depth of the step in the path structure
+            'lvl'               => $this->getLvl(),         // The depth of the step in the path structure
             'name'              => $this->getName(),        // The name of the linked Activity (used as Step name)
             'description'       => $this->getDescription(), // The description of the linked Activity (used as Step description)
             'primaryResource'   => array (),
@@ -478,6 +507,8 @@ class Step implements \JsonSerializable
             'who'               => null,
             'where'             => null,
             'duration'          => null, // Duration in seconds
+            'accessibleFrom'    => $accessibleFrom  instanceof \DateTime ? $accessibleFrom->format('Y-m-d H:i:s')  : null,
+            'accessibleUntil'   => $accessibleUntil instanceof \DateTime ? $accessibleUntil->format('Y-m-d H:i:s') : null,
         );
 
         // Get activity properties

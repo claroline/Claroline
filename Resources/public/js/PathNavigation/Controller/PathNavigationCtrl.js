@@ -8,8 +8,6 @@ var PathNavigationCtrl = function PathNavigationCtrl($routeParams, $scope, PathS
 
     this.current = $routeParams;
 
-    this.summaryState = this.pathService.getSummaryState();
-
     // Watch the route changes
     $scope.$watch(function watchCurrentRoute() {
         return this.current;
@@ -42,12 +40,6 @@ PathNavigationCtrl.prototype.step = {};
 PathNavigationCtrl.prototype.parents = {};
 
 /**
- * Current state of the summary
- * @type {object}
- */
-PathNavigationCtrl.prototype.summaryState = {};
-
-/**
  * Reload the Step from route params
  */
 PathNavigationCtrl.prototype.reloadStep = function reloadStep() {
@@ -66,11 +58,4 @@ PathNavigationCtrl.prototype.reloadStep = function reloadStep() {
     if (angular.isDefined(this.step) && angular.isObject(this.step)) {
         this.parents = this.pathService.getParents(this.step);
     }
-};
-
-/**
- * Allow toggle Summary from the current step
- */
-PathNavigationCtrl.prototype.toggleSummary = function toggleSummary() {
-    this.pathService.toggleSummaryState();
 };

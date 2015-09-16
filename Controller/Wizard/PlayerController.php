@@ -69,6 +69,7 @@ class PlayerController
 
         return array (
             '_resource'       => $path,
+            'workspace'       => $path->getWorkspace(),
             'userProgression' => $this->pathManager->getUserProgression($path),
             'resourceIcons'   => $resourceIcons,
             'editEnabled'     => $this->pathManager->isAllow('EDIT', $path),

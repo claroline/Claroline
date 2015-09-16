@@ -1,12 +1,8 @@
 <div>
-    <!--<button type="button" class="btn btn-default">
-        <span class="fa fa-sitemap"></span>
-    </button>-->
-
     <!-- Angular can't initialize 2 directives on same element (here, PathSummaryDirective & NgPageslideDirective) so we need a container -->
     <div data-pageslide="" data-ps-open="pathSummaryShowCtrl.state.opened" data-ps-side="left" data-ps-class="path-summary-container" data-ps-push-class="path-summary-opened">
-        <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="pathSummaryShowCtrl.close()">
-            <span class="fa fa-times"></span>
+        <a href="" id="sidebar-left-close" class="ps-close pull-right" data-ng-click="pathSummaryShowCtrl.close()" data-placement="right" data-toggle="tooltip" data-original-title="{{ 'sidebar_close'|trans:{}:'path_wizards' }}">
+            <span class="fa fa-lg fa-caret-left"></span>
             <span class="sr-only">{{ 'sidebar_close'|trans:{}:'path_wizards' }}</span>
         </a>
 
