@@ -191,7 +191,6 @@
             }
         }
 
-        console.log(event);
         // Create the popover for the event or the task
         createPopover(event, $element);
     }
@@ -317,8 +316,8 @@
         $calendarElement.fullCalendar('clientEvents', function (eventObject) {
             filterEvent(eventObject, workspaceIds);
         });
-
-        $calendarElement.fullCalendar('rerenderEvents');
+        //$calendarElement.fullCalendar('removeEvents');
+        $calendarElement.fullCalendar('refetchEvents');
     }
 
     function createPopover(event, $element)
