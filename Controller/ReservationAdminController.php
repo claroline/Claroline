@@ -272,7 +272,14 @@ class ReservationAdminController extends Controller
      */
     public function updateResourceRolesAction(Resource $resource, $rolesList = "")
     {
-        $maskByRole = explode(',', $rolesList);
+        $tempMaskByRole= explode(',', $rolesList);
+
+        $maskByRole = array();
+        
+        foreach ($tempMaskByRole as $oneMaskByRole) {
+            $insideOneMaskByRole=explode(':',$oneMaskByRole);
+            $maskByRole[intval($insideOneMaskByRole[0])]=  intval($insideOneMaskByRole[1]);
+        }
         $roles = $this->roleRepo->findBy(['type' => 1]);
 
         foreach ($roles as $role) {

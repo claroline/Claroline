@@ -192,9 +192,18 @@
     }
 
     function updateResourceRoles(resourceId)
-    {
+    {   
+        var rolesListString='';
+        
+        for (var key in rolesList){
+            rolesListString+=key+':'+rolesList[key]+',';
+            
+        }
+        
+        rolesListString=rolesListString.substring(0,rolesListString.length -1);
+
         $.ajax({
-            url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesList}),
+            url: Routing.generate('formalibre_reservation_update_resource_roles', {id: resourceId, rolesList: rolesListString}),
             type: 'post'
         });
     }
