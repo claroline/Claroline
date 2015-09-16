@@ -57,8 +57,10 @@ class UserBadgeController extends Controller
             $data = array(
                 'user_badge' => array(
                     'id' => $userBadge->getId(),
-                    'username' => $userBadge->getUser()->getUsername(),
-                    'slug' => $userBadge->getBadge()->getSlug(),
+                    'url' => $this->generateUrl("icap_badge_badge_share_view", array(
+                        "username" => $userBadge->getUser()->getUsername(),
+                        "badgeSlug" => $userBadge->getBadge()->getSlug()
+                    )),
                     'is_shared' => $userBadge->isIsShared()
                 )
             );

@@ -430,10 +430,14 @@
 
             badgeUpdateRequest
                 .success(function(data) {
-                    updateSharedState(sharedLink, sharedState);
+                    updateBadgeSharedState(sharedLink, sharedState);
+
+                    if (1 == sharedState) {
+                        sharedLink.parent().find(".share_badge").attr("href", data.user_badge.url);
+                    }
                 })
                 .fail(function() {
-                    updateSharedState(sharedLink, (0 == sharedState)? 1 : 0);
+                    updateBadgeSharedState(sharedLink, (0 == sharedState)? 1 : 0);
                     var errorMessage = "edit_is_shared_badge_error";
                     if (1 == sharedState) {
                         errorMessage = "edit_is_unshared_badge_error";
@@ -441,5 +445,16 @@
                     displayError(errorMessage);
                 });
         });
+
+        function updateBadgeSharedState(sharedLink, sharedState) {
+            if (0 == sharedState) {
+                sharedLink.html(sharedLink.attr("data-private-state"));
+                sharedLink.parent().find(".share_badge").hide();
+            }
+            else {
+                sharedLink.html(sharedLink.attr("data-shared-state"));
+                sharedLink.parent().find(".share_badge").show();
+            }
+        }
     });
 })(jQuery);
