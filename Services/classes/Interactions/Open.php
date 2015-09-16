@@ -29,7 +29,7 @@ class Open extends Interaction
 
         $response = $request->request->get('interOpen');
 
-        $penalty = $this->getPenalty($interOpen->getInteraction(), $session, $paperID);
+        $penalty = $this->getPenalty($interOpen->getQuestion(), $session, $paperID);
 
         $score = $this->mark($interOpen, $response, $penalty);
 

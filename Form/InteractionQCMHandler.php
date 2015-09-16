@@ -84,7 +84,7 @@ class InteractionQCMHandler extends QuestionHandler
         foreach ($originalInterQCM->getChoices() as $choice) {
             $originalChoices[] = $choice;
         }
-        foreach ($originalInterQCM->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterQCM->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -138,8 +138,7 @@ class InteractionQCMHandler extends QuestionHandler
         $interQCM->setScoreRightResponse($pointsRight);
 
         $this->em->persist($interQCM);
-        $this->em->persist($interQCM->getInteraction()->getQuestion());
-        $this->em->persist($interQCM->getInteraction());
+        $this->em->persist($interQCM->getQuestion());
 
         // On persiste tous les choices de l'interaction QCM.
         foreach ($interQCM->getChoices() as $choice) {

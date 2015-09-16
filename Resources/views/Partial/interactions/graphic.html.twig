@@ -11,7 +11,7 @@
                 {{ 'select' | trans({}, 'ujm_exo') }}
             </a>
             {% if src == 'edit' %}
-                {% if app.user.id == entity.interaction.question.user.id %}
+                {% if app.user.id == entity.question.user.id %}
                     <a class="btn btn-primary" onClick="addPicture('{{ path('ujm_interactiongraphic_SavePic') }}');">
                         <i class="fa fa-picture-o"></i> {{ 'add_new_picture' | trans({}, 'ujm_exo') }}
                     </a>

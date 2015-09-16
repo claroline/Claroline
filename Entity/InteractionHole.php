@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InteractionHole extends AbstractInteraction
 {
+    const TYPE = 'InteractionHole';
+
     /**
      * @ORM\Column(type="text")
      */
@@ -33,6 +35,14 @@ class InteractionHole extends AbstractInteraction
     public function __construct()
     {
         $this->holes = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQuestionType()
+    {
+        return self::TYPE;
     }
 
     /**

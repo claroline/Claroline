@@ -26,7 +26,7 @@ class InteractionGraphicType extends AbstractType
 
         $builder
             ->add(
-                'interaction', new QuestionType($this->user, $this->catID)
+                'question', new QuestionType($this->user, $this->catID)
             )
             ->add(
                 'document', 'entity', array(

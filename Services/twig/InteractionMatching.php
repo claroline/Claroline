@@ -69,7 +69,7 @@ class InteractionMatching extends \Twig_Extension
      */
     public function initTabResponseMatching($response, $interMatching)
     {
-        $interMatchSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\InteractionMatching');
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
 
         return $interMatchSer->initTabResponseMatching($response, $interMatching);
     }

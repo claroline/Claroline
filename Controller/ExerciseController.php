@@ -769,7 +769,7 @@ class ExerciseController extends Controller
             ->getRepository('UJMExoBundle:Response')
             ->getAlreadyResponded($session->get('paper'), $interactionToValidatedID);
 
-        $interSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\\'.$typeInterToRecorded);
+        $interSer = $this->container->get('ujm.exo_'.$typeInterToRecorded);
         $res = $interSer->response($request, $session->get('paper'));
 
         if (count($response) == 0) {

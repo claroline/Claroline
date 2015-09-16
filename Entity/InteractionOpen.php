@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InteractionOpen extends AbstractInteraction
 {
+    const TYPE = 'InteractionOpen';
+
     /**
      * @ORM\Column(name="orthography_correct", type="boolean")
      */
@@ -38,6 +40,14 @@ class InteractionOpen extends AbstractInteraction
     public function __construct()
     {
         $this->wordResponses = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQuestionType()
+    {
+        return self::TYPE;
     }
 
     /**

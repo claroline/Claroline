@@ -57,12 +57,10 @@ class InteractionHoleHandler extends QuestionHandler
      */
     protected function onSuccessAdd($interHole)
     {
-
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
-        $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interHole->getInteraction()->getQuestion()->setUser($this->user);
-        $interHole->getInteraction()->setType('InteractionHole');
+        $interHole->getQuestion()->setDateCreate(new \Datetime());
+        $interHole->getQuestion()->setUser($this->user);
 
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
@@ -74,9 +72,7 @@ class InteractionHoleHandler extends QuestionHandler
         }
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
-        $this->em->persist($interHole->getInteraction()->getQuestion());
-        $this->em->persist($interHole->getInteraction());
-
+        $this->em->persist($interHole->getQuestion());
         $this->persistHints($interHole);
 
         $this->em->flush();
@@ -105,7 +101,7 @@ class InteractionHoleHandler extends QuestionHandler
         foreach ($originalInterHole->getHoles() as $hole) {
             $originalHoles[] = $hole;
         }
-        foreach ($originalInterHole->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterHole->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -169,8 +165,7 @@ class InteractionHoleHandler extends QuestionHandler
 
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
-        $this->em->persist($interHole->getInteraction()->getQuestion());
-        $this->em->persist($interHole->getInteraction());
+        $this->em->persist($interHole->getQuestion());
 
         // On persiste tous les holes de l'interaction hole.
         foreach ($interHole->getHoles() as $hole) {

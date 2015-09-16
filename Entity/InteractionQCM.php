@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InteractionQCM extends AbstractInteraction
 {
+    const TYPE = 'InteractionQCM';
+
     /**
      * @ORM\Column(type="boolean")
      */
@@ -52,6 +54,14 @@ class InteractionQCM extends AbstractInteraction
     public function __construct()
     {
         $this->choices = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQuestionType()
+    {
+        return self::TYPE;
     }
 
     /**

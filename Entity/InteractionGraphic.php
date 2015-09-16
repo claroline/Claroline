@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class InteractionGraphic extends AbstractInteraction
 {
+    const TYPE = 'InteractionGraphic';
+
     /**
      * @ORM\Column(type="integer")
      */
@@ -41,6 +43,14 @@ class InteractionGraphic extends AbstractInteraction
     public function __construct()
     {
         $this->coords = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQuestionType()
+    {
+        return self::TYPE;
     }
 
     /**
@@ -81,14 +91,6 @@ class InteractionGraphic extends AbstractInteraction
     public function getQuestion()
     {
         return $this->question;
-    }
-
-    /**
-     * @param Question $question
-     */
-    public function setQuestion(Question $question)
-    {
-        $this->question = $question;
     }
 
     /**

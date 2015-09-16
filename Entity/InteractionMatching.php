@@ -11,6 +11,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class InteractionMatching extends AbstractInteraction
 {
+    const TYPE = 'InteractionMatching';
+
     /**
      * @ORM\Column(type="boolean")
      */
@@ -47,6 +49,14 @@ class InteractionMatching extends AbstractInteraction
     {
         $this->labels = new ArrayCollection();
         $this->proposals = new ArrayCollection();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getQuestionType()
+    {
+        return self::TYPE;
     }
 
     /**

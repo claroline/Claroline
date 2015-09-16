@@ -284,12 +284,11 @@ class PaperService
         $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
 
         $responseGiven = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
-        $typeParts = explode('\\', $typeInterToDisplayed);
 
         $array['workspace'] = $workspace;
         $array['tabOrderInter'] = $tabOrderInter;
         $array['interactionToDisplayed'] = $interactionToDisplayed;
-        $array['interactionType'] = array_pop($typeParts);
+        $array['interactionType'] = $typeInterToDisplayed;
         $array['numQ'] = $numQuestionToDisplayed;
         $array['paper'] = $session->get('paper');
         $array['numAttempt'] = $paper->getNumPaper();

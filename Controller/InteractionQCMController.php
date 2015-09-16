@@ -100,8 +100,8 @@ class InteractionQCMController extends Controller
 
         $qcmHandler = $formHandler->processAdd();
         if ($qcmHandler === true) {
-            $categoryToFind = $interQCM->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interQCM->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interQCM->getQuestion()->getCategory();
+            $titleToFind = $interQCM->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -210,8 +210,8 @@ class InteractionQCMController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionQCM entity.');
         }
 
-        if ($user->getId() != $interQCM->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $interQCM->getInteraction()->getQuestion()->getCategory()->getId();
+        if ($user->getId() != $interQCM->getQuestion()->getUser()->getId()) {
+            $catID = $interQCM->getQuestion()->getCategory()->getId();
         }
 
         $editForm = $this->createForm(
@@ -245,7 +245,7 @@ class InteractionQCMController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id' => $interQCM->getInteraction()->getQuestion()->getId(),
+                'id' => $interQCM->getQuestion()->getId(),
                 'form' => $editForm,
             )
         );

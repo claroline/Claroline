@@ -7,6 +7,7 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use UJM\ExoBundle\Entity\InteractionOpen;
 
 class QtiRepository
 {
@@ -263,7 +264,7 @@ class QtiRepository
      */
     public function export($question)
     {
-        if ($question->getType() !== 'UJM\ExoBundle\Entity\InteractionOpen') {
+        if ($question->getType() !== InteractionOpen::TYPE) {
             $service = 'ujm.exo_qti_export_'.$question->getType();
             $qtiExport = $this->container->get($service);
         } else {
@@ -284,8 +285,8 @@ class QtiRepository
     {
         $em = $this->container->get('doctrine')->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-            ->findByQuestion($questionId);
-        $type = ucfirst($interOpen->getTypeOpenQuestion());
+            ->findOneByQuestion($questionId);
+        $type = $interOpen->getTypeOpenQuestion();
         $serv = $this->container->get('ujm.exo_qti_export_open_'.$type);
 
         return $serv;

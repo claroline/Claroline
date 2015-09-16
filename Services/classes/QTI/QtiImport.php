@@ -21,7 +21,6 @@ abstract class QtiImport
     protected $user;
     protected $qtiRepos;
     protected $qtiCat;
-    protected $interaction;
     protected $question;
     protected $assessmentItem;
     protected $dirQTI;
@@ -53,8 +52,8 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-        $this->question->setType($type);
         $this->question->setDescription($this->getPrompt());
+        $this->question->setType($type);
 
         if ($feedback = $this->getFeedback()) {
             $this->question->setFeedBack($feedback);

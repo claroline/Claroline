@@ -51,7 +51,6 @@ class QuestionType extends AbstractType
             )
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
-                    'required' => false,
                     'attr' => array('placeholder' => 'question_description',
                                       'class' => 'form-control',
                                       'data-new-tab' => 'yes',
@@ -66,9 +65,8 @@ class QuestionType extends AbstractType
                 )
             )
             ->add('description', 'tinymce', array(
-                    'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'question',
-                    'attr'  => array('placeholder' => 'question'),
+                    'attr'  => array('data-new-tab' => 'yes', 'placeholder' => 'question'),
                     'required' => false
                 )
             )

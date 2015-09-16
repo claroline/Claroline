@@ -59,7 +59,7 @@ class InteractionMatchingController extends Controller
            ), $entity
        );
 
-       $interMatchSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\InteractionMatching');
+       $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
        $typeMatching = $interMatchSer->getTypeMatching();
 
         return $this->container->get('templating')->renderResponse(
@@ -80,7 +80,7 @@ class InteractionMatchingController extends Controller
      */
     public function createAction()
     {
-        $interMatchSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\InteractionMatching');
+        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
         $interMatching = new InteractionMatching();
         $form = $this->createForm(
             new InteractionMatchingType(
@@ -158,7 +158,7 @@ class InteractionMatchingController extends Controller
     public function editAction()
     {
         $attr = $this->get('request')->attributes;
-        $matchSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\InteractionMatching');
+        $matchSer = $this->container->get('ujm.exo_InteractionMatching');
         $catSer = $this->container->get('ujm.exo_category');
         $em = $this->get('doctrine')->getEntityManager();
 
@@ -315,7 +315,7 @@ class InteractionMatchingController extends Controller
             $vars['_resource'] = $exercise;
         }
 
-        $interSer = $this->container->get('ujm.exo_UJM\ExoBundle\Entity\InteractionMatching');
+        $interSer = $this->container->get('ujm.exo_InteractionMatching');
         $res = $interSer->response($request);
 
         $vars['score'] = $res['score'];

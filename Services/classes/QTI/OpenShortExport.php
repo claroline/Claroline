@@ -27,8 +27,8 @@ class OpenShortExport  extends OpenExport
         $this->mappingTag();
         $this->extendedTextInteractionTag();
 
-        if (($this->interactionopen->getInteraction()->getFeedBack() != null)
-                && ($this->interactionopen->getInteraction()->getFeedBack() != '')) {
+        if (($this->interactionopen->getQuestion()->getFeedBack() != null)
+                && ($this->interactionopen->getQuestion()->getFeedBack() != '')) {
             $this->qtiFeedBack($question->getFeedBack());
         }
 

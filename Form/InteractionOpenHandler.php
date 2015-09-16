@@ -36,13 +36,11 @@ class InteractionOpenHandler extends QuestionHandler
      */
     protected function onSuccessAdd($interOpen)
     {
-        $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interOpen->getInteraction()->getQuestion()->setUser($this->user);
-        $interOpen->getInteraction()->setType('InteractionOpen');
+        $interOpen->getQuestion()->setDateCreate(new \Datetime());
+        $interOpen->getQuestion()->setUser($this->user);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $wr->setInteractionOpen($interOpen);
@@ -74,7 +72,7 @@ class InteractionOpenHandler extends QuestionHandler
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;
         }
-        foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterOpen->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -117,8 +115,7 @@ class InteractionOpenHandler extends QuestionHandler
         $this->modifyHints($interOpen, $originalHints);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $interOpen->addWordResponse($wr);

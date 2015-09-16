@@ -258,10 +258,8 @@ class QuestionController extends Controller
                 ->getRepository('UJMExoBundle:Question')
                 ->find($id);
 
-            $typeParts = explode('\\', $interaction->getType());
-
             return $this->forward(
-                'UJMExoBundle:'.array_pop($typeParts).':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars)
+                'UJMExoBundle:'.$interaction->getType().':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars)
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -351,14 +349,13 @@ class QuestionController extends Controller
         }
 
         if ($question || $shareAllowEdit) {
-            $typeParts = explode('\\', $question->getType());
-
             if ($user->getId() != $question->getUser()->getId()) {
                 $catID = $question->getCategory()->getId();
             }
 
             return $this->forward(
-                'UJMExoBundle:'.array_pop($typeParts).':edit', array('interaction' => $question, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user)
+                'UJMExoBundle:'.$question->getType().':edit',
+                array('interaction' => $question, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user)
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -394,9 +391,6 @@ class QuestionController extends Controller
 
             $em->flush();
 
-            $type = $question->getType();
-            $typeParts = explode('\\', $type);
-
              // If delete last item of page, display the previous one
             $rest = $nbItem % $maxPage;
 
@@ -404,11 +398,11 @@ class QuestionController extends Controller
                 $pageNow -= 1;
             }
 
-            $interSer = $this->container->get('ujm.exo_'.$type);
+            $interSer = $this->container->get('ujm.exo_'.$question->getType());
             $interX = $interSer->getInteractionX($question->getId());
 
             return $this->forward(
-                'UJMExoBundle:'.array_pop($typeParts).':delete',
+                'UJMExoBundle:'.$question->getType().':delete',
                 array('id' => $interX->getId(), 'pageNow' => $pageNow)
             );
         }
@@ -1527,8 +1521,7 @@ class QuestionController extends Controller
         }
 
         if ($question && (count($sharedQuestions) > 0 || $allowToAccess)) {
-            $typeParts = explode('\\', $question->getType());
-            $type = array_pop($typeParts);
+            $type = $question->getType();
             $handlerType = '\UJM\ExoBundle\Form\\'.$type.'Handler';
 
             $interactionX = $this->getDoctrine()

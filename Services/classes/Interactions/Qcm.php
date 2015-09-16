@@ -30,7 +30,7 @@ class Qcm extends Interaction
         $allChoices = $interQCM->getChoices();
 
         $session = $request->getSession();
-        $penalty = $this->getPenalty($interQCM->getInteraction(), $session, $paperID);
+        $penalty = $this->getPenalty($interQCM->getQuestion(), $session, $paperID);
 
         $score = $this->mark($interQCM, $response, $allChoices, $penalty);
 

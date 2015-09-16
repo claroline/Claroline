@@ -3,7 +3,6 @@
         <label class="control-label col-md-1">{{ 'title' | trans({}, 'ujm_exo') }}</label>
         <div class="col-md-5">{{ form_widget(form.question.title) }}</div>
         <a id="idCategoryButton" class="btn btn-default " data-toggle="collapse" data-target="#categoryDiv" onClick="statusButton('idCategory','categoryDiv');" ><i id="idCategory" class=""></i>&nbsp;{{'category' | trans({}, 'ujm_exo') }}</a>
-        <a id="idDescriptionButton" class="btn btn-default" data-toggle="collapse" data-target="#descriptionDiv" onClick="statusButton('idDescription','descriptionDiv');" ><i id="idDescription" class=""></i>&nbsp;{{'description' | trans({}, 'ujm_exo') }}</a>
         {{ form_errors(form.question.category) }}
     </div>
    <div id="categoryDiv" class="form-group row collapse">

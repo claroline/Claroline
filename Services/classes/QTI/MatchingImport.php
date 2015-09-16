@@ -26,7 +26,7 @@ class MatchingImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-        $this->createQuestion('UJM\ExoBundle\Entity\InteractionMatching');
+        $this->createQuestion(InteractionMatching::TYPE);
         $this->createInteractionMatching();
 
         return $this->interactionMatching;
