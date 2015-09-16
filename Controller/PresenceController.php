@@ -293,7 +293,7 @@ class PresenceController extends Controller
         
         else{
               $Presences = $this->presenceRepo->findAll();
-              $SchoolYearName="Aucune période existante";
+              $SchoolYearName="Aucune période existante/selectionnée";
               
               $SchoolYearSelection = $this ->createFormBuilder()
            

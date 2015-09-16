@@ -150,6 +150,8 @@ class AdminPresenceController extends Controller
                 $actualStatus->setStatusByDefault($principal);
                 $this->em->persist($actualStatus);
                 $this->em->flush();
+                
+                return $this->redirect($this->generateUrl('formalibre_presence_admin_tool_index')); 
  
             }
             

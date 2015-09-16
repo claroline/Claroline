@@ -35,7 +35,7 @@
             {{macros.flashBox()}}
             <div style="text-align:center;font-size:36px";>Horaire type: </div>
             {% if schoolYear is null %}
-                 <h4>Periode de relevée: Aucune période existante</h4>
+                 <h4>Periode de relevée: Aucune période existante/selectionnée</h4>
             {% else %}
                 <h4>Periode de relevée: {{schoolYear.getSchoolYearName()}}</h4>
             {% endif %}

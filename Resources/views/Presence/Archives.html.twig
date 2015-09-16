@@ -31,7 +31,11 @@
                         {{form_widget(schoolYearSelection.selection)}}
                     </div>
                     <div class="col-md-2">
-                        {{form_widget(schoolYearSelection.valider)}}
+                        <button type="submit" 
+                           class="btn btn-primary"
+                           name="schoolYearSelection[valider]">
+                          Valider 
+                        </button>
                     </div>
                 </div>
             </form>        
@@ -41,7 +45,7 @@
                     <thead>
                         <tr>
                             <th style="text-align: center;">Date</th>
-                            <th style="text-align: center;">Period</th>
+                            <th style="text-align: center;">Tranche n°</th>
                                 {#<th>Cours</th>#}
                                 <th style="text-align: center;">Classe</th>
                                 <th style="text-align: center;">Nom de l'étudiant</th>
