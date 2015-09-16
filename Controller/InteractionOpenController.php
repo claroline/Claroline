@@ -26,7 +26,7 @@ class InteractionOpenController extends Controller
 
         $response = new Response();
         $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                              ->getInteractionOpen($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $form = $this->createForm(new ResponseType(), $response);
 
@@ -152,7 +152,7 @@ class InteractionOpenController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                              ->getInteractionOpen($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $editForm = $this->createForm(
             new InteractionOpenType($attr->get('user'), $attr->get('catID')), $interactionOpen

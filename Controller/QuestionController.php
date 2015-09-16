@@ -183,13 +183,17 @@ class QuestionController extends Controller
         if ($idExo == -2) {
             $listQExo = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getUserModel($uid);
+                ->getRepository('UJMExoBundle:Question')
+                ->findByUser($user, true);
         } else {
+            $exercise = $this->getDoctrine()
+                ->getManager()
+                ->getRepository('UJMExoBundle:Exercise')
+                ->find($idExo);
             $listQExo = $this->getDoctrine()
                 ->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getExerciseInteraction($em, $idExo, 0);
+                ->getRepository('UJMExoBundle:Question')
+                ->findByExercise($exercise);
         }
 
         $allActions = $services->getActionsAllQuestions($listQExo, $uid);
@@ -1504,7 +1508,7 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function duplicateAction ($questionId, $exoID)
+    public function duplicateAction($questionId, $exoID)
     {
         $exercise = null;
         $service = $this->container->get('ujm.exo_question');

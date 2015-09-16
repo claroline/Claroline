@@ -139,9 +139,9 @@ class QcmExport extends QtiExport
         $this->choiceInteraction->appendChild($prompt);
 
         $prompttxt = $this->document
-                ->CreateTextNode(
-                        $this->interactionqcm->getInteraction()->getInvite()
-                        );
+            ->CreateTextNode(
+                $this->interactionqcm->getQuestion()->getDescription()
+            );
         $prompt->appendChild($prompttxt);
         $this->qtiChoicesQCM($this->correctResponse);
     }

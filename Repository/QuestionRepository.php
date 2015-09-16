@@ -10,17 +10,25 @@ use UJM\ExoBundle\Entity\Question;
 class QuestionRepository extends EntityRepository
 {
     /**
-     * Returns all the questions created by a given user.
+     * Returns all the questions created by a given user. Allows to
+     * select only questions defined as models (defaults to false).
      *
      * @param User $user
+     * @param bool $limitToModels
      * @return array
      */
-    public function findByUser(User $user)
+    public function findByUser(User $user, $limitToModels = false)
     {
-        return $this->createQueryBuilder('q')
+        $qb = $this->createQueryBuilder('q')
             ->join('q.user', 'u')
             ->join('q.category', 'c')
-            ->where('q.user = :user')
+            ->where('q.user = :user');
+
+        if ($limitToModels) {
+            $qb->andWhere('q.model = true');
+        }
+
+        return $qb
             ->orderBy('c.value, q.title', 'ASC')
             ->setParameter('user', $user)
             ->getQuery()
@@ -70,7 +78,11 @@ class QuestionRepository extends EntityRepository
      * @param bool      $limitToModels
      * @return array
      */
-    public function findByUserNotInExercise(User $user, Exercise $exercise, $limitToModels = false)
+    public function findByUserNotInExercise(
+        User $user,
+        Exercise $exercise,
+        $limitToModels = false
+    )
     {
         $exerciseQuestionsQuery = $this->createQueryBuilder('q1')
             ->join('q1.exerciseQuestions', 'eq')
@@ -227,83 +239,4 @@ class QuestionRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
-
-
-    /**
-     * Get user's Questions
-     *
-     * @param integer $userId id User
-     *
-     * Return array[Question]
-     */
-    public function getQuestionsUser($userId)
-    {
-        $qb = $this->createQueryBuilder('q');
-        $qb->join('q.user', 'u')
-            ->where($qb->expr()->in('u.id', $userId));
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Allow to know if the User is the owner of this Question
-     *
-     * @param int $user
-     * @param int $question
-     *
-     * Return array[Question]
-     */
-    public function getControlOwnerQuestion($user, $question)
-    {
-        $qb = $this->createQueryBuilder('q');
-        $qb->join('q.user', 'u')
-            ->where($qb->expr()->in('q.id', $question))
-            ->andWhere($qb->expr()->in('u.id', $user));
-
-        return $qb->getQuery()->getResult();
-    }
-
-//    /**
-//     * Search question by category
-//     *
-//     * @access public
-//     *
-//     * @param integer $userId id User
-//     * @param String $whatToFind string to find
-//     *
-//     * Return array[Question]
-//     */
-//    public function findByCategory($userId, $whatToFind)
-//    {
-//        $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q JOIN q.category c
-//            WHERE c.value LIKE ?1
-//            AND q.user = ?2';
-//
-//        $query = $this->_em->createQuery($dql)
-//                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
-//
-//        return $query->getResult();
-//    }
-
-//    /**
-//     * Search question
-//     *
-//     * @access public
-//     *
-//     * @param integer $userId id User
-//     * @param String $whatToFind string to find
-//     *
-//     * Return array[Question]
-//     */
-//    public function findByTitle($userId, $whatToFind)
-//    {
-//        $dql = 'SELECT q FROM UJM\ExoBundle\Entity\Question q
-//            WHERE q.title LIKE ?1
-//            AND q.user = ?2';
-//
-//        $query = $this->_em->createQuery($dql)
-//                      ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
-//
-//        return $query->getResult();
-//    }
 }

@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionOpenRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ujm_interaction_open")
  */
 class InteractionOpen extends AbstractInteraction

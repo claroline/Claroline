@@ -420,7 +420,7 @@ class ExerciseController extends Controller
                     $listQExo = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Question')
-                        ->findByUserNotInExercise($user, $exercise);
+                        ->findByExercise($exercise);
                 }
 
                 $allActions = $questionSer->getActionsAllQuestions($listQExo, $uid);
@@ -673,7 +673,7 @@ class ExerciseController extends Controller
                 $paper->setArchive(0);
                 $paper->setInterupt(1);
 
-                if (($exercise->getNbQuestion() > 0) && ($exercise->getKeepSameQuestion()) == true) {
+                if ($exercise->getNbQuestion() > 0 && $exercise->getKeepSameQuestion()) {
                     $papers = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Paper')
@@ -688,7 +688,7 @@ class ExerciseController extends Controller
                         $orderInter = $lastPaper->getOrdreQuestion();
                         $tabOrderInter = explode(';', $lastPaper->getOrdreQuestion());
                         unset($tabOrderInter[count($tabOrderInter) - 1]);
-                        $interactions[0] = $em->getRepository('UJMExoBundle:Interaction')->find($tabOrderInter[0]);
+                        $interactions[0] = $em->getRepository('UJMExoBundle:Question')->find($tabOrderInter[0]);
                     }
                 } else {
                     $tab = $paperSer->prepareInteractionsPaper($id, $exercise);
@@ -709,7 +709,7 @@ class ExerciseController extends Controller
                 }
                 $tabOrderInter = explode(';', $paper->getOrdreQuestion());
                 unset($tabOrderInter[count($tabOrderInter) - 1]);
-                $interactions[0] = $em->getRepository('UJMExoBundle:Interaction')->find($tabOrderInter[0]);
+                $interactions[0] = $em->getRepository('UJMExoBundle:Question')->find($tabOrderInter[0]);
             }
 
             $session->set('tabOrderInter', $tabOrderInter);
@@ -805,7 +805,7 @@ class ExerciseController extends Controller
             return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $paperInt->getExercise()->getId()]));
         } else {
             $interactionToDisplayedID = $tabOrderInter[$numQuestionToDisplayed - 1];
-            $interactionToDisplay = $em->getRepository('UJMExoBundle:Interaction')->find($interactionToDisplayedID);
+            $interactionToDisplay = $em->getRepository('UJMExoBundle:Question')->find($interactionToDisplayedID);
             $typeInterToDisplayed = $interactionToDisplay->getType();
 
             $array = $paperSer->displayQuestion(

@@ -24,7 +24,7 @@ class InteractionGraphicController extends Controller
         $vars = $attr->get('vars');
 
         $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
-                               ->getInteractionGraphic($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $repository = $em->getRepository('UJMExoBundle:Coords');
 
@@ -151,12 +151,12 @@ class InteractionGraphicController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $docID = -1;
+
         $interactionGraph = $em->getRepository('UJMExoBundle:InteractionGraphic')
-                               ->getInteractionGraphic($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $position = $em->getRepository('UJMExoBundle:Coords')->findBy(
-            array('interactionGraphic' => $interactionGraph->getId(),
-            )
+            array('interactionGraphic' => $interactionGraph->getId())
         );
 
         if ($attr->get('user')->getId() != $interactionGraph->getInteraction()->getQuestion()->getUser()->getId()) {

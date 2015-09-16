@@ -163,7 +163,7 @@ class InteractionMatchingController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
-                                  ->getInteractionMatching($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $correspondence = $matchSer->initTabRightResponse($interactionMatching);
         foreach ($correspondence as $key => $corresp) {
