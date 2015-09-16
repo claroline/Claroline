@@ -225,7 +225,7 @@ cut: Couper
 dashboard: 'Tableau de bord'
 data_col: 'Colonne des données'
 database: 'Base de données'
-database_connection_failed: 'La connexion à la base de données à échoué.'
+database_connection_failed: 'La connexion à la base de données a échoué.'
 date: Date
 date_agenda_display_format_for_form: dd-MM-yyyy
 date_form_datepicker_format: dd-mm-yyyy
