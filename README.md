@@ -1,4 +1,5 @@
-DropzoneBundle
+CollecticielBundle
 ==============
 
-Claroline connect plugin for drop zone, evaluation and peer review
+Claroline connect plugin for collecticiel
+
