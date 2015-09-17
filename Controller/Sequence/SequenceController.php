@@ -289,6 +289,119 @@ class SequenceController extends Controller
             );
         }
         
+        else if ($type === "choice") {
+            $question1 = array(
+                "id" => "1",
+                "type" => "application/x.choice+json",
+                "title" => "Question ?",
+                "choices" => array(
+                  array(
+                    "id" => "1",
+                    "type" => "image/png",
+                    "url" => $webImg1,
+                    "meta" => array(
+                      "description" => "Image 1"
+                    )
+                  ),
+                  array(
+                    "id" => "2",
+                    "type" => "image/jpg",
+                    "url" => $webImg2,
+                    "meta" => array(
+                      "description" => "Image 2"
+                    )
+                  ),
+                  array(
+                    "id" => "3",
+                    "type" => "image/png",
+                    "url" => $webImg3,
+                    "meta" => array(
+                      "description" => "Image 3"
+                    )
+                  )
+                ),
+                "random" => false,
+                "multiple" => false,
+                "solutions" => array(
+                  array(
+                    "id" => "1",
+                    "score" => 2
+                  ),
+                  array(
+                    "id" => "3",
+                    "score" => 1
+                  )
+                )
+            );
+            
+            $question2 = array(
+                "id" => "1",
+                "type" => "application/x.choice+json",
+                "meta" => array(
+                  "authors" => array(
+                    array(
+                      "name" => "John Doe",
+                      "status" => "Tutor"
+                    )
+                  ),
+                  "license" => "CC",
+                  "created" => "2014-06-23"
+                ),
+                "objects" => array(
+                  array(
+                    "id" => "1",
+                    "type" => "text/html",
+                    "data" => "<p>Lorem ipsum dolor sit amet</p>",
+                    "meta" => array(
+                      "title" => "Lorem sample"
+                    )
+                  )
+                ),
+                "resources" => array(
+                  array(
+                    "id" => "2",
+                    "type" => "application/pdf",
+                    "url" => $pdfSyllabus
+                  )
+                ),
+                "title" => "Question ?",
+                "choices" => array(
+                  array(
+                    "id" => "3",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img1
+                  ),
+                  array(
+                    "id" => "4",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img2
+                  ),
+                  array(
+                    "id" => "5",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img3
+                  )
+                ),
+                "random" => false,
+                "multiple" => false,
+                "hints" => array(
+                  array(
+                    "id" => "3",
+                    "text" => "Lorem",
+                    "penalty" => 1
+                  ),
+                  array(
+                    "id" => "5",
+                    "text" => "Ipsum",
+                    "penalty" => 1.5
+                  )
+                )
+            );
+        }
+        
         else {
             $question1 = "Wrong type name given";
             $question2 = "Type in another type name";
