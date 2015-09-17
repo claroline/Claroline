@@ -29,9 +29,15 @@ class SequenceController extends Controller
         // get api manager
         $manager = $this->get('ujm.exo.api_manager');
         $exo = $manager->exportExercise($exercise);
-
+/*
         $steps = $exo['steps'];
         $data = json_encode($exo);
+        print_r($data);
+        */
+        $exo = $this->getExercise(1, "match");
+        
+        $data = json_encode($exo);
+        $steps = $exo['steps'];
         
         // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
@@ -65,62 +71,58 @@ class SequenceController extends Controller
         $webImg3 = 'http://www.fubiz.net/wp-content/uploads/2012/07/You-are-not-Banksy17.jpg';
         $pdfSyllabus = 'http://www.cie.org.uk/images/128363-2015-syllabus.pdf';
         
-        $id = "1";
+        $id = 1;
         
         if ($metaNb === 1) {
             $meta = array(
-                "meta" => array(
-                    "authors" => array(
-                      array(
-                        "name" => "John Doe",
-                        "status" => "Tutor"
-                      )
-                    ),
-                    "created" => "2015-09-11 10:43:55",
-                    "title" => "TEST",
-                    "description" => null
-                )
+                "authors" => array(
+                  array(
+                    "name" => "John Doe",
+                    "status" => "Tutor"
+                  )
+                ),
+                "created" => "2015-09-11 10:43:56",
+                "title" => "TEST",
+                "description" => null
             );
         }
         else if ($metaNb === 2) {
             $meta = array(
-                "meta" => array(
-                    "authors" => array(
-                      array(
-                        "name" => "John Doe",
-                        "status" => "Tutor"
-                      ),
-                      array(
-                        "name" => "Jane Doe",
-                        "email" => "jane@mail.com",
-                        "status" => "Professor"
-                      )
-                    ),
-                    "license" => "CC",
-                    "created" => "2015-09-11 10:43:55",
-                    "title" => "TEST",
-                    "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
-                    "pick" => 0,
-                    "random" => false,
-                    "maxAttempts" => 1
-                )
+                "authors" => array(
+                  array(
+                    "name" => "John Doe",
+                    "status" => "Tutor"
+                  ),
+                  array(
+                    "name" => "Jane Doe",
+                    "email" => "jane@mail.com",
+                    "status" => "Professor"
+                  )
+                ),
+                "license" => "CC",
+                "created" => "2015-09-11 10:43:55",
+                "title" => "TEST",
+                "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
+                "pick" => 0,
+                "random" => false,
+                "maxAttempts" => 1
             );
         }
         
         // SORT QUESTION
         if ($type === "sort") {
             $question1 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.sort+json",
                 "title" => "Question ?",
                 "items" => array(
                   array(
-                    "id" => "2",
+                    "id" => 2,
                     "type" => "text/plain",
                     "data" => "Item A"
                   ),
                   array(
-                    "id" => "3",
+                    "id" => 3,
                     "type" => "text/plain",
                     "data" => "Item B"
                   )
@@ -128,33 +130,33 @@ class SequenceController extends Controller
             );
 
             $question2 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.sort+json",
                 "title" => "Question ?",
                 "objects" => array(
-                    "id" => "42",
+                    "id" => 42,
                     "type" => "text/plain",
                     "url" => "http://domain.com/text.txt"
                 ),
                 "items" => array(
                   array(
-                    "id" => "2",
+                    "id" => 2,
                     "type" => "image/jpg",
                     "url" => $webImg1
                   ),
                   array(
-                    "id" => "3",
+                    "id" => 3,
                     "type" => "image/jpg",
                     "url" => $webImg2
                   ),
                   array(
-                    "id" => "4",
+                    "id" => 4,
                     "type" => "image/jpg",
                     "url" => $webImg3
                   )
                 ),
                 "solution" => array(
-                  "itemIds" => ["3", "4", "2"],
+                  "itemIds" => [3, 4, 2],
                   "itemScore" => 1.5
                 ),
                 "feedback" => "Lorem ipsum dolor sit amet"
@@ -164,29 +166,29 @@ class SequenceController extends Controller
         
         else if ($type === "match") {
             $question1 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.match+json",
                 "title" => "Question ?",
                 "firstSet" => array(
                   array(
-                    "id" => "2",
+                    "id" => 2,
                     "type" => "text/plain",
                     "data" => "Item A"
                   ),
                   array(
-                    "id" => "3",
+                    "id" => 3,
                     "type" => "text/plain",
                     "data" => "Item B"
                   )
                 ),
                 "secondSet" => array(
                   array(
-                    "id" => "4",
+                    "id" => 4,
                     "type" => "text/plain",
                     "data" => "Item C"
                   ),
                   array(
-                    "id" => "5",
+                    "id" => 5,
                     "type" => "text/plain",
                     "data" => "Item D"
                   )
@@ -194,42 +196,42 @@ class SequenceController extends Controller
             );
 
             $question2 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.match+json",
                 "title" => "Question ?",
                 "firstSet" => array(
                   array(
-                    "id" => "3",
+                    "id" => 3,
                     "type" => "text/plain",
                     "data" => "Item A"
                   ),
                   array(
-                    "id" => "4",
+                    "id" => 4,
                     "type" => "text/plain",
                     "data" => "Item B"
                   )
                 ),
                 "secondSet" => array(
                   array(
-                    "id" => "5",
+                    "id" => 5,
                     "type" => "image/png",
                     "url" => $webImg2
                   ),
                   array(
-                    "id" => "6",
+                    "id" => 6,
                     "type" => "image/png",
                     "url" => $webImg3
                   )
                 ),
                 "solutions" => array(
                   array(
-                    "firstId" => "3",
-                    "secondId" => "6",
+                    "firstId" => 3,
+                    "secondId" => 6,
                     "score" => 1.5
                   ),
                   array(
-                    "firstId" => "4",
-                    "secondId" => "5",
+                    "firstId" => 4,
+                    "secondId" => 5,
                     "score" => 1
                   )
                 ),
@@ -240,17 +242,17 @@ class SequenceController extends Controller
         else if ($type === "cloze") {
             // CLOZE QUESTION
             $question1 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.cloze+json",
                 "title" => "Question ?",
                 "text" => "Lorem [[1]] dolor sit [[2]].",
                 "holes" => array(
                   array(
-                    "id" => "1",
+                    "id" => 1,
                     "size" => 20
                   ),
                   array(
-                    "id" => "2",
+                    "id" => 2,
                     "size" => 14,
                     "placeholder" => "(verb)"
                   )
@@ -258,30 +260,143 @@ class SequenceController extends Controller
             );
 
             $question2 = array(
-                "id" => "1",
+                "id" => 1,
                 "type" => "application/x.cloze+json",
                 "title" => "Question ?",
                 "text" => "Lorem [[1]] dolor sit [[2]].",
                 "holes" => array(
                   array(
-                    "id" => "1",
+                    "id" => 1,
                     "choices" => ["foo", "ipsum", "bar"]
                   ),
                   array(
-                    "id" => "2",
+                    "id" => 2,
                     "size" => 10
                   )
                 ),
                 "solutions" => array(
                   array(
-                    "holeId" => "1",
+                    "holeId" => 1,
                     "answers" => ["ipsum"],
                     "score" => 1.5
                   ),
                   array(
-                    "holeId" => "2",
+                    "holeId" => 2,
                     "answers" => ["amet", "consecitur", "nunc"],
                     "score" => 3.5
+                  )
+                )
+            );
+        }
+        
+        else if ($type === "choice") {
+            $question1 = array(
+                "id" => "1",
+                "type" => "application/x.choice+json",
+                "title" => "Question ?",
+                "choices" => array(
+                  array(
+                    "id" => "1",
+                    "type" => "image/png",
+                    "url" => $webImg1,
+                    "meta" => array(
+                      "description" => "Image 1"
+                    )
+                  ),
+                  array(
+                    "id" => "2",
+                    "type" => "image/jpg",
+                    "url" => $webImg2,
+                    "meta" => array(
+                      "description" => "Image 2"
+                    )
+                  ),
+                  array(
+                    "id" => "3",
+                    "type" => "image/png",
+                    "url" => $webImg3,
+                    "meta" => array(
+                      "description" => "Image 3"
+                    )
+                  )
+                ),
+                "random" => false,
+                "multiple" => false,
+                "solutions" => array(
+                  array(
+                    "id" => "1",
+                    "score" => 2
+                  ),
+                  array(
+                    "id" => "3",
+                    "score" => 1
+                  )
+                )
+            );
+            
+            $question2 = array(
+                "id" => "1",
+                "type" => "application/x.choice+json",
+                "meta" => array(
+                  "authors" => array(
+                    array(
+                      "name" => "John Doe",
+                      "status" => "Tutor"
+                    )
+                  ),
+                  "license" => "CC",
+                  "created" => "2014-06-23"
+                ),
+                "objects" => array(
+                  array(
+                    "id" => "1",
+                    "type" => "text/html",
+                    "data" => "<p>Lorem ipsum dolor sit amet</p>",
+                    "meta" => array(
+                      "title" => "Lorem sample"
+                    )
+                  )
+                ),
+                "resources" => array(
+                  array(
+                    "id" => "2",
+                    "type" => "application/pdf",
+                    "url" => $pdfSyllabus
+                  )
+                ),
+                "title" => "Question ?",
+                "choices" => array(
+                  array(
+                    "id" => "3",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img1
+                  ),
+                  array(
+                    "id" => "4",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img2
+                  ),
+                  array(
+                    "id" => "5",
+                    "type" => "image/png",
+                    "encoding" => "base64",
+                    "data" => $base64Img3
+                  )
+                ),
+                "random" => false,
+                "multiple" => false,
+                "hints" => array(
+                  array(
+                    "id" => "3",
+                    "text" => "Lorem",
+                    "penalty" => 1
+                  ),
+                  array(
+                    "id" => "5",
+                    "text" => "Ipsum",
+                    "penalty" => 1.5
                   )
                 )
             );
@@ -294,7 +409,10 @@ class SequenceController extends Controller
         
         $steps = array($question1, $question2);
         
-        $data = array($id, $meta, $steps);
+        $data = array(
+            "id" => $id,
+            "meta" => $meta,
+            "steps" => $steps);
         return $data;
     }
 }
