@@ -30,10 +30,7 @@ class CollectionController extends Controller
             $showBanner = false;
         }
         else {
-            /** @var User|string $user */
-            $user = $this->getUser();
-
-            $showBanner = ($user === $collection->getUser());
+            $showBanner = ($this->getUser() === $collection->getUser());
         }
 
         return array(

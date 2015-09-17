@@ -22,36 +22,40 @@
             width: 150px;
             .badge_menu_link {
                 .badge_name {
-                    display:       inline-block;
-                    width:         100px;
-                    white-space:   nowrap;
-                    overflow:      hidden;
+                    display: inline-block;
+                    width: 100px;
+                    white-space: nowrap;
+                    overflow: hidden;
                     text-overflow: ellipsis;
                 }
             }
         }
         .thumbnail {
-            width:  150px;
-            height: 110px;
-            .badge_name {
-                color:           #333333;
-                white-space:     nowrap;
-                overflow:        hidden;
-                text-overflow:   ellipsis;
-                text-align:      center;
-            }
+            width: 150px;
             &:hover {
-                color:           #333333;
+                color: #333333;
                 text-decoration: none;
-
+            }
+            .badge_name {
+                color: #333333;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+            .caption {
+                padding-bottom: 0;
+                .shared_options_container {
+                    margin-bottom: 0;
+                }
             }
         }
         .expired {
-            position:   absolute;
-            right:      5px;
-            color:      red;
+            position: absolute;
+            right: 5px;
+            color: red;
             margin-top: 5px;
-            font-size:  18px;
+            font-size: 18px;
         }
     }
 }
@@ -346,7 +350,6 @@ table.badge_informations {
     }
 }
 .thumbnail {
-    height:      128px;
     padding-top: 15px;
 }
 

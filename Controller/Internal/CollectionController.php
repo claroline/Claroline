@@ -1,14 +1,10 @@
 <?php
 
-namespace Icap\BadgeBundle\Controller\Api;
+namespace Icap\BadgeBundle\Controller\Internal;
 
 use Icap\BadgeBundle\Entity\BadgeCollection;
 use Claroline\CoreBundle\Entity\User;
-use Icap\BadgeBundle\Form\BadgeCollectionType;
 use FOS\RestBundle\View\View;
-use FOS\RestBundle\View\ViewHandler;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -17,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * @Route("/internalapi/badge_collection")
+ * @Route("/internal/badge_collection")
  */
 class CollectionController extends Controller
 {
@@ -41,6 +37,10 @@ class CollectionController extends Controller
      */
     public function editAction(Request $request, User $user, BadgeCollection $collection)
     {
+        if ($collection->getUser() !== $user) {
+            throw new AccessDeniedHttpException();
+        }
+
         return $this->processForm($request, $collection, "PATCH");
     }
 
