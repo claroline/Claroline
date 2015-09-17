@@ -42,7 +42,10 @@ class PortfolioViewEvent extends LogGenericEvent implements LogNotRepeatableInte
             null,
             null,
             null,
-            $user
+            $user,
+            null,
+            null,
+            $this->portfolio->getId()
         );
     }
 

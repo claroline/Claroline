@@ -130,3 +130,8 @@ text_help_text: "Vous pouvez rajouter ici toutes les informations supplémentair
 badges_help_text: "Vous pouvez afficher les badges obtenus sur la plateforme (via l'outil badge) et afficher les badges importés d'autres plateformes (bientôt)"
 my_portfolios_help_text: "Voici la liste des différentes vues de votre portfolio personnel.Vous pouvez choisir de faire apparaitre plus ou moins d'information en fonction de l'interlocuteur ciblé.Chacun de vos portfolios peuvent être commentés et suivis par des accompagnateurs (contact à selectionner dans la plateforme).Vous pouvez commenter et suivre les portfolios sur lesquels on vous a demandez de faire un accompagnement."
 exchange_space_help_text: "Retrouvez ici de manière centralisée tous les échanges sur les accompagnements de vos portfolios, et ceux que vous suivez."
+statistics: "Statistiques"
+portfolio_view_statistics: "Statistiques des visites"
+select_portfolio: "Sélectionner un portfolio"
+period: "Période"
+no_data_available: "Aucune donnée disponible pour la période et le portfolio sélectionné"

@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-line-chart"></i>
+                {{'portfolio_view_statistics'|trans({}, 'icap_portfolio')}}
+            </div>
+            <div class="panel-body statistics-view-container">
+                <div data-ng-show="!portfolios.$resolved">
+                    <span class="fa fa-spinner fa-pulse"></span>
+                </div>
+                {{ form_start(analyticsViewsForm, {'attr': {'class': 'form-horizontal'}}) }}
+                    {{ form_errors(analyticsViewsForm) }}
+
+                    <div class="form-group">
+                        <label for="portfolio" class="col-md-2 control-label">{{ 'portfolio'|trans({}, 'icap_portfolio') }} :</label>
+                        <div class="col-md-10">
+                            <select id="portfolio" class="ng-cloak form-control portfolio-selector" data-ng-model="selectedPortfolio"
+                                data-ng-change="fetchVisitData()" data-ng-show="portfolios.$resolved">
+                                <option value="">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</option>
+                                {% verbatim %}
+                                <option data-ng-repeat="portfolio in analyticsPortfolios = (portfolios | toArray : false | filter:{type: 'owned'})" value="{{ portfolio.id }}">
+                                    {{ portfolio.title }}
+                                </option>
+                                {% endverbatim %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_errors(analyticsViewsForm.range) }}
+                        {{ form_label(analyticsViewsForm.range) }}
+                        <div class="col-md-10">
+
+                            {{ form_widget(analyticsViewsForm.range, {'attr': {
+                                'class': 'date-picker', 'data-ng-model': 'period.date', 'date-range-picker': '',
+                                'options': '{format: \'' ~ 'date_range.js_format'|trans({}, 'platform') ~ '\',
+                                eventHandlers: {\'apply.daterangepicker\': fetchVisitData}}'
+                            }}) }}
+                        </div>
+                    </div>
+                {{ form_end(analyticsViewsForm) }}
+                <div id="chart"></div>
+                <div class="empty_chart" data-ng-show="selectedPortfolio == '' || chartData.length == 0 || fetchingChartData">
+                    <span class="fa fa-line-chart" data-ng-show="selectedPortfolio == ''"></span>
+                    <span class="fa fa-spinner fa-pulse" data-ng-show="fetchingChartData"></span>
+                    <span class="small" data-ng-show="selectedPortfolio == ''">{{ 'select_portfolio'|trans({}, 'icap_portfolio') }}</span>
+                    <span class="small" data-ng-show="selectedPortfolio != '' && !fetchingChartData && chartData.length == 0">{{ 'no_data_available'|trans({}, 'icap_portfolio') }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

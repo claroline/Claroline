@@ -74,6 +74,14 @@ class Controller extends BaseController
     }
 
     /**
+     * @return \Icap\PortfolioBundle\Manager\AnalyticsManager
+     */
+    public function getAnalyticsManager()
+    {
+        return $this->get('icap_portfolio.manager.analytics');
+    }
+
+    /**
      * @return \Icap\PortfolioBundle\Manager\ImportManager
      */
     public function getImportManager()
