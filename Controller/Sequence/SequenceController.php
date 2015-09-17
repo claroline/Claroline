@@ -28,17 +28,19 @@ class SequenceController extends Controller
     {
         // get api manager
         $manager = $this->get('ujm.exo.api_manager');
+        
+        // DATA from API
         $exo = $manager->exportExercise($exercise);
-/*
         $steps = $exo['steps'];
-        $data = json_encode($exo);
-        print_r($data);
-        */
+        $data = json_encode($exo);       
+        
+        /*
+        // we use fake data for development
         $exo = $this->getExercise(1, "match");
         
         $data = json_encode($exo);
         $steps = $exo['steps'];
-        
+        */
         // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
