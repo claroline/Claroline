@@ -26,21 +26,22 @@ class SequenceController extends Controller
      */
     public function playAction(Exercise $exercise)
     {
-        // DATA from API
+        // get api manager
         $manager = $this->get('ujm.exo.api_manager');
-        $exo = $manager->exportExercise($exercise);
-
-        $steps = $exo['steps'];
-        $data = json_encode($exo);
         
-        // DATA hard coded for DEV!
+        // DATA from API
+        $exo = $manager->exportExercise($exercise);
+/*
+        $steps = $exo['steps'];
+        $data = json_encode($exo);       
+        
         /*
+        // we use fake data for development
         $exo = $this->getExercise(1, "match");
         
         $data = json_encode($exo);
-        $steps = $exo['steps'];        
+        $steps = $exo['steps'];
         */
-        
         // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
@@ -113,253 +114,230 @@ class SequenceController extends Controller
         
         // SORT QUESTION
         if ($type === "sort") {
-            $step1 = array(
+            $question1 = array(
                 "id" => 1,
                 "type" => "application/x.sort+json",
+                "title" => "Question ?",
                 "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "items" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "text/plain",
-                            "data" => "Item A"
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
-                        )
-                    )
+                  array(
+                    "id" => 2,
+                    "type" => "text/plain",
+                    "data" => "Item A"
+                  ),
+                  array(
+                    "id" => 3,
+                    "type" => "text/plain",
+                    "data" => "Item B"
+                  )
                 )
             );
 
-            $step2 = array(
+            $question2 = array(
                 "id" => 1,
                 "type" => "application/x.sort+json",
+                "title" => "Question ?",
+                "objects" => array(
+                    "id" => 42,
+                    "type" => "text/plain",
+                    "url" => "http://domain.com/text.txt"
+                ),
                 "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "items" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "image/jpg",
-                            "url" => $webImg1
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "image/jpg",
-                            "url" => $webImg2
-                          ),
-                          array(
-                            "id" => 4,
-                            "type" => "image/jpg",
-                            "url" => $webImg3
-                          )
-                        ),
-                        "solution" => array(
-                          "itemIds" => [3, 4, 2],
-                          "itemScore" => 1.5
-                        ),
-                        "feedback" => "Lorem ipsum dolor sit amet"
-                    )
-                )
+                  array(
+                    "id" => 2,
+                    "type" => "image/jpg",
+                    "url" => $webImg1
+                  ),
+                  array(
+                    "id" => 3,
+                    "type" => "image/jpg",
+                    "url" => $webImg2
+                  ),
+                  array(
+                    "id" => 4,
+                    "type" => "image/jpg",
+                    "url" => $webImg3
+                  )
+                ),
+                "solution" => array(
+                  "itemIds" => [3, 4, 2],
+                  "itemScore" => 1.5
+                ),
+                "feedback" => "Lorem ipsum dolor sit amet"
             );
         
         }
         
         else if ($type === "match") {
-            $step1 = array(
+            $question1 = array(
                 "id" => 1,
                 "type" => "application/x.match+json",
-                "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "firstSet" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "text/plain",
-                            "data" => "Item A"
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
-                        ),
-                        "secondSet" => array(
-                          array(
-                            "id" => 4,
-                            "type" => "text/plain",
-                            "data" => "Item C"
-                          ),
-                          array(
-                            "id" => 5,
-                            "type" => "text/plain",
-                            "data" => "Item D"
-                          )
-                        )
-                    )
+                "title" => "Question ?",
+                "firstSet" => array(
+                  array(
+                    "id" => 2,
+                    "type" => "text/plain",
+                    "data" => "Item A"
+                  ),
+                  array(
+                    "id" => 3,
+                    "type" => "text/plain",
+                    "data" => "Item B"
+                  )
+                ),
+                "secondSet" => array(
+                  array(
+                    "id" => 4,
+                    "type" => "text/plain",
+                    "data" => "Item C"
+                  ),
+                  array(
+                    "id" => 5,
+                    "type" => "text/plain",
+                    "data" => "Item D"
+                  )
                 )
             );
 
-            $step2 = array(
+            $question2 = array(
                 "id" => 1,
                 "type" => "application/x.match+json",
-                "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "firstSet" => array(
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "Item A"
-                          ),
-                          array(
-                            "id" => 4,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
-                        ),
-                        "secondSet" => array(
-                          array(
-                            "id" => 5,
-                            "type" => "image/png",
-                            "url" => $webImg2
-                          ),
-                          array(
-                            "id" => 6,
-                            "type" => "image/png",
-                            "url" => $webImg3
-                          )
-                        ),
-                        "solutions" => array(
-                          array(
-                            "firstId" => 3,
-                            "secondId" => 6,
-                            "score" => 1.5
-                          ),
-                          array(
-                            "firstId" => 4,
-                            "secondId" => 5,
-                            "score" => 1
-                          )
-                        ),
-                        "feedback" => "Lorem ipsum dolor sit amet."
-                    )
-                )
+                "title" => "Question ?",
+                "firstSet" => array(
+                  array(
+                    "id" => 3,
+                    "type" => "text/plain",
+                    "data" => "Item A"
+                  ),
+                  array(
+                    "id" => 4,
+                    "type" => "text/plain",
+                    "data" => "Item B"
+                  )
+                ),
+                "secondSet" => array(
+                  array(
+                    "id" => 5,
+                    "type" => "image/png",
+                    "url" => $webImg2
+                  ),
+                  array(
+                    "id" => 6,
+                    "type" => "image/png",
+                    "url" => $webImg3
+                  )
+                ),
+                "solutions" => array(
+                  array(
+                    "firstId" => 3,
+                    "secondId" => 6,
+                    "score" => 1.5
+                  ),
+                  array(
+                    "firstId" => 4,
+                    "secondId" => 5,
+                    "score" => 1
+                  )
+                ),
+                "feedback" => "Lorem ipsum dolor sit amet."
             );
         }
         
         else if ($type === "cloze") {
             // CLOZE QUESTION
-            $step1 = array(
+            $question1 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
-                "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "text" => "Lorem [[1]] dolor sit [[2]].",
-                        "holes" => array(
-                          array(
-                            "id" => 1,
-                            "size" => 20
-                          ),
-                          array(
-                            "id" => 2,
-                            "size" => 14,
-                            "placeholder" => "(verb)"
-                          )
-                        )
-                    )
+                "title" => "Question ?",
+                "text" => "Lorem [[1]] dolor sit [[2]].",
+                "holes" => array(
+                  array(
+                    "id" => 1,
+                    "size" => 20
+                  ),
+                  array(
+                    "id" => 2,
+                    "size" => 14,
+                    "placeholder" => "(verb)"
+                  )
                 )
             );
 
-            $step2 = array(
+            $question2 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
-                "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "text" => "Lorem [[1]] dolor sit [[2]].",
-                        "holes" => array(
-                          array(
-                            "id" => 1,
-                            "choices" => ["foo", "ipsum", "bar"]
-                          ),
-                          array(
-                            "id" => 2,
-                            "size" => 10
-                          )
-                        ),
-                        "solutions" => array(
-                          array(
-                            "holeId" => 1,
-                            "answers" => ["ipsum"],
-                            "score" => 1.5
-                          ),
-                          array(
-                            "holeId" => 2,
-                            "answers" => ["amet", "consecitur", "nunc"],
-                            "score" => 3.5
-                          )
-                        )
-                    )
+                "title" => "Question ?",
+                "text" => "Lorem [[1]] dolor sit [[2]].",
+                "holes" => array(
+                  array(
+                    "id" => 1,
+                    "choices" => ["foo", "ipsum", "bar"]
+                  ),
+                  array(
+                    "id" => 2,
+                    "size" => 10
+                  )
+                ),
+                "solutions" => array(
+                  array(
+                    "holeId" => 1,
+                    "answers" => ["ipsum"],
+                    "score" => 1.5
+                  ),
+                  array(
+                    "holeId" => 2,
+                    "answers" => ["amet", "consecitur", "nunc"],
+                    "score" => 3.5
+                  )
                 )
             );
         }
         
         else if ($type === "choice") {
-            $step1 = array(
+            $question1 = array(
                 "id" => "1",
                 "type" => "application/x.choice+json",
-                "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "choices" => array(
-                          array(
-                            "id" => "1",
-                            "type" => "image/png",
-                            "url" => $webImg1,
-                            "meta" => array(
-                              "description" => "Image 1"
-                            )
-                          ),
-                          array(
-                            "id" => "2",
-                            "type" => "image/jpg",
-                            "url" => $webImg2,
-                            "meta" => array(
-                              "description" => "Image 2"
-                            )
-                          ),
-                          array(
-                            "id" => "3",
-                            "type" => "image/png",
-                            "url" => $webImg3,
-                            "meta" => array(
-                              "description" => "Image 3"
-                            )
-                          )
-                        ),
-                        "random" => false,
-                        "multiple" => false,
-                        "solutions" => array(
-                          array(
-                            "id" => "1",
-                            "score" => 2
-                          ),
-                          array(
-                            "id" => "3",
-                            "score" => 1
-                          )
-                        )
+                "title" => "Question ?",
+                "choices" => array(
+                  array(
+                    "id" => "1",
+                    "type" => "image/png",
+                    "url" => $webImg1,
+                    "meta" => array(
+                      "description" => "Image 1"
                     )
+                  ),
+                  array(
+                    "id" => "2",
+                    "type" => "image/jpg",
+                    "url" => $webImg2,
+                    "meta" => array(
+                      "description" => "Image 2"
+                    )
+                  ),
+                  array(
+                    "id" => "3",
+                    "type" => "image/png",
+                    "url" => $webImg3,
+                    "meta" => array(
+                      "description" => "Image 3"
+                    )
+                  )
+                ),
+                "random" => false,
+                "multiple" => false,
+                "solutions" => array(
+                  array(
+                    "id" => "1",
+                    "score" => 2
+                  ),
+                  array(
+                    "id" => "3",
+                    "score" => 1
+                  )
                 )
             );
             
-            $step2 = array(
+            $question2 = array(
                 "id" => "1",
                 "type" => "application/x.choice+json",
                 "meta" => array(
