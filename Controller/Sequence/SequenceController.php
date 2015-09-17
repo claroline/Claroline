@@ -21,7 +21,7 @@ class SequenceController extends Controller
 
     /**
      * Play the selected Exercise
-     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
+     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      */
     public function playAction(Exercise $exercise)
@@ -29,20 +29,31 @@ class SequenceController extends Controller
        
 
         // DATA from API
-        $manager = $this->get('ujm.exo.api_manager');
-
-        $exo = $manager->exportExercise($exercise);
         /*
+        $manager = $this->get('ujm.exo.api_manager');
+        $exo = $manager->exportExercise($exercise);        
         $steps = $exo['steps'];
 
         $data = json_encode($exo);       
         */
+        
+        $manager = $this->get('ujm.exo.api_manager');
+        $exo1 = $manager->exportExercise($exercise);  
+        
+        // echo '<pre>';
+        // print_r($exo1); 
+        // die;
        
-        // we use fake data for development
-        $exo = $this->getExercise(1, "match");
+        // FAKE Data for development!!
+        $exo = $this->getExercise(2, "choice");
         $steps = $exo['steps'];
 
         $data = json_encode($exo);
+        
+        //echo '<hr/>';
+        //echo '<pre>';
+        //print_r($exo);die;
+        
         // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
@@ -109,236 +120,260 @@ class SequenceController extends Controller
                 "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
                 "pick" => 0,
                 "random" => false,
-                "maxAttempts" => 1
+                "maxAttempts" => 4
             );
         }
         
         // SORT QUESTION
         if ($type === "sort") {
-            $question1 = array(
+            $step1 = array(
                 "id" => 1,
                 "type" => "application/x.sort+json",
                 "title" => "Question ?",
                 "items" => array(
-                  array(
-                    "id" => 2,
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => 3,
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
+                    array(
+                        "title" => "Question ?",
+                        "items" => array(
+                          array(
+                            "id" => 2,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
+            $step2 = array(
                 "id" => 1,
-                "type" => "application/x.sort+json",
-                "title" => "Question ?",
-                "objects" => array(
-                    "id" => 42,
-                    "type" => "text/plain",
-                    "url" => "http://domain.com/text.txt"
-                ),
+                "type" => "application/x.sort+json"
                 "items" => array(
-                  array(
-                    "id" => 2,
-                    "type" => "image/jpg",
-                    "url" => $webImg1
-                  ),
-                  array(
-                    "id" => 3,
-                    "type" => "image/jpg",
-                    "url" => $webImg2
-                  ),
-                  array(
-                    "id" => 4,
-                    "type" => "image/jpg",
-                    "url" => $webImg3
-                  )
-                ),
-                "solution" => array(
-                  "itemIds" => [3, 4, 2],
-                  "itemScore" => 1.5
-                ),
-                "feedback" => "Lorem ipsum dolor sit amet"
+                    array(
+                        "title" => "Question ?",
+                        "items" => array(
+                          array(
+                            "id" => 2,
+                            "type" => "image/jpg",
+                            "url" => $webImg1
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "image/jpg",
+                            "url" => $webImg2
+                          ),
+                          array(
+                            "id" => 4,
+                            "type" => "image/jpg",
+                            "url" => $webImg3
+                          )
+                        ),
+                        "solution" => array(
+                          "itemIds" => [3, 4, 2],
+                          "itemScore" => 1.5
+                        ),
+                        "feedback" => "Lorem ipsum dolor sit amet"
+                    )
+                )
             );
         
         }
         
         else if ($type === "match") {
-            $question1 = array(
+            $step1 = array(
                 "id" => 1,
                 "type" => "application/x.match+json",
-                "title" => "Question ?",
-                "firstSet" => array(
-                  array(
-                    "id" => 2,
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => 3,
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
-                ),
-                "secondSet" => array(
-                  array(
-                    "id" => 4,
-                    "type" => "text/plain",
-                    "data" => "Item C"
-                  ),
-                  array(
-                    "id" => 5,
-                    "type" => "text/plain",
-                    "data" => "Item D"
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "firstSet" => array(
+                          array(
+                            "id" => 2,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
+                        ),
+                        "secondSet" => array(
+                          array(
+                            "id" => 4,
+                            "type" => "text/plain",
+                            "data" => "Item C"
+                          ),
+                          array(
+                            "id" => 5,
+                            "type" => "text/plain",
+                            "data" => "Item D"
+                          )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
+            $step2 = array(
                 "id" => 1,
                 "type" => "application/x.match+json",
-                "title" => "Question ?",
-                "firstSet" => array(
-                  array(
-                    "id" => 3,
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => 4,
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
-                ),
-                "secondSet" => array(
-                  array(
-                    "id" => 5,
-                    "type" => "image/png",
-                    "url" => $webImg2
-                  ),
-                  array(
-                    "id" => 6,
-                    "type" => "image/png",
-                    "url" => $webImg3
-                  )
-                ),
-                "solutions" => array(
-                  array(
-                    "firstId" => 3,
-                    "secondId" => 6,
-                    "score" => 1.5
-                  ),
-                  array(
-                    "firstId" => 4,
-                    "secondId" => 5,
-                    "score" => 1
-                  )
-                ),
-                "feedback" => "Lorem ipsum dolor sit amet."
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "firstSet" => array(
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 4,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
+                        ),
+                        "secondSet" => array(
+                          array(
+                            "id" => 5,
+                            "type" => "image/png",
+                            "url" => $webImg2
+                          ),
+                          array(
+                            "id" => 6,
+                            "type" => "image/png",
+                            "url" => $webImg3
+                          )
+                        ),
+                        "solutions" => array(
+                          array(
+                            "firstId" => 3,
+                            "secondId" => 6,
+                            "score" => 1.5
+                          ),
+                          array(
+                            "firstId" => 4,
+                            "secondId" => 5,
+                            "score" => 1
+                          )
+                        ),
+                        "feedback" => "Lorem ipsum dolor sit amet."
+                    )
+                )
             );
         }
         
         else if ($type === "cloze") {
             // CLOZE QUESTION
-            $question1 = array(
+            $step1 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
-                "title" => "Question ?",
-                "text" => "Lorem [[1]] dolor sit [[2]].",
-                "holes" => array(
-                  array(
-                    "id" => 1,
-                    "size" => 20
-                  ),
-                  array(
-                    "id" => 2,
-                    "size" => 14,
-                    "placeholder" => "(verb)"
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "holes" => array(
+                          array(
+                            "id" => 1,
+                            "size" => 20
+                          ),
+                          array(
+                            "id" => 2,
+                            "size" => 14,
+                            "placeholder" => "(verb)"
+                          )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
+            $step2 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
-                "title" => "Question ?",
-                "text" => "Lorem [[1]] dolor sit [[2]].",
-                "holes" => array(
-                  array(
-                    "id" => 1,
-                    "choices" => ["foo", "ipsum", "bar"]
-                  ),
-                  array(
-                    "id" => 2,
-                    "size" => 10
-                  )
-                ),
-                "solutions" => array(
-                  array(
-                    "holeId" => 1,
-                    "answers" => ["ipsum"],
-                    "score" => 1.5
-                  ),
-                  array(
-                    "holeId" => 2,
-                    "answers" => ["amet", "consecitur", "nunc"],
-                    "score" => 3.5
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "holes" => array(
+                          array(
+                            "id" => 1,
+                            "choices" => ["foo", "ipsum", "bar"]
+                          ),
+                          array(
+                            "id" => 2,
+                            "size" => 10
+                          )
+                        ),
+                        "solutions" => array(
+                          array(
+                            "holeId" => 1,
+                            "answers" => ["ipsum"],
+                            "score" => 1.5
+                          ),
+                          array(
+                            "holeId" => 2,
+                            "answers" => ["amet", "consecitur", "nunc"],
+                            "score" => 3.5
+                          )
+                        )
+                    )
                 )
             );
         }
         
         else if ($type === "choice") {
-            $question1 = array(
+            $step1 = array(
                 "id" => "1",
-                "type" => "application/x.choice+json",
-                "title" => "Question ?",
-                "choices" => array(
-                  array(
-                    "id" => "1",
-                    "type" => "image/png",
-                    "url" => $webImg1,
-                    "meta" => array(
-                      "description" => "Image 1"
+                "items" => array(
+                    array(
+                        "id" => "7",
+                        "type" => "application/x.choice+json",
+                        "title" => "Simple question for dummies...",
+                        "label" => "Witch image shows a kid ?",
+                        "random" => false,
+                        "multiple" => false,
+                        "feedback" => "Global feedback",
+                        "hints" => "",
+                        "choices" => array(
+                          array(
+                            "id" => "1",
+                            "type" => "image/png",
+                            "url" => $webImg1,
+                            "meta" => array(
+                              "description" => "Image 1"
+                            )
+                          ),
+                          array(
+                            "id" => "2",
+                            "type" => "image/jpg",
+                            "url" => $webImg2,
+                            "meta" => array(
+                              "description" => "Image 2"
+                            )
+                          ),
+                          array(
+                            "id" => "3",
+                            "type" => "image/png",
+                            "url" => $webImg3,
+                            "meta" => array(
+                              "description" => "Image 3"
+                            )
+                          )
+                        ),
+                        "solutions" => array(
+                          array(
+                            "id" => "2",
+                            "score" => 2
+                          )
+                        )
                     )
-                  ),
-                  array(
-                    "id" => "2",
-                    "type" => "image/jpg",
-                    "url" => $webImg2,
-                    "meta" => array(
-                      "description" => "Image 2"
-                    )
-                  ),
-                  array(
-                    "id" => "3",
-                    "type" => "image/png",
-                    "url" => $webImg3,
-                    "meta" => array(
-                      "description" => "Image 3"
-                    )
-                  )
-                ),
-                "random" => false,
-                "multiple" => false,
-                "solutions" => array(
-                  array(
-                    "id" => "1",
-                    "score" => 2
-                  ),
-                  array(
-                    "id" => "3",
-                    "score" => 1
-                  )
                 )
             );
             
-            $question2 = array(
+            $step2 = array(
                 "id" => "1",
                 "type" => "application/x.choice+json",
                 "meta" => array(
@@ -353,42 +388,54 @@ class SequenceController extends Controller
                 ),
                 "items" => array(
                     array(
-                        "title" => "Question ?",
-                        "choices" => array(
-                          array(
-                            "id" => "3",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img1
-                          ),
-                          array(
-                            "id" => "4",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img2
-                          ),
-                          array(
-                            "id" => "5",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img3
-                          )
-                        ),
-                        "random" => false,
-                        "multiple" => false,
+                        "id" => "7",
+                        "type" => "application/x.choice+json",
+                        "title" => "Another simple question for dummies...",
+                        "label" => "What is my prefered color ?",
+                        "random" => true,
+                        "multiple" => true,
+                        "feedback" => "Global feedback",
                         "hints" => array(
                           array(
-                            "id" => "3",
+                            "id" => "27",
                             "text" => "Lorem",
                             "penalty" => 1
                           ),
                           array(
-                            "id" => "5",
+                            "id" => "75",
                             "text" => "Ipsum",
                             "penalty" => 1.5
                           )
+                        ),
+                        "choices" => array(
+                          array(
+                            "id" => "3",
+                            "type" => "text/html",
+                            "data" => "<p>White</p>"
+                          ),
+                          array(
+                            "id" => "4",
+                            "type" => "text/html",
+                            "data" => "<p>Yellow</p>"
+                          ),
+                          array(
+                            "id" => "5",
+                            "type" => "text/html",
+                            "data" => "<p>Black</p>"
+                          )
+                        ),
+                        "solutions" => array(
+                          array(
+                            "id" => "3",
+                            "score" => 2
+                          ),
+                          array(
+                            "id" => "5",
+                            "score" => 2
+                          )
                         )
                     )
+                  )
                 )
             );
         }
