@@ -206,6 +206,7 @@
                                     <span class="expired fa fa-exclamation-circle" data-title="Badge expiré"
                                            data-toggle="tooltip" data-placement="top" data-container="body"></span>
                                 {% endif %}
+                                {% set isBadgeShared = userBadge.isIsShared %}
                                 <div class="thumbnail">
                                     <img class="badge_image" src="{{ asset(badge.webPath) }}" alt="{{ badge.name }}"/>
                                     <div class="caption">
