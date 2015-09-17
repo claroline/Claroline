@@ -5,6 +5,9 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use UJM\ExoBundle\Entity\Question;
+
 class QcmExport extends QtiExport
 {
     private $interactionqcm;
@@ -16,18 +19,20 @@ class QcmExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param qtiRepository                     $qtiRepos
+     * @access public
+     * @param Question $question
+     * @param qtiRepository $qtiRepos
+     * @return BinaryFileResponse
      */
-    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
+    public function export(Question $question, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $interaction->getQuestion();
+        $this->question = $question;
 
         $this->interactionqcm = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionQCM')
-                                ->findOneBy(array('interaction' => $interaction->getId()));
+                                ->findOneByQuestion($question);
 
         //if it's Null mean "Global notation for QCM" Else it's Notation for each choice
         $weightresponse = $this->interactionqcm->getWeightResponse();
@@ -49,9 +54,9 @@ class QcmExport extends QtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if (($this->interactionqcm->getInteraction()->getFeedBack() != null)
-                && ($this->interactionqcm->getInteraction()->getFeedBack() != '')) {
-            $this->qtiFeedBack($interaction->getFeedBack());
+        if ($this->interactionqcm->getQuestion()->getFeedBack()!= null
+            && $this->interactionqcm->getQuestion()->getFeedBack() != '') {
+            $this->qtiFeedBack($question->getFeedBack());
         }
 
         if ($weightresponse == false) {

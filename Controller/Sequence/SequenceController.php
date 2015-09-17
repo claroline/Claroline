@@ -26,19 +26,20 @@ class SequenceController extends Controller
      */
     public function playAction(Exercise $exercise)
     {
-        // get api manager
-/*        $manager = $this->get('ujm.exo.api_manager');
+        // DATA from API
+        $manager = $this->get('ujm.exo.api_manager');
         $exo = $manager->exportExercise($exercise);
 
         $steps = $exo['steps'];
         $data = json_encode($exo);
-        echo "<pre>";
-        print_r($data);
-        */
+        
+        // DATA hard coded for DEV!
+        /*
         $exo = $this->getExercise(1, "match");
         
         $data = json_encode($exo);
-        $steps = $exo['steps'];
+        $steps = $exo['steps'];        
+        */
         
         // get user data... user, number of attempts (what if first attempt?), notes, papers... 
 
