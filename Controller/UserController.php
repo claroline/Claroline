@@ -497,6 +497,8 @@ class UserController extends Controller
         $datas = array();
 
         foreach ($users as $user) {
+            $userRole = $this->roleManager->getUserRoleByUser($user);
+
             $datas[] = array(
                 'id' => $user->getId(),
                 'firstName' => $user->getFirstName(),
@@ -504,7 +506,13 @@ class UserController extends Controller
                 'username' => $user->getUsername(),
                 'mail' => $user->getMail(),
                 'phone' => $user->getPhone(),
-                'picture' => $user->getPicture()
+                'picture' => $user->getPicture(),
+                'administrative_code' => $user->getAdministrativeCode(),
+                'personal_workspace_id' => is_null($user->getPersonalWorkspace()) ?
+                    null :
+                    $user->getPersonalWorkspace()->getId(),
+                'user_role_id' => is_null($userRole) ? null : $userRole->getId()
+
             );
         }
 
