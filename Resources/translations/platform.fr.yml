@@ -925,7 +925,7 @@ tags_management: 'Gestion des Tags'
 tags_organization: 'Organisation des Tags'
 teacher: Professeur
 technical: Techniques
-technical_data: 'URL, version, langue principale, IP et email du support'
+technical_data: 'URL, version, langue principale, IP et courriel du support'
 term_of_service: 'Conditions d''utilisation'
 term_of_service_activation_message: 'Activez les conditions d''utilisation dans la plate-forme'
 terms_enabled_but_empty: 'Les conditions d''utilisation ne peuvent être activées que si le texte est fourni dans au moins une langue.'
