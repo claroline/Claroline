@@ -100,7 +100,7 @@ form:
   maxTimeOfReservation: Temps maximum par réservation (facultatif)
   name: Nom
   quantity: Quantité
-  information_about_quantity_modification: La modification de la quantité de ressources disponibles affectera uniquement les futurs réservations.
+  information_about_quantity_modification: La modification de la quantité de ressources disponibles affectera uniquement les futures réservations.
 import_: Importer
 import:
   resources: Importer des ressources
