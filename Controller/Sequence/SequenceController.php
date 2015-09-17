@@ -27,14 +27,12 @@ class SequenceController extends Controller
     public function playAction(Exercise $exercise)
     {
         // get api manager
-        $manager = $this->get('ujm.exo.api_manager');
+/*        $manager = $this->get('ujm.exo.api_manager');
         $exo = $manager->exportExercise($exercise);
-        
-        echo "<pre>";
-        print_r($exo); die();
-/*
+
         $steps = $exo['steps'];
         $data = json_encode($exo);
+        echo "<pre>";
         print_r($data);
         */
         $exo = $this->getExercise(1, "match");
@@ -255,7 +253,7 @@ class SequenceController extends Controller
         
         else if ($type === "cloze") {
             // CLOZE QUESTION
-            $question1 = array(
+            $step1 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
                 "items" => array(
@@ -277,7 +275,7 @@ class SequenceController extends Controller
                 )
             );
 
-            $question2 = array(
+            $step2 = array(
                 "id" => 1,
                 "type" => "application/x.cloze+json",
                 "items" => array(
@@ -312,7 +310,7 @@ class SequenceController extends Controller
         }
         
         else if ($type === "choice") {
-            $question1 = array(
+            $step1 = array(
                 "id" => "1",
                 "type" => "application/x.choice+json",
                 "items" => array(
@@ -360,7 +358,7 @@ class SequenceController extends Controller
                 )
             );
             
-            $question2 = array(
+            $step2 = array(
                 "id" => "1",
                 "type" => "application/x.choice+json",
                 "meta" => array(
@@ -416,11 +414,11 @@ class SequenceController extends Controller
         }
         
         else {
-            $question1 = "Wrong type name given";
-            $question2 = "Type in another type name";
+            $step1 = "Wrong type name given";
+            $step2 = "Type in another type name";
         }
         
-        $steps = array($question1, $question2);
+        $steps = array($step1, $step2);
         
         $data = array(
             "id" => $id,
