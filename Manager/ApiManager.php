@@ -84,7 +84,7 @@ class ApiManager
 
         return array_map(function ($question) {
             switch ($questionType = $question->getType()) {
-                case 'UJM\ExoBundle\Entity\InteractionQCM':
+                case 'InteractionQCM':
                     $data = $this->getQCM($question);
                     $type = 'application/x.choice+json';
                     break;
