@@ -34,7 +34,7 @@ class Category
      *
      * @ORM\Column(name="locker", type="boolean")
      */
-    private $locker;
+    private $locker = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")

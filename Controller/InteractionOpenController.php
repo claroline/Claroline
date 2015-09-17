@@ -26,7 +26,7 @@ class InteractionOpenController extends Controller
 
         $response = new Response();
         $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                              ->getInteractionOpen($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $form = $this->createForm(new ResponseType(), $response);
 
@@ -93,8 +93,8 @@ class InteractionOpenController extends Controller
         );
         $openHandler = $formHandler->processAdd();
         if ($openHandler === true) {
-            $categoryToFind = $interOpen->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interOpen->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interOpen->getQuestion()->getCategory();
+            $titleToFind = $interOpen->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -152,7 +152,7 @@ class InteractionOpenController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-                              ->getInteractionOpen($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $editForm = $this->createForm(
             new InteractionOpenType($attr->get('user'), $attr->get('catID')), $interactionOpen
@@ -204,8 +204,8 @@ class InteractionOpenController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionOpen entity.');
         }
 
-        if ($user->getId() != $interOpen->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $interOpen->getInteraction()->getQuestion()->getCategory()->getId();
+        if ($user->getId() != $interOpen->getQuestion()->getUser()->getId()) {
+            $catID = $interOpen->getQuestion()->getCategory()->getId();
         }
 
         $editForm = $this->createForm(
@@ -240,7 +240,7 @@ class InteractionOpenController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id' => $interOpen->getInteraction()->getQuestion()->getId(),
+                'id' => $interOpen->getQuestion()->getId(),
                 'form' => $editForm,
             )
         );

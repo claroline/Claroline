@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Form;
 
-class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionOpenHandler extends QuestionHandler
 {
     /**
      * Implements the abstract method.
@@ -36,13 +36,11 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interOpen)
     {
-        $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
-        $interOpen->getInteraction()->getQuestion()->setUser($this->user);
-        $interOpen->getInteraction()->setType('InteractionOpen');
+        $interOpen->getQuestion()->setDateCreate(new \Datetime());
+        $interOpen->getQuestion()->setUser($this->user);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $wr->setInteractionOpen($interOpen);
@@ -74,7 +72,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;
         }
-        foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterOpen->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -117,8 +115,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->modifyHints($interOpen, $originalHints);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getInteraction()->getQuestion());
-        $this->em->persist($interOpen->getInteraction());
+        $this->em->persist($interOpen->getQuestion());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $interOpen->addWordResponse($wr);

@@ -61,7 +61,7 @@ class PaperService
         $interQuestionsTab = explode(';', $interQuestions);
 
         foreach ($interQuestionsTab as $interQuestion) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
+            $interaction = $em->getRepository('UJMExoBundle:Question')->find($interQuestion);
             $interSer = $this->container->get('ujm.exo_'.$interaction->getType());
             $interactionX = $interSer->getInteractionX($interaction->getId());
             $exercisePaperTotalScore += $interSer->maxScore($interactionX);
@@ -165,7 +165,7 @@ class PaperService
         foreach ($order as $interId) {
             $tem = 0;
             foreach ($responses as $key => $response) {
-                if ($response->getInteraction()->getId() == $interId) {
+                if ($response->getQuestion()->getId() == $interId) {
                     ++$tem;
                     $resp[] = $response;
                     unset($responses[$key]);
@@ -192,12 +192,11 @@ class PaperService
      */
     private function getInteractions($orderQuestion)
     {
+        $questionIds = explode(';', substr($orderQuestion, 0, -1));
         $em = $this->doctrine->getManager();
 
-        $interactions = $em->getRepository('UJMExoBundle:Interaction')
-                           ->getPaperInteraction($em, str_replace(';', '\',\'', substr($orderQuestion, 0, -1)));
-
-        return $interactions;
+        return $em->getRepository('UJMExoBundle:Question')
+            ->findByIds($questionIds);
     }
 
     /**
@@ -243,18 +242,15 @@ class PaperService
         $tabOrderInter = array();
         $tab = array();
 
-        $interactions = $this->doctrine->getManager()
-                ->getRepository('UJMExoBundle:Interaction')
-                ->getExerciseInteraction(
-                $this->doctrine->getManager(), $id, $exercise->getShuffle(), $exercise->getNbQuestion()
-        );
+        $questions = $this->container->get('ujm.exo.exercise_manager')
+            ->pickQuestions($exercise);
 
-        foreach ($interactions as $interaction) {
-            $orderInter = $orderInter.$interaction->getId().';';
-            $tabOrderInter[] = $interaction->getId();
+        foreach ($questions as $question) {
+            $orderInter .= $question->getId().';';
+            $tabOrderInter[] = $question->getId();
         }
 
-        $tab['interactions'] = $interactions;
+        $tab['interactions'] = $questions;
         $tab['orderInter'] = $orderInter;
         $tab['tabOrderInter'] = $tabOrderInter;
 
@@ -286,6 +282,7 @@ class PaperService
 
         $interSer = $this->container->get('ujm.exo_'.$interactionToDisplay->getType());
         $interactionToDisplayed = $interSer->getInteractionX($interactionToDisplay->getId());
+
         $responseGiven = $interSer->getResponseGiven($interactionToDisplay, $session, $interactionToDisplayed);
 
         $array['workspace'] = $workspace;

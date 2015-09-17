@@ -120,10 +120,10 @@ class ShareRepository extends EntityRepository
      */
     public function findByTypeShared($userId, $whatToFind)
     {
-        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
-                WHERE s.question = i.question
-                AND s.user = ?2
-                AND i.type LIKE ?1';
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s
+                JOIN s.question q
+                WHERE s.user = ?2
+                AND q.type LIKE ?1';
 
         $query = $this->_em->createQuery($dql)
                       ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
@@ -142,10 +142,10 @@ class ShareRepository extends EntityRepository
      */
     public function findByContainShared($userId, $whatToFind)
     {
-        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i
-                WHERE s.question = i.question
-                AND s.user = ?2
-                AND i.invite LIKE ?1';
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s
+                JOIN s.question q
+                WHERE s.user = ?2
+                AND q.description LIKE ?1';
 
         $query = $this->_em->createQuery($dql)
                       ->setParameters(array(1 => "%{$whatToFind}%", 2 => $userId));
@@ -164,11 +164,11 @@ class ShareRepository extends EntityRepository
      */
     public function findByAllShared($userId, $whatToFind)
     {
-        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s, UJM\ExoBundle\Entity\Interaction i,
+        $dql = 'SELECT s FROM UJM\ExoBundle\Entity\Share s,
                 UJM\ExoBundle\Entity\Question q, UJM\ExoBundle\Entity\Category c
-                WHERE s.question = i.question AND i.question = q AND q.category = c
+                WHERE s.question = q AND q.category = c
                 AND s.user = ?2
-                AND (i.invite LIKE ?1 OR i.type LIKE ?1 OR c.value LIKE ?1 OR q.title LIKE ?1)
+                AND (q.description LIKE ?1 OR q.type LIKE ?1 OR c.value LIKE ?1 OR q.title LIKE ?1)
         ';
 
         $query = $this->_em->createQuery($dql)

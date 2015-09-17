@@ -58,20 +58,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for interaction in listQuestions %}
+                {% for question in listQuestions %}
                     <tr>
-                        <td class="classic">{{ interaction.question.category.value }}</td>
+                        <td class="classic">{{ question.category.value }}</td>
                         <td class="classic">
-                            <a href="{{ path('ujm_question_show', { 'id': interaction.question.id }) }}">
-                                {{ interaction.question.title }}
+                            <a href="{{ path('ujm_question_show', { 'id': question.id }) }}">
+                                {{ question.title }}
                             </a>
                         </td>
-                        <td class="classic">{{ interaction.type|trans({}, 'ujm_exo') }}</td>
-                        <td class="classic">{{ interaction.invite|raw }}</td>
+                        <td class="classic">{{ question.type|trans({}, 'ujm_exo') }}</td>
+                        <td class="classic">{{ question.description|raw }}</td>
                         <td class="classic">
                             <ul class="list-unstyled">
                                 <li>
-                                    <input type="checkbox" name ="import" value="{{ interaction.question.id }}" onclick="addQuestionInOrder($(this).val());">
+                                    <input type="checkbox" name ="import" value="{{ question.id }}" onclick="addQuestionInOrder($(this).val());">
                                 </li>
                             </ul>
                         </td>

@@ -58,41 +58,41 @@
         <tbody>
         {% for FindQuestion in listQuestions %}
             <tr>
-                <td class="classic">{{ FindQuestion.question.category.value }}</td>
-                <td class="classic"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.question.id }) }}">{{ FindQuestion.question.title }}</a></td>
+                <td class="classic">{{ FindQuestion.category.value }}</td>
+                <td class="classic"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.id }) }}">{{ FindQuestion.title }}</a></td>
                 <td class="classic">{{ FindQuestion.type|trans({}, 'ujm_exo') }}</td>
-                <td class="classic">{{ FindQuestion.invite|raw }}</td>
+                <td class="classic">{{ FindQuestion.description|raw }}</td>
                 {% if canDisplay == 'my' %}
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans({}, 'ujm_exo') }}"
-                           href="{{ path('ujm_question_share', { 'questionID': FindQuestion.question.id }) }}">
+                           href="{{ path('ujm_question_share', { 'questionID': FindQuestion.id }) }}">
                             <i class="fa fa-share"></i>
                         </a>
-                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'interID': FindQuestion.id }) }}">
+                        <a class="btn btn-default" data-toggle="tooltip" title="{{ 'duplicate' | trans({}, 'ujm_exo') }}" href="{{ path('ujm_question_duplicate', { 'questionId': FindQuestion.id }) }}">
                             <i class="fa fa-repeat"></i>
                         </a>
                         {% if(questionWithResponse[FindQuestion.id] == 0) %}
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
-                               href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}">
+                               href="{{ path('ujm_question_edit', { 'id': FindQuestion.id }) }}">
                                 <i class="fa fa-pencil"></i>
                             </a>
 
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'delete_of_my_bank' | trans({}, 'ujm_exo') }}"
-                               href="{{ path('ujm_question_delete', { 'id': FindQuestion.question.id}) }}" id="delete-question">
+                               href="{{ path('ujm_question_delete', { 'id': FindQuestion.id}) }}" id="delete-question">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         {% else %}
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'edit' | trans({}, 'ujm_exo') }}"
-                               href="{{ path('ujm_question_edit', { 'id': FindQuestion.question.id }) }}"
+                               href="{{ path('ujm_question_edit', { 'id': FindQuestion.id }) }}"
                                style="color: red;">
                                 <i class="fa fa-pencil"></i>
                             </a>
                         {% endif %}
                     </td>
-                    {% if(alreadyShared[FindQuestion.question.id] == 1) %}
+                    {% if(alreadyShared[FindQuestion.id] == 1) %}
                         <td class="classic">
                             <a class="btn btn-default" data-toggle="tooltip" title="{{ 'show'|trans({}, 'ujm_exo') }}"
-                                href="{{ path('ujm_see_shared', { 'id': FindQuestion.question.id }) }}">
+                                href="{{ path('ujm_see_shared', { 'id': FindQuestion.id }) }}">
                                 <i class="fa fa-eye"></i>
                             </a>
                         </td>
@@ -102,10 +102,10 @@
                 {% endif %}
                 {% if canDisplay == 'shared' %}
                     <td class="classic">
-                        {{ FindQuestion.question.user.firstName }} {{ FindQuestion.question.user.lastName }}
+                        {{ FindQuestion.user.firstName }} {{ FindQuestion.user.lastName }}
                     </td>
                     <td class="classic">
-                        <a href="{{ path('ujm_delete_shared_question', { 'qid': FindQuestion.question.id, 'uid': app.user.id, 'pageNow': pagerSearch.currentPage,
+                        <a href="{{ path('ujm_delete_shared_question', { 'qid': FindQuestion.id, 'uid': app.user.id, 'pageNow': pagerSearch.currentPage,
                             'maxPage': pagerSearch.maxPerPage,'nbItem': pagerSearch.getNbResults, 'lastPage': pagerSearch.getNbPages }) }}" id="delete-question">
                            <i class="fa fa-trash-o"></i>
                         </a>

@@ -347,7 +347,7 @@ class PaperController extends Controller
 
             while (false !== ($row = $iterableResult->next())) {
                 $rowCSV = array();
-                $infosPaper = $this->container->get('ujm.exo_exercise')->getInfosPaper($row[0]);
+                $infosPaper = $this->container->get('ujm.exo_paper')->getInfosPaper($row[0]);
                 $score = $infosPaper['scorePaper'] / $infosPaper['maxExoScore'];
                 $score = $score * 20;
 

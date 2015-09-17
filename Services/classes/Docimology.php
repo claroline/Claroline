@@ -60,14 +60,13 @@ class Docimology
             foreach ($interQuestionsTab as $interQuestion) {
                 $flag = $em->getRepository('UJMExoBundle:Response')->findOneBy(
                     array(
-                        'interaction' => $interQuestion,
+                        'question' => $interQuestion,
                         'paper' => $paper->getId(),
                     )
                 );
 
                 if (!$flag || $flag->getResponse() == '') {
-                    $interaction = $em->getRepository('UJMExoBundle:Interaction')->find($interQuestion);
-                    $questionsResponsesTab[$interaction->getQuestion()->getId()]['noResponse'] += 1;
+                    $questionsResponsesTab[$interQuestion]['noResponse'] += 1;
                 }
             }
         }
@@ -259,14 +258,12 @@ class Docimology
     private function getCorrectAnswer($exerciseId, $eq)
     {
         $em = $this->doctrine->getManager();
-
-        $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
-
+        $question = $eq->getQuestion();
         $responses = $em->getRepository('UJMExoBundle:Response')
-                        ->getExerciseInterResponsesWithCount($exerciseId, $interaction->getId());
-        $typeInter = $interaction->getType();
+                        ->getExerciseInterResponsesWithCount($exerciseId, $question->getId());
+        $typeInter = $question->getType();
         $interSer = $this->container->get('ujm.exo_'.$typeInter);
-        $interX = $interSer->getInteractionX($interaction->getId());
+        $interX = $interSer->getInteractionX($question->getId());
         $scoreMax = $interSer->maxScore($interX);
         $responsesTab = $this->responseStatus($responses, $scoreMax);
 
@@ -322,9 +319,8 @@ class Docimology
         $em = $this->doctrine->getManager();
         $tabScoreQ = array();
         foreach ($eqs as $eq) {
-            $interaction = $em->getRepository('UJMExoBundle:Interaction')->getInteraction($eq->getQuestion()->getId());
             $responses = $em->getRepository('UJMExoBundle:Response')
-                            ->getExerciseInterResponses($exerciseId, $interaction->getId());
+                            ->getExerciseInterResponses($exerciseId, $eq->getQuestion()->getId());
             foreach ($responses as $response) {
                 $tabScoreQ[$eq->getQuestion()->getId()][] = $response['mark'];
             }

@@ -27,18 +27,17 @@ abstract class Interaction
     /**
      * Get penalty for an interaction and a paper.
      *
-     *
-     * @param \UJM\ExoBundle\Entity\Interaction $interaction
-     * @param int                               $paperID     id Paper
+     * @param \UJM\ExoBundle\Entity\Question    $question
+     * @param int                               $paperID
      *
      * @return float
      */
-    private function getPenaltyPaper($interaction, $paperID)
+    private function getPenaltyPaper($question, $paperID)
     {
         $em = $this->doctrine->getManager();
         $penalty = 0;
 
-        $hints = $interaction->getHints();
+        $hints = $question->getHints();
 
         foreach ($hints as $hint) {
             $lhp = $em->getRepository('UJMExoBundle:LinkHintPaper')
@@ -60,14 +59,13 @@ abstract class Interaction
     /**
      * Get penalty for a test or a paper.
      *
-     *
-     * @param \UJM\ExoBundle\Entity\Interaction                          $interaction
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param int                                                        $paperID
+     * @param \UJM\ExoBundle\Entity\Question                                $question
+     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface    $session
+     * @param int                                                           $paperID
      *
      * @return float
      */
-    protected function getPenalty($interaction, \Symfony\Component\HttpFoundation\Session\SessionInterface $session, $paperID)
+    protected function getPenalty($question, \Symfony\Component\HttpFoundation\Session\SessionInterface $session, $paperID)
     {
         $penalty = 0;
         if ($paperID == 0) {
@@ -84,7 +82,7 @@ abstract class Interaction
             }
             $session->remove('penalties');
         } else {
-            $penalty = $this->getPenaltyPaper($interaction, $paperID);
+            $penalty = $this->getPenaltyPaper($question, $paperID);
         }
 
         return $penalty;
@@ -144,7 +142,7 @@ abstract class Interaction
      {
          $em = $this->doctrine->getEntityManager();
          $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findBy(array('interaction' => $interaction->getId()));
+                        ->findBy(array('question' => $interaction->getId()));
 
          return count($response);
      }
@@ -182,11 +180,11 @@ abstract class Interaction
      /**
       * abstract method.
       *
-      * @param Integer $interId id of interaction
+      * @param int $questionId
       *
       * @return \UJM\ExoBundle\Entity\InteractionX (qcm, graphic, open, ...)
       */
-     abstract public function getInteractionX($interId);
+     abstract public function getInteractionX($questionId);
 
      /**
       * abstract method.

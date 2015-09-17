@@ -26,7 +26,7 @@ class InteractionMatchingController extends Controller
 
         $response = new Response();
         $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
-                                  ->getInteractionMatching($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         if ($interactionMatching->getShuffle()) {
             $interactionMatching->shuffleProposals();
@@ -59,8 +59,8 @@ class InteractionMatchingController extends Controller
            ), $entity
        );
 
-        $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
-        $typeMatching = $interMatchSer->getTypeMatching();
+       $interMatchSer = $this->container->get('ujm.exo_InteractionMatching');
+       $typeMatching = $interMatchSer->getTypeMatching();
 
         return $this->container->get('templating')->renderResponse(
            'UJMExoBundle:InteractionMatching:new.html.twig', array(
@@ -102,9 +102,10 @@ class InteractionMatchingController extends Controller
                 $this->get('translator')
          );
         $matchingHandler = $formHandler->processAdd();
+
         if ($matchingHandler === true) {
-            $categoryToFind = $interMatching->getInteraction()->getQuestion()->getCategory();
-            $titleToFind = $interMatching->getInteraction()->getQuestion()->getTitle();
+            $categoryToFind = $interMatching->getQuestion()->getCategory();
+            $titleToFind = $interMatching->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -162,7 +163,7 @@ class InteractionMatchingController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionMatching = $em->getRepository('UJMExoBundle:InteractionMatching')
-                                  ->getInteractionMatching($attr->get('interaction')->getId());
+            ->findOneByQuestion($attr->get('interaction')->getId());
 
         $correspondence = $matchSer->initTabRightResponse($interactionMatching);
         foreach ($correspondence as $key => $corresp) {
@@ -232,8 +233,8 @@ class InteractionMatchingController extends Controller
             throw $this->createNotFoundException('Enable to find InteractionMatching entity.');
         }
 
-        if ($user->getId() != $interMatching->getInteraction()->getQuestion()->getUser()->getId()) {
-            $catID = $interMatching->getInteraction()->getQuestion()->getUser()->getId();
+        if ( $user->getId() != $interMatching->getQuestion()->getUser()->getId() ) {
+            $catID = $interMatching->getQuestion()->getUser()->getId();
         }
 
         $editForm = $this->createForm(
@@ -267,7 +268,7 @@ class InteractionMatchingController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id' => $interMatching->getInteraction()->getQuestion()->getId(),
+                'id' => $interMatching->getQuestion()->getId(),
                 'form' => $editForm,
             )
         );

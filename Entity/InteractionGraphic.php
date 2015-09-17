@@ -2,51 +2,38 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionGraphic.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionGraphicRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ujm_interaction_graphic")
  */
-class InteractionGraphic
+class InteractionGraphic extends AbstractInteraction
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    const TYPE = 'InteractionGraphic';
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="width", type="integer")
+     * @ORM\Column(type="integer")
      */
     private $width;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="height", type="integer")
+     * @ORM\Column(type="integer")
      */
     private $height;
 
     /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
-     */
-    private $interaction;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Document")
+     * @ORM\ManyToOne(targetEntity="Document")
      */
     private $document;
 
     /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Coords", mappedBy="interactionGraphic", cascade={"remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="Coords",
+     *     mappedBy="interactionGraphic",
+     *     cascade={"remove"}
+     * )
      */
     private $coords;
 
@@ -55,23 +42,19 @@ class InteractionGraphic
      */
     public function __construct()
     {
-        $this->coords = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->coords = new ArrayCollection();
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * @return string
      */
-    public function getId()
+    public static function getQuestionType()
     {
-        return $this->id;
+        return self::TYPE;
     }
 
     /**
-     * Set width.
-     *
-     * @param int $width
+     * @param integer $width
      */
     public function setWidth($width)
     {
@@ -79,8 +62,6 @@ class InteractionGraphic
     }
 
     /**
-     * Get width.
-     *
      * @return int
      */
     public function getWidth()
@@ -89,8 +70,6 @@ class InteractionGraphic
     }
 
     /**
-     * Set height.
-     *
      * @param int $height
      */
     public function setHeight($height)
@@ -99,8 +78,6 @@ class InteractionGraphic
     }
 
     /**
-     * Get height.
-     *
      * @return int
      */
     public function getHeight()
@@ -108,40 +85,44 @@ class InteractionGraphic
         return $this->height;
     }
 
-    public function getInteraction()
+    /**
+     * @return Question
+     */
+    public function getQuestion()
     {
-        return $this->interaction;
+        return $this->question;
     }
 
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
-    {
-        $this->interaction = $interaction;
-    }
-
+    /**
+     * @return Document
+     */
     public function getDocument()
     {
         return $this->document;
     }
 
-    public function setDocument(\UJM\ExoBundle\Entity\Document $document)
+    /**
+     * @param Document $document
+     */
+    public function setDocument(Document $document)
     {
         $this->document = $document;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getCoords()
     {
         return $this->coords;
     }
 
-    public function addCoord(\UJM\ExoBundle\Entity\Coords $coord)
+    /**
+     * @param Coords $coord
+     */
+    public function addCoord(Coords $coord)
     {
-        $this->coords[] = $coord;
-        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
-        //aussi lié l'interactionqcm double travail avec les relations bidirectionnelles avec
-        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
-        //script il faudra exécuter $interactionqcm->addChoice() qui garde la cohérence entre les
-        //deux entités, il ne faudra pas exécuter $choice->setInteractionQCM(), car lui ne garde
-        //pas la cohérence
+        $this->coords->add($coord);
         $coord->setInteractionGraphic($this);
     }
 
@@ -149,15 +130,15 @@ class InteractionGraphic
     {
         if ($this->id) {
             $this->id = null;
+            $this->question = clone $this->question;
+            $newCoords = new ArrayCollection;
 
-            $this->interaction = clone $this->interaction;
-
-            $newCoords = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->coords as $coord) {
                 $newCoord = clone $coord;
                 $newCoord->setInteractionGraphic($this);
                 $newCoords->add($newCoord);
             }
+
             $this->coords = $newCoords;
         }
     }

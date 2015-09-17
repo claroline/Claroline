@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Form;
 
 use UJM\ExoBundle\Entity\Coords;
 
-class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
+class InteractionGraphicHandler extends QuestionHandler
 {
     /**
      * Implements the abstract method.
@@ -40,9 +40,8 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interGraph)
     {
-        $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
-        $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
-        $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
+        $interGraph->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
+        $interGraph->getQuestion()->setUser($this->user); // add the user to the question
 
         if ($this->request != null) {
             $width = $this->request->get('imagewidth'); // Get the width of the image
@@ -65,8 +64,10 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         }
 
         $this->em->persist($interGraph);
-        $this->em->persist($interGraph->getInteraction()->getQuestion());
-        $this->em->persist($interGraph->getInteraction());
+        $this->em->persist($interGraph->getQuestion());
+
+        $interGraph->setQuestion($interGraph->getQuestion());
+
 
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $this->em->persist($allCoords[$i]);
@@ -93,7 +94,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
     {
         $originalHints = array();
 
-        foreach ($originalInterGraphic->getInteraction()->getHints() as $hint) {
+        foreach ($originalInterGraphic->getQuestion()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 

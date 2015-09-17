@@ -2,68 +2,51 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\InteractionHole.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionHoleRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ujm_interaction_hole")
  */
-class InteractionHole
+class InteractionHole extends AbstractInteraction
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    const TYPE = 'InteractionHole';
 
     /**
-     * @var text
-     *
-     * @ORM\Column(name="html", type="text")
+     * @ORM\Column(type="text")
      */
     private $html;
 
     /**
-     * @var text
-     *
-     * @ORM\Column(name="htmlWithoutValue", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)
      */
     private $htmlWithoutValue;
 
     /**
-     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
-     */
-    private $interaction;
-
-    /**
-     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hole", mappedBy="interactionHole", cascade={"remove"})
+     * @ORM\OneToMany(
+     *     targetEntity="Hole",
+     *     mappedBy="interactionHole",
+     *     cascade={"remove"}
+     * )
      */
     private $holes;
 
     public function __construct()
     {
-        $this->holes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->holes = new ArrayCollection();
     }
 
     /**
-     * Get id.
-     *
-     * @return int
+     * @return string
      */
-    public function getId()
+    public static function getQuestionType()
     {
-        return $this->id;
+        return self::TYPE;
     }
 
     /**
-     * Set html.
-     *
-     * @param text $html
+     * @param string $html
      */
     public function setHtml($html)
     {
@@ -71,9 +54,7 @@ class InteractionHole
     }
 
     /**
-     * Get html.
-     *
-     * @return text
+     * @return string
      */
     public function getHtml()
     {
@@ -81,9 +62,7 @@ class InteractionHole
     }
 
     /**
-     * Set htmlWithoutValue.
-     *
-     * @param text $htmlWithoutValue
+     * @param string $htmlWithoutValue
      */
     public function setHtmlWithoutValue($htmlWithoutValue)
     {
@@ -91,54 +70,51 @@ class InteractionHole
     }
 
     /**
-     * Get htmlWithoutValue.
-     *
-     * @return text
+     * @return string
      */
     public function getHtmlWithoutValue()
     {
         return $this->htmlWithoutValue;
     }
 
-    public function getInteraction()
-    {
-        return $this->interaction;
-    }
-
-    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
-    {
-        $this->interaction = $interaction;
-    }
-
+    /**
+     * @return ArrayCollection
+     */
     public function getHoles()
     {
         return $this->holes;
     }
 
-    public function addHole(\UJM\ExoBundle\Entity\Hole $hole)
+    /**
+     * @param Hole $hole
+     */
+    public function addHole(Hole $hole)
     {
-        $this->holes[] = $hole;
-
+        $this->holes->add($hole);
         $hole->setInteractionHole($this);
     }
 
-    public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)
+    /**
+     * @param Hole $hole
+     */
+    public function removeHole(Hole $hole)
     {
+        $this->holes->removeElement($hole);
     }
 
     public function __clone()
     {
         if ($this->id) {
             $this->id = null;
+            $this->question = clone $this->question;
+            $newHoles = new ArrayCollection();
 
-            $this->interaction = clone $this->interaction;
-
-            $newHoles = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->holes as $hole) {
                 $newHole = clone $hole;
                 $newHole->setInteractionHole($this);
                 $newHoles->add($newHole);
             }
+
             $this->holes = $newHoles;
         }
     }

@@ -21,7 +21,6 @@ abstract class QtiImport
     protected $user;
     protected $qtiRepos;
     protected $qtiCat;
-    protected $interaction;
     protected $question;
     protected $assessmentItem;
     protected $dirQTI;
@@ -45,7 +44,7 @@ abstract class QtiImport
     /**
      * Create the question objet.
      */
-    protected function createQuestion()
+    protected function createQuestion($type)
     {
         $this->objectToResource();
         $this->question = new Question();
@@ -53,29 +52,15 @@ abstract class QtiImport
         $this->question->setDateCreate(new \Datetime());
         $this->question->setUser($this->user);
         $this->question->setCategory($this->qtiCat);
-        $this->getDescription();
+        $this->question->setDescription($this->getPrompt());
+        $this->question->setType($type);
+
+        if ($feedback = $this->getFeedback()) {
+            $this->question->setFeedBack($feedback);
+        }
+
         $this->om->persist($this->question);
         $this->om->flush();
-    }
-
-    /**
-     * Create the interaction objet.
-     */
-    protected function createInteraction()
-    {
-        $feedback = $this->getFeedback();
-        $this->interaction = new Interaction();
-        $this->interaction->setInvite($this->getPrompt());
-        if ($this->interaction->getInvite() == '' && $this->question->getDescription() != '') {
-            $this->interaction->setInvite($this->question->getDescription());
-            $this->question->setDescription('');
-            $this->om->persist($this->question);
-            $this->om->flush();
-        }
-        if ($feedback != null) {
-            $this->interaction->setFeedBack($feedback);
-        }
-        $this->interaction->setQuestion($this->question);
     }
 
     /**

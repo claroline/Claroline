@@ -26,14 +26,7 @@ class GraphicImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-
-        $this->createQuestion();
-
-        $this->createInteraction();
-        $this->interaction->setType('InteractionGraphic');
-        $this->om->persist($this->interaction);
-        $this->om->flush();
-
+        $this->createQuestion(InteractionGraphic::TYPE);
         $this->createInteractionGraphic();
 
         return $this->interactionGraph;
@@ -48,7 +41,7 @@ class GraphicImport extends QtiImport
         $ob = $spi->getElementsByTagName('object')->item(0);
 
         $this->interactionGraph = new InteractionGraphic();
-        $this->interactionGraph->setInteraction($this->interaction);
+        $this->interactionGraph->setQuestion($this->question);
         $this->interactionGraph->setHeight($ob->getAttribute('height'));
         $this->interactionGraph->setWidth($ob->getAttribute('width'));
 

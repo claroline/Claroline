@@ -82,15 +82,10 @@ class ExerciseServices
                     ->findBy(array('exercise' => $exoID));
 
         foreach ($eqs as $eq) {
-            $interaction = $this->om
-                                ->getRepository('UJMExoBundle:Interaction')
-                                ->getInteraction($eq->getQuestion()->getId());
-            $typeInter = $interaction->getType();
-
+            $typeInter = $eq->getQuestion()->getType();
             $interSer = $this->container->get('ujm.exo_'.$typeInter);
-            $interactionX = $interSer->getInteractionX($interaction->getId());
+            $interactionX = $interSer->getInteractionX($eq->getQuestion()->getId());
             $scoreMax = $interSer->maxScore($interactionX);
-
             $exoTotalScore += $scoreMax;
         }
 
@@ -106,7 +101,7 @@ class ExerciseServices
      */
     public function setExerciseQuestion($exercise, $interX, $order = -1)
     {
-        $eq = new ExerciseQuestion($exercise, $interX->getInteraction()->getQuestion());
+        $eq = new ExerciseQuestion($exercise, $interX->getQuestion());
 
         if ($order == -1) {
             $dql = 'SELECT max(eq.ordre) FROM UJM\ExoBundle\Entity\ExerciseQuestion eq '
