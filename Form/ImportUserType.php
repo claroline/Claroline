@@ -63,7 +63,7 @@ class ImportUserType extends AbstractType
 
         if ($this->showRoles) {
             $builder->add(
-                'role',
+                'roles',
                 'entity',
                 array(
                     'required' => false,
@@ -72,7 +72,7 @@ class ImportUserType extends AbstractType
                     'class' => 'Claroline\CoreBundle\Entity\Role',
                     'choice_translation_domain' => true,
                     'expanded' => true,
-                    'multiple' => false,
+                    'multiple' => true,
                     'property' => 'translationKey',
                     'query_builder' => function (\Doctrine\ORM\EntityRepository $er) {
                             $query = $er->createQueryBuilder('r')

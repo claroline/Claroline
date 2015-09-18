@@ -442,6 +442,8 @@ class WorkspaceController extends Controller
     public function renderToolListAction(Workspace $workspace, $_breadcrumbs)
     {
         //first we add check if some tools will be missing from the navbar and we add them if necessary
+        //lets be sure we loaded everything properly because the pathbundle broke something
+        $workspace = $this->workspaceManager->getWorkspaceByCode($workspace->getCode());
         $this->toolManager->addMissingWorkspaceTools($workspace);
 
         if ($_breadcrumbs != null) {

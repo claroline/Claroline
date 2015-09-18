@@ -317,7 +317,7 @@ class UserManager
             $lastName = $user[1];
             $username = $user[2];
             $pwd = $user[3];
-            $email = $user[4];
+            $email = trim($user[4]);
 
             if (isset($user[5])) {
                 $code = trim($user[5]) === '' ? null: $user[5];
@@ -406,13 +406,13 @@ class UserManager
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
         $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
-        
+
         if (count($created) > 0) {
             $code = $user->getUsername() . '~' . uniqid();
         } else {
             $code = $user->getUsername();
         }
-        
+
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . ' - ' . $user->getUsername();
 
         if (!$model) {
