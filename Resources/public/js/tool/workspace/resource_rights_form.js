@@ -223,16 +223,26 @@
     });
 
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
-        //do some stuff here
         var picker = new UserPicker();
         var settings = {
             'multiple': true,
-            'picker_name': 'user_res_picker'
+            'picker_name': 'user_res_picker',
+            'return_datas': true
         };
         picker.configure(
             settings,
             function (users) {
-                $('.no-user-warning').hide();
+                $.each(users, function(index, val) {
+                    //add the row to the tab
+                    var twigParams = {
+                        'user': val,
+                        'isDir': true,
+                        'permissions': ['open', 'copy', 'export', 'delete', 'edit', 'administrate']
+                    };
+
+                    var el = Twig.render(ResourceRightsRow, twigParams);
+                    $('.rights-single-user').append(el);
+                });
             }
         );
         picker.open();

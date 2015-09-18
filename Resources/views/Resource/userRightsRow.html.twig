@@ -1,32 +1,28 @@
-{% set roleId = usersRoles[user.getUsername()].getId() %}
+{% twig_js name="ResourceRightsRow" %}
+
 <tr>
     <td>
-        {{ user.getFirstName() }}
-        {{ user.getLastName() }}
-        <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+        {{ user.firstName }}
+        {{ user.lastName }}
+        <input type="hidden" name="role_row[{{ user.user_role_id }}]" value="{{ user.user_role_id }}"/>
     </td>
     <td>
-        {{ user.getUsername() }}
+        {{ user.username }}
     </td>
 
-    {% for decoder in resource.getResourceType().getMaskDecoders() %}
+    {% for right in rights %}
         <td>
-            <input name="roles[{{ roleId }}][{{ decoder.getName() }}]"
-                   type="checkbox"
-                   {% if usersRights[user.getUsername()] is defined and
-                        (usersRights[user.getUsername()].getMask() b-and decoder.getValue())
-                   %}
-                       checked
-                   {% endif %}
+            <input name="roles[{{ user.user_role_id }}][{{ right }}]"
+               type="checkbox"
             >
         </td>
     {% endfor %}
 
     {% if isDir %}
         <td>
-            <a data-resource-id="{{ resource.getId() }}"
+            <a data-resource-id="{{ resource.id }}"
                class="res-creation-options"
-               href="{{ path('claro_resource_right_creation_form', {'node': resource.getId(), 'role': roleId }) }}"
+               href="{{ path('claro_resource_right_creation_form', {'node': resource.id, 'role': user.user_role_id }) }}"
             >
                <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
             </a>
