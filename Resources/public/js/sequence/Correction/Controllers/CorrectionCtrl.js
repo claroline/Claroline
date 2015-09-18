@@ -9,6 +9,7 @@
             this.answers = {};
             this.sequence = {};
             this.isCollapsed = false;
+            this.note = 0;
 
             this.init = function (sequence, answers) {
                 this.answers = answers;
@@ -17,7 +18,20 @@
                 console.log(this.answers);
                 console.log('sequence');
                 console.log(this.sequence);
-            }
+            };
+            
+            /**
+             * 
+             * @returns string
+             */
+            this.setNote = function (){
+                var nbAnswers = this.answers.length;
+                for(var i = 0; i < nbAnswers; i++){
+                    var currentAnswer = this.answers[i];
+                    var currentQuestion = currentAnswer.question;
+                    
+                }
+            };
 
             this.setCurrentQuestion = function (question) {
                 this.currentQuestion = question;
