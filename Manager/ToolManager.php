@@ -390,6 +390,7 @@ class ToolManager
         $initPos++;
         $missingTools = array();
         $wsRoles = $this->roleManager->getWorkspaceConfigurableRoles($workspace);
+        $this->om->startFlushSuite();
 
         foreach ($undisplayedTools as $undisplayedTool) {
             $wot = $this->orderedToolRepo->findOneBy(
@@ -423,6 +424,8 @@ class ToolManager
 
             $initPos++;
         }
+
+        $this->om->endFlushSuite();
 
         return $missingTools;
     }
