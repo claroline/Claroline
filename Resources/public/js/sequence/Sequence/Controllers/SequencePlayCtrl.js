@@ -81,13 +81,15 @@
                 console.log('student data are below');
                 console.log(data);
                 // save step results TODO save it in db !!!!
-                // also save the current progression ?
+                // also save the current progression in db ?
                 this.studentResults.push(data);
                 // go to next step
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var length = this.steps.length;
                 var newIndex = currentStepIndex + 1;
                 if(newIndex < length){
+                    
+                    
                     this.setCurrentStep(newIndex);
                     this.isLastStep = newIndex === this.steps.length - 1 ? true:false;
                 }
@@ -99,6 +101,7 @@
                     // save the paper (table ujm_paper) (and the question order for the paper...)
                     // save answers (table ujm_response)
                     // show correction summary page
+                    // should correction summary page be on another route ? or not ?
                 }
                 
             };

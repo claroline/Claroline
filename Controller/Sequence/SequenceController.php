@@ -21,25 +21,31 @@ class SequenceController extends Controller
 
     /**
      * Play the selected Exercise
-     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play")
+     * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
      * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      */
     public function playAction(Exercise $exercise)
     {
-        // get api manager
+        // DATA from API
+        /*
         $manager = $this->get('ujm.exo.api_manager');
         $exo = $manager->exportExercise($exercise);
-
         $steps = $exo['steps'];
         $data = json_encode($exo);
+        */
         
-        // get user data... user, number of attempts (what if first attempt?), notes, papers... 
+        // FAKE Data for development!!
+        $exo = $this->getExercise(2, "choice");
+        $steps = $exo['steps'];
+        $data = json_encode($exo);
+
+        // TODO get user data... user, number of attempts (what if first attempt?), previous notes, previous papers... 
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
-            '_resource' => $exercise, 
-            'steps' => json_encode($steps),
-            'sequence' => $data
-                )
+                    '_resource' => $exercise,
+                    'steps' => json_encode($steps),
+                    'sequence' => $data
+                        )
         );
     }
     
@@ -54,7 +60,7 @@ class SequenceController extends Controller
         
     }
     
-    private function getExercise($metaNb, $type) 
+    private function getExercise($metaNb, $type)
     {
         $base64Img1 = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
         $base64Img2 = 'iVBORw0KGgoAAAANSUhEUgAAA5sAAACsCAYAAAD1/LiYAAAABHNCSVQICAgIfAhkiAAAIABJREFUeJzt3elbG1e+L/pvleYZJCEGAWY02IbYsR07dkan093Z++7znDf37zz39tn73t6ddCexE8eJ4yGeADODACEhgeZZqvPCGbC0BJpAA9/P8/iFpQIVqlWr1m9NP2lsdEoBERERERERUQPJzT4BIiIiIiIi6jwMNomIiIiIiKjhGGwSERERERFRwzHYJCIiIiIiooZjsElEREREREQNx2CTiIiIiIiIGo7BJhERERERETUcg00iIiIiIiJqOAabRERERERE1HAMNomIiIiIiKjhGGwSERERERFRwzHYJCIiIiIiooZjsElEREREREQNx2CTiIiIiIiIGo7BJhERERERETUcg00iIiIiIiJqOAabRERERERE1HAMNomIiIiIiKjhGGwSERERERFRwzHYJCIiIiIiooZjsElEREREREQNx2CTiIiIiIiIGo7BJhERERERETUcg00iIiIiIiJqOAabRERERERE1HAMNomIiIiIiKjhGGwSERERERFRw6mbfQJE9DaN+0P8z9uOoldD+Pk/72EjpTTlnIiIOocK9mt/xmdjurdfTq3h678/x36uOWdFRG9IWiv6htzo77XD3mWB2aiDWhIdmYPn7pf4yZ897VOsyllv1zUk2JTNQ5iZdkL7a0HIBpfxYjWKQrnjTYO4eKEH+gqPJyIiIiKiDqY2Y/DSZbx73gnd8UdTm6g/2JR06L/8Ds4P/PGrQvuvUTZOl3TovXwZ0+5Dxx8ccfxRH60fxEf/cQ0uYW9HCE/+v3tYTXR+jwERERERUbuStD2Y/fQWztuEjXpqY3Wv2ZRtY5gdOByzJrAbTJcNHmXrCN5xHz4+id1A+ePLk2AYGCsTaAJAF8YHTWCRJSIiIiJqUZIR596/yUCzQ9U3sinp4Z4Zh/nwa5kAdmP5Msfr0D8zAcvh17IB+ModfxTZCPdE95GH2MYHYVleQITzc4mIiIiIWowETe9FXO5Vid/OxhDcCyOazCBXUIoGp3LYT9QQQ9CpqivYVHWNY6b/7cJR2N9FuMx1Lx0FBQr73rLHH0U2D2HcdsxB5nMYtS3h2QELIhERERFRS5H0GLjghqbkjSy8vzzAz8sHyHBFXFurfRqtZIB7dgymopdD2yFk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';
@@ -64,237 +70,360 @@ class SequenceController extends Controller
         $webImg2 = 'http://www.planetecampus.com/wp-content/uploads/2014/10/BhchDtlCIAALalT.jpg';
         $webImg3 = 'http://www.fubiz.net/wp-content/uploads/2012/07/You-are-not-Banksy17.jpg';
         $pdfSyllabus = 'http://www.cie.org.uk/images/128363-2015-syllabus.pdf';
-        
-        $id = "1";
-        
+
+        $id = 1;
+
         if ($metaNb === 1) {
             $meta = array(
-                "meta" => array(
-                    "authors" => array(
-                      array(
+                "authors" => array(
+                    array(
                         "name" => "John Doe",
                         "status" => "Tutor"
-                      )
-                    ),
-                    "created" => "2015-09-11 10:43:55",
-                    "title" => "TEST",
-                    "description" => null
-                )
+                    )
+                ),
+                "created" => "2015-09-11 10:43:56",
+                "title" => "TEST",
+                "description" => null
             );
-        }
-        else if ($metaNb === 2) {
+        } else if ($metaNb === 2) {
             $meta = array(
-                "meta" => array(
-                    "authors" => array(
-                      array(
+                "authors" => array(
+                    array(
                         "name" => "John Doe",
                         "status" => "Tutor"
-                      ),
-                      array(
+                    ),
+                    array(
                         "name" => "Jane Doe",
                         "email" => "jane@mail.com",
                         "status" => "Professor"
-                      )
-                    ),
-                    "license" => "CC",
-                    "created" => "2015-09-11 10:43:55",
-                    "title" => "TEST",
-                    "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
-                    "pick" => 0,
-                    "random" => false,
-                    "maxAttempts" => 1
-                )
+                    )
+                ),
+                "license" => "CC",
+                "created" => "2015-09-11 10:43:55",
+                "title" => "TEST",
+                "description" => "<h1>Lorem ipsum dolor sit amet</h1><p>Integer non tortor porta, facilisis odio vitae, condimentum ex. Ut dictum orci at enim consequat, vel iaculis augue posuere. Sed ullamcorper est et odio rhoncus mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Suspendisse aliquam hendrerit nibh, ac mattis ante scelerisque at. Nam varius lorem nec ex malesuada pharetra. Quisque vulputate lacus ligula, in feugiat mauris sodales quis. Morbi ultricies dolor eu suscipit sollicitudin. Morbi vel congue sapien. Integer in lectus erat. Ut volutpat id nibh id semper. Vivamus ex turpis, iaculis id cursus et, ultricies vitae est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam tincidunt quam consectetur mauris consectetur, in dictum diam hendrerit. Pellentesque maximus lectus mi. </p>",
+                "pick" => 0,
+                "random" => false,
+                "maxAttempts" => 4
             );
         }
-        
+
         // SORT QUESTION
         if ($type === "sort") {
-            $question1 = array(
-                "id" => "1",
+            $step1 = array(
+                "id" => 1,
                 "type" => "application/x.sort+json",
                 "title" => "Question ?",
                 "items" => array(
-                  array(
-                    "id" => "2",
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => "3",
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
+                    array(
+                        "title" => "Question ?",
+                        "items" => array(
+                            array(
+                                "id" => 2,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
-                "id" => "1",
+            $step2 = array(
+                "id" => 1,
                 "type" => "application/x.sort+json",
-                "title" => "Question ?",
-                "objects" => array(
-                    "id" => "42",
-                    "type" => "text/plain",
-                    "url" => "http://domain.com/text.txt"
-                ),
                 "items" => array(
-                  array(
-                    "id" => "2",
-                    "type" => "image/jpg",
-                    "url" => $webImg1
-                  ),
-                  array(
-                    "id" => "3",
-                    "type" => "image/jpg",
-                    "url" => $webImg2
-                  ),
-                  array(
-                    "id" => "4",
-                    "type" => "image/jpg",
-                    "url" => $webImg3
-                  )
-                ),
-                "solution" => array(
-                  "itemIds" => ["3", "4", "2"],
-                  "itemScore" => 1.5
-                ),
-                "feedback" => "Lorem ipsum dolor sit amet"
+                    array(
+                        "title" => "Question ?",
+                        "items" => array(
+                            array(
+                                "id" => 2,
+                                "type" => "image/jpg",
+                                "url" => $webImg1
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "image/jpg",
+                                "url" => $webImg2
+                            ),
+                            array(
+                                "id" => 4,
+                                "type" => "image/jpg",
+                                "url" => $webImg3
+                            )
+                        ),
+                        "solution" => array(
+                            "itemIds" => [3, 4, 2],
+                            "itemScore" => 1.5
+                        ),
+                        "feedback" => "Lorem ipsum dolor sit amet"
+                    )
+                )
             );
-        
-        }
-        
-        else if ($type === "match") {
-            $question1 = array(
-                "id" => "1",
+        } else if ($type === "match") {
+            $step1 = array(
+                "id" => 1,
                 "type" => "application/x.match+json",
-                "title" => "Question ?",
-                "firstSet" => array(
-                  array(
-                    "id" => "2",
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => "3",
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
-                ),
-                "secondSet" => array(
-                  array(
-                    "id" => "4",
-                    "type" => "text/plain",
-                    "data" => "Item C"
-                  ),
-                  array(
-                    "id" => "5",
-                    "type" => "text/plain",
-                    "data" => "Item D"
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "firstSet" => array(
+                            array(
+                                "id" => 2,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
+                        ),
+                        "secondSet" => array(
+                            array(
+                                "id" => 4,
+                                "type" => "text/plain",
+                                "data" => "Item C"
+                            ),
+                            array(
+                                "id" => 5,
+                                "type" => "text/plain",
+                                "data" => "Item D"
+                            )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
-                "id" => "1",
+            $step2 = array(
+                "id" => 1,
                 "type" => "application/x.match+json",
-                "title" => "Question ?",
-                "firstSet" => array(
-                  array(
-                    "id" => "3",
-                    "type" => "text/plain",
-                    "data" => "Item A"
-                  ),
-                  array(
-                    "id" => "4",
-                    "type" => "text/plain",
-                    "data" => "Item B"
-                  )
-                ),
-                "secondSet" => array(
-                  array(
-                    "id" => "5",
-                    "type" => "image/png",
-                    "url" => $webImg2
-                  ),
-                  array(
-                    "id" => "6",
-                    "type" => "image/png",
-                    "url" => $webImg3
-                  )
-                ),
-                "solutions" => array(
-                  array(
-                    "firstId" => "3",
-                    "secondId" => "6",
-                    "score" => 1.5
-                  ),
-                  array(
-                    "firstId" => "4",
-                    "secondId" => "5",
-                    "score" => 1
-                  )
-                ),
-                "feedback" => "Lorem ipsum dolor sit amet."
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "firstSet" => array(
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 4,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
+                        ),
+                        "secondSet" => array(
+                            array(
+                                "id" => 5,
+                                "type" => "image/png",
+                                "url" => $webImg2
+                            ),
+                            array(
+                                "id" => 6,
+                                "type" => "image/png",
+                                "url" => $webImg3
+                            )
+                        ),
+                        "solutions" => array(
+                            array(
+                                "firstId" => 3,
+                                "secondId" => 6,
+                                "score" => 1.5
+                            ),
+                            array(
+                                "firstId" => 4,
+                                "secondId" => 5,
+                                "score" => 1
+                            )
+                        ),
+                        "feedback" => "Lorem ipsum dolor sit amet."
+                    )
+                )
             );
-        }
-        
-        else if ($type === "cloze") {
+        } else if ($type === "cloze") {
             // CLOZE QUESTION
-            $question1 = array(
-                "id" => "1",
+            $step1 = array(
+                "id" => 1,
                 "type" => "application/x.cloze+json",
-                "title" => "Question ?",
-                "text" => "Lorem [[1]] dolor sit [[2]].",
-                "holes" => array(
-                  array(
-                    "id" => "1",
-                    "size" => 20
-                  ),
-                  array(
-                    "id" => "2",
-                    "size" => 14,
-                    "placeholder" => "(verb)"
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "holes" => array(
+                            array(
+                                "id" => 1,
+                                "size" => 20
+                            ),
+                            array(
+                                "id" => 2,
+                                "size" => 14,
+                                "placeholder" => "(verb)"
+                            )
+                        )
+                    )
                 )
             );
 
-            $question2 = array(
-                "id" => "1",
+            $step2 = array(
+                "id" => 1,
                 "type" => "application/x.cloze+json",
-                "title" => "Question ?",
-                "text" => "Lorem [[1]] dolor sit [[2]].",
-                "holes" => array(
-                  array(
-                    "id" => "1",
-                    "choices" => ["foo", "ipsum", "bar"]
-                  ),
-                  array(
-                    "id" => "2",
-                    "size" => 10
-                  )
-                ),
-                "solutions" => array(
-                  array(
-                    "holeId" => "1",
-                    "answers" => ["ipsum"],
-                    "score" => 1.5
-                  ),
-                  array(
-                    "holeId" => "2",
-                    "answers" => ["amet", "consecitur", "nunc"],
-                    "score" => 3.5
-                  )
+                "items" => array(
+                    array(
+                        "title" => "Question ?",
+                        "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "holes" => array(
+                            array(
+                                "id" => 1,
+                                "choices" => ["foo", "ipsum", "bar"]
+                            ),
+                            array(
+                                "id" => 2,
+                                "size" => 10
+                            )
+                        ),
+                        "solutions" => array(
+                            array(
+                                "holeId" => 1,
+                                "answers" => ["ipsum"],
+                                "score" => 1.5
+                            ),
+                            array(
+                                "holeId" => 2,
+                                "answers" => ["amet", "consecitur", "nunc"],
+                                "score" => 3.5
+                            )
+                        )
+                    )
                 )
             );
+        } else if ($type === "choice") {
+            $step1 = array(
+                "id" => "1",
+                "items" => array(
+                    array(
+                        "id" => "7",
+                        "type" => "application/x.choice+json",
+                        "title" => "Simple question for dummies...",
+                        "label" => "Witch image shows a kid ?",
+                        "random" => false,
+                        "multiple" => false,
+                        "feedback" => "Global feedback",
+                        "hints" => "",
+                        "choices" => array(
+                            array(
+                                "id" => "1",
+                                "type" => "image/png",
+                                "url" => $webImg1,
+                                "meta" => array(
+                                    "description" => "Image 1"
+                                )
+                            ),
+                            array(
+                                "id" => "2",
+                                "type" => "image/jpg",
+                                "url" => $webImg2,
+                                "meta" => array(
+                                    "description" => "Image 2"
+                                )
+                            ),
+                            array(
+                                "id" => "3",
+                                "type" => "image/png",
+                                "url" => $webImg3,
+                                "meta" => array(
+                                    "description" => "Image 3"
+                                )
+                            )
+                        ),
+                        "solutions" => array(
+                            array(
+                                "id" => "2",
+                                "score" => 2
+                            )
+                        )
+                    )
+                )
+            );
+
+            $step2 = array(
+                "id" => "1",
+                "meta" => array(
+                    "authors" => array(
+                        array(
+                            "name" => "John Doe",
+                            "status" => "Tutor"
+                        )
+                    ),
+                    "license" => "CC",
+                    "created" => "2014-06-23"
+                ),
+                "items" => array(
+                    array(
+                        "id" => "7",
+                        "type" => "application/x.choice+json",
+                        "title" => "Another simple question for dummies...",
+                        "label" => "What is my prefered color ?",
+                        "random" => true,
+                        "multiple" => true,
+                        "feedback" => "Global feedback",
+                        "hints" => array(
+                            array(
+                                "id" => "27",
+                                "text" => "Lorem",
+                                "penalty" => 1
+                            ),
+                            array(
+                                "id" => "75",
+                                "text" => "Ipsum",
+                                "penalty" => 1.5
+                            )
+                        ),
+                        "choices" => array(
+                            array(
+                                "id" => "3",
+                                "type" => "text/html",
+                                "data" => "<p>White</p>"
+                            ),
+                            array(
+                                "id" => "4",
+                                "type" => "text/html",
+                                "data" => "<p>Yellow</p>"
+                            ),
+                            array(
+                                "id" => "5",
+                                "type" => "text/html",
+                                "data" => "<p>Black</p>"
+                            )
+                        ),
+                        "solutions" => array(
+                            array(
+                                "id" => "3",
+                                "score" => 2
+                            ),
+                            array(
+                                "id" => "5",
+                                "score" => 2
+                            )
+                        )
+                    )
+                )
+            );
+        } else {
+            $step1 = "Wrong type name given";
+            $step2 = "Type in another type name";
         }
-        
-        else {
-            $question1 = "Wrong type name given";
-            $question2 = "Type in another type name";
-        }
-        
-        $steps = array($question1, $question2);
-        
-        $data = array($id, $meta, $steps);
+
+        $steps = array($step1, $step2);
+
+        $data = array(
+            "id" => $id,
+            "meta" => $meta,
+            "steps" => $steps);
         return $data;
     }
 }
