@@ -2,51 +2,68 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * UJM\ExoBundle\Entity\InteractionHole.
+ *
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionHoleRepository")
  * @ORM\Table(name="ujm_interaction_hole")
  */
-class InteractionHole extends AbstractInteraction
+class InteractionHole
 {
-    const TYPE = 'InteractionHole';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @var text
+     *
+     * @ORM\Column(name="html", type="text")
      */
     private $html;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var text
+     *
+     * @ORM\Column(name="htmlWithoutValue", type="text", nullable=true)
      */
     private $htmlWithoutValue;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Hole",
-     *     mappedBy="interactionHole",
-     *     cascade={"remove"}
-     * )
+     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
+     */
+    private $interaction;
+
+    /**
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Hole", mappedBy="interactionHole", cascade={"remove"})
      */
     private $holes;
 
     public function __construct()
     {
-        $this->holes = new ArrayCollection();
+        $this->holes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @return string
+     * Get id.
+     *
+     * @return int
      */
-    public static function getQuestionType()
+    public function getId()
     {
-        return self::TYPE;
+        return $this->id;
     }
 
     /**
-     * @param string $html
+     * Set html.
+     *
+     * @param text $html
      */
     public function setHtml($html)
     {
@@ -54,7 +71,9 @@ class InteractionHole extends AbstractInteraction
     }
 
     /**
-     * @return string
+     * Get html.
+     *
+     * @return text
      */
     public function getHtml()
     {
@@ -62,7 +81,9 @@ class InteractionHole extends AbstractInteraction
     }
 
     /**
-     * @param string $htmlWithoutValue
+     * Set htmlWithoutValue.
+     *
+     * @param text $htmlWithoutValue
      */
     public function setHtmlWithoutValue($htmlWithoutValue)
     {
@@ -70,51 +91,54 @@ class InteractionHole extends AbstractInteraction
     }
 
     /**
-     * @return string
+     * Get htmlWithoutValue.
+     *
+     * @return text
      */
     public function getHtmlWithoutValue()
     {
         return $this->htmlWithoutValue;
     }
 
-    /**
-     * @return ArrayCollection
-     */
+    public function getInteraction()
+    {
+        return $this->interaction;
+    }
+
+    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
+    {
+        $this->interaction = $interaction;
+    }
+
     public function getHoles()
     {
         return $this->holes;
     }
 
-    /**
-     * @param Hole $hole
-     */
-    public function addHole(Hole $hole)
+    public function addHole(\UJM\ExoBundle\Entity\Hole $hole)
     {
-        $this->holes->add($hole);
+        $this->holes[] = $hole;
+
         $hole->setInteractionHole($this);
     }
 
-    /**
-     * @param Hole $hole
-     */
-    public function removeHole(Hole $hole)
+    public function removeHole(\UJM\ExoBundle\Entity\Hole $hole)
     {
-        $this->holes->removeElement($hole);
     }
 
     public function __clone()
     {
         if ($this->id) {
             $this->id = null;
-            $this->question = clone $this->question;
-            $newHoles = new ArrayCollection();
 
+            $this->interaction = clone $this->interaction;
+
+            $newHoles = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->holes as $hole) {
                 $newHole = clone $hole;
                 $newHole->setInteractionHole($this);
                 $newHoles->add($newHole);
             }
-
             $this->holes = $newHoles;
         }
     }

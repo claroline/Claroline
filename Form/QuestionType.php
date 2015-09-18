@@ -51,6 +51,7 @@ class QuestionType extends AbstractType
             )
             ->add('description', 'textarea', array(
                     'label' => 'question_description',
+                    'required' => false,
                     'attr' => array('placeholder' => 'question_description',
                                       'class' => 'form-control',
                                       'data-new-tab' => 'yes',
@@ -62,26 +63,6 @@ class QuestionType extends AbstractType
                     'required' => false,
                     'label' => 'question_model',
                     'translation_domain' => 'ujm_exo',
-                )
-            )
-            ->add('description', 'tinymce', array(
-                    'label' => 'question',
-                    'attr'  => array('data-new-tab' => 'yes', 'placeholder' => 'question'),
-                    'required' => false
-                )
-            )
-            ->add('feedBack', 'tinymce', array(
-                    //for automatically open documents in a new tab for all tinymce field
-                    'attr' => array('data-new-tab' => 'yes', 'placeholder' => 'interaction_feedback'),
-                    'label' => 'interaction_feedback', 'required' => false
-                )
-            )
-            ->add(
-                'hints', 'collection', array(
-                    'type' => new HintType,
-                    'prototype' => true,
-                    'allow_add' => true,
-                    'allow_delete' => true
                 )
             );
     }

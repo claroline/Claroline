@@ -40,7 +40,7 @@
 {% block section_content %}
 
     <div class="panel-heading">
-        <h3 class="panel-title">{{ interactionToDisplayed.question.title }}</h3>
+        <h3 class="panel-title">{{ interactionToDisplayed.interaction.question.title }}</h3>
     </div>
     <div class="panel-body">
         {% if exoID == -1 %}
@@ -64,7 +64,7 @@
 
                 <div id="interHoleResponse">{{ interactionToDisplayed.htmlWithoutValue | raw }}</div>
 
-                {% if interactionToDisplayed.question.hints is not empty %}
+                {% if interactionToDisplayed.interaction.hints is not empty %}
                     {% set tryInteraction = interactionToDisplayed %}
                     {% include "UJMExoBundle:Partial:hintTryInteraction.html.twig" %}
                 {% endif %}

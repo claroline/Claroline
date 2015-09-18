@@ -5,34 +5,44 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * UJM\ExoBundle\Entity\Hint.
+ *
  * @ORM\Entity
  * @ORM\Table(name="ujm_hint")
  */
 class Hint
 {
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
     /**
-     * @ORM\Column(type="float")
+     * @var float
+     *
+     * @ORM\Column(name="penalty", type="float")
      */
     private $penalty;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Question", inversedBy="hints")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", inversedBy="hints")
      */
-    private $question;
+    private $interaction;
 
     /**
+     * Get id.
+     *
      * @return int
      */
     public function getId()
@@ -41,6 +51,8 @@ class Hint
     }
 
     /**
+     * Set value.
+     *
      * @param string $value
      */
     public function setValue($value)
@@ -49,6 +61,8 @@ class Hint
     }
 
     /**
+     * Get value.
+     *
      * @return string
      */
     public function getValue()
@@ -57,6 +71,8 @@ class Hint
     }
 
     /**
+     * Set penalty.
+     *
      * @param float $penalty
      */
     public function setPenalty($penalty)
@@ -65,6 +81,8 @@ class Hint
     }
 
     /**
+     * Get penalty.
+     *
      * @return float
      */
     public function getPenalty()
@@ -72,19 +90,13 @@ class Hint
         return $this->penalty;
     }
 
-    /**
-     * @param Question $question
-     */
-    public function setQuestion(Question $question)
+    public function getInteraction()
     {
-        $this->question = $question;
+        return $this->interaction;
     }
 
-    /**
-     * @return Question
-     */
-    public function getQuestion()
+    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {
-        return $this->question;
+        $this->interaction = $interaction;
     }
 }

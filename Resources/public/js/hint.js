@@ -1,7 +1,4 @@
-var containerH = $('div[id$="_question_hints"]'); // Div which contain the dataprototype
-
-console.log(containerH)
-
+var containerH = $('div[id$="_interaction_hints"]'); // Div which contain the dataprototype
 var tableHints = $('#tableHint'); // div which contain the hints array
 
 function newHint(label, penalty, addHint, deleteHint) {

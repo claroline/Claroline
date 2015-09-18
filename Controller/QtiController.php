@@ -162,11 +162,12 @@ class QtiController extends Controller
         $qtiRepos->createDirQTI($title, true);
 
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
-        $questionRepo = $em->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($exercise);
+        $interRepos = $em->getRepository('UJMExoBundle:Interaction');
+        $interactions = $interRepos->getExerciseInteraction(
+               $this->container->get('doctrine')->getManager(),
+               $exoID, false);
 
-        $this->createQuestionsDirectory($qtiRepos, $questions);
+        $this->createQuestionsDirectory($qtiRepos, $interactions);
         $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
         if ($qdirs == null) {
@@ -241,14 +242,14 @@ class QtiController extends Controller
      * create the directory questions to export an exercise and export the qti files.
      *
      * @param type $qtiRepos
-     * @param type $questions
+     * @param type $interactions
      */
-    private function createQuestionsDirectory($qtiRepos, $questions)
+    private function createQuestionsDirectory($qtiRepos, $interactions)
     {
         mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
-        foreach ($questions as $question) {
-            $qtiRepos->export($question);
+        foreach ($interactions as $interaction) {
+            $qtiRepos->export($interaction);
             mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {

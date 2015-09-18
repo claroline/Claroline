@@ -5,9 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use UJM\ExoBundle\Entity\Question;
-
 class OpenLongExport extends OpenExport
 {
     private $extendedTextInteraction;
@@ -15,14 +12,12 @@ class OpenLongExport extends OpenExport
     /**
      * overload the export method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
-     * @return BinaryFileResponse
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
-        parent::export($question, $qtiRepos);
+        parent::export($interaction, $qtiRepos);
         $this->extendedTextInteractionTag();
         $this->promptTag($this->extendedTextInteraction);
 

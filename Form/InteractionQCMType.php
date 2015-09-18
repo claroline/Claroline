@@ -23,7 +23,7 @@ class InteractionQCMType extends AbstractType
     {
         $builder
             ->add(
-                'question', new QuestionType(
+                'interaction', new InteractionType(
                     $this->user, $this->catID
                 )
             );

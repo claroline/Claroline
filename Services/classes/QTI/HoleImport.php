@@ -29,7 +29,13 @@ class HoleImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-        $this->createQuestion(InteractionHole::TYPE);
+
+        $this->createQuestion();
+
+        $this->createInteraction();
+        $this->interaction->setType('InteractionHole');
+        $this->om->persist($this->interaction);
+
         $this->createInteractionHole();
 
         $this->om->forceFlush();
@@ -45,7 +51,7 @@ class HoleImport extends QtiImport
     protected function createInteractionHole()
     {
         $this->interactionHole = new InteractionHole();
-        $this->interactionHole->setQuestion($this->question);
+        $this->interactionHole->setInteraction($this->interaction);
 
         $this->getQtiTextWithHoles();
         $this->getHtml();

@@ -5,8 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use UJM\ExoBundle\Entity\Question;
-
 class OpenExport extends QtiExport
 {
     protected $interactionopen;
@@ -14,19 +12,18 @@ class OpenExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $question;
+        $this->question = $interaction->getQuestion();
 
         $this->interactionopen = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionOpen')
-                                ->findOneByQuestion($question);
+                                ->findOneBy(array('interaction' => $interaction->getId()));
 
         $this->qtiHead('extendedText', $this->question->getTitle());
         $this->qtiResponseDeclaration('RESPONSE', 'string', $this->getCardinality());
@@ -34,9 +31,9 @@ class OpenExport extends QtiExport
         $this->defaultValueTag();
         $this->itemBodyTag();
 
-        if ($this->interactionopen->getQuestion()->getFeedBack() != null
-            && $this->interactionopen->getQuestion()->getFeedBack() != ''){
-            $this->qtiFeedBack($question->getFeedBack());
+        if (($this->interactionopen->getInteraction()->getFeedBack() != null)
+                && ($this->interactionopen->getInteraction()->getFeedBack() != '')) {
+            $this->qtiFeedBack($interaction->getFeedBack());
         }
     }
 
@@ -50,7 +47,7 @@ class OpenExport extends QtiExport
         $node = $arg_list[0];
 
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionopen->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactionopen->getInteraction()->getInvite());
         $prompt->appendChild($prompttxt);
         $node->appendChild($prompt);
     }

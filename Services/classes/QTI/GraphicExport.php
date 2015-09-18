@@ -5,9 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use UJM\ExoBundle\Entity\Question;
-
 class GraphicExport extends QtiExport
 {
     private $interactiongraph;
@@ -16,20 +13,18 @@ class GraphicExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
-     * @return BinaryFileResponse
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $question;
+        $this->question = $interaction->getQuestion();
 
         $this->interactiongraph = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionGraphic')
-                                ->findOneByQuestion($question);
+                                ->findOneBy(array('interaction' => $interaction->getId()));
 
         if (count($this->interactiongraph->getCoords()) > 1) {
             $cardinality = 'multiple';
@@ -46,9 +41,9 @@ class GraphicExport extends QtiExport
         $this->selectPointInteractionTag();
         $this->promptTag();
 
-        if ($this->interactiongraph->getQuestion()->getFeedBack() != null
-            && $this->interactiongraph->getQuestion()->getFeedBack() != '') {
-            $this->qtiFeedBack($question->getFeedBack());
+        if (($this->interactiongraph->getInteraction()->getFeedBack() != null)
+                && ($this->interactiongraph->getInteraction()->getFeedBack() != '')) {
+            $this->qtiFeedBack($interaction->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
@@ -150,7 +145,7 @@ class GraphicExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactiongraph->getInteraction()->getInvite());
         $prompt->appendChild($prompttxt);
         $this->selectPointInteraction->appendChild($prompt);
     }

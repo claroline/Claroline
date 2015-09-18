@@ -21,7 +21,11 @@ class InteractionHoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('question', new QuestionType($this->user, $this->catID))
+            ->add('interaction', new InteractionType(
+                    $this->user,
+                    $this->catID
+                    )
+            )
             ->add('html', 'tinymce', array(
                     'attr' => array('data-new-tab' => 'yes'),
                     'label' => 'hole',

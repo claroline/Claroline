@@ -14,7 +14,7 @@
 <div style="margin-left: 30px;">
     <div id="Answer" style="position: relative;">
         <img class="AnswerImage" src="{{asset (inter.document.url)}}" width="{{ inter.width }}" height="{{ inter.height }}"
-             alt="AnswerImage" id="AnswerImage{{ inter.question.id }}"/>
+             alt="AnswerImage" id="AnswerImage{{ inter.interaction.id }}"/>
 
         {% set repco = responses[p].response|split(';') %}
         {% set x = 0 %}
@@ -27,10 +27,10 @@
                 {% set repcoX = repco[x]|split('-') %}
             {% endif %}
 
-            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.question.id }}ra{{ x }}"
+            <img src="{{ asset('bundles/ujmexo/images/graphic/circlew.png') }}" id="{{ inter.interaction.id }}ra{{ x }}"
                  alt="RightAnswer{{ x }}" width="{{ coords[x].size }}" style="z-index: 2;"/>
 
-            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ inter.question.id }}cursor{{ x }}"
+            <img src="{{ asset('bundles/ujmexo/images/graphic/answer.png') }}" id="{{ inter.interaction.id }}cursor{{ x }}"
                  alt="AnswerZone{{ x }}" style="z-index: 7;"/>
 
             <script type="text/javascript" src="{{ asset('bundles/ujmexo/js/graphicOverview.js') }}"></script>
@@ -46,7 +46,7 @@
             <script type="text/javascript">
                     whichImg('{{coords[x].shape}}', '{{coords[x].color}}', {{x}}, '{{ numb[0] }}', '{{ numb[1] }}',
                     '{{abscissa}}', '{{ordoninate}}', '{{ asset('bundles/ujmexo/images/graphic/') }}',
-                    '{{ coords[x].size }}', '{{inter.question.id}}')
+                    '{{ coords[x].size }}', '{{inter.interaction.id}}')
             </script>
 
             {% set x = x + 1 %}

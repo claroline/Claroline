@@ -6,9 +6,7 @@
 namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use UJM\ExoBundle\Entity\Question;
 
 abstract class QtiExport
 {
@@ -178,11 +176,10 @@ abstract class QtiExport
     /**
      * abstract method to export the question.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    abstract public function export(Question $question, qtiRepository $qtiRepos);
+    abstract public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos);
 
     /**
      * abstract method

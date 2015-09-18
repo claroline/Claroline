@@ -5,9 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use UJM\ExoBundle\Entity\Question;
-
 class QcmExport extends QtiExport
 {
     private $interactionqcm;
@@ -19,20 +16,18 @@ class QcmExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
-     * @return BinaryFileResponse
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $question;
+        $this->question = $interaction->getQuestion();
 
         $this->interactionqcm = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionQCM')
-                                ->findOneByQuestion($question);
+                                ->findOneBy(array('interaction' => $interaction->getId()));
 
         //if it's Null mean "Global notation for QCM" Else it's Notation for each choice
         $weightresponse = $this->interactionqcm->getWeightResponse();
@@ -54,9 +49,9 @@ class QcmExport extends QtiExport
         $this->promptTag();
 
         //comment globale for this question
-        if ($this->interactionqcm->getQuestion()->getFeedBack()!= null
-            && $this->interactionqcm->getQuestion()->getFeedBack() != '') {
-            $this->qtiFeedBack($question->getFeedBack());
+        if (($this->interactionqcm->getInteraction()->getFeedBack() != null)
+                && ($this->interactionqcm->getInteraction()->getFeedBack() != '')) {
+            $this->qtiFeedBack($interaction->getFeedBack());
         }
 
         if ($weightresponse == false) {
@@ -139,9 +134,9 @@ class QcmExport extends QtiExport
         $this->choiceInteraction->appendChild($prompt);
 
         $prompttxt = $this->document
-            ->CreateTextNode(
-                $this->interactionqcm->getQuestion()->getDescription()
-            );
+                ->CreateTextNode(
+                        $this->interactionqcm->getInteraction()->getInvite()
+                        );
         $prompt->appendChild($prompttxt);
         $this->qtiChoicesQCM($this->correctResponse);
     }

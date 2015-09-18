@@ -23,7 +23,14 @@ class OpenImport extends QtiImport
         $this->qtiRepos = $qtiRepos;
         $this->getQTICategory();
         $this->initAssessmentItem($assessmentItem);
-        $this->createQuestion(InteractionOpen::TYPE);
+
+        $this->createQuestion();
+
+        $this->createInteraction();
+        $this->interaction->setType('InteractionOpen');
+        $this->om->persist($this->interaction);
+        $this->om->flush();
+
         $this->createInteractionOpen();
     }
 
@@ -38,7 +45,7 @@ class OpenImport extends QtiImport
         $codeTypeOpen = $this->getCodeTypeOpen();
 
         $this->interactionOpen = new InteractionOpen();
-        $this->interactionOpen->setQuestion($this->question);
+        $this->interactionOpen->setInteraction($this->interaction);
         $this->interactionOpen->setOrthographyCorrect(false);
         $this->interactionOpen->setTypeOpenQuestion($codeTypeOpen);
         $this->interactionOpen->setScoreMaxLongResp($val->nodeValue);

@@ -5,49 +5,63 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * UJM\ExoBundle\Entity\Response.
+ *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ResponseRepository")
  * @ORM\Table(name="ujm_response")
  */
 class Response
 {
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="ip", type="string", length=255)
      */
     private $ip;
 
     /**
-     * @ORM\Column(type="float")
+     * @var float
+     *
+     * @ORM\Column(name="mark", type="float")
      */
     private $mark;
 
     /**
+     * @var int
+     *
      * @ORM\Column(name="nb_tries", type="integer")
      */
     private $nbTries;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var text
+     *
+     * @ORM\Column(name="response", type="text", nullable=true)
      */
     private $response;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Paper")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Paper")
      */
     private $paper;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Question")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Interaction")
      */
-    private $question;
+    private $interaction;
 
     /**
+     * Get id.
+     *
      * @return int
      */
     public function getId()
@@ -56,6 +70,8 @@ class Response
     }
 
     /**
+     * Set ip.
+     *
      * @param string $ip
      */
     public function setIp($ip)
@@ -64,6 +80,8 @@ class Response
     }
 
     /**
+     * Get ip.
+     *
      * @return string
      */
     public function getIp()
@@ -72,6 +90,8 @@ class Response
     }
 
     /**
+     * Set mark.
+     *
      * @param float $mark
      */
     public function setMark($mark)
@@ -80,6 +100,8 @@ class Response
     }
 
     /**
+     * Get mark.
+     *
      * @return float
      */
     public function getMark()
@@ -88,6 +110,8 @@ class Response
     }
 
     /**
+     * Set nbTries.
+     *
      * @param int $nbTries
      */
     public function setNbTries($nbTries)
@@ -96,6 +120,8 @@ class Response
     }
 
     /**
+     * Get nbTries.
+     *
      * @return int
      */
     public function getNbTries()
@@ -104,7 +130,9 @@ class Response
     }
 
     /**
-     * @param string $response
+     * Set response.
+     *
+     * @param text $response
      */
     public function setResponse($response)
     {
@@ -112,42 +140,32 @@ class Response
     }
 
     /**
-     * @return string
+     * Get response.
+     *
+     * @return text
      */
     public function getResponse()
     {
         return $this->response;
     }
 
-    /**
-     * @param Paper $paper
-     */
-    public function setPaper(Paper $paper)
+    public function setPaper(\UJM\ExoBundle\Entity\Paper $paper)
     {
         $this->paper = $paper;
     }
 
-    /**
-     * @return Paper
-     */
     public function getPaper()
     {
         return $this->paper;
     }
 
-    /**
-     * @return Question
-     */
-    public function getQuestion()
+    public function getInteraction()
     {
-        return $this->question;
+        return $this->interaction;
     }
 
-    /**
-     * @param Question $question
-     */
-    public function setQuestion(Question $question)
+    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
     {
-        $this->question = $question;
+        $this->interaction = $interaction;
     }
 }

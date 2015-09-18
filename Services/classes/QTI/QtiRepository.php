@@ -7,7 +7,6 @@ namespace UJM\ExoBundle\Services\classes\QTI;
 
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use UJM\ExoBundle\Entity\InteractionOpen;
 
 class QtiRepository
 {
@@ -257,36 +256,36 @@ class QtiRepository
     }
 
     /**
-     * call method to export a question
+     * call method to export a question.
      *
-     * @access public
-     * @param  \UJM\ExoBundle\Entity\Question $question
+     * @param UJM\ExoBundle\Entity\Interaction $interaction
      */
-    public function export($question)
+    public function export($interaction)
     {
-        if ($question->getType() !== InteractionOpen::TYPE) {
-            $service = 'ujm.exo_qti_export_'.$question->getType();
+        if ($interaction->getType() != 'InteractionOpen') {
+            $service = 'ujm.exo_qti_export_'.$interaction->getType();
             $qtiExport = $this->container->get($service);
         } else {
-            $qtiExport = $this->serviceOpenQuestion($question->getId());
+            $qtiExport = $this->serviceOpenQuestion($interaction->getId());
         }
 
-        return $qtiExport->export($question, $this);
+        return $qtiExport->export($interaction, $this);
     }
 
     /**
      * To select the service (long, oneWord, ...) for an open question.
      *
-     * @param int $questionId
+     *
+     * @param Integer $interId id of the interaction
      *
      * @return instance of service ujm.qti_open
      */
-    private function serviceOpenQuestion($questionId)
+    private function serviceOpenQuestion($interId)
     {
         $em = $this->container->get('doctrine')->getManager();
         $interOpen = $em->getRepository('UJMExoBundle:InteractionOpen')
-            ->findOneByQuestion($questionId);
-        $type = $interOpen->getTypeOpenQuestion();
+                        ->getInteractionOpen($interId);
+        $type = ucfirst($interOpen->getTypeOpenQuestion());
         $serv = $this->container->get('ujm.exo_qti_export_open_'.$type);
 
         return $serv;

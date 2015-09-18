@@ -13,49 +13,65 @@ use Doctrine\ORM\Mapping as ORM;
 class Coords
 {
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="value", type="string", length=255)
      */
     private $value;
 
     /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="shape", type="string", length=255)
      */
     private $shape;
 
     /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="color", type="string", length=255)
      */
     private $color;
 
     /**
+     * @var float
+     *
      * @ORM\Column(name="score_coords", type="float")
      */
     private $scoreCoords;
 
     /**
-     * @ORM\ManyToOne(targetEntity="InteractionGraphic", inversedBy="coords")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\InteractionGraphic", inversedBy="coords")
      * @ORM\JoinColumn(name="interaction_graphic_id", referencedColumnName="id")
      */
     private $interactionGraphic;
 
     /**
-     * @ORM\Column(type="float")
+     * @var float
+     *
+     * @ORM\Column(name="size", type="float")
      */
     private $size;
-    
+
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @var text
+     *
+     * @ORM\Column(name="feedback", type="text", nullable=true)
      */
     private $feedback;
 
     /**
+     * Get id.
+     *
      * @return int
      */
     public function getId()
@@ -64,6 +80,8 @@ class Coords
     }
 
     /**
+     * Set value.
+     *
      * @param string $value
      */
     public function setValue($value)
@@ -72,6 +90,8 @@ class Coords
     }
 
     /**
+     * Get value.
+     *
      * @return string
      */
     public function getValue()
@@ -80,6 +100,8 @@ class Coords
     }
 
     /**
+     * Set shape.
+     *
      * @param string $shape
      */
     public function setShape($shape)
@@ -88,6 +110,8 @@ class Coords
     }
 
     /**
+     * Get shape.
+     *
      * @return string
      */
     public function getShape()
@@ -96,6 +120,8 @@ class Coords
     }
 
     /**
+     * Set color.
+     *
      * @param string $color
      */
     public function setColor($color)
@@ -104,6 +130,8 @@ class Coords
     }
 
     /**
+     * Get color.
+     *
      * @return string
      */
     public function getColor()
@@ -112,6 +140,8 @@ class Coords
     }
 
     /**
+     * Set scoreCoords.
+     *
      * @param float $scoreCoords
      */
     public function setScoreCoords($scoreCoords)
@@ -120,6 +150,8 @@ class Coords
     }
 
     /**
+     * Get scoreCoords.
+     *
      * @return float
      */
     public function getScoreCoords()
@@ -128,6 +160,8 @@ class Coords
     }
 
     /**
+     * Set sizes.
+     *
      * @param float $size
      */
     public function setSize($size)
@@ -136,6 +170,8 @@ class Coords
     }
 
     /**
+     * Get size.
+     *
      * @return float
      */
     public function getSize()
@@ -143,23 +179,19 @@ class Coords
         return $this->size;
     }
 
-    /**
-     * @return InteractionGraphic
-     */
     public function getInteractionGraphic()
     {
         return $this->interactionGraphic;
     }
 
-    /**
-     * @param InteractionGraphic $interactionGraphic
-     */
-    public function setInteractionGraphic(InteractionGraphic $interactionGraphic)
+    public function setInteractionGraphic(\UJM\ExoBundle\Entity\InteractionGraphic $interactionGraphic)
     {
         $this->interactionGraphic = $interactionGraphic;
     }
 
     /**
+     * get feedback.
+     *
      * @return string
      */
     public function getFeedback()
@@ -168,7 +200,9 @@ class Coords
     }
 
     /**
-     * @param $feedback
+     * set feedback.
+     *
+     * @param \UJM\ExoBundle\Entity\text $feedback
      */
     public function setFeedback($feedback)
     {

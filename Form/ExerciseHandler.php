@@ -5,9 +5,7 @@ namespace UJM\ExoBundle\Form;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManager;
-
 use Claroline\CoreBundle\Entity\User;
-
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Subscription;
 
@@ -22,14 +20,12 @@ class ExerciseHandler
     /**
      * Constructor.
      *
-     * @access public
      *
-     * @param \Symfony\Component\Form\Form $form for an exercise
+     * @param \Symfony\Component\Form\Form              $form    for an exercise
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param Doctrine EntityManager $em
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param String $action
-     *
+     * @param Doctrine EntityManager                    $em
+     * @param \Claroline\CoreBundle\Entity\User         $user
+     * @param String                                    $action
      */
     public function __construct(Form $form, Request $request, EntityManager $em, User $user, $action)
     {
@@ -66,6 +62,8 @@ class ExerciseHandler
      */
     private function onSuccess(Exercise $exercise)
     {
+        // \ pour instancier un objet du namespace global et non pas de l'actuel
+        $exercise->setNbQuestionPage(1);
         $this->em->persist($exercise);
         $this->em->flush();
 

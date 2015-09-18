@@ -126,9 +126,12 @@ class ExoImporter extends Importer implements ConfigurationInterface
         $this->new = false;
         $qtiServ = $this->container->get('ujm.exo_qti');
 
-        $questionRepo = $this->om->getRepository('UJMExoBundle:Question');
-        $questions = $questionRepo->findByExercise($object->getId());
-        $this->createQuestionsDirectory($qtiRepos, $questions);
+        $interRepos = $this->om->getRepository('UJMExoBundle:Interaction');
+        $interactions = $interRepos->getExerciseInteraction(
+                $this->container->get('doctrine')->getManager(),
+                $object->getId(), false);
+
+        $this->createQuestionsDirectory($qtiRepos, $interactions);
         $qdirs = $qtiServ->sortPathOfQuestions($qtiRepos);
 
         $i = 'a';
@@ -172,6 +175,7 @@ class ExoImporter extends Importer implements ConfigurationInterface
     {
         $newExercise = new Exercise();
         $newExercise->setTitle($title);
+        $newExercise->setNbQuestionPage(1);
         $newExercise->setNbQuestion(0);
         $newExercise->setDuration(0);
         $newExercise->setMaxAttempts(0);
@@ -195,14 +199,14 @@ class ExoImporter extends Importer implements ConfigurationInterface
      * create the directory questions to export an exercise and export the qti files.
      *
      * @param UJM\ExoBundle\Services\classes\QTI\qtiRepository $qtiRepos
-     * @param collection of  UJM\ExoBundle\Entity\Question  $interactions
+     * @param collection of  UJM\ExoBundle\Entity\Interaction  $interactions
      */
-    private function createQuestionsDirectory($qtiRepos, $questions)
+    private function createQuestionsDirectory($qtiRepos, $interactions)
     {
         @mkdir($qtiRepos->getUserDir().'questions');
         $i = 'a';
-        foreach ($questions as $question) {
-            $qtiRepos->export($question);
+        foreach ($interactions as $interaction) {
+            $qtiRepos->export($interaction);
             @mkdir($qtiRepos->getUserDir().'questions/'.'question_'.$i);
             $iterator = new \DirectoryIterator($qtiRepos->getUserDir());
             foreach ($iterator as $element) {

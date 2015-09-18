@@ -36,11 +36,13 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interOpen)
     {
-        $interOpen->getQuestion()->setDateCreate(new \Datetime());
-        $interOpen->getQuestion()->setUser($this->user);
+        $interOpen->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
+        $interOpen->getInteraction()->getQuestion()->setUser($this->user);
+        $interOpen->getInteraction()->setType('InteractionOpen');
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getQuestion());
+        $this->em->persist($interOpen->getInteraction()->getQuestion());
+        $this->em->persist($interOpen->getInteraction());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $wr->setInteractionOpen($interOpen);
@@ -72,7 +74,7 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         foreach ($originalInterOpen->getWordResponses() as $wr) {
             $originalWrs[] = $wr;
         }
-        foreach ($originalInterOpen->getQuestion()->getHints() as $hint) {
+        foreach ($originalInterOpen->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -115,7 +117,8 @@ class InteractionOpenHandler extends \UJM\ExoBundle\Form\InteractionHandler
         $this->modifyHints($interOpen, $originalHints);
 
         $this->em->persist($interOpen);
-        $this->em->persist($interOpen->getQuestion());
+        $this->em->persist($interOpen->getInteraction()->getQuestion());
+        $this->em->persist($interOpen->getInteraction());
 
         foreach ($interOpen->getWordResponses() as $wr) {
             $interOpen->addWordResponse($wr);

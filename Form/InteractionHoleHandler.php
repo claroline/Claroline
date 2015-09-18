@@ -57,10 +57,12 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interHole)
     {
+
         // to avoid bug with code tinymce
         $htmlTiny = $interHole->getHtml();
-        $interHole->getQuestion()->setDateCreate(new \Datetime());
-        $interHole->getQuestion()->setUser($this->user);
+        $interHole->getInteraction()->getQuestion()->setDateCreate(new \Datetime());
+        $interHole->getInteraction()->getQuestion()->setUser($this->user);
+        $interHole->getInteraction()->setType('InteractionHole');
 
         foreach ($interHole->getHoles() as $hole) {
             foreach ($hole->getWordResponses() as $wr) {
@@ -72,7 +74,9 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler
         }
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
-        $this->em->persist($interHole->getQuestion());
+        $this->em->persist($interHole->getInteraction()->getQuestion());
+        $this->em->persist($interHole->getInteraction());
+
         $this->persistHints($interHole);
 
         $this->em->flush();
@@ -101,7 +105,7 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler
         foreach ($originalInterHole->getHoles() as $hole) {
             $originalHoles[] = $hole;
         }
-        foreach ($originalInterHole->getQuestion()->getHints() as $hint) {
+        foreach ($originalInterHole->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 
@@ -165,7 +169,8 @@ class InteractionHoleHandler extends \UJM\ExoBundle\Form\InteractionHandler
 
         $interHole->setHtml($htmlTiny);
         $this->em->persist($interHole);
-        $this->em->persist($interHole->getQuestion());
+        $this->em->persist($interHole->getInteraction()->getQuestion());
+        $this->em->persist($interHole->getInteraction());
 
         // On persiste tous les holes de l'interaction hole.
         foreach ($interHole->getHoles() as $hole) {

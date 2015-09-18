@@ -6,44 +6,62 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * UJM\ExoBundle\Entity\InteractionQCM.
+ *
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionQCMRepository")
  * @ORM\Table(name="ujm_interaction_qcm")
  */
-class InteractionQCM extends AbstractInteraction
+class InteractionQCM
 {
-    const TYPE = 'InteractionQCM';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var bool
+     *
+     * @ORM\Column(name="shuffle", type="boolean", nullable=true)
      */
     private $shuffle = false;
 
     /**
+     * @var float
+     *
      * @ORM\Column(name="score_right_response", type="float", nullable=true)
      */
     private $scoreRightResponse;
 
     /**
+     * @var float
+     *
      * @ORM\Column(name="score_false_response", type="float", nullable=true)
      */
     private $scoreFalseResponse;
 
     /**
-     * @ORM\Column(name="weight_response", type="boolean")
+     * @var bool
+     *
+     * @ORM\Column(name="weight_response", type="boolean", nullable=true)
      */
     private $weightResponse = false;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Choice",
-     *     mappedBy="interactionQCM",
-     *     cascade={"remove"}
-     * )
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\Choice", mappedBy="interactionQCM", cascade={"remove"})
      */
     private $choices;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TypeQCM")
+     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
+     */
+    private $interaction;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeQCM")
      * @ORM\JoinColumn(name="type_qcm_id", referencedColumnName="id")
      */
     private $typeQCM;
@@ -57,31 +75,39 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @return string
+     * Get id.
+     *
+     * @return int
      */
-    public static function getQuestionType()
+    public function getId()
     {
-        return self::TYPE;
+        return $this->id;
     }
 
-    /**
-     * @return TypeQCM
-     */
+    public function getInteraction()
+    {
+        return $this->interaction;
+    }
+
+    public function setInteraction(Interaction $interaction)
+    {
+        $this->interaction = $interaction;
+    }
+
     public function getTypeQCM()
     {
         return $this->typeQCM;
     }
 
-    /**
-     * @param TypeQCM $typeQCM
-     */
     public function setTypeQCM(TypeQCM $typeQCM)
     {
         $this->typeQCM = $typeQCM;
     }
 
     /**
-     * @param boolean $shuffle
+     * Set shuffle.
+     *
+     * @param bool $shuffle
      */
     public function setShuffle($shuffle)
     {
@@ -89,7 +115,7 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @return boolean
+     * Get shuffle.
      */
     public function getShuffle()
     {
@@ -97,6 +123,8 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
+     * Set scoreRightResponse.
+     *
      * @param float $scoreRightResponse
      */
     public function setScoreRightResponse($scoreRightResponse)
@@ -105,6 +133,8 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
+     * Get scoreRightResponse.
+     *
      * @return float
      */
     public function getScoreRightResponse()
@@ -113,6 +143,8 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
+     * Set scoreFalseResponse.
+     *
      * @param float $scoreFalseResponse
      */
     public function setScoreFalseResponse($scoreFalseResponse)
@@ -121,6 +153,8 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
+     * Get scoreFalseResponse.
+     *
      * @return float
      */
     public function getScoreFalseResponse()
@@ -129,7 +163,9 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @param boolean $weightResponse
+     * Set weightResponse.
+     *
+     * @param bool $weightResponse
      */
     public function setWeightResponse($weightResponse)
     {
@@ -137,27 +173,27 @@ class InteractionQCM extends AbstractInteraction
     }
 
     /**
-     * @return boolean
+     * Get weightResponse.
      */
     public function getWeightResponse()
     {
         return $this->weightResponse;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getChoices()
     {
         return $this->choices;
     }
 
-    /**
-     * @param Choice $choice
-     */
     public function addChoice(Choice $choice)
     {
-        $this->choices->add($choice);
+        $this->choices[] = $choice;
+        //le choix est bien lié à l'entité interactionqcm, mais dans l'entité choice il faut
+        //aussi lié l'interactionqcm double travail avec les relations bidirectionnelles avec
+        //lesquelles il faut bien faire attention à garder les données cohérentes dans un autre
+        //script il faudra exécuter $interactionqcm->addChoice() qui garde la cohérence entre les
+        //deux entités, il ne faudra pas exécuter $choice->setInteractionQCM(), car lui ne garde
+        //pas la cohérence
         $choice->setInteractionQCM($this);
     }
 
@@ -165,8 +201,8 @@ class InteractionQCM extends AbstractInteraction
     {
         $this->sortChoices();
         $i = 0;
-        $tabShuffle = [];
-        $tabFixed = [];
+        $tabShuffle = array();
+        $tabFixed = array();
         $choices = new ArrayCollection();
         $choiceCount = count($this->choices);
 
@@ -180,7 +216,6 @@ class InteractionQCM extends AbstractInteraction
 
             ++$i;
         }
-
         shuffle($tabShuffle);
 
         $i = 0;
@@ -204,7 +239,7 @@ class InteractionQCM extends AbstractInteraction
 
     public function sortChoices()
     {
-        $tab = [];
+        $tab = array();
         $choices = new ArrayCollection();
 
         foreach ($this->choices as $choice) {
@@ -224,15 +259,15 @@ class InteractionQCM extends AbstractInteraction
     {
         if ($this->id) {
             $this->id = null;
-            $this->question = clone $this->question;
-            $newChoices = new ArrayCollection();
 
+            $this->interaction = clone $this->interaction;
+
+            $newChoices = new ArrayCollection();
             foreach ($this->choices as $choice) {
                 $newChoice = clone $choice;
                 $newChoice->setInteractionQCM($this);
                 $newChoices->add($newChoice);
             }
-
             $this->choices = $newChoices;
         }
     }

@@ -40,8 +40,9 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
      */
     protected function onSuccessAdd($interGraph)
     {
-        $interGraph->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
-        $interGraph->getQuestion()->setUser($this->user); // add the user to the question
+        $interGraph->getInteraction()->getQuestion()->setDateCreate(new \Datetime()); // Set Creation Date to today
+        $interGraph->getInteraction()->getQuestion()->setUser($this->user); // add the user to the question
+        $interGraph->getInteraction()->setType('InteractionGraphic'); // set the type of the question
 
         if ($this->request != null) {
             $width = $this->request->get('imagewidth'); // Get the width of the image
@@ -64,10 +65,8 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
         }
 
         $this->em->persist($interGraph);
-        $this->em->persist($interGraph->getQuestion());
-
-        $interGraph->setQuestion($interGraph->getQuestion());
-
+        $this->em->persist($interGraph->getInteraction()->getQuestion());
+        $this->em->persist($interGraph->getInteraction());
 
         for ($i = 0; $i < $lengthCoord; ++$i) {
             $this->em->persist($allCoords[$i]);
@@ -94,7 +93,7 @@ class InteractionGraphicHandler extends \UJM\ExoBundle\Form\InteractionHandler
     {
         $originalHints = array();
 
-        foreach ($originalInterGraphic->getQuestion()->getHints() as $hint) {
+        foreach ($originalInterGraphic->getInteraction()->getHints() as $hint) {
             $originalHints[] = $hint;
         }
 

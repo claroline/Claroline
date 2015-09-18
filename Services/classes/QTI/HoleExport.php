@@ -5,9 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use UJM\ExoBundle\Entity\Question;
-
 class HoleExport extends QtiExport
 {
     private $interactionhole;
@@ -16,20 +13,18 @@ class HoleExport extends QtiExport
     /**
      * Implements the abstract method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
-     * @return BinaryFileResponse
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
         $this->qtiRepos = $qtiRepos;
-        $this->question = $question;
+        $this->question = $interaction->getQuestion();
 
         $this->interactionhole = $this->doctrine
                                 ->getManager()
                                 ->getRepository('UJMExoBundle:InteractionHole')
-                                ->findOneByQuestion($question);
+                                ->findOneBy(array('interaction' => $interaction->getId()));
 
         $this->qtiHead('textEntry', $this->question->getTitle());
         foreach ($this->interactionhole->getHoles() as $hole) {
@@ -44,9 +39,9 @@ class HoleExport extends QtiExport
         $this->promptTag();
         $this->textWithHole();
 
-        if ($this->interactionhole->getQuestion()->getFeedBack() != null
-            && $this->interactionhole->getQuestion()->getFeedBack() != '') {
-            $this->qtiFeedBack($question->getFeedBack());
+        if (($this->interactionhole->getInteraction()->getFeedBack() != null)
+                && ($this->interactionhole->getInteraction()->getFeedBack() != '')) {
+            $this->qtiFeedBack($interaction->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
@@ -121,7 +116,7 @@ class HoleExport extends QtiExport
     protected function promptTag()
     {
         $prompt = $this->document->CreateElement('prompt');
-        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getQuestion()->getDescription());
+        $prompttxt = $this->document->CreateTextNode($this->interactionhole->getInteraction()->getInvite());
         $prompt->appendChild($prompttxt);
         $this->itemBody->appendChild($prompt);
     }

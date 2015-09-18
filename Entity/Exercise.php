@@ -56,7 +56,14 @@ class Exercise extends AbstractResource
     private $duration = 0;
 
     /**
-     * @var boolean $doprint
+     * @var int
+     *
+     * @ORM\Column(name="nb_question_page", type="integer")
+     */
+    private $nbQuestionPage = 0;
+
+    /**
+     * @var bool
      *
      * @ORM\Column(name="doprint", type="boolean", nullable=true)
      */
@@ -109,6 +116,19 @@ class Exercise extends AbstractResource
     private $lockAttempt = false;
 
     /**
+     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Groupes")
+     * @ORM\JoinTable(
+     *     name="ujm_exercise_group",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="exercise_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    private $groupes;
+
+    /**
      * Flag indicating whether the exercise has been published at least
      * one time. An exercise that has never been published has all its
      * existing papers deleted at the first publication.
@@ -121,6 +141,7 @@ class Exercise extends AbstractResource
 
     public function __construct()
     {
+        $this->groupes = new \Doctrine\Common\Collections\ArrayCollection();
         $this->dateCorrection = new \DateTime();
     }
 
@@ -251,7 +272,27 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * Set doprint
+     * Set nbQuestionPage.
+     *
+     * @param int $nbQuestionPage
+     */
+    public function setNbQuestionPage($nbQuestionPage)
+    {
+        $this->nbQuestionPage = $nbQuestionPage;
+    }
+
+    /**
+     * Get nbQuestionPage.
+     *
+     * @return int
+     */
+    public function getNbQuestionPage()
+    {
+        return $this->nbQuestionPage;
+    }
+
+    /**
+     * Set doprint.
      *
      * @param bool $doprint
      */
@@ -313,7 +354,7 @@ class Exercise extends AbstractResource
      *
      * @param \Datetime $dateCorrection
      */
-    public function setDateCorrection(\DateTime $dateCorrection = null)
+    public function setDateCorrection(\DateTime $dateCorrection)
     {
         $this->dateCorrection = $dateCorrection;
     }
@@ -382,6 +423,26 @@ class Exercise extends AbstractResource
     public function getLockAttempt()
     {
         return $this->lockAttempt;
+    }
+
+    /**
+     * Gets an array of Groupes.
+     *
+     * @return array An array of Groupes objects
+     */
+    public function getGroupes()
+    {
+        return $this->groupes;
+    }
+
+    /**
+     * Add Groupe.
+     *
+     * @param UJM\ExoBundle\Entity\Groupes $Groupe
+     */
+    public function addGroupe(\UJM\ExoBundle\Entity\Groupes $groupe)
+    {
+        $this->groupes[] = $groupe;
     }
 
     public function archiveExercise()

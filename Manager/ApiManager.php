@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Entity\Interaction;
 
 /**
  * @DI\Service("ujm.exo.api_manager")
@@ -13,7 +13,7 @@ use UJM\ExoBundle\Entity\Question;
 class ApiManager
 {
     private $om;
-    private $questionRepo;
+    private $interactionRepo;
     private $interactionQcmRepo;
 
     /**
@@ -26,7 +26,7 @@ class ApiManager
     public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->questionRepo = $om->getRepository('UJMExoBundle:Question');
+        $this->interactionRepo = $om->getRepository('UJMExoBundle:Interaction');
         $this->interactionQcmRepo = $om->getRepository('UJMExoBundle:InteractionQCM');
     }
 
@@ -80,33 +80,33 @@ class ApiManager
      */
     private function getSteps(Exercise $exercise)
     {
-        $questions = $this->questionRepo->findByExercise($exercise);
+        $interactions = $this->interactionRepo->findByExercise($exercise);
 
-        return array_map(function ($question) {
-            switch ($questionType = $question->getType()) {
+        return array_map(function ($interaction) {
+            switch ($type = $interaction->getType()) {
                 case 'InteractionQCM':
-                    $data = $this->getQCM($question);
+                    $data = $this->getQCM($interaction);
                     $type = 'application/x.choice+json';
                     break;
                 default:
-                    throw new \Exception("Export not implemented for {$questionType} type");
+                    throw new \Exception("Export not implemented for {$type} type");
             }
 
             $step = [
                 'id' => 'todo',
                 'items' => [array_merge($data, [
-                    'id' => $question->getId(),
+                    'id' => $interaction->getId(),
                     'type' => $type,
-                    'title' => $question->getTitle(),
+                    'title' => $interaction->getQuestion()->getTitle(),
                     'hints' => '',
-                ])]
+                ])],
             ];
 
-            if ($question->getFeedback()) {
-                $step['items'][0]['feedback'] = $question->getFeedback();
+            if ($interaction->getFeedback()) {
+                $step['items'][0]['feedback'] = $interaction->getFeedback();
             }
 
-            if (count($hints = $question->getHints()->toArray()) > 0) {
+            if (count($hints = $interaction->getHints()->toArray()) > 0) {
                 $step['items'][0]['hints'] = array_map(function ($hint) {
                     return [
                         'id' => $hint->getId(),
@@ -117,7 +117,7 @@ class ApiManager
             }
 
             return $step;
-        }, $questions);
+        }, $interactions);
     }
 
     /**
@@ -126,12 +126,13 @@ class ApiManager
      * @todo check order of choices
      * @todo weight ?
      *
-     * @param Question $question
+     * @param Interaction $interaction
+     *
      * @return array
      */
-    private function getQCM(Question $question)
+    private function getQCM(Interaction $interaction)
     {
-        $qcm = $this->interactionQcmRepo->findOneBy(['question' => $question]);
+        $qcm = $this->interactionQcmRepo->findOneBy(['interaction' => $interaction]);
 
         return [
             'multiple' => false,

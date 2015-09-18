@@ -4,7 +4,7 @@
     <div class="panel-body">
         <table>
             {% set nbr_hint = 1 %}
-            {% for hint in tryInteraction.question.hints %}
+            {% for hint in tryInteraction.interaction.hints %}
                 <tr>
                     <td class="classic">
                         <a href="#"  id="indice_popup" onclick="show_hint('{{hint.id}}',

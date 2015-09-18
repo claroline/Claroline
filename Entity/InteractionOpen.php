@@ -2,56 +2,73 @@
 
 namespace UJM\ExoBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * UJM\ExoBundle\Entity\InteractionOpen.
+ *
+ * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\InteractionOpenRepository")
  * @ORM\Table(name="ujm_interaction_open")
  */
-class InteractionOpen extends AbstractInteraction
+class InteractionOpen
 {
-    const TYPE = 'InteractionOpen';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
     /**
+     * @var bool
+     *
      * @ORM\Column(name="orthography_correct", type="boolean")
      */
-    private $orthographyCorrect = false;
+    private $orthographyCorrect;
 
     /**
-     * @ORM\ManyToOne(targetEntity="TypeOpenQuestion")
+     * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Interaction", cascade={"remove"})
+     */
+    private $interaction;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\TypeOpenQuestion")
      */
     private $typeopenquestion;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="WordResponse",
-     *     mappedBy="interactionopen",
-     *     cascade={"remove"}
-     * )
+     * @ORM\OneToMany(targetEntity="UJM\ExoBundle\Entity\WordResponse", mappedBy="interactionopen", cascade={"remove"})
      */
     private $wordResponses;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @var float
+     *
+     * @ORM\Column(name="scoreMaxLongResp", type="float", nullable=true)
      */
     private $scoreMaxLongResp;
 
     public function __construct()
     {
-        $this->wordResponses = new ArrayCollection();
+        $this->wordResponses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
-     * @return string
+     * Get id.
+     *
+     * @return int
      */
-    public static function getQuestionType()
+    public function getId()
     {
-        return self::TYPE;
+        return $this->id;
     }
 
     /**
-     * @param boolean $orthographyCorrect
+     * Set orthographyCorrect.
+     *
+     * @param bool $orthographyCorrect
      */
     public function setOrthographyCorrect($orthographyCorrect)
     {
@@ -66,48 +83,45 @@ class InteractionOpen extends AbstractInteraction
         return $this->orthographyCorrect;
     }
 
-    /**
-     * @return TypeOpenQuestion
-     */
+    public function getInteraction()
+    {
+        return $this->interaction;
+    }
+
+    public function setInteraction(\UJM\ExoBundle\Entity\Interaction $interaction)
+    {
+        $this->interaction = $interaction;
+    }
+
     public function getTypeOpenQuestion()
     {
         return $this->typeopenquestion;
     }
 
-    /**
-     * @param TypeOpenQuestion $typeOpenQuestion
-     */
-    public function setTypeOpenQuestion(TypeOpenQuestion $typeOpenQuestion)
+    public function setTypeOpenQuestion(\UJM\ExoBundle\Entity\TypeOpenQuestion $typeOpenQuestion)
     {
         $this->typeopenquestion = $typeOpenQuestion;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getWordResponses()
     {
         return $this->wordResponses;
     }
 
-    /**
-     * @param WordResponse $wordResponse
-     */
-    public function addWordResponse(WordResponse $wordResponse)
+    public function addWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-        $this->wordResponses->add($wordResponse);
+        $this->wordResponses[] = $wordResponse;
+
         $wordResponse->setInteractionOpen($this);
     }
 
-    /**
-     * @param WordResponse $wordResponse
-     */
-    public function removeWordResponse(WordResponse $wordResponse)
+    public function removeWordResponse(\UJM\ExoBundle\Entity\WordResponse $wordResponse)
     {
-        $this->wordResponses->removeElement($wordResponse);
     }
 
     /**
+     * Set scoreMaxLongResp.
+     *
      * @param float $scoreMaxLongResp
      */
     public function setScoreMaxLongResp($scoreMaxLongResp)
@@ -116,7 +130,7 @@ class InteractionOpen extends AbstractInteraction
     }
 
     /**
-     * @return float
+     * Get scoreMaxLongResp.
      */
     public function getScoreMaxLongResp()
     {
@@ -127,15 +141,15 @@ class InteractionOpen extends AbstractInteraction
     {
         if ($this->id) {
             $this->id = null;
-            $this->question= clone $this->question;
-            $newWordResponses = new ArrayCollection();
 
+            $this->interaction = clone $this->interaction;
+
+            $newWordResponses = new \Doctrine\Common\Collections\ArrayCollection();
             foreach ($this->wordResponses as $wordResponse) {
                 $newWordResponse = clone $wordResponse;
                 $newWordResponse->setInteractionOpen($this);
                 $newWordResponses->add($newWordResponse);
             }
-
             $this->wordResponses = $newWordResponses;
         }
     }

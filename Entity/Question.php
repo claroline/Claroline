@@ -5,66 +5,84 @@ namespace UJM\ExoBundle\Entity;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * UJM\ExoBundle\Entity\Question.
+ *
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\QuestionRepository")
  * @ORM\Table(name="ujm_question")
  */
 class Question
 {
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column
-     */
-    private $type;
-
-    /**
-     * @ORM\Column
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255, nullable=true)
      */
     private $title;
 
     /**
-     * @ORM\Column(type="text")
-     * @Assert\NotBlank
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $feedback;
-
-    /**
+     * @var \Datetime
+     *
      * @ORM\Column(name="date_create", type="datetime")
      */
     private $dateCreate;
 
     /**
+     * @var \Datetime
+     *
      * @ORM\Column(name="date_modify", type="datetime", nullable=true)
      */
     private $dateModify;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var bool
+     *
+     * @ORM\Column(name="locked", type="boolean", nullable=true)
      */
-    private $locked = false;
+    private $locked;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @var bool
+     *
+     * @ORM\Column(name="model", type="boolean", nullable=true)
      */
-    private $model = false;
+    private $model;
 
-     /**
-     * @ORM\ManyToOne(targetEntity="Category")
+    /**
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Expertise")
      */
-    private $category;
+    private $expertise;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="UJM\ExoBundle\Entity\Document")
+     * @ORM\JoinTable(
+     *     name="ujm_document_question",
+     *     joinColumns={
+     *         @ORM\JoinColumn(name="question_id", referencedColumnName="id")
+     *     },
+     *     inverseJoinColumns={
+     *         @ORM\JoinColumn(name="document_id", referencedColumnName="id")
+     *     }
+     * )
+     */
+    private $documents;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
@@ -72,13 +90,9 @@ class Question
     private $user;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Hint",
-     *     mappedBy="question",
-     *     cascade={"remove", "persist"}
-     * )
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Category")
      */
-    private $hints;
+    private $category;
 
     /**
      * Note: used for joins only.
@@ -89,30 +103,14 @@ class Question
 
     public function __construct()
     {
-        $this->hints = new ArrayCollection();
-        $this->exerciseQuestions = new ArrayCollection();
-        $this->dateCreate = new \DateTime();
+        $this->documents = new ArrayCollection();
+        $this->setLocked(false);
+        $this->setModel(false);
     }
 
     /**
-     * Note: this method is automatically called in AbstractInteraction#setQuestion
+     * Get id.
      *
-     * @param string $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
      * @return int
      */
     public function getId()
@@ -121,6 +119,8 @@ class Question
     }
 
     /**
+     * Set title.
+     *
      * @param string $title
      */
     public function setTitle($title)
@@ -129,6 +129,8 @@ class Question
     }
 
     /**
+     * Get title.
+     *
      * @return string
      */
     public function getTitle()
@@ -137,6 +139,8 @@ class Question
     }
 
     /**
+     * Set description.
+     *
      * @param string $description
      */
     public function setDescription($description)
@@ -145,6 +149,8 @@ class Question
     }
 
     /**
+     * Get description.
+     *
      * @return string
      */
     public function getDescription()
@@ -153,22 +159,8 @@ class Question
     }
 
     /**
-     * @param string $feedback
-     */
-    public function setFeedback($feedback)
-    {
-        $this->feedback = $feedback;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFeedback()
-    {
-        return $this->feedback;
-    }
-
-    /**
+     * Set dateCreate.
+     *
      * @param \Datetime $dateCreate
      */
     public function setDateCreate(\DateTime $dateCreate)
@@ -177,6 +169,8 @@ class Question
     }
 
     /**
+     * Get dateCreate.
+     *
      * @return \Datetime
      */
     public function getDateCreate()
@@ -185,6 +179,8 @@ class Question
     }
 
     /**
+     * Set dateModify.
+     *
      * @param \Datetime $dateModify
      */
     public function setDateModify(\DateTime $dateModify)
@@ -193,6 +189,8 @@ class Question
     }
 
     /**
+     * Get dateModify.
+     *
      * @return \Datetime
      */
     public function getDateModify()
@@ -201,7 +199,9 @@ class Question
     }
 
     /**
-     * @param boolean $locked
+     * Set locked.
+     *
+     * @param bool $locked
      */
     public function setLocked($locked)
     {
@@ -209,7 +209,7 @@ class Question
     }
 
     /**
-     * @return boolean
+     * Get locked.
      */
     public function getLocked()
     {
@@ -217,7 +217,9 @@ class Question
     }
 
     /**
-     * @param boolean $model
+     * Set model.
+     *
+     * @param bool $model
      */
     public function setModel($model)
     {
@@ -225,69 +227,60 @@ class Question
     }
 
     /**
-     * @return boolean
+     * Get model.
      */
     public function getModel()
     {
         return $this->model;
     }
 
+    public function getExpertise()
+    {
+        return $this->expertise;
+    }
+
+    public function setExpertise(Expertise $expertise)
+    {
+        $this->expertise = $expertise;
+    }
+
     /**
-     * @return User
+     * Gets an array of Documents.
+     *
+     * @return array An array of Documents objects
      */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add document.
+     *
+     * @param Document $document
+     */
+    public function addDocument(Document $document)
+    {
+        $this->document[] = $document;
+    }
+
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return Category
-     */
     public function getCategory()
     {
         return $this->category;
     }
 
-    /**
-     * @param Category $category
-     */
     public function setCategory(Category $category)
     {
         $this->category = $category;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getHints()
-    {
-        return $this->hints;
-    }
-
-    /**
-     * @param Hint $hint
-     */
-    public function addHint(Hint $hint)
-    {
-        $this->hints->add($hint);
-        $hint->setQuestion($this);
-    }
-
-    /**
-     * @param array $hints
-     */
-    public function setHints(array $hints)
-    {
-        foreach ($hints as $hint) {
-            $this->addHint($hint);
-        }
     }
 }

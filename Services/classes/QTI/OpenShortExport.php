@@ -5,9 +5,6 @@
  */
 namespace UJM\ExoBundle\Services\classes\QTI;
 
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use UJM\ExoBundle\Entity\Question;
-
 class OpenShortExport  extends OpenExport
 {
     private $extendedTextInteraction;
@@ -15,21 +12,19 @@ class OpenShortExport  extends OpenExport
     /**
      * overload the export method.
      *
-     * @access public
-     * @param Question $question
-     * @param qtiRepository $qtiRepos
-     * @return BinaryFileResponse
+     * @param \UJM\ExoBundle\Entity\Interaction $interaction
+     * @param qtiRepository                     $qtiRepos
      */
-    public function export(Question $question, qtiRepository $qtiRepos)
+    public function export(\UJM\ExoBundle\Entity\Interaction $interaction, qtiRepository $qtiRepos)
     {
-        parent::export($question, $qtiRepos);
+        parent::export($interaction, $qtiRepos);
         $this->promptTag($this->itemBody);
         $this->mappingTag();
         $this->extendedTextInteractionTag();
 
-        if (($this->interactionopen->getQuestion()->getFeedBack() != null)
-                && ($this->interactionopen->getQuestion()->getFeedBack() != '')) {
-            $this->qtiFeedBack($question->getFeedBack());
+        if (($this->interactionopen->getInteraction()->getFeedBack() != null)
+                && ($this->interactionopen->getInteraction()->getFeedBack() != '')) {
+            $this->qtiFeedBack($interaction->getFeedBack());
         }
 
         $this->document->save($this->qtiRepos->getUserDir().$this->question->getId().'_qestion_qti.xml');
