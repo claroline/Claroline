@@ -1094,7 +1094,7 @@ class RoleManager
 
         $this->om->endFlushSuite();
         $this->log('Checking user role integrity.');
-        $users = $this->userRepo->findAll();
+        $users = $this->container->get('claroline.manager.user_manager')->getAllEnabledUsers();
         $this->om->startFlushSuite();
 
         foreach ($users as $user) {
