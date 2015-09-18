@@ -1,9 +1,10 @@
 'use strict';
 
 widgetsApp
-    .controller("widgetController", ["$scope", "widgetManager", "$attrs",
-        function($scope, widgetManager, $attrs) {
+    .controller("widgetController", ["$scope", "widgetManager", "$attrs", "tinyMceConfig",
+        function($scope, widgetManager, $attrs, tinyMceConfig) {
             $scope.widgetType = $attrs['widgetContainer'];
+            $scope.tinyMceConfig = tinyMceConfig;
 
             $scope.create = function() {
                 widgetManager.create($scope.widgetType);
