@@ -9,10 +9,12 @@ Trait LoggableTrait
 {
     use LoggerAwareTrait;
 
-    public function log($message)
+    public function log($message, $logLevel = null)
     {
-        if (null !== $this->logger) {
-            $this->logger->log(LogLevel::INFO, $message);
+        if ($this->logger) {
+            $time = date("m-d-y h:i:s") . ': ';
+            if (!$logLevel) $logLevel = LogLevel::INFO;
+            $this->logger->log($logLevel, $time . $message);
         }
     }
 }
