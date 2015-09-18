@@ -234,7 +234,7 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
-        $this->objectManager->remove($userRole);
+        if ($userRole) $this->objectManager->remove($userRole);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 

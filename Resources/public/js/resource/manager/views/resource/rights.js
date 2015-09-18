@@ -30,7 +30,7 @@
             'click #search-user-without-rights-btn': 'searchUsersWithoutRights',
             'click .pagination > ul > li > a': 'pagination',
             'click th > a': 'reorder',
-            'click #add-new-user-rights-btn': 'switchUserRightsTab',
+            'click #add-new-user-rights-btn': 'addUserClick',
             'click #search-workspaces-btn': 'searchWorkspaces'
         },
         initialize: function (dispatcher) {
@@ -188,7 +188,7 @@
                     url: url,
                     type: 'GET',
                     success: function (datas) {
-                        
+
                         if (type === 'with') {
                             $('#users-with-rights-tab').empty();
                             $('#users-with-rights-tab').append(datas);
@@ -217,7 +217,7 @@
                     url: url,
                     type: 'GET',
                     success: function (datas) {
-                        
+
                         if (type === 'with') {
                             $('#users-with-rights-tab').empty();
                             $('#users-with-rights-tab').append(datas);
@@ -243,9 +243,19 @@
 
             return type;
         },
-        switchUserRightsTab: function () {
-            $('#users-with-rights-list-tab').removeClass('active');
-            $('#users-without-rights-list-tab').addClass('active');
+        addUserClick: function () {
+            var picker = new UserPicker();
+            var settings = {
+                'multiple': true,
+                'picker_name': 'user_res_picker'
+            };
+            picker.configure(
+                settings,
+                function (users) {
+                    $('.no-user-warning').hide();
+                }
+            );
+            picker.open();
         }
     });
 })();
