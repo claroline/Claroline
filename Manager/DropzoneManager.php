@@ -260,6 +260,38 @@ class DropzoneManager
     }
 
     /**
+     * To know if a collecticiel is open or not (close) InnovaERV
+     */
+    public function collecticielOpenOrNot(Dropzone $dropzone)
+    {
+
+        $open = false;
+
+        /**
+         * "Manuellement" InnovaERV
+         */
+        if ($dropzone->getManualPlanning() == 1 && $dropzone->getManualState() == Dropzone::MANUAL_STATE_ALLOW_DROP)
+        {
+            $open = true;
+        }
+
+        /**
+         * "Par dates" InnovaERV
+         */
+        if ($dropzone->getManualPlanning() == 0)
+        {
+            $now = new \DateTime();
+            if (($dropzone->getStartAllowDrop()->getTimestamp() < $now->getTimestamp())
+            && ($now->getTimestamp() < $dropzone->getEndAllowDrop()->getTimestamp() ))
+            {
+                $open = true;
+            }
+        }
+
+        return $open;
+    }
+
+    /**
      * if the dropzone option 'autocloseOpenDropsWhenTimeIsUp' is activated, and evalution allowToDrop time is over,
      *  this will close all drop not closed yet.
      * @param Dropzone $dropzone

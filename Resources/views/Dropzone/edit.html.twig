@@ -55,7 +55,7 @@
                         {{ 'Parameters'|trans({}, 'innova_collecticiel') }}
                     </a>
                 </li>
-                {% if dropzone.manualState != "allowDrop" %}
+                {% if not collecticielOpenOrNot %}
                 <li style="float: right; padding: 8px;" class="alert alert-warning">
                     {{ 'Closed collecticiel'|trans({}, 'innova_collecticiel') }}
                 </li>

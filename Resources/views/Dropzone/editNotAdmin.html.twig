@@ -1,15 +1,22 @@
-            {# (Mon) Espace collecticiel #}
-            {% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
-                <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}active {% endblock %}">
-                    <a id="editCriteriaLink" href="
-                    {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
-                        {{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}
-                    {% endblock %}" class="hometab-link">
-                        Mon espace collecticiel
-                    </a>
+{# (Mon) Espace collecticiel #}
+{% block collecticiel_mon_espace_edit_navTabs_criteria_block %}
+    <li class="hometab-element peer-review-options {% block collecticiel_mon_espace_edit_navTabs_criteria_element_class %}active {% endblock %}">
+        <a id="editCriteriaLink" href="
+        {% block collecticiel_mon_espace_edit_navTabs_criteria_element_link %}
+            {{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}
+        {% endblock %}" class="hometab-link">
+            Mon espace collecticiel
+        </a>
 {#
-                        <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
-                           class="btn btn-primary pull-right">{{ 'Start evaluation'|trans({}, 'innova_collecticiel') }}</a>
+            <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}"
+               class="btn btn-primary pull-right">{{ 'Start evaluation'|trans({}, 'innova_collecticiel') }}</a>
 #}
-                </li>
-            {% endblock %}
+    </li>
+    {% if not adminInnova %}
+        {% if not collecticielOpenOrNot %}
+            <li style="float: right; padding: 8px;" class="alert alert-warning">
+              {{ 'NotAllowToAddAnyDocument'|trans({}, 'innova_collecticiel') }}
+            </li>
+        {% endif %}
+    {% endif %}
+{% endblock %}

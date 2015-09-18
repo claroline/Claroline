@@ -1,4 +1,4 @@
-{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText, adminInnova ) %}
+{% macro displayDocumentsList(drop, dropzone, width, mode, documentListText, adminInnova, collecticielOpenOrNot ) %}
     <div class="row">
         <div class="col-md-{{ width }}">
             {% if documentListText is not null %}
@@ -31,7 +31,13 @@
                                 <th class="centered" style="width:140px;">{{ 'Commented document'|trans({}, 'innova_collecticiel') }}</th>
                                 {% endif %}
                                 <th class="centered" style="width:120px;">{{ 'Comment'|trans({}, 'innova_collecticiel') }}</th>
-                                <th class="no-sort" style="width: 120px;"></th>
+                                {% if adminInnova %}
+                                    <th class="no-sort" style="width: 120px;"></th>
+                                {% else %}
+                                    {% if collecticielOpenOrNot %}
+                                        <th class="no-sort" style="width: 120px;"></th>
+                                    {% endif %}
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>

@@ -273,7 +273,7 @@ corrected copy: 'Document corrigé, évaluation terminée'
 Dropzone progress: 'Etat d''avancement de votre évaluation'
 Choose a resource: 'Ajoutez une ressource'
 Auto close opened drops when time is up: 'Evaluer automatiquement les documents non terminés lorsque la date de fin du dépot est atteinte'
-People will not be able to drop anymore: 'Les utilisateurs ne pourront plus déposer/terminer de document'
+People will not be able to drop anymore: 'Les utilisateurs ne pourront plus déposer de document'
 Do you want to valid all drop started but not validated yet ?: 'Voulez-vous Evaluer automatiquement toutes les travaux commencés qui n''ont pas encore été terminées ?'
 yes: 'oui'
 no: 'non'
@@ -311,7 +311,7 @@ Notifications: "Notifications"
 unterminated drops: 'document(s) non terminée(s)'
 Notify on drop: 'Notifier les administrateurs lorsqu''un document est déposé'
 drop_info: "Chaque document ajouté est sauvegardé automatiquement. Cependant pensez à cliquer sur 'terminer' en bas à droite une fois que vous avez fini. Si vous ne le faites pas, votre document sera considérée comme non-rendue."
-dropzone_startedNotValidatedYet_infos: "Ces travaux concernent les personnes qui ont commencé à déposer des fichiers mais n'ont pas encore cliqué sur le bouton 'terminer' afin d''évaluer leurs documents. Si vous ne faites rien, ces documents seront considérés comme 'non rendues' et n'apparaitront pas dans la liste des documents en cours d'évaluation."
+dropzone_startedNotValidatedYet_infos: "Notez que l'option 'Fermé' du collectiel empêche le dépôt de (nouveaux) documents. Il reste cependant accessible pour la consultation ainsi que pour la rédaction de commentaires/évaluations."
 Close unterminated drops: "Evaluer les travaux non terminés"
 Sorted by date with reported drops first: "Tri par date avec les travaux signalés en premier."
 only reported drops: "Seulement les travaux signalés"
@@ -393,3 +393,4 @@ Submissions: 'Documents déposés'
 Addressed requests: 'Demandes adressées'
 To display: 'Afficher'
 To drop: 'Déposer'
+NotAllowToAddAnyDocument: 'Ce collecticiel n''est pas (ou plus) ouvert. Il n''est donc pas possible de déposer des documents'
