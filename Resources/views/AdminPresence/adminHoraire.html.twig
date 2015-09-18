@@ -35,27 +35,27 @@
             {{macros.flashBox()}}
             <div style="text-align:center;font-size:36px";>Horaire type: </div>
             {% if schoolYear is null %}
-                 <h4>Periode de relevée: Aucune période existante/selectionnée</h4>
+                 <h4> {{"periode_relevee"|trans({},"presences")}}: {{"aucune_periode"|trans({},"presences")}} </h4>
             {% else %}
-                <h4>Periode de relevée: {{schoolYear.getSchoolYearName()}}</h4>
+                <h4>{{"periode_relevee"|trans({},"presences")}}: {{schoolYear.getSchoolYearName()}}</h4>
             {% endif %}
             <br /><br />
             <form method="post" {{ form_enctype(NewPeriodForm) }}>    
                 <div class="row">
                     <div class="col-md-2"  style="text-align: left;">
-                        Jour(s):{{form_widget(NewPeriodForm.day)}}
+                        {{"jour"|trans({},"presences")}}:{{form_widget(NewPeriodForm.day)}}
                     </div>
                     <div class="col-md-2"  style="text-align: left;">    
-                        N° de la tranche horaire:{{form_widget(NewPeriodForm.number)}}
-                        Nom de la tranche horaire:{{form_widget(NewPeriodForm.name)}}
+                        {{"num_tranche"|trans({},"presences")}}:{{form_widget(NewPeriodForm.number)}}
+                       {{"nom_tranche"|trans({},"presences")}}:{{form_widget(NewPeriodForm.name)}}
                     </div>
                     <div class="col-md-2"  style="text-align: left;"> 
-                        Heure de début:{{form_widget(NewPeriodForm.start)}}
-                        Heure de fin:{{form_widget(NewPeriodForm.end)}}
+                        {{"heure_debut"|trans({},"presences")}}t:{{form_widget(NewPeriodForm.start)}}
+                        {{"heure_fin"|trans({},"presences")}}:{{form_widget(NewPeriodForm.end)}}
                     </div>
                     <div class="col-md-2 col-md-offset-0"  style="text-align: left;"> 
                         <br />
-                        <button class="btn btn-primary" type="submit" name="Releve[Pres]">Ajouter la tranche horaire</button> 
+                        <button class="btn btn-primary" type="submit" name="Releve[Pres]">{{"ajouter"|trans({},"presences")}}</button> 
                     </div>
                     <br />
                 </div>

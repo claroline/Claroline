@@ -8,22 +8,22 @@
                 &times;
             </button>
             <h3 class="modal-title" style="text-align: center;">
-                Modifier présence
+                {{"modifier_presence"|trans({},"presences")}}
             </h3>
         </div>
         <div class="modal-body">
             {% if canEditArchives%}
                 <div class="row">
                     <div class="col-md-6">
-                        Le {{presence.getPeriod.getDay()|date('d-m-Y')}} 
-                        de {{presence.getPeriod.getBeginHour()|date('H:i')}} 
-                        à {{presence.getPeriod.getEndHour()|date('H:i')}}
+                        {{"le"|trans({},"presences")}} {{presence.getPeriod.getDay()|date('d-m-Y')}} 
+                        {{"de"|trans({},"presences")}} {{presence.getPeriod.getBeginHour()|date('H:i')}} 
+                        {{"à"|trans({},"presences")}} {{presence.getPeriod.getEndHour()|date('H:i')}}
                     </div>
                     <strong class="col-md-5 col-md-offset-1">
                         {% if presence.getStatus() is null %}
-                            Status: Non communiqué
+                           {{"statut"|trans({},"presences")}}: {{"NC"|trans({},"presences")}}
                         {% else %}
-                            Status: {{presence.getStatus.getStatusName()}}
+                            {{"statut"|trans({},"presences")}}: {{presence.getStatus.getStatusName()}}
                         {% endif %}
 
                     </strong>
@@ -43,9 +43,9 @@
                         <form id="ModifHoraireForm" 
                               method="post" {{ form_enctype(ModifPresenceForm) }} 
                               action="{{path("formalibre_presence_modif",{"id":presence.getId()})}}">
-                            Modifier le status:
+                            {{"modifier_statut"|trans({},"presences")}}:
                             {{form_widget(ModifPresenceForm.Status)}}
-                            Commentaire(s):
+                            {{"comment"|trans({},"presences")}}:
                             {{form_widget(ModifPresenceForm.Comment)}}  
                             </br> </br>
                              <button type="submit" 
@@ -53,20 +53,20 @@
                                    style="float: right;"
                                    id="CollReleve_Valider"
                                    name="ModifHoraireForm[Save]">
-                              Enregistrer 
+                              {{"modifier"|trans({},"presences")}}
                            </button>
                         </form>
                     </div>
                 </div>
                 <div class="row"> </br></br>
                     <div class="col-md-10">    
-                        Professeur responsable de l'appel:
+                        {{"prof_appel"|trans({},"presences")}}:
                         {{presence.getUserTeacher.getLastName()}}
                         {{presence.getUserTeacher.getFirstName()}}
                     </div>     
                  </div>
         {% else %}
-            Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+           {{"access_error"|trans({},"presences")}}
         {% endif %}    
         </div>
     </div>

@@ -14,15 +14,15 @@
             </div>
             
             <br /><br />
-            <h3>Configuration de la période</h3>
+            <h3>{{"config_periode"|trans({},"presences")}}</h3>
             <form method="post" {{ form_enctype(NewSchoolYearForm) }} action="{{path("formalibre_presence_admin_add_school_year")}}">
                 <div class="row">
                     <div class="col-md-2">
-                        Choisissez un nom:
+                        {{"choix_nom"|trans({},"presences")}}:
                         {{form_widget(NewSchoolYearForm.name)}}
                     </div>    
                     <div class="col-md-1">
-                        Date de début:
+                        {{"date_debut"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
                               data-placement="top"
                               data-title="Indiquer le premier jour d'ouverture de l'établissement">
@@ -30,7 +30,7 @@
                         </span>
                     </div> 
                     <div class="col-md-1">
-                        Date de fin:
+                        {{"date_fin"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
                               data-placement="top"
                               data-title="Indiquer le dernier jour d'ouverture de l'établissement">
@@ -38,7 +38,7 @@
                         </span>
                     </div> 
                     <div class="col-md-1">
-                        H. d'ouverture:
+                        {{"heure_ouverture"|trans({},"presences")}}:
                         <span data-toggle="tooltip"
                               data-placement="top"
                               data-title="Indiquer l'heure d'ouverture de l'établissement">
@@ -46,7 +46,7 @@
                         </span>
                     </div> 
                     <div class="col-md-1">
-                       H. de fermeture:
+                        {{"heure_ouverture"|trans({},"presences")}}:
                        <span data-toggle="tooltip"
                               data-placement="top"
                               data-title="Indiquer l'heure de fermeture de l'établissement">
@@ -54,14 +54,14 @@
                         </span>
                     </div> 
                      <div class="col-md-2">
-                        Il s'agit de la période courante:
+                        {{"actual_periode"|trans({},"presences")}}
                         {{form_widget(NewSchoolYearForm.actual)}}
                     </div> 
                     <div class="col-md-2">
                         <button type="submit" 
                                    class="btn btn-primary"
                                    name="NewSchoolYearForm[valider2]">
-                              Ajouter 
+                              {{"ajouter"|trans({},"presences")}}
                         </button>
                     </div> 
                 </div>
@@ -117,27 +117,27 @@
                 </table>
             </div>
             <br /><br />
-            <h3>Configuration des status</h3>
+            <h3>{{"config_statut"|trans({},"presences")}}</h3>
             <br />
             <form method="post" {{ form_enctype(NewStatusForm) }} action="{{path("formalibre_presence_admin_tool_index")}}">
                 <div class="row">
                     <div class="col-md-3">
-                        Choisissez un nom:
+                        {{"choix_nom"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.name)}}
                     </div>    
                     <div class="col-md-3">
-                        Choisissez une couleur:
+                        {{"choix_couleur"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.color)}}
                     </div> 
                     <div class="col-md-2">
-                        Mise en évidence du status:
+                        {{"mise_evidence"|trans({},"presences")}}
                         {{form_widget(NewStatusForm.principalStatus)}}
                     </div> 
                     <div class="col-md-3">
                         <button type="submit" 
                                    class="btn btn-primary"
                                    name="NewStatusForm[valider]">
-                              Ajouter 
+                              {{"ajouter"|trans({},"presences")}}
                         </button>
                     </div> 
                 </div>
@@ -146,10 +146,10 @@
             <div class="table-responsive">
                 <table class="table">
                     <tr>
-                        <th style='text-align:center;'>Status</th>
-                        <th style='text-align:center;'>Couleur</th>
-                        <th style='text-align:center;'>Mis en évidence</th>
-                        <th style='text-align:center;'>Actions</th>
+                        <th style='text-align:center;'>{{"statut"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"couleur"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"evidence"|trans({},"presences")}}</th>
+                        <th style='text-align:center;'>{{"actions"|trans({},"presences")}}</th>
                     </tr>
                     {% for onestatus in listStatus %}
                         <tr style='text-align:center;'>
@@ -188,15 +188,15 @@
                         </tr>
                     {% endfor %}
                 </table>
-               <i class="fa fa-info"></i> - Nous déconseillons de mettre plus de trois status en évidence.
+               <i class="fa fa-info"></i> - {{"conseil1"|trans({},"presences")}}Nous déconseillons de mettre plus de trois status en évidence.
             </div>
             <br /><br />
-            <h3>Configuration des droits</h3>
+            <h3>{{"config_droits"|trans({},"presences")}}</h3>
             <div class="table-responsive">
                 <table class="table">
                     
                     <tr>
-                        <th>Rôles</th>
+                        <th>{{"roles"|trans({},"presences")}}</th>
                         {% for onename in rightName%}
                             <th>
                                 {{onename}}

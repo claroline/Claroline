@@ -7,10 +7,10 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs">
-                  <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
+                  <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >{{"accueil"|trans({},"presences")}}</a></li>
                   {% if canCheckPresences %}
-                    <li role="presentation" class="active"><a href="">Relevé</a></li>
-                    <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                    <li role="presentation" class="active"><a href="">{{"releve"|trans({},"presences")}}</a></li>
+                    <li role="presentation"><a href="{{path("formalibre_presence_archives")}}"  >{{"archives"|trans({},"presences")}}</a></li>
                   {% endif %}
                 </ul>
             </div>
@@ -19,14 +19,14 @@
                 <div class="row">
                     <br /><br />
                     <div class="col-md-6">
-                        Vous souhaitez faire l'appel pour la  
+                        {{"appel"|trans({},"presences")}}  
                         <a  href="{{path("formalibre_presence_tool_index")}}" 
                             role="button"
                             class="btn btn-primary ">
                             {{period.getNumPeriod()}}° tranche horaire du {{date}}
                         </a>
 
-                        pour la classe de:
+                        {{"pour_groupe"|trans({},"presences")}}
 
                         <a class="btn btn-primary modifier-classe-btn"
                            data-period-id="{{period.getId()}}"
@@ -49,21 +49,21 @@
                         <button type="button" 
                                 class="btn btn-primary col-md-1 "
                                 id="form_valider">
-                            Confirmer ?
+                            {{"confirmer"|trans({},"presences")}}?
                         </button>
                        
                     </div>
 
                 <br /><br /><br /><br /> 
                 <form method="post" {{ form_enctype(presForm) }}>
-                <table id="studentList" class="cell-border" cellspacing="0" width="50%">
+                <table id="studentList" class="cell-border table table-striped table-bordered" cellspacing="0" width="50%">
                     <thead>
                         <tr>
-                            <th>Trombinoscope</th>
-                            <th>Nom</th>
-                            <th>Prénom</th>
-                            <th>Status</th>
-                            <th>Antécédents</th>
+                            <th>{{"tromb"|trans({},"presences")}}</th>
+                            <th>{{"nom"|trans({},"presences")}}</th>
+                            <th>{{"prenom"|trans({},"presences")}}</th>
+                            <th>{{"statut"|trans({},"presences")}}</th>
+                            <th>{{"before"|trans({},"presences")}}</th>
 
                             </tr>
                         </thead>
@@ -72,11 +72,17 @@
                                 <tr class="OneForm">
                                     {% for student in presences %}
                                         {%if student.getUserStudent().getId()==presence.vars.value.userStudent.getId%}
-                                    <td> <img id="photo" style="height:150px;" 
+                                            <td> 
+                                            {% if student.getUserStudent().getPicture() is null%}
+                                                
+                                                    <h1><i class="fa fa-user img-thumbnail"></i></h1>
+                                            {% else %}   
+                                                        <img id="photo" style="height:150px;" 
                                                          class="img-thumbnail" 
                                                          src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
                                                          width="100" 
                                                          alt="Photo de l'élève">
+                                            {% endif %}
                                         <br />
                                     </td>
                                     <td>{{student.getUserStudent().getLastName()}}</td>
@@ -125,14 +131,14 @@
                                class="btn btn-primary"
                                id="CollReleve_Valider"
                                name="CollReleve[Valider]">
-                           Valider les présences ?
+                           {{"valider_presences"|trans({},"presences")}}
                        </button>
 
                 </form>
             {% else %}
                 </br></br>
                 </br></br>
-                Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+                {{"acces_error"|trans({},"presences")}}
                 </br></br>
                 </br></br>
 

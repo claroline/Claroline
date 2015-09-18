@@ -64,7 +64,7 @@ class LoadPresencesData extends LoggableFixture implements ContainerAwareInterfa
         $demoSchoolYear->setSchoolYearEnd($endDateFormat);
         $demoSchoolYear->setSchoolDayBeginHour($beginHourFormat);
         $demoSchoolYear->setSchoolDayendHour($endHourFormat);
-        $demoSchoolYear->getSchoolYearActual(true);
+        $demoSchoolYear->setSchoolYearActual(true);
         $manager->persist($demoSchoolYear);
         
         
@@ -86,7 +86,7 @@ class LoadPresencesData extends LoggableFixture implements ContainerAwareInterfa
         $demoStatus3->setStatusName("Retard");
         $manager->persist($demoStatus3);
         
-
+      
         $manager->flush();
 
     }

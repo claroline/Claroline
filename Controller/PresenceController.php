@@ -130,7 +130,7 @@ class PresenceController extends Controller
                 'label'=>'Classe:',
                 'class' => 'ClarolineCoreBundle:Group',
                 'property' => 'name',
-                'empty_value' =>'Choisissez une classe',))
+                'empty_value' =>'Choisissez un groupe',))
             ->add ('valider','submit',array (
                 'label'=>'Relever les présences'))
             ->getForm();

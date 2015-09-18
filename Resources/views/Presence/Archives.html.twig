@@ -8,20 +8,20 @@
             <div>
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs">
-                      <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >Accueil</a></li>
-                      <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >Archives</a></li>
+                      <li role="presentation"><a href="{{path("formalibre_presence_tool_index")}}" >{{"accueil"|trans({},"presences")}}</a></li>
+                      <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >{{"archives"|trans({},"presences")}}</a></li>
                     </ul>
             </div>
                     
             </br>
             
             <div style="text-align: center;">
-                    <H1>Archives:</H1>
+                    <H1>{{"archives"|trans({},"presences")}}:</H1>
             </div>
             {{macros.flashBox()}}
             <div class="row">
                 <div class="col-md-6">
-                    <h4>Période affichée : {{schoolYearName}}</h4>
+                    <h4>{{"periode_relevee"|trans({},"presences")}} : {{schoolYearName}}</h4>
                 </div>
             </div>
             <form method="post" {{ form_enctype(schoolYearSelection) }} 
@@ -34,7 +34,7 @@
                         <button type="submit" 
                            class="btn btn-primary"
                            name="schoolYearSelection[valider]">
-                          Valider 
+                          {{"valider"|trans({},"presences")}} 
                         </button>
                     </div>
                 </div>
@@ -44,17 +44,17 @@
             <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th style="text-align: center;">Date</th>
-                            <th style="text-align: center;">Tranche n°</th>
+                            <th style="text-align: center;">{{"date"|trans({},"presences")}}</th>
+                            <th style="text-align: center;">{{"tranche"|trans({},"presences")}}</th>
                                 {#<th>Cours</th>#}
-                                <th style="text-align: center;">Classe</th>
-                                <th style="text-align: center;">Nom de l'étudiant</th>
-                                <th style="text-align: center;">Prénom de l'étudiant</th>
-                                <th style="text-align: center;">Status</th>
-                                <th style="text-align: center;">Responsable de l'appel</th>
-                                <th style="text-align: center;">Commentaire(s)</th>
+                                <th style="text-align: center;">{{"group"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_name"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_firstname"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"statut"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"prof_appel"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"comment"|trans({},"presences")}}</th>
                                 {% if canEditArchives%}
-                                    <th style="text-align: center;">Actions</th>
+                                    <th style="text-align: center;">{{"actions"|trans({},"presences")}}</th>
                                 {% endif %}
                             </tr>
                         </thead>
@@ -68,7 +68,7 @@
                                     <td>{{presence.getUserStudent.getLastName()}}</td>
                                     <td>{{presence.getUserStudent.getFirstName()}}</td>
                                     {% if presence.getStatus() is null %}
-                                        <td>Non communiqué</td>
+                                        <td>{{"NC"|trans({},"presences")}}</td>
                                     {% else %}
                                     <td>{{presence.getStatus.getStatusName()}}</td>
                                     {% endif %}
@@ -104,7 +104,7 @@
             {% else %}
                 </br></br>
                 </br></br>
-                Vous n'avez pas le droit d'accèder à cette page. Si c'est une erreur, merci de contacter l'administrateur de la plateforme.
+                {{"acces_error"|trans({},"presences")}}
                 </br></br>
                 </br></br>
             {% endif %}        

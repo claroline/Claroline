@@ -8,19 +8,19 @@
                 &times;
             </button>
             <h3 class="modal-title" style="text-align: center;">
-                Modifier status : {{theStatus.getStatusName()}}
+                {{"modifier_statut"|trans({},"presences")}} : {{theStatus.getStatusName()}}
             </h3>
         </div>
         <div class="modal-body">
             <form method="post" {{ form_enctype(ModifStatusForm) }} action="{{path("formalibre_status_modif",{"theStatus":theStatus.getId()})}}">
               
-                Choisissez un nom:
+                {{"choix_nom"|trans({},"presences")}} :
                 {{form_widget(ModifStatusForm.name2)}}
 
-                Choisissez une couleur:
+                {{"choix_couleur"|trans({},"presences")}} :
                 {{form_widget(ModifStatusForm.color2)}}
 
-                Mise en évidence du status:
+                {{"mise_evidence"|trans({},"presences")}} :
                 {{form_widget(ModifStatusForm.principalStatus2)}}
                 
                 </br></br>

@@ -36,37 +36,37 @@
             
             {% if canCheckPresences %}
                 <div style="text-align: center;">
-                    <H1>Relever les présences:</H1>
+                    <H1>{{"releve_pres"|trans({},"presences")}}:</H1>
                 </div>
                 <br />
-                Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+                {{"bonjour"|trans({},"presences")}} {{user.getUsername()}}, {{"date_pres"|trans({},"presences")}} {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
                 <br /><br />
-                Semaine n°: {{ "now"|date("W") }}
+                {{"semaine"|trans({},"presences")}} n°: {{ "now"|date("W") }}
                 <br /><br /><br />
                 <div id='calendar'></div>
             {% endif %}
             
             {% if canViewPersonalArchives and presences is not empty%} 
                 <div style="text-align: center;">
-                    <H1>Tes présences:</H1>
+                    <H1>{{"tes_presences"|trans({},"presences")}}:</H1>
                 </div>
                 <br />
-                Bonjour {{user.getUsername()}}, nous sommes le {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
+               {{"bonjour"|trans({},"presences")}} {{user.getUsername()}}, {{"date_pres"|trans({},"presences")}} {{ "now"|date("d-m-Y W") }} il est {{ "now"|date("H:i") }}
                 <br /><br />
-                Semaine n°: {{ "now"|date("W") }}
+                {{"semaine"|trans({},"presences")}} n°: {{ "now"|date("W") }}
 
                 <br /><br /><br />
                 <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th style="text-align: center;">Date</th>
-                            <th style="text-align: center;">Period</th>
+                            <th style="text-align: center;">{{"date"|trans({},"presences")}}</th>
+                            <th style="text-align: center;">{{"tranche"|trans({},"presences")}}</th>
                                 {#<th>Cours</th>#}
-                                <th style="text-align: center;">Classe</th>
-                                <th style="text-align: center;">Nom de l'étudiant</th>
-                                <th style="text-align: center;">Prénom de l'étudiant</th>
-                                <th style="text-align: center;">Status</th>
-                                <th style="text-align: center;">Responsable de l'appel</th>
+                                <th style="text-align: center;">{{"group"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_name"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"student_firstname"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"statut"|trans({},"presences")}}</th>
+                                <th style="text-align: center;">{{"prof_appel"|trans({},"presences")}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -80,11 +80,11 @@
                                         <td>{{presence.getUserStudent.getLastName()}}</td>
                                         <td>{{presence.getUserStudent.getFirstName()}}</td>
                                         {% if presence.getStatus() is null %}
-                                            <td>Non communiqué</td>
+                                            <td>{{"NC"|trans({},"presences")}}</td>
                                         {% else %}
                                         <td>{{presence.getStatus.getStatusName()}}</td>
                                         {% endif %}
-                                        <td>Mr./Mme.{{presence.getUserTeacher.getLastName()}}</td>
+                                        <td>{{presence.getUserTeacher.getFirstName()}} {{presence.getUserTeacher.getLastName()}}</td>
                                     </tr>
                             {% endif %}
                         {% endfor %}
@@ -92,7 +92,7 @@
                     </tbody>
                 </table>
             {% else%}
-                Il n'y a pas d'archives vous concernant pour le moment.
+                 {{"no_archives"|trans({},"presences")}}
             {% endif %}
         </div>
     </div>

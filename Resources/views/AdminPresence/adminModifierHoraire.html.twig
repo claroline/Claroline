@@ -10,7 +10,7 @@
                 &times;
             </button>
             <h3 class="modal-title">
-                Modifier une tranche horaire
+                 {{"modifier_tranche"|trans({},"presences")}}
             </h3>
         </div>
         <div class="modal-body">
@@ -19,10 +19,10 @@
                   method="post" {{ form_enctype(ModifPeriodForm) }} 
                   action="{{path("formalibre_presence_modifier_horaire",{"period":period.getId()})}}">   
               
-                        Changer le N°:{{form_widget(ModifPeriodForm.numberMod,{ 'attr': {'value': period.getNumPeriod()} } )}}
-                        Changer le nom:{{form_widget(ModifPeriodForm.nameMod,{ 'attr': {'value': period.getName()} } )}}
-                        Changer l'heure de début:{{form_widget(ModifPeriodForm.startMod,{ 'attr': {'value':period.getBeginHour()|date('H:i')} } )}}
-                        Changer l'heure de fin:{{form_widget(ModifPeriodForm.endMod,{ 'attr': {'value': period.getEndHour()|date('H:i')} } )}}
+                       {{"num_tranche"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.numberMod,{ 'attr': {'value': period.getNumPeriod()} } )}}
+                        {{"nom_tranche"|trans({},"presences")}}{{form_widget(ModifPeriodForm.nameMod,{ 'attr': {'value': period.getName()} } )}}
+                        {{"heure_debut"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.startMod,{ 'attr': {'value':period.getBeginHour()|date('H:i')} } )}}
+                        {{"heure_fin"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.endMod,{ 'attr': {'value': period.getEndHour()|date('H:i')} } )}}
                         {{form_widget(ModifPeriodForm.dayName,{ 'attr': {'value': period.getDayName} } )}}
                        
                         <br />
@@ -36,7 +36,7 @@
                                     id="supprimer-btn"
                                     data-dismiss="modal"
                                     data-period-id="{{period.getId()}}">
-                            Supprimer la tranche
+                             {{"supprimer"|trans({},"presences")}}
                             </button> 
                          
                         </div>
