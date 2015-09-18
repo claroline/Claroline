@@ -3,7 +3,7 @@ all: Tous
 'for user': 'Filtrer sur l''utilisateur :'
 group: Groupe
 log_add_user: 'Ajout d''un utilisateur'
-log_change_right: 'Changement de droit'
+log_change_right: 'Changement de droits'
 log_change_set: 'Liste des propriétés modifiées'
 log_context: 'Contexte :'
 log_copy: Copie
@@ -44,7 +44,7 @@ log_no_actions_found: 'Aucune action trouvée'
 log_old_folder: 'Ancien dossier parent'
 log_old_values: 'Anciennes valeurs'
 log_old_workspace: 'Ancien espace d''activités'
-log_owner: 'Propriétaire de la ressource ciblée'
+log_owner: 'Propriétaire de la ressource cible'
 log_platform_roles: 'Rôles plateforme'
 log_read: Lecture
 log_receiver_group: 'Groupe cible de l''action'
@@ -81,10 +81,10 @@ log_resource-shortcut_sentence: 'a créé le raccourci %resource%'
 log_resource-shortcut_shortname: Raccourci
 log_resource-shortcut_title: 'Création d''un raccourci'
 log_resource-update_filter: 'Mise à jour d''une ressource'
-log_resource-update_rename_filter: 'Renommage d''une ressource'
+log_resource-update_rename_filter: 'Renommer une ressource'
 log_resource-update_rename_sentence: 'a renommé %resource%'
 log_resource-update_rename_shortname: Renommage
-log_resource-update_rename_title: 'Renommage d''une ressource'
+log_resource-update_rename_title: 'Renommer une ressource'
 log_resource-update_sentence: 'a modifié %resource%'
 log_resource-update_shortname: Modification
 log_resource-update_title: 'Mise à jour d''une ressource'
@@ -176,4 +176,4 @@ role: Rôle
 user: Utilisateur
 workspace: 'Espace d''activités'
 log_resource-custom_action_update_file_shortname: Mise à jour
-log_resource-custom_action_update_file_sentence: Le fichier a été mit à jour.
+log_resource-custom_action_update_file_sentence: Le fichier a été mis à jour.

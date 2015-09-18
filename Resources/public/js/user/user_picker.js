@@ -21,6 +21,7 @@ var UserPicker = function () {
     this.showGroups = 0;
     this.showPlatformRoles = 0;
     this.attachName = 1;
+    this.returnDatas = 0;
     this.userIds = [];
     this.forcedUserIds = [];
     this.selectedUserIds = [];
@@ -91,6 +92,10 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
     
     if (configurationDatas['attach_name'] !== undefined) {
         this.attachName = configurationDatas['attach_name'] ? 1 : 0;
+    }
+    
+    if (configurationDatas['return_datas'] !== undefined) {
+        this.returnDatas = configurationDatas['return_datas'] ? 1 : 0;
     }
     
     if (configurationDatas['blacklist'] !== undefined) {
@@ -744,30 +749,54 @@ UserPicker.prototype.open = function () {
 
             modalElement.on('click', '.submit', function () {
 
-                if (userPicker.multiple === 'multiple') {
+                if (userPicker.returnDatas) {
                     var ids = [];
-                    var names = [];
 
                     for (var i = 0; i < userIds.length; i++) {
                         ids[i] = parseInt(userIds[i]['id']);
-                        names[i] = userIds[i]['name'];
                     }
-                    $('#user-picker-input-' + userPicker.pickerName).val(ids);
-                    $('#user-picker-input-view-' + userPicker.pickerName).val(names);
                     
-                    (ids.length > 0) ? 
-                        userPicker.callBack(ids) :
-                        userPicker.callBack(null);
-                } else if (userPicker.multiple === 'single') {
+                    var params = {};
+                    params.userIds = ids;
+                    var route = Routing.generate('claro_users_infos_request');
+                    route += '?' + $.param(params);
+
+                    $.ajax({
+                        url: route,
+                        type: 'GET',
+                        success: function (datas) {
+                            (datas.length > 0) ? 
+                                userPicker.callBack(datas) :
+                                userPicker.callBack(null);
+                        }
+                    });
+                } else {
                     
-                    if (userIds.length > 0) {
-                        $('#user-picker-input-' + userPicker.pickerName).val(parseInt(userIds[0]['id']));
-                        $('#user-picker-input-view-' + userPicker.pickerName).val(userIds[0]['name']);
-                        userPicker.callBack(userIds[0]['id']);
-                    } else {
-                        $('#user-picker-input-' + userPicker.pickerName).val(null);
-                        $('#user-picker-input-view-' + userPicker.pickerName).val(null);
-                        userPicker.callBack(null);
+                    if (userPicker.multiple === 'multiple') {
+                        var ids = [];
+                        var names = [];
+
+                        for (var i = 0; i < userIds.length; i++) {
+                            ids[i] = parseInt(userIds[i]['id']);
+                            names[i] = userIds[i]['name'];
+                        }
+                        $('#user-picker-input-' + userPicker.pickerName).val(ids);
+                        $('#user-picker-input-view-' + userPicker.pickerName).val(names);
+
+                        (ids.length > 0) ? 
+                            userPicker.callBack(ids) :
+                            userPicker.callBack(null);
+                    } else if (userPicker.multiple === 'single') {
+
+                        if (userIds.length > 0) {
+                            $('#user-picker-input-' + userPicker.pickerName).val(parseInt(userIds[0]['id']));
+                            $('#user-picker-input-view-' + userPicker.pickerName).val(userIds[0]['name']);
+                            userPicker.callBack(userIds[0]['id']);
+                        } else {
+                            $('#user-picker-input-' + userPicker.pickerName).val(null);
+                            $('#user-picker-input-view-' + userPicker.pickerName).val(null);
+                            userPicker.callBack(null);
+                        }
                     }
                 }
                 modalElement.modal('hide');
