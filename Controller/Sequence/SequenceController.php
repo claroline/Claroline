@@ -164,6 +164,7 @@ class SequenceController extends Controller
                     )
                 )
             );
+        
         }
         
         else if ($type === "match") {
