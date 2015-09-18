@@ -325,6 +325,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
     public function deleteDocumentAction(Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
 
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $canEdit = $this->get('innova.manager.dropzone_voter')->checkEditRight($dropzone);
 
@@ -366,6 +367,8 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
                 );
             }
         }
+      
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $view = 'InnovaCollecticielBundle:Document:deleteDocument.html.twig';
         if ($this->getRequest()->isXMLHttpRequest()) {
@@ -381,6 +384,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
                 'drop' => $drop,
                 'document' => $document,
                 'form' => $form->createView(),
+                'collecticielOpenOrNot' => $collecticielOpenOrNot,
             )
         );
     }

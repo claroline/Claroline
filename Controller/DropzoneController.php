@@ -52,6 +52,7 @@ class DropzoneController extends DropzoneBaseController
 
         $dropzoneVoter->isAllowToOpen($dropzone);
         $dropzoneVoter->isAllowToEdit($dropzone);
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
         $form = $this->createForm(
             new DropzoneCommonType(), $dropzone,
@@ -111,6 +112,8 @@ class DropzoneController extends DropzoneBaseController
         && $this->get('security.token_storage')->getToken()->getUser()->getId() == $user->getId()) {
             $adminInnova = true;
         }
+    
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -118,6 +121,7 @@ class DropzoneController extends DropzoneBaseController
             'dropzone' => $dropzone,
             'form' => $form->createView(),
             'adminInnova' => $adminInnova,
+            'collecticielOpenOrNot' => $collecticielOpenOrNot
         );
     }
 

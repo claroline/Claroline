@@ -1,8 +1,11 @@
 {# Si le document a été demandé en évaluation alors je ne peux plus le faire #}
 {# Cf popup.js #}
 {# Ajout de la classe document_validate pour la validation du document #}
+{# Si le collecticiel n'est pas ouverte, il n'est pas possible de demander une évaluation. InnovaERV #}
 {% if not document.validate %}
-    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+    {% if collecticielOpenOrNot %}
+	    <input id="document_id_{{ document.id }}" value="document" type="checkbox" class="document_validate" name="document_id_{{ document.id }}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#validate-modal" data-document_id="{{ document.id }}" />
+	{% endif %}
 {% else %}
     <input id="document_id_{{ document.id }}" value="document" type="checkbox" name="document_id_{{ document.id }}" disabled checked />
     {# #32 ajout de "Demande transmise #}

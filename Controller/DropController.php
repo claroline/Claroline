@@ -113,7 +113,9 @@ class DropController extends DropzoneBaseController
         $userNbTextToRead = array();
 
         $activeRoute = $this->getRequest()->attributes->get('_route');
-        
+      
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
         return array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -128,7 +130,8 @@ class DropController extends DropzoneBaseController
             'dropzoneProgress' => $dropzoneProgress,
             'adminInnova' => $canEdit,
             'userNbTextToRead' => $userNbTextToRead,
-            'activeRoute' => $activeRoute
+            'activeRoute' => $activeRoute,
+            'collecticielOpenOrNot' => $collecticielOpenOrNot
         );
     }
 
@@ -497,7 +500,8 @@ class DropController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
-        
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
+
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
 
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop');
@@ -555,6 +559,8 @@ class DropController extends DropzoneBaseController
             $adminInnova = true;
         }*/
 
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
         $dataToView = $this->addDropsStats($dropzone, array(
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
             '_resource' => $dropzone,
@@ -564,6 +570,7 @@ class DropController extends DropzoneBaseController
             'nbCommentNotRead' => $userToCommentCount,
             'userNbTextToRead' => $userNbTextToRead,
             'adminInnova' => $adminInnova,
+            'collecticielOpenOrNot' => $collecticielOpenOrNot,
         ));
 
         return $dataToView;
@@ -975,6 +982,7 @@ class DropController extends DropzoneBaseController
 // Onglet "Espaces partagés"
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
+        $dropzoneManager = $this->get('innova.manager.dropzone_manager');
 
         $dropzoneVoter = $this->get('innova.manager.dropzone_voter');
         
@@ -1052,6 +1060,10 @@ class DropController extends DropzoneBaseController
         }
 
         $adminInnova = $dropzoneVoter->checkEditRight($dropzone);
+
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
+
+
         /*
         if ($this->get('security.context')->isGranted('ROLE_ADMIN' === true)) {
             $adminInnova = true;
@@ -1066,7 +1078,8 @@ class DropController extends DropzoneBaseController
             'userNbDocDropped' => $userNbDocDropped,
             'userNbAdressedRequests' => $userNbAdressedRequests,
             'adminInnova' => $adminInnova,
-            'usersByWorkspaces' => $usersByWorkspaces
+            'usersByWorkspaces' => $usersByWorkspaces,
+            'collecticielOpenOrNot' => $collecticielOpenOrNot
         ));
 
         return $dataToView;

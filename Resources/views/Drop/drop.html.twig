@@ -30,10 +30,11 @@
         <a href="{{ path('innova_collecticiel_open', {'resourceId': dropzone.id}) }}"><span
                     class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</a>
     </li>
-    <li class="active"> {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}</li>
+    <li class="active">{{ 'Make my copy'|trans({}, 'innova_collecticiel') }}</li>
 {% endblock %}
 
 {% block drop_zone_content_edit %}
+
         {# InnovaERV : affichage enlevé car affiché en double
         <h3>
             {{ 'Make my copy'|trans({}, 'innova_collecticiel') }}
@@ -57,7 +58,7 @@
 
         {# DOCUMENTS ALREADY ADDED #}
         <h4>{{ 'Documents added  the copy %nom% %prenom% %pseudo%'|trans({'%nom%': drop.user.firstName, '%prenom%': drop.user.lastName, '%pseudo%': drop.user.username},'innova_collecticiel') }}</h4>
-        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova) }}
+        {{ dropzoneMacros.displayDocumentsList(drop, dropzone, 12, "complete", null, adminInnova, collecticielOpenOrNot) }}
 
         {% if adminInnova %}
             {% set lastType = "file" %}
@@ -78,7 +79,9 @@
 
         <br/>
         {# ADD DOCUMENT #}
-        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig' with {'lastType': lastType}  %}
+        {% include 'InnovaCollecticielBundle:Drop:addDocument.html.twig'
+         with {'lastType': lastType, 'collecticielOpenOrNot': collecticielOpenOrNot}
+        %}
 
         {# GLOBAL DROP FORM #}
         <form id='dropzone_global_drop_form' class="form-horizontal" method="POST"

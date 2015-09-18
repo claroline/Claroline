@@ -6,7 +6,6 @@
 <h4>{{ 'Add a document'|trans({}, 'innova_collecticiel') }}</h4>
 
 <div class='div-test well'>
-
     {# ****************************************************** #}
     {# InnovaERV                                              #}
     {# Partie "affichage des menus"                           #}
@@ -16,57 +15,63 @@
     {% if allowedTypes|length <= 0 %}
         <span class="text-danger">{{ 'No document type allowed'|trans({}, 'innova_collecticiel') }}</span>
     {% else %}
-        {% set activeClass = " active " %}
-        <ul class="nav nav-tabs">
-            {# Déposer un fichier #}
-            {% if 'file' in allowedTypes %}
-                {% if lastType == 'file' %}
-                    {% set activeClass = " active " %}
-                {% else %}
+        {% if (adminInnova == false and collecticielOpenOrNot == false) %}
+                <div class="alert alert-warning">
+                  {{ 'NotAllowToAddAnyDocument'|trans({}, 'innova_collecticiel') }}
+                </div>
+        {% else %}
+            {% set activeClass = " active " %}
+            <ul class="nav nav-tabs">
+                {# Déposer un fichier #}
+                {% if 'file' in allowedTypes %}
+                    {% if lastType == 'file' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <li class="{{ activeClass }}">
+                        <a href="#file-tab" data-toggle="tab">{{ 'file' |trans({}, 'innova_collecticiel') }}</a>
+                    </li>
                     {% set activeClass = "" %}
                 {% endif %}
-                <li class="{{ activeClass }}">
-                    <a href="#file-tab" data-toggle="tab">{{ 'file' |trans({}, 'innova_collecticiel') }}</a>
-                </li>
-                {% set activeClass = "" %}
-            {% endif %}
-            {# Saisir une URL #}
-            {% if 'url' in allowedTypes %}
-                {% if lastType == 'url' %}
-                    {% set activeClass = " active " %}
-                {% else %}
+                {# Saisir une URL #}
+                {% if 'url' in allowedTypes %}
+                    {% if lastType == 'url' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <li class="{{ activeClass }}">
+                        <a href="#url-tab" data-toggle="tab">{{ 'url' |trans({}, 'innova_collecticiel') }}</a>
+                    </li>
                     {% set activeClass = "" %}
                 {% endif %}
-                <li class="{{ activeClass }}">
-                    <a href="#url-tab" data-toggle="tab">{{ 'url' |trans({}, 'innova_collecticiel') }}</a>
-                </li>
-                {% set activeClass = "" %}
-            {% endif %}
-            {# Ajouter une ressource #}
-            {% if 'resource' in allowedTypes %}
-                {% if lastType == 'resource' %}
-                    {% set activeClass = " active " %}
-                {% else %}
+                {# Ajouter une ressource #}
+                {% if 'resource' in allowedTypes %}
+                    {% if lastType == 'resource' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <li class="{{ activeClass }}">
+                        <a href="#resource-tab" data-toggle="tab">{{ 'resource' |trans({}, 'innova_collecticiel') }}</a>
+                    </li>
                     {% set activeClass = "" %}
                 {% endif %}
-                <li class="{{ activeClass }}">
-                    <a href="#resource-tab" data-toggle="tab">{{ 'resource' |trans({}, 'innova_collecticiel') }}</a>
-                </li>
-                {% set activeClass = "" %}
-            {% endif %}
-            {# Rédiger un texte #}
-            {% if 'text' in allowedTypes %}
-                {% if lastType == 'text' %}
-                    {% set activeClass = " active " %}
-                {% else %}
+                {# Rédiger un texte #}
+                {% if 'text' in allowedTypes %}
+                    {% if lastType == 'text' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <li class="{{ activeClass }}">
+                        <a href="#text-tab" data-toggle="tab">{{ 'text' |trans({}, 'innova_collecticiel') }}</a>
+                    </li>
                     {% set activeClass = "" %}
                 {% endif %}
-                <li class="{{ activeClass }}">
-                    <a href="#text-tab" data-toggle="tab">{{ 'text' |trans({}, 'innova_collecticiel') }}</a>
-                </li>
-                {% set activeClass = "" %}
-            {% endif %}
-        </ul>
+            </ul>
+        {% endif %}
     {% endif %}
 
     {# ******************************************** #}
@@ -76,56 +81,58 @@
     {# les modifications si on change l'ordre       #}
     {# et que l'on veut garder les zones de saisies #}
     {# ******************************************** #}
-    {% if allowedTypes|length > 0 %}
-        <div class="tab-content">
-            {# Déposer un fichier #}
-            {% if 'file' in allowedTypes %}
-                {% if lastType == 'file' %}
-                    {% set activeClass = " active " %}
-                {% else %}
-                    {% set activeClass = "" %}
+     {% if not (adminInnova == false and collecticielOpenOrNot == false) %}
+        {% if allowedTypes|length > 0 %}
+            <div class="tab-content">
+                {# Déposer un fichier #}
+                {% if 'file' in allowedTypes %}
+                    {% if lastType == 'file' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <div class="tab-pane {{ activeClass }}" id="file-tab">
+                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        with {'form':form_file, 'documentType': 'file'} %}
+                    </div>
                 {% endif %}
-                <div class="tab-pane {{ activeClass }}" id="file-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
-                    with {'form':form_file, 'documentType': 'file'} %}
-                </div>
-            {% endif %}
-            {# Saisir une URL #}
-            {% if 'url' in allowedTypes %}
-                {% if lastType == 'url' %}
-                    {% set activeClass = " active " %}
-                {% else %}
-                    {% set activeClass = "" %}
+                {# Saisir une URL #}
+                {% if 'url' in allowedTypes %}
+                    {% if lastType == 'url' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <div class="tab-pane {{ activeClass }}" id="url-tab">
+                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        with {'form':form_url, 'documentType': 'url'} %}
+                    </div>
                 {% endif %}
-                <div class="tab-pane {{ activeClass }}" id="url-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
-                    with {'form':form_url, 'documentType': 'url'} %}
-                </div>
-            {% endif %}
-            {# Ajouter une ressource #}
-            {% if 'resource' in allowedTypes %}
-                {% if lastType == 'resource' %}
-                    {% set activeClass = " active " %}
-                {% else %}
-                    {% set activeClass = "" %}
+                {# Ajouter une ressource #}
+                {% if 'resource' in allowedTypes %}
+                    {% if lastType == 'resource' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <div class="tab-pane {{ activeClass }}" id="resource-tab">
+                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        with {'form':form_resource, 'documentType': 'resource'} %}
+                    </div>
                 {% endif %}
-                <div class="tab-pane {{ activeClass }}" id="resource-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
-                    with {'form':form_resource, 'documentType': 'resource'} %}
-                </div>
-            {% endif %}
-            {# Rédiger un texte #}
-            {% if 'text' in allowedTypes %}
-                {% if lastType == 'text' %}
-                    {% set activeClass = " active " %}
-                {% else %}
-                    {% set activeClass = "" %}
+                {# Rédiger un texte #}
+                {% if 'text' in allowedTypes %}
+                    {% if lastType == 'text' %}
+                        {% set activeClass = " active " %}
+                    {% else %}
+                        {% set activeClass = "" %}
+                    {% endif %}
+                    <div class="tab-pane {{ activeClass }}" id="text-tab">
+                        {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
+                        with {'form':form_text, 'documentType': 'text'} %}
+                    </div>
                 {% endif %}
-                <div class="tab-pane {{ activeClass }}" id="text-tab">
-                    {% include 'InnovaCollecticielBundle:Document:documentForm.html.twig'
-                    with {'form':form_text, 'documentType': 'text'} %}
-                </div>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
     {% endif %}
 </div>
