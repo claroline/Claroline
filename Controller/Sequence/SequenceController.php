@@ -30,6 +30,7 @@ class SequenceController extends Controller
         /*
         $manager = $this->get('ujm.exo.api_manager');
         $exo = $manager->exportExercise($exercise);
+
         $steps = $exo['steps'];
         $data = json_encode($exo);
         */
@@ -107,27 +108,26 @@ class SequenceController extends Controller
                 "maxAttempts" => 4
             );
         }
-
+        
         // SORT QUESTION
         if ($type === "sort") {
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.sort+json",
-                "title" => "Question ?",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.sort+json",
                         "items" => array(
-                            array(
-                                "id" => 2,
-                                "type" => "text/plain",
-                                "data" => "Item A"
-                            ),
-                            array(
-                                "id" => 3,
-                                "type" => "text/plain",
-                                "data" => "Item B"
-                            )
+                          array(
+                            "id" => 2,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
                         )
                     )
                 )
@@ -135,65 +135,67 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.sort+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.sort+json",
                         "items" => array(
-                            array(
-                                "id" => 2,
-                                "type" => "image/jpg",
-                                "url" => $webImg1
-                            ),
-                            array(
-                                "id" => 3,
-                                "type" => "image/jpg",
-                                "url" => $webImg2
-                            ),
-                            array(
-                                "id" => 4,
-                                "type" => "image/jpg",
-                                "url" => $webImg3
-                            )
+                          array(
+                            "id" => 2,
+                            "type" => "image/jpg",
+                            "url" => $webImg1
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "image/jpg",
+                            "url" => $webImg2
+                          ),
+                          array(
+                            "id" => 4,
+                            "type" => "image/jpg",
+                            "url" => $webImg3
+                          )
                         ),
                         "solution" => array(
-                            "itemIds" => [3, 4, 2],
-                            "itemScore" => 1.5
+                          "itemIds" => [3, 4, 2],
+                          "itemScore" => 1.5
                         ),
                         "feedback" => "Lorem ipsum dolor sit amet"
                     )
                 )
             );
-        } else if ($type === "match") {
+        }
+        
+        else if ($type === "match") {
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.match+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.match+json",
                         "firstSet" => array(
-                            array(
-                                "id" => 2,
-                                "type" => "text/plain",
-                                "data" => "Item A"
-                            ),
-                            array(
-                                "id" => 3,
-                                "type" => "text/plain",
-                                "data" => "Item B"
-                            )
+                          array(
+                            "id" => 2,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
                         ),
                         "secondSet" => array(
-                            array(
-                                "id" => 4,
-                                "type" => "text/plain",
-                                "data" => "Item C"
-                            ),
-                            array(
-                                "id" => 5,
-                                "type" => "text/plain",
-                                "data" => "Item D"
-                            )
+                          array(
+                            "id" => 4,
+                            "type" => "text/plain",
+                            "data" => "Item C"
+                          ),
+                          array(
+                            "id" => 5,
+                            "type" => "text/plain",
+                            "data" => "Item D"
+                          )
                         )
                     )
                 )
@@ -201,69 +203,71 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.match+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.match+json",
                         "firstSet" => array(
-                            array(
-                                "id" => 3,
-                                "type" => "text/plain",
-                                "data" => "Item A"
-                            ),
-                            array(
-                                "id" => 4,
-                                "type" => "text/plain",
-                                "data" => "Item B"
-                            )
+                          array(
+                            "id" => 3,
+                            "type" => "text/plain",
+                            "data" => "Item A"
+                          ),
+                          array(
+                            "id" => 4,
+                            "type" => "text/plain",
+                            "data" => "Item B"
+                          )
                         ),
                         "secondSet" => array(
-                            array(
-                                "id" => 5,
-                                "type" => "image/png",
-                                "url" => $webImg2
-                            ),
-                            array(
-                                "id" => 6,
-                                "type" => "image/png",
-                                "url" => $webImg3
-                            )
+                          array(
+                            "id" => 5,
+                            "type" => "image/png",
+                            "url" => $webImg2
+                          ),
+                          array(
+                            "id" => 6,
+                            "type" => "image/png",
+                            "url" => $webImg3
+                          )
                         ),
                         "solutions" => array(
-                            array(
-                                "firstId" => 3,
-                                "secondId" => 6,
-                                "score" => 1.5
-                            ),
-                            array(
-                                "firstId" => 4,
-                                "secondId" => 5,
-                                "score" => 1
-                            )
+                          array(
+                            "firstId" => 3,
+                            "secondId" => 6,
+                            "score" => 1.5
+                          ),
+                          array(
+                            "firstId" => 4,
+                            "secondId" => 5,
+                            "score" => 1
+                          )
                         ),
                         "feedback" => "Lorem ipsum dolor sit amet."
                     )
                 )
             );
-        } else if ($type === "cloze") {
+        }
+        
+        else if ($type === "cloze") {
             // CLOZE QUESTION
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.cloze+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
                         "holes" => array(
-                            array(
-                                "id" => 1,
-                                "size" => 20
-                            ),
-                            array(
-                                "id" => 2,
-                                "size" => 14,
-                                "placeholder" => "(verb)"
-                            )
+                          array(
+                            "id" => 1,
+                            "size" => 20
+                          ),
+                          array(
+                            "id" => 2,
+                            "size" => 14,
+                            "placeholder" => "(verb)"
+                          )
                         )
                     )
                 )
@@ -271,32 +275,34 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.cloze+json",
                 "items" => array(
                     array(
+                        "id" => "2",
                         "title" => "Question ?",
+                        "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "feedback" => "Global feedback", 
                         "holes" => array(
-                            array(
-                                "id" => 1,
-                                "choices" => ["foo", "ipsum", "bar"]
-                            ),
-                            array(
-                                "id" => 2,
-                                "size" => 10
-                            )
+                          array(
+                            "id" => 1,
+                            "choices" => ["foo", "ipsum", "bar"]
+                          ),
+                          array(
+                            "id" => 2,
+                            "size" => 10
+                          )
                         ),
                         "solutions" => array(
-                            array(
-                                "holeId" => 1,
-                                "answers" => ["ipsum"],
-                                "score" => 1.5
-                            ),
-                            array(
-                                "holeId" => 2,
-                                "answers" => ["amet", "consecitur", "nunc"],
-                                "score" => 3.5
-                            )
+                          array(
+                            "holeId" => 1,
+                            "answers" => ["ipsum"],
+                            "score" => 1.5
+                          ),
+                          array(
+                            "holeId" => 2,
+                            "answers" => ["amet", "consecitur", "nunc"],
+                            "score" => 3.5
+                          )
                         )
                     )
                 )
