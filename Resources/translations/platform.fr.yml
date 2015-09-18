@@ -744,7 +744,7 @@ recursive_dir_action: 'Appliquer au contenu du répertoire et aux sous-répertoi
 redirect_after_login: 'Rediriger vers la dernière page visitée'
 redirect_uri: 'Url de redirection'
 refresh: Rafraîchir
-refresh_explanation: "Certains problèmes peuvent apparaître en raison de fichiers javascripts et css qui n'ont pas bien été générés. </br>\nAfin de tenter de résoudre, veuillez sur \"Raffraîchir\"  </br>\nPour augmenter vos chances, pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
+refresh_explanation: "Certains problèmes peuvent apparaître en raison de fichiers javascripts et css qui n'ont pas bien été générés. </br>\nAfin de tenter de résoudre ce problème, veuillez cliquer sur \"Rafraîchir\".  </br>\nPour augmenter vos chances, vous pouvez également essayer de vider le dossier app/cache de la plateforme manuellement avant de tenter l'opération.\n"
 register: Inscription
 register_to_a_public_workspace: 'Inscription à un espace d''activités public'
 register_to_a_workspace: 'M''inscrire à un espace'
