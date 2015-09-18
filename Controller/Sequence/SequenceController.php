@@ -114,10 +114,10 @@ class SequenceController extends Controller
         if ($type === "sort") {
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.sort+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.sort+json",
                         "items" => array(
                           array(
                             "id" => 2,
@@ -136,10 +136,10 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.sort+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.sort+json",
                         "items" => array(
                           array(
                             "id" => 2,
@@ -165,16 +165,15 @@ class SequenceController extends Controller
                     )
                 )
             );
-        
         }
         
         else if ($type === "match") {
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.match+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.match+json",
                         "firstSet" => array(
                           array(
                             "id" => 2,
@@ -205,10 +204,10 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.match+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.match+json",
                         "firstSet" => array(
                           array(
                             "id" => 3,
@@ -255,10 +254,10 @@ class SequenceController extends Controller
             // CLOZE QUESTION
             $step1 = array(
                 "id" => 1,
-                "type" => "application/x.cloze+json",
                 "items" => array(
                     array(
                         "title" => "Question ?",
+                        "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
                         "holes" => array(
                           array(
@@ -277,11 +276,13 @@ class SequenceController extends Controller
 
             $step2 = array(
                 "id" => 1,
-                "type" => "application/x.cloze+json",
                 "items" => array(
                     array(
+                        "id" => "2",
                         "title" => "Question ?",
+                        "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
+                        "feedback" => "Global feedback", 
                         "holes" => array(
                           array(
                             "id" => 1,
@@ -309,104 +310,100 @@ class SequenceController extends Controller
             );
         }
         
-        else if ($type === "choice") {
-            $step1 = array(
-                "id" => "1",
-                "type" => "application/x.choice+json",
+        else if ($type === "choice") { 
+            $step1 = array( 
+                "id" => "1", 
                 "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "choices" => array(
-                          array(
-                            "id" => "1",
-                            "type" => "image/png",
-                            "url" => $webImg1,
-                            "meta" => array(
-                              "description" => "Image 1"
-                            )
-                          ),
-                          array(
-                            "id" => "2",
-                            "type" => "image/jpg",
-                            "url" => $webImg2,
-                            "meta" => array(
-                              "description" => "Image 2"
-                            )
-                          ),
-                          array(
-                            "id" => "3",
-                            "type" => "image/png",
-                            "url" => $webImg3,
-                            "meta" => array(
-                              "description" => "Image 3"
-                            )
-                          )
-                        ),
-                        "random" => false,
-                        "multiple" => false,
+                    array( 
+                        "id" => "7",
+                        "type" => "application/x.choice+json", 
+                        "title" => "Simple question for dummies...", 
+                        "label" => "Witch image shows a kid ?", 
+                        "random" => false, 
+                        "multiple" => false, 
+                        "feedback" => "Global feedback", 
+                        "hints" => "", 
+                        "choices" => array( 
+                            array( 
+                                "id" => "1", 
+                                "type" => "image/png", 
+                                "url" => $webImg1, 
+                                "meta" => array( 
+                                    "description" => "Image 1" 
+                                ) 
+                            ), 
+                            array( 
+                                "id" => "2", 
+                                "type" => "image/jpg", 
+                                "url" => $webImg2, 
+                                "meta" => array( 
+                                    "description" => "Image 2" 
+                                ) 
+                            ), 
+                            array(
+                                "id" => "3", 
+                                "type" => "image/png", 
+                                "url" => $webImg3, 
+                                "meta" => array( 
+                                    "description" => "Image 3" 
+                                ) 
+                            ) 
+                        ), 
                         "solutions" => array(
-                          array(
-                            "id" => "1",
-                            "score" => 2
-                          ),
-                          array(
-                            "id" => "3",
-                            "score" => 1
-                          )
-                        )
-                    )
-                )
-            );
+                            array( 
+                                "id" => "2", 
+                                "score" => 2 
+                            ) 
+                        ) 
+                    ) 
+                ) 
+            ); 
             
             $step2 = array(
-                "id" => "1",
-                "type" => "application/x.choice+json",
-                "meta" => array(
-                  "authors" => array(
-                    array(
-                      "name" => "John Doe",
-                      "status" => "Tutor"
-                    )
-                  ),
-                  "license" => "CC",
-                  "created" => "2014-06-23"
-                ),
+                "id" => "1", 
                 "items" => array(
-                    array(
-                        "title" => "Question ?",
-                        "choices" => array(
-                          array(
-                            "id" => "3",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img1
-                          ),
-                          array(
-                            "id" => "4",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img2
-                          ),
-                          array(
-                            "id" => "5",
-                            "type" => "image/png",
-                            "encoding" => "base64",
-                            "data" => $base64Img3
-                          )
-                        ),
-                        "random" => false,
-                        "multiple" => false,
-                        "hints" => array(
-                          array(
-                            "id" => "3",
-                            "text" => "Lorem",
-                            "penalty" => 1
-                          ),
-                          array(
-                            "id" => "5",
-                            "text" => "Ipsum",
-                            "penalty" => 1.5
-                          )
+                    array( 
+                        "id" => "7", 
+                        "type" => "application/x.choice+json", 
+                        "title" => "Another simple question for dummies...", 
+                        "label" => "What is my prefered color ?", 
+                        "random" => true, 
+                        "multiple" => true, 
+                        "feedback" => "Global feedback", 
+                        "hints" => array( 
+                            array( 
+                                "id" => "27", 
+                                "text" => "Lorem", 
+                                "penalty" => 1 
+                            ), 
+                            array( 
+                                "id" => "75", 
+                                "text" => "Ipsum", 
+                                "penalty" => 1.5 
+                            ) 
+                        ), 
+                        "choices" => array( 
+                            array( 
+                                "id" => "3", 
+                                "type" => "text/html", 
+                                "data" => "<p>White</p>" 
+                            ), 
+                            array( 
+                                "id" => "4", 
+                                "type" => "text/html", 
+                                "data" => "<p>Yellow</p>" 
+                            ), 
+                            array( 
+                                "id" => "5", 
+                                "type" => "text/html", 
+                                "data" => "<p>Black</p>" 
+                            ) 
+                        ), 
+                        "solutions" => array( 
+                            array( 
+                                "id" => "3", 
+                                "score" => 2 
+                            )
                         )
                     )
                 )
