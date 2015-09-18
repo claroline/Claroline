@@ -30,9 +30,9 @@
         </div>
     </div>
     <p>
-        <button type="button" class="btn btn-sm btn-success" data-ui-resource-picker="resourcePickerConfig" data-ui-resources="collection">
-            {{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}
-        </button>
+        <btn-resource-picker data-parameters="resourcePickerConfig" class="btn btn-sm btn-success">
+            <span>{{ 'formation_add_resource'|trans({}, 'icap_portfolio') }}</span>
+        </btn-resource-picker>
     </p>
     <ul class="list-unstyled">
         <li data-ng-repeat="resource in collection">
