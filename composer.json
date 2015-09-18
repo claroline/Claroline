@@ -15,7 +15,8 @@
         "claroline/core-bundle": "~6.0",
         "claroline/team-bundle": "~6.0",
         "icap/badge-bundle": "~6.0",
-        "innova/angular-js-bundle": "~5.0"
+        "innova/angular-js-bundle": "~5.0",
+        "innova/angular-ui-resource-picker-bundle" : "~6.0"
     },
     "autoload": {
         "psr-0": { "Icap\\PortfolioBundle": "" }
