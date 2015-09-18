@@ -448,6 +448,30 @@ class PresenceController extends Controller
         return new JsonResponse($datas,200);
     }
     
+     /**
+     * @EXT\Route(
+     *     "/presence/listingstatusbydefaultnoadmin",
+     *     name="formalibre_presence_listingstatusbydefaultnoadmin",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @param User $user
+     */
+    public function ListingStatusByDefaultnoAdminAction()
+            
+    {
+        
+        $liststatus= $this->statuRepo->findByStatusByDefault(0);
+        $datas=array();
+        foreach($liststatus as $status)
+        {
+            $datas[$status->getId()]=array();
+            $datas[$status->getId()]=$status->getId();
+        }
+        return new JsonResponse($datas,200);
+    }
+    
     
     
 }
