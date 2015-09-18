@@ -1,13 +1,10 @@
 'use strict';
 
 commentsApp
-    .controller("commentsController", ["$scope", "$timeout", "commentsManager", "assetPath", function($scope, $timeout, commentsManager, assetPath) {
+    .controller("commentsController", ["$scope", "$timeout", "commentsManager", "assetPath", "tinyMceConfig",
+        function($scope, $timeout, commentsManager, assetPath, tinyMceConfig) {
         $scope.comments = commentsManager.comments;
-        $scope.tinyMceConfig = {
-            forced_root_block : "",
-            force_br_newlines : true,
-            force_p_newlines : false
-        };
+        $scope.tinyMceConfig = tinyMceConfig;
         $scope.assetPath = assetPath;
 
         $scope.addComment = function(portfolioId, message) {

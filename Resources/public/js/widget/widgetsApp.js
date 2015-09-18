@@ -2,7 +2,7 @@
 
 var widgetsApp = angular.module('widgetsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
     'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'ui.dateTimeInput', 'mgcrea.ngStrap.popover',
-    'ui.bootstrap.collapse', 'app.translation', 'app.interpolator', 'app.directives']);
+    'ui.bootstrap.collapse', 'app.translation', 'app.interpolator', 'app.directives', 'app.config']);
 
 widgetsApp.config(["$httpProvider", function($http) {
     var elementToRemove = ['views', 'isCollapsed', 'isEditing', 'isUpdating', 'isDeleting', 'isNew'];
