@@ -105,20 +105,6 @@ class MailManager
         return $this->send($subject, $body, array($user));
     }
 
-    public function sendInitPassword(User $user)
-    {
-        $this->container->get('claroline.manager.user_manager')->initializePassword($user);
-        $hash = $user->getResetPasswordHash();
-        $link = $this->router->generate('claro_security_reset_password', array('hash' => $hash), true);
-        $subject = $this->translator->trans('initialize_your_password', array(), 'platform');
-
-        $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:initialize_password.html.twig', array('user' => $user, 'link' => $link)
-        );
-
-        return $this->send($subject, $body, array($user));
-    }
-
     public function sendEnableAccountMessage($user)
     {
         $hash = $user->getResetPasswordHash();

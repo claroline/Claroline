@@ -1010,7 +1010,6 @@ class RoleManager
         $this->om->endFlushSuite();
     }
 
-<<<<<<< HEAD
     public function getRoleOptions(Role $role)
     {
         $roleOptions = $this->roleOptionsRepo->findOneByRole($role);
