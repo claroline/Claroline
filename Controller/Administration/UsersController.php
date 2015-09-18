@@ -461,9 +461,9 @@ class UsersController extends Controller
                 return array('form' => $form->createView(), 'error' => 'role_user unavailable');
             }
 
-            $additionalRole = $form->get('role')->getData();
+            $additionalRoles = $form->get('roles')->getData();
 
-            if ($additionalRole !== null) {
+            foreach ($additionalRoles as $additionalRole) {
                 $max = $additionalRole->getMaxUsers();
                 $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
 
@@ -477,12 +477,9 @@ class UsersController extends Controller
             }
 
             if (count($toUpdate) > 0) {
-                $additionalRoles = is_null($additionalRole) ?
-                    array() :
-                    array($additionalRole);
                 $updatedNames = $this->userManager->updateImportedUsers(
                     $toUpdate,
-                    $additionalRoles
+                    $additionalRoles->toArray()
                 );
 
                 foreach ($updatedNames as $name) {
@@ -499,7 +496,7 @@ class UsersController extends Controller
                 $users,
                 $sendMail,
                 null,
-                array($additionalRole)
+                $additionalRoles
             );
 
             foreach ($createdNames as $name) {
