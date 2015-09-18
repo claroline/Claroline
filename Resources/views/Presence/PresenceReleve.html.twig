@@ -56,7 +56,8 @@
 
                 <br /><br /><br /><br /> 
                 <form method="post" {{ form_enctype(presForm) }}>
-                <table id="studentList" class="cell-border table table-striped table-bordered" cellspacing="0" width="50%">
+                    <div class="table-responsive">    
+                <table id="studentList" class="cell-border table table-striped table-bordered " cellspacing="0" width="100%">
                     <thead>
                         <tr>
                             <th>{{"tromb"|trans({},"presences")}}</th>
@@ -77,8 +78,8 @@
                                                 
                                                     <h1><i class="fa fa-user img-thumbnail"></i></h1>
                                             {% else %}   
-                                                        <img id="photo" style="height:150px;" 
-                                                         class="img-thumbnail" 
+                                                        <img id="photo" style="height:150px; border: 2px solid black;" 
+                                                         class="img-circle" 
                                                          src="{{asset('uploads/pictures/') ~ student.getUserStudent().getPicture()}}" 
                                                          width="100" 
                                                          alt="Photo de l'élève">
@@ -124,6 +125,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
 
 
                     <br/><br/>
@@ -167,7 +169,7 @@
          if($(this).prop('checked')){
              var valeurCheck=$(this).val();
 
-             image.css( 'background-color', colors[valeurCheck]['color']);  
+             image.css( 'border-color', colors[valeurCheck]['color']);  
 
          }
 
@@ -179,7 +181,7 @@
             var OneForm=$(this).closest('.OneForm');
             var image =OneForm.find("img");
             var valeurCheck=$(this).val();
-            image.css( 'background-color', colors[valeurCheck]['color']);
+            image.css( 'border-color', colors[valeurCheck]['color']);
             var oTable = $('#studentList').dataTable();
              oTable.fnFilter('');
          
@@ -202,7 +204,7 @@
               $(this).prop('checked',true);
               var OneForm=$(this).closest('.OneForm');
               var image =OneForm.find("img");
-            image.css( 'background-color', colors[status]['color']);
+            image.css( 'border-color', colors[status]['color']);
             console.log("testcouleur")
               }
               else
@@ -248,10 +250,12 @@
         $(document).ready(function() {
             $('#studentList').DataTable( {
                 
-                paging: true,
-                "pageLength": 25,
+               
+                 dom: 'Bftlp',
+                buttons: true,
+               "pageLength": 25,
                 "language": {
-                    "lengthMenu": "Afficher _MENU_ étudiants par page",
+                    "lengthMenu": "Nombre d'étudiants par page _MENU_",
                     "zeroRecords": "Rien trouvé - Désolé",
                     "info": "Affichage de la page _PAGE_ sur _PAGES_",
                     "infoEmpty": "Pas de présence valide",
