@@ -161,7 +161,7 @@ class UserManager
                 $this->mailManager->sendCreationMessage($user);
             }
         }
-        
+
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
 
@@ -237,7 +237,7 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
-        $this->objectManager->remove($userRole);
+        if ($userRole) $this->objectManager->remove($userRole);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 
@@ -406,13 +406,13 @@ class UserManager
         $locale = $this->platformConfigHandler->getParameter('locale_language');
         $this->translator->setLocale($locale);
         $created = $this->workspaceManager->getWorkspaceByCode($user->getUsername());
-        
+
         if (count($created) > 0) {
             $code = $user->getUsername() . '~' . uniqid();
         } else {
             $code = $user->getUsername();
         }
-        
+
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . ' - ' . $user->getUsername();
 
         if (!$model) {
@@ -1459,7 +1459,7 @@ class UserManager
 
         return $restrictions;
     }
-    
+
     public function initializePassword(User $user)
     {
         $user->setHashTime(time());

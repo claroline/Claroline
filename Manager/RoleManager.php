@@ -30,12 +30,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @DI\Service("claroline.manager.role_manager")
  */
 class RoleManager
 {
+    use LoggableTrait;
+
     /** @var RoleRepository */
     private $roleRepo;
     /** @var RoleOptionsRepository */
@@ -70,6 +75,7 @@ class RoleManager
     )
     {
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
+        $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->roleOptionsRepo = $om->getRepository('ClarolineCoreBundle:RoleOptions');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->groupRepo = $om->getRepository('ClarolineCoreBundle:Group');
@@ -1052,5 +1058,61 @@ class RoleManager
         return count($roles) > 0 ?
             $this->roleOptionsRepo->findRoleOptionsByRoles($roles) :
             array();
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function checkIntegrity()
+    {
+        $this->log('Checking workspace roles integrity.');
+        $workspaces = $this->workspaceRepo->findAll();
+        $i = 0;
+        $this->om->startFlushSuite();
+
+        foreach ($workspaces as $workspace) {
+            $this->log('Checking collaborator role for workspace ' . $workspace->getCode() . '...');
+            $collaborator = $this->getCollaboratorRole($workspace);
+
+            if (!$collaborator) {
+                $this->log('Adding collaborator role for workspace ' . $workspace->getCode() . '...', LogLevel::DEBUG);
+                $this->createWorkspaceRole(
+                    'ROLE_WS_COLLABORATOR_' . $workspace->getGuid(),
+                    'collaborator',
+                    $workspace,
+                    true
+                );
+                $i++;
+
+                if ($i % 50 === 0) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
+        $this->log('Checking user role integrity.');
+        $users = $this->userRepo->findAll();
+        $this->om->startFlushSuite();
+
+        foreach ($users as $user) {
+            $this->log('Checking personal role for ' . $user->getUsername());
+            $roleName = 'ROLE_USER_' . strtoupper($user->getUsername());
+            $role = $this->roleRepo->findOneByName($roleName);
+
+            if (!$role) {
+                $this->log('Adding user role for ' . $user->getUsername(), LogLevel::DEBUG);
+                $this->createUserRole($user);
+                $i++;
+
+                if ($i % 50 === 0) {
+                    $this->om->forceFlush();
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 }

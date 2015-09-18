@@ -29,6 +29,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 /**
  * @DI\Service("claroline.manager.rights_manager")
@@ -670,6 +671,47 @@ class RightsManager
         }
 
         return false;
+    }
+
+    public function checkIntegrity()
+    {
+        $this->log('Checking roles integrity for resources... This may take a while.');
+        $workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $workspaces = $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')->findAll();
+        $this->om->startFlushSuite();
+        $i = 0;
+
+        foreach ($workspaces as $workspace) {
+            $this->log('Checking ' . $workspace->getCode() . '...');
+            $roles = $workspace->getRoles();
+            $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
+            $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+
+            if ($root && $collaboratorRole) {
+                $collaboratorFound = false;
+
+                foreach ($root->getRights() as $right) {
+                    if ($right->getRole()->getName() == $this->roleManager->getCollaboratorRole($workspace)->getName()) {
+                        $collaboratorFound = true;
+                    }
+                }
+
+                if (!$collaboratorFound) {
+                    $this->log('Adding missing right on root for ' . $workspace->getCode() . '.', LogLevel::DEBUG);
+                    $collaboratorRole = $this->roleManager->getCollaboratorRole($workspace);
+                    $this->editPerms(5, $collaboratorRole, $root, true, array(), true);
+                    $i++;
+
+                    if ($i % 3 === 0) {
+                        $this->log('flushing...');
+                        $this->om->forceFlush();
+                        $this->om->clear();
+                    }
+                }
+            }
+        }
+
+        $this->om->endFlushSuite();
     }
 
     public function setLogger(LoggerInterface $logger)
