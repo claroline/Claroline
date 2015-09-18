@@ -26,7 +26,7 @@ class InteractionHoleController extends Controller
 
         $response = new Response();
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
-            ->findOneByQuestion($attr->get('interaction')->getId());
+                              ->getInteractionHole($attr->get('interaction')->getId());
 
         $form = $this->createForm(new ResponseType(), $response);
 
@@ -92,8 +92,8 @@ class InteractionHoleController extends Controller
 
         $holeHandler = $formHandler->processAdd();
         if ($holeHandler === true) {
-            $categoryToFind = $interHole->getQuestion()->getCategory();
-            $titleToFind = $interHole->getQuestion()->getTitle();
+            $categoryToFind = $interHole->getInteraction()->getQuestion()->getCategory();
+            $titleToFind = $interHole->getInteraction()->getQuestion()->getTitle();
 
             if ($exoID == -1) {
                 return $this->redirect(
@@ -154,11 +154,11 @@ class InteractionHoleController extends Controller
         $em = $this->get('doctrine')->getEntityManager();
 
         $interactionHole = $em->getRepository('UJMExoBundle:InteractionHole')
-            ->findOneByQuestion($attr->get('interaction')->getId());
+                              ->getInteractionHole($attr->get('interaction')->getId());
 
         $editForm = $this->createForm(
-            new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
-        );
+             new InteractionHoleType($attr->get('user'), $attr->get('catID')), $interactionHole
+         );
 
         $linkedCategory = $catSer->getLinkedCategories();
 
@@ -196,8 +196,8 @@ class InteractionHoleController extends Controller
             throw $this->createNotFoundException('Unable to find InteractionHole entity.');
         }
 
-        if ($user->getId() != $interHole->getQuestion()->getUser()->getId()) {
-            $catID = $interHole->getQuestion()->getCategory()->getId();
+        if ($user->getId() != $interHole->getInteraction()->getQuestion()->getUser()->getId()) {
+            $catID = $interHole->getInteraction()->getQuestion()->getCategory()->getId();
         }
 
         $editForm = $this->createForm(
@@ -238,7 +238,7 @@ class InteractionHoleController extends Controller
         return $this->forward(
             'UJMExoBundle:Question:edit', array(
                 'exoID' => $exoID,
-                'id' => $interHole->getQuestion()->getId(),
+                'id' => $interHole->getInteraction()->getQuestion()->getId(),
                 'form' => $editForm,
             )
         );
