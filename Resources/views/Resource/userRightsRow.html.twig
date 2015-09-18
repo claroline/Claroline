@@ -1,0 +1,35 @@
+{% set roleId = usersRoles[user.getUsername()].getId() %}
+<tr>
+    <td>
+        {{ user.getFirstName() }}
+        {{ user.getLastName() }}
+        <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+    </td>
+    <td>
+        {{ user.getUsername() }}
+    </td>
+
+    {% for decoder in resource.getResourceType().getMaskDecoders() %}
+        <td>
+            <input name="roles[{{ roleId }}][{{ decoder.getName() }}]"
+                   type="checkbox"
+                   {% if usersRights[user.getUsername()] is defined and
+                        (usersRights[user.getUsername()].getMask() b-and decoder.getValue())
+                   %}
+                       checked
+                   {% endif %}
+            >
+        </td>
+    {% endfor %}
+
+    {% if isDir %}
+        <td>
+            <a data-resource-id="{{ resource.getId() }}"
+               class="res-creation-options"
+               href="{{ path('claro_resource_right_creation_form', {'node': resource.getId(), 'role': roleId }) }}"
+            >
+               <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
+            </a>
+        </td>
+    {% endif %}
+</tr>
