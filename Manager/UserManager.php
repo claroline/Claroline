@@ -161,7 +161,7 @@ class UserManager
                 $this->mailManager->sendCreationMessage($user);
             }
         }
-        
+
         $this->container->get('claroline.event.event_dispatcher')
             ->dispatch('user_created_event', 'UserCreated', array('user' => $user));
 
@@ -237,7 +237,7 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
-        $this->objectManager->remove($userRole);
+        if ($userRole) $this->objectManager->remove($userRole);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 
@@ -1459,7 +1459,7 @@ class UserManager
 
         return $restrictions;
     }
-    
+
     public function initializePassword(User $user)
     {
         $user->setHashTime(time());

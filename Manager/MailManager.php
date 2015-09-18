@@ -91,7 +91,7 @@ class MailManager
 
         return $this->send($subject, $body, array($user));
     }
-    
+
     public function sendInitPassword(User $user)
     {
         $this->container->get('claroline.manager.user_manager')->initializePassword($user);
