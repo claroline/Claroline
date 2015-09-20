@@ -24,11 +24,11 @@
     {% else %}
         {% set newOrder = 'ASC' %}
     {% endif %}
-    {{ 
+    {{
         path(
             'claro_resources_rights_users_with_rights_form',
             {
-                'node': nodeId, 
+                'node': nodeId,
                 'search': search,
                 'orderedBy': orderedBy,
                 'order': newOrder,
@@ -74,93 +74,86 @@
     </div>
 </div>
 <br>
-
-{% if users|length == 0 %}
-    <div class="alert alert-warning">
-        {{ 'no_user'|trans({}, 'platform') }}
-    </div>
-{% else %}
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th>
-                        <a href="{{ sortUrl(resource.getId(), search, 'firstName', order, max) }}"
-                           data-ordered-by="firstName"
-                        >
-                            {{ 'name'|trans({}, 'platform') }}
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ sortUrl(resource.getId(), search, 'username', order, max) }}"
-                           data-ordered-by="username"
-                        >
-                            {{ 'username'|trans({}, 'platform') }}
-                        </a>
-                    </th>
-                    {% for decoder in resource.getResourceType().getMaskDecoders() %}
-                        <th> {{ decoder.getName()|trans({}, 'resource') }} </th>
-                    {% endfor %}
-                    {% if isDir %}
-                        <th> {{ 'creation'|trans({}, 'platform') }} </th>
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    {% if usersRoles[user.getUsername()] is defined %}
-                        {% set roleId = usersRoles[user.getUsername()].getId() %}
-                        <tr>
-                            <td>
-                                {{ user.getFirstName() }}
-                                {{ user.getLastName() }}
-                                <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
-                            </td>
-                            <td>
-                                {{ user.getUsername() }}
-                            </td>
-
-                            {% for decoder in resource.getResourceType().getMaskDecoders() %}
-                                <td>
-                                    <input name="roles[{{ roleId }}][{{ decoder.getName() }}]"
-                                           type="checkbox"
-                                           {% if usersRights[user.getUsername()] is defined and
-                                                (usersRights[user.getUsername()].getMask() b-and decoder.getValue())
-                                           %}
-                                               checked
-                                           {% endif %}
-                                    >
-                                </td>
-                            {% endfor %}
-
-                            {% if isDir %}
-                                <td>
-                                    <a data-resource-id="{{ resource.getId() }}"
-                                       class="res-creation-options"
-                                       href="{{ path('claro_resource_right_creation_form', {'node': resource.getId(), 'role': roleId }) }}"
-                                    >
-                                       <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
-                                    </a>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endif %}
+<div class="table-responsive">
+    <table class="table table-striped table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>
+                    <a href="{{ sortUrl(resource.getId(), search, 'firstName', order, max) }}"
+                       data-ordered-by="firstName"
+                    >
+                        {{ 'name'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                <th>
+                    <a href="{{ sortUrl(resource.getId(), search, 'username', order, max) }}"
+                       data-ordered-by="username"
+                    >
+                        {{ 'username'|trans({}, 'platform') }}
+                    </a>
+                </th>
+                {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                    <th> {{ decoder.getName()|trans({}, 'resource') }} </th>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-        
-    {% if users.getNbPages() > 1 %}
-        {{ renderPager(users, resource.getId(), search, orderedBy, order, max) }}
-    {% endif %}
+                {% if isDir %}
+                    <th> {{ 'creation'|trans({}, 'platform') }} </th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody class="rights-single-user">
+            {% for user in users %}
+                {% if usersRoles[user.getUsername()] is defined %}
+                    {% set roleId = usersRoles[user.getUsername()].getId() %}
+                    <tr>
+                        <td>
+                            {{ user.getFirstName() }}
+                            {{ user.getLastName() }}
+                            <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
+                        </td>
+                        <td>
+                            {{ user.getUsername() }}
+                        </td>
 
-    {% if isDir %}
-        <br>
-        <input id="advanced-recursive-option" name="isRecursive" type="checkbox"/>
-        {{ 'recursive_dir_action'|trans({}, 'platform')}}
-    {% endif %}
+                        {% for decoder in resource.getResourceType().getMaskDecoders() %}
+                            <td>
+                                <input name="roles[{{ roleId }}][{{ decoder.getName() }}]"
+                                       type="checkbox"
+                                       {% if usersRights[user.getUsername()] is defined and
+                                            (usersRights[user.getUsername()].getMask() b-and decoder.getValue())
+                                       %}
+                                           checked
+                                       {% endif %}
+                                >
+                            </td>
+                        {% endfor %}
+
+                        {% if isDir %}
+                            <td>
+                                <a data-resource-id="{{ resource.getId() }}"
+                                   class="res-creation-options"
+                                   href="{{ path('claro_resource_right_creation_form', {'node': resource.getId(), 'role': roleId }) }}"
+                                >
+                                   <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
+                                </a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if users.getNbPages() > 1 %}
+    {{ renderPager(users, resource.getId(), search, orderedBy, order, max) }}
 {% endif %}
-        
+
+{% if isDir %}
+    <br>
+    <input id="advanced-recursive-option" name="isRecursive" type="checkbox"/>
+    {{ 'recursive_dir_action'|trans({}, 'platform')}}
+{% endif %}
+
 <div id="users-with-rights-datas"
      data-node-id="{{ resource.getId() }}"
      data-search="{{ search }}"

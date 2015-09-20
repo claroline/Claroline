@@ -78,6 +78,12 @@
 {% endif %}
 
 <div{% if isModal %} class="modal-dialog"{% endif %}>
+    <div id="rights-list" 
+        data-rights="{% for decoder in resource.getResourceType().getMaskDecoders() %} {{ decoder.getName() }} {% if not loop.last %},{% endif %} {% endfor %}" 
+        data-is-dir="{{ isDir }}"
+        data-node-id="{{ resource.getId() }}"
+    >
+    </div>
     <form role="form" id="node-rights-form"
           class="{% if mode == "modal" %}modal-content {% endif %}node-rights-form"
           action="{{ path('claro_resource_rights_edit', {'node': resource.getId()}) }}"
@@ -97,12 +103,6 @@
                 <li id="users-with-rights-list-tab">
                     <a href="#users-with-rights-list" data-toggle="tab">
                         {{ 'by_user'|trans({}, 'platform') }}
-                    </a>
-                </li>
-                <li id="users-without-rights-list-tab">
-                    <a href="#users-without-rights-list" data-toggle="tab">
-                        <i class="fa fa-plus-circle"></i>
-                        {{ 'users'|trans({}, 'platform') }}
                     </a>
                 </li>
             </ul>
@@ -187,7 +187,7 @@
                                             <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
                                         </td>
                                         {% for decoder in resource.getResourceType().getMaskDecoders() %}
-                                            <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %} </td>
+                                            <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %}> </td>
                                         {% endfor %}
                                         {% if isDir %}
                                             <td>
@@ -225,14 +225,14 @@
                             </a>
                         </div>
                         <div id="collapse-all" class="panel-body collapse {% if tags|length == 0 %}in{% endif %}">
-                            <div id="all-workspaces-panel">      
+                            <div id="all-workspaces-panel">
                                 <div id="workspaces-datas"
                                      data-node-id="{{ resource.getId() }}"
                                      data-search="{{ wsSearch }}"
                                      data-max="{{ wsMax }}"
                                 >
                                 </div>
-                            
+
                                 {% if wsSearch != '' %}
                                     <div class="alert alert-info">
                                         {{ 'results_for_search_on'|trans({}, 'platform') }} :
@@ -256,11 +256,11 @@
                                 </div>
                                 <br>
                                 <br>
-                            
+
                                 {% if workspaces.getNbPages() > 1 %}
                                      {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
                                 {% endif %}
-                            
+
                                 {% for workspace in workspaces %}
                                     <div class="panel panel-default">
                                         <div class="panel-heading">
@@ -284,7 +284,7 @@
                                         </div>
                                     </div>
                                 {% endfor %}
-                            
+
                                 {% if workspaces.getNbPages() > 1 %}
                                      {{ renderPager(workspaces, wsSearch, wsMax, resource) }}
                                 {% endif %}
@@ -296,8 +296,8 @@
                 <div id="form-rights-tag-wrapper"></div>
             </div>
 
-{# ------------------------------ USER WITH RIGHTS TAB ----------------------------------- #}
-    
+{# ------------------------------ USER TAB ----------------------------------- #}
+
             <div class="tab-pane" id="users-with-rights-list">
                 <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive"
                      id="users-with-rights-tab"
@@ -316,30 +316,6 @@
                 </div>
                 {{ block('formfooter') }}
             </div>
-
-{# ------------------------------ USERS WITHOUT RIGHTS TAB ----------------------------------- #}
-    
-            <div class="tab-pane" id="users-without-rights-list">
-                <div class="{{ mode }}-body padding-top-none {% if isModal %}padding-bottom-none{% endif %} table-responsive"
-                     id="users-without-rights-tab"
-                >
-                    {{
-                        render(
-                            controller(
-                                'ClarolineCoreBundle:ResourceRights:resourcesRightsUsersWithoutRightsForm',
-                                {
-                                    'node': resource,
-                                    'search': ''
-                                }
-                            )
-                        )
-                    }}
-                </div>
-                {{ block('formfooter') }}
-            </div>
-   
-{# --------------------------------- END ------------------------------------- #}
-                
         </div>
     </form>
 </div>

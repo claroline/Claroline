@@ -150,61 +150,6 @@
         });
     });
 
-    $('body').on('change', '#search-user-without-rights-input', function () {
-        var search = $('#search-user-without-rights-input').val();
-        var nodeId = $('#users-without-rights-datas').attr('data-node-id');
-
-        $.ajax({
-            url: Routing.generate(
-                'claro_resources_rights_users_without_rights_form',
-                {'node': nodeId, 'search': search}
-            ),
-            type: 'GET',
-            success: function (datas) {
-                $('#users-without-rights-tab').empty();
-                $('#users-without-rights-tab').append(datas);
-            }
-        });
-    });
-
-    $('#users-without-rights-list').on('click', '.pagination > ul > li > a', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var element = event.currentTarget;
-        var url = $(element).attr('href');
-
-        if (url !== '#') {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (datas) {
-                    $('#users-without-rights-tab').empty();
-                    $('#users-without-rights-tab').append(datas);
-                }
-            });
-        }
-    });
-
-    $('#users-without-rights-list').on('click', 'th > a', function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        var element = event.currentTarget;
-        var url = $(element).attr('href');
-
-        if (url !== '#') {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (datas) {
-                    $('#users-without-rights-tab').empty();
-                    $('#users-without-rights-tab').append(datas);
-                }
-            });
-        }
-    });
-
     $('body').on('click', '#search-user-with-rights-btn',function () {
         var search = $('#search-user-with-rights-input').val();
         var nodeId = $('#users-with-rights-datas').attr('data-node-id');
@@ -278,8 +223,34 @@
     });
 
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
-        $('#users-with-rights-list-tab').removeClass('active');
-        $('#users-without-rights-list-tab').addClass('active');
+        var rights = $('#rights-list').attr('data-rights');
+        var isDir = $('#rights-list').attr('data-is-dir');
+        var nodeId = $('#rights-list').attr('data-node-id');
+        rights = rights.split(',');
+        var picker = new UserPicker();
+        var settings = {
+            'multiple': true,
+            'picker_name': 'user_res_picker',
+            'return_datas': true
+        };
+        picker.configure(
+            settings,
+            function (users) {
+                $.each(users, function(index, val) {
+                    //add the row to the tab
+                    var twigParams = {
+                        'user': val,
+                        'isDir': true,
+                        'rights': rights,
+                        'nodeId': nodeId
+                    };
+
+                    var el = Twig.render(ResourceRightsRow, twigParams);
+                    $('.rights-single-user').append(el);
+                });
+            }
+        );
+        picker.open();
     });
 
     $('body').on('click', '#search-workspaces-btn',function () {
@@ -339,7 +310,7 @@
 
     $('body').on('click', '#root-dir-icon-edit-btn',function () {
         var nodeId = $(this).data('node-id');
-        
+
         window.Claroline.Modal.displayForm(
             Routing.generate(
                 'claro_resource_icon_edit_form',
@@ -350,6 +321,6 @@
             'resource-icon-form'
         );
     });
-    
+
     var doNothing = function () {};
 })();
