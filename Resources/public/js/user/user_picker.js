@@ -41,87 +41,87 @@ var UserPicker = function () {
 };
 
 UserPicker.prototype.configure = function (configurationDatas, callBack) {
-    
+
     if (configurationDatas['picker_name'] !== undefined) {
         this.pickerName = configurationDatas['picker_name'];
     }
-    
+
     if (configurationDatas['picker_title'] !== undefined) {
         this.pickerTitle = configurationDatas['picker_title'];
     }
-    
+
     if (configurationDatas['multiple'] !== undefined) {
         this.multiple = configurationDatas['multiple'] ? 'multiple' : 'single';
     }
-    
+
     if (configurationDatas['show_all_users'] !== undefined) {
         this.showAllUsers = configurationDatas['show_all_users'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_filters'] !== undefined) {
         this.showFilters = configurationDatas['show_filters'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_id'] !== undefined) {
         this.showId = configurationDatas['show_id'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_picture'] !== undefined) {
         this.showPicture = configurationDatas['show_picture'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_username'] !== undefined) {
         this.showUsername = configurationDatas['show_username'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_mail'] !== undefined) {
         this.showMail = configurationDatas['show_mail'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_code'] !== undefined) {
         this.showCode = configurationDatas['show_code'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_groups'] !== undefined) {
         this.showGroups = configurationDatas['show_groups'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['show_platform_roles'] !== undefined) {
         this.showPlatformRoles = configurationDatas['show_platform_roles'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['attach_name'] !== undefined) {
         this.attachName = configurationDatas['attach_name'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['return_datas'] !== undefined) {
         this.returnDatas = configurationDatas['return_datas'] ? 1 : 0;
     }
-    
+
     if (configurationDatas['blacklist'] !== undefined) {
         this.userIds = configurationDatas['blacklist'];
     }
-    
+
     if (configurationDatas['whitelist'] !== undefined) {
         this.forcedUserIds = configurationDatas['whitelist'];
     }
-    
+
     if (configurationDatas['selected_users'] !== undefined) {
         this.selectedUserIds = configurationDatas['selected_users'];
     }
-    
+
     if (configurationDatas['forced_groups'] !== undefined) {
         this.forcedGroupIds = configurationDatas['forced_groups'];
     }
-    
+
     if (configurationDatas['forced_roles'] !== undefined) {
         this.forcedRoleIds = configurationDatas['forced_roles'];
     }
-    
+
     if (configurationDatas['forced_workspaces'] !== undefined) {
         this.forcedWorkspaceIds = configurationDatas['forced_workspaces'];
     }
-    
+
     if (configurationDatas['shown_workspaces'] !== undefined) {
         this.shownWorkspaceIds = configurationDatas['shown_workspaces'];
     }
@@ -608,7 +608,7 @@ UserPicker.prototype.open = function () {
                 var element = event.currentTarget;
                 var route = $(element).attr('href');
                 route += '?' + $.param(userPicker.parameters);
-                
+
                 $.ajax({
                     url: route,
                     type: 'GET',
@@ -618,7 +618,7 @@ UserPicker.prototype.open = function () {
                     }
                 });
             });
-            
+
             modalElement.on('click', '#search-user-btn', function () {
                 currentSearch = $(modalId + ' #search-user-input').val();
                 refreshUsersList();
@@ -705,7 +705,7 @@ UserPicker.prototype.open = function () {
                         selectedUsers[userId] = firstName + ' ' + lastName;
                     }
                     addUserToSelectedUsersBox(userId, selectedUsers[userId]);
-                } 
+                }
                 updateIdsArray('user');
                 updateSelectedUsersBadge();
             });
@@ -755,7 +755,7 @@ UserPicker.prototype.open = function () {
                     for (var i = 0; i < userIds.length; i++) {
                         ids[i] = parseInt(userIds[i]['id']);
                     }
-                    
+
                     var params = {};
                     params.userIds = ids;
                     var route = Routing.generate('claro_users_infos_request');
@@ -765,13 +765,13 @@ UserPicker.prototype.open = function () {
                         url: route,
                         type: 'GET',
                         success: function (datas) {
-                            (datas.length > 0) ? 
+                            (datas.length > 0) ?
                                 userPicker.callBack(datas) :
                                 userPicker.callBack(null);
                         }
                     });
                 } else {
-                    
+
                     if (userPicker.multiple === 'multiple') {
                         var ids = [];
                         var names = [];
@@ -783,7 +783,7 @@ UserPicker.prototype.open = function () {
                         $('#user-picker-input-' + userPicker.pickerName).val(ids);
                         $('#user-picker-input-view-' + userPicker.pickerName).val(names);
 
-                        (ids.length > 0) ? 
+                        (ids.length > 0) ?
                             userPicker.callBack(ids) :
                             userPicker.callBack(null);
                     } else if (userPicker.multiple === 'single') {

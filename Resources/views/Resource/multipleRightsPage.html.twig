@@ -78,6 +78,12 @@
 {% endif %}
 
 <div{% if isModal %} class="modal-dialog"{% endif %}>
+    <div id="rights-list" 
+        data-rights="{% for decoder in resource.getResourceType().getMaskDecoders() %} {{ decoder.getName() }} {% if not loop.last %},{% endif %} {% endfor %}" 
+        data-is-dir="{{ isDir }}"
+        data-node-id="{{ resource.getId() }}"
+    >
+    </div>
     <form role="form" id="node-rights-form"
           class="{% if mode == "modal" %}modal-content {% endif %}node-rights-form"
           action="{{ path('claro_resource_rights_edit', {'node': resource.getId()}) }}"
@@ -181,7 +187,7 @@
                                             <input type="hidden" name="role_row[{{ roleId }}]" value="{{ roleId }}"/>
                                         </td>
                                         {% for decoder in resource.getResourceType().getMaskDecoders() %}
-                                            <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %} </td>
+                                            <td> <input name="roles[{{ roleId }}][{{ decoder.getName() }}]" type="checkbox" {% if resourceRight.getMask() b-and decoder.getValue() %} checked {% endif %}> </td>
                                         {% endfor %}
                                         {% if isDir %}
                                             <td>
