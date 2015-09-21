@@ -62,6 +62,7 @@ class DropzoneListener extends ContainerAware
     public function onOpen(OpenResourceEvent $event)
     {
 
+
         // Modification ERV (août 2015) InnovaERV
         // suite demande JJQ, voir son document de référence d'août 2015
         // il faut venir sur l'onglet "Mon espace collecticiel" et non plus sur "Drop"
@@ -84,8 +85,11 @@ class DropzoneListener extends ContainerAware
             
             $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')
             ->find($event->getResource()->getId());
-            
-            if ($dropzone->getManualState() == "allowDrop") {
+
+            // Pour savoir si le collecticiel est ouvert ou pas. InnovaERV            
+            $dropzoneManager = $this->container->get('innova.manager.dropzone_manager');
+
+            if ($dropzoneManager->collecticielOpenOrNot($dropzone)) {
                 $route = $this->container
                     ->get('router')
                     ->generate(
