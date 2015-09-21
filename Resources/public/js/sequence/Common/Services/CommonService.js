@@ -23,6 +23,7 @@
                  */
                 setSequence: function (sequence) {
                     this.sequence = sequence;
+                    return this.sequence;
                 },
                 getSequence: function () {
                     return this.sequence;

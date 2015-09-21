@@ -1,6 +1,12 @@
 # b
 btn_end_step_label: End step
 btn_end_sequence_label: End sequence
+btn_prev_step_label: Go to previous step
+btn_next_step_label: Go to next step
+
+# d
+dropdown_step_navigate_choice_label: Step n°%1% / %2%
+dropdown_step_navigate_action_label: Go to
 
 # m
 meta_authors: Author(s)
@@ -32,6 +38,7 @@ question_solution_score: Score
 question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 
 # s
+sequence_step: Step
 sequence_panel_title: Sequence
 sequence_panel_hide: Hide / Show sequence informations
 sequence_type_name : Sequence name

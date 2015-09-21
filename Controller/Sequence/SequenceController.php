@@ -26,6 +26,11 @@ class SequenceController extends Controller
      */
     public function playAction(Exercise $exercise)
     {
+        // get user id
+        // check if exercise has a limited number of attempts
+        // if true check if user can play the test (number of attempts already done)
+        $attempts = 1; // deafult value = 1 = first attempt
+        // else redirect user to error page
         // DATA from API
         /*
         $manager = $this->get('ujm.exo.api_manager');
@@ -37,16 +42,17 @@ class SequenceController extends Controller
         
         // FAKE Data for development!!
         $exo = $this->getExercise(2, "choice");
-        $steps = $exo['steps'];
+        $steps = json_encode($exo['steps']);
         $data = json_encode($exo);
-
-        // TODO get user data... user, number of attempts (what if first attempt?), previous notes, previous papers... 
+        
+        // $this->container->get('security.token_storage')->getToken()->getUser()
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
-                    'steps' => json_encode($steps),
-                    'sequence' => $data
-                        )
+                    'steps' => $steps,
+                    'sequence' => $data,
+                    'attempts' => $attempts
+            )
         );
     }
     

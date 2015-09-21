@@ -1,6 +1,12 @@
 # b
 btn_end_step_label: Terminer l'étape
 btn_end_sequence_label: Terminer la séquence
+btn_prev_step_label: Aller à l'étape précédente
+btn_next_step_label: Aller à l'étape suivante
+
+# d
+dropdown_step_navigate_choice_label: Etape n°%1% / %2%
+dropdown_step_navigate_action_label: Aller à
 
 # m
 meta_authors: Author(s)
@@ -33,6 +39,7 @@ question_solution_score: Score
 question_show_hint_confirm: Etes vous sur de vouloir utiliser l'indice ? <br/> Cela entrainera une pénalité de %1% points.
 
 # s
+sequence_step: Etape
 sequence_panel_title: Séquence
 sequence_panel_hide: Cacher / Montrer les informations de la séquence
 sequence_type_name : Nom de la séquence

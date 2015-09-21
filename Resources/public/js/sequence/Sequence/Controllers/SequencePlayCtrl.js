@@ -1,26 +1,33 @@
 (function () {
     'use strict';
 
-    angular.module('Sequence').controller('SequencePlayCtrl', [
+    angular.module('Sequence').controller('SequencePlayCtrl', [        
+        '$ngBootbox',
         'SequenceService',
         'CommonService',
-        function (SequenceService, CommonService) {
+        function ($ngBootbox, SequenceService, CommonService) {
 
             this.sequence = {};
             this.currentStep = {};
             this.steps = {};
             this.nbAttempts = 1;
             this.studentResults = Array();
-            this.isFinished = false;
             this.isLastStep = false;
-            
-            this.setSequence = function (sequence) {
-                this.sequence = sequence;
-                CommonService.setSequence(sequence);
-            };
+            this.isFirstStep = true;
 
-            this.getSequence = function () {
-                return CommonService.getSequence();
+
+            /**
+             * Init the sequence
+             * @param {object} sequence
+             * @param {object} sequence steps
+             * @param {number} number of attempts already done
+             */
+            this.init = function (sequence, steps, attempts) {
+                // need to set the sequence in CommonService so that other directives can retrieve the info
+                this.sequence = CommonService.setSequence(sequence);
+                this.steps = steps;
+                this.setCurrentStep(0);
+                this.nbAttempts = attempts;
             };
 
             /**
@@ -29,31 +36,15 @@
             this.questionHasOtherMeta = function () {
                 return CommonService.objectHasOtherMeta(this.sequence);
             };
-            
-            this.setSteps = function(steps){
-                this.steps = steps;
-            };
-            
-            this.getSteps = function () {
-                return this.steps;
-            };
-
-            /**
-             * 
-             * @returns number of steps in the collection
-             */
-            this.getNbStep = function () {
-                return this.steps.length;
-            };
 
             this.setCurrentStep = function (index) {
                 this.currentStep = this.steps[index];
             };
-            
+
             this.getCurrentStep = function () {
                 return this.currentStep;
             };
-            
+
             /**
              * use for display 
              * @returns the current step index (+1 for human readability)
@@ -63,39 +54,56 @@
                 return  index + 1;
             };
 
-            this.setNbAttempts = function (nb) {
-                this.nbAttempts = nb;
+            /**
+             * 
+             */
+            this.goTo = function (step) {
+                //{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}
+                //Translator.trans('root_default_name', {}, 'path_wizards');
+                $ngBootbox.confirm(Translator.trans('sequence_next_step_confirm', {}, 'ujm_sequence'))
+                        .then(function () {
+                            console.log('Confirmed!');
+                            this.validateStep('goto', this.steps.indexOf(step));
+                        }.bind(this), function () {
+                           // console.log('Confirm dismissed!');
+                        });
             };
 
-            this.getNbAttempts = function () {
-                return this.nbAttempts;
-            };
-            
             /**
              * Validate the current step after confirm
-             * If next step get it (also save student progression)
-             * Else terminate sequence (also save student paper)
+             * If next/prev step get it (also save student progression)
+             * Else end the sequence (also save student paper)
+             * 
+             * @param {String} action
              */
-            this.validateStep = function () {
+            this.validateStep = function (action, index) {
+                // data are given by question directive
                 var data = CommonService.getStudentData();
                 console.log('student data are below');
                 console.log(data);
-                // save step results TODO save it in db !!!!
+                // save step results in DB !!!!
                 // also save the current progression in db ?
                 this.studentResults.push(data);
-                // go to next step
+                // get current step index
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var length = this.steps.length;
-                var newIndex = currentStepIndex + 1;
-                if(newIndex < length){
-                    
-                    
-                    this.setCurrentStep(newIndex);
-                    this.isLastStep = newIndex === this.steps.length - 1 ? true:false;
+                var newIndex = index ? index : 0;
+                console.log('action ' + action);
+                if (action && action === 'forward') {
+                    newIndex = currentStepIndex + 1;
                 }
-                else{
+                else if (action && action === 'backward') {
+                    newIndex = currentStepIndex - 1;
+                }
+                this.isFirstStep = newIndex === 0;
+                this.isLastStep = newIndex === this.steps.length - 1;
+                // check new index is in computable range
+                if (newIndex < length && newIndex >= 0) {
+                    this.setCurrentStep(newIndex);
+                }
+                else if (this.isLastStep) {
                     console.log('you reached the end of the exercise you will be redirected to summary page');
-                    this.isFinished = true;
+
                     // TODO save the results in db
                     // save the hints used (table ujm_link_hint_paper) -> really need this ?
                     // save the paper (table ujm_paper) (and the question order for the paper...)
@@ -103,7 +111,11 @@
                     // show correction summary page
                     // should correction summary page be on another route ? or not ?
                 }
-                
+                else {
+                    // error page
+                    console.log('error...');
+                }
+
             };
         }
     ]);

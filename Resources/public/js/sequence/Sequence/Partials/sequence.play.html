@@ -1,35 +1,51 @@
-<div>
-    <!-- PLAY -->
-    <div data-ng-if="!sequencePlayCtrl.isFinished" class="panel panel-default">
-        <div class="panel-heading clearfix">
-            <h3 class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - Etape {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.getNbStep()}}</h3>
-            <span class="pull-right">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.getNbAttempts()}:'ujm_sequence'}} </span>
-        </div>
-        <div class="panel-body">           
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <step-show class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row pull-right">
-                        <div class="col-md-12" data-ng-if="!sequencePlayCtrl.isLastStep">
-                            <button role="button" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
-                                {{ 'btn_end_step_label'|trans:{}:'ujm_sequence' }}
-                            </button>
-                        </div>
-                        <div class="col-md-12" data-ng-if="sequencePlayCtrl.isLastStep">
-                            <button role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
-                                {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
-                            </button>
-                        </div>
+<div class="panel panel-default">
+    <div class="panel-heading clearfix">
+        <h3 class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.steps.length}}</h3>
+        <span class="pull-right">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.nbAttempts}:'ujm_sequence'}} </span>
+    </div>
+    <div class="panel-body">           
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-12">
+                        <step-show class="step-container" data-current-step="sequencePlayCtrl.currentStep"></step-show>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- END -->
-    <correction-show data-ng-if="sequencePlayCtrl.isFinished" data-sequence="sequencePlayCtrl.sequence" data-answers="sequencePlayCtrl.studentResults"></correction-show>
+    <!-- NAVIGATE THROUGH STEPS / END SEQUENCE -->
+    <div class="panel-footer">
+        <div class="row center-text">
+            <!-- PREV / NEXT / JUMP TO / END -->
+            <div class="col-md-12">
+                <!-- NEXT / PREV -->
+                <div class="btn-group" role="group">
+                    <button role="button" data-ng-disabled="sequencePlayCtrl.isFirstStep" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('backward')" class="btn btn-default fa fa-arrow-circle-left">    
+                    </button>
+                    <button role="button" data-ng-disabled="sequencePlayCtrl.isLastStep" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
+                    </button>
+                </div>
+                <!-- JUMP TO -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ 'dropdown_step_navigate_choice_label'|trans:{"1" : sequencePlayCtrl.getCurrentStepIndex(), "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}} <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li data-ng-repeat="step in sequencePlayCtrl.steps">
+                            <a href="#" data-ng-click="sequencePlayCtrl.goTo(step)">{{ 'dropdown_step_navigate_choice_label'|trans:{"1" : $index + 1, "2" : sequencePlayCtrl.steps.length}:'ujm_sequence'}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- END SEQUENCE -->
+                <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                    {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
+                </button>
+            </div>
+        </div>
+
+        <!--
+        <correction-show data-ng-if="sequencePlayCtrl.isFinished" data-sequence="sequencePlayCtrl.sequence" data-answers="sequencePlayCtrl.studentResults"></correction-show>
+        -->
+    </div>
 </div>
