@@ -1053,6 +1053,7 @@ class ParametersController extends Controller
             'app.php',
             $currentUrl
         );
+        $this->configHandler->setParameter('platform_url', $platformUrl);
 
         $postDatas = "ip=$ip" .
             "&name=$name" .
