@@ -223,6 +223,8 @@ class AdditionalInstaller extends BaseInstaller
                 $updater->setLogger($this->logger);
                 $updater->postUpdate();
         }
+        $termsOfServiceManager = $this->container->get('claroline.common.terms_of_service_manager');
+        $termsOfServiceManager->sendDatas();
     }
 
     private function setLocale()
