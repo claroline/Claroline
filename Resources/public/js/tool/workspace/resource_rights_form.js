@@ -223,6 +223,10 @@
     });
 
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
+        var rights = $('#rights-list').attr('data-rights');
+        var isDir = $('#rights-list').attr('data-is-dir');
+        var nodeId = $('#rights-list').attr('data-node-id');
+        rights = rights.split(',');
         var picker = new UserPicker();
         var settings = {
             'multiple': true,
@@ -237,7 +241,8 @@
                     var twigParams = {
                         'user': val,
                         'isDir': true,
-                        'permissions': ['open', 'copy', 'export', 'delete', 'edit', 'administrate']
+                        'rights': rights,
+                        'nodeId': nodeId
                     };
 
                     var el = Twig.render(ResourceRightsRow, twigParams);

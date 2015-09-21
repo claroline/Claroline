@@ -22,7 +22,7 @@
         <td>
             <a data-resource-id="{{ resource.id }}"
                class="res-creation-options"
-               href="{{ path('claro_resource_right_creation_form', {'node': resource.id, 'role': user.user_role_id }) }}"
+               href="{{ path('claro_resource_right_creation_form', {'node': nodeId, 'role': user.user_role_id }) }}"
             >
                <i class="fa fa-cog"></i> {{ 'options'|trans({}, 'platform') }}
             </a>

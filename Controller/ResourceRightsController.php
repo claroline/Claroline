@@ -381,39 +381,6 @@ class ResourceRightsController
         return $data;
     }
 
-    /*
-    $type = $node->getResourceType();
-    $rights = $node->getRights();
-    $permsMap = $this->maskManager->getPermissionMap($type);
-    $roles = $this->request->getCurrentRequest()->request->get('roles');
-    $rows = $this->request->getCurrentRequest()->request->get('role_row');
-    $data = array();
-    $changedPerms = array();
-
-    if (is_null($roles)) {
-        $roles = array();
-    }
-
-   //init array to false
-   foreach ($rights as $right) {
-        foreach ($permsMap as $perm) {
-            $data[$right->getRole()->getId()]['permissions'][$perm] = false;
-        }
-
-        $data[$right->getRole()->getId()]['role'] = $this->roleManager->getRole($right->getRole()->getId());
-    }
-
-    foreach ($roles as $roleId => $perms) {
-
-        foreach ($permsMap as $perm) {
-            $data[$roleId]['permissions'][$perm] = (array_key_exists($perm, $perms)) ? true: false;
-        }
-
-        //$data[$right->getRole()->getId()]['role'] = $this->roleManager->getRole($right->getRole()->getId());
-    }
-
-    return $data;
-    */
 
     /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.
