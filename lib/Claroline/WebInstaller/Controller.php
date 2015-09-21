@@ -382,6 +382,7 @@ class Controller
         $nbUsers = $datas['nbUsers'];
         $type = $datas['type'];
         $token = $datas['token'];
+        $this->configHandler->setParameter('platform_url', $platformUrl);
         
         $postDatas = "ip=$ip" .
             "&name=$name" .
