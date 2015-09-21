@@ -32,7 +32,6 @@
             > 
                 {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
                 {{ form_widget(form) }}
-                
                 <br>
                 <span class="pull-right">
                     <span class="btn btn-default" data-dismiss="modal">
@@ -49,29 +48,17 @@
     </div>
 </div>
 
-{% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.css') }}"/>
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/frontend/jquery/plugin/tag-it/css/jquery.tagit.css') }}"/>
-{% endblock %}
-
 {% block javascripts %}
-    {% javascripts output='js/tags.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.position.min.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.menu.min.js'
-        '@FrontEndBundle/Resources/public/jquery/jquery-ui-1.9.2/components/jquery.ui.autocomplete.min.js'
-        '@FrontEndBundle/Resources/public/jquery/plugin/tag-it/js/tag-it.min.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-
+    <script src='{{ asset('bundles/clarolinetag/js/bootstrap3-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinetag/js/tag-typeahead.js') }}'
+            type="text/javascript"
+    >
+    </script>
     <script type="text/javascript">
         var allTags = [{% for tag in tags %}'{{ tag.getName() }}'{% if not loop.last %}, {% endif %}{% endfor %}];
-        
-        $(function() {
-            $("#tag_form_tags").tagit({
-{#                'availableTags' : allTags,#}
-                'allowSpaces' : true
-            });
-        });
+        new TagTypeAhead({'tags': allTags});
     </script>
 {% endblock %}
