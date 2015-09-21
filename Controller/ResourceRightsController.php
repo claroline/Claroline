@@ -335,92 +335,12 @@ class ResourceRightsController
         );
     }
 
-    /**
-     * @EXT\Route(
-     *     "/{node}/rights/users/without/rights/ordered/by/{orderedBy}/order/{order}/page/{page}/max/{max}/form/search/{search}",
-     *     name="claro_resources_rights_users_without_rights_form",
-     *     options={"expose"=true},
-     *     defaults={"search"="","ordered"="firstName","order"="ASC","page"=1,"max"=50}
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:resourcesRightsUsersWithoutRightsForm.html.twig")
-     *
-     * Displays the resource rights form for all users.
-     *
-     * @param ResourceNode $node
-     * @param string $search
-     * @param string $orderedBy
-     * @param string $order
-     * @param int $page
-     * @param int $max
-     *
-     * @return Response
-     */
-    public function resourcesRightsUsersWithoutRightsFormAction(
-        ResourceNode $node,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50
-    )
-    {
-        $collection = new ResourceCollection(array($node));
-        $this->checkAccess('ADMINISTRATE', $collection);
-        $isDir = $node->getResourceType()->getName() === 'directory';
-        $resourceType = $node->getResourceType();
-        $mask = $this->maskManager
-            ->decodeMask($resourceType->getDefaultMask(), $resourceType);
-
-        $users = empty($search) ?
-            $this->userManager
-                ->getUsersWithoutRights($node, $orderedBy, $order, $page, $max) :
-            $this->userManager->getSearchedUsersWithoutRights(
-                $node,
-                $search,
-                $orderedBy,
-                $order,
-                $page,
-                $max
-            );
-        $roleKeys = array();
-        $usersRoles = array();
-        $usersRights = array();
-
-        foreach ($users as $user) {
-            $roleKeys[] = $user->getUsername();
-        }
-        $usersRolesRaw = $this->roleManager
-            ->getUserRolesByTranslationKeys($roleKeys);
-
-        foreach ($usersRolesRaw as $userRole) {
-            $usersRoles[$userRole->getTranslationKey()] = $userRole;
-        }
-        $userRolesRights = $this->rightsManager
-            ->getUserRolesResourceRights($node, $roleKeys);
-
-        foreach ($userRolesRights as $right) {
-            $usersRights[$right->getRole()->getTranslationKey()] = $right;
-        }
-
-        return array(
-            'resource' => $node,
-            'isDir' => $isDir,
-            'mask' => $mask,
-            'users' => $users,
-            'usersRoles' => $usersRoles,
-            'usersRights' => $usersRights,
-            'orderedBy' => $orderedBy,
-            'order' => $order,
-            'max' => $max,
-            'search' => $search
-        );
-    }
-
     public function getPermissionsFromRequest(ResourceType $type)
     {
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->getCurrentRequest()->request->get('roles');
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
+
         $data = array();
         $falsePerms = array();
 
@@ -428,6 +348,7 @@ class ResourceRightsController
             $roles = array();
         }
 
+        //because otherwise there is way too much stuff (it sends the whole list of user aswell...)
        foreach (array_keys($rows) as $roleId) {
            $changedPerms = array();
             if (!array_key_exists($roleId, $roles)) {
@@ -459,6 +380,7 @@ class ResourceRightsController
 
         return $data;
     }
+
 
     /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.
