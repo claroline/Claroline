@@ -73,6 +73,7 @@ admin_third_party_application: 'Third-party applications'
 admin_workspace_tag_form_name: Name
 administration: Administration
 administrative_code: 'Administrative code'
+administrativeCode: 'Administrative code'
 advanced: Advanced
 advanced_parameters: 'Advanced parameters'
 agreeing: 'By agreeing to send the data, you will enjoy a better service and you will contribute to improving the Claroline Connect platform that you are installing.'
@@ -211,6 +212,7 @@ csv_group_import_infos_format: 'Format: username list separated by a carriage re
 csv_users_import_infos: 'CSV file informations'
 csv_users_import_infos_format: Format
 csv_users_import_infos_format_a: 'User informations must be defined in one line and separated by semicolon'
+csv_workspaces_import_infos_format_a: 'Workspaces informations must be defined in one line and separated by semicolon'
 csv_users_import_infos_format_b: 'Note that you must not add a file header'
 csv_users_import_infos_optional: Optional
 csv_users_import_infos_required: Required
@@ -820,7 +822,7 @@ roles_facet_form_explanation: 'This form allows you to set wich roles can see th
 roles_fields_form_explanation: 'This form allows you to set wich roles can see and edit the field in the public profile.'
 roles_management: 'Roles management'
 save: Save
-save_as_template: 'Save as template'
+save_as_template: 'Export'
 save_workspace_as_template: 'Save workspace as template'
 saved_changes: 'Your changes have been saved'
 score: Score
@@ -1133,3 +1135,7 @@ your_platform_id: 'Your platform login'
 your_workspace_activity_overview: 'Overview of recent activities of your workspaces'
 404: 'Page Not found'
 domain_name: 'Domain name'
+import_csv: 'Import csv'
+admin_profile_properties_explanations: 'Selected properties will be editable by users.'
+self_unregistration: Self unregistration
+is_visible: Is visible

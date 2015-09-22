@@ -37,7 +37,7 @@
         </a>
         <a href="{{ path('claro_admin_workspace_import_form') }}" class="btn btn-default action-button">
             <i class="icon-book"></i>
-            {{ 'import'|trans({}, 'platform') }}
+            {{ 'import_csv'|trans({}, 'platform') }}
         </a>
     {% endif %}
 {% endmacro %}
@@ -347,11 +347,11 @@
                 }
             });
         });
-        
+
         $('#type-select').on('change', function () {
             var url;
             var workspaceType = $(this).val();
-            
+
             {% if search == '' %}
                 url = Routing.generate(
                     'claro_admin_workspaces_management',
@@ -374,7 +374,7 @@
                     }
                 );
             {% endif %}
-            
+
             window.location = url;
         });
     </script>
