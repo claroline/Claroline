@@ -702,6 +702,8 @@ class CorrectionController extends DropzoneBaseController
         $documentOri = $document;
 
         $em = $this->getDoctrine()->getManager();
+        $dropzoneManager        = $this->get('innova.manager.dropzone_manager');
+        $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzone);
 
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $correction = $this
@@ -934,6 +936,7 @@ class CorrectionController extends DropzoneBaseController
                     'comments' => $comments,
                     'user' => $user,
                     'adminInnova' => $canEdit,
+                    'collecticielOpenOrNot' => $collecticielOpenOrNot
                 )
             );
         } else if ($state == 'preview') {
@@ -951,6 +954,7 @@ class CorrectionController extends DropzoneBaseController
                     'edit' => false,
                     'state' => $state,
                     'adminInnova' => $canEdit,
+                    'collecticielOpenOrNot' => $collecticielOpenOrNot
                 )
             );
         }
@@ -1109,6 +1113,7 @@ class CorrectionController extends DropzoneBaseController
         */
 
         $em = $this->getDoctrine()->getManager();
+
         $correction = new Correction();
         $correction->setUser($user);
         $correction->setDropzone($dropzone);
@@ -1130,7 +1135,7 @@ class CorrectionController extends DropzoneBaseController
                     'state' => 'edit',
                     'correctionId' => $correction->getId(),
                     'documentId' => $document->getId()
-                )
+               )
             )
         );
     }
