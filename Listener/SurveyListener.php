@@ -11,6 +11,9 @@
 
 namespace Claroline\SurveyBundle\Listener;
 
+use Claroline\SurveyBundle\Entity\Choice;
+use Claroline\SurveyBundle\Entity\MultipleChoiceQuestion;
+use Claroline\SurveyBundle\Entity\Question;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -20,6 +23,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Form\SurveyType;
+use Claroline\SurveyBundle\Manager\SurveyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
@@ -38,6 +42,7 @@ class SurveyListener
     private $om;
     private $request;
     private $router;
+    private $surveyManager;
     private $templating;
 
     /**
@@ -47,6 +52,7 @@ class SurveyListener
      *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
      *     "requestStack"       = @DI\Inject("request_stack"),
      *     "router"             = @DI\Inject("router"),
+     *     "surveyManager"      = @DI\Inject("claroline.manager.survey_manager"),
      *     "templating"         = @DI\Inject("templating")
      * })
      */
@@ -56,6 +62,7 @@ class SurveyListener
         ObjectManager $om,
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
+        SurveyManager $surveyManager,
         TwigEngine $templating
     )
     {
@@ -64,6 +71,7 @@ class SurveyListener
         $this->om = $om;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
+        $this->surveyManager = $surveyManager;
         $this->templating = $templating;
     }
 
@@ -140,6 +148,7 @@ class SurveyListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        $workspace = $event->getParent()->getWorkspace();
         $survey = $event->getResource();
         $copy = new Survey();
         $copy->setPublished($survey->isPublished());
@@ -152,11 +161,48 @@ class SurveyListener
         $relations = $survey->getQuestionRelations();
 
         foreach ($relations as $relation) {
-            $newRelation = new SurveyQuestionRelation();
-            $newRelation->setSurvey($copy);
-            $newRelation->setQuestion($relation->getQuestion());
-            $newRelation->setQuestionOrder($relation->getQuestionOrder());
-            $this->om->persist($newRelation);
+            $question = $relation->getQuestion();
+            $type = $question->getType();
+            $copyQuestion = new Question();
+            $copyQuestion->setTitle($question->getTitle());
+            $copyQuestion->setQuestion($question->getQuestion());
+            $copyQuestion->setWorkspace($workspace);
+            $copyQuestion->setType($type);
+            $copyQuestion->setCommentAllowed($question->isCommentAllowed());
+            $copyQuestion->setCommentLabel($question->getCommentLabel());
+            $this->om->persist($copyQuestion);
+
+            switch ($type) {
+
+                case 'multiple_choice_single':
+                case 'multiple_choice_multiple':
+                    $multiChoiceQuestion = $this->surveyManager
+                        ->getMultipleChoiceQuestionByQuestion($question);
+                    $choices = $multiChoiceQuestion->getChoices();
+
+                    $copyMultiQuestion = new MultipleChoiceQuestion();
+                    $copyMultiQuestion->setHorizontal($multiChoiceQuestion->getHorizontal());
+                    $copyMultiQuestion->setQuestion($copyQuestion);
+
+                    foreach ($choices as $choice) {
+                        $copyChoice = new Choice();
+                        $copyChoice->setContent($choice->getContent());
+                        $copyChoice->setOther($choice->isOther());
+                        $copyChoice->setChoiceQuestion($copyMultiQuestion);
+                        $this->om->persist($copyChoice);
+                    }
+
+                    $this->om->persist($copyMultiQuestion);
+                    break;
+                case 'open-ended':
+                default:
+                    break;
+            }
+            $copyRelation = new SurveyQuestionRelation();
+            $copyRelation->setSurvey($copy);
+            $copyRelation->setQuestion($copyQuestion);
+            $copyRelation->setQuestionOrder($relation->getQuestionOrder());
+            $this->om->persist($copyRelation);
         }
 
         $event->setCopy($copy);
