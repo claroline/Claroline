@@ -152,8 +152,21 @@ class BlogOptions
      *
      * @ORM\Column(type="string", name="display_list_widget_blog_right", nullable=false, options={"default" = "01112131415161"})
      */
-    protected $listWidgetBlog = "01112131415161" ;
+    protected $listWidgetBlog = "01112131415161";
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="tag_top_mode")
+     */
+    protected $tagTopMode = false;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(type="smallint", name="max_tag", nullable=false, options={"default" = 50})
+     */
+    protected $maxTag=50;
 
     /**
      * @return int
@@ -612,5 +625,42 @@ class BlogOptions
     public function getBannerActivate()
     {
         return $this->bannerActivate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxTag()
+    {
+        return $this->maxTag;
+    }
+
+    /**
+     * @param int $maxTag
+     * @return BlogOptions
+     */
+    public function setMaxTag($maxTag)
+    {
+        $this->maxTag = $maxTag;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTagTopMode()
+    {
+        return $this->tagTopMode;
+    }
+
+    /**
+     * @param boolean $tagTopMode
+     * @return BlogOptions
+     */
+    public function setTagTopMode($tagTopMode)
+    {
+        $this->tagTopMode = $tagTopMode;
+
+        return $this;
     }
 }

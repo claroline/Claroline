@@ -58,9 +58,13 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getTagsByBlog(Blog $blog)
     {
-        $tags = $this->getTagManager()->loadByBlog($blog, 50);
-        shuffle($tags);
-        //$tagNames = array_map(function($val){return $val->name;}, $tags);
+        if($blog->getOptions()->isTagTopMode()) {
+            $tags = $this->getTagManager()->loadByBlog($blog, $blog->getOptions()->getMaxTag());
+        }
+        else {
+            $tags = $this->getTagManager()->loadByBlog($blog);
+            shuffle($tags);
+        }
 
         return $tags;
     }

@@ -37,6 +37,16 @@
             </label>
         </div>
 
+        {{ form_row(form.post_per_page) }}
+        {{ form_row(form.tag_cloud) }}
+
+        <div class="form-group row">
+            <div class=" col-md-3"></div>
+            <div id="row_max_tag" class="col-md-9">
+            {{ form_widget(form.tag_top_mode) }} <label id="label_max_tag">{{ 'limit_to'|trans({}, 'icap_blog') }} {{ form_widget(form.max_tag) }} {{ 'tags_in_the_cloud'|trans({}, 'icap_blog') }}</label>
+            </div>
+        </div>
+
         {{ form_rest(form) }}
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">{{ 'apply'|trans({}, 'icap_blog') }}</button>
