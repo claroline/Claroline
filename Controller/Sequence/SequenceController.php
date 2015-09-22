@@ -3,7 +3,9 @@
 namespace UJM\ExoBundle\Controller\Sequence;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use UJM\ExoBundle\Entity\Exercise;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class SequenceController extends Controller
 {
+
     /**
      * Render the Exercise player main view.
      *

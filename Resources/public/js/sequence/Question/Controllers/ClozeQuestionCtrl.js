@@ -51,7 +51,8 @@
             this.findHoleObject = function (id) {
                 if (this.question.holes) {
                     for (var j = 0; j < this.question.holes.length; j++) {
-                        if (this.question.holes[j].id === id) {
+                        if (this.question.holes[j].id === parseInt(id)) {
+                            console.log(this.question.holes[j]);
                             return this.question.holes[j];
                         }
                     }
@@ -60,6 +61,25 @@
             };
 
             this.getHoleContent = function (hole) {
+                console.log(hole);
+                if (typeof hole.choices !== "undefined") {
+                    var html = '';
+                    html += '<select>';
+                    for (var i = 0; i < hole.choices.length; i++) {
+                        html += '<option>' + hole.choices[i] + '</option>';
+                    }
+                    html += '</select>';
+                    return html;
+                }
+                else {
+                    var size = hole.size ? hole.size.toString() : '50';
+                    var input = '<input type="text" style="width:' + size + 'px;" value=""';
+                    if (hole.placeholder) {
+                        input += ' placeholder="' + hole.placeholder + '"';
+                    }
+                    input += 'disabled >';
+                    return input;
+                }/*
                 switch (hole.type) {
                     case "simple":
                         var size = hole.size ? hole.size.toString() : '50';
@@ -89,7 +109,7 @@
                         return input;
                         break;
 
-                }
+                }*/
             };
 
             /**
@@ -97,7 +117,7 @@
              * @returns {boolean}
              */
             this.questionHasOtherMeta = function () {
-                return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
+                return this.question.meta.licence || this.question.meta.created || this.question.meta.modified || this.question.meta.description;
             };
         }
     ]);
