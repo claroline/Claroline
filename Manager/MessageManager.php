@@ -99,7 +99,11 @@ class MessageManager
      *
      * @return \Claroline\MessageBundle\Entity\Message
      */
-    public function send(Message $message, $setAsSent = true)
+    public function send(
+        Message $message,
+        $setAsSent = true,
+        $sendMail = true
+    )
     {
         if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
             $receiversString = substr_replace($receiversString, '', -1);
@@ -154,7 +158,7 @@ class MessageManager
         }
 
         $mailNotifiedUsers = array();
-
+        
         //get every users which are going to be notified
         foreach ($groupReceivers as $groupReceiver) {
             $users = $this->userRepo->findByGroup($groupReceiver);
@@ -194,12 +198,15 @@ class MessageManager
             }
         }
 
-        $this->mailManager->send(
-            $message->getObject(),
-            $message->getContent(),
-            $mailNotifiedUsers,
-            $message->getSender()
-        );
+        if ($sendMail) {
+            $this->mailManager->send(
+                $message->getObject(),
+                $message->getContent(),
+                $mailNotifiedUsers,
+                $message->getSender()
+            );
+        }
+
         $this->om->flush();
 
         return $message;
@@ -369,7 +376,8 @@ class MessageManager
         AbstractRoleSubject $subject,
         $content,
         $object,
-        $sender = null
+        $sender = null,
+        $withMail = true
     )
     {
         $users = array();
@@ -385,7 +393,7 @@ class MessageManager
         }
 
         $message = $this->create($content, $object, $users, $sender);
-        $this->send($message);
+        $this->send($message, true, $withMail);
     }
 
     public function getOneUserMessageByUserAndMessage(User $user, Message $message)
