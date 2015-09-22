@@ -169,8 +169,9 @@ class RoleManager
             $role->setReadOnly(true);
             $role->setType(Role::USER_ROLE);
             $this->om->persist($role);
+
         }
-        $this->associateRole($user, $role);
+        $this->associateRole($user, $role, false, false);
         $this->om->endFlushSuite();
 
         return $role;
@@ -230,7 +231,7 @@ class RoleManager
      *
      * @throws Exception\AddRoleException
      */
-    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false)
+    public function associateRole(AbstractRoleSubject $ars, Role $role, $sendMail = false, $dispatch = true)
     {
         if (!$this->validateRoleInsert($ars, $role)) {
             throw new Exception\AddRoleException('Role cannot be added');
@@ -245,11 +246,13 @@ class RoleManager
             $ars->addRole($role);
             $this->om->startFlushSuite();
 
-            $this->dispatcher->dispatch(
-                'log',
-                'Log\LogRoleSubscribe',
-                array($role, $ars)
-            );
+            if ($dispatch) {
+                $this->dispatcher->dispatch(
+                    'log',
+                    'Log\LogRoleSubscribe',
+                    array($role, $ars)
+                );
+            }
             $this->om->persist($ars);
             $this->om->endFlushSuite();
 
@@ -1005,7 +1008,7 @@ class RoleManager
                 );
                 $i++;
 
-                if ($i % 50 === 0) {
+                if ($i % 300 === 0) {
                     $this->om->forceFlush();
                 }
             }
@@ -1026,7 +1029,7 @@ class RoleManager
                 $this->createUserRole($user);
                 $i++;
 
-                if ($i % 50 === 0) {
+                if ($i % 300 === 0) {
                     $this->om->forceFlush();
                 }
             }

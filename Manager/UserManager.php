@@ -187,6 +187,8 @@ class UserManager
      */
     public function rename(User $user, $username)
     {
+        $userRole = $this->roleManager->getUserRoleByUser($user);
+        if ($userRole) $this->roleManager->renameUserRole($userRole, $user->getUsername());
         $user->setUsername($username);
         $personalWorkspaceName = $this->translator->trans('personal_workspace', array(), 'platform') . $user->getUsername();
         $pws = $user->getPersonalWorkspace();
