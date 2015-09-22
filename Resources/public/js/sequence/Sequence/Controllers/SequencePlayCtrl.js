@@ -55,18 +55,18 @@
             };
 
             /**
-             * 
+             * When using the drop down to jum to a specific step
              */
             this.goTo = function (step) {
-                //{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}
-                //Translator.trans('root_default_name', {}, 'path_wizards');
-                $ngBootbox.confirm(Translator.trans('sequence_next_step_confirm', {}, 'ujm_sequence'))
+                this.validateStep('goto', this.steps.indexOf(step));
+                // no need to confirm !!
+                /*$ngBootbox.confirm(Translator.trans('sequence_next_step_confirm', {}, 'ujm_sequence'))
                         .then(function () {
                             console.log('Confirmed!');
                             this.validateStep('goto', this.steps.indexOf(step));
                         }.bind(this), function () {
                            // console.log('Confirm dismissed!');
-                        });
+                        });*/
             };
 
             /**
@@ -75,20 +75,26 @@
              * Else end the sequence (also save student paper)
              * 
              * @param {String} action
+             * @param {Number} index (nullable) the step index
              */
             this.validateStep = function (action, index) {
+                // disable tooltips...
+                $('.tooltip').each(function(){
+                    $(this).hide();
+                });
+                
                 // data are given by question directive
                 var data = CommonService.getStudentData();
                 console.log('student data are below');
                 console.log(data);
                 // save step results in DB !!!!
                 // also save the current progression in db ?
+                // probably not necessary as the correction will be done by another module and data will be retrieved in DB
                 this.studentResults.push(data);
                 // get current step index
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
                 var length = this.steps.length;
                 var newIndex = index ? index : 0;
-                console.log('action ' + action);
                 if (action && action === 'forward') {
                     newIndex = currentStepIndex + 1;
                 }

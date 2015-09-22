@@ -1,12 +1,10 @@
 # b
-btn_end_step_label: End step
 btn_end_sequence_label: End sequence
 btn_prev_step_label: Go to previous step
 btn_next_step_label: Go to next step
 
 # d
 dropdown_step_navigate_choice_label: Step n°%1% / %2%
-dropdown_step_navigate_action_label: Go to
 
 # m
 meta_authors: Author(s)
@@ -60,8 +58,9 @@ sequence_save: Save sequence
 sequence_step_panel_title: Steps
 sequence_select_available_question: Select a question
 sequence_step_add_question: Add question
-sequence_attempts_infos: You have %1% attempt(s) - Attempt N° %2% / %1%
-sequence_next_step_confirm: Are you sure you want to go to the next step ? <br/> Yon won't be able to go back.
+sequence_attempts_infos: You have %1% attempt(s)
+sequence_nb_attempts: Attempt N° %1%
+sequence_next_step_confirm: Are you sure you want to end the current step ? <br/> Yon won't be able to go back.
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
 step_question_shuffle: Shuffle question order for this step
 

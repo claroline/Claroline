@@ -1,7 +1,13 @@
 <div class="panel panel-default">
     <div class="panel-heading clearfix">
         <h3 class="panel-title pull-left"> {{sequencePlayCtrl.sequence.meta.title}} - {{ 'sequence_step'|trans:{}:'ujm_sequence' }} {{sequencePlayCtrl.getCurrentStepIndex()}} / {{sequencePlayCtrl.steps.length}}</h3>
-        <span class="pull-right">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts, "2" : sequencePlayCtrl.nbAttempts}:'ujm_sequence'}} </span>
+        <span class="pull-right">
+            <!-- IF MAX ATTEMPTS -->
+            <span data-ng-if="sequencePlayCtrl.sequence.meta.maxAttempts > 0">{{ 'sequence_attempts_infos'|trans:{"1" : sequencePlayCtrl.sequence.meta.maxAttempts}:'ujm_sequence'}}</span>
+            <span>{{ 'sequence_nb_attempts'|trans:{"1" : sequencePlayCtrl.nbAttempts}:'ujm_sequence' }}</span>
+            <span data-ng-if="sequencePlayCtrl.sequence.meta.maxAttempts > 0">/ {{sequencePlayCtrl.sequence.meta.maxAttempts}}</span>
+        </span>
+     
     </div>
     <div class="panel-body">           
         <div class="row">
@@ -21,9 +27,9 @@
             <div class="col-md-12">
                 <!-- NEXT / PREV -->
                 <div class="btn-group" role="group">
-                    <button role="button" data-ng-disabled="sequencePlayCtrl.isFirstStep" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('backward')" class="btn btn-default fa fa-arrow-circle-left">    
+                    <button role="button" data-ng-disabled="sequencePlayCtrl.isFirstStep" data-container="body" data-toggle="tooltip" title="{{ 'btn_prev_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="sequencePlayCtrl.validateStep('backward')" class="btn btn-default fa fa-arrow-circle-left">    
                     </button>
-                    <button role="button" data-ng-disabled="sequencePlayCtrl.isLastStep" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" ng-bootbox-confirm="{{ 'sequence_next_step_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
+                    <button role="button" data-ng-disabled="sequencePlayCtrl.isLastStep" data-container="body" data-toggle="tooltip" title="{{ 'btn_next_step_label'|trans:{}:'ujm_sequence' }}" type="button" data-ng-click="sequencePlayCtrl.validateStep('forward')" class="btn btn-default fa fa-arrow-circle-right">    
                     </button>
                 </div>
                 <!-- JUMP TO -->
