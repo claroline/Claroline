@@ -131,7 +131,7 @@
                     </thead>
                     <tbody id="group-table-body">
                         {% for group in pager.currentPageResults %}
-                            <tr id="group-{{ group.getId() }}" class="row-group"/>
+                            <tr id="group-{{ group.getId() }}" class="row-group">
                                 <td>
                                     <input type="checkbox" class="chk-item" value="{{ group.getId() }}"></input>
                                 </td>

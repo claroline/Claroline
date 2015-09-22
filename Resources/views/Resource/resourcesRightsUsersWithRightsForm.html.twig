@@ -100,7 +100,7 @@
                 {% endif %}
             </tr>
         </thead>
-        <tbody>
+        <tbody class="rights-single-user">
             {% for user in users %}
                 {% if usersRoles[user.getUsername()] is defined %}
                     {% set roleId = usersRoles[user.getUsername()].getId() %}

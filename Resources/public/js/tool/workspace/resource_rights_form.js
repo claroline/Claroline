@@ -223,16 +223,31 @@
     });
 
     $('#users-with-rights-list').on('click', '#add-new-user-rights-btn', function () {
-        //do some stuff here
+        var rights = $('#rights-list').attr('data-rights');
+        var isDir = $('#rights-list').attr('data-is-dir');
+        var nodeId = $('#rights-list').attr('data-node-id');
+        rights = rights.split(',');
         var picker = new UserPicker();
         var settings = {
             'multiple': true,
-            'picker_name': 'user_res_picker'
+            'picker_name': 'user_res_picker',
+            'return_datas': true
         };
         picker.configure(
             settings,
             function (users) {
-                $('.no-user-warning').hide();
+                $.each(users, function(index, val) {
+                    //add the row to the tab
+                    var twigParams = {
+                        'user': val,
+                        'isDir': true,
+                        'rights': rights,
+                        'nodeId': nodeId
+                    };
+
+                    var el = Twig.render(ResourceRightsRow, twigParams);
+                    $('.rights-single-user').append(el);
+                });
             }
         );
         picker.open();
