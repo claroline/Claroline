@@ -94,11 +94,13 @@ class MessageListener
         $sender = $event->getSender();
         $content = $event->getContent();
         $object = $event->getObject();
+        $withMail = $event->getWithMail();
         $this->messageManager->sendMessageToAbstractRoleSubject(
             $receiver,
             $content,
             $object,
-            $sender
+            $sender,
+            $withMail
         );
     }
 
