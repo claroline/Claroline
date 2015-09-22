@@ -31,7 +31,7 @@ class LoadRequiredFixturesData extends AbstractFixture
             $entity = new WidgetType();
             $entity
                 ->setName($widgetType[0])
-                ->setIcon($widgetType[2]);
+                ->setIcon($widgetType[1]);
 
             $manager->persist($entity);
         }
