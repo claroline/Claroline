@@ -103,3 +103,5 @@ no_blog_selected: 'No blog selected'
 blog_widget_tag_list_blog_form_tag_cloud: "Tag cloud"
 icap_blog_options_form_Order_Widget_Right: "Manage the side bar of widget"
 apply: "Apply"
+limit_to: "Limit to the"
+tags_in_the_cloud: "tags most used"

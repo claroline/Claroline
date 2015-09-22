@@ -41,6 +41,10 @@ class BlogOptionsType extends AbstractType
                 'multiple'      => false,
                 'empty_value'   => false
             ))
+            ->add('tag_top_mode', 'checkbox', array(
+                'required' => false,
+            ))
+            ->add('max_tag', 'integer')
             ->add('listWidgetBlog', 'listWidgetBlog', array(
                 'label' => 'Trier les rubriques'
             ))

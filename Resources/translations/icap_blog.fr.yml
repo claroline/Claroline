@@ -103,3 +103,5 @@ no_blog_selected: 'Aucun blog sélectionné'
 blog_widget_tag_list_blog_form_tag_cloud: "Nuage de tags"
 icap_blog_options_form_Order_Widget_Right: "Gestion de la barre latérale de widget"
 apply: "Appliquer"
+limit_to: "Limiter l'affichage aux"
+tags_in_the_cloud: "tags les plus utilisés"
