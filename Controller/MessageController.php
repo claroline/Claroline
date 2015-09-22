@@ -607,7 +607,7 @@ class MessageController
 
             // merge the 2 groups array
             foreach ($userGroupsFinal as $userGroupFinal) {
-                if (!in_array($userGroupFinal, $groups)) {
+                if (!in_array($userGroupFinal, $groups, true)) {
                     $groups[] = $userGroupFinal;
                 }
             }
