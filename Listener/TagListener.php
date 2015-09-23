@@ -294,7 +294,6 @@ class TagListener
         foreach ($users as $user) {
             $ids[] = $user->getId();
         }
-
         $this->tagManager->removeTaggedObjectsByClassAndIds(
             'Claroline\CoreBundle\Entity\User',
             $ids
@@ -314,9 +313,27 @@ class TagListener
         foreach ($groups as $group) {
             $ids[] = $group->getId();
         }
-
         $this->tagManager->removeTaggedObjectsByClassAndIds(
             'Claroline\CoreBundle\Entity\Group',
+            $ids
+        );
+    }
+
+    /**
+     * @DI\Observe("claroline_workspaces_delete")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onWorkspacesDelete(GenericDatasEvent $event)
+    {
+        $workspaces = $event->getDatas();
+        $ids = array();
+
+        foreach ($workspaces as $workspace) {
+            $ids[] = $workspace->getId();
+        }
+        $this->tagManager->removeTaggedObjectsByClassAndIds(
+            'Claroline\CoreBundle\Entity\Workspace\Workspace',
             $ids
         );
     }
