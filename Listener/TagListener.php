@@ -86,20 +86,90 @@ class TagListener
         $datas = $event->getDatas();
 
         if (is_array($datas)) {
-            $search = isset($datas['tag']) ? $datas['tag'] : '';
             $user = isset($datas['user']) ? $datas['user'] : null;
+            $search = isset($datas['tag']) ? $datas['tag'] : '';
             $withPlatform = isset($datas['with_platform']) && $datas['with_platform'];
+            $strictSearch = isset($datas['strict']) ? $datas['strict'] : false;
+            $class = isset($datas['class']) ? $datas['class'] : null;
+            $objectResponse = isset($datas['object_response']) && $datas['object_response'];
+            $orderedBy = isset($datas['ordered_by']) ? $datas['ordered_by'] : 'id';
+            $order = isset($datas['order']) ? $datas['order'] : 'ASC';
 
-            $objects = $this->tagManager->getTaggedObjects($user, $withPlatform, $search);
+            $objects = $this->tagManager->getTaggedObjects(
+                $user,
+                $withPlatform,
+                $class,
+                $search,
+                $strictSearch
+            );
 
-            foreach ($objects as $object) {
-                $datas = array();
-                $datas['class'] = $object->getObjectClass();
-                $datas['objectId'] = $object->getObjectId();
-                $taggedObjects[] = $datas;
+            if (!is_null($class) && $objectResponse) {
+                $ids = array();
+
+                foreach ($objects as $object) {
+                    $ids[] = $object->getObjectId();
+                }
+                $taggedObjects = $this->tagManager->getObjectsByClassAndIds(
+                    $class,
+                    $ids,
+                    $orderedBy,
+                    $order
+                );
+            } else {
+
+                foreach ($objects as $object) {
+                    $datas = array();
+                    $datas['class'] = $object->getObjectClass();
+                    $datas['id'] = $object->getObjectId();
+                    $datas['name'] = $object->getObjectName();
+                    $taggedObjects[] = $datas;
+                }
             }
         }
         $event->setResponse($taggedObjects);
+    }
+
+    /**
+     * @DI\Observe("claroline_retrieve_tags")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onRetrieveTags(GenericDatasEvent $event)
+    {
+        $tags = array();
+        $tagsName = array();
+        $datas = $event->getDatas();
+
+        if (is_array($datas)) {
+            $user = isset($datas['user']) ? $datas['user'] : null;
+            $search = isset($datas['search']) ? $datas['search'] : '';
+            $withPlatform = isset($datas['with_platform']) && $datas['with_platform'];
+            $orderedBy = isset($datas['ordered_by']) ? $datas['ordered_by'] : 'name';
+            $order = isset($datas['order']) ? $datas['order'] : 'ASC';
+            $withPager = isset($datas['with_pager']) && $datas['with_pager'];
+            $page = isset($datas['page']) ? $datas['page'] : 1;
+            $max = isset($datas['max']) ? $datas['max'] : 50;
+            $strictSearch = isset($datas['strict']) ? $datas['strict'] : false;
+
+            $tags = $this->tagManager->getTags(
+                $user,
+                $search,
+                $withPlatform,
+                $orderedBy,
+                $order,
+                $withPager,
+                $page,
+                $max,
+                $strictSearch
+            );
+        } else {
+            $tags = $this->tagManager->getPlatformTags();
+        }
+
+        foreach ($tags as $tag) {
+            $tagsName[] = $tag->getName();
+        }
+        $event->setResponse($tagsName);
     }
 
     /**
@@ -184,5 +254,30 @@ class TagListener
         ->setExtra('display', 'modal_form');
 
         return $menu;
+    }
+
+    /**
+     * @DI\Observe("claroline_retrieve_user_workspaces_by_tag")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onRetrieveUserWorkspacesByTag(GenericDatasEvent $event)
+    {
+        $workspaces = array();
+        $datas = $event->getDatas();
+
+        if (is_array($datas) && isset($datas['user']) && isset($datas['tag'])) {
+            $user = $datas['user'];
+            $tag = $datas['tag'];
+            $orderedBy = isset($datas['ordered_by']) ? $datas['ordered_by'] : 'id';
+            $order = isset($datas['order']) ? $datas['order'] : 'ASC';
+            $workspaces = $this->tagManager->getTaggedWorkspacesByRoles(
+                $user,
+                $tag,
+                $orderedBy,
+                $order
+            );
+        }
+        $event->setResponse($workspaces);
     }
 }

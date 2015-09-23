@@ -149,10 +149,78 @@ class TagManager
         }
     }
 
+    public function getObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
+    {
+        $objects = array();
+
+        if (count($ids) > 0) {
+            $objects = $this->taggedObjectRepo
+                ->findObjectsByClassAndIds($class, $ids, $orderedBy, $order);
+        }
+
+        return $objects;
+    }
+
+    public function getTaggedWorkspacesByRoles(
+        User $user,
+        $tag,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
+    {
+        $roles = $user->getEntityRoles();
+
+        return count($roles) > 0 ?
+            $this->taggedObjectRepo->findTaggedWorkspacesByRoles(
+                $tag,
+                $roles,
+                $orderedBy,
+                $order
+            ) :
+            array();
+    }
+
 
     /***********************************
      * Access to TagRepository methods *
      ***********************************/
+
+    public function getTags(
+        User $user = null,
+        $search = '',
+        $withPlatform = false,
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $withPager = false,
+        $page = 1,
+        $max = 50,
+        $strictSearch = false
+    )
+    {
+        $tags = is_null($user) ?
+            $this->getPlatformTags(
+                $search,
+                $orderedBy,
+                $order,
+                $withPager,
+                $page,
+                $max,
+                $strictSearch
+            ) :
+            $this->getUserTags(
+                $user,
+                $search,
+                $withPlatform,
+                $orderedBy,
+                $order,
+                $withPager,
+                $page,
+                $max,
+                $strictSearch
+            );
+
+        return $tags;
+    }
 
     public function getPlatformTags(
         $search = '',
@@ -160,12 +228,13 @@ class TagManager
         $order = 'ASC',
         $withPager = false,
         $page = 1,
-        $max = 50
+        $max = 50,
+        $strictSearch = false
     )
     {
         $tags = empty($search) ?
             $this->tagRepo->findAllPlatformTags($orderedBy, $order) :
-            $this->tagRepo->findSearchedPlatformTags($search, $orderedBy, $order);
+            $this->tagRepo->findSearchedPlatformTags($search, $orderedBy, $order, $strictSearch);
 
         return $withPager ?
             $this->pagerFactory->createPagerFromArray($tags, $page, $max) :
@@ -180,7 +249,8 @@ class TagManager
         $order = 'ASC',
         $withPager = false,
         $page = 1,
-        $max = 50
+        $max = 50,
+        $strictSearch = false
     )
     {
         $tags = empty($search) ?
@@ -195,7 +265,8 @@ class TagManager
                 $search,
                 $withPlatform,
                 $orderedBy,
-                $order
+                $order,
+                $strictSearch
             );
 
         return $withPager ?
@@ -238,7 +309,9 @@ class TagManager
     public function getTaggedObjects(
         User $user = null,
         $withPlatform = false,
+        $class = null,
         $search = '',
+        $strictSearch = false,
         $orderedBy = 'name',
         $order = 'ASC',
         $withPager = false,
@@ -250,6 +323,7 @@ class TagManager
             $this->taggedObjectRepo->findAllTaggedObjects(
                 $user,
                 $withPlatform,
+                $class,
                 $orderedBy,
                 $order
             ) :
@@ -257,8 +331,10 @@ class TagManager
                 $search,
                 $user,
                 $withPlatform,
+                $class,
                 $orderedBy,
-                $order
+                $order,
+                $strictSearch
             );
 
         return $withPager ?

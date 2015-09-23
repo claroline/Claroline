@@ -29,18 +29,30 @@ class TagRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findSearchedPlatformTags($search = '', $orderedBy = 'name', $order = 'ASC')
+    public function findSearchedPlatformTags(
+        $search = '',
+        $orderedBy = 'name',
+        $order = 'ASC',
+        $strictSearch = false
+    )
     {
+        $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
+
         $dql = "
             SELECT t
             FROM Claroline\TagBundle\Entity\Tag t
             WHERE t.user IS NULL
-            AND UPPER(t.name) LIKE :search
+            AND UPPER(t.name) $searchTest
             ORDER BY t.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
         $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
+
+        if ($strictSearch) {
+            $query->setParameter('search', $upperSearch);
+        } else {
+            $query->setParameter('search', "%{$upperSearch}%");
+        }
 
         return $query->getResult();
     }
@@ -79,9 +91,12 @@ class TagRepository extends EntityRepository
         $search = '',
         $withPlatform = false,
         $orderedBy = 'name',
-        $order = 'ASC'
+        $order = 'ASC',
+        $strictSearch = false
     )
     {
+        $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
+
         if ($withPlatform) {
             $dql = "
                 SELECT t
@@ -90,7 +105,7 @@ class TagRepository extends EntityRepository
                     t.user = :user
                     OR t.user IS NULL
                 )
-                AND UPPER(t.name) LIKE :search
+                AND UPPER(t.name) $searchTest
                 ORDER BY t.{$orderedBy} {$order}
             ";
         } else {
@@ -98,14 +113,19 @@ class TagRepository extends EntityRepository
                 SELECT t
                 FROM Claroline\TagBundle\Entity\Tag t
                 WHERE t.user = :user
-                AND UPPER(t.name) LIKE :search
+                AND UPPER(t.name) $searchTest
                 ORDER BY t.{$orderedBy} {$order}
             ";
         }
         $query = $this->_em->createQuery($dql);
         $query->setParameter('user', $user);
         $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
+
+        if ($strictSearch) {
+            $query->setParameter('search', $upperSearch);
+        } else {
+            $query->setParameter('search', "%{$upperSearch}%");
+        }
 
         return $query->getResult();
     }
