@@ -280,4 +280,24 @@ class TagListener
         }
         $event->setResponse($workspaces);
     }
+
+    /**
+     * @DI\Observe("claroline_groups_delete")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onGroupsDelete(GenericDatasEvent $event)
+    {
+        $groups = $event->getDatas();
+        $ids = array();
+
+        foreach ($groups as $group) {
+            $ids[] = $group->getId();
+        }
+
+        $this->tagManager->removeTaggedObjectsByClassAndIds(
+            'Claroline\CoreBundle\Entity\Group',
+            $ids
+        );
+    }
 }

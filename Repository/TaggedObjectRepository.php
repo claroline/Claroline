@@ -173,6 +173,27 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findTaggedObjectsByClassAndIds(
+        $class,
+        array $ids,
+        $orderedBy = 'id',
+        $order = 'ASC'
+    )
+    {
+        $dql = "
+            SELECT to
+            FROM Claroline\TagBundle\Entity\TaggedObject to
+            WHERE to.objectClass = :class
+            AND to.objectId IN (:ids)
+            ORDER BY to.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('class', $class);
+        $query->setParameter('ids', $ids);
+
+        return $query->getResult();
+    }
+
     public function findObjectsByClassAndIds(
         $class,
         array $ids,

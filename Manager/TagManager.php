@@ -180,6 +180,22 @@ class TagManager
             array();
     }
 
+    public function removeTaggedObjectsByClassAndIds($class, array $ids)
+    {
+        if (!empty($class) && !empty($ids)) {
+            $objects = $this->taggedObjectRepo->findTaggedObjectsByClassAndIds($class, $ids);
+            $nbObjects = count($objects);
+
+            foreach ($objects as $object) {
+                $this->om->remove($object);
+            }
+
+            if ($nbObjects > 0) {
+                $this->om->flush();
+            }
+        }
+    }
+
 
     /***********************************
      * Access to TagRepository methods *
