@@ -17,8 +17,6 @@
 <p><span class="fa fa-phone"></span> {{ widget.user.phone }}</p>
 {% endif %}
 {% if widget.showDescription %}
-<p>{{ widget.user.description|raw }}</p>
+{{ widget.user.description|raw }}
 {% endif %}
-<p>
-    {{ widget.text|raw }}
-</p>
+{{ widget.text|raw }}
