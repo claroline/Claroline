@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Controller;
 
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -20,15 +21,12 @@ class ExerciseController extends Controller
      * Displays a form to edit an existing Exercise entity.
      *
      * @EXT\Route("/{id}/edit", name="ujm_exercise_edit")
-     *
-     * @param int $id id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id)
+    public function editAction(Exercise $exercise)
     {
-        $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
@@ -52,7 +50,7 @@ class ExerciseController extends Controller
                 )
             );
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getid()]));
         }
     }
 
@@ -63,17 +61,13 @@ class ExerciseController extends Controller
      * @EXT\Route("/{id}/update", name="ujm_exercise_update")
      * @EXT\Method("POST")
      *
-     * @param int $id id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateAction($id)
+    public function updateAction(Exercise $exercise)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
-
-        $entity = $em->getRepository('UJMExoBundle:Exercise')->find($id);
+        $entity = $exercise->getid();
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Exercise entity.');
@@ -114,8 +108,7 @@ class ExerciseController extends Controller
      *     requirements={"id"="\d+"},
      *     options={"expose"=true}
      * )
-     *
-     * @param Exercise $exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -160,8 +153,7 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/publish", name="ujm_exercise_publish")
      * @EXT\Method("POST")
-     *
-     * @param Exercise $exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -178,8 +170,7 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/unpublish", name="ujm_exercise_unpublish")
      * @EXT\Method("POST")
-     *
-     * @param Exercise $exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -196,8 +187,7 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/{id}/papers/delete", name="ujm_exercise_delete_papers")
      * @EXT\Method("POST")
-     *
-     * @param Exercise $exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -219,9 +209,9 @@ class ExerciseController extends Controller
      * @EXT\Route("/{id}/questions/{pageNow}/{displayAll}/{categoryToFind}/{titleToFind}", 
      *              name="ujm_exercise_questions", 
      *              defaults={"pageNow" = 0,"categoryToFind"= "z", "titleToFind"= "z", "displayAll"= 0 },
-     *              requirements={"categoryToFind"=".+","titleToFind"= ".+"})
-     *
-     * @param int    $id             id of exercise
+     *              requirements={"categoryToFind"=".+","titleToFind"= ".+"})     * 
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * 
      * @param int    $pageNow        actual page for the pagination
      * @param string $categoryToFind used for pagination (for example after creating a question, go back to page contaning this question)
      * @param string $titleToFind    used for pagination (for example after creating a question, go back to page contaning this question)
@@ -229,15 +219,14 @@ class ExerciseController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showQuestionsAction($id, $pageNow, $categoryToFind, $titleToFind, $displayAll)
+    public function showQuestionsAction(Exercise $exercise, $pageNow, $categoryToFind, $titleToFind, $displayAll)
     {
         $user = $this->container->get('security.token_storage')
                                 ->getToken()->getUser();
         $allowEdit = array();
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         $this->checkAccess($exercise);
-
+        
         $workspace = $exercise->getResourceNode()->getWorkspace();
 
         $exoAdmin = $this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise);
@@ -315,7 +304,7 @@ class ExerciseController extends Controller
                     array(
                         'workspace' => $workspace,
                         'interactions' => $interactionsPager,
-                        'exerciseID' => $id,
+                        'exerciseID' => $exercise->getId(),
                         'questionWithResponse' => $questionWithResponse,
                         'pagerQuestion' => $pagerQuestion,
                         'displayAll' => $displayAll,
@@ -330,7 +319,7 @@ class ExerciseController extends Controller
                     array(
                         'workspace' => $workspace,
                         'interactions' => $interactionsPager,
-                        'exerciseID' => $id,
+                        'exerciseID' => $exercise->getId(),
                         'questionWithResponse' => $questionWithResponse,
                         'pagerQuestion' => $pagerQuestion,
                         'displayAll' => $displayAll,
@@ -340,18 +329,18 @@ class ExerciseController extends Controller
                 );
             }
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
         }
     }
 
     /**
      *To import in this Exercise a Question of the User's bank.
      *
-     * @EXT\Route("/{exoID}/import/{pageGoNow}/{maxPage}/{nbItem}/{displayAll}/{idExo}/{QuestionsExo}", 
+     * @EXT\Route("/{id}/import/{pageGoNow}/{maxPage}/{nbItem}/{displayAll}/{idExo}/{QuestionsExo}", 
      *              name="ujm_exercise_import_question", 
      *              defaults={"pageGoNow"= 1, "maxPage"= 10, "nbItem"= 1, "displayAll"= 0, "idExo"= -1, "QuestionsExo"= "false"})
      *
-     * @param int  $exoID        id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      * @param int  $pageGoNow    page going for the pagination
      * @param int  $maxpage      number max questions per page
      * @param int  $nbItem       number of question
@@ -361,7 +350,7 @@ class ExerciseController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function importQuestionAction($exoID, $pageGoNow, $maxPage, $nbItem, $displayAll, $idExo = -1, $QuestionsExo = 'false')
+    public function importQuestionAction(Exercise $exercise, $pageGoNow, $maxPage, $nbItem, $displayAll, $idExo = -1, $QuestionsExo = 'false')
     {
         if ($QuestionsExo == '') {
             $QuestionsExo = 'false';
@@ -374,7 +363,6 @@ class ExerciseController extends Controller
         $alreadyShared = array();
 
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $this->checkAccess($exercise);
 
         $workspace = $exercise->getResourceNode()->getWorkspace();
@@ -437,7 +425,7 @@ class ExerciseController extends Controller
                     ->findByUserNotInExercise($user, $exercise);
 
                 $shared = $em->getRepository('UJMExoBundle:Share')
-                        ->getUserInteractionSharedImport($exoID, $uid, $em);
+                        ->getUserInteractionSharedImport($exercise->getId(), $uid, $em);
 
                 if ($displayAll == 1) {
                     if (count($userQuestions) > count($shared)) {
@@ -500,7 +488,7 @@ class ExerciseController extends Controller
             $vars['shareRight'] = $shareRight;
             $vars['displayAll'] = $displayAll;
             $vars['listExo'] = $listExo;
-            $vars['exoID'] = $exoID;
+            $vars['exoID'] = $exercise->getId();
             $vars['QuestionsExo'] = $QuestionsExo;
             $vars['workspace'] = $workspace;
             $vars['_resource'] = $exercise;
@@ -508,7 +496,7 @@ class ExerciseController extends Controller
 
             return $this->render('UJMExoBundle:Question:import.html.twig', $vars);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exoID]));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
         }
     }
 
@@ -563,11 +551,11 @@ class ExerciseController extends Controller
     /**
      * Delete the Question of the exercise.
      *
-     * @EXT\Route("/{exoID}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", 
+     * @EXT\Route("/{id}/{qid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", 
      *              name="ujm_exercise_question_delete",
      *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
      *
-     * @param int $exoID    id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      * @param int $qid      id of question to delete
      * @param int $pageNow  actual page for the pagination
      * @param int $maxpage  number max questions per page
@@ -576,10 +564,9 @@ class ExerciseController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteQuestionAction($exoID, $qid, $pageNow, $maxPage, $nbItem, $lastPage)
+    public function deleteQuestionAction(Exercise $exercise, $qid, $pageNow, $maxPage, $nbItem, $lastPage)
     {
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
         $this->checkAccess($exercise);
 
@@ -588,7 +575,7 @@ class ExerciseController extends Controller
         if ($exoAdmin === true) {
             $em = $this->getDoctrine()->getManager();
             $eq = $em->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->findOneBy(array('exercise' => $exoID, 'question' => $qid));
+                ->findOneBy(array('exercise' => $exercise->getId(), 'question' => $qid));
             $em->remove($eq);
             $em->flush();
 
@@ -604,7 +591,7 @@ class ExerciseController extends Controller
             $this->generateUrl(
                 'ujm_exercise_questions',
                 array(
-                    'id' => $exoID,
+                    'id' => $exercise->getId(),
                     'pageNow' => $pageNow,
                 )
             )
@@ -615,12 +602,11 @@ class ExerciseController extends Controller
      * To create a paper in order to take an assessment.
      *
      * @EXT\Route("/{id}/paper", name="ujm_exercise_paper")
-     *
-     * @param int $id id of exercise
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function exercisePaperAction($id)
+    public function exercisePaperAction(Exercise $exercise)
     {
         $exerciseSer = $this->container->get('ujm.exo_exercise');
         $paperSer = $this->container->get('ujm.exo_paper');
@@ -628,9 +614,8 @@ class ExerciseController extends Controller
         $uid = $exerciseSer->getUserId();
 
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($id);
         if (!$exerciseSer->allowToOpen($exercise)) {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $id]));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
         }
 
         $exoAdmin = $exerciseSer->isExerciseAdmin($exercise);
@@ -643,7 +628,7 @@ class ExerciseController extends Controller
 
             if ($uid != 'anonymous') {
                 $dql = 'SELECT max(p.numPaper) FROM UJM\ExoBundle\Entity\Paper p '
-                    .'WHERE p.exercise='.$id.' AND p.user='.$uid;
+                    .'WHERE p.exercise='.$exercise->getId().' AND p.user='.$uid;
                 $query = $em->createQuery($dql);
                 $maxNumPaper = $query->getSingleResult();
 
@@ -651,7 +636,7 @@ class ExerciseController extends Controller
                 $paper = $this->getDoctrine()
                     ->getManager()
                     ->getRepository('UJMExoBundle:Paper')
-                    ->getPaper($uid, $id);
+                    ->getPaper($uid, $exercise->getId());
             } else {
                 $maxNumPaper[1] = 0;
                 $paper = array();
@@ -660,7 +645,7 @@ class ExerciseController extends Controller
             //if not exist a paper no finished
             if (count($paper) == 0) {
                 if ($exerciseSer->controlMaxAttemps($exercise, $uid, $exoAdmin) === false) {
-                    return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
+                    return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $exercise->getId())));
                 }
 
                 $paper = new Paper();
@@ -677,9 +662,9 @@ class ExerciseController extends Controller
                     $papers = $this->getDoctrine()
                         ->getManager()
                         ->getRepository('UJMExoBundle:Paper')
-                        ->getExerciseUserPapers($uid, $id);
+                        ->getExerciseUserPapers($uid, $exercise->getId());
                     if (count($papers) == 0) {
-                        $tab = $paperSer->prepareInteractionsPaper($id, $exercise);
+                        $tab = $paperSer->prepareInteractionsPaper($exercise->getId(), $exercise);
                         $interactions = $tab['interactions'];
                         $orderInter = $tab['orderInter'];
                         $tabOrderInter = $tab['tabOrderInter'];
@@ -691,7 +676,7 @@ class ExerciseController extends Controller
                         $interactions[0] = $em->getRepository('UJMExoBundle:Question')->find($tabOrderInter[0]);
                     }
                 } else {
-                    $tab = $paperSer->prepareInteractionsPaper($id, $exercise);
+                    $tab = $paperSer->prepareInteractionsPaper($exercise->getId(), $exercise);
                     $interactions = $tab['interactions'];
                     $orderInter = $tab['orderInter'];
                     $tabOrderInter = $tab['tabOrderInter'];
@@ -714,7 +699,7 @@ class ExerciseController extends Controller
 
             $session->set('tabOrderInter', $tabOrderInter);
             $session->set('paper', $paper->getId());
-            $session->set('exerciseID', $id);
+            $session->set('exerciseID', $exercise->getId());
 
             $typeInter = $interactions[0]->getType();
 
@@ -726,7 +711,7 @@ class ExerciseController extends Controller
 
             return $this->render('UJMExoBundle:Exercise:paper.html.twig', $array);
         } else {
-            return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $id)));
+            return $this->redirect($this->generateUrl('ujm_paper_list', array('exoID' => $exercise->getId())));
         }
     }
 
@@ -867,47 +852,46 @@ class ExerciseController extends Controller
     /**
      * To display the docimology's histogramms.
      *
-     * @EXT\Route("/docimology/{exerciseId}/{nbPapers}", name="ujm_exercise_docimology")
-     *
-     * @param int $exerciseId exercise id
+     * @EXT\Route("/docimology/{id}/{nbPapers}", name="ujm_exercise_docimology")
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * 
      * @param int $nbPapers   number of papers to this exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function docimologyAction($exerciseId, $nbPapers)
+    public function docimologyAction(Exercise $exercise, $nbPapers)
     {
         $docimoServ = $this->container->get('ujm.exo_docimology');
         $em = $this->getDoctrine()->getManager();
-        $exercise = $em->getRepository('UJMExoBundle:Exercise')->find($exerciseId);
         $this->checkAccess($exercise);
-
+        
         $eqs = $em->getRepository('UJMExoBundle:ExerciseQuestion')->findBy(
-            array('exercise' => $exerciseId),
+            array('exercise' => $exercise->getId()),
             array('ordre' => 'ASC')
         );
-
-        $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exerciseId);
-
+        
+        $papers = $em->getRepository('UJMExoBundle:Paper')->getExerciseAllPapers($exercise->getId());
+        
         if ($this->container->get('ujm.exo_exercise')->isExerciseAdmin($exercise)) {
             $workspace = $exercise->getResourceNode()->getWorkspace();
-
+            
             $parameters['nbPapers'] = $nbPapers;
             $parameters['workspace'] = $workspace;
-            $parameters['exoID'] = $exerciseId;
+            $parameters['exoID'] = $exercise->getId();
             $parameters['_resource'] = $exercise;
-
+            
             if ($nbPapers >= 12) {
-                $histoMark = $docimoServ->histoMark($exerciseId);
-                $histoSuccess = $docimoServ->histoSuccess($exerciseId, $eqs, $papers);
-
+                $histoMark = $docimoServ->histoMark($exercise->getId());
+                $histoSuccess = $docimoServ->histoSuccess($exercise->getId(), $eqs, $papers);
+                
                 if ($exercise->getNbQuestion() == 0) {
-                    $histoDiscrimination = $docimoServ->histoDiscrimination($exerciseId, $eqs, $papers);
+                    $histoDiscrimination = $docimoServ->histoDiscrimination($exercise->getId(), $eqs, $papers);
                 } else {
                     $histoDiscrimination['coeffQ'] = 'none';
                 }
-
-                $histoMeasureDifficulty = $docimoServ->histoMeasureOfDifficulty($exerciseId, $eqs);
-
+                
+                $histoMeasureDifficulty = $docimoServ->histoMeasureOfDifficulty($exercise->getId(), $eqs);
+                
                 $parameters['scoreList'] = $histoMark['scoreList'];
                 $parameters['frequencyMarks'] = $histoMark['frequencyMarks'];
                 $parameters['maxY'] = $histoMark['maxY'];
@@ -917,10 +901,10 @@ class ExerciseController extends Controller
                 $parameters['coeffQ'] = $histoDiscrimination['coeffQ'];
                 $parameters['MeasureDifficulty'] = $histoMeasureDifficulty;
             }
-
+            
             return $this->render('UJMExoBundle:Exercise:docimology.html.twig', $parameters);
         } else {
-            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exerciseId]));
+            return $this->redirect($this->generateUrl('ujm_exercise_open', ['id' => $exercise->getId()]));
         }
     }
 
@@ -928,13 +912,13 @@ class ExerciseController extends Controller
      * To check the right to open exo or not.
      *
      *
-     * @param \UJM\ExoBundle\Entity\Exercise $exo
+     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
      *
      * @return exception
      */
-    private function checkAccess($exo)
+    private function checkAccess(Exercise $exercise)
     {
-        $collection = new ResourceCollection(array($exo->getResourceNode()));
+        $collection = new ResourceCollection(array($exercise->getResourceNode()));
 
         if (!$this->get('security.authorization_checker')->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());

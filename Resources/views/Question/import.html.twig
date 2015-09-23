@@ -44,19 +44,19 @@
         </a>
         {% if QuestionsExo == 'false' %}
             {% if (pagerMy.getNbResults > pagerMy.maxPerPage or pagerShared.getNbResults > pagerShared.maxPerPage) and displayAll == 0 %}
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'displayAll': 1 }) }} ">
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID, 'displayAll': 1 }) }} ">
                     <i class="fa fa-plus-circle"></i> {{ 'display_all_on_this_page' | trans({}, 'ujm_exo') }}
                 </a>
             {% elseif displayAll == 1 %}
-                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}">
+                <a class="btn btn-primary" href="{{ path('ujm_exercise_import_question', { 'id': exoID }) }}">
                     <i class="fa fa-minus-circle"></i> {{ 'display_pagination' | trans({}, 'ujm_exo') }}
                 </a>
             {% endif %}
         {% endif %}
 
         <select id="exoList" onchange="getQuestionsExoImport(this.options[this.selectedIndex].value,
-                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
-                     '{{ path('ujm_exercise_import_question', { 'exoID': exoID }) }}');">
+                     '{{ path('ujm_exercise_import_question', { 'id': exoID, 'idExo': idExo, 'QuestionsExo': 'true' }) }}',
+                     '{{ path('ujm_exercise_import_question', { 'id': exoID }) }}');">
             {% include "UJMExoBundle:Partial:listToFilterQuestions.html.twig" %}
         </select>
 
@@ -112,7 +112,7 @@
                             <div class="text-center panel-footer">
                                 {{ pagerfanta(pagerMy, 'twitter_bootstrap_translated',
                                     {'routeName': 'ujm_exercise_import_question', 'routeParams':
-                                    { 'exoID': exoID, 'pagerShared': pagerShared.getCurrentPage,
+                                    { 'id': exoID, 'pagerShared': pagerShared.getCurrentPage,
                                         'pagerMy': pagerMy.getCurrentPage, 'click': 'my', 'pageGoNow': pageToGo } }) }}
                             </div>
                         {% endif %}
@@ -132,7 +132,7 @@
                             <div class="text-center panel-footer">
                                 {{ pagerfanta(pagerShared, 'twitter_bootstrap_translated',
                                     {'routeName': 'ujm_exercise_import_question', 'routeParams':
-                                    { 'exoID': exoID, 'pagerMy': pagerMy.getCurrentPage,
+                                    { 'id': exoID, 'pagerMy': pagerMy.getCurrentPage,
                                         'pagerShared': pagerShared.getCurrentPage,  'click': 'shared',
                                         'pageGoNow': pageToGo} }) }}
                             </div>
