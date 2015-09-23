@@ -942,6 +942,11 @@ class ResourceManager
                 }
 
                 $this->dispatcher->dispatch(
+                    'claroline_resources_delete',
+                    'GenericDatas',
+                    array(array($node))
+                );
+                $this->dispatcher->dispatch(
                     "log",
                     'Log\LogResourceDelete',
                     array($node)

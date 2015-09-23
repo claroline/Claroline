@@ -250,7 +250,11 @@ class WorkspaceManager
                 }
             }
         }
-
+        $this->dispatcher->dispatch(
+            'claroline_workspaces_delete',
+            'GenericDatas',
+            array(array($workspace))
+        );
         $this->om->remove($workspace);
         $this->om->flush();
     }

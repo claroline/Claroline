@@ -239,10 +239,13 @@ class UserManager
             $this->objectManager->persist($ws);
         }
 
-        if ($userRole) $this->objectManager->remove($userRole);
+        if ($userRole) {
+            $this->objectManager->remove($userRole);
+        }
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 
+        $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericDatas', array(array($user)));
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', array($user));
         $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', array($user));
     }
