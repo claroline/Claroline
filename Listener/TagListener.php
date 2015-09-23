@@ -282,6 +282,26 @@ class TagListener
     }
 
     /**
+     * @DI\Observe("claroline_users_delete")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onUsersDelete(GenericDatasEvent $event)
+    {
+        $users = $event->getDatas();
+        $ids = array();
+
+        foreach ($users as $user) {
+            $ids[] = $user->getId();
+        }
+
+        $this->tagManager->removeTaggedObjectsByClassAndIds(
+            'Claroline\CoreBundle\Entity\User',
+            $ids
+        );
+    }
+
+    /**
      * @DI\Observe("claroline_groups_delete")
      *
      * @param GenericDatasEvent $event
