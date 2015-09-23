@@ -85,6 +85,12 @@ class GroupManager
      */
     public function deleteGroup(Group $group)
     {
+        $this->eventDispatcher->dispatch(
+            'claroline_groups_delete',
+            'GenericDatas',
+            array(array($group))
+        );
+
         $this->om->remove($group);
         $this->om->flush();
     }
