@@ -85,9 +85,9 @@ class TagListener
         $taggedObjects = array();
         $datas = $event->getDatas();
 
-        if (is_array($datas)) {
+        if (is_array($datas) && isset($datas['tag']) && !empty($datas['tag'])) {
+            $search = $datas['tag'];
             $user = isset($datas['user']) ? $datas['user'] : null;
-            $search = isset($datas['tag']) ? $datas['tag'] : '';
             $withPlatform = isset($datas['with_platform']) && $datas['with_platform'];
             $strictSearch = isset($datas['strict']) ? $datas['strict'] : false;
             $class = isset($datas['class']) ? $datas['class'] : null;
