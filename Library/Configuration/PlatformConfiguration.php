@@ -66,6 +66,7 @@ class PlatformConfiguration
     private $sendMailAtWorkspaceRegistration;
     private $locales;
     private $domainName;
+    private $defaultWorkspaceTag;
 
     /**
      * @param mixed $sessionDbDataCol
@@ -665,5 +666,15 @@ class PlatformConfiguration
     public function getDomainName()
     {
         return $this->domainName;
+    }
+
+    public function setDefaultWorkspaceTag($defaultWorkspaceTag)
+    {
+        $this->defaultWorkspaceTag = $defaultWorkspaceTag;
+    }
+
+    public function getDefaultWorkspaceTag()
+    {
+        return $this->defaultWorkspaceTag;
     }
 }
