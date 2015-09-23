@@ -337,4 +337,23 @@ class TagListener
             $ids
         );
     }
+
+    /**
+     * @DI\Observe("claroline_resources_delete")
+     *
+     * @param GenericDatasEvent $event
+     */
+    public function onResourcesDelete(GenericDatasEvent $event)
+    {
+        $resources = $event->getDatas();
+        $ids = array();
+
+        foreach ($resources as $resource) {
+            $ids[] = $resource->getId();
+        }
+        $this->tagManager->removeTaggedObjectsByClassAndIds(
+            'Claroline\CoreBundle\Entity\Resource\ResourceNode',
+            $ids
+        );
+    }
 }
