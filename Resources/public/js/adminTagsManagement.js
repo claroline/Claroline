@@ -10,9 +10,27 @@
 (function () {
     'use strict';
     
-    $('#search-tag-input').keyup(function(e) {
-        var search = $(this).val();
-        
+    $('#search-tag-input').on('keypress', function(e) {
+        if (e.keyCode === 13) {
+            var search = $(this).val();
+
+            var route = Routing.generate(
+                'claro_tag_admin_tags_display',
+                {'search': search}
+            );
+            $.ajax({
+                url: route,
+                type: 'GET',
+                success: function (datas) {
+                    $('#tags-display-box').html(datas);
+                }
+            });
+        }
+    });
+    
+    $('#search-tag-btn').on('click', function () {
+        var search = $('#search-tag-input').val();
+
         var route = Routing.generate(
             'claro_tag_admin_tags_display',
             {'search': search}
