@@ -197,6 +197,7 @@ class PlatformConfigurationHandler
         $config->setSendMailAtWorkspaceRegistration($this->parameters['send_mail_at_workspace_registration']);
         $config->setLocales($this->parameters['locales']);
         $config->setDomainName($this->parameters['domain_name']);
+        $config->setDefaultWorkspaceTag($this->parameters['default_workspace_tag']);
 
         return $config;
     }

@@ -245,6 +245,15 @@ class GeneralType extends AbstractType
                     'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
                     'label' => 'send_mail_at_workspace_registration'
                 )
+            )
+            ->add(
+                'defaultWorkspaceTag',
+                'text',
+                array(
+                    'label' => 'default_workspace_tag',
+                    'required' => false,
+                    'disabled' => isset($this->lockedParams['default_workspace_tag'])
+                )
             );
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event){

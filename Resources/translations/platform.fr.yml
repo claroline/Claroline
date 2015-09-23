@@ -262,6 +262,7 @@ db_table: 'Table de la base de données'
 decline: Refuser
 default_language: 'Langue par défaut'
 default_role: 'Rôle par défaut'
+default_workspace_tag: 'Tag de l''espace d''activités qui doit être ouvert à la connexion'
 deletable: Supprimable
 delete: Supprimer
 delete_category: 'Supprimer la catégorie'

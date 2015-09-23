@@ -109,6 +109,33 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        $defaultWorkspaceTag = $this->configurationHandler->getParameter('default_workspace_tag');
+
+        if (!is_null($defaultWorkspaceTag)) {
+            $event = $this->eventDispatcher->dispatch(
+                'claroline_retrieve_user_workspaces_by_tag',
+                'GenericDatas',
+                array(
+                    array(
+                        'tag' => $defaultWorkspaceTag,
+                        'user' => $user,
+                        'ordered_by' => 'id',
+                        'order' => 'ASC'
+                    )
+                )
+            );
+            $workspaces = $event->getResponse();
+
+            if (is_array($workspaces) && count($workspaces) > 0) {
+                $workspace = $workspaces[0];
+                $route = $this->router->generate(
+                    'claro_workspace_open',
+                    array('workspaceId' => $workspace->getId())
+                );
+
+                return new RedirectResponse($route);
+            }
+        }
 
         if ($uri = $request->getSession()->get('redirect_route')) {
             $request->getSession()->remove('redirect_route');

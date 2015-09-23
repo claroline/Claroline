@@ -77,22 +77,41 @@
     </form>
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet"
+          href="{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.css') }}"
+          type="text/css"
+    />
+{% endblock %}
+
 {% block javascripts %}
-{{ parent() }}
-<script type="text/javascript">
-    (function($) {
-        "use strict";
+    {{ parent() }}
+    <script type="text/javascript">
+        (function($) {
+            "use strict";
 
-        $(function() {
-            var portfolioUrlRadio = $(".portfolio_url input[type=radio]");
-            var portfolioUrlField = $(".portfolio_url_field input");
+            $(function() {
+                var portfolioUrlRadio = $(".portfolio_url input[type=radio]");
+                var portfolioUrlField = $(".portfolio_url_field input");
 
-            portfolioUrlField.on('keyup', function (event) {
-                if ('' !== $(this).val()) {
-                    portfolioUrlRadio.prop("checked", true);
-                }
+                portfolioUrlField.on('keyup', function (event) {
+                    if ('' !== $(this).val()) {
+                        portfolioUrlRadio.prop("checked", true);
+                    }
+                });
             });
+        })(jQuery);
+    </script>
+    <script type="text/javascript"
+            src="{{ asset('bundles/frontend/jquery/jquery-ui-1.11.3/jquery-ui.min.js') }}"
+    >
+    </script>
+    <script type="text/javascript">
+        var tagsList = [{% for tag in tags %}"{{ tag|raw }}"{% if not loop.last %}, {% endif %}{% endfor %}];
+        
+        $('#platform_parameters_form_defaultWorkspaceTag').autocomplete({
+            source: tagsList
         });
-    })(jQuery);
-</script>
+    </script>
 {% endblock %}
