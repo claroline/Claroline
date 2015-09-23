@@ -126,7 +126,7 @@ abstract class QuestionHandler
 
         if ($question->getTitle() == "") {
             //removes html tags and entity code html
-            $provTitle = html_entity_decode(strip_tags($question->getDescription()));
+            $provTitle = html_entity_decode(strip_tags($question->getInvite()));
             $newTitle = substr($provTitle,0,50);
             $question->setTitle($newTitle);
         }

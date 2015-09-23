@@ -75,7 +75,7 @@ class InteractionGraphicController extends Controller
         $exoID = $this->container->get('request')->request->get('exercise');
 
         //Get the lock category
-       $catSer = $this->container->get('ujm.exo_category');
+        $catSer = $this->container->get('ujm.exo_category');
 
         $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
         $formHandler = new InteractionGraphicHandler(

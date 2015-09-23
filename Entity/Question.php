@@ -31,10 +31,15 @@ class Question
     private $title;
 
     /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank
      */
-    private $description;
+    private $invite;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -150,6 +155,22 @@ class Question
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * @param string $invite
+     */
+    public function setInvite($invite)
+    {
+        $this->invite = $invite;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInvite()
+    {
+        return $this->invite;
     }
 
     /**
