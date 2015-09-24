@@ -14,7 +14,10 @@ namespace Claroline\TagBundle\Controller;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
+use Claroline\TagBundle\Form\ResourcesTagsWidgetConfigurationType;
 use Claroline\TagBundle\Form\TagType;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -269,6 +272,103 @@ class TagController extends Controller
                 'tags' => $tags,
                 'workspaceTags' => $workspaceTags
             );
+        }
+    }
+
+    /******************
+     * Widget methods *
+     ******************/
+
+    /**
+     * @EXT\Route(
+     *     "/resources/widget/{widgetInstance}",
+     *     name="claro_tag_resources_widget",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Widget:resourcesTagsWidget.html.twig")
+     */
+    public function resourcesTagsWidgetAction(WidgetInstance $widgetInstance)
+    {
+        $workspace = $widgetInstance->getWorkspace();
+        $config = $this->tagManager->getResourcesTagsWidgetConfig($widgetInstance);
+        $details = $config->getDetails();
+        $nbTags = !empty($details) && isset($details['nb_tags']) ? $details['nb_tags'] : 10;
+        $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace($workspace);
+        $tags = array();
+        $datas = array();
+
+        foreach ($taggedObjects as $taggedObject) {
+            $tag = $taggedObject->getTag();
+            $tagId = $tag->getId();
+
+            if (!isset($tags[$tagId])) {
+                $tags[$tagId] = array();
+                $tags[$tagId]['tag'] = $tag->getName();
+                $tags[$tagId]['objects'] = array();
+            }
+            $tags[$tagId]['objects'][] = array(
+                'id' => $taggedObject->getObjectId(),
+                'name' => $taggedObject->getObjectName()
+            );
+        }
+        $datas = $tags;
+
+        return array(
+            'widgetInstance' => $widgetInstance,
+            'nbTags' => $nbTags,
+            'datas' => $datas
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resources/widget/{widgetInstance}/configure/form",
+     *     name="claro_tag_resources_widget_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("ClarolineTagBundle:Widget:resourcesTagsWidgetConfigForm.html.twig")
+     */
+    public function resourcesTagsWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->tagManager->getResourcesTagsWidgetConfig($widgetInstance);
+
+        $form = $this->formFactory->create(
+            new ResourcesTagsWidgetConfigurationType($config),
+            $config
+        );
+
+        return array('form' => $form->createView(), 'config' => $config);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resources/widget/configure/config/{config}",
+     *     name="claro_tag_resources_widget_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function resourcesTagsWidgetConfigureAction(ResourcesTagsWidgetConfig $config)
+    {
+        $form = $this->formFactory->create(
+            new ResourcesTagsWidgetConfigurationType($config),
+            $config
+        );
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $details = $config->getDetails();
+            $nbTags = $form->get('nbTags')->getData();
+            $details['nb_tags'] = $nbTags;
+            $config->setDetails($details);
+            $this->tagManager->persistResourcesTagsWidgetConfig($config);
+
+            return new JsonResponse('success', 204);
+        } else {
+
+            return new JsonResponse('success', 204);
         }
     }
 }

@@ -8,6 +8,7 @@ Claroline\CoreBundle\Entity\User: User
 Claroline\CoreBundle\Entity\Workspace\Workspace: Workspace
 delete_tag: Delete Tag
 no_tag: No tag
+number_of_tags: Number of Tags
 remove_tag: Remove Tag
 remove_tag_from_object_message: Are you sure you want to remove this Tag from this object ?
 tag_action: Tag

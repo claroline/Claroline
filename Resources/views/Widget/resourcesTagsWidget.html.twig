@@ -1,0 +1,21 @@
+{% if datas|length > 0 %}
+    
+    {% for data in datas %}
+        <div>
+            <i class="fa fa-tag"></i>
+            {{ data['tag'] }}
+            <span class="badge">
+                {{ data['objects']|length }}
+            </span>
+            <ul>
+                {% for object in data['objects'] %}
+                    <li>{{ object['name'] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_tag'|trans({}, 'tag') }}
+    </div>
+{% endif %}

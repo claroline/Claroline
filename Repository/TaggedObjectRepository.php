@@ -13,6 +13,7 @@ namespace Claroline\TagBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\TagBundle\Entity\Tag;
 use Doctrine\ORM\EntityRepository;
 
@@ -193,6 +194,30 @@ class TaggedObjectRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findTaggedResourcesByWorkspace(Workspace $workspace)
+    {
+        $dql = '
+            SELECT to
+            FROM Claroline\TagBundle\Entity\TaggedObject to
+            WHERE to.objectClass = :objectClass
+            AND to.objectId IN (
+                SELECT r.id
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
+                WHERE r.workspace = :workspace
+            )
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $query->setParameter('workspace', $workspace);
+
+        return $query->getResult();
+    }
+
+
+    /********************************
+     * Return casted tagged objects *
+     ********************************/
 
     public function findObjectsByClassAndIds(
         $class,

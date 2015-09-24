@@ -8,9 +8,9 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated migration based on mapping information: modify it with caution
  *
- * Generation date: 2015/09/03 12:00:51
+ * Generation date: 2015/09/24 12:38:50
  */
-class Version20150903120049 extends AbstractMigration
+class Version20150924123848 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -35,6 +35,15 @@ class Version20150903120049 extends AbstractMigration
             ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
         ");
         $this->addSql("
+            CREATE TABLE claro_tagbundle_resources_tags_widget_config (
+                id INT AUTO_INCREMENT NOT NULL, 
+                details LONGTEXT DEFAULT NULL COMMENT '(DC2Type:json_array)', 
+                widgetInstance_id INT DEFAULT NULL, 
+                UNIQUE INDEX UNIQ_5F11BDA4AB7B5A55 (widgetInstance_id), 
+                PRIMARY KEY(id)
+            ) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB
+        ");
+        $this->addSql("
             ALTER TABLE claro_tagbundle_tagged_object 
             ADD CONSTRAINT FK_1EA1E15DBAD26311 FOREIGN KEY (tag_id) 
             REFERENCES claro_tagbundle_tag (id) 
@@ -44,6 +53,12 @@ class Version20150903120049 extends AbstractMigration
             ALTER TABLE claro_tagbundle_tag 
             ADD CONSTRAINT FK_6E5EC9DA76ED395 FOREIGN KEY (user_id) 
             REFERENCES claro_user (id) 
+            ON DELETE CASCADE
+        ");
+        $this->addSql("
+            ALTER TABLE claro_tagbundle_resources_tags_widget_config 
+            ADD CONSTRAINT FK_5F11BDA4AB7B5A55 FOREIGN KEY (widgetInstance_id) 
+            REFERENCES claro_widget_instance (id) 
             ON DELETE CASCADE
         ");
     }
@@ -59,6 +74,9 @@ class Version20150903120049 extends AbstractMigration
         ");
         $this->addSql("
             DROP TABLE claro_tagbundle_tag
+        ");
+        $this->addSql("
+            DROP TABLE claro_tagbundle_resources_tags_widget_config
         ");
     }
 }

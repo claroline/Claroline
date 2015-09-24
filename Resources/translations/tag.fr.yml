@@ -8,6 +8,7 @@ Claroline\CoreBundle\Entity\User: Utilisateur
 Claroline\CoreBundle\Entity\Workspace\Workspace: Espace d'activités
 delete_tag: Supprimer le Tag
 no_tag: Aucun Tag
+number_of_tags: Nombre de Tags
 remove_tag: Retirer le Tag
 remove_tag_from_object_message: Êtes-vous sûr de vouloir retirer ce Tag de cet objet ?
 tag_action: Taguer
