@@ -62,7 +62,6 @@ class QuestionType extends AbstractType
                     'label' => 'question',
                     'attr' => array(
                         'placeholder' => 'question',
-                        'class' => 'form-control',
                         'data-new-tab' => 'yes',
                     ),
                 )
