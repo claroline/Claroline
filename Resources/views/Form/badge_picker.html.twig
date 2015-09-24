@@ -71,6 +71,7 @@
         <script type="text/javascript" src="{{ asset('bundles/icapbadge/js/badge_picker.js') }}"></script>
         <script type="text/javascript">
             $(function(){
+                var assetPath = "{{ asset('') }}";
                 $("#badgepicker_{{ id }}").click(function() {
                 {% if multiple %}
                     var value = [];
@@ -100,7 +101,7 @@
                                 .html(selectedBadge.text)
                                 .removeClass('hide');
                             $(".badge_image", badgeSelectionField)
-                                .attr('src', selectedBadge.icon)
+                                .attr('src', assetPath + selectedBadge.icon)
                                 .attr('alt', selectedBadge.text)
                                 .removeClass('hide');
                             $(".no_badge_selected").addClass('hide');
