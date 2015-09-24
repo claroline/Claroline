@@ -160,13 +160,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             SELECT u, r, g FROM Claroline\CoreBundle\Entity\User u
             JOIN u.roles r
             LEFT JOIN u.groups g
-            WHERE UPPER(u.lastName) LIKE :search
+            WHERE (
+            UPPER(u.lastName) LIKE :search
             OR UPPER(u.firstName) LIKE :search
             OR UPPER(u.username) LIKE :search
             OR UPPER(u.administrativeCode) LIKE :search
             OR UPPER(u.mail) LIKE :search
             OR CONCAT(UPPER(u.firstName), CONCAT(' ', UPPER(u.lastName))) LIKE :search
             OR CONCAT(UPPER(u.lastName), CONCAT(' ', UPPER(u.firstName))) LIKE :search
+            )
             AND u.isEnabled = true
             AND r.type = 1
             ORDER BY u.{$orderedBy} {$order}
