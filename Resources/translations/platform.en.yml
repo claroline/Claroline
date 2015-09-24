@@ -1154,3 +1154,5 @@ hours: hours
 minutes: minutes
 seconds: seconds
 time_ago: %count% %unit% ago
+mail_options: Email options
+mailer_from: Email "from" field

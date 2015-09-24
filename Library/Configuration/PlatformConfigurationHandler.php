@@ -84,8 +84,9 @@ class PlatformConfigurationHandler
         'register_button_at_login' => false,
         'send_mail_at_workspace_registration' => true,
         'locales' => array('fr', 'en', 'es'),
-        'domain_name' => 'changeme.com',
-        'platform_url' => null
+        'domain_name' => null,
+        'platform_url' => null,
+        'mailer_from' => null
     );
     private $lockedParameters;
 

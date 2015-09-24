@@ -163,7 +163,7 @@ class MailManager
             $to = [];
 
             $layout = $this->contentManager->getTranslatedContent(array('type' => 'claro_mail_layout'));
-            $fromEmail = 'noreply@' . $this->ch->getParameter('domain_name');
+            $fromEmail = $this->getMailerFrom();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
@@ -262,5 +262,20 @@ class MailManager
         } catch (\Swift_TransportException $e) {
             $event->addCacheParameter('is_mailer_available', false);
         }
+    }
+
+    public function getMailerFrom()
+    {
+        if ($from = $this->ch->getParameter('mailer_from')) {
+            if (filter_var($from, FILTER_VALIDATE_EMAIL)) {
+                return $from;
+            }
+        }
+
+        if ($this->ch->getParameter('domain_name') && trim($this->ch->getParameter('domain_name')) !== '') {
+            return 'noreply@' . $this->ch->getParameter('domain_name');
+        }
+
+        return $this->ch->getParameter('support_email');
     }
 }
