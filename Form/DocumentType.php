@@ -14,6 +14,9 @@ class DocumentType extends AbstractType
     {
         if ($options['documentType'] == 'text') {
             $this->setName('innova_collecticiel_document_file_form_text');
+            $builder->add('title', 'text', array(
+                          'required' => true)
+                         );
             $builder->add('document', 'tinymce', array(
                 'required' => true,
             ));
