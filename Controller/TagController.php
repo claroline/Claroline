@@ -306,6 +306,7 @@ class TagController extends Controller
             if (!isset($tags[$tagId])) {
                 $tags[$tagId] = array();
                 $tags[$tagId]['tag'] = $tag->getName();
+                $tags[$tagId]['tag_id'] = $tag->getId();
                 $tags[$tagId]['objects'] = array();
             }
             $tags[$tagId]['objects'][] = array(
