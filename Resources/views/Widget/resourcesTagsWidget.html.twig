@@ -7,11 +7,11 @@
             <span class="badge">
                 {{ data['objects']|length }}
             </span>
-            <ul>
+            {#<ul>
                 {% for object in data['objects'] %}
                     <li>{{ object['name'] }}</li>
                 {% endfor %}
-            </ul>
+            </ul>#}
         </div>
     {% endfor %}
 {% else %}
