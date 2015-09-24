@@ -35,14 +35,35 @@
             var isCustom = event.currentTarget.getAttribute('data-is-custom') === 'yes';
             var eventName = isCustom ? 'custom-action' : action;
             var isForm = event.currentTarget.getAttribute('data-action-type') === 'display-form';
-            eventName = isCustom && isForm ? 'custom-action-form' : eventName;
+            var name = event.currentTarget.getAttribute('data-node-name');
+            eventName = isCustom && isForm ? 'custom-action-form' : eventName
 
-            this.dispatcher.trigger(eventName, {
-                action: action,
-                nodeId: nodeId,
-                view: this.parameters.viewName,
-                isCustomAction: isCustom
-            });
+            //we want a confirmation for the delete
+            if (action === 'delete') {
+                var node = [];
+                node[3] = name;
+                var body = Twig.render(
+                    ResourceDeleteConfirmMessage,
+                    {'nodes': [node]}
+                );
+                this.dispatcher.trigger('confirm', {
+                    header: Translator.trans('delete', {}, 'platform'),
+                    body: body,
+                    callback: _.bind(function () {
+                        this.dispatcher.trigger('delete', {
+                            ids: [nodeId],
+                            view: this.parameters.viewName
+                        });
+                    }, this)
+                });
+            } else {
+                this.dispatcher.trigger(eventName, {
+                    action: action,
+                    nodeId: nodeId,
+                    view: this.parameters.viewName,
+                    isCustomAction: isCustom
+                });
+            }
         },
         render: function (node, isSelectionAllowed) {
             this.el.id = node.id;
