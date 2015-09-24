@@ -197,32 +197,34 @@ function placeholderTinyMCE(){
 
 /**
  * Enters edit advance
+ *
  * @param {String} idTextarea
- * @param {String}  btnEdition : the id button edition
+ * @param {String}  btnEdition the id button edition
  * @param {Event} e
  * @returns {Boolean}
  */
-function advancedEdition(idTextarea,btnEdition,e){
-    var textarea;
-     // If the navavigator is chrome
+function advancedEdition(idTextarea, btnEdition, e) {
+    // If the navigator is chrome
     var userNavigator = navigator.userAgent;
-    var positionText = userNavigator.indexOf("Chrome");
-    if(positionText !== -1) {
+    var positionText = userNavigator.indexOf('Chrome');
+
+    if (positionText !== -1) {
         //the edition that after running action
         $('body').append($('<input type="hidden" id="chrome"> '));
         $('#chrome').remove();
     }
-    if(idTextarea === 'interaction_question_description'){
-        textarea =$("*[id$='"+idTextarea+"']");
-    }
-    else{
-            textarea=$("#"+idTextarea);
-    }
-       textarea.addClass("claroline-tiny-mce hide");
-       textarea.data("data-theme","advanced");
-       $('#'+btnEdition).remove();
-       e.preventDefault();
-       return false;
+
+    var textarea = idTextarea === 'question_description' ?
+        $("*[id$='" + idTextarea + "']") :
+        $('#' + idTextarea);
+
+    textarea.addClass('claroline-tiny-mce hide');
+    textarea.data('theme', 'advanced');
+
+    $('#' + btnEdition).remove();
+    e.preventDefault();
+
+    return false;
 }
 
 /**

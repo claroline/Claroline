@@ -934,7 +934,7 @@ class QuestionController extends Controller
                         $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                         break;
                     case 'Contain':
-                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndInvite($user, $whatToFind);
                         break;
                     case 'All':
                         $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
@@ -1221,7 +1221,7 @@ class QuestionController extends Controller
 
                         break;
                     case 'Contain':
-                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndInvite($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
                             ->findByContainShared($user->getId(), $whatToFind);
 

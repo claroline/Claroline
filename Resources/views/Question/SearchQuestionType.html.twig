@@ -61,7 +61,7 @@
                 <td class="classic">{{ FindQuestion.category.value }}</td>
                 <td class="classic"><a href="{{ path('ujm_question_show', { 'id': FindQuestion.id }) }}">{{ FindQuestion.title }}</a></td>
                 <td class="classic">{{ FindQuestion.type|trans({}, 'ujm_exo') }}</td>
-                <td class="classic">{{ FindQuestion.description|raw }}</td>
+                <td class="classic">{{ FindQuestion.invite|raw }}</td>
                 {% if canDisplay == 'my' %}
                     <td class="classic">
                         <a class="btn btn-default" data-toggle="tooltip" title="{{ 'share' | trans({}, 'ujm_exo') }}"

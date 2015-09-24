@@ -131,7 +131,7 @@
             <td class="classic">{{ question.category.value }}</td>
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': question.id, 'exoID': exerciseID }) }}">{{ question.title }}</a></td>
             <td class="classic">{{ question.type|trans({}, 'ujm_exo') }}</td>
-            <td class="classic">{{ question.description|raw }}</td>
+            <td class="classic">{{ question.invite|raw }}</td>
             {% if rights['dispSharedBy'] %}
                 <td class="classic">
                     {{ question.user.firstName }} {{ question.user.lastName }}
