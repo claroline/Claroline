@@ -52,7 +52,6 @@
                 if (this.question.holes) {
                     for (var j = 0; j < this.question.holes.length; j++) {
                         if (this.question.holes[j].id === parseInt(id)) {
-                            console.log(this.question.holes[j]);
                             return this.question.holes[j];
                         }
                     }
@@ -61,7 +60,6 @@
             };
 
             this.getHoleContent = function (hole) {
-                console.log(hole);
                 if (typeof hole.choices !== "undefined") {
                     var html = '';
                     html += '<select>';
@@ -77,39 +75,9 @@
                     if (hole.placeholder) {
                         input += ' placeholder="' + hole.placeholder + '"';
                     }
-                    input += 'disabled >';
+                    input += ' >';
                     return input;
-                }/*
-                switch (hole.type) {
-                    case "simple":
-                        var size = hole.size ? hole.size.toString() : '50';
-                        var input = '<input type="text" style="width:' + size + 'px;" value=""';
-                        if (hole.placeholder) {
-                            input += ' placeholder="' + hole.placeholder + '"';
-                        }
-                        input += 'disabled >';
-                        return input;
-                        break;
-                    case "choice":
-                        var html = '';
-                        html += '<select>';
-                        for (var i = 0; i < hole.choices.length; i++) {
-                            html += '<option>' + hole.choices[i] + '</option>';
-                        }
-                        html += '</select>';
-                        return html;
-                        break;
-                    default:
-                        var size = hole.size ? hole.size.toString() : '50';
-                        var input = '<input type="text" style="width:' + size + 'px;" value=""';
-                        if (hole.placeholder) {
-                            input += ' placeholder="' + hole.placeholder + '"';
-                        }
-                        input += 'disabled >';
-                        return input;
-                        break;
-
-                }*/
+                }
             };
 
             /**

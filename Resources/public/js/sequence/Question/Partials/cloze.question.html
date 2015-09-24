@@ -87,14 +87,15 @@
                 </div>
             </div>
         </div>
+        <!-- Commenté, pour ne pas afficher les solutions sur la page de question jouée -->
         <!-- Question solution row -->
-        <div data-ng-if="clozeQuestionCtrl.question.solutions" class="question-row">
+    <!--    <div data-ng-if="clozeQuestionCtrl.question.solutions" class="question-row">
             <div class="form"> 
                 <label>{{ 'question_solutions'|trans:{}:'ujm_sequence' }}:</label>
                 <ul>
                     <li data-ng-repeat="solution in clozeQuestionCtrl.question.solutions | orderBy:'holeId'">
-                        <!-- answers -->
-                        <div> 
+    -->                    <!-- answers -->
+    <!--                    <div> 
                             <label>{{ 'question_solution_answers'|trans:{}:'ujm_sequence' }}:</label>
                             <ul>
                                 <li data-ng-repeat="answer in solution.answers">
@@ -102,8 +103,8 @@
                                 </li>
                             </ul>
                         </div>
-                        <!-- score -->
-                        <div> 
+    -->                    <!-- score -->
+    <!--                    <div> 
                             <label>{{ 'question_solution_score'|trans:{}:'ujm_sequence' }}:</label>
                             <span>
                                 {{solution.score}}
@@ -113,5 +114,5 @@
                 </ul>
             </div>
         </div>
-    </div>
+-->    </div>
 </div>
