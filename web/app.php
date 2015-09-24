@@ -23,8 +23,10 @@ if (file_exists($file = __DIR__ . '/../app/config/ip_white_list.yml')) {
     $ips = Yaml::parse($file);
     $authorized = false;
 
-    foreach ($ips as $ip) {
-        if ($ip === $_SERVER['REMOTE_ADDR']) $authorized = true;
+    if (is_array($ips)) {
+        foreach ($ips as $ip) {
+            if ($ip === $_SERVER['REMOTE_ADDR']) $authorized = true;
+        }
     }
 }
 
