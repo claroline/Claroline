@@ -862,7 +862,7 @@ class WorkspaceManager
      */
     public function importWorkspaces(array $workspaces, $logger = null)
     {
-        $this->om->clear();
+        //$this->om->clear();
         $ds = DIRECTORY_SEPARATOR;
         $i = 0;
         $j = 0;
