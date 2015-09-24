@@ -296,8 +296,9 @@ class TagController extends Controller
         $nbTags = !empty($details) && isset($details['nb_tags']) ? $details['nb_tags'] : 10;
         $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace($workspace);
         $tags = array();
+        $sorted = array();
         $datas = array();
-
+        // Sort all tagged objects by tag
         foreach ($taggedObjects as $taggedObject) {
             $tag = $taggedObject->getTag();
             $tagId = $tag->getId();
@@ -312,7 +313,36 @@ class TagController extends Controller
                 'name' => $taggedObject->getObjectName()
             );
         }
-        $datas = $tags;
+        // Sort all tags by number of tagged objects
+        foreach ($tags as $tag) {
+            $nbObjects = count($tag['objects']);
+
+            if (!isset($sorted[$nbObjects])) {
+                $sorted[$nbObjects] = array();
+            }
+            $sorted[$nbObjects][] = $tag;
+        }
+        // Sort most used tags DESC
+        krsort($sorted);
+        $index = 0;
+        // Keep X ($nbTags) most used tags
+        foreach ($sorted as $contents) {
+
+            if ($index === $nbTags) {
+                break;
+            } else {
+
+                foreach ($contents as $content) {
+
+                    if ($index === $nbTags) {
+                        break;
+                    } else {
+                        $datas[] = $content;
+                        $index++;
+                    }
+                }
+            }
+        }
 
         return array(
             'widgetInstance' => $widgetInstance,
