@@ -44,6 +44,12 @@
                 {{ 'create_user'|trans({}, 'platform') }}
             </a>
         {% endif %}
+        {% if canUserBeCreated == true %}
+            <a href="{{path('claro_admin_import_users_form')}}" class="btn btn-default">
+                <i class="fa fa-plus"></i>
+                {{ 'import_csv'|trans({}, 'platform') }}
+            </a>
+        {% endif %}
         <a class="btn btn-default action-button table-control"
             href="{{ path('claro_admin_export_users', {'format': 'xls'}) }}">
             {{ 'excel_export'|trans({}, 'platform') }}

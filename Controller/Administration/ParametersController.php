@@ -526,6 +526,47 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route("/mail/layout/option/form", name="claro_admin_mail_option_form")
+     * @EXT\Template
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function optionMailFormAction()
+    {
+        $form = $this->formFactory->create(
+            new AdminForm\MailOptionType($this->mailManager->getMailerFrom())
+        );
+
+        return array('form' => $form->createView());
+    }
+
+    /**
+     * @EXT\Route("/mail/layout/option/submit", name="claro_admin_mail_submit_form")
+     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:optionMailForm.html.twig")
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function optionMailSubmitAction()
+    {
+        $form = $this->formFactory->create(
+            new AdminForm\MailOptionType()
+        );
+
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $this->configHandler->setParameter('mailer_from', $form->get('mailerFrom')->getData());
+            $this->addFlashMessage('parameters_save_success');
+
+            return $this->redirect($this->generateUrl('claro_admin_parameters_mail_index'));
+        }
+
+        return array('form' => $form->createView());
+    }
+
+    /**
      * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")

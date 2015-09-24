@@ -21,3 +21,4 @@ resource_shortcut: Raccourcis
 text: Texte
 update_file: 'Mettre à jour le fichier'
 write: Ecrire
+resource_type: 'Type de ressource'

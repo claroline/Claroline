@@ -44,6 +44,7 @@
                             href="#"
                             class="node-menu-action"
                             data-action="{{ action }}"
+                            data-node-name="{{ node.name }}"
                             data-is-custom="{{ attributes.isCustom }}"
                             data-id="{{ node.id }}" tabindex="-1" href="#"
                             {% if attributes.isForm %}

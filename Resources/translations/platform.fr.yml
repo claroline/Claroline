@@ -1168,3 +1168,20 @@ import_csv: 'Importer un csv'
 admin_profile_properties_explanations: 'Les propriétés cochées seront modifiable par les utilisateurs disposant du rôle requis.'
 self_unregistration: Auto-désinscription
 is_visible: Visible par les utilisateurs
+year: an
+month: mois
+week: semaine
+day: jour
+hour: heure
+minute: minute
+second: seconde
+years: années
+months: mois
+weeks: semaines
+days: jours
+hours: heures
+minutes: minutes
+seconds: secondes
+time_ago: Il y a %count% %unit%
+mail_options: Options du courriel
+mailer_from: Champ "from" du courriel

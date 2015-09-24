@@ -1052,6 +1052,11 @@ class ResourceController
         //}
     }
 
+    public function deleteNodeConfirmAction(ResourceNode $node)
+    {
+        throw new \Exception('hey');
+    }
+
     private function isUsurpatingWorkspaceRole(TokenInterface $token)
     {
         foreach ($token->getRoles() as $role) {
