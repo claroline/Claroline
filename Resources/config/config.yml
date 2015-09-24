@@ -1,0 +1,18 @@
+plugin:
+  has_options: false
+
+  admin_tools:
+    - name: claroline_tag_admin_tool
+      class: tags
+
+  resource_actions:
+    - name: tag_action
+      is_form: true
+      
+  widgets:
+    - name: claroline_tag_resources_widget
+      is_configurable: true
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: false
+      default_width: 4
+      default_height: 3

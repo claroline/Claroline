@@ -1,0 +1,67 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'claroline_tag_admin_tool' | trans({}, 'tools') | striptags | raw
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'claroline_tag_admin_tool'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'claroline_tag_admin_tool' | trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="input-group col-md-6 pull-right margin-top-sm">
+            <input class="form-control search-tag"
+                   type="text"
+                   id="search-tag-input"
+                   placeholder="{{ 'search'|trans({}, 'platform') }}"
+            >
+            <span class="input-group-btn">
+                <button class="filter btn btn-default search-tag-btn"
+                        type="button"
+                        id="search-tag-btn"
+                >
+                    <i class="fa fa-search"></i>
+                </button>
+            </span>
+        </div>
+        <br>
+        <br>
+        <div id="tags-display-box">
+            {{ render(controller('ClarolineTagBundle:AdminTag:adminTagsDisplay')) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'tag' }) }}"
+    >
+    </script>
+    <script src='{{ asset('bundles/clarolinetag/js/adminTagsManagement.js') }}'
+            type="text/javascript"
+    >
+    </script>
+{% endblock %}

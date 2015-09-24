@@ -17,6 +17,6 @@ class ClarolineTagBundle extends PluginBundle
 {
     public function hasMigrations()
     {
-        return false;
+        return true;
     }
 }
