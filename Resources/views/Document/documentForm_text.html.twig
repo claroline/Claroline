@@ -17,9 +17,10 @@
         <div class='col-md-10'>
             <div class='input-group'>
  
-               {{ form_row(form.title,{'label_col_size': ' ', 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_text' }) }}
-{
+                {{ form_row(form.title, {'input_col_size': 'col-md-8', 'label_attr': {'class': 'control-label title-label'}, 'label_col_size': 'col-md-2','id': 'innova_collecticiel_document_file_form_title'}) }} 
+
                 {{ form_row(form.document,{'label_col_size': ' ', 'attr': {'placeholder': (documentType~'_placeholder')|trans({}, 'innova_collecticiel')}, 'label_attr': {'class': 'sr-only'},'id':'innova_collecticiel_document_file_form_text' }) }}
+
 {#  InnovaERV : ajout de la classe addButtonToTop afin de positionner le bouton "Ajouter" dans le texte #}
                 <span class='input-group-btn addButtonToTop'>
                         <button type="submit" class="btn btn-default">

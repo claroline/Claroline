@@ -5,6 +5,7 @@ namespace Innova\CollecticielBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DocumentType extends AbstractType
 {
@@ -12,11 +13,14 @@ class DocumentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
         if ($options['documentType'] == 'text') {
             $this->setName('innova_collecticiel_document_file_form_text');
+
             $builder->add('title', 'text', array(
                           'required' => true)
                          );
+
             $builder->add('document', 'tinymce', array(
                 'required' => true,
             ));
