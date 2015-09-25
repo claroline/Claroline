@@ -6,6 +6,13 @@ use Icap\PortfolioBundle\Installation\Updater;
 
 class AdditionalInstaller extends BaseInstaller
 {
+    public function postInstall()
+    {
+        $updater = new Updater\MigrationUpdater($this->container);
+        $updater->setLogger($this->logger);
+        $updater->postInstall();
+    }
+
     public function postUpdate($currentVersion, $targetVersion)
     {
         if (version_compare($currentVersion, '0.1.3', '<')) {
