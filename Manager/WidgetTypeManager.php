@@ -26,21 +26,6 @@ class WidgetTypeManager
     }
 
     /**
-     * @return array
-     */
-    public function getWidgetTabOrder()
-    {
-        return [
-            'userInformation' => 0,
-            'text' => 4,
-            'skills' => 3,
-            'formations' => 1,
-            'badges' => 5,
-            'experience' => 2,
-        ];
-    }
-
-    /**
      * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType[]
      */
     public function getWidgetsTypes()
@@ -56,6 +41,20 @@ class WidgetTypeManager
     }
 
     /**
+     * @return array
+     */
+    public function getWidgetTabOrder()
+    {
+        return [
+            'userInformation' => 0,
+            'formations' => 1,
+            'experience' => 2,
+            'skills' => 3,
+            'text' => 4,
+        ];
+    }
+
+    /**
      * @return \Icap\PortfolioBundle\Entity\Widget\WidgetType[]
      */
     public function getWidgetsTypesForDisplay()
@@ -65,7 +64,8 @@ class WidgetTypeManager
         $widgetTabOrder = $this->getWidgetTabOrder();
 
         foreach ($widgetTypes as $widgetType) {
-            $sortedWidgetTypes[$widgetTabOrder[$widgetType['name']]] = $widgetType;
+            $widgetTabOrder = isset($widgetTabOrder[$widgetType['name']]) ? $widgetTabOrder[$widgetType['name']] : count($sortedWidgetTypes);
+            $sortedWidgetTypes[$widgetTabOrder] = $widgetType;
         }
 
         ksort($sortedWidgetTypes);
