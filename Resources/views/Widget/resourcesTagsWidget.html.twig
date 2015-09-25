@@ -16,8 +16,13 @@
             <div id="tag-row-{{ data['tag_id'] }}" class="panel-collapse collapse">
                 <div class="panel-body">
                     <ul class="list-unstyled">
+                        
                         {% for object in data['objects'] %}
-                            <li>{{ object['name'] }}</li>
+                            <li>
+                                <a href="{{ path('claro_tag_resource_from_widget_open', {'resourceNode': object['id']}) }}">
+                                    {{ object['name'] }}
+                                </a>
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>
