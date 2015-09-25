@@ -340,39 +340,32 @@ class ResourceRightsController
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->getCurrentRequest()->request->get('roles');
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
-
         $data = array();
-        $falsePerms = array();
 
         if (is_null($roles)) {
             $roles = array();
         }
 
-        //because otherwise there is way too much stuff (it sends the whole list of user aswell...)
-       foreach (array_keys($rows) as $roleId) {
-           $changedPerms = array();
+        foreach (array_keys($rows) as $roleId) {
             if (!array_key_exists($roleId, $roles)) {
                 foreach ($permsMap as $perm) {
                     $changedPerms[$perm] = false;
                 }
 
-                $falsePerms[$roleId] = $changedPerms;
+                $data[] = array(
+                    'role' => $this->roleManager->getRole($roleId),
+                    'permissions' => $changedPerms
+                );
             }
         }
 
         foreach ($roles as $roleId => $perms) {
-            $changedPerms = array();
-            foreach ($falsePerms as $id => $setToFalse) {
-                if ($id === $roleId) {
-                    $changedPerms = $setToFalse;
-                }
-            }
 
             foreach ($permsMap as $perm) {
                 $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
             }
 
-            $data[$roleId] = array(
+            $data[] = array(
                 'role' => $this->roleManager->getRole($roleId),
                 'permissions' => $changedPerms
             );
