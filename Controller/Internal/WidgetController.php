@@ -112,9 +112,6 @@ class WidgetController extends BaseController
             $data = $widgetManager->handle($newWidget, $type, $request->request->all(), $this->get('kernel')->getEnvironment());
             $statusCode = Response::HTTP_CREATED;
         } catch(\Exception $exception){
-            echo "<pre>";
-            var_dump($exception->getMessage());
-            echo "</pre>" . PHP_EOL;
             $data = [];
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
