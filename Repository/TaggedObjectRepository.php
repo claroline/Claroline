@@ -195,21 +195,63 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findTaggedResourcesByWorkspace(Workspace $workspace)
+    public function findTaggedResourcesByWorkspace(
+        Workspace $workspace,
+        $user = 'anon.',
+        array $roleNames = array('ROLE_ANONYMOUS')
+    )
     {
-        $dql = '
+        $isManager = false;
+
+        foreach ($roleNames as $roleName) {
+
+            if ($roleName === 'ROLE_WS_MANAGER_' . $workspace->getGuid()) {
+                $isManager = true;
+                break;
+            }
+        }
+        $rightsTest = $isManager ?
+            '' :
+            'AND rrr.name IN (:roleNames)
+            AND BIT_AND(rr.mask, 1) = 1';
+
+        $dql = "
             SELECT to
             FROM Claroline\TagBundle\Entity\TaggedObject to
             WHERE to.objectClass = :objectClass
             AND to.objectId IN (
-                SELECT r.id
+                SELECT DISTINCT r.id
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-                WHERE r.workspace = :workspace
+                JOIN r.creator c
+                LEFT JOIN r.workspace w
+                LEFT JOIN w.roles wr
+                LEFT JOIN r.rights rr
+                LEFT JOIN rr.role rrr
+                WHERE w = :workspace
+                AND r.active = :active
+                AND (
+                    c.id = :userId
+                    OR (
+                        r.published = true
+                        AND (r.accessibleFrom IS NULL OR r.accessibleFrom <= :currentdate)
+                        AND (r.accessibleUntil IS NULL OR r.accessibleUntil >= :currentdate)
+                    )
+                )
+                $rightsTest
             )
-        ';
+        ";
         $query = $this->_em->createQuery($dql);
         $query->setParameter('objectClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $query->setParameter('workspace', $workspace);
+        $query->setParameter('active', true);
+        $userId = ($user === 'anon.') ? -1 : $user->getId();
+        $query->setParameter('userId', $userId);
+        $currentDate = new \DateTime();
+
+        if (!$isManager) {
+            $query->setParameter('roleNames', $roleNames);
+        }
+        $query->setParameter('currentdate', $currentDate->format('Y-m-d H:i:s'));
 
         return $query->getResult();
     }

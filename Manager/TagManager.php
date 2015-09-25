@@ -416,8 +416,16 @@ class TagManager
             $objects;
     }
 
-    public function getTaggedResourcesByWorkspace(Workspace $workspace)
+    public function getTaggedResourcesByWorkspace(
+        Workspace $workspace,
+        $user = 'anon.',
+        array $roleNames = array('ROLE_ANONYMOUS')
+    )
     {
-        return $this->taggedObjectRepo->findTaggedResourcesByWorkspace($workspace);
+        return $this->taggedObjectRepo->findTaggedResourcesByWorkspace(
+            $workspace,
+            $user,
+            $roleNames
+        );
     }
 }
