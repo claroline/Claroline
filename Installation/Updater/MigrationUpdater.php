@@ -166,13 +166,24 @@ class MigrationUpdater extends Updater
             ->getOneOrNullResult();
 
         if (null !== $portfolioPlugin) {
-            $widgetType = new \Icap\PortfolioBundle\Entity\Widget\WidgetType();
-            $widgetType
-                ->setName('badges')
-                ->setIcon('trophy');
+            /** @var \Icap\PortfolioBundle\Repository\Widget\WidgetTypeRepository $widgetTypeRepository */
+            $widgetTypeRepository = $this->entityManager->getRepository('IcapPortfolioBundle:Widget\WidgetType');
 
-            $this->entityManager->persist($widgetType);
-            $this->log("Badge widget type created.");
+            $badgeWidgetType = $widgetTypeRepository->createQueryBuilder('widgetType')
+                ->where('widgetType.name = :badgetWidgetTypeName')
+                ->setParameter('badgetWidgetTypeName', 'badges')
+                ->getQuery()
+                ->getOneOrNullResult();
+
+            if (null === $badgeWidgetType) {
+                $widgetType = new \Icap\PortfolioBundle\Entity\Widget\WidgetType();
+                $widgetType
+                    ->setName('badges')
+                    ->setIcon('trophy');
+
+                $this->entityManager->persist($widgetType);
+                $this->log("Badge widget type created for portfolio.");
+            }
         }
 
         $this->entityManager->flush();
