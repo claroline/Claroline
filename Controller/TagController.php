@@ -313,10 +313,22 @@ class TagController extends Controller
     public function resourcesTagsWidgetAction(WidgetInstance $widgetInstance)
     {
         $workspace = $widgetInstance->getWorkspace();
+        $user = $this->tokenStorage->getToken()->getUser();
+        $roles = $this->tokenStorage->getToken()->getRoles();
+        $roleNames = array();
+
+        foreach ($roles as $role) {
+            $roleNames[] = $role->getRole();
+        }
+
         $config = $this->tagManager->getResourcesTagsWidgetConfig($widgetInstance);
         $details = $config->getDetails();
         $nbTags = !empty($details) && isset($details['nb_tags']) ? $details['nb_tags'] : 10;
-        $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace($workspace);
+        $taggedObjects = $this->tagManager->getTaggedResourcesByWorkspace(
+            $workspace,
+            $user,
+            $roleNames
+        );
         $tags = array();
         $sorted = array();
         $datas = array();
