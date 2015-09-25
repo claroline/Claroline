@@ -15,7 +15,7 @@ class MigrationUpdater extends Updater
     /**
      * @var \Doctrine\ORM\EntityManager
      */
-    private $em;
+    private $entityManager;
 
     /**
      * @var \Claroline\CoreBundle\Entity\Plugin
@@ -26,7 +26,7 @@ class MigrationUpdater extends Updater
     {
         $this->container = $container;
         $this->conn = $container->get('database_connection');
-        $this->em = $container->get('doctrine.orm.entity_manager');
+        $this->entityManager = $container->get('doctrine.orm.entity_manager');
     }
 
     public function preInstall()
@@ -37,7 +37,7 @@ class MigrationUpdater extends Updater
     public function postInstall()
     {
         /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
-        $pluginRepository = $this->em->getRepository('ClarolineCoreBundle:Plugin');
+        $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');
 
         $this->badgePlugin = $pluginRepository->createQueryBuilder('plugin')
             ->where('plugin.vendorName = :badgeVendorName')
@@ -46,11 +46,12 @@ class MigrationUpdater extends Updater
             ->getQuery()
             ->getSingleResult();
 
-        $this->em->flush();
+        $this->entityManager->flush();
 
         $this->reusePreviousAdminToolsIfAny();
         $this->reusePreviousToolsIfAny();
         $this->reusePreviousWidgetsIfAny();
+        $this->insertWidgetTypeDataForPortfolio();
     }
 
     private function skipInstallIfMigratingFromCore()
@@ -99,32 +100,32 @@ class MigrationUpdater extends Updater
             $this->log("Re-using previous {$name} {$type}...");
             $current = $this->find($type, $name);
             $current->setName($name . '_tmp');
-            $this->em->persist($current);
-            $this->em->flush();
+            $this->entityManager->persist($current);
+            $this->entityManager->flush();
             $previous->setPlugin($current->getPlugin());
-            $this->em->persist($previous);
-            $this->em->flush();
+            $this->entityManager->persist($previous);
+            $this->entityManager->flush();
             $this->delete($type, $name . '_tmp');
         }
     }
 
     private function find($type, $name)
     {
-        return $this->em
+        return $this->entityManager
             ->getRepository($this->getClassFromType($type))
             ->findOneBy(['name' => $name, 'plugin' => $this->badgePlugin]);
     }
 
     private function findWithNoPlugin($type, $name)
     {
-        return $this->em
+        return $this->entityManager
             ->getRepository($this->getClassFromType($type))
             ->findOneBy(['name' => $name, 'plugin' => null]);
     }
 
     private function delete($type, $name)
     {
-        $this->em->createQueryBuilder()
+        $this->entityManager->createQueryBuilder()
             ->delete()
             ->from($this->getClassFromType($type), 't')
             ->where('t.name = :name')
@@ -150,5 +151,30 @@ class MigrationUpdater extends Updater
         }
 
         return $class;
+    }
+
+    private function insertWidgetTypeDataForPortfolio()
+    {
+        /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
+        $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');
+
+        $portfolioPlugin = $pluginRepository->createQueryBuilder('plugin')
+            ->where('plugin.vendorName = :portfolioVendorName')
+            ->andWhere('plugin.bundleName = :portfolioShortName')
+            ->setParameters(['portfolioVendorName' => 'Icap', 'portfolioShortName' => 'PortfolioBundle'])
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if (null !== $portfolioPlugin) {
+            $widgetType = new \Icap\PortfolioBundle\Entity\Widget\WidgetType();
+            $widgetType
+                ->setName('badges')
+                ->setIcon('trophy');
+
+            $this->entityManager->persist($widgetType);
+            $this->log("Badge widget type created.");
+        }
+
+        $this->entityManager->flush();
     }
 }
