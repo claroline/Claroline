@@ -5,12 +5,18 @@ namespace Innova\CollecticielBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DropzoneType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('required' => true));
+        $builder->add('name', 'text',
+        array(
+            'constraints' => new NotBlank(),
+            'required' => true
+             )
+        );
     }
 
     public function getName()
