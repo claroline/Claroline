@@ -73,47 +73,50 @@ class HomeExtension extends \Twig_Extension
     public function timeAgo($start)
     {
         $end = new \DateTime("now");
-
+        $translator = $this->container->get('translator');
         $interval = $start->diff($end);
-
         $formats = array("%Y", "%m", "%W", "%d", "%H", "%i", "%s");
+
         $translation["singular"] = array(
-            "%Y" => "year",
-            "%m" => "month",
-            "%W" => "week",
-            "%d" => "day",
-            "%H" => "hour",
-            "%i" => "minute",
-            "%s" => "second"
+            "%Y" => $translator->trans("year", array(), 'platform'),
+            "%m" => $translator->trans("month", array(), 'platform'),
+            "%W" => $translator->trans("week", array(), 'platform'),
+            "%d" => $translator->trans("day", array(), 'platform'),
+            "%H" => $translator->trans("hour", array(), 'platform'),
+            "%i" => $translator->trans("minute", array(), 'platform'),
+            "%s" => $translator->trans("second", array(), 'platform')
         );
+
         $translation["plural"] = array(
-            "%Y" => "years",
-            "%m" => "months",
-            "%W" => "weeks",
-            "%d" => "days",
-            "%H" => "hours",
-            "%i" => "minutes",
-            "%s" => "seconds"
+            "%Y" => $translator->trans("years", array(), 'platform'),
+            "%m" => $translator->trans("months", array(), 'platform'),
+            "%W" => $translator->trans("weeks", array(), 'platform'),
+            "%d" => $translator->trans("days", array(), 'platform'),
+            "%H" => $translator->trans("hours", array(), 'platform'),
+            "%i" => $translator->trans("minutes", array(), 'platform'),
+            "%s" => $translator->trans("seconds", array(), 'platform')
         );
 
         foreach ($formats as $format) {
             if ($format == "%W") {
-
                 $i = round($interval->format("%d") / 8); //fix for week that does not exist in DataInterval obj
             } else {
                 $i = ltrim($interval->format($format), "0");
             }
 
             if ($i > 0) {
+                $unit = $i === 1 ? $translation["singular"][$format]: $translation["plural"][$format];
+
                 return $this->container->get("translator")->transChoice(
-                    "%count% ".$translation["singular"][$format]." ago|%count% ".$translation["plural"][$format]." ago",
+                    'time_ago',
                     $i,
-                    array('%count%' => $i),
-                    "home"
+                    array('%count%' => $i, '%unit%' => $unit),
+                    "platform"
                 );
             }
         }
 
+        //?? why seconds ago
         return $this->container->get("translator")->transChoice(
             "seconds_ago",
             1,
@@ -249,7 +252,7 @@ class HomeExtension extends \Twig_Extension
         if (!is_file($toCheck)) {
             return false;
         }
-        
+
         return true;
     }
 

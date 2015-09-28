@@ -340,39 +340,32 @@ class ResourceRightsController
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->getCurrentRequest()->request->get('roles');
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
-
         $data = array();
-        $falsePerms = array();
 
         if (is_null($roles)) {
             $roles = array();
         }
 
-        //because otherwise there is way too much stuff (it sends the whole list of user aswell...)
-       foreach (array_keys($rows) as $roleId) {
-           $changedPerms = array();
+        foreach (array_keys($rows) as $roleId) {
             if (!array_key_exists($roleId, $roles)) {
                 foreach ($permsMap as $perm) {
                     $changedPerms[$perm] = false;
                 }
 
-                $falsePerms[$roleId] = $changedPerms;
+                $data[] = array(
+                    'role' => $this->roleManager->getRole($roleId),
+                    'permissions' => $changedPerms
+                );
             }
         }
 
         foreach ($roles as $roleId => $perms) {
-            $changedPerms = array();
-            foreach ($falsePerms as $id => $setToFalse) {
-                if ($id === $roleId) {
-                    $changedPerms = $setToFalse;
-                }
-            }
 
             foreach ($permsMap as $perm) {
                 $changedPerms[$perm] = (array_key_exists($perm, $perms)) ? true: false;
             }
 
-            $data[$roleId] = array(
+            $data[] = array(
                 'role' => $this->roleManager->getRole($roleId),
                 'permissions' => $changedPerms
             );
@@ -381,39 +374,6 @@ class ResourceRightsController
         return $data;
     }
 
-    /*
-    $type = $node->getResourceType();
-    $rights = $node->getRights();
-    $permsMap = $this->maskManager->getPermissionMap($type);
-    $roles = $this->request->getCurrentRequest()->request->get('roles');
-    $rows = $this->request->getCurrentRequest()->request->get('role_row');
-    $data = array();
-    $changedPerms = array();
-
-    if (is_null($roles)) {
-        $roles = array();
-    }
-
-   //init array to false
-   foreach ($rights as $right) {
-        foreach ($permsMap as $perm) {
-            $data[$right->getRole()->getId()]['permissions'][$perm] = false;
-        }
-
-        $data[$right->getRole()->getId()]['role'] = $this->roleManager->getRole($right->getRole()->getId());
-    }
-
-    foreach ($roles as $roleId => $perms) {
-
-        foreach ($permsMap as $perm) {
-            $data[$roleId]['permissions'][$perm] = (array_key_exists($perm, $perms)) ? true: false;
-        }
-
-        //$data[$right->getRole()->getId()]['role'] = $this->roleManager->getRole($right->getRole()->getId());
-    }
-
-    return $data;
-    */
 
     /**
      * Checks if the current user has the right to perform an action on a ResourceCollection.

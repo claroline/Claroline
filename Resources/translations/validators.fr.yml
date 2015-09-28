@@ -1,3 +1,5 @@
+6_parameters_min_msg: 'Chaque ligne nécessite 6 paramètres (séparés par des points-virgules).'
+7_parameters_min_msg: 'Chaque ligne nécessite 7 paramètres (séparés par des points-virgules).'
 2047_characters_max: 'Vous ne pouvez pas dépasser la limite de 2047 caractères.'
 'Each row requires 2 parameters.': 'Chaque ligne nécessite 2 paramètres (séparés par des points-virgules).'
 'Each row requires at least 5 parameters.': 'Chaque ligne nécessite au moins 5 paramètres (séparés par des points-virgules).'

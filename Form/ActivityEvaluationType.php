@@ -21,7 +21,8 @@ class ActivityEvaluationType extends AbstractType
     {
         $evaluation = $builder->getData();
         $activityParams = $evaluation->getActivityParameters();
-        $evaluationType = empty($activityParams->getEvaluationType()) ?
+        $type = $activityParams->getEvaluationType();
+        $evaluationType = empty($type) ?
             'manual' :
             $activityParams->getEvaluationType();
 

@@ -11,32 +11,49 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ContentManager;
-use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.common.terms_of_service_manager")
  */
 class TermsOfServiceManager
 {
-    private $isActive;
+    private $configHandler;
+    private $container;
     private $contentManager;
+    private $isActive;
+    private $userManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler"  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "contentManager" = @DI\Inject("claroline.manager.content_manager")
+     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "container"        = @DI\Inject("service_container"),
+     *     "contentManager"   = @DI\Inject("claroline.manager.content_manager"),
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         PlatformConfigurationHandler $configHandler,
-        ContentManager $contentManager
+        ContainerInterface $container,
+        ContentManager $contentManager,
+        UserManager $userManager,
+        WorkspaceManager $workspaceManager
     )
     {
+        $this->configHandler = $configHandler;
+        $this->container = $container;
         $this->contentManager = $contentManager;
         $this->isActive = $configHandler->getParameter('terms_of_service');
+        $this->userManager = $userManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -101,5 +118,64 @@ class TermsOfServiceManager
         if ($termsOfService instanceof Content) {
             $this->contentManager->deleteTranslation($locale, $termsOfService->getId());
         }
+    }
+
+    public function sendDatas()
+    {
+        $platformUrl = $this->configHandler->getParameter('platform_url');
+
+        if ($this->configHandler->getParameter('confirm_send_datas') === 'OK' && !is_null($platformUrl)) {
+            $url = $this->configHandler->getParameter('datas_sending_url');
+            $name = $this->configHandler->getParameter('name');
+            $lang = $this->configHandler->getParameter('locale_language');
+            $country = $this->configHandler->getParameter('country');
+            $supportEmail = $this->configHandler->getParameter('support_email');
+            $version = $this->getCoreBundleVersion();
+            $nbNonPersonalWorkspaces = $this->workspaceManager->getNbNonPersonalWorkspaces();
+            $nbPersonalWorkspaces = $this->workspaceManager->getNbPersonalWorkspaces();
+            $nbUsers = $this->userManager->getCountAllEnabledUsers();
+            $type = 3;
+            $token = $this->configHandler->getParameter('token');
+
+            $postDatas = "name=$name" .
+                "&url=$platformUrl" .
+                "&lang=$lang" .
+                "&country=$country" .
+                "&email=$supportEmail" .
+                "&version=$version" .
+                "&workspaces=$nbNonPersonalWorkspaces" .
+                "&personal_workspaces=$nbPersonalWorkspaces" .
+                "&users=$nbUsers" .
+                "&stats_type=$type" .
+                "&token=$token";
+
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_POST, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $postDatas);
+            curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($curl, CURLOPT_HEADER, 0);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_exec($curl);
+        }
+    }
+
+    private function getCoreBundleVersion()
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $version = '-';
+        $installedFile = $this->container->getParameter('kernel.root_dir') .
+            $ds . '..' . $ds . 'vendor' . $ds . 'composer' . $ds . 'installed.json';
+        $jsonString = file_get_contents($installedFile);
+        $bundles = json_decode($jsonString, true);
+
+        foreach ($bundles as $bundle) {
+
+            if (isset($bundle['name']) && $bundle['name'] === 'claroline/core-bundle') {
+                $version = $bundle['version'];
+                break;
+            }
+        }
+
+        return $version;
     }
 }

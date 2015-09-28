@@ -303,6 +303,18 @@ class Builder extends ContainerAware
             'claroline_workspace_additional_action',
             new WorkspaceAdditionalActionEvent($factory, $menu, $workspace)
         );
+    }
+
+    public function workspaceUsersMenu(FactoryInterface $factory, array $options)
+    {
+        $user = $options['user'];
+        $menu = $factory->createItem($user->getUsername())
+            ->setChildrenAttribute('class', 'btn-group menu contact-actions-menu');
+
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_workspace_users_action',
+            new ContactAdditionalActionEvent($factory, $menu, $user)
+        );
 
         return $menu;
     }

@@ -1026,43 +1026,40 @@ class ResourceManager
             if ($this->container->get('security.context')->isGranted('EXPORT', $node)) {
                 $resource = $this->getResourceFromNode($node);
 
-                if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                    $node = $resource->getTarget();
-                }
-
-                $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
-                $resource = $this->getResourceFromNode($node);
-
-                //if it's a file, we may have to add the extension back in case someone removed it from the name
-                if ($node->getResourceType()->getName() === 'file') {
-                    $extension = '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
-                    if (!preg_match("#$extension#", $filename)) $filename .= $extension;
-                }
-
-                if ($node->getResourceType()->getName() !== 'directory') {
-                    $event = $this->dispatcher->dispatch(
-                        "download_{$node->getResourceType()->getName()}",
-                        'DownloadResource',
-                        array($resource)
-                    );
-                    $extension = $event->getExtension();
-
-                    if (!empty($extension)) {
-                        $filename .= '.' . $extension;
+                if ($resource) {
+                    if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                        $node = $resource->getTarget();
                     }
 
-                    $obj = $event->getItem();
+                    $filename = $this->getRelativePath($currentDir, $node) . $node->getName();
+                    $resource = $this->getResourceFromNode($node);
 
-                    if ($obj !== null) {
-                        $archive->addFile($obj, iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
+                    //if it's a file, we may have to add the extension back in case someone removed it from the name
+                    if ($node->getResourceType()->getName() === 'file') {
+                        $extension = '.' . pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
+                        if (!preg_match("#$extension#", $filename)) $filename .= $extension;
+                    }
+
+                    if ($node->getResourceType()->getName() !== 'directory') {
+                        $event = $this->dispatcher->dispatch(
+                            "download_{$node->getResourceType()->getName()}",
+                            'DownloadResource',
+                            array($resource)
+                        );
+
+                        $obj = $event->getItem();
+
+                        if ($obj !== null) {
+                            $archive->addFile($obj, iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
+                        } else {
+                             $archive->addFromString(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename), '');
+                        }
                     } else {
-                         $archive->addFromString(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename), '');
+                        $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
                     }
-                } else {
-                    $archive->addEmptyDir(iconv(mb_detect_encoding($filename), $this->getEncoding(), $filename));
-                }
 
-                $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
+                    $this->dispatcher->dispatch('log', 'Log\LogResourceExport', array($node));
+                }
             }
         }
 

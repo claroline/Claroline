@@ -73,6 +73,7 @@ admin_third_party_application: 'Applications tierces'
 admin_workspace_tag_form_name: Nom
 administration: Administration
 administrative_code: 'Code administratif'
+administrativeCode: 'Code administratif'
 advanced: Avancé
 advanced_parameters: 'Paramètres avancés'
 agreeing: 'En acceptant l''envoi de ces données, vous bénéficierez d''un meilleur service et vous contribuerez à l''amélioration de la plateforme Claroline Connect que vous allez installer.'
@@ -124,7 +125,7 @@ by: par
 by_user: 'Par utilisateur'
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
-canCreate: 'Creation de %type%'
+canCreate: 'Création de %type%'
 canDelete: 'Droit de supprimer'
 canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
@@ -219,6 +220,8 @@ csv_users_import_infos_optional: Optionnel
 csv_users_import_infos_required: Requis
 csv_users_import_infos_ws_role_a: 'Les rôles prédéfinis par la plateforme sont "Collaborateur" et "Gestionnaire" et les valeurs à utiliser dans le CSV sont respectivement "collaborator" et "manager".'
 csv_users_import_infos_ws_role_b: 'Si ces rôles sont modifiés, le nouveau nom entré doit être utilisé dans le CSV.'
+csv_users_import_infos_format_a: 'Les données d''un utilisateur doivent être définies sur une ligne et séparées par un point virgule.'
+csv_workspaces_import_infos_format_a: 'Les données d''un espace d''activité doivent être définies sur une ligne et séparées par un point virgule.'
 curl_facebook_application_validation_error: 'Extension php curl manquante.'
 current_category: 'Catégorie courante'
 cut: Couper
@@ -840,7 +843,7 @@ roles_facet_form_explanation: 'Ce formulaire vous permet de spécifier quels rô
 roles_fields_form_explanation: 'Ce formulaire vous permet de spécifier quels rôles peuvent voir et éditer le champ dans le profil public de l''utilisateur.'
 roles_management: 'Gestion des rôles'
 save: Sauvegarder
-save_as_template: 'Sauvegarder comme modèle'
+save_as_template: 'Exporter'
 save_workspace_as_template: 'Sauvegarde de l''espace d''activités comme modèle'
 saved_changes: 'Vos changements ont été sauvegardés'
 score: Score
@@ -1160,3 +1163,24 @@ initialize_your_password: Initialisation du mot de passe
 hide_client: Cacher un client
 hide_client_message: Êtes-vous sûr de vouloir cacher ce client ?
 domain_name: 'Nom de domaine'
+import_csv: 'Importer un csv'
+admin_profile_properties_explanations: 'Les propriétés cochées seront modifiable par les utilisateurs disposant du rôle requis.'
+self_unregistration: Auto-désinscription
+is_visible: Visible par les utilisateurs
+year: an
+month: mois
+week: semaine
+day: jour
+hour: heure
+minute: minute
+second: seconde
+years: années
+months: mois
+weeks: semaines
+days: jours
+hours: heures
+minutes: minutes
+seconds: secondes
+time_ago: Il y a %count% %unit%
+mail_options: Options du courriel
+mailer_from: Champ "from" du courriel
