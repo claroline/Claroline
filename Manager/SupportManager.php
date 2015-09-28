@@ -181,7 +181,10 @@ class SupportManager
             $config = $configs[0];
         } else {
             $config = new Configuration();
-            $details = array('with_credits' => false);
+            $details = array(
+                'with_credits' => false,
+                'contacts' => array()
+            );
             $config->setDetails($details);
             $this->persistConfiguration($config);
         }
@@ -201,6 +204,14 @@ class SupportManager
         $details = $config->getDetails();
 
         return isset($details['with_credits']) ? $details['with_credits'] : false;
+    }
+
+    public function getConfigurationContactsOption()
+    {
+        $config = $this->getConfiguration();
+        $details = $config->getDetails();
+
+        return isset($details['contacts']) ? $details['contacts'] : array();
     }
 
 

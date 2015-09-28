@@ -1,0 +1,152 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ 
+        parent() ~
+        ' - ' ~
+        'support_contacts_management' | trans({}, 'support')
+    }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'icon': 'fa fa-cog',
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
+                'href': path('formalibre_admin_support_index')
+            },
+            {
+                'name': 'configuration'|trans({}, 'platform'),
+                'href': path('formalibre_admin_support_configuration_menu')
+            },
+            {
+                'name': 'support_contacts_management'|trans({}, 'support'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'support_contacts_management'|trans({}, 'support') }}
+        </h3>
+    </div>
+    <div class="panel-body" id="contacts-management-body">
+        
+        {% if contacts|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <tr>
+                        <th>{{ 'name'|trans({}, 'platform') }}</th>
+                        <th>{{ 'mail'|trans({}, 'platform') }}</th>
+                        <th></th>
+                    </tr>
+                    
+                    {% for contact in contacts %}
+                        <tr id="support-contact-row-{{ contact.getId() }}">
+                            <td>
+                                {{ contact.getFirstName() }}
+                                {{ contact.getLastName() }}
+                            </td>
+                            <td>
+                                {{ contact.getMail() }}
+                            </td>
+                            <td>
+                                <span class="btn btn-danger remove-support-contact-btn"
+                                      data-user-id="{{ contact.getId() }}"
+                                >
+                                    <i class="fa fa-times-circle"></i>
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                {{ 'no_support_contact'|trans({}, 'support') }}
+            </div>
+        {% endif %}
+        
+        <span class="btn btn-primary" id="add-support-contact-btn">
+            {{ 'add_support_contacts'|trans({}, 'support') }}
+        </span>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript"
+            src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"
+    >
+    </script>
+    <script type="text/javascript">
+        (function () {
+            'use strict';
+            
+            var contactsIds = [{% for contact in contacts %}{{ contact.getId() }}{% if not loop.last %}, {% endif %}{% endfor %}];
+
+            $('#contacts-management-body').on('click', '#add-support-contact-btn', function () {
+                var userPicker = new UserPicker();
+                var params = {
+                    picker_name: 'support_contacts_picker',
+                    picker_title: '{{ 'select_support_contacts'|trans({}, 'support') }}',
+                    multiple: true,
+                    blacklist: contactsIds,
+                    show_mail: true
+                };
+                userPicker.configure(params, addContacts);
+                userPicker.open();
+            });
+
+            $('#contacts-management-body').on('click', '.remove-support-contact-btn', function () {
+                var userId = $(this).data('user-id');
+                removeContact(userId);
+            });
+            
+            function addContacts(userIds)
+            {
+                if (userIds !== null) {
+                    var contactsIdsTxt = '';
+
+                    for (var i = 0; i < userIds.length; i++) {
+                        contactsIdsTxt += userIds[i] + ',';
+                    }
+                    contactsIdsTxt = contactsIdsTxt.substring(0, contactsIdsTxt.length - 1);
+                    
+                    $.ajax({
+                        url: Routing.generate(
+                            'formalibre_admin_support_contacts_add',
+                            {'contactIds': contactsIdsTxt}
+                        ),
+                        type: 'POST',
+                        success: function () {
+                            window.location.reload();
+                        }
+                    });
+                }
+            };
+            
+            function removeContact(userId)
+            {
+                $.ajax({
+                    url: Routing.generate(
+                        'formalibre_admin_support_contact_remove',
+                        {'contactId': userId}
+                    ),
+                    type: 'DELETE',
+                    success: function () {
+                        window.location.reload();
+                    }
+                });
+            }
+        }) ();
+    </script>
+{% endblock %}

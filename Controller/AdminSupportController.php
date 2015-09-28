@@ -4,6 +4,7 @@ namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Manager\UserManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Status;
@@ -43,6 +44,7 @@ class AdminSupportController extends Controller
     private $router;
     private $supportManager;
     private $translator;
+    private $userManager;
 
     /**
      * @DI\InjectParams({
@@ -51,7 +53,8 @@ class AdminSupportController extends Controller
      *     "requestStack"    = @DI\Inject("request_stack"),
      *     "router"          = @DI\Inject("router"),
      *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "translator"      = @DI\Inject("translator"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
@@ -60,7 +63,8 @@ class AdminSupportController extends Controller
         RequestStack $requestStack,
         RouterInterface $router,
         SupportManager $supportManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        UserManager $userManager
     )
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -69,6 +73,7 @@ class AdminSupportController extends Controller
         $this->router = $router;
         $this->supportManager = $supportManager;
         $this->translator = $translator;
+        $this->userManager = $userManager;
     }
 
     /**
@@ -145,6 +150,76 @@ class AdminSupportController extends Controller
         $allStatus = $this->supportManager->getAllStatus();
 
         return array('allStatus' => $allStatus);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/contacts/management",
+     *     name="formalibre_admin_support_contacts_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportContactsManagementAction()
+    {
+        $contactIds = $this->supportManager->getConfigurationContactsOption();
+        $contacts = $this->userManager->getUsersByIds($contactIds);
+
+        return array('contacts' => $contacts);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/contacts/{contactIds}/add",
+     *     name="formalibre_admin_support_contacts_add",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminSupportContactsAddAction($contactIds)
+    {
+        $config = $this->supportManager->getConfiguration();
+        $details = $config->getDetails();
+        $contacts = isset($details['contacts']) ? $details['contacts'] : array();
+        $toAdd = explode(',', $contactIds);
+
+        foreach ($toAdd as $userId) {
+            $contacts[] = intval($userId);
+        }
+        $details['contacts'] = $contacts;
+        $config->setDetails($details);
+        $this->supportManager->persistConfiguration($config);
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/contact/{contactId}/remove",
+     *     name="formalibre_admin_support_contact_remove",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     */
+    public function adminSupportContactRemoveAction($contactId)
+    {
+        $config = $this->supportManager->getConfiguration();
+        $details = $config->getDetails();
+
+        if (isset($details['contacts'])) {
+            $contacts = $details['contacts'];
+            $key = array_search($contactId, $contacts);
+
+            if ($key !== false) {
+                unset($contacts[$key]);
+                $details['contacts'] = $contacts;
+                $config->setDetails($details);
+                $this->supportManager->persistConfiguration($config);
+            }
+        }
+
+        return new JsonResponse('success', 200);
     }
 
     /**
