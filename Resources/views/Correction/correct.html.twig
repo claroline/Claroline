@@ -40,15 +40,14 @@
             {{ dropzone.resourceNode.name }} (Collecticiel)
 
             <div class="btn-group pull-right">
-                {# Suivre cette ressource #}
-                {# {% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': dropzone.resourceNode.id, 'resourceClass': dropzone.resourceNode.class}) %} #}
-                {# ERV/Modif car changement de nom car on renvoie vers une nouvelle page #}
-                {# Accéder à la vue personnelle #}
-                {# <a class="btn btn-default" href="{% block drops_awaiting_link %}{{ path('innova_collecticiel_drops_awaiting', {'resourceId': dropzone.id}) }} {% endblock %}">
-                    <span class="fa fa-list"></span>
-                    {{ 'See personal view'|trans({}, 'innova_collecticiel') }}
-                </a>
-                #}
+                {# Ajout du bouton "Retour" InnovaERV #}
+                {% if not adminInnova  %}
+                    {# Si je suis "Etudiant" alors je viens sur cette page que par UNE seule route. InnovaERV #}
+                    <a href="{{ path('innova_collecticiel_drop', {'resourceId': dropzone.id}) }}" class="btn btn-default"><span class="fa fa-arrow-left"></span>{{ 'Return'|trans({}, 'innova_collecticiel') }}</a>
+                {% else %}
+                    {# Si je suis "Enseignant" alors je peux venir de DEUX routes. InnovaERV #}
+                    <a href="#" class="btn btn-default backLink"><span class="fa fa-arrow-left"></span>{{ 'Return'|trans({}, 'innova_collecticiel') }}</a>
+                {% endif %}
             </div>
         </h2>
 

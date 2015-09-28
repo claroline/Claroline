@@ -103,4 +103,10 @@ $(document).ready(function () {
         });
     });
 
+    // InnovaERV : ajout du bouton "Retour" dans la liste des commentaires.
+    $('.backLink').on('click', function(event) {
+        event.preventDefault();
+        history.back(-1);
+    });
+
 });

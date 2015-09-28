@@ -225,6 +225,11 @@ class DocumentController extends DropzoneBaseController
         $document->setDrop($drop);
         $document->setSender($sender);
 
+        // #126. Ajout de la valorisation du titre du document. InnovaERV.
+        if ($documentType == 'text') {
+            $document->setTitle($data['title']);
+        }
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($document);
         $em->flush();

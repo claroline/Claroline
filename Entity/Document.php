@@ -75,7 +75,6 @@ class Document {
      */
     protected $drop;
     
-    
     /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
@@ -84,7 +83,10 @@ class Document {
      */
     protected $sender;
 
-
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $title;
 
     /**
      * @return mixed
@@ -305,4 +307,28 @@ class Document {
         $this->sender = $sender;
     }
 
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     *
+     * @return Document
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }
