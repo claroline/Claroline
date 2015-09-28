@@ -264,6 +264,7 @@ db_table: 'Database table'
 decline: Decline
 default_language: 'Default Language'
 default_role: 'Default role'
+default_workspace_tag: 'Tag of the workspace that will be opened at connection'
 deletable: Deletable
 delete: Delete
 delete_category: 'Delete category'

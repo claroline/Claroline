@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\CoreBundle\Entity\SecurityToken;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
@@ -68,6 +69,7 @@ class ParametersController extends Controller
     private $ipwlm;
     private $userManager;
     private $workspaceManager;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -88,7 +90,8 @@ class ParametersController extends Controller
      *     "ipwlm"              = @DI\Inject("claroline.manager.ip_white_list_manager"),
      *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
      *     "userManager"        = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "eventDispatcher"    = @DI\Inject("claroline.event.event_dispatcher")
      * })
      */
     public function __construct(
@@ -109,7 +112,8 @@ class ParametersController extends Controller
         IPWhiteListManager $ipwlm,
         SecurityTokenManager $tokenManager,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        StrictDispatcher $eventDispatcher
     )
     {
         $this->configHandler      = $configHandler;
@@ -131,6 +135,7 @@ class ParametersController extends Controller
         $this->tokenManager       = $tokenManager;
         $this->userManager        = $userManager;
         $this->workspaceManager   = $workspaceManager;
+        $this->eventDispatcher    = $eventDispatcher;
     }
 
     /**
@@ -162,7 +167,8 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(
             new AdminForm\GeneralType(
                 $this->localeManager->getAvailableLocales(),
-                $role, $descriptions,
+                $role,
+                $descriptions,
                 $this->translator->trans('date_form_format', array(), 'platform'),
                 $this->localeManager->getUserLocale($request),
                 $this->configHandler->getLockedParamaters()
@@ -197,7 +203,8 @@ class ParametersController extends Controller
                             'help_url' => $form['helpUrl']->getData(),
                             'register_button_at_login' => $form['registerButtonAtLogin']->getData(),
                             'send_mail_at_workspace_registration' => $form['sendMailAtWorkspaceRegistration']->getData(),
-                            'domain_name' => $form['domainName']->getData()
+                            'domain_name' => $form['domainName']->getData(),
+                            'default_workspace_tag' => $form['defaultWorkspaceTag']->getData()
                         )
                     );
 
@@ -234,10 +241,18 @@ class ParametersController extends Controller
                 }
             }
         }
+        $event = $this->eventDispatcher->dispatch(
+            'claroline_retrieve_tags',
+            'GenericDatas',
+            array()
+        );
+        $response = $event->getResponse();
+        $tags = is_array($response) ? $response : array();
 
         return array(
             'form_settings' => $form->createView(),
-            'logos' => $this->get('claroline.common.logo_service')->listLogos()
+            'logos' => $this->get('claroline.common.logo_service')->listLogos(),
+            'tags' => $tags
         );
     }
 
