@@ -202,7 +202,7 @@ class Updater600100
             return; // migration has already been executed
         }
 
-        $this->log('Moving data from ujm_interaction to ujm_exercise...');
+        $this->log('Moving data from ujm_interaction to ujm_question...');
 
         $typeQuery = "
             UPDATE ujm_question AS question
@@ -210,11 +210,11 @@ class Updater600100
             ON question.id = interaction.question_id
             SET question.type = interaction.type
         ";
-        $descQuery = '
+        $inviteQuery = '
             UPDATE ujm_question AS question
             JOIN ujm_interaction AS interaction
             ON question.id = interaction.question_id
-            SET question.description = interaction.invite
+            SET question.invite = interaction.invite
         ';
         $feedbackQuery = '
             UPDATE ujm_question AS question
@@ -224,7 +224,7 @@ class Updater600100
         ';
 
         $this->connection->exec($typeQuery);
-        $this->connection->exec($descQuery);
+        $this->connection->exec($inviteQuery);
         $this->connection->exec($feedbackQuery);
     }
 
