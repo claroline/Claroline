@@ -6,6 +6,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Question;
+use UJM\ExoBundle\Transfer\Json\ValidationException;
+use UJM\ExoBundle\Transfer\Json\Validator;
 
 /**
  * @DI\Service("ujm.exo.api_manager")
@@ -13,21 +15,58 @@ use UJM\ExoBundle\Entity\Question;
 class ApiManager
 {
     private $om;
+    private $validator;
     private $questionRepo;
     private $interactionQcmRepo;
 
     /**
      * @DI\InjectParams({
-     *     "om" = @DI\Inject("claroline.persistence.object_manager")
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "validator"  = @DI\Inject("ujm.exo.json_validator")
      * })
      *
      * @param ObjectManager $om
+     * @param Validator     $validator
      */
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, Validator $validator)
     {
         $this->om = $om;
+        $this->validator = $validator;
         $this->questionRepo = $om->getRepository('UJMExoBundle:Question');
         $this->interactionQcmRepo = $om->getRepository('UJMExoBundle:InteractionQCM');
+    }
+
+    /**
+     * Imports a question in a JSON format.
+     *
+     * @param string $data
+     * @throws ValidationException if the question is not valid
+     */
+    public function importQuestion($data)
+    {
+        $question = json_decode($data);
+        $errors = $this->validator->validateQuestion($question);
+
+        if (count($errors) > 0) {
+            throw new ValidationException('Question is not valid', $errors);
+        }
+    }
+
+    /**
+     * Imports an exercise in JSON format.
+     *
+     * @param string $data
+     * @throws ValidationException if the exercise is not valid
+     */
+    public function importExercise($data)
+    {
+        $quiz = json_decode($data);
+
+        $errors = $this->validator->validateExercise($quiz);
+
+        if (count($errors) > 0) {
+            throw new ValidationException('Exercise is not valid', $errors);
+        }
     }
 
     /**

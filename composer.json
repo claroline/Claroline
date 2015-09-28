@@ -11,7 +11,9 @@
         "innova/angular-ui-translation-bundle" : "~5.0",
         "innova/angular-ui-resource-picker-bundle" : "~6.0",
         "innova/angular-ui-sortable-bundle" : "~5.0",
-        "innova/angular-ui-pageslide-bundle" : "~5.0"
+        "innova/angular-ui-pageslide-bundle" : "~5.0",
+        "json-quiz/json-quiz": "dev-master",
+        "justinrainbow/json-schema": "~1.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.6",
