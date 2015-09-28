@@ -3,6 +3,8 @@
 namespace FormaLibre\SupportBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\SupportBundle\Entity\Comment;
@@ -12,14 +14,20 @@ use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\Type;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("formalibre.manager.support_manager")
  */
 class SupportManager
 {
+    private $mailManager;
     private $om;
     private $pagerFactory;
+    private $router;
+    private $translator;
+    private $userManager;
 
     private $configurationRepo;
     private $interventionRepo;
@@ -29,14 +37,30 @@ class SupportManager
 
     /**
      * @DI\InjectParams({
+     *     "mailManager"  = @DI\Inject("claroline.manager.mail_manager"),
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory"),
+     *     "router"       = @DI\Inject("router"),
+     *     "translator"   = @DI\Inject("translator"),
+     *     "userManager"  = @DI\Inject("claroline.manager.user_manager")
      * })
      */
-    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
+    public function __construct(
+        MailManager $mailManager,
+        ObjectManager $om,
+        PagerFactory $pagerFactory,
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        UserManager $userManager
+    )
     {
+        $this->mailManager = $mailManager;
         $this->om = $om;
         $this->pagerFactory = $pagerFactory;
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->userManager = $userManager;
+
         $this->configurationRepo = $om->getRepository('FormaLibreSupportBundle:Configuration');
         $this->interventionRepo = $om->getRepository('FormaLibreSupportBundle:Intervention');
         $this->statusRepo = $om->getRepository('FormaLibreSupportBundle:Status');
@@ -181,7 +205,10 @@ class SupportManager
             $config = $configs[0];
         } else {
             $config = new Configuration();
-            $details = array('with_credits' => false);
+            $details = array(
+                'with_credits' => false,
+                'contacts' => array()
+            );
             $config->setDetails($details);
             $this->persistConfiguration($config);
         }
@@ -201,6 +228,147 @@ class SupportManager
         $details = $config->getDetails();
 
         return isset($details['with_credits']) ? $details['with_credits'] : false;
+    }
+
+    public function getConfigurationContactsOption()
+    {
+        $config = $this->getConfiguration();
+        $details = $config->getDetails();
+
+        return isset($details['contacts']) ? $details['contacts'] : array();
+    }
+
+    public function sendTicketMail(
+        User $user,
+        Ticket $ticket,
+        $type = '',
+        Comment $comment = null
+    )
+    {
+        $receivers = array();
+        $extra = array();
+
+        switch ($type) {
+            
+            case 'new_ticket' :
+                $contactIds = $this->getConfigurationContactsOption();
+
+                if (count($contactIds) > 0) {
+                    $receivers = $this->userManager->getUsersByIds($contactIds);
+                    $subject = '[' .
+                        $this->translator->trans('new_ticket', array(), 'support') .
+                        '][' .
+                        $user->getFirstName() .
+                        ' ' .
+                        $user->getLastName() .
+                        '] ' .
+                        $ticket->getTitle();
+                    $content = $ticket->getDescription() .
+                        '<br><br>' .
+                        $this->translator->trans('mail', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactMail() .
+                        '<br>' .
+                        $this->translator->trans('phone', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactPhone() .
+                        '<br><br>';
+                }
+                break;
+
+            case 'ticket_edition' :
+                $contactIds = $this->getConfigurationContactsOption();
+
+                if (count($contactIds) > 0) {
+                    $receivers = $this->userManager->getUsersByIds($contactIds);
+                    $subject = '[' .
+                        $this->translator->trans('ticket_edition', array(), 'support') .
+                        '][' .
+                        $user->getFirstName() .
+                        ' ' .
+                        $user->getLastName() .
+                        '] ' .
+                        $ticket->getTitle();
+                    $content = $ticket->getDescription() .
+                        '<br><br>' .
+                        $this->translator->trans('mail', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactMail() .
+                        '<br>' .
+                        $this->translator->trans('phone', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactPhone() .
+                        '<br><br>';
+                }
+                break;
+
+            case 'ticket_deletion' :
+                $contactIds = $this->getConfigurationContactsOption();
+
+                if (count($contactIds) > 0) {
+                    $receivers = $this->userManager->getUsersByIds($contactIds);
+                    $subject = '[' .
+                        $this->translator->trans('ticket_deletion', array(), 'support') .
+                        '][' .
+                        $user->getFirstName() .
+                        ' ' .
+                        $user->getLastName() .
+                        '] ' .
+                        $ticket->getTitle();
+                    $content = $this->translator->trans('ticket_deletion', array(), 'support') .
+                        '<br><br>';
+                }
+                break;
+                
+            case 'new_admin_comment' :
+                $extra['to'] = array($ticket->getContactMail());
+
+                if (!is_null($comment)) {
+                    $subject = '[' .
+                        $this->translator->trans('new_comment', array(), 'support') .
+                        '][' .
+                        $this->translator->trans('ticket', array(), 'support') .
+                        ' #' .
+                        $ticket->getNum() .
+                        '] ' .
+                        $ticket->getTitle();
+                    $content = $comment->getContent() . '<br><br>';
+                }
+                break;
+
+            case 'new_comment' :
+                $contactIds = $this->getConfigurationContactsOption();
+
+                if (count($contactIds) > 0 && !is_null($comment)) {
+                    $receivers = $this->userManager->getUsersByIds($contactIds);
+                    $subject = '[' .
+                        $this->translator->trans('new_comment', array(), 'support') .
+                        '][' .
+                        $user->getFirstName() .
+                        ' ' .
+                        $user->getLastName() .
+                        '] ' .
+                        $ticket->getTitle();
+                    $content = $comment->getContent() .
+                        '<br><br>' .
+                        $this->translator->trans('mail', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactMail() .
+                        '<br>' .
+                        $this->translator->trans('phone', array(), 'platform') .
+                        ' : ' .
+                        $ticket->getContactPhone() .
+                        '<br><br>';
+                }
+                break;
+            
+            default :
+                break;
+        }
+
+        if (count($receivers) > 0 || count($extra) > 0) {
+            $this->mailManager->send($subject, $content, $receivers, null, $extra);
+        }
     }
 
 

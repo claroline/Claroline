@@ -163,6 +163,7 @@ class SupportController extends Controller
             $now = new \DateTime();
             $ticket->setCreationDate($now);
             $this->supportManager->persistTicket($ticket);
+            $this->supportManager->sendTicketMail($authenticatedUser, $ticket, 'new_ticket');
 
             return new RedirectResponse(
                 $this->router->generate('formalibre_support_index')
@@ -210,6 +211,7 @@ class SupportController extends Controller
 
         if ($form->isValid()) {
             $this->supportManager->persistTicket($ticket);
+            $this->supportManager->sendTicketMail($authenticatedUser, $ticket, 'ticket_edition');
 
             return new RedirectResponse(
                 $this->router->generate('formalibre_support_index')
@@ -260,6 +262,7 @@ class SupportController extends Controller
 
         if ($form->isValid()) {
             $this->supportManager->persistTicket($ticket);
+            $this->supportManager->sendTicketMail($authenticatedUser, $ticket, 'ticket_edition');
 
             return new JsonResponse('success', 200);
         } else {
@@ -282,6 +285,7 @@ class SupportController extends Controller
     public function ticketDeleteAction(User $authenticatedUser, Ticket $ticket)
     {
         $this->checkTicketEditionAccess($authenticatedUser, $ticket);
+        $this->supportManager->sendTicketMail($authenticatedUser, $ticket, 'ticket_deletion');
         $this->supportManager->deleteTicket($ticket);
 
         return new JsonResponse('success', 200);
@@ -358,6 +362,12 @@ class SupportController extends Controller
             $comment->setIsAdmin(false);
             $comment->setCreationDate(new \DateTime());
             $this->supportManager->persistComment($comment);
+            $this->supportManager->sendTicketMail(
+                $authenticatedUser,
+                $ticket,
+                'new_comment',
+                $comment
+            );
 
             return new JsonResponse('success', 201);
         } else {
