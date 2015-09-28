@@ -9,6 +9,7 @@ use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
+use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -72,13 +73,20 @@ class WidgetsManager
 
     /**
      * @param AbstractWidget $widget
-     * @param string         $type
+     * @param string         $widgetType
      *
      * @return string
      */
-    public function getView(AbstractWidget $widget, $type)
+    public function getView(AbstractWidget $widget, $widgetType)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates:' . $type . '.html.twig', array('widget' => $widget));
+        $widgetFormEvent = new WidgetViewEvent();
+        $widgetFormEvent
+            ->setWidgetType($widgetType)
+            ->setWidget($widget);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetFormEvent);
+
+        return $widgetFormEvent->getView();
     }
 
     /**

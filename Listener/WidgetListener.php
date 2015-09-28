@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Listener;
 
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
+use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -61,5 +62,19 @@ class WidgetListener
     public function onWidgetData(WidgetDataEvent $widgetDataEvent)
     {
         $widgetDataEvent->setWidget($this->widgetFactory->createEmptyDataWidget($widgetDataEvent->getWidgetType()));
+    }
+
+    /**
+     * @param WidgetViewEvent $widgetViewEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_view_userInformation")
+     * @DI\Observe("icap_portfolio_widget_view_text")
+     * @DI\Observe("icap_portfolio_widget_view_skills")
+     * @DI\Observe("icap_portfolio_widget_view_formations")
+     * @DI\Observe("icap_portfolio_widget_view_experience")
+     */
+    public function onWidgetmView(WidgetViewEvent $widgetViewEvent)
+    {
+        $widgetViewEvent->setView($this->templatingEngine->render('IcapPortfolioBundle:templates:' . $widgetViewEvent->getWidgetType() . '.html.twig', array('widget' => $widgetViewEvent->getWidget())));
     }
 }
