@@ -25,13 +25,17 @@ class WidgetListener
     }
 
     /**
-     * @param WidgetFormViewEvent $widgetFormEvent
+     * @param WidgetFormViewEvent $widgetFormViewEvent
      *
-     * @return string
+     * @DI\Observe("icap_portfolio_widget_form_view_userInformation")
+     * @DI\Observe("icap_portfolio_widget_form_view_text")
+     * @DI\Observe("icap_portfolio_widget_form_view_skills")
+     * @DI\Observe("icap_portfolio_widget_form_view_formations")
+     * @DI\Observe("icap_portfolio_widget_form_view_experience")
      */
-    protected function getFormView(WidgetFormViewEvent $widgetFormEvent)
+    public function onWidgetFormView(WidgetFormViewEvent $widgetFormViewEvent)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates/form:' . $widgetFormEvent->getWidgetType() . '.html.twig');
+        $widgetFormViewEvent->setFormView($this->templatingEngine->render('IcapPortfolioBundle:templates/form:' . $widgetFormViewEvent->getWidgetType() . '.html.twig'));
     }
 
     /**
