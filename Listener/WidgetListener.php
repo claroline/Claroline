@@ -2,7 +2,9 @@
 
 namespace Icap\PortfolioBundle\Listener;
 
+use Icap\PortfolioBundle\Event\WidgetDataEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
+use Icap\PortfolioBundle\Factory\WidgetFactory;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -11,17 +13,26 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WidgetListener
 {
-    /** @var EngineInterface  */
+    /**
+     * @var EngineInterface
+     */
     protected $templatingEngine;
 
     /**
+     * @var WidgetFactory
+     */
+    protected $widgetFactory;
+
+    /**
      * @DI\InjectParams({
-     *     "templatingEngine" = @DI\Inject("templating")
+     *     "templatingEngine" = @DI\Inject("templating"),
+     *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget")
      * })
      */
-    public function __construct(EngineInterface $templatingEngine)
+    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory)
     {
         $this->templatingEngine = $templatingEngine;
+        $this->widgetFactory = $widgetFactory;
     }
 
     /**
@@ -39,16 +50,16 @@ class WidgetListener
     }
 
     /**
-     * @param WidgetFormViewEvent $widgetFormEvent
+     * @param WidgetDataEvent $widgetDataEvent
      *
-     * @DI\Observe("icap_portfolio_widget_form_view_userInformation")
-     * @DI\Observe("icap_portfolio_widget_form_view_text")
-     * @DI\Observe("icap_portfolio_widget_form_view_skills")
-     * @DI\Observe("icap_portfolio_widget_form_view_formations")
-     * @DI\Observe("icap_portfolio_widget_form_view_experience")
+     * @DI\Observe("icap_portfolio_widget_data_userInformation")
+     * @DI\Observe("icap_portfolio_widget_data_text")
+     * @DI\Observe("icap_portfolio_widget_data_skills")
+     * @DI\Observe("icap_portfolio_widget_data_formations")
+     * @DI\Observe("icap_portfolio_widget_data_experience")
      */
-    public function onWidgetFormUserInfomation(WidgetFormViewEvent $widgetFormEvent)
+    public function onWidgetData(WidgetDataEvent $widgetDataEvent)
     {
-        $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
+        $widgetDataEvent->setWidget($this->widgetFactory->createEmptyDataWidget($widgetDataEvent->getWidgetType()));
     }
 }

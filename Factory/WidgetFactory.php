@@ -4,9 +4,11 @@ namespace Icap\PortfolioBundle\Factory;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
+use Icap\PortfolioBundle\Event\WidgetDataEvent;
 use Icap\PortfolioBundle\Manager\WidgetTypeManager;
 use Icap\PortfolioBundle\Repository\Widget\AbstractWidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -14,24 +16,33 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class WidgetFactory
 {
-    /** @var WidgetTypeManager  */
+    /**
+     * @var WidgetTypeManager
+     */
     protected $widgetTypeManager;
 
-    /** @var TranslatorInterface  */
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
     /**
-     * Constructor.
-     *
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @DI\InjectParams({
      *     "widgetTypeManager" = @DI\Inject("icap_portfolio.manager.widget_type"),
-     *     "translator" = @DI\Inject("translator")
+     *     "translator" = @DI\Inject("translator"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator)
+    public function __construct(WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator, EventDispatcherInterface $eventDispatcher)
     {
         $this->widgetTypeManager = $widgetTypeManager;
         $this->translator = $translator;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -42,16 +53,31 @@ class WidgetFactory
     public function createDataWidget($widgetType)
     {
         if ($this->widgetTypeManager->isWidgetTypeExists($widgetType)) {
-            $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($widgetType));
-            /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
-            $widget = new $widgetNamespace();
-            $widget
-                ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
+            $widgetDataEvent = new WidgetDataEvent();
+            $widgetDataEvent->setWidgetType($widgetType);
 
-            return $widget;
+            $this->eventDispatcher->dispatch('icap_portfolio_widget_data_' . $widgetType, $widgetDataEvent);
+
+            return $widgetDataEvent->getWidget();
         }
 
         throw new \InvalidArgumentException("Unknown type of widget.");
+    }
+
+    /**
+     * @param string $widgetType
+     *
+     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget
+     */
+    public function createEmptyDataWidget($widgetType)
+    {
+        $widgetNamespace = sprintf('Icap\PortfolioBundle\Entity\Widget\%sWidget', ucfirst($widgetType));
+        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget $widget */
+        $widget = new $widgetNamespace();
+        $widget
+            ->setLabel($this->translator->trans($widgetType . '_title', array(), 'icap_portfolio'));
+
+        return $widget;
     }
 
     /**
