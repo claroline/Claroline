@@ -12,6 +12,7 @@
 namespace Claroline\MessageBundle\Listener;
 
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use Claroline\CoreBundle\Menu\ContactAdditionalActionEvent;
 use Claroline\CoreBundle\Event\SendMessageEvent;
 use Claroline\MessageBundle\Manager\MessageManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -75,6 +76,25 @@ class MessageListener
 
             return $menu;
         }
+    }
+
+    /**
+     * @DI\Observe("claroline_workspace_users_action")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onWorkspaceUsersConfigureMessage(ContactAdditionalActionEvent $event)
+    {
+        $user = $event->getUser();
+
+            $menu = $event->getMenu();
+            $messageMenuLink = $menu->addChild(
+                $this->translator->trans('messages', array(), 'platform'),
+                array('route' => 'claro_message_show')
+            )
+            ->setExtra('icon', 'fa fa-envelope')
+            ->setExtra('qstring', 'userIds[]=' . $user->getId())
+            ->setExtra('title', $this->translator->trans('message', array(), 'platform'));
     }
 
     /**
