@@ -38,48 +38,12 @@ class WidgetListener
      * @param WidgetFormViewEvent $widgetFormEvent
      *
      * @DI\Observe("icap_portfolio_widget_form_view_userInformation")
-     */
-    public function onWidgetFormUserInfomation(WidgetFormViewEvent $widgetFormEvent)
-    {
-        $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
-    }
-
-    /**
-     * @param WidgetFormViewEvent $widgetFormEvent
-     *
      * @DI\Observe("icap_portfolio_widget_form_view_text")
-     */
-    public function onWidgetFormText(WidgetFormViewEvent $widgetFormEvent)
-    {
-        $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
-    }
-
-    /**
-     * @param WidgetFormViewEvent $widgetFormEvent
-     *
      * @DI\Observe("icap_portfolio_widget_form_view_skills")
-     */
-    public function onWidgetFormSkills(WidgetFormViewEvent $widgetFormEvent)
-    {
-        $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
-    }
-
-    /**
-     * @param WidgetFormViewEvent $widgetFormEvent
-     *
      * @DI\Observe("icap_portfolio_widget_form_view_formations")
-     */
-    public function onWidgetFormFormations(WidgetFormViewEvent $widgetFormEvent)
-    {
-        $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
-    }
-
-    /**
-     * @param WidgetFormViewEvent $widgetFormEvent
-     *
      * @DI\Observe("icap_portfolio_widget_form_view_experience")
      */
-    public function onWidgetFormExperience(WidgetFormViewEvent $widgetFormEvent)
+    public function onWidgetFormUserInfomation(WidgetFormViewEvent $widgetFormEvent)
     {
         $widgetFormEvent->setFormView($this->getFormView($widgetFormEvent));
     }
