@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
 use Claroline\TagBundle\Form\ResourcesTagsWidgetConfigurationType;
 use Claroline\TagBundle\Form\TagType;
@@ -25,12 +24,10 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -38,39 +35,31 @@ class TagController extends Controller
 {
     private $formFactory;
     private $request;
-    private $resourceManager;
     private $router;
     private $tagManager;
-    private $templating;
     private $tokenStorage;
 
     /**
      * @DI\InjectParams({
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "router"          = @DI\Inject("router"),
      *     "tagManager"      = @DI\Inject("claroline.manager.tag_manager"),
-     *     "templating"      = @DI\Inject("templating"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
         FormFactory $formFactory,
         RequestStack $requestStack,
-        ResourceManager $resourceManager,
         RouterInterface $router,
         TagManager $tagManager,
-        TwigEngine $templating,
         TokenStorageInterface $tokenStorage
     )
     {
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
-        $this->resourceManager = $resourceManager;
         $this->router = $router;
         $this->tagManager = $tagManager;
-        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -449,12 +438,16 @@ class TagController extends Controller
         $resourceType = $resourceNode->getResourceType();
 
         if ($resourceType->getName() === 'directory') {
-            $content = $this->openWorkspaceDirectory(
-                $resourceNode->getWorkspace(),
-                $resourceNode->getId()
+            $route = $this->router->generate(
+                'claro_workspace_open_tool',
+                array(
+                    'toolName' => 'resource_manager',
+                    'workspaceId' => $resourceNode->getWorkspace()->getId()
+                )
             );
-
-            return new Response($content);
+            $route .= '?#resources/' . $resourceNode->getId();
+            
+            return new RedirectResponse($route);
         } else {
             $route = $this->router->generate(
                 'claro_resource_open_short',
@@ -463,51 +456,5 @@ class TagController extends Controller
 
             return new RedirectResponse($route);
         }
-    }
-
-    private function openWorkspaceDirectory(Workspace $workspace, $directoryId)
-    {
-        if (!$this->request) {
-
-            throw new NoHttpRequestException();
-        }
-        $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
-
-        if ($breadcrumbsIds != null) {
-            $ancestors = $this->resourceManager->getByIds($breadcrumbsIds);
-
-            if (!$this->resourceManager->isPathValid($ancestors)) {
-
-                throw new \Exception('Breadcrumbs invalid');
-            }
-        } else {
-            $ancestors = array();
-        }
-        $path = array();
-        foreach ($ancestors as $ancestor) {
-            $path[] = $this->resourceManager->toArray(
-                $ancestor,
-                $this->tokenStorage->getToken()
-            );
-        }
-
-        $jsonPath = json_encode($path);
-        $resourceTypes = $this->resourceManager->getAllResourceTypes();
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $resourceActions = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
-            ->findByResourceType(null);
-
-        return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig',
-            array(
-                'workspace' => $workspace,
-                'directoryId' => $directoryId,
-                'resourceTypes' => $resourceTypes,
-                'resourceActions' => $resourceActions,
-                'jsonPath' => $jsonPath,
-                'maxPostSize' => ini_get('post_max_size'),
-                'resourceZoom' => 'zoom100'
-             )
-        );
     }
 }
