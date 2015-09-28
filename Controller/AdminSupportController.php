@@ -779,6 +779,12 @@ class AdminSupportController extends Controller
             $comment->setIsAdmin(true);
             $comment->setCreationDate(new \DateTime());
             $this->supportManager->persistComment($comment);
+            $this->supportManager->sendTicketMail(
+                $authenticatedUser,
+                $ticket,
+                'new_admin_comment',
+                $comment
+            );
 
             return new JsonResponse('success', 201);
         } else {
@@ -812,7 +818,7 @@ class AdminSupportController extends Controller
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentEditModalForm.html.twig")
      */
-    public function adminTicketCommentEditAction(Comment $comment)
+    public function adminTicketCommentEditAction(User $authenticatedUser, Comment $comment)
     {
         $form = $this->formFactory->create(new CommentEditType(), $comment);
         $form->handleRequest($this->request);
@@ -820,6 +826,12 @@ class AdminSupportController extends Controller
         if ($form->isValid()) {
             $comment->setEditionDate(new \DateTime());
             $this->supportManager->persistComment($comment);
+            $this->supportManager->sendTicketMail(
+                $authenticatedUser,
+                $comment->getTicket(),
+                'new_admin_comment',
+                $comment
+            );
 
             return new JsonResponse('success', 200);
         } else {
