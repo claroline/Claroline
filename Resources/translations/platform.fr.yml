@@ -123,7 +123,7 @@ by: par
 by_user: 'Par utilisateur'
 by_workspace: 'Par espace'
 canCopy: 'Droit de copier'
-canCreate: 'Creation de %type%'
+canCreate: 'Création de %type%'
 canDelete: 'Droit de supprimer'
 canEdit: 'Droit de modifier'
 canExport: 'Droit d''exporter'
