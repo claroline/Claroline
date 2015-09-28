@@ -24,14 +24,14 @@ class WidgetFactory
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "widgetTypeManager"        = @DI\Inject("icap_portfolio.manager.widget_type"),
-     *     "translator"               = @DI\Inject("translator")
+     *     "widgetTypeManager" = @DI\Inject("icap_portfolio.manager.widget_type"),
+     *     "translator" = @DI\Inject("translator")
      * })
      */
     public function __construct(WidgetTypeManager $widgetTypeManager, TranslatorInterface $translator)
     {
-        $this->widgetTypeManager        = $widgetTypeManager;
-        $this->translator               = $translator;
+        $this->widgetTypeManager = $widgetTypeManager;
+        $this->translator = $translator;
     }
 
     /**
