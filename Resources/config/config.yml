@@ -9,7 +9,7 @@ plugin:
       icon: res_file.png
       actions:
         - name: administrate
-          menu_name: administrate
+          menu_name: path_administrate
 
   widgets:
      - name: innova_path_widget
