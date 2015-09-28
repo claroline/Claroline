@@ -8,9 +8,11 @@ use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -36,22 +38,28 @@ class WidgetsManager
     /** @var WidgetFactory  */
     protected $widgetFactory;
 
+    /** @var EventDispatcherInterface  */
+    protected $eventDispatcher;
+
     /**
      * @DI\InjectParams({
-     *     "entityManager"     = @DI\Inject("doctrine.orm.entity_manager"),
-     *     "templatingEngine"  = @DI\Inject("templating"),
-     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "entityManager" = @DI\Inject("doctrine.orm.entity_manager"),
+     *     "templatingEngine" = @DI\Inject("templating"),
+     *     "formFactory" = @DI\Inject("form.factory"),
      *     "widgetTypeManager" = @DI\Inject("icap_portfolio.manager.widget_type"),
-     *     "widgetFactory"     = @DI\Inject("icap_portfolio.factory.widget")
+     *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory, WidgetTypeManager $widgetTypeManager, WidgetFactory $widgetFactory)
+    public function __construct(EntityManager $entityManager, EngineInterface $templatingEngine, FormFactory $formFactory,
+        WidgetTypeManager $widgetTypeManager, WidgetFactory $widgetFactory, EventDispatcherInterface $eventDispatcher)
     {
-        $this->entityManager     = $entityManager;
-        $this->templatingEngine  = $templatingEngine;
-        $this->formFactory       = $formFactory;
+        $this->entityManager = $entityManager;
+        $this->templatingEngine = $templatingEngine;
+        $this->formFactory = $formFactory;
         $this->widgetTypeManager = $widgetTypeManager;
-        $this->widgetFactory     = $widgetFactory;
+        $this->widgetFactory = $widgetFactory;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -75,13 +83,17 @@ class WidgetsManager
 
     /**
      * @param string $type
-     * @param string $action
      *
      * @return string
      */
-    public function getFormView($type, $action)
+    public function getFormView($type)
     {
-        return $this->templatingEngine->render('IcapPortfolioBundle:templates/' . $action . ':' . $type . '.html.twig');
+        $widgetFormEvent = new WidgetFormViewEvent();
+        $widgetFormEvent->setWidgetType($type);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $type, $widgetFormEvent);
+
+        return $widgetFormEvent->getFormView();
     }
 
     /**

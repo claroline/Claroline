@@ -30,7 +30,7 @@ class WidgetController extends BaseController
         $data = [];
 
         if ("form" === $action) {
-            $data['form'] = $this->getWidgetsManager()->getFormView($type, $action);
+            $data['form'] = $this->getWidgetsManager()->getFormView($type);
         }
         else {
             $widget = $this->getWidgetsManager()->getNewDataWidget($type, $loggedUser);
