@@ -261,9 +261,12 @@ class ReservationController extends Controller
             ]);
         }
 
+        $description = $resource->getDescription();
+        $localisation = $resource->getLocalisation();
+
         return new JsonResponse([
-            'description' => empty($resource->getDescription()) ? $none : $resource->getDescription(),
-            'localisation' => empty($resource->getLocalisation()) ? $none : $resource->getLocalisation(),
+            'description' => empty($description) ? $none : $description,
+            'localisation' => empty($localisation) ? $none : $localisation,
             'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation()
         ]);
     }
