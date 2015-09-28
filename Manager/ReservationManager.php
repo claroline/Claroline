@@ -81,10 +81,12 @@ class ReservationManager
     // Add to the jsonSerialize, some reservations fields
     public function completeJsonEventWithReservation(Reservation $reservation)
     {
+        $color = $reservation->getResource()->getColor();
+
         return array_merge(
             $reservation->getEvent()->jsonSerialize(),
             [
-                'color' => !empty($reservation->getResource()->getColor()) ? $reservation->getResource()->getColor() : '#3a87ad',
+                'color' => !empty($color) ? $color : '#3a87ad',
                 'comment' => $reservation->getComment(),
                 'resourceTypeId' => $reservation->getResource()->getResourceType()->getId(),
                 'resourceTypeName' => $reservation->getResource()->getResourceType()->getName(),
