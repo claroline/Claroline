@@ -8,8 +8,8 @@ plugin:
       is_exportable: true
       icon: res_file.png
       actions:
-        - name: administrate
-          menu_name: path_administrate
+        - name: path_administrate
+          menu_name: administrate
 
   widgets:
      - name: innova_path_widget
