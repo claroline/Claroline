@@ -29,9 +29,7 @@
     <div class="panel-body">
         <div class="list-group">
             <a href="{{ path('claro_admin_oauth_claroline') }}" class="list-group-item">Claroline</a>
-        </div>
-        <div class="list-group">
-            {{ knp_menu_render('ClarolineCoreBundle:Builder:externalAuthenticationMenu', {}, 'external_authentication') }}
+            {{ knp_menu_render('ClarolineCoreBundle:Builder:externalAuthenticationMenu', {}, 'external_authentication_renderer') }}
         </div>
     </div>
 {% endblock %}
