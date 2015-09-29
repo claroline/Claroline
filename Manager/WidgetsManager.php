@@ -80,10 +80,7 @@ class WidgetsManager
      */
     public function getView(AbstractWidget $widget, $widgetType)
     {
-        $widgetViewEvent = new WidgetViewEvent();
-        $widgetViewEvent
-            ->setWidgetType($widgetType)
-            ->setWidget($widget);
+        $widgetViewEvent = new WidgetViewEvent($widgetType, $widget);
 
         $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetViewEvent);
 
@@ -97,8 +94,7 @@ class WidgetsManager
      */
     public function getFormView($widgetType)
     {
-        $widgetFormViewEvent = new WidgetFormViewEvent();
-        $widgetFormViewEvent->setWidgetType($widgetType);
+        $widgetFormViewEvent = new WidgetFormViewEvent($widgetType);
 
         $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $widgetType, $widgetFormViewEvent);
 
@@ -113,10 +109,7 @@ class WidgetsManager
      */
     public function getForm($widgetType, AbstractWidget $data)
     {
-        $widgetFormEvent = new WidgetFormEvent();
-        $widgetFormEvent
-            ->setWidgetType($widgetType)
-            ->setData($data);
+        $widgetFormEvent = new WidgetFormEvent($widgetType, $data);
 
         $this->eventDispatcher->dispatch('icap_portfolio_widget_form_' . $widgetType, $widgetFormEvent);
 

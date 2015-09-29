@@ -53,8 +53,7 @@ class WidgetFactory
     public function createDataWidget($widgetType)
     {
         if ($this->widgetTypeManager->isWidgetTypeExists($widgetType)) {
-            $widgetDataEvent = new WidgetDataEvent();
-            $widgetDataEvent->setWidgetType($widgetType);
+            $widgetDataEvent = new WidgetDataEvent($widgetType);
 
             $this->eventDispatcher->dispatch('icap_portfolio_widget_data_' . $widgetType, $widgetDataEvent);
 

@@ -17,10 +17,22 @@ class WidgetFormViewEvent extends Event
     protected $widgetType;
 
     /**
+     * @param string $widgetType
+     */
+    public function __construct($widgetType)
+    {
+        $this->widgetType = $widgetType;
+    }
+
+    /**
      * @return string
+     * @throws \Exception
      */
     public function getFormView()
     {
+        if (null === $this->formView) {
+            throw new \Exception("Empty form view");
+        }
         return $this->formView;
     }
 
@@ -42,17 +54,5 @@ class WidgetFormViewEvent extends Event
     public function getWidgetType()
     {
         return $this->widgetType;
-    }
-
-    /**
-     * @param string $widgetType
-     *
-     * @return WidgetFormViewEvent
-     */
-    public function setWidgetType($widgetType)
-    {
-        $this->widgetType = $widgetType;
-
-        return $this;
     }
 }

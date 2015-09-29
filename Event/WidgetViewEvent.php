@@ -23,10 +23,24 @@ class WidgetViewEvent extends Event
     protected $widget;
 
     /**
+     * @param string         $widgetType
+     * @param AbstractWidget $widget
+     */
+    public function __construct($widgetType, AbstractWidget $widget)
+    {
+        $this->widgetType = $widgetType;
+        $this->widget = $widget;
+    }
+
+    /**
      * @return string
+     * @throws \Exception
      */
     public function getView()
     {
+        if (null === $this->view) {
+            throw new \Exception("Empty view");
+        }
         return $this->view;
     }
 
@@ -51,34 +65,10 @@ class WidgetViewEvent extends Event
     }
 
     /**
-     * @param string $widgetType
-     *
-     * @return WidgetViewEvent
-     */
-    public function setWidgetType($widgetType)
-    {
-        $this->widgetType = $widgetType;
-
-        return $this;
-    }
-
-    /**
      * @return AbstractWidget
      */
     public function getWidget()
     {
         return $this->widget;
-    }
-
-    /**
-     * @param AbstractWidget $widget
-     *
-     * @return WidgetViewEvent
-     */
-    public function setWidget(AbstractWidget $widget)
-    {
-        $this->widget = $widget;
-
-        return $this;
     }
 }

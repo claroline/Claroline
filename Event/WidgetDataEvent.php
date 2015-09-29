@@ -18,6 +18,14 @@ class WidgetDataEvent extends Event
     protected $widget;
 
     /**
+     * @param string $widgetType
+     */
+    public function __construct($widgetType)
+    {
+        $this->widgetType = $widgetType;
+    }
+
+    /**
      * @return string
      */
     public function getWidgetType()
@@ -26,22 +34,14 @@ class WidgetDataEvent extends Event
     }
 
     /**
-     * @param string $widgetType
-     *
-     * @return WidgetFormViewEvent
-     */
-    public function setWidgetType($widgetType)
-    {
-        $this->widgetType = $widgetType;
-
-        return $this;
-    }
-
-    /**
      * @return AbstractWidget
+     * @throws \Exception
      */
     public function getWidget()
     {
+        if (null === $this->widget) {
+            throw new \Exception("Empty widget");
+        }
         return $this->widget;
     }
 

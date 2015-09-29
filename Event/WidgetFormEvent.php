@@ -24,23 +24,21 @@ class WidgetFormEvent extends Event
     protected $form;
 
     /**
+     * @param string         $widgetType
+     * @param AbstractWidget $widget
+     */
+    public function __construct($widgetType, AbstractWidget $widget)
+    {
+        $this->widgetType = $widgetType;
+        $this->data = $widget;
+    }
+
+    /**
      * @return string
      */
     public function getWidgetType()
     {
         return $this->widgetType;
-    }
-
-    /**
-     * @param string $widgetType
-     *
-     * @return WidgetFormViewEvent
-     */
-    public function setWidgetType($widgetType)
-    {
-        $this->widgetType = $widgetType;
-
-        return $this;
     }
 
     /**
@@ -52,22 +50,14 @@ class WidgetFormEvent extends Event
     }
 
     /**
-     * @param AbstractWidget $data
-     *
-     * @return WidgetFormEvent
-     */
-    public function setData(AbstractWidget $data)
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    /**
      * @return Form
+     * @throws \Exception
      */
     public function getForm()
     {
+        if (null === $this->form) {
+            throw new \Exception("Empty form");
+        }
         return $this->form;
     }
 
