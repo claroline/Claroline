@@ -303,6 +303,8 @@ class Builder extends ContainerAware
             'claroline_workspace_additional_action',
             new WorkspaceAdditionalActionEvent($factory, $menu, $workspace)
         );
+
+        return $menu;
     }
 
     public function workspaceUsersMenu(FactoryInterface $factory, array $options)
