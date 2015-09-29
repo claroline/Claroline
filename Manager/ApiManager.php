@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Transfer\Json\ValidationException;
 use UJM\ExoBundle\Transfer\Json\Validator;
@@ -123,7 +124,7 @@ class ApiManager
 
         return array_map(function ($question) {
             switch ($questionType = $question->getType()) {
-                case 'InteractionQCM':
+                case InteractionQCM::TYPE:
                     $data = $this->getQCM($question);
                     $type = 'application/x.choice+json';
                     break;
