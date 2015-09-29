@@ -693,9 +693,13 @@ class AdminSupportController extends Controller
 
         $status = $intervention->getStatus();
 
-        if (!is_null($status) && $status->getCode() === 'FA') {
+        if (!is_null($status)) {
             $ticket = $intervention->getTicket();
-            $ticket->setLevel(-1);
+            $ticket->setStatus($status);
+
+            if ($status->getCode() === 'FA') {
+                $ticket->setLevel(-1);
+            }
             $this->supportManager->persistTicket($ticket);
         }
 
@@ -946,6 +950,13 @@ class AdminSupportController extends Controller
 
         if ($form->isValid()) {
             $this->supportManager->persistIntervention($intervention);
+            $status = $intervention->getStatus();
+            $ticket->setStatus($status);
+
+            if ($status->getCode() === 'FA') {
+                $ticket->setLevel(-1);
+            }
+            $this->supportManager->persistTicket($ticket);
 
             return new RedirectResponse(
                 $this->router->generate(
