@@ -35,6 +35,11 @@ class OpenResourceEvent extends Event implements MandatoryEventInterface, DataCo
         return $this->resource;
     }
 
+    public function getResourceNode()
+    {
+        return $this->resource->getResourceNode();
+    }
+
     public function setResponse($response)
     {
         $this->response = $response;
