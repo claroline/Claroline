@@ -1,0 +1,47 @@
+<div id="modal-ticket-create-form" 
+     class="modal-dialog" 
+     role="dialog" 
+     aria-labelledby="modalLabel" 
+     aria-hidden="true"
+>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h3 class="modal-title">
+                {{ 'ticket_creation'|trans({}, 'support') }}
+            </h3>
+        </div>
+        <div class="modal-body">
+            <form id="group-tag-form"
+                  action="{{ 
+                      path(
+                          'formalibre_ticket_from_issue_create',
+                          {
+                              'user': user.getId(),
+                              'exceptionClass': exceptionClass,
+                              'message': message,
+                              'file': file,
+                              'line': line,
+                              'url': url,
+                              'referer': referer
+                          }
+                      )
+                  }}"
+                  method="POST"
+                  novalidate="novalidate"
+            > 
+                {{ form_widget(form) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <span class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({},'platform') }}
+            </span>
+            <button type="submit" id='create-btn' class="btn btn-primary">
+                {{ 'ok'|trans({},'platform') }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -392,6 +392,124 @@ class SupportController extends Controller
         return array('ticket' => $ticket);
     }
 
+    /**
+     * @EXT\Route(
+     *     "user/{user}/ticket/from/issue/{exceptionClass}/message/{message}/file/{file}/end_file/line/{line}/url/{url}/end_url/referer/{referer}/end_referer/create/form",
+     *     name="formalibre_ticket_from_issue_create_form",
+     *     options={"expose"=true},
+     *     requirements={"file"=".+", "url"=".+", "referer"=".+"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:ticketFromIssueCreateForm.html.twig")
+     */
+    public function ticketFromIssueCreateFormAction(
+        User $authenticatedUser,
+        User $user,
+        $exceptionClass,
+        $message,
+        $file,
+        $line,
+        $url,
+        $referer
+    )
+    {
+        $this->checkUser($authenticatedUser, $user);
+        $ticket = new Ticket();
+        $ticket->setContactMail($user->getMail());
+        $phone = $authenticatedUser->getPhone();
+
+        if (is_null($phone)) {
+            $ticket->setContactPhone('-');
+        } else {
+            $ticket->setContactPhone($phone);
+        }
+        $ticket->setTitle($message);
+        $form = $this->formFactory->create(new TicketType(1), $ticket);
+
+        return array(
+            'form' => $form->createView(),
+            'user' => $user,
+            'exceptionClass' => $exceptionClass,
+            'message' => $message,
+            'file' => $file,
+            'line' => $line,
+            'url' => $url,
+            'referer' => $referer
+        );
+    }
+
+    /**
+     * @EXT\Route(
+     *     "user/{user}/ticket/from/issue/{exceptionClass}/message/{message}/file/{file}/end_file/line/{line}/url/{url}/end_url/referer/{referer}/end_referer/create",
+     *     name="formalibre_ticket_from_issue_create",
+     *     options={"expose"=true},
+     *     requirements={"file"=".+", "url"=".+", "referer"=".+"}
+     * )
+     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:Support:ticketFromIssueCreateForm.html.twig")
+     */
+    public function ticketFromIssueCreateAction(
+        User $authenticatedUser,
+        User $user,
+        $exceptionClass,
+        $message,
+        $file,
+        $line,
+        $url,
+        $referer
+    )
+    {
+        $this->checkUser($authenticatedUser, $user);
+        $ticket = new Ticket();
+        $ticket->setUser($user);
+        $form = $this->formFactory->create(new TicketType(1), $ticket);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $content = $ticket->getDescription();
+            $content .=
+                "<br><br>--------------------------------------------------------<br><br>" .
+                "Uncaught PHP $exceptionClass Exception: \"$message\" at $file line $line" .
+                '<br><br>URL : ' .
+                $url .
+                '<br>Referer : ' .
+                $referer .
+                '<br><br>--------------------------------------------------------<br><br>';
+            $ticket->setDescription($content);
+            $num = $this->supportManager->generateTicketNum($authenticatedUser);
+            $ticket->setNum($num);
+            $now = new \DateTime();
+            $ticket->setCreationDate($now);
+            $type = $this->supportManager->getOneTypeByName('technical');
+
+            if (!is_null($type)) {
+                $ticket->setType($type);
+            } else {
+                $types = $this->supportManager->getAllTypes();
+
+                if (count($types) > 0) {
+                    $ticket->setType($types[0]);
+                }
+            }
+            $this->supportManager->persistTicket($ticket);
+            $this->supportManager->sendTicketMail($authenticatedUser, $ticket, 'new_ticket');
+
+            return new JsonResponse('success', 200);
+        } else {
+
+            return array(
+                'form' => $form->createView(),
+                'user' => $user,
+                'exceptionClass' => $exceptionClass,
+                'message' => $message,
+                'file' => $file,
+                'line' => $line,
+                'url' => $url,
+                'referer' => $referer
+            );
+        }
+    }
+
     private function checkTicketAccess(User $user, Ticket $ticket)
     {
         if ($user->getId() !== $ticket->getUser()->getId()) {
@@ -407,6 +525,14 @@ class SupportController extends Controller
         if ($user->getId() !== $ticket->getUser()->getId() ||
             count($interventions) > 0 ||
             $ticket->getLevel() !== 0) {
+
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkUser(User $authenticateUser, User $user)
+    {
+        if ($user->getId() !== $authenticateUser->getId()) {
 
             throw new AccessDeniedException();
         }
