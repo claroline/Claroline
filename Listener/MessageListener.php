@@ -84,6 +84,25 @@ class MessageListener
     }
 
     /**
+     * @DI\Observe("claroline_workspace_users_action")
+     *
+     * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
+     */
+    public function onWorkspaceUsersConfigureMessage(ContactAdditionalActionEvent $event)
+    {
+        $user = $event->getUser();
+
+            $menu = $event->getMenu();
+            $messageMenuLink = $menu->addChild(
+                $this->translator->trans('messages', array(), 'platform'),
+                array('route' => 'claro_message_show')
+            )
+            ->setExtra('icon', 'fa fa-envelope')
+            ->setExtra('qstring', 'userIds[]=' . $user->getId())
+            ->setExtra('title', $this->translator->trans('message', array(), 'platform'));
+    }
+
+    /**
      * @DI\Observe("claroline_message_sending")
      *
      * @param Claroline\CoreBundle\Event\SendMessageEvent $event
