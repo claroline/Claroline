@@ -1,6 +1,6 @@
 <?php
 
-namespace Icap\PortfolioBundle\Form\Type\Widgets;
+namespace Icap\BadgeBundle\Form\Type\Portfolio;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
@@ -32,16 +32,16 @@ class BadgesBadgeType extends AbstractType
 
     public function getName()
     {
-        return 'icap_portfolio_widget_form_badges_badge';
+        return 'icap_badge_portfolio_widget_form_badges_badge';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(
-                'data_class'         => 'Icap\PortfolioBundle\Entity\Widget\BadgesWidgetBadge',
-                'translation_domain' => 'icap_portfolio',
-                'csrf_protection'    => false,
+                'data_class' => 'Icap\BadgeBundle\Entity\Portfolio\BadgesWidgetBadge',
+                'translation_domain' => 'icap_badge',
+                'csrf_protection' => false,
             )
         );
     }

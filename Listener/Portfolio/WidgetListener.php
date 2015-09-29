@@ -4,10 +4,12 @@ namespace Icap\BadgeBundle\Listener\Portfolio;
 
 use Icap\BadgeBundle\Factory\Portfolio\WidgetFactory;
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
+use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
 
 /**
  * @DI\Service()
@@ -25,15 +27,22 @@ class WidgetListener
     protected $widgetFactory;
 
     /**
+     * @var FormFactory
+     */
+    protected $formFactory;
+
+    /**
      * @DI\InjectParams({
      *     "templatingEngine" = @DI\Inject("templating"),
-     *     "widgetFactory" = @DI\Inject("icap_badge.factory.portfolio_widget")
+     *     "widgetFactory" = @DI\Inject("icap_badge.factory.portfolio_widget"),
+     *     "formFactory" = @DI\Inject("form.factory"),
      * })
      */
-    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory)
+    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory)
     {
         $this->templatingEngine = $templatingEngine;
         $this->widgetFactory = $widgetFactory;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -64,5 +73,15 @@ class WidgetListener
     public function onWidgetView(WidgetViewEvent $widgetViewEvent)
     {
         $widgetViewEvent->setView($this->templatingEngine->render('IcapBadgeBundle:Portfolio:' . $widgetViewEvent->getWidgetType() . '.html.twig', array('widget' => $widgetViewEvent->getWidget())));
+    }
+
+    /**
+     * @param WidgetFormEvent $widgetFormEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_form_badges")
+     */
+    public function onWidgetForm(WidgetFormEvent $widgetFormEvent)
+    {
+        $widgetFormEvent->setForm($this->formFactory->create('icap_badge_portfolio_widget_form_' . $widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
     }
 }
