@@ -15,11 +15,6 @@ class MigrationUpdater extends Updater
      */
     private $entityManager;
 
-    /**
-     * @var \Claroline\CoreBundle\Entity\Plugin
-     */
-    private $badgePlugin;
-
     public function __construct(ContainerInterface $container)
     {
         $this->entityManager = $container->get('doctrine.orm.entity_manager');
