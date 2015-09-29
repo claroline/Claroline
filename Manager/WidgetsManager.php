@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
 use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\AbstractWidget;
+use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
@@ -79,14 +80,14 @@ class WidgetsManager
      */
     public function getView(AbstractWidget $widget, $widgetType)
     {
-        $widgetFormEvent = new WidgetViewEvent();
-        $widgetFormEvent
+        $widgetViewEvent = new WidgetViewEvent();
+        $widgetViewEvent
             ->setWidgetType($widgetType)
             ->setWidget($widget);
 
-        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetFormEvent);
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_view_' . $widgetType, $widgetViewEvent);
 
-        return $widgetFormEvent->getView();
+        return $widgetViewEvent->getView();
     }
 
     /**
@@ -96,23 +97,30 @@ class WidgetsManager
      */
     public function getFormView($widgetType)
     {
-        $widgetFormEvent = new WidgetFormViewEvent();
-        $widgetFormEvent->setWidgetType($widgetType);
+        $widgetFormViewEvent = new WidgetFormViewEvent();
+        $widgetFormViewEvent->setWidgetType($widgetType);
 
-        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $widgetType, $widgetFormEvent);
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_view_' . $widgetType, $widgetFormViewEvent);
 
-        return $widgetFormEvent->getFormView();
+        return $widgetFormViewEvent->getFormView();
     }
 
     /**
-     * @param string $widgetType
-     * @param object $data
+     * @param string         $widgetType
+     * @param AbstractWidget $data
      *
      * @return \Symfony\Component\Form\Form|\Symfony\Component\Form\FormInterface
      */
-    public function getForm($widgetType, $data)
+    public function getForm($widgetType, AbstractWidget $data)
     {
-        return $this->formFactory->create('icap_portfolio_widget_form_' . $widgetType, $data);
+        $widgetFormEvent = new WidgetFormEvent();
+        $widgetFormEvent
+            ->setWidgetType($widgetType)
+            ->setData($data);
+
+        $this->eventDispatcher->dispatch('icap_portfolio_widget_form_' . $widgetType, $widgetFormEvent);
+
+        return $widgetFormEvent->getForm();
     }
 
     /**

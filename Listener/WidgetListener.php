@@ -3,11 +3,14 @@
 namespace Icap\PortfolioBundle\Listener;
 
 use Icap\PortfolioBundle\Event\WidgetDataEvent;
+use Icap\PortfolioBundle\Event\WidgetFormEvent;
 use Icap\PortfolioBundle\Event\WidgetFormViewEvent;
 use Icap\PortfolioBundle\Event\WidgetViewEvent;
 use Icap\PortfolioBundle\Factory\WidgetFactory;
+use Icap\PortfolioBundle\Manager\WidgetsManager;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\FormFactory;
 
 /**
  * @DI\Service()
@@ -25,15 +28,22 @@ class WidgetListener
     protected $widgetFactory;
 
     /**
+     * @var FormFactory
+     */
+    protected $formFactory;
+
+    /**
      * @DI\InjectParams({
      *     "templatingEngine" = @DI\Inject("templating"),
-     *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget")
+     *     "widgetFactory" = @DI\Inject("icap_portfolio.factory.widget"),
+     *     "formFactory" = @DI\Inject("form.factory"),
      * })
      */
-    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory)
+    public function __construct(EngineInterface $templatingEngine, WidgetFactory $widgetFactory, FormFactory $formFactory)
     {
         $this->templatingEngine = $templatingEngine;
         $this->widgetFactory = $widgetFactory;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -73,8 +83,22 @@ class WidgetListener
      * @DI\Observe("icap_portfolio_widget_view_formations")
      * @DI\Observe("icap_portfolio_widget_view_experience")
      */
-    public function onWidgetmView(WidgetViewEvent $widgetViewEvent)
+    public function onWidgetView(WidgetViewEvent $widgetViewEvent)
     {
         $widgetViewEvent->setView($this->templatingEngine->render('IcapPortfolioBundle:templates:' . $widgetViewEvent->getWidgetType() . '.html.twig', array('widget' => $widgetViewEvent->getWidget())));
+    }
+
+    /**
+     * @param WidgetFormEvent $widgetFormEvent
+     *
+     * @DI\Observe("icap_portfolio_widget_form_userInformation")
+     * @DI\Observe("icap_portfolio_widget_form_text")
+     * @DI\Observe("icap_portfolio_widget_form_skills")
+     * @DI\Observe("icap_portfolio_widget_form_formations")
+     * @DI\Observe("icap_portfolio_widget_form_experience")
+     */
+    public function onWidgetForm(WidgetFormEvent $widgetFormEvent)
+    {
+        $widgetFormEvent->setForm($this->formFactory->create('icap_portfolio_widget_form_' . $widgetFormEvent->getWidgetType(), $widgetFormEvent->getData()));
     }
 }
