@@ -86,7 +86,8 @@ class PlatformConfigurationHandler
         'locales' => array('fr', 'en', 'es'),
         'domain_name' => null,
         'platform_url' => null,
-        'mailer_from' => null
+        'mailer_from' => null,
+        'default_workspace_tag' => null,
     );
     private $lockedParameters;
 
