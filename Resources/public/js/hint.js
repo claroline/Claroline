@@ -1,18 +1,13 @@
 var containerH = $('div[id$="_question_hints"]'); // Div which contain the dataprototype
-
-console.log(containerH)
-
 var tableHints = $('#tableHint'); // div which contain the hints array
 
 function newHint(label, penalty, addHint, deleteHint) {
-
     $('#divHint').find('.form-collection-add').remove();
 
     var begin = true;
 
     // create the button to add a hint
    var add = $('<a href="#" id="add_hint" class="btn btn-primary"><i class="fa fa-plus"></i>&nbsp;'+addHint+'</a>');
- // var add = $('<a href="#" id="add_hint" class="btn btn-default" >'+addHint+'</a>');
 
     // Add the button after the table
     tableHints.append(add);

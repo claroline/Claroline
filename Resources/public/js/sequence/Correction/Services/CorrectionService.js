@@ -53,6 +53,7 @@
                             console.log('QuestionService, getStepQuestions method error');
                             console.log(status);
                             console.log(data);
+                            deferred.reject([]);
                         });
                         return deferred.promise;
                 }

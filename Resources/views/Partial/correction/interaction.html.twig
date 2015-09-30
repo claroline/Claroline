@@ -3,5 +3,10 @@
     <hr/>
 {% endif %}
 
-{{ inter.question.description|raw }}
+{% if inter.question.description %}
+    <p>{{ inter.question.description|raw }}</p>
+    <hr/>
+{% endif %}
+
+{{ inter.question.invite|raw }}
 <hr/>

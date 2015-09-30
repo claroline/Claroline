@@ -131,7 +131,7 @@
             <td class="classic">{{ question.category.value }}</td>
             <td class="classic"><a href="{{ path('ujm_question_show', { 'id': question.id, 'exoID': exerciseID }) }}">{{ question.title }}</a></td>
             <td class="classic">{{ question.type|trans({}, 'ujm_exo') }}</td>
-            <td class="classic">{{ question.description|raw }}</td>
+            <td class="classic">{{ question.invite|raw }}</td>
             {% if rights['dispSharedBy'] %}
                 <td class="classic">
                     {{ question.user.firstName }} {{ question.user.lastName }}
@@ -214,7 +214,7 @@
                 {% if rights['allowDeleteQuestionOfExercise'] %}
                     <a class="btn btn-default" title="{{ 'delete_of_my_exercise' | trans({}, 'ujm_exo') }}" data-toggle="tooltip"
                        href="{{ path('ujm_exercise_question_delete', {
-                            'exoID': exerciseID, 'qid': question.id, 'pageNow': pagerQuestion.getCurrentPage,
+                            'id': exerciseID, 'qid': question.id, 'pageNow': pagerQuestion.getCurrentPage,
                             'maxPage': pagerQuestion.maxPerPage, 'nbItem': pagerQuestion.getNbResults,
                             'lastPage': pagerQuestion.getNbPages }) }}">
                         <i class="fa fa-trash-o"></i>

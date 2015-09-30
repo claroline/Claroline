@@ -42,8 +42,8 @@
                         <td class="classic">{{ user.firstName }}</td>
                         <td class="classic"><input id="allowToEditQ_{{ user.id }}" type="checkbox" /></td>
                         <td class="classic">
-                            <a href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.id }}'
-                            ,'{{ 'already' | trans({}, 'ujm_exo') }} ...','{{ 'self' | trans({}, 'ujm_exo') }} ...');"><i class="fa fa-share-square-o"></i>
+                            <a class="btn btn-default" href="#" onclick="shareQuestionUser('{{ path('ujm_question_shareQuestionUser') }}','{{ user.id }}'
+                            ,'{{ 'already' | trans({}, 'ujm_exo') }} ...','{{ 'self' | trans({}, 'ujm_exo') }} ...');"><i class="fa fa-share"></i>
                             </a>
                         </td>
                     </tr>
