@@ -10,6 +10,7 @@ use Innova\CollecticielBundle\Entity\Drop;
 use Innova\CollecticielBundle\Entity\Dropzone;
 use Innova\CollecticielBundle\Event\Log\LogDocumentCreateEvent;
 use Innova\CollecticielBundle\Event\Log\LogDocumentDeleteEvent;
+use Innova\CollecticielBundle\Event\Log\LogDropzoneManualRequestSentEvent;
 use Innova\CollecticielBundle\Event\Log\LogDocumentOpenEvent;
 use Innova\CollecticielBundle\Form\DocumentDeleteType;
 use Innova\CollecticielBundle\Form\DocumentType;
@@ -444,7 +445,7 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
      * @Route(
      *      "/document/{documentId}",
      *      name="innova_collecticiel_validate_document",
-     *      requirements={"documentId" = "\d+"},
+     *      requirements={"documentId" = "\d+", "dropzoneId" = "\d+"},
      *      options={"expose"=true}
      * )
      * @ParamConverter("document", class="InnovaCollecticielBundle:Document", options={"id" = "documentId"})
@@ -461,9 +462,28 @@ Travail effectué : changement de route et ajout d'un paramètre pour cette nouv
         // Mise à jour du booléen de Validation de false à true
         $doc->setvalidate(true);
 
+        // Récupération du dropID puis du dropZone
+        $dropId = $document->getDrop()->getId();
+var_dump("dropId = " . $dropId);
+
+        $dropRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:Drop')
+        ->findBy(array('id' => $dropId));
+//var_dump($dropRepo);
+var_dump($dropRepo[0]->getDropZone());
+die();
+
+        $dropzoneRepo = $this->getDoctrine()->getManager()->getRepository('InnovaCollecticielBundle:DropZone')
+        ->findBy(array('id' => $dropRepo->getDropzone()->getId()));
+
+
         // Mise à jour de la base de données
         $em->persist($doc);
         $em->flush();
+
+        $usersIds = $document->getSender();
+        $event = new LogDropzoneManualRequestSentEvent($document, "titi", $usersIds, $dropzone);
+        $this->get('event_dispatcher')->dispatch('log', $event);
+var_dump("LOG OK !!!!!!!!!!");
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get("templating")->

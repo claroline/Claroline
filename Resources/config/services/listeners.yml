@@ -47,6 +47,7 @@ services:
                 - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-correction_report,               method: onCreateLogDetails }
                 - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-drop_grade_available,            method: onCreateLogDetails }
                 - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-dropzone_manual_state_changed,   method: onCreateLogDetails }
+                - { name: kernel.event_listener, event: create_log_details_resource-innova_dropzone-dropzone_manual_request_sent,    method: onCreateLogDetails }
 
     innova.listener.dropzone.notification_listener:
             class: Innova\CollecticielBundle\Listener\NotificationListener
@@ -57,4 +58,5 @@ services:
                 - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-correction_report,                method: onCreateNotificationItem }
                 - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-drop_grade_available,             method: onCreateNotificationItem }
                 - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-dropzone_manual_state_changed,    method: onCreateNotificationItem }
+                - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-dropzone_manual_request_sent,     method: onCreateNotificationItem }
                 - { name: kernel.event_listener, event: create_notification_item_resource-innova_dropzone-drop_end,                         method: onCreateNotificationItem }
