@@ -20,6 +20,9 @@ meta_max_attempts: Maximum attempts
 
 # q
 question_hints: Hints
+question_hint_label: Hint
+question_hint_show_title: Show hint
+question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 question_objects: Objects
 question_global_feedback: Global feedback
 question_resources: Resources
@@ -33,7 +36,6 @@ question_cloze_text: Cloze text
 question_solutions: Solutions
 question_solution_answers: Answer(s)
 question_solution_score: Score
-question_show_hint_confirm: Are you sure you want to see this hint ? <br/> This will give you a penalty of %1% points.
 
 # s
 sequence_step: Step
@@ -63,4 +65,3 @@ sequence_nb_attempts: Attempt N° %1%
 sequence_next_step_confirm: Are you sure you want to end the current step ? <br/> Yon won't be able to go back.
 sequence_end_sequence_confirm: Are you sure you want to go to finish the sequence ? <br/> Yon won't be able to edit your answers.
 step_question_shuffle: Shuffle question order for this step
-

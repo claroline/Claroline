@@ -5,13 +5,12 @@ namespace UJM\ExoBundle\Controller\Sequence;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use UJM\ExoBundle\Entity\Sequence\Sequence;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Question;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Description of SequenceController.
@@ -22,53 +21,166 @@ class SequenceController extends Controller
     /**
      * Play the selected Exercise
      * @Route("/play/{id}", requirements={"id" = "\d+"}, name="ujm_exercise_play", options={"expose"=true})
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * @Method("GET")
      */
     public function playAction(Exercise $exercise)
     {
-        // get user id
-        // $user = $this->container->get('security.token_storage')->getToken()->getUser()
-        // check if exercise has a limited number of attempts
-        // if true check if user can play the test (number of attempts already done)
-        $attempts = 1; // number of attempts for the exercise, default value = 1 = first attempt
-        // else redirect user to error page (or exercise home page with message)
-        
-        /*
-        // DATA from API        
-        $manager = $this->get('ujm.exo.api_manager');
-        $exo = $manager->exportExercise($exercise);
+        // get user
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        $steps = json_encode($exo['steps']);
-        $data = json_encode($exo);
-        */
-        
+        // get number of attempts already done by user
+        $nbAttempts = $this->container->get('ujm.exo_exercise')->getNbPaper($user->getId(), $exercise->getId());
+        $maxAttempts = $exercise->getMaxAttempts();
+
+        // check if exercise has a limited number of attempts and if curent user has reached this maximum
+        /* if($maxAttempts > 0 && $nbAttempts >= $maxAttempts){
+          $msg = $this->get('translator')->trans('sequence_max_attempts_reached', array(), 'ujm_sequence');
+          $this->get('session')->getFlashBag()->set('error', $msg);
+          // redirect to exercise home page
+          return $this->redirect($this->generateUrl('ujm_exercise_open', array('id' => $exercise->getId())));
+          } */
+
+        // if a paper exist for the user and exercise get it with steps order
+        // 
+        //
+        // DATA from API this API method should :
+        // - check exercise availablility
+        // - return a json object with : 
+        //      - exercise data (steps, questions per step, meta per step, choices per question, hints per question...)
+        //      - first unfinished paper if exists with :
+        //          - anwsers previously given by the student
+        //          - step order
+        /*
+          $apiManager = $this->get('ujm.exo.api_manager');
+          $exo = $apiManager->exportExercise($exercise);
+          $steps = json_encode($exo['steps']); // get step order if previous paper
+          $data = json_encode($exo);
+         */
+
+        $previousPaper = array(
+            'id' => '2',
+            'steps' => array(
+                array(
+                    'id' => '1',
+                    'answers' => array(
+                        array(
+                            'answer_id' => '7',
+                            'question_id' => '1',
+                            'choices' => ['1']
+                        )
+                    ),
+                    'hints' => [
+                        array(
+                            'id' => "12", 
+                            'penalty' => 1.5,
+                            'text' => "I'm hint number 12"
+                        )
+                    ]
+                ),
+                array(
+                    'id' => '7',
+                    'answers' => '',
+                    'hints' => ''
+                )
+            )
+        ); // previous or new
+        // should contain step order, questions per step, hints used per question, anwser given per question
+        $paper = json_encode($previousPaper);
+
+
+
         // FAKE Data for development!!
         $exo = $this->getExercise(2, "choice");
+        // to do : if question.randomize = true edit questions (steps) order
         $steps = json_encode($exo['steps']);
         $data = json_encode($exo);
-        
-        
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,
                     'steps' => $steps,
                     'sequence' => $data,
-                    'attempts' => $attempts
-            )
+                    'attempts' => $nbAttempts,
+                    'paper' => $paper
+                        )
         );
     }
-    
+
     /**
-     * Show the sequence correction
-     *
-     * @Route("/correct/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_correction", options={"expose"=true})
-     * @ParamConverter("Exercise", class="UJMExoBundle:Exercise")
+     * @Route("hints/{id}", name="ujm_get_hint_content", options={"expose"=true})
+     * @param Request $request
+     * @Method("GET")
      */
-    public function correctionAction(Exercise $exercise)
+    public function getHint(Request $request)
     {
-        
+        $searched = $request->get('id');
+
+        $hints = [
+            array(
+                "id" => "27",
+                "penalty" => 1,
+                "text" => "I'm hint number 27"
+            ),
+            array(
+                "id" => "12",
+                "penalty" => 1.5,
+                "text" => "I'm hint number 27"
+            ),
+            array(
+                "id" => "54",
+                "penalty" => 2,
+                "text" => "I'm hint number 54"
+            ),
+            array(
+                "id" => "75",
+                "penalty" => 1,
+                "text" => "I'm hint number 75"
+            )
+        ];
+        $response = array();
+        $response['status'] = 'success';
+        $response['messages'] = array();
+        $response['data'] = 'youplaboum';
+        foreach ($hints as $hint) {
+            if ($hint["id"] === $searched) {
+                $response['data'] = $hint;
+            }
+        }
+        return new JsonResponse($response);
     }
-    
+
+    /**
+     * Each time a student navigate through question / step we have to record the current answer
+     * the answer object might have an id in this case we update the previous record else we create a new one
+     * @Route("/record/{exo_id}/question/{question_id}", name="ujm_sequence_record_step", options={"expose"=true})
+     * @Method("PUT")
+     * @ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"id" = "exo_id"})
+     * @ParamConverter("question", class="UJMExoBundle:Question", options={"id" = "question_id"})
+     */
+    public function saveProgression(Exercise $exercise, Question $question, Request $request)
+    {
+        $sequenceManager = $this->get('ujm.exo.sequence_manager');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        // get answer data
+        $data = $request->get('data');
+        $response = $sequenceManager->saveProgression($user, $exercise, $question, $data);
+        return new JsonResponse($response);
+    }
+
+    /**
+     * @Route("/end/{id}", requirements={"id" = "\d+"}, name="ujm_sequence_end", options={"expose"=true})
+     * @Method("PUT")
+     */
+    public function endSequence(Exercise $exercise)
+    {
+        $sequenceManager = $this->get('ujm.exo.sequence_manager');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $response = $sequenceManager->endSequence($user, $exercise);
+
+        // if response[message] === success
+
+        return $this->redirect($this->generateUrl('ujm_exercise_open', array('id' => $exercise->getId())));
+    }
+
     private function getExercise($metaNb, $type)
     {
         $base64Img1 = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
@@ -116,7 +228,7 @@ class SequenceController extends Controller
                 "maxAttempts" => 4
             );
         }
-        
+
         // SORT QUESTION
         if ($type === "sort") {
             $step1 = array(
@@ -126,16 +238,16 @@ class SequenceController extends Controller
                         "title" => "Question ?",
                         "type" => "application/x.sort+json",
                         "items" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "text/plain",
-                            "data" => "Item A"
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
+                            array(
+                                "id" => 2,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
                         )
                     )
                 )
@@ -148,34 +260,31 @@ class SequenceController extends Controller
                         "title" => "Question ?",
                         "type" => "application/x.sort+json",
                         "items" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "image/jpg",
-                            "url" => $webImg1
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "image/jpg",
-                            "url" => $webImg2
-                          ),
-                          array(
-                            "id" => 4,
-                            "type" => "image/jpg",
-                            "url" => $webImg3
-                          )
+                            array(
+                                "id" => 2,
+                                "type" => "image/jpg",
+                                "url" => $webImg1
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "image/jpg",
+                                "url" => $webImg2
+                            ),
+                            array(
+                                "id" => 4,
+                                "type" => "image/jpg",
+                                "url" => $webImg3
+                            )
                         ),
                         "solution" => array(
-                          "itemIds" => [3, 4, 2],
-                          "itemScore" => 1.5
+                            "itemIds" => [3, 4, 2],
+                            "itemScore" => 1.5
                         ),
                         "feedback" => "Lorem ipsum dolor sit amet"
                     )
                 )
             );
-        
-        }
-        
-        else if ($type === "match") {
+        } else if ($type === "match") {
             $step1 = array(
                 "id" => 1,
                 "items" => array(
@@ -183,28 +292,28 @@ class SequenceController extends Controller
                         "title" => "Question ?",
                         "type" => "application/x.match+json",
                         "firstSet" => array(
-                          array(
-                            "id" => 2,
-                            "type" => "text/plain",
-                            "data" => "Item A"
-                          ),
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
+                            array(
+                                "id" => 2,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
                         ),
                         "secondSet" => array(
-                          array(
-                            "id" => 4,
-                            "type" => "text/plain",
-                            "data" => "Item C"
-                          ),
-                          array(
-                            "id" => 5,
-                            "type" => "text/plain",
-                            "data" => "Item D"
-                          )
+                            array(
+                                "id" => 4,
+                                "type" => "text/plain",
+                                "data" => "Item C"
+                            ),
+                            array(
+                                "id" => 5,
+                                "type" => "text/plain",
+                                "data" => "Item D"
+                            )
                         )
                     )
                 )
@@ -217,49 +326,46 @@ class SequenceController extends Controller
                         "title" => "Question ?",
                         "type" => "application/x.match+json",
                         "firstSet" => array(
-                          array(
-                            "id" => 3,
-                            "type" => "text/plain",
-                            "data" => "It
-em A"
-                          ),
-                          array(
-                            "id" => 4,
-                            "type" => "text/plain",
-                            "data" => "Item B"
-                          )
+                            array(
+                                "id" => 3,
+                                "type" => "text/plain",
+                                "data" => "Item A"
+                            ),
+                            array(
+                                "id" => 4,
+                                "type" => "text/plain",
+                                "data" => "Item B"
+                            )
                         ),
                         "secondSet" => array(
-                          array(
-                            "id" => 5,
-                            "type" => "image/png",
-                            "url" => $webImg2
-                          ),
-                          array(
-                            "id" => 6,
-                            "type" => "image/png",
-                            "url" => $webImg3
-                          )
+                            array(
+                                "id" => 5,
+                                "type" => "image/png",
+                                "url" => $webImg2
+                            ),
+                            array(
+                                "id" => 6,
+                                "type" => "image/png",
+                                "url" => $webImg3
+                            )
                         ),
                         "solutions" => array(
-                          array(
-                            "firstId" => 3,
-                            "secondId" => 6,
-                            "score" => 1.5
-                          ),
-                          array(
-                            "firstId" => 4,
-                            "secondId" => 5,
-                            "score" => 1
-                          )
+                            array(
+                                "firstId" => 3,
+                                "secondId" => 6,
+                                "score" => 1.5
+                            ),
+                            array(
+                                "firstId" => 4,
+                                "secondId" => 5,
+                                "score" => 1
+                            )
                         ),
                         "feedback" => "Lorem ipsum dolor sit amet."
                     )
                 )
             );
-        }
-        
-        else if ($type === "cloze") {
+        } else if ($type === "cloze") {
             // CLOZE QUESTION
             $step1 = array(
                 "id" => 1,
@@ -269,15 +375,15 @@ em A"
                         "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
                         "holes" => array(
-                          array(
-                            "id" => 1,
-                            "size" => 20
-                          ),
-                          array(
-                            "id" => 2,
-                            "size" => 14,
-                            "placeholder" => "(verb)"
-                          )
+                            array(
+                                "id" => 1,
+                                "size" => 20
+                            ),
+                            array(
+                                "id" => 2,
+                                "size" => 14,
+                                "placeholder" => "(verb)"
+                            )
                         )
                     )
                 )
@@ -291,28 +397,28 @@ em A"
                         "title" => "Question ?",
                         "type" => "application/x.cloze+json",
                         "text" => "Lorem [[1]] dolor sit [[2]].",
-                        "feedback" => "Global feedback", 
+                        "feedback" => "Global feedback",
                         "holes" => array(
-                          array(
-                            "id" => 1,
-                            "choices" => ["foo", "ipsum", "bar"]
-                          ),
-                          array(
-                            "id" => 2,
-                            "size" => 10
-                          )
+                            array(
+                                "id" => 1,
+                                "choices" => ["foo", "ipsum", "bar"]
+                            ),
+                            array(
+                                "id" => 2,
+                                "size" => 10
+                            )
                         ),
                         "solutions" => array(
-                          array(
-                            "holeId" => 1,
-                            "answers" => ["ipsum"],
-                            "score" => 1.5
-                          ),
-                          array(
-                            "holeId" => 2,
-                            "answers" => ["amet", "consecitur", "nunc"],
-                            "score" => 3.5
-                          )
+                            array(
+                                "holeId" => 1,
+                                "answers" => ["ipsum"],
+                                "score" => 1.5
+                            ),
+                            array(
+                                "holeId" => 2,
+                                "answers" => ["amet", "consecitur", "nunc"],
+                                "score" => 3.5
+                            )
                         )
                     )
                 )
@@ -329,7 +435,16 @@ em A"
                         "random" => false,
                         "multiple" => false,
                         "feedback" => "Global feedback",
-                        "hints" => "",
+                        "hints" => array(
+                            array(
+                                "id" => "12",
+                                "penalty" => 1
+                            ),
+                            array(
+                                "id" => "54",
+                                "penalty" => 2
+                            )
+                        ),
                         "choices" => array(
                             array(
                                 "id" => "1",
@@ -390,12 +505,10 @@ em A"
                         "hints" => array(
                             array(
                                 "id" => "27",
-                                "text" => "Lorem",
                                 "penalty" => 1
                             ),
                             array(
                                 "id" => "75",
-                                "text" => "Ipsum",
                                 "penalty" => 1.5
                             )
                         ),
@@ -442,4 +555,5 @@ em A"
             "steps" => $steps);
         return $data;
     }
+
 }

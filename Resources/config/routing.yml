@@ -53,17 +53,8 @@ all_qti:
 sequence:
     resource: "@UJMExoBundle/Controller/Sequence/SequenceController.php"
     type: annotation
-    prefix: /sequence    
-   
-sequence_steps:
-    resource: "@UJMExoBundle/Controller/Sequence/StepController.php"
-    type: annotation
-    prefix: /page
-    
-sequence_step_questions:
-    resource: "@UJMExoBundle/Controller/Sequence/StepQuestionController.php"
-    type: annotation
-    prefix: /step-question
+    prefix: /    
+  
 
 ujm_exercise:
     resource: "@UJMExoBundle/Controller/ExerciseController.php"

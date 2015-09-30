@@ -8,54 +8,33 @@
         '$http',
         '$filter',
         '$q',
-        function QuestionService($http, $filter, $q) {       
-           
+        function QuestionService($http, $filter, $q) {            
 
             return {
                
                 /**
-                 * Get all available questions
+                 * Get an hint
                  * @returns promise
                  */
-                getAll : function (){
+                getHint : function (_id){
                     var deferred = $q.defer(); 
                     $http
                         .get(
-                            Routing.generate('ujm_step_get_available_questions')
+                            Routing.generate('ujm_get_hint_content', { id : _id })
                         )
                         .success(function (response){
                             deferred.resolve(response);
                         })
                         .error(function(data, status){
-                            console.log('QuestionService, getAll method error');
+                            console.log('QuestionService, getHint method error');
                             console.log(status);
                             console.log(data);
                             deferred.reject([]);
                         });
                         
                      return deferred.promise;
-                },
-                /**
-                 * get questions for a step
-                 * @param sequence
-                 * @returns 
-                 */
-                getStepQuestions : function (step){
-                    var deferred = $q.defer();                    
-                    $http
-                        .get(
-                            Routing.generate('ujm_step_get_questions', { id : step.id })
-                        )
-                        .success(function (response){
-                            deferred.resolve(response);
-                        })
-                        .error(function(data, status){
-                            console.log('QuestionService, getStepQuestions method error');
-                            console.log(status);
-                            console.log(data);
-                        });
-                        return deferred.promise;
                 }
+                      
             };
         }
     ]);

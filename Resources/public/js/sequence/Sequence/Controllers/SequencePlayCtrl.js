@@ -1,33 +1,33 @@
 (function () {
     'use strict';
 
-    angular.module('Sequence').controller('SequencePlayCtrl', [        
-        '$ngBootbox',
+    angular.module('Sequence').controller('SequencePlayCtrl', [
+        '$window',
         'SequenceService',
         'CommonService',
-        function ($ngBootbox, SequenceService, CommonService) {
+        function ($window, SequenceService, CommonService) {
 
             this.sequence = {};
             this.currentStep = {};
             this.steps = {};
             this.nbAttempts = 1;
-            this.studentResults = Array();
             this.isLastStep = false;
             this.isFirstStep = true;
-
 
             /**
              * Init the sequence
              * @param {object} sequence
              * @param {object} sequence steps
+             * @param {object} sequence paper
              * @param {number} number of attempts already done
              */
-            this.init = function (sequence, steps, attempts) {
-                // need to set the sequence in CommonService so that other directives can retrieve the info
-                this.sequence = CommonService.setSequence(sequence);
+            this.init = function (sequence, steps, paper, nbAttempts) {
+                // need to set the sequence and paper in CommonService so that other directives can retrieve the info
+                this.sequence = CommonService.setSequence(sequence);                
+                CommonService.setPaper(paper);
                 this.steps = steps;
+                this.nbAttempts = nbAttempts;
                 this.setCurrentStep(0);
-                this.nbAttempts = attempts;
             };
 
             /**
@@ -37,8 +37,21 @@
                 return CommonService.objectHasOtherMeta(this.sequence);
             };
 
+            /**
+             * Check data validity and set current step
+             * also set the current paper step for questions directive (previously used hints and given answers)
+             * @param {number} index
+             */
             this.setCurrentStep = function (index) {
-                this.currentStep = this.steps[index];
+                this.isFirstStep = index === 0;
+                this.isLastStep = index === this.steps.length - 1;
+                // check new index is in computable range
+                if (index < this.steps.length && index >= 0) {
+                    this.currentStep = this.steps[index];
+                    CommonService.setCurrentPaperStep(index);
+                } else {
+                    console.log('set current step error');
+                }
             };
 
             this.getCurrentStep = function () {
@@ -51,77 +64,67 @@
              */
             this.getCurrentStepIndex = function () {
                 var index = this.steps.indexOf(this.currentStep);
-                return  index + 1;
+                return index + 1;
             };
 
             /**
-             * When using the drop down to jum to a specific step
+             * When using the drop down to jump to a specific step
              */
             this.goTo = function (step) {
                 this.validateStep('goto', this.steps.indexOf(step));
-                // no need to confirm !!
-                /*$ngBootbox.confirm(Translator.trans('sequence_next_step_confirm', {}, 'ujm_sequence'))
-                        .then(function () {
-                            console.log('Confirmed!');
-                            this.validateStep('goto', this.steps.indexOf(step));
-                        }.bind(this), function () {
-                           // console.log('Confirm dismissed!');
-                        });*/
             };
 
             /**
-             * Validate the current step after confirm
-             * If next/prev step get it (also save student progression)
-             * Else end the sequence (also save student paper)
-             * 
+             * save the current step in paper js object
+             * go to another step or end sequence
              * @param {String} action
              * @param {Number} index (nullable) the step index
              */
             this.validateStep = function (action, index) {
-                // disable tooltips...
-                $('.tooltip').each(function(){
+                // manualy disable tooltips...
+                $('.tooltip').each(function () {
                     $(this).hide();
                 });
-                
-                // data are given by question directive
-                var data = CommonService.getStudentData();
-                console.log('student data are below');
-                console.log(data);
-                // save step results in DB !!!!
-                // also save the current progression in db ?
-                // probably not necessary as the correction will be done by another module and data will be retrieved in DB
-                this.studentResults.push(data);
                 // get current step index
                 var currentStepIndex = this.steps.indexOf(this.currentStep);
-                var length = this.steps.length;
-                var newIndex = index ? index : 0;
-                if (action && action === 'forward') {
-                    newIndex = currentStepIndex + 1;
+                var newIndex = 0;
+                if (action && (action === 'forward' || action === 'backward')) {
+                    newIndex = action === 'forward' ? currentStepIndex + 1 : currentStepIndex - 1;
+                    this.saveAnswerAndGotTo(newIndex);
+                } else if (action && action === 'goto' && index) {
+                    newIndex = index;
+                    this.saveAnswerAndGotTo(newIndex);
+                } else if (action && action === 'end') {
+                    console.log('you reached the end of the exercise you will be redirected to paper list page');
+                    // TODO go to paper list / correction instead of exercise home page
+                    var url = CommonService.generateUrl('exercise-home');
+                    $window.location.href = url;
+                } else {
+                    console.log('validate step error');
                 }
-                else if (action && action === 'backward') {
-                    newIndex = currentStepIndex - 1;
-                }
-                this.isFirstStep = newIndex === 0;
-                this.isLastStep = newIndex === this.steps.length - 1;
-                // check new index is in computable range
-                if (newIndex < length && newIndex >= 0) {
-                    this.setCurrentStep(newIndex);
-                }
-                else if (this.isLastStep) {
-                    console.log('you reached the end of the exercise you will be redirected to summary page');
+            };
 
-                    // TODO save the results in db
-                    // save the hints used (table ujm_link_hint_paper) -> really need this ?
-                    // save the paper (table ujm_paper) (and the question order for the paper...)
-                    // save answers (table ujm_response)
-                    // show correction summary page
-                    // should correction summary page be on another route ? or not ?
-                }
-                else {
-                    // error page
-                    console.log('error...');
-                }
+            /**
+             * Saves the anwser in DB (or in session ????)
+             * @param {type} nextStepIndex
+             */
+            this.saveAnswerAndGotTo = function (nextStepIndex) {
+                // data set by question directive
+                var studentData = CommonService.getStudentData();
+                // save answer only or whole paper ??
+                var promise = SequenceService.recordAnswer(this.sequence.id, studentData);
+                promise.then(function (result) {
+                    if (result.status === 'success') {
+                        // result.data.id = recorded answer id ??? but do we need this ? any answer id can be retrieved by ujm_response.paper_id + ujm_response.question_id
+                        // change current step
+                        this.setCurrentStep(nextStepIndex);
+                        // update paper step
+                        CommonService.setCurrentPaperStep(nextStepIndex);
+                    }
 
+                }.bind(this), function (error) {
+                    console.log('error');
+                }.bind(this));
             };
         }
     ]);

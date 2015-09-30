@@ -44,7 +44,7 @@
                     </ul>
                 </div>
                 <!-- END SEQUENCE -->
-                <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep()" class="btn btn-default">
+                <button data-ng-if="sequencePlayCtrl.isLastStep" role="button" type="button" ng-bootbox-confirm="{{ 'sequence_end_sequence_confirm'|trans:{}:'ujm_sequence'}}" ng-bootbox-confirm-action="sequencePlayCtrl.validateStep('end')" class="btn btn-default">
                     {{ 'btn_end_sequence_label'|trans:{}:'ujm_sequence' }}
                 </button>
             </div>

@@ -10,9 +10,11 @@
         function StepService($http, $filter, $q) {
 
             this.sequence = {};
+            this.paper = {};
             this.currentQuestion = {};
             this.currentAnswer = {};
-            this.currentPenalty = 0;
+            this.currentPaperStep = {};
+            this.usedHints = [];
 
             return {
                 /**
@@ -31,6 +33,44 @@
                 getSequenceMeta: function () {
                     return this.sequence.meta;
                 },
+                /**
+                 * @param {object} object a javascript object with meta property
+                 * @returns null or string
+                 */
+                objectHasOtherMeta: function (object) {
+                    if (!object.meta || object.meta === undefined || object.meta === 'undefined') {
+                        return null;
+                    }
+                    return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
+                },
+                // set / update the student data
+                setStudentData: function (question, paperStep) {
+                    this.currentQuestion = question;
+                    // this will automatically update the paper
+                    this.currentPaperStep = paperStep;
+                },
+                getStudentData: function () {
+                    return{                        
+                        question: this.currentQuestion,
+                        paperStep: this.currentPaperStep,
+                        paper: this.paper
+                    };
+                },
+                setPaper: function (paper) {
+                    this.paper = paper;
+                    return this.paper;
+                },
+                getPaper: function () {
+                    return this.paper;
+                },
+                setCurrentPaperStep: function (index) {
+                    this.currentPaperStep = this.paper.steps[index];
+                    return this.currentPaperStep;
+                },
+                getCurrentPaperStep: function () {
+                    return this.currentPaperStep;
+                },
+                // UTILS METHODS
                 /**
                  * @param {object} object a javascript object with type property
                  * @returns null or string
@@ -60,28 +100,26 @@
                     }
                 },
                 /**
-                 * @param {object} object a javascript object with meta property
-                 * @returns null or string
+                 * shuffle array elements
+                 * @param {array} the given array
+                 * @returns {array} the shuffled array
                  */
-                objectHasOtherMeta: function (object) {
-                    if (!object.meta || object.meta === undefined || object.meta === 'undefined') {
-                        return null;
+                shuffleArray: function (array) {
+                    var currentIndex = array.length, temporaryValue, randomIndex;
+                    // While there remain elements to shuffle...
+                    while (0 !== currentIndex) {
+                        // Pick a remaining element...
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex -= 1;
+
+                        // And swap it with the current element.
+                        temporaryValue = array[currentIndex];
+                        array[currentIndex] = array[randomIndex];
+                        array[randomIndex] = temporaryValue;
                     }
-                    return object.meta.licence || object.meta.created || object.meta.modified || (object.meta.description && object.meta.description !== '');
+                    return array;
                 },
-                setCurrentQuestionAndAnswer: function (answer, question, penalty) {
-                    this.currentPenalty = penalty;
-                    this.currentAnswer = answer;
-                    this.currentQuestion = question;
-                },
-                getStudentData: function () {
-                    return{
-                        penalty: this.currentPenalty,
-                        answer: this.currentAnswer,
-                        question: this.currentQuestion
-                    };
-                },
-                generateUrl: function (witch) {                                    
+                generateUrl: function (witch) {
                     switch (witch) {
                         case 'exercise-home':
                             return Routing.generate('ujm_exercise_open', {id: this.sequence.id});
@@ -97,3 +135,5 @@
         }
     ]);
 })();
+
+
