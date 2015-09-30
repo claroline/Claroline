@@ -13,7 +13,7 @@ use JsonSchema\Validator as SchemaValidator;
 class Validator
 {
     /**
-     * Validates a json-decoded question against the available
+     * Validates a JSON-decoded question against the available
      * question schemas. Returns an array of validation errors.
      *
      * @param \stdClass $question
@@ -34,13 +34,13 @@ class Validator
             }
 
             return [[
-                'path' => 'type',
+                'property' => 'type',
                 'message' => "Unknown question type '{$question->type}'"
             ]];
         }
 
         return [[
-            'path' => '',
+            'property' => '',
             'message' => 'Question cannot be validated due to missing property "type"'
         ]];
     }

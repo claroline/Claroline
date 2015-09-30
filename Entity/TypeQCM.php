@@ -5,39 +5,29 @@ namespace UJM\ExoBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UJM\ExoBundle\Entity\TypeQCM.
- *
- * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\TypeQCMRepository")
+ * @ORM\Entity
  * @ORM\Table(name="ujm_type_qcm")
  */
 class TypeQCM
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="value", type="string", length=255)
+     * @ORM\Column
      */
     private $value;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(unique=true, name="code", type="integer")
+     * @ORM\Column(type="integer", unique=true)
      */
     private $code;
 
     /**
-     * Get id.
-     *
      * @return int
      */
     public function getId()
@@ -46,8 +36,6 @@ class TypeQCM
     }
 
     /**
-     * Set value.
-     *
      * @param string $value
      */
     public function setValue($value)
@@ -56,8 +44,6 @@ class TypeQCM
     }
 
     /**
-     * Get value.
-     *
      * @return string
      */
     public function getValue()
@@ -66,8 +52,6 @@ class TypeQCM
     }
 
     /**
-     * Set code.
-     *
      * @param int $code
      */
     public function setCode($code)
@@ -76,8 +60,6 @@ class TypeQCM
     }
 
     /**
-     * Get code.
-     *
      * @return int
      */
     public function getCode()

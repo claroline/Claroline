@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use UJM\ExoBundle\DataFixtures\LoadOptionsData;
 use UJM\ExoBundle\Transfer\Json\Validator;
 
 class ApiManagerTest extends TransactionalTestCase
@@ -43,7 +44,7 @@ class ApiManagerTest extends TransactionalTestCase
     public function testImportQuestionThrowsIfValidationError()
     {
         $data = file_get_contents("{$this->formatDir}/question/choice/examples/invalid/no-solution-score.json");
-        $this->manager->importQuestion($data);
+        $this->manager->importQuestion(json_decode($data));
     }
 
     /**
@@ -56,14 +57,27 @@ class ApiManagerTest extends TransactionalTestCase
     }
 
     /**
-     * @dataProvider validQuestionProvider
+     * @dataProvider validQcmQuestionProvider
      * @param string $dataFilename
      */
-    public function testQuestionRoundTrip($dataFilename)
+    public function testQcmQuestionRoundTrip($dataFilename)
     {
-        $this->markTestIncomplete();
-        $data = file_get_contents("{$this->formatDir}/question/{$dataFilename}");
-        $this->manager->importQuestion($data);
+        $this->loadQuestionTypeFixture();
+
+        $compFile = __DIR__ . "/data/choice/{$dataFilename}-comp.json";
+        $evalFile = __DIR__ . "/data/choice/{$dataFilename}-eval.json";
+        $originalCompData = json_decode(file_get_contents($compFile));
+        $originalEvalData = json_decode(file_get_contents($evalFile));
+        $this->manager->importQuestion($originalCompData);
+
+        $questions = $this->om->getRepository('UJMExoBundle:Question')->findAll();
+        $this->assertEquals(1, count($questions), 'Expected one (and only one) question to be created');
+
+        $exportedCompData = $this->manager->exportQuestion($questions[0], true);
+        $exportedEvalData = $this->manager->exportQuestion($questions[0], false);
+
+        $this->assertEqualsWithoutIds($originalCompData, $exportedCompData);
+        $this->assertEqualsWithoutIds($originalEvalData, $exportedEvalData);
     }
 
     /**
@@ -77,10 +91,11 @@ class ApiManagerTest extends TransactionalTestCase
         $this->manager->importExercise($data);
     }
 
-    public function validQuestionProvider()
+    public function validQcmQuestionProvider()
     {
         return [
-            ['choice/examples/valid/extended.json']
+          ['qcm-1'],
+          ['qcm-2']
         ];
     }
 
@@ -89,5 +104,36 @@ class ApiManagerTest extends TransactionalTestCase
         return [
             ['quiz-metadata.json']
         ];
+    }
+
+    private function assertEqualsWithoutIds(\stdClass $expected, \stdClass $actual)
+    {
+        $expectedCopy = clone $expected;
+        $actualCopy = clone $actual;
+
+        $removeIds = function (\stdClass $object) use (&$removeIds) {
+            foreach (get_object_vars($object) as $property => $value) {
+                if ($property === 'id') {
+                    unset($object->id);
+                } elseif (is_object($value)) {
+                    $removeIds($value);
+                } elseif (is_array($value)) {
+                    foreach ($value as $key => $element) {
+                        $removeIds($element);
+                    }
+                }
+            }
+        };
+
+        $removeIds($expectedCopy);
+        $removeIds($actualCopy);
+
+        $this->assertEquals($expectedCopy, $actualCopy);
+    }
+
+    private function loadQuestionTypeFixture()
+    {
+        $fixture = new LoadOptionsData();
+        $fixture->load($this->om);
     }
 }
