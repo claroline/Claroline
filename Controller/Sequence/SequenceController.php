@@ -50,11 +50,20 @@ class SequenceController extends Controller
         //      - first unfinished paper if exists with :
         //          - anwsers previously given by the student
         //          - step order
+        //      - new paper if no unfinished paper
+        
+        
+        $apiManager = $this->get('ujm.exo.api_manager');
+        $exo = $apiManager->exportExercise($exercise);
+        $steps = json_encode($exo['steps']); // get step order if previous paper
+        $data = json_encode($exo);
+          
         /*
-          $apiManager = $this->get('ujm.exo.api_manager');
-          $exo = $apiManager->exportExercise($exercise);
-          $steps = json_encode($exo['steps']); // get step order if previous paper
-          $data = json_encode($exo);
+        // FAKE Data for development!!
+        $exo = $this->getExercise(2, "choice");
+        // to do : if question.randomize = true edit questions (steps) order
+        $steps = json_encode($exo['steps']);
+        $data = json_encode($exo);
          */
 
         $previousPaper = array(
@@ -89,11 +98,7 @@ class SequenceController extends Controller
 
 
 
-        // FAKE Data for development!!
-        $exo = $this->getExercise(2, "choice");
-        // to do : if question.randomize = true edit questions (steps) order
-        $steps = json_encode($exo['steps']);
-        $data = json_encode($exo);
+       
 
         return $this->render('UJMExoBundle:Sequence:play.html.twig', array(
                     '_resource' => $exercise,

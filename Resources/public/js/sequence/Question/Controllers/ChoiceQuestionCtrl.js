@@ -18,7 +18,6 @@
                 if (meta.random) {
                     CommonService.shuffleArray(this.question.choices);
                 }
-                this.checkChoices(this.question.multiple);
                 // init hints object if needed
                 if (this.currentPaperStep.hints === '') {
                     this.currentPaperStep.hints = [];
@@ -32,6 +31,8 @@
                         choices: []
                     };
                 }
+                
+                this.checkChoices(this.question.multiple);
             };
 
             /**
