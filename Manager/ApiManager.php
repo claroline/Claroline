@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Choice;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\InteractionQCM;
 use UJM\ExoBundle\Entity\Question;
@@ -38,18 +39,50 @@ class ApiManager
     }
 
     /**
-     * Imports a question in a JSON format.
+     * Imports a question in a JSON-decoded format.
      *
-     * @param string $data
-     * @throws ValidationException if the question is not valid
+     * @param \stdClass $question
+     * @throws ValidationException  if the question is not valid
+     * @throws \Exception           if the question type import is not implemented
      */
-    public function importQuestion($data)
+    public function importQuestion(\stdClass $question)
     {
-        $question = json_decode($data);
         $errors = $this->validator->validateQuestion($question);
 
         if (count($errors) > 0) {
             throw new ValidationException('Question is not valid', $errors);
+        }
+
+        switch ($question->type) {
+            case 'application/x.choice+json':
+                $this->persistQcm($question);
+                break;
+            default:
+                throw new \Exception(
+                    "Import not implemented for {$question->type}"
+                );
+        }
+
+        $this->om->flush();
+    }
+
+    /**
+     * Exports a question in JSON format.
+     *
+     * @param Question  $question
+     * @param bool      $withSolution
+     * @return \stdClass
+     * @throws \Exception if the question type export is not implemented
+     */
+    public function exportQuestion(Question $question, $withSolution = true)
+    {
+        switch ($question->getType()) {
+            case InteractionQCM::TYPE:
+                return $this->exportQcm($question, $withSolution);
+            default:
+                throw new \Exception(
+                    "Export not implemented for {$question->getType()}"
+                );
         }
     }
 
@@ -184,5 +217,78 @@ class ApiManager
                 ];
             }, $qcm->getChoices()->toArray()),
         ];
+    }
+
+    private function persistQcm(\stdClass $data)
+    {
+        $question = new Question();
+        $question->setTitle($data->title);
+        $question->setInvite($data->title);
+        $interaction = new InteractionQCM();
+
+        for ($i = 0, $max = count($data->choices); $i < $max; ++$i) {
+            // temporary limitation
+            if ($data->choices[$i]->type !== 'text/html') {
+                throw new \Exception(
+                    "Import not implemented for MIME type {$data->choices[$i]->type}"
+                );
+            }
+
+            $choice = new Choice();
+            $choice->setLabel($data->choices[$i]->data);
+            $choice->setOrdre($i);
+
+            foreach ($data->solutions as $solution) {
+                if ($solution->id === $data->choices[$i]->id) {
+                    $choice->setWeight($solution->score);
+                }
+            }
+
+            $choice->setInteractionQCM($interaction);
+            $interaction->addChoice($choice);
+            $this->om->persist($choice);
+        }
+
+
+        $subTypeCode = $data->multiple ? 1 : 2;
+        $subType = $this->om->getRepository('UJMExoBundle:TypeQCM')
+            ->findOneByCode($subTypeCode);
+        $interaction->setTypeQCM($subType);
+        $interaction->setShuffle($data->random);
+        $interaction->setQuestion($question);
+        $this->om->persist($interaction);
+        $this->om->persist($question);
+    }
+
+    private function exportQcm(Question $question, $withSolution = true)
+    {
+        $qcm = $this->interactionQcmRepo->findOneBy(['question' => $question]);
+        $choices = $qcm->getChoices()->toArray();
+
+        $data = new \stdClass();
+        $data->type = 'application/x.choice+json';
+        $data->title = $question->getTitle();
+        $data->multiple = $qcm->getTypeQCM()->getCode() == 1;
+        $data->random = $qcm->getShuffle();
+        $data->choices = array_map(function ($choice) {
+            $choiceData = new \stdClass();
+            $choiceData->id = $choice->getId();
+            $choiceData->type = 'text/html';
+            $choiceData->data = $choice->getLabel();
+
+            return $choiceData;
+        }, $choices);
+
+        if ($withSolution) {
+            $data->solutions = array_map(function ($choice) {
+                $solutionData = new \stdClass();
+                $solutionData->id = $choice->getId();
+                $solutionData->score = $choice->getWeight();
+
+                return $solutionData;
+            }, $choices);
+        }
+
+        return $data;
     }
 }

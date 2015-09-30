@@ -12,8 +12,23 @@ class ValidationException extends \Exception
 
     public function __construct($message, array $errors)
     {
-        parent::__construct($message);
         $this->errors = $errors;
+
+        $errorMessages = array_map(function ($error) {
+            return sprintf(
+                "  { path: %s, msg: %s }",
+                $error['property'],
+                $error['message']
+            );
+        }, $errors);
+
+        $message = sprintf(
+            "%s\n{\n%s\n}",
+            $message,
+            implode(",\n", $errorMessages)
+        );
+
+        parent::__construct($message);
     }
 
     public function getErrors()
