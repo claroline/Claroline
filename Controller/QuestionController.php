@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use UJM\ExoBundle\Entity\InteractionGraphic;
 use UJM\ExoBundle\Entity\Question;
 use UJM\ExoBundle\Entity\Response;
@@ -12,11 +13,14 @@ use UJM\ExoBundle\Form\QuestionType;
 /**
  * Question controller.
  */
-class QuestionController extends Controller
-{
+class QuestionController extends Controller {
+
     /**
      * Lists the User's Question entities.
      *
+     * @EXT\Route("/index/{pageNow}/{pageNowShared}/{categoryToFind}/{titleToFind}/{resourceId}/{displayAll}", 
+     *              name="ujm_question_index",
+     *              defaults={"pageNow" = 0,"pageNowShared" = 0,"categoryToFind"= "z", "titleToFind"= "z","resourceId"= -1, "displayAll"= 0 })
      *
      * @param int    $pageNow        for the pagination : actual page of my questions list
      * @param int    $pageNowShared  for the pagination : actual page of my shared questions list
@@ -27,8 +31,7 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0)
-    {
+    public function indexAction($pageNow = 0, $pageNowShared = 0, $categoryToFind = '', $titleToFind = '', $resourceId = -1, $displayAll = 0) {
         if (base64_decode($categoryToFind)) {
             $categoryToFind = base64_decode($categoryToFind);
             $titleToFind = base64_decode($titleToFind);
@@ -56,12 +59,11 @@ class QuestionController extends Controller
         $pagerMy = $request->query->get('pagerMy', 1); // Get the page of the array my question (default 1)
         $pagerShared = $request->query->get('pagerShared', 1); // Get the pager of the array my shared question (default 1)
         $max = 10; // Max of questions per page
-
         // If change page of my questions array
         if ($click == 'my') {
             // The choosen new page is for my questions array
             $pagerMy = $page;
-        // Else if change page of my shared questions array
+            // Else if change page of my shared questions array
         } elseif ($click == 'shared') {
             // The choosen new page is for my shared questions array
             $pagerShared = $page;
@@ -71,9 +73,9 @@ class QuestionController extends Controller
         $uid = $user->getId();
 
         $questions = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Question')
-            ->findByUser($user);
+                ->getManager()
+                ->getRepository('UJMExoBundle:Question')
+                ->findByUser($user);
 
         foreach ($questions as $question) {
             $actions = $services->getActionQuestion($question);
@@ -82,7 +84,7 @@ class QuestionController extends Controller
         }
 
         $shared = $em->getRepository('UJMExoBundle:Share')
-            ->findBy(array('user' => $uid));
+                ->findBy(array('user' => $uid));
 
         foreach ($shared as $s) {
             $actionsS = $services->getActionShared($s);
@@ -130,9 +132,9 @@ class QuestionController extends Controller
         $pagerfantaShared = $doublePagination[3];
 
         $listExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciseAdmin($uid);
+                ->getManager()
+                ->getRepository('UJMExoBundle:Exercise')
+                ->getExerciseAdmin($uid);
 
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
 
@@ -159,13 +161,13 @@ class QuestionController extends Controller
     /**
      * To filter question by exercise.
      *
-     *
+     * @EXT\Route("/bank/filter/{idExo}", name="ujm_question_bank_filter",defaults={"idExo"= -1})
+     *     
      * @param int $idExo id of exercise selected in the list to filter questions
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function bankFilterAction($idExo = -1)
-    {
+    public function bankFilterAction($idExo = -1) {
         $vars = array();
         $shareRight = array();
         $questionWithResponse = array();
@@ -182,18 +184,18 @@ class QuestionController extends Controller
 
         if ($idExo == -2) {
             $listQExo = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Question')
-                ->findByUser($user, true);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Question')
+                    ->findByUser($user, true);
         } else {
             $exercise = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Exercise')
-                ->find($idExo);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Exercise')
+                    ->find($idExo);
             $listQExo = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Question')
-                ->findByExercise($exercise);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Question')
+                    ->findByExercise($exercise);
         }
 
         $allActions = $services->getActionsAllQuestions($listQExo, $uid);
@@ -205,9 +207,9 @@ class QuestionController extends Controller
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
 
         $listExo = $this->getDoctrine()
-                        ->getManager()
-                        ->getRepository('UJMExoBundle:Exercise')
-                        ->getExerciseAdmin($uid);
+                ->getManager()
+                ->getRepository('UJMExoBundle:Exercise')
+                ->getExerciseAdmin($uid);
 
         $vars['interactions'] = $listQExo;
         $vars['actionQ'] = $actionQ;
@@ -226,14 +228,14 @@ class QuestionController extends Controller
     /**
      * Finds and displays a Question entity.
      *
-     *
+     * @EXT\Route("/show/{id}/{exoID}", name="ujm_question_show", defaults={"exoID"= -1})
+     * 
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAction($id, $exoID)
-    {
+    public function showAction($id, $exoID) {
         $vars = array();
         $allowToAccess = 0;
         $questionSer = $this->container->get('ujm.exo_question');
@@ -244,7 +246,7 @@ class QuestionController extends Controller
             $vars['_resource'] = $exercise;
 
             if ($this->container->get('ujm.exo_exercise')
-                     ->isExerciseAdmin($exercise)) {
+                            ->isExerciseAdmin($exercise)) {
                 $allowToAccess = 1;
             }
         }
@@ -254,12 +256,12 @@ class QuestionController extends Controller
 
         if ($question || count($sharedQuestion) > 0 || $allowToAccess == 1) {
             $interaction = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Question')
-                ->find($id);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Question')
+                    ->find($id);
 
             return $this->forward(
-                'UJMExoBundle:'.$interaction->getType().':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars)
+                            'UJMExoBundle:' . $interaction->getType() . ':show', array('interaction' => $interaction, 'exoID' => $exoID, 'vars' => $vars)
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -269,13 +271,14 @@ class QuestionController extends Controller
     /**
      * Displays a form to create a new Question entity with interaction.
      *
-     *
+     * @EXT\Route("/new/{exoID}/{pageToGo}/{maxPage}/{nbItem}", name="ujm_question_new", 
+     *              defaults={"exoID"= -1, "pageToGo"= 1, "maxPage"= 10, "nbItem"= 1})
+     * 
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function newAction($exoID)
-    {
+    public function newAction($exoID) {
         $catSer = $this->container->get('ujm.exo_category');
         $variables = array(
             'exoID' => $exoID,
@@ -330,14 +333,14 @@ class QuestionController extends Controller
     /**
      * Displays a form to edit an existing Question entity.
      *
-     *
+     * @EXT\Route("/{id}/edit/{exoID}", name="ujm_question_edit", defaults={"exoID"= -1})
+     *  
      * @param int $id    id Question
      * @param int $exoID id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction($id, $exoID)
-    {
+    public function editAction($id, $exoID) {
         $services = $this->container->get('ujm.exo_question');
         $question = $services->controlUserQuestion($id);
         $share = $services->controlUserSharedQuestion($id);
@@ -354,8 +357,7 @@ class QuestionController extends Controller
             }
 
             return $this->forward(
-                'UJMExoBundle:'.$question->getType().':edit',
-                array('interaction' => $question, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user)
+                            'UJMExoBundle:' . $question->getType() . ':edit', array('interaction' => $question, 'exoID' => $exoID, 'catID' => $catID, 'user' => $user)
             );
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
@@ -365,7 +367,9 @@ class QuestionController extends Controller
     /**
      * Deletes a Question entity.
      *
-     *
+     * @EXT\Route("/{id}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_question_delete", 
+     *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
+     * 
      * @param int $id       id Question
      * @param int $pageNow  actual page for the pagination
      * @param int $maxpage  number max questions per page
@@ -374,16 +378,15 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage)
-    {
+    public function deleteAction($id, $pageNow, $maxPage, $nbItem, $lastPage) {
         $em = $this->getDoctrine()->getManager();
         $question = $this->container->get('ujm.exo_question')->controlUserQuestion($id);
 
         if ($question) {
             $eq = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:ExerciseQuestion')
-                ->getExercises($id);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:ExerciseQuestion')
+                    ->getExercises($id);
 
             foreach ($eq as $e) {
                 $em->remove($e);
@@ -391,19 +394,18 @@ class QuestionController extends Controller
 
             $em->flush();
 
-             // If delete last item of page, display the previous one
+            // If delete last item of page, display the previous one
             $rest = $nbItem % $maxPage;
 
             if ($rest == 1 && $pageNow == $lastPage) {
                 $pageNow -= 1;
             }
 
-            $interSer = $this->container->get('ujm.exo_'.$question->getType());
+            $interSer = $this->container->get('ujm.exo_' . $question->getType());
             $interX = $interSer->getInteractionX($question->getId());
 
             return $this->forward(
-                'UJMExoBundle:'.$question->getType().':delete',
-                array('id' => $interX->getId(), 'pageNow' => $pageNow)
+                            'UJMExoBundle:' . $question->getType() . ':delete', array('id' => $interX->getId(), 'pageNow' => $pageNow)
             );
         }
     }
@@ -411,11 +413,12 @@ class QuestionController extends Controller
     /**
      * Displays the rigth form when a teatcher wants to create a new Question (JS).
      *
-     *
+     * @EXT\Route("/formNew", name="ujm_question_display_form_type")
+     * @EXT\Method("POST")
+     * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function formNewAction()
-    {
+    public function formNewAction() {
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
@@ -423,36 +426,36 @@ class QuestionController extends Controller
             $exoID = $request->request->get('exercise');
 
             return $this->forward(
-                       'UJMExoBundle:'.$valType.':new', array('exoID' => $exoID)
-                    );
+                            'UJMExoBundle:' . $valType . ':new', array('exoID' => $exoID)
+            );
         }
     }
 
     /**
      * To share Question.
      *
-     *
+     * @EXT\Route("/share/{questionID}", name="ujm_question_share")
+     * 
      * @param int $questionID id of question
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function shareAction($questionID)
-    {
+    public function shareAction($questionID) {
         return $this->render(
-            'UJMExoBundle:Question:share.html.twig', array(
-            'questionID' => $questionID,
-            )
+                        'UJMExoBundle:Question:share.html.twig', array(
+                    'questionID' => $questionID,
+                        )
         );
     }
 
     /**
      * To search Question.
      *
+     * @EXT\Route("/share/search/user", name="ujm_question_share_search_user")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchAction()
-    {
+    public function searchAction() {
         $request = $this->get('request');
         $paginationSer = $this->container->get('ujm.exo_pagination');
 
@@ -473,12 +476,12 @@ class QuestionController extends Controller
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                'UJMExoBundle:Question:search.html.twig', array(
+                    'UJMExoBundle:Question:search.html.twig', array(
                 'userList' => $userListPager,
                 'pagerUserSearch' => $pagerUserSearch,
                 'search' => $search,
                 'questionID' => $questionID,
-                )
+                    )
             );
 
             // If request is ajax (first display of the first search result (page = 1))
@@ -490,18 +493,18 @@ class QuestionController extends Controller
 
                 // Send the form to search and the result
                 return $this->render(
-                    'UJMExoBundle:Question:share.html.twig', array(
-                    'userList' => $userList,
-                    'divResultSearch' => $divResultSearch,
-                    'questionID' => $questionID,
-                    )
+                                'UJMExoBundle:Question:share.html.twig', array(
+                            'userList' => $userList,
+                            'divResultSearch' => $divResultSearch,
+                            'questionID' => $questionID,
+                                )
                 );
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Question:search.html.twig', array(
-                'userList' => '',
-                )
+                            'UJMExoBundle:Question:search.html.twig', array(
+                        'userList' => '',
+                            )
             );
         }
     }
@@ -509,27 +512,27 @@ class QuestionController extends Controller
     /**
      * To manage the User's documents.
      *
+     * @EXT\Route("/manageDoc", name="ujm_question_manage_doc")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function manageDocAction()
-    {
+    public function manageDocAction() {
         $allowToDel = array();
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
         $paginationSer = $this->container->get('ujm.exo_pagination');
 
         $repository = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Document');
+                ->getManager()
+                ->getRepository('UJMExoBundle:Document');
 
         $listDoc = $repository->findBy(array('user' => $user->getId()));
 
         foreach ($listDoc as $doc) {
             $interGraph = $this->getDoctrine()
-                               ->getManager()
-                               ->getRepository('UJMExoBundle:InteractionGraphic')
-                               ->findOneBy(array('document' => $doc->getId()));
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:InteractionGraphic')
+                    ->findOneBy(array('document' => $doc->getId()));
             if ($interGraph) {
                 $allowToDel[$doc->getId()] = false;
             } else {
@@ -548,28 +551,27 @@ class QuestionController extends Controller
         $pagerDoc = $pagination[1];
 
         return $this->render(
-            'UJMExoBundle:Document:manageImg.html.twig',
-            array(
-                'listDoc' => $listDocPager,
-                'pagerDoc' => $pagerDoc,
-                'allowToDel' => $allowToDel,
-            )
+                        'UJMExoBundle:Document:manageImg.html.twig', array(
+                    'listDoc' => $listDocPager,
+                    'pagerDoc' => $pagerDoc,
+                    'allowToDel' => $allowToDel,
+                        )
         );
     }
 
     /**
      * To delete a User's document.
      *
-     *
+     * @EXT\Route("/deleteDoc/{idDoc}", name="ujm_document_del")
+     * 
      * @param int $idDoc id Document
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteDocAction($idDoc)
-    {
+    public function deleteDocAction($idDoc) {
         $repositoryDoc = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Document');
+                ->getManager()
+                ->getRepository('UJMExoBundle:Document');
 
         $doc = $repositoryDoc->find($idDoc);
 
@@ -587,18 +589,19 @@ class QuestionController extends Controller
 
     /**
      * To delete a User's document linked to questions but not to paper.
+     * 
+     * @EXT\Route("/deletelinkedDoc/{label}", name="ujm_document_del_linked")
      *
      * @param string $label label of document
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deletelinkedDocAction($label)
-    {
+    public function deletelinkedDocAction($label) {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
 
         $repositoryDoc = $this->getDoctrine()
-            ->getManager()
-            ->getRepository('UJMExoBundle:Document');
+                ->getManager()
+                ->getRepository('UJMExoBundle:Document');
 
         $listDoc = $repositoryDoc->findByLabel($label, $userId, 0);
 
@@ -632,13 +635,14 @@ class QuestionController extends Controller
     /**
      * To display the modal which allow to change the label of a document.
      *
-     *
+     * @EXT\Route("/update/name", name="ujm_question_name_update")
+     * @EXT\Method("POST")
+     * 
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function changeDocumentNameAction()
-    {
+    public function changeDocumentNameAction() {
         $request = $this->get('request'); // Get the request which contains the following parameters :
         $oldDocLabel = $request->request->get('oldDocLabel');
         $i = $request->request->get('i');
@@ -649,13 +653,13 @@ class QuestionController extends Controller
     /**
      * To change the label of a document.
      *
-     *
+     * @EXT\Route("/change/document/name", name="ujm_document_change_name")
+     * 
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function updateNameAction()
-    {
+    public function updateNameAction() {
         $request = $this->container->get('request');
         $newlabel = $request->get('newlabel');
         $oldlabel = $request->get('oldName');
@@ -675,13 +679,13 @@ class QuestionController extends Controller
     /**
      * To sort document by type.
      *
-     *
+     * @EXT\Route("/sort", name="ujm_question_sortDocuments")
+     * 
      * @param int $id id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sortDocumentsAction()
-    {
+    public function sortDocumentsAction() {
         $request = $this->container->get('request');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $paginationSer = $this->container->get('ujm.exo_pagination');
@@ -694,8 +698,8 @@ class QuestionController extends Controller
 
         if ($type && isset($searchLabel)) {
             $repository = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:Document');
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:Document');
 
             $listDocSort = $repository->findByType($type, $user->getId(), $searchLabel);
 
@@ -706,13 +710,13 @@ class QuestionController extends Controller
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                'UJMExoBundle:Document:sortDoc.html.twig', array(
+                    'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => $listDocSortPager,
                 'pagerFindDoc' => $pagerSortDoc,
                 'labelToFind' => $searchLabel,
                 'whichAction' => 'sort',
                 'doctype' => $type,
-                )
+                    )
             );
 
             // If request is ajax (first display of the first search result (page = 1))
@@ -724,17 +728,17 @@ class QuestionController extends Controller
 
                 // Send the form to search and the result
                 return $this->render(
-                    'UJMExoBundle:Document:manageImg.html.twig', array(
-                    'divResultSearch' => $divResultSearch,
-                    )
+                                'UJMExoBundle:Document:manageImg.html.twig', array(
+                            'divResultSearch' => $divResultSearch,
+                                )
                 );
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Document:sortDoc.html.twig', array(
-                'listFindDoc' => '',
-                'whichAction' => 'sort',
-                )
+                            'UJMExoBundle:Document:sortDoc.html.twig', array(
+                        'listFindDoc' => '',
+                        'whichAction' => 'sort',
+                            )
             );
         }
     }
@@ -742,13 +746,13 @@ class QuestionController extends Controller
     /**
      * To search document with a defined label.
      *
+     * @EXT\Route("/search", name="ujm_question_searchDocuments")
      *
-     * @param int $id id of exercise
+     * @param int $id id of exercise 
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchDocAction()
-    {
+    public function searchDocAction() {
         $userId = $this->container->get('security.token_storage')->getToken()->getUser()->getId();
         $request = $this->get('request');
         $paginationSer = $this->container->get('ujm.exo_pagination');
@@ -769,12 +773,12 @@ class QuestionController extends Controller
 
             // Put the result in a twig
             $divResultSearch = $this->render(
-                'UJMExoBundle:Document:sortDoc.html.twig', array(
+                    'UJMExoBundle:Document:sortDoc.html.twig', array(
                 'listFindDoc' => $listFindDocPager,
                 'pagerFindDoc' => $pagerFindDoc,
                 'labelToFind' => $labelToFind,
                 'whichAction' => 'search',
-                )
+                    )
             );
 
             // If request is ajax (first display of the first search result (page = 1))
@@ -786,17 +790,17 @@ class QuestionController extends Controller
 
                 // Send the form to search and the result
                 return $this->render(
-                    'UJMExoBundle:Document:manageImg.html.twig', array(
-                    'divResultSearch' => $divResultSearch,
-                    )
+                                'UJMExoBundle:Document:manageImg.html.twig', array(
+                            'divResultSearch' => $divResultSearch,
+                                )
                 );
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Document:sortDoc.html.twig', array(
-                'listFindDoc' => '',
-                'whichAction' => 'search',
-                )
+                            'UJMExoBundle:Document:sortDoc.html.twig', array(
+                        'listFindDoc' => '',
+                        'whichAction' => 'search',
+                            )
             );
         }
     }
@@ -804,11 +808,12 @@ class QuestionController extends Controller
     /**
      * To share question with other users.
      *
+     * @EXT\Route("/shareQuestionUser", name="ujm_question_shareQuestionUser")
+     * @EXT\Method("POST")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function shareQuestionUserAction()
-    {
+    public function shareQuestionUserAction() {
         $request = $this->container->get('request');
 
         if ($request->isXmlHttpRequest()) {
@@ -833,7 +838,7 @@ class QuestionController extends Controller
             $em->persist($share);
             $em->flush();
 
-            return new \Symfony\Component\HttpFoundation\Response('no;'.$this->generateUrl('ujm_question_index'));
+            return new \Symfony\Component\HttpFoundation\Response('no;' . $this->generateUrl('ujm_question_index'));
         }
     }
 
@@ -846,58 +851,58 @@ class QuestionController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function alreadySharedAction($toShare, $em)
-    {
-        $alreadyShared = $em->getRepository('UJMExoBundle:Share')->findAll();
-        $already = false;
-
-        $end = count($alreadyShared);
-
-        for ($i = 0; $i < $end; ++$i) {
-            if ($alreadyShared[$i]->getUser() == $toShare->getUser() &&
-                $alreadyShared[$i]->getQuestion() == $toShare->getQuestion()
-            ) {
-                $already = true;
-                break;
-            }
-        }
-
-        if ($already == true) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+//    public function alreadySharedAction($toShare, $em)
+//    {
+//        $alreadyShared = $em->getRepository('UJMExoBundle:Share')->findAll();
+//        $already = false;
+//
+//        $end = count($alreadyShared);
+//
+//        for ($i = 0; $i < $end; ++$i) {
+//            if ($alreadyShared[$i]->getUser() == $toShare->getUser() &&
+//                $alreadyShared[$i]->getQuestion() == $toShare->getQuestion()
+//            ) {
+//                $already = true;
+//                break;
+//            }
+//        }
+//
+//        if ($already == true) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     /**
      * Display form to search questions.
      *
-     *
+     * @EXT\Route("/SearchQuestion/{exoID}", name="ujm_question_search_question", defaults={"exoID"= -1})
+     * 
      * @param int $exoID id of exercise
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchQuestionAction($exoID)
-    {
+    public function searchQuestionAction($exoID) {
         return $this->render('UJMExoBundle:Question:searchQuestion.html.twig', array(
-            'exoID' => $exoID,
-            )
+                    'exoID' => $exoID,
+                        )
         );
     }
 
     /**
      * Display the questions matching to the research.
      *
+     * @EXT\Route("/SearchQuestionType", name="ujm_question_searchQuestion")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function searchQuestionTypeAction()
-    {
+    public function searchQuestionTypeAction() {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $request = $this->get('request');
 
         $paginationSer = $this->container->get('ujm.exo_pagination');
-        
+
         $listQuestions = array();
         $questionWithResponse = array();
         $alreadyShared = array();
@@ -910,7 +915,6 @@ class QuestionController extends Controller
         $page = $request->query->get('page'); // Which page
         $exoID = $request->query->get('exoID'); // If we import or see the questions
         $displayAll = $request->query->get('displayAll', 0); // If we want to have all the questions in one page
-
         // If what and where to search is defined
         if ($type && $whatToFind && $where) {
             $em = $this->getDoctrine()->getManager();
@@ -920,7 +924,6 @@ class QuestionController extends Controller
             //  * in which database search,
             //  * in witch column
             //  * and what text to search
-
             // User's database
             if ($where == 'my') {
                 switch ($type) {
@@ -934,18 +937,18 @@ class QuestionController extends Controller
                         $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                         break;
                     case 'Contain':
-                        $listQuestions = $questionRepository->findByUserAndInvite($user, $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
                         break;
                     case 'All':
                         $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
                         break;
                 }
 
-                // For all the matching questions search if ...
+                // For all the matching questions search if ...              
                 foreach ($listQuestions as $question) {
                     // ... the question is link to a paper (question in the test has already been passed)
                     $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findOneByQuestion($question);
+                            ->findOneByQuestion($question);
 
                     if ($response) {
                         $questionWithResponse[$question->getId()] = 1;
@@ -955,7 +958,7 @@ class QuestionController extends Controller
 
                     // ...the question is shared or not
                     $share = $em->getRepository('UJMExoBundle:Share')
-                        ->findOneByQuestion($question);
+                            ->findOneByQuestion($question);
 
                     if ($share) {
                         $alreadyShared[$question->getId()] = 1;
@@ -1003,7 +1006,7 @@ class QuestionController extends Controller
                 // Put the result in a twig
                 if ($exoID == -1) {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
                         'listQuestions' => $listQuestionsPager,
                         'canDisplay' => $where,
                         'pagerSearch' => $pagerSearch,
@@ -1013,19 +1016,19 @@ class QuestionController extends Controller
                         'alreadyShared' => $alreadyShared,
                         'exoID' => $exoID,
                         'displayAll' => $displayAll,
-                        )
+                            )
                     );
                 } else {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                            'listQuestions' => $listQuestionsPager,
-                            'pagerSearch' => $pagerSearch,
-                            'exoID' => $exoID,
-                            'canDisplay' => $where,
-                            'whatToFind' => $whatToFind,
-                            'type' => $type,
-                            'displayAll' => $displayAll,
-                        )
+                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'pagerSearch' => $pagerSearch,
+                        'exoID' => $exoID,
+                        'canDisplay' => $where,
+                        'whatToFind' => $whatToFind,
+                        'type' => $type,
+                        'displayAll' => $displayAll,
+                            )
                     );
                 }
 
@@ -1038,18 +1041,18 @@ class QuestionController extends Controller
 
                     // Send the form to search and the result
                     return $this->render(
-                        'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch,
-                        'exoID' => $exoID,
-                        )
+                                    'UJMExoBundle:Question:searchQuestion.html.twig', array(
+                                'divResultSearch' => $divResultSearch,
+                                'exoID' => $exoID,
+                                    )
                     );
                 }
-            // Shared with user's database
+                // Shared with user's database
             } elseif ($where == 'shared') {
                 switch ($type) {
                     case 'Category':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByCategoryShared($user->getId(), $whatToFind);
+                                ->findByCategoryShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1060,7 +1063,7 @@ class QuestionController extends Controller
                         break;
                     case 'Type':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByTypeShared($user->getId(), $whatToFind);
+                                ->findByTypeShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1071,7 +1074,7 @@ class QuestionController extends Controller
                         break;
                     case 'Title':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByTitleShared($user->getId(), $whatToFind);
+                                ->findByTitleShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1082,7 +1085,7 @@ class QuestionController extends Controller
                         break;
                     case 'Contain':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByContainShared($user->getId(), $whatToFind);
+                                ->findByContainShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1093,7 +1096,7 @@ class QuestionController extends Controller
                         break;
                     case 'All':
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByAllShared($user->getId(), $whatToFind);
+                                ->findByAllShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1143,7 +1146,7 @@ class QuestionController extends Controller
                 // Put the result in a twig
                 if ($exoID == -1) {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
                         'listQuestions' => $listQuestionsPager,
                         'canDisplay' => $where,
                         'pagerSearch' => $pagerSearch,
@@ -1151,19 +1154,19 @@ class QuestionController extends Controller
                         'whatToFind' => $whatToFind,
                         'exoID' => $exoID,
                         'displayAll' => $displayAll,
-                        )
+                            )
                     );
                 } else {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                            'listQuestions' => $listQuestionsPager,
-                            'pagerSearch' => $pagerSearch,
-                            'exoID' => $exoID,
-                            'canDisplay' => $where,
-                            'whatToFind' => $whatToFind,
-                            'type' => $type,
-                            'displayAll' => $displayAll,
-                        )
+                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'pagerSearch' => $pagerSearch,
+                        'exoID' => $exoID,
+                        'canDisplay' => $where,
+                        'whatToFind' => $whatToFind,
+                        'type' => $type,
+                        'displayAll' => $displayAll,
+                            )
                     );
                 }
 
@@ -1176,10 +1179,10 @@ class QuestionController extends Controller
 
                     // Send the form to search and the result
                     return $this->render(
-                        'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch,
-                        'exoID' => $exoID,
-                        )
+                                    'UJMExoBundle:Question:searchQuestion.html.twig', array(
+                                'divResultSearch' => $divResultSearch,
+                                'exoID' => $exoID,
+                                    )
                     );
                 }
             } elseif ($where == 'all') {
@@ -1187,7 +1190,7 @@ class QuestionController extends Controller
                     case 'Category':
                         $listQuestions = $questionRepository->findByUserAndCategoryName($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByCategoryShared($user->getId(), $whatToFind);
+                                ->findByCategoryShared($user->getId(), $whatToFind);
 
                         $ends = count($sharedQuestion);
 
@@ -1199,7 +1202,7 @@ class QuestionController extends Controller
                     case 'Type':
                         $listQuestions = $questionRepository->findByUserAndType($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByTypeShared($user->getId(), $whatToFind);
+                                ->findByTypeShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1211,7 +1214,7 @@ class QuestionController extends Controller
                     case 'Title':
                         $listQuestions = $questionRepository->findByUserAndTitle($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByTitleShared($user->getId(), $whatToFind);
+                                ->findByTitleShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1221,9 +1224,9 @@ class QuestionController extends Controller
 
                         break;
                     case 'Contain':
-                        $listQuestions = $questionRepository->findByUserAndInvite($user, $whatToFind);
+                        $listQuestions = $questionRepository->findByUserAndDescription($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByContainShared($user->getId(), $whatToFind);
+                                ->findByContainShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1235,7 +1238,7 @@ class QuestionController extends Controller
                     case 'All':
                         $listQuestions = $questionRepository->findByUserAndContent($user, $whatToFind);
                         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-                            ->findByAllShared($user->getId(), $whatToFind);
+                                ->findByAllShared($user->getId(), $whatToFind);
 
                         $end = count($sharedQuestion);
 
@@ -1250,7 +1253,7 @@ class QuestionController extends Controller
                 foreach ($listQuestions as $question) {
                     // ... the interaction is link to a paper (interaction in the test has already been passed)
                     $response = $em->getRepository('UJMExoBundle:Response')
-                        ->findOneByQuestion($question);
+                            ->findOneByQuestion($question);
 
                     if ($response) {
                         $questionWithResponse[$question->getId()] = 1;
@@ -1260,7 +1263,7 @@ class QuestionController extends Controller
 
                     // ...the interaction is shared or not
                     $share = $em->getRepository('UJMExoBundle:Share')
-                        ->findOneByQuestion($question);
+                            ->findOneByQuestion($question);
 
                     if ($share) {
                         $alreadyShared[$question->getId()] = 1;
@@ -1308,7 +1311,7 @@ class QuestionController extends Controller
                 // Put the result in a twig
                 if ($exoID == -1) {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
                         'listQuestions' => $listQuestionsPager,
                         'canDisplay' => $where,
                         'pagerSearch' => $pagerSearch,
@@ -1318,19 +1321,19 @@ class QuestionController extends Controller
                         'alreadyShared' => $alreadyShared,
                         'exoID' => $exoID,
                         'displayAll' => $displayAll,
-                        )
+                            )
                     );
                 } else {
                     $divResultSearch = $this->render(
-                        'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
-                            'listQuestions' => $listQuestionsPager,
-                            'pagerSearch' => $pagerSearch,
-                            'exoID' => $exoID,
-                            'canDisplay' => $where,
-                            'whatToFind' => $whatToFind,
-                            'type' => $type,
-                            'displayAll' => $displayAll,
-                        )
+                            'UJMExoBundle:Question:searchQuestionImport.html.twig', array(
+                        'listQuestions' => $listQuestionsPager,
+                        'pagerSearch' => $pagerSearch,
+                        'exoID' => $exoID,
+                        'canDisplay' => $where,
+                        'whatToFind' => $whatToFind,
+                        'type' => $type,
+                        'displayAll' => $displayAll,
+                            )
                     );
                 }
 
@@ -1343,21 +1346,21 @@ class QuestionController extends Controller
 
                     // Send the form to search and the result
                     return $this->render(
-                        'UJMExoBundle:Question:searchQuestion.html.twig', array(
-                        'divResultSearch' => $divResultSearch,
-                        'exoID' => $exoID,
-                        )
+                                    'UJMExoBundle:Question:searchQuestion.html.twig', array(
+                                'divResultSearch' => $divResultSearch,
+                                'exoID' => $exoID,
+                                    )
                     );
                 }
             }
         } else {
             return $this->render(
-                'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
-                'listQuestions' => '',
-                'canDisplay' => $where,
-                'whatToFind' => $whatToFind,
-                'type' => $type,
-                )
+                            'UJMExoBundle:Question:SearchQuestionType.html.twig', array(
+                        'listQuestions' => '',
+                        'canDisplay' => $where,
+                        'whatToFind' => $whatToFind,
+                        'type' => $type,
+                            )
             );
         }
     }
@@ -1365,18 +1368,19 @@ class QuestionController extends Controller
     /**
      * To delete the shared question of user's questions bank.
      *
-     *
+     * @EXT\Route("/{qid}/{uid}/delete/{pageNow}/{maxPage}/{nbItem}/{lastPage}", name="ujm_delete_shared_question",
+     *              defaults={"pageNow"= 1, "maxPage"= 10, "nbItem"= 1, "lastPage"= 1})
+     * 
      * @param int $qid      id Question
      * @param int $uid      id User, user connected
      * @param int $pageNow  actual page for the pagination
-     * @param int $maxpage  number max questions per page
+     * @param int $maxPage  number max questions per page
      * @param int $nbItem   number of question
      * @param int $lastPage number of last page
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteSharedQuestionAction($qid, $uid, $pageNow, $maxPage, $nbItem, $lastPage)
-    {
+    public function deleteSharedQuestionAction($qid, $uid, $pageNow, $maxPage, $nbItem, $lastPage) {
         $em = $this->getDoctrine()->getManager();
         $sharedToDel = $em->getRepository('UJMExoBundle:Share')->findOneBy(array('question' => $qid, 'user' => $uid));
 
@@ -1400,13 +1404,13 @@ class QuestionController extends Controller
     /**
      * To see with which person the user has shared his question.
      *
-     *
+     * @EXT\Route("/seeShared/{id}", name="ujm_see_shared")
+     * 
      * @param int $id id of question
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function seeSharedWithAction($id)
-    {
+    public function seeSharedWithAction($id) {
         $em = $this->getDoctrine()->getManager();
         $questionsharedWith = $em->getRepository('UJMExoBundle:Share')->findBy(array('question' => $id));
 
@@ -1418,20 +1422,20 @@ class QuestionController extends Controller
         }
 
         return $this->render(
-            'UJMExoBundle:Question:seeSharedWith.html.twig', array(
-            'sharedWith' => $sharedWith,
-            )
+                        'UJMExoBundle:Question:seeSharedWith.html.twig', array(
+                    'sharedWith' => $sharedWith,
+                        )
         );
     }
 
     /**
      * To search questions brief in the question bank.
      *
-     *
+     * @EXT\Route("/search/brief", name="ujm_question_briefSearch")
+     * 
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function briefSearchAction()
-    {
+    public function briefSearchAction() {
         $em = $this->getDoctrine()->getManager();
         $questionRepository = $em->getRepository('UJMExoBundle:Question');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
@@ -1445,7 +1449,7 @@ class QuestionController extends Controller
 
         $listQuestions = $questionRepository->findByUserAndContent($user, $userSearch, $exercise);
         $sharedQuestion = $em->getRepository('UJMExoBundle:Share')
-            ->findByAllShared($user->getId(), $userSearch);
+                ->findByAllShared($user->getId(), $userSearch);
 
         $end = count($sharedQuestion);
 
@@ -1462,9 +1466,9 @@ class QuestionController extends Controller
         $interactionType = $this->container->get('ujm.exo_question')->getTypes();
 
         $listExo = $this->getDoctrine()
-                    ->getManager()
-                    ->getRepository('UJMExoBundle:Exercise')
-                    ->getExerciseAdmin($user->getId());
+                ->getManager()
+                ->getRepository('UJMExoBundle:Exercise')
+                ->getExerciseAdmin($user->getId());
 
         $vars['interactions'] = $listQuestions;
         $vars['actionQ'] = $actionQ;
@@ -1497,13 +1501,14 @@ class QuestionController extends Controller
     /**
      * To duplicate a question.
      *
+     * @EXT\Route("/duplicate/{questionId}/{exoID}", name="ujm_question_duplicate", defaults={"exoID"= -1})
+     * 
      * @param int $questionId   id Question
      * @param int $exoID        id Exercise if the user is in an exercise, -1 if the user is in the question bank
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function duplicateAction($questionId, $exoID)
-    {
+    public function duplicateAction($questionId, $exoID) {
         $exercise = null;
         $service = $this->container->get('ujm.exo_question');
 
@@ -1515,26 +1520,23 @@ class QuestionController extends Controller
             $exercise = $this->getDoctrine()->getManager()->getRepository('UJMExoBundle:Exercise')->find($exoID);
 
             if ($this->container->get('ujm.exo_exercise')
-                     ->isExerciseAdmin($exercise) === true) {
+                            ->isExerciseAdmin($exercise) === true) {
                 $allowToAccess = true;
             }
         }
 
         if ($question && (count($sharedQuestions) > 0 || $allowToAccess)) {
             $type = $question->getType();
-            $handlerType = '\UJM\ExoBundle\Form\\'.$type.'Handler';
+            $handlerType = '\UJM\ExoBundle\Form\\' . $type . 'Handler';
 
             $interactionX = $this->getDoctrine()
-                ->getManager()
-                ->getRepository('UJMExoBundle:'.$type)
-                ->findOneByQuestion($question);
+                    ->getManager()
+                    ->getRepository('UJMExoBundle:' . $type)
+                    ->findOneByQuestion($question);
 
             $interXHandler = new $handlerType(
-                        null, null, $this->getDoctrine()->getManager(),
-                        $this->container->get('ujm.exo_exercise'),
-                        $this->container->get('security.token_storage')->getToken()->getUser(), $exercise,
-                        $this->get('translator')
-                    );
+                    null, null, $this->getDoctrine()->getManager(), $this->container->get('ujm.exo_exercise'), $this->container->get('security.token_storage')->getToken()->getUser(), $exercise, $this->get('translator')
+            );
 
             $interXHandler->singleDuplicateInter($interactionX);
 
@@ -1543,19 +1545,20 @@ class QuestionController extends Controller
 
             if ($exoID == -1) {
                 return $this->redirect(
-                    $this->generateUrl('ujm_question_index', array(
-                        'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind), )
-                    )
+                                $this->generateUrl('ujm_question_index', array(
+                                    'categoryToFind' => base64_encode($categoryToFind), 'titleToFind' => base64_encode($titleToFind),)
+                                )
                 );
             } else {
                 return $this->redirect(
-                    $this->generateUrl('ujm_exercise_questions', array(
-                        'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind, )
-                    )
+                                $this->generateUrl('ujm_exercise_questions', array(
+                                    'id' => $exoID, 'categoryToFind' => $categoryToFind, 'titleToFind' => $titleToFind,)
+                                )
                 );
             }
         } else {
             return $this->redirect($this->generateUrl('ujm_question_index'));
         }
     }
+
 }
