@@ -93,7 +93,7 @@ class PathListener extends ContainerAware
     {
         // Create form
         $form = $this->container->get('form.factory')->create('innova_path', new Path());
-        
+
         // Try to process form
         $request = $this->container->get('request');
         $form->handleRequest($request);
@@ -105,7 +105,7 @@ class PathListener extends ContainerAware
             $event->setPublished($published);
 
             $path->initializeStructure();
-            
+
             // Send new path to dispatcher through event object
             $event->setResources(array ($path));
         }
@@ -120,7 +120,7 @@ class PathListener extends ContainerAware
 
             $event->setErrorFormContent($content);
         }
-        
+
         $event->stopPropagation();
     }
 
@@ -141,6 +141,9 @@ class PathListener extends ContainerAware
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        $om = $this->container->get('claroline.persistence.object_manager');
+        // Start the transaction. We'll copy every resource in one go that way.
+        $om->startFlushSuite();
         // Get Path to duplicate
         $pathToCopy = $event->getResource();
 
@@ -160,15 +163,22 @@ class PathListener extends ContainerAware
             $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
         }
 
-        // Store the new structure of the Path
-        $path->setStructure(json_encode($structure));
+        // End the transaction
+        $om->endFlushSuite();
+        // We need the resources ids
+        $om->forceFlush();
 
+        //update the structure tree
+        foreach ($structure->steps as $step) {
+            $this->updateStep($step, $processedNodes);
+        }
+
+        $path->setStructure(json_encode($structure));
         $event->setCopy($path);
 
         // Force the unpublished state (the publication will recreate the correct links, and create new Activities)
         // If we directly copy all the published Entities we can't remap some relations
         $event->setPublish(false);
-
         $event->stopPropagation();
     }
 
@@ -211,6 +221,7 @@ class PathListener extends ContainerAware
         $manager = $this->container->get('claroline.manager.resource_manager');
 
         $resourceNode = $manager->getNode($resource->resourceId);
+
         if ($resourceNode) {
             // Check if Node is in a subdirectory
             $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
@@ -246,22 +257,43 @@ class PathListener extends ContainerAware
                 }
             }
 
+            //we add the processed node
             if (empty($processedNodes[$resourceNode->getId()])) {
                 // Current Node has not been processed => create a copy
                 // Duplicate Node
                 $copy = $manager->copy($resourceNode, $newParent, $user);
                 $copyNode = $copy->getResourceNode();
-
-                // Update structure with new id
-                $resource->resourceId = $copy->getResourceNode()->getId();
-
                 $processedNodes[$resourceNode->getId()] = $copyNode;
-            } else {
-                // Current has already been processed => get copy
-                $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
             }
         }
 
         return $processedNodes;
+    }
+
+    private function updateStep(\stdClass $step, array $processedNodes = array ())
+    {
+        if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
+            $this->replaceResourceId($step->primaryResource[0], $processedNodes);
+        }
+
+        if (!empty($step->resources)) {
+            foreach ($step->resources as $resource) {
+                $this->replaceResourceId($resource, $processedNodes);
+            }
+        }
+
+        // Process step children
+        if (!empty($step->children)) {
+            foreach ($step->children as $child) {
+                $this->updateStep($child, $processedNodes);
+            }
+        }
+    }
+
+    private function replaceResourceId(\stdClass $resource, $processedNodes)
+    {
+        $manager = $this->container->get('claroline.manager.resource_manager');
+        $resourceNode = $manager->getNode($resource->resourceId);
+        $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
     }
 }
