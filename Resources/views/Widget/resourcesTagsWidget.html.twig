@@ -1,22 +1,26 @@
 {% if datas|length > 0 %}
+    <div id="tags-list-box-{{ widgetInstance.getId() }}">    
+    
+        {% for data in datas %}
+            <button class="btn btn-default tag-btn margin-bottom-sm" data-tag-id="{{ data['tag_id'] }}">
+                <i class="fa fa-tag"></i>
+                {{ data['tag'] }}
+                <span class="badge">
+                    {{ data['objects']|length }}
+                </span>
+            </button>
+        {% endfor %}
+        <br>
+        <br>
         
-    {% for data in datas %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" href="#tag-row-{{ data['tag_id'] }}">
-                        <i class="fa fa-tag"></i>
-                        {{ data['tag'] }}
-                        <span class="badge">
-                            {{ data['objects']|length }}
-                        </span>
-                    </a>
-                </h4>
-            </div>
-            <div id="tag-row-{{ data['tag_id'] }}" class="panel-collapse collapse">
-                <div class="panel-body">
+        {% for data in datas %}
+            <div id="tagged-objects-box-{{ widgetInstance.getId() }}-{{ data['tag_id'] }}"
+                 class="well well-sm hidden objects-box-{{ widgetInstance.getId() }}"
+            >
+                <h3>{{ data['tag'] }}</h3>
+                <div>
                     <ul class="list-unstyled">
-                        
+
                         {% for object in data['objects'] %}
                             <li>
                                 <a href="{{ path('claro_tag_resource_from_widget_open', {'resourceNode': object['id']}) }}">
@@ -27,10 +31,25 @@
                     </ul>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 {% else %}
     <div class="alert alert-warning">
         {{ 'no_tag'|trans({}, 'tag') }}
     </div>
 {% endif %}
+
+<script type="text/javascript">
+    (function () {
+        'use strict';
+        
+        var widgetInstanceId = {{ widgetInstance.getId() }};
+        
+        $('#tags-list-box-' + widgetInstanceId).on('click', '.tag-btn', function () {
+            var tagId = $(this).data('tag-id');
+            $('.objects-box-' + widgetInstanceId).hide('slow');
+            $('#tagged-objects-box-' + widgetInstanceId + '-' + tagId).removeClass('hidden');
+            $('#tagged-objects-box-' + widgetInstanceId + '-' + tagId).show('slow');
+        });
+    })();
+</script>
