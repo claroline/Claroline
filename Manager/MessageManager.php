@@ -158,7 +158,7 @@ class MessageManager
         }
 
         $mailNotifiedUsers = array();
-        
+
         //get every users which are going to be notified
         foreach ($groupReceivers as $groupReceiver) {
             $users = $this->userRepo->findByGroup($groupReceiver);
@@ -262,12 +262,13 @@ class MessageManager
 
     /**
      * @param \Claroline\MessageBundle\Entity\Message $message
+     * @param \Claroline\MessageBundle\Entity\User    $user
      *
      * @return \Claroline\MessageBundle\Entity\Message[]
      */
-    public function getConversation(Message $message)
+    public function getConversation(Message $message, User $user)
     {
-        return $this->messageRepo->findAncestors($message);
+        return $this->messageRepo->findAncestors($message, $user);
     }
 
     /**

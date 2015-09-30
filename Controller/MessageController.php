@@ -172,7 +172,7 @@ class MessageController
             return new RedirectResponse($url);
         }
 
-        $ancestors = $parent ? $this->messageManager->getConversation($parent) : array();
+        $ancestors = $parent ? $this->messageManager->getConversation($parent, $sender) : array();
 
         return array('form' => $form->createView(), 'message' => $parent, 'ancestors' => $ancestors);
     }
@@ -328,7 +328,7 @@ class MessageController
     {
         if ($message) {
             $this->messageManager->markAsRead($user, array($message));
-            $ancestors = $this->messageManager->getConversation($message);
+            $ancestors = $this->messageManager->getConversation($message, $user);
             $sendString = $message->getSenderUsername();
             $object = 'Re: ' . $message->getObject();
             $this->checkAccess($message, $user);
