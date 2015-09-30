@@ -248,7 +248,7 @@
         'browser_spellcheck': true,
         'autoresize_min_height': 100,
         'autoresize_max_height': 500,
-        'content_css':  home.asset + 'css/clarolinecore/tinymce.css',
+        'content_css':  [themeCSS, home.asset + 'css/clarolinecore/tinymce.css'],
         'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
                     'media link charmap | print preview code',
         'extended_valid_elements': 'user[id], a[data-toggle|data-parent]',
