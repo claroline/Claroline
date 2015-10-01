@@ -5,15 +5,18 @@ namespace Icap\BadgeBundle\Installation\Updater;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
 use Doctrine\DBAL\Migrations\Version;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Connection;
 
 class MigrationUpdater extends Updater
 {
-    private $container;
-    private $conn;
+    /**
+     * @var Connection
+     */
+    private $connection;
 
     /**
-     * @var \Doctrine\ORM\EntityManager
+     * @var EntityManager
      */
     private $entityManager;
 
@@ -22,16 +25,16 @@ class MigrationUpdater extends Updater
      */
     private $badgePlugin;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(Connection $connection, EntityManager $entityManager)
     {
-        $this->container = $container;
-        $this->conn = $container->get('database_connection');
-        $this->entityManager = $container->get('doctrine.orm.entity_manager');
+        $this->connection = $connection;
+        $this->entityManager = $entityManager;
     }
 
     public function preInstall()
     {
         $this->skipInstallIfMigratingFromCore();
+        $this->deleteExistingTablesRelatedToPortfolio();
     }
 
     public function postInstall()
@@ -56,14 +59,24 @@ class MigrationUpdater extends Updater
 
     private function skipInstallIfMigratingFromCore()
     {
-        if ($this->conn->getSchemaManager()->tablesExist(['claro_badge'])) {
+        if ($this->connection->getSchemaManager()->tablesExist(['claro_badge'])) {
             $this->log('Found existing database schema: skipping install migration...');
-            $config = new Configuration($this->conn);
+            $config = new Configuration($this->connection);
             $config->setMigrationsTableName('doctrine_icapbadgebundle_versions');
             $config->setMigrationsNamespace('claro_badge'); // required but useless
             $config->setMigrationsDirectory('claro_badge'); // idem
             $version = new Version($config, '20150506091116', 'stdClass');
             $version->markMigrated();
+        }
+    }
+
+    private function deleteExistingTablesRelatedToPortfolio()
+    {
+        // Manage the case when we install the BadgeBundle while portfolio badges tables are already in the database as
+        // portfolio badges was in the PortfolioBundle before
+        if ($this->connection->getSchemaManager()->tablesExist(['icap__portfolio_widget_badges'])) {
+            $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges_badge');
+            $this->connection->getSchemaManager()->dropTable('icap__portfolio_widget_badges');
         }
     }
 
