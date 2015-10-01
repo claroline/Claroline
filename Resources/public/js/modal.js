@@ -106,24 +106,24 @@
      * This function show a complete modal with given title and content.
      *
      * @param title The title of the modal.
-     * @param content The content of the modal.
+     * @param body The body of the modal.
      * @param footer The footer of the modal, if footer is not defined a default footer will be used.
      */
-    modal.simpleContainer = function (title, content, footer)
+    modal.simpleContainer = function (title, body, footer)
     {
         footer = typeof(footer) !== 'undefined' ? footer : modal.defaultFooter();
 
-        return modal.create(
-            common.createElement('div', 'modal-dialog').html(
-                common.createElement('div', 'modal-content').append(
-                    common.createElement('div', 'modal-header')
-                    .append(common.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
-                    .append(common.createElement('h4', 'modal-title').html(title))
-                )
-                .append(common.createElement('div', 'modal-body').html(content))
-                .append(common.createElement('div', 'modal-footer').html(footer))
-            )
-        );
+        var modalHtml = common.createElement('div', 'modal-content').append(
+            common.createElement('div', 'modal-header')
+            .append(common.createElement('button', 'close').html('&times;').attr('data-dismiss', 'modal'))
+            .append(common.createElement('h4', 'modal-title').html(title))
+        )
+        .append(common.createElement('div', 'modal-body').html(body))
+        .append(common.createElement('div', 'modal-footer').html(footer));
+
+        var content = common.createElement('div', 'modal-dialog').html(modalHtml);
+
+        return modal.create(content);
     };
 
      /**
