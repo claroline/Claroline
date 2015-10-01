@@ -18,7 +18,7 @@ use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
 
 /**
- * @DI\Service("claroline.menu.external_authentication_renderer")
+ * @DI\Service("claroline.menu.workspace_user_renderer_renderer")
  * @DI\Tag("knp_menu.renderer", attributes = {"name" = "knp_menu.renderer", "alias"="workspace_users"})
  */
 class WorkspaceUsersRenderer extends ListRenderer
