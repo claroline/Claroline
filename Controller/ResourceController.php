@@ -615,6 +615,14 @@ class ResourceController
                     }
                 }
 
+                //compute this is_published flag. If the resource has an accessible_from/accessible_until flag
+                //and the current date don't match, then it's de facto unpublished.
+                if ($item['accessible_from'] || $item['accessible_until']) {
+                    $now = new \DateTime();
+                    if ($item['accessible_from']->getTimeStamp() > $now->getTimeStamp()) $item['published'] = false;
+                    if ($item['accessible_until']->getTimeStamp() < $now->getTimeStamp()) $item['published'] = false;
+                }
+
                 $nodesWithCreatorPerms[] = $item;
             }
 
