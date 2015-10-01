@@ -8,9 +8,9 @@ class AdditionalInstaller extends BaseInstaller
 {
     public function postInstall()
     {
-        $updater = new Updater\MigrationUpdater($this->container);
+        $updater = new Updater\MigrationUpdater();
         $updater->setLogger($this->logger);
-        $updater->postInstall();
+        $updater->postInstall($this->container->get('doctrine.orm.entity_manager'));
     }
 
     public function postUpdate($currentVersion, $targetVersion)
@@ -37,6 +37,12 @@ class AdditionalInstaller extends BaseInstaller
                 $this->container->get('doctrine.dbal.default_connection'));
             $updater->setLogger($this->logger);
             $updater->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '6.2.0', '<=')) {
+            $updater = new Updater\Updater060200();
+            $updater->setLogger($this->logger);
+            $updater->postUpdate($this->container->get('doctrine.dbal.default_connection'), $this->container->get('kernel'));
         }
     }
 }

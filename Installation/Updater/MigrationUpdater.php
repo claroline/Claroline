@@ -10,17 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class MigrationUpdater extends Updater
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    private $entityManager;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->entityManager = $container->get('doctrine.orm.entity_manager');
-    }
-
-    public function postInstall()
+    public function postInstall(EntityManager $entityManager)
     {
         /** @var \Claroline\CoreBundle\Repository\PluginRepository $pluginRepository */
         $pluginRepository = $this->entityManager->getRepository('ClarolineCoreBundle:Plugin');

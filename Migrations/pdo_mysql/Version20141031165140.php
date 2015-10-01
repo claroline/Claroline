@@ -100,15 +100,6 @@ class Version20141031165140 extends AbstractMigration
             ALTER TABLE icap__portfolio_abstract_widget 
             ADD `label` VARCHAR(255) NOT NULL
         ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
-        ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_badge (id)
-        ");
     }
 
     public function down(Schema $schema)
@@ -132,15 +123,6 @@ class Version20141031165140 extends AbstractMigration
         $this->addSql("
             ALTER TABLE icap__portfolio_abstract_widget 
             DROP `label`
-        ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            DROP FOREIGN KEY FK_25D41B98F7A2C2FC
-        ");
-        $this->addSql("
-            ALTER TABLE icap__portfolio_widget_badges_badge 
-            ADD CONSTRAINT FK_25D41B98F7A2C2FC FOREIGN KEY (badge_id) 
-            REFERENCES claro_user_badge (id)
         ");
     }
 }
