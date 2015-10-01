@@ -25,7 +25,7 @@
             <a target="_blank"
                href="{{ document.url }}">{{ document.url | length > 40 ? document.url | slice(0, 40) ~ '...' :document.url }}</a>
         {% else %}
-            {% if document.title is not null %}
+            {% if document.title|length > 0  %}
             <a target="_blank"
                href="{{ path('innova_collecticiel_open_resource', {'resourceId': dropzone.id, 'documentId': document.id}) }}">{{ document.title }}</a>
             {% else %}
