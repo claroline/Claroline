@@ -4,22 +4,23 @@
  * @constructor
  */
 var ResourcesSecondaryBaseCtrl = function ResourcesSecondaryBaseCtrl() {
+    // Call parent constructor
+    ResourcesCtrl.apply(this, arguments);
+
     this.resourceIcons  = AngularApp.resourceIcons;
 
     return this;
 };
+
+// Extends the base controller
+ResourcesSecondaryBaseCtrl.prototype = Object.create(ResourcesCtrl.prototype);
+ResourcesSecondaryBaseCtrl.prototype.constructor = ResourcesCtrl;
 
 /**
  * Icons of the Resources
  * @type {object}
  */
 ResourcesSecondaryBaseCtrl.prototype.resourceIcons = {};
-
-/**
- * Resources owned by the Step
- * @type {Array}
- */
-ResourcesSecondaryBaseCtrl.prototype.resources = [];
 
 /**
  * Resources inherited from the parents
@@ -32,17 +33,3 @@ ResourcesSecondaryBaseCtrl.prototype.inherited = [];
  * @type {Array}
  */
 ResourcesSecondaryBaseCtrl.prototype.excluded = [];
-
-/**
- * Display resource in new window tab
- * @param resource
- */
-ResourcesSecondaryBaseCtrl.prototype.showResource = function showResource(resource) {
-    // Retrieve resource type
-    var resourceRoute = Routing.generate('claro_resource_open', {
-        node: resource.resourceId,
-        resourceType: resource.type
-    });
-
-    window.open(resourceRoute, '_blank');
-};

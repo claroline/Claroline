@@ -69,6 +69,7 @@ resource_delete_confirm: Êtes-vous sur de vouloir supprimer cette ressource ?
 resource_delete_title: <span class="trash-o"></span> Suppression de la ressource : <strong>&lt;%resourceName%&gt;</strong>
 resource_hide_parent: Masquer dans cette étape
 resource_primary_add: Ajouter une ressource
+resource_primary_delete: Supprimer
 resource_primary_replace: Remplacer
 resource_propagate : Rendre disponible dans les étapes enfants
 resource_no_propagate : Rendre indisponible dans les étapes enfants
