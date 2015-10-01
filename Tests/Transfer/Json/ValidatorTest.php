@@ -16,7 +16,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new Validator();
         $errors = $validator->validateQuestion(new \stdClass());
         $expected = [[
-            'path' => '',
+            'property' => '',
             'message' => 'Question cannot be validated due to missing property "type"'
         ]];
         $this->assertEquals($expected, $errors);
@@ -29,7 +29,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $question->type = 'application/x.foo+json';
         $errors = $validator->validateQuestion($question);
         $expected = [[
-            'path' => 'type',
+            'property' => 'type',
             'message' => "Unknown question type 'application/x.foo+json'"
         ]];
         $this->assertEquals($expected, $errors);
